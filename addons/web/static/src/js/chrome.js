@@ -534,7 +534,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
                     'login_successful': function() {
-                        var url = '/?db=' + form_obj['db_name'];
+                        var url = '/web?db=' + form_obj['db_name'];
                         if (self.session.debug) {
                             url += '&debug';
                         }
@@ -805,10 +805,11 @@ instance.web.redirect = function(url, wait) {
 
     var load = function() {
         var old = "" + window.location;
-        if (old === url) {
-            window.location.reload();
-        } else {
-            window.location = url;
+        var old_no_hash = old.split("#")[0];
+        var url_no_hash = url.split("#")[0];
+        location.assign(url);
+        if (old_no_hash === url_no_hash) {
+            location.reload(true);
         }
     };
 
@@ -1246,6 +1247,7 @@ instance.web.Client = instance.web.Widget.extend({
         this.$el.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();
             var $toggle = $(this);
+            var doc_width = $(document).width();
             var $menu = $toggle.siblings('.oe_dropdown_menu');
             $menu = $menu.size() >= 1 ? $menu : $toggle.find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
@@ -1254,7 +1256,6 @@ instance.web.Client = instance.web.Widget.extend({
                 $toggle.add($menu).toggleClass('oe_opened', !state);
                 if (!state) {
                     // Move $menu if outside window's edge
-                    var doc_width = $(document).width();
                     var offset = $menu.offset();
                     var menu_width = $menu.width();
                     var x = doc_width - offset.left - menu_width - 2;

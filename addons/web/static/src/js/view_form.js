@@ -3664,7 +3664,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 _.extend(view.options, {
                     addable: null,
                     selectable: self.multi_selection,
-                    sortable: false,
+                    sortable: true,
                     import_enabled: false,
                     deletable: true
                 });
@@ -5475,7 +5475,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         });
         this.get_selection();
         if (this.options.clickable) {
-            this.$el.on('click','li:not(.oe_folded)',this.on_click_stage);
+            this.$el.on('click','li[data-id]',this.on_click_stage);
         }
         if (this.$el.parent().is('header')) {
             this.$el.after('<div class="oe_clear"/>');
@@ -5629,6 +5629,131 @@ instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
     },
 });
 
+/*
+    This type of field display a list of checkboxes. It works only with m2ms. This field will display one checkbox for each
+    record existing in the model targeted by the relation, according to the given domain if one is specified. Checked records
+    will be added to the relation.
+*/
+instance.web.form.FieldMany2ManyCheckBoxes = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    className: "oe_form_many2many_checkboxes",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set("value", {});
+        this.set("records", []);
+        this.field_manager.on("view_content_has_changed", this, function() {
+            var domain = new openerp.web.CompoundDomain(this.build_domain()).eval();
+            if (! _.isEqual(domain, this.get("domain"))) {
+                this.set("domain", domain);
+            }
+        });
+        this.records_orderer = new instance.web.DropMisordered();
+    },
+    initialize_field: function() {
+        instance.web.form.ReinitializeFieldMixin.initialize_field.call(this)
+        this.on("change:domain", this, this.query_records);
+        this.set("domain", new openerp.web.CompoundDomain(this.build_domain()).eval());
+        this.on("change:records", this, this.render_value);
+    },
+    query_records: function() {
+        var self = this;
+        var model = new openerp.Model(openerp.session, this.field.relation);
+        this.records_orderer.add(model.call("search", [this.get("domain")], {"context": this.build_context()}).then(function(record_ids) {
+            return model.call("name_get", [record_ids] , {"context": self.build_context()});
+        })).then(function(res) {
+            self.set("records", res);
+        });
+    },
+    render_value: function() {
+        this.$().html(QWeb.render("FieldMany2ManyCheckBoxes", {widget: this, selected: this.get("value")}));
+        var inputs = this.$("input");
+        inputs.change(_.bind(this.from_dom, this));
+        if (this.get("effective_readonly"))
+            inputs.attr("disabled", "true");
+    },
+    from_dom: function() {
+        var new_value = {};
+        this.$("input").each(function() {
+            var elem = $(this);
+            new_value[elem.data("record-id")] = elem.attr("checked") ? true : undefined;
+        });
+        if (! _.isEqual(new_value, this.get("value")))
+            this.internal_set_value(new_value);
+    },
+    set_value: function(value) {
+        value = value || [];
+        if (value.length >= 1 && value[0] instanceof Array) {
+            value = value[0][2];
+        }
+        var formatted = {};
+        _.each(value, function(el) {
+            formatted[JSON.stringify(el)] = true;
+        });
+        this._super(formatted);
+    },
+    get_value: function() {
+        var value = _.filter(_.keys(this.get("value")), function(el) {
+            return this.get("value")[el];
+        }, this);
+        value = _.map(value, function(el) {
+            return JSON.parse(el);
+        });
+        return [commands.replace_with(value)];
+    },
+});
+
+/**
+    This field can be applied on many2many and one2many. It is a read-only field that will display a single link whose name is
+    "<number of linked records> <label of the field>". When the link is clicked, it will redirect to another act_window
+    action on the model of the relation and show only the linked records.
+
+    Widget options:
+
+    * views: The views to display in the act_window action. Must be a list of tuples whose first element is the id of the view
+      to display (or False to take the default one) and the second element is the type of the view. Defaults to
+      [[false, "tree"], [false, "form"]] .
+*/
+instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    className: "oe_form_x2many_counter",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set("value", []);
+        _.defaults(this.options, {
+            "views": [[false, "tree"], [false, "form"]],
+        });
+    },
+    render_value: function() {
+        var text = _.str.sprintf("%d %s", this.val().length, this.string);
+        this.$().html(QWeb.render("X2ManyCounter", {text: text}));
+        this.$("a").click(_.bind(this.go_to, this));
+    },
+    go_to: function() {
+        return this.view.recursive_save().then(_.bind(function() {
+            var val = this.val();
+            var context = {};
+            if (this.field.type === "one2many") {
+                context["default_" + this.field.relation_field] = this.view.datarecord.id;
+            }
+            var domain = [["id", "in", val]];
+            return this.do_action({
+                type: 'ir.actions.act_window',
+                name: this.string,
+                res_model: this.field.relation,
+                views: this.options.views,
+                target: 'current',
+                context: context,
+                domain: domain,
+            });
+        }, this));
+    },
+    val: function() {
+        var value = this.get("value") || [];
+        if (value.length >= 1 && value[0] instanceof Array) {
+            value = value[0][2];
+        }
+        return value;
+    }
+});
+
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
@@ -5664,6 +5789,8 @@ instance.web.form.widgets = new instance.web.Registry({
     'many2many_binary': 'instance.web.form.FieldMany2ManyBinaryMultiFiles',
     'statusbar': 'instance.web.form.FieldStatus',
     'monetary': 'instance.web.form.FieldMonetary',
+    'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
+    'x2many_counter': 'instance.web.form.X2ManyCounter',
 });
 
 /**

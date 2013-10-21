@@ -527,28 +527,42 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, debug=False, **kw):
-        debug = debug != False
-        if db is not None:
-            lst = http.db_list(True)
-            if db in lst and db != request.session.db:
-                request.session.logout()
-                request.session.db = db
+        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
+        redirect = '/web' + '?' + urllib.urlencode(query)
+        return redirect_with_hash(redirect)
 
-        if db != request.session.db:
+    @http.route('/web', type='http', auth="none")
+    def web_client(self, s_action=None, db=None, debug=False, **kw):
+        debug = debug != False
+
+        lst = http.db_list(True)
+        if db not in lst:
+            db = None
+        guessed_db = http.db_monodb(request.httprequest)
+        if guessed_db is None and len(lst) > 0:
+            guessed_db = lst[0]
+
+        def redirect(db):
             query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-            query.update({'db': request.session.db})
+            query.update({'db': db})
             redirect = request.httprequest.path + '?' + urllib.urlencode(query)
             return redirect_with_hash(redirect)
-                
-        db = request.session.db
 
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db, debug=debug))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=db, debug=debug))
+        if db is None and guessed_db is not None:
+            return redirect(guessed_db)
+
+        if db is not None and db != guessed_db:
+            request.session.logout()
+            request.session.db = db
+            guessed_db = db
+
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=guessed_db, debug=debug))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=guessed_db, debug=debug))
 
         r = html_template % {
             'js': js,
             'css': css,
-            'modules': simplejson.dumps(module_boot(db=db)),
+            'modules': simplejson.dumps(module_boot(db=guessed_db)),
             'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
         }
         return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
@@ -729,7 +743,7 @@ class Database(http.Controller):
     def get_list(self):
         # TODO change js to avoid calling this method if in monodb mode
         try:
-            return db_list()
+            return http.db_list()
         except openerp.exceptions.AccessDenied:
             monodb = db_monodb()
             if monodb:
@@ -851,11 +865,6 @@ class Session(http.Controller):
         except Exception:
             return {'error': _('The old password you provided is incorrect, your password was not changed.'), 'title': _('Change Password')}
         return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
-
-    @http.route('/web/session/sc_list', type='json', auth="user")
-    def sc_list(self):
-        return request.session.model('ir.ui.view_sc').get_sc(
-            request.session.uid, "ir.ui.menu", request.context)
 
     @http.route('/web/session/get_lang_list', type='json', auth="none")
     def get_lang_list(self):
@@ -1002,13 +1011,6 @@ class Menu(http.Controller):
         """
         return request.session.model('ir.ui.menu').get_needaction_data(menu_ids, request.context)
 
-    @http.route('/web/menu/action', type='json', auth="user")
-    def action(self, menu_id):
-        # still used by web_shortcut
-        actions = load_actions_from_ir_values('action', 'tree_but_open',
-                                             [('ir.ui.menu', menu_id)], False)
-        return {"action": actions}
-
 class DataSet(http.Controller):
 
     @http.route('/web/dataset/search_read', type='json', auth="user")
@@ -1078,7 +1080,7 @@ class DataSet(http.Controller):
                 return records
 
         if method.startswith('_'):
-            raise Exception("Access denied")
+            raise Exception("Access Denied: Underscore prefixed methods cannot be remotely called")
 
         return getattr(request.registry.get(model), method)(request.cr, request.uid, *args, **kwargs)
 
@@ -1683,8 +1685,6 @@ class Reports(http.Controller):
             if 'ids' in action['datas']:
                 report_ids = action['datas'].pop('ids')
             report_data.update(action['datas'])
-        if not report_ids:
-            raise ValueError("action['datas']['ids'] and context['active_ids'] are undefined")
 
         report_id = report_srv.report(
             request.session.db, request.session.uid, request.session.password,

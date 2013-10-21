@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import collections
+
 import mock
 import unittest2
+
 from openerp.addons.web.http import request as req
-from openerp.addons.web.http import set_request
+
+from . import common
 
 from ..controllers import main
 
@@ -12,11 +15,10 @@ class Placeholder(object):
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
-class LoadTest(unittest2.TestCase):
+class LoadTest(common.MockRequestCase):
     def setUp(self):
+        super(LoadTest, self).setUp()
         self.menu = main.Menu()
-        self.tmp_req = set_request(mock.Mock())
-        self.tmp_req.__enter__()
 
         # Have self.request.session.model() return a different mock object for
         # each model (but always the same mock for a given model name)
@@ -31,9 +33,9 @@ class LoadTest(unittest2.TestCase):
         }]
 
     def tearDown(self):
-        self.tmp_req.__exit__()
         del self.MockMenus
         del self.menu
+        super(LoadTest, self).tearDown()
 
     def test_empty(self):
         self.MockMenus.search.return_value = []

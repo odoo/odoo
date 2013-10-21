@@ -62,8 +62,21 @@ instance.web.DataExport = instance.web.Dialog.extend({
             });
         }).change();
 
+        var got_domain = this.getParent().get_active_domain().then(function (domain) {
+            if (domain === undefined) {
+                self.ids_to_export = self.getParent().get_selected_ids();
+                self.domain = self.dataset.domain;
+            }
+            else {
+                self.ids_to_export = false;
+                self.domain = domain;
+            }
+            self.on_show_domain();
+        });
+
         return $.when(
             got_fields,
+            got_domain,
             this.rpc('/web/export/formats', {}).done(this.do_setup_export_formats),
             this.show_exports_list());
     },
@@ -195,6 +208,9 @@ instance.web.DataExport = instance.web.Dialog.extend({
         } else {
             self.showcontent(record.id);
         }
+    },
+    on_show_domain: function() {
+        this.$el.find('tr').first().find('td').append(QWeb.render('ExportTreeView-Domain', {'record': this}));
     },
     on_show_data: function(result, after) {
         var self = this;
@@ -384,27 +400,17 @@ instance.web.DataExport = instance.web.Dialog.extend({
 
         var export_format = this.$el.find("#export_format").val();
 
-        this.getParent().get_active_domain().then(function (domain) {
-            if (domain === undefined) {
-                var ids_to_export = self.getParent().get_selected_ids();
-                var domain = self.dataset.domain;
-            }
-            else {
-                var ids_to_export = false;
-                var domain = domain;
-            }
-            instance.web.blockUI();
-            self.session.get_file({
-                url: '/web/export/' + export_format,
-                data: {data: JSON.stringify({
-                    model: self.dataset.model,
-                    fields: exported_fields,
-                    ids: ids_to_export,
-                    domain: domain,
-                    import_compat: !!self.$el.find("#import_compat").val(),
-                })},
-                complete: instance.web.unblockUI,
-            });
+        instance.web.blockUI();
+        this.session.get_file({
+            url: '/web/export/' + export_format,
+            data: {data: JSON.stringify({
+                model: this.dataset.model,
+                fields: exported_fields,
+                ids: this.ids_to_export,
+                domain: this.domain,
+                import_compat: !!this.$el.find("#import_compat").val(),
+            })},
+            complete: instance.web.unblockUI,
         });
     },
     close: function() {

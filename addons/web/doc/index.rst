@@ -3,8 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to OpenERP Web's documentation!
-=======================================
+OpenERP Web Reference Documentation
+===================================
+
+See also the `OpenERP Web Training`_.
+
+.. _OpenERP Web Training: https://doc.openerp.com/trunk/training/
 
 Basics
 ------
