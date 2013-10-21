@@ -561,12 +561,16 @@ class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
     _inherit = 'ir.qweb.field'
 
+    def precision(self, cr, uid, column, options=None, context=None):
+        _, precision = column.digits or (None, None)
+        return precision
+
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
-        width, precision = column.digits or (None, None)
+        precision = self.precision(cr, uid, column, options=options, context=context)
         fmt = '{value}' if precision is None else '{value:.{precision}f}'
 
         return werkzeug.utils.escape(
-            fmt.format(value=value, width=width, precision=precision, ))
+            fmt.format(value=value, precision=precision, ))
 
 class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'
