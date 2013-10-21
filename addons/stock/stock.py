@@ -1700,6 +1700,7 @@ class stock_move(osv.osv):
         """ Cancels the moves and if all moves are cancelled it cancels the picking.
         @return: True
         """
+        procurement_obj = self.pool.get('procurement.order')
         context = context or {}
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
@@ -1707,7 +1708,12 @@ class stock_move(osv.osv):
                         _('You cannot cancel a stock move that has been set to \'Done\'.'))
             if move.reserved_quant_ids:
                 self.pool.get("stock.quant").quants_unreserve(cr, uid, move, context=context)
-            if move.move_dest_id:
+            if context.get('cancel_procurement'):
+                if move.propagate:
+                    procurement_ids = procurement_obj.search(cr, uid, [('move_dest_id', '=', move.id)], context=context)
+                    procurement_obj.cancel(cr, uid, procurement_ids, context=context)
+            elif move.move_dest_id:
+                #cancel chained moves
                 if move.propagate:
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
                 elif move.move_dest_id.state == 'waiting':

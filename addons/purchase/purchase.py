@@ -1082,6 +1082,11 @@ class procurement_order(osv.osv):
         'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order'),
     }
 
+    def propagate_cancel(self, cr, uid, procurement, context=None):
+        if procurement.rule_id.action == 'buy' and procurement.purchase_line_id:
+            self.pool.get('purchase.order.line').write(cr, uid, [procurement.purchase_line_id.id], {'state': 'cancel'}, context=context)
+        return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)
+        
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id:
             print procurement.rule_id.action
