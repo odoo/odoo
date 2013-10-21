@@ -102,13 +102,13 @@ class purchase_order(osv.osv):
         for id in ids:
             res[id] = [0.0,0.0]
         cr.execute('''SELECT
-                p.purchase_id,sum(m.product_qty), m.state
+                p.order_id, sum(m.product_qty), m.state
             FROM
                 stock_move m
             LEFT JOIN
-                stock_picking p on (p.id=m.picking_id)
+                purchase_order_line p on (p.id=m.purchase_line_id)
             WHERE
-                p.purchase_id IN %s GROUP BY m.state, p.purchase_id''',(tuple(ids),))
+                p.order_id IN %s GROUP BY m.state, p.order_id''',(tuple(ids),))
         for oid,nbr,state in cr.fetchall():
             if state=='cancel':
                 continue
