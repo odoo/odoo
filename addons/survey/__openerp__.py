@@ -61,5 +61,6 @@ user name and password for the invitation of the survey.
     'images': ['images/survey_answers.jpeg', 'images/survey_pages.jpeg', 'images/surveys.jpeg'],
     'css': ['static/src/css/survey.css'],
     'js': ['static/src/js/survey.js'],
+    'category' : 'Survey'
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
