@@ -13,6 +13,7 @@ import math
 import werkzeug.utils
 
 from openerp.osv import osv, orm, fields
+import openerp.tools
 
 _logger = logging.getLogger(__name__)
 
@@ -592,6 +593,39 @@ class FloatConverter(osv.AbstractModel):
 
         return werkzeug.utils.escape(
             lang.format(fmt.format(precision=precision), value, grouping=True))
+
+class DateConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.date'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        lang = self.user_lang(cr, uid, context=context)
+
+        parse_format = openerp.tools.DEFAULT_SERVER_DATE_FORMAT
+        out_format = lang.date_format.encode('utf-8')
+
+        if isinstance(value, basestring):
+            value = datetime.datetime.strptime(value, parse_format)
+
+        return value.strftime(out_format)
+
+class DateTimeConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.datetime'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        lang = self.user_lang(cr, uid, context=context)
+
+        parse_format = openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT
+        out_format = (u"%s %s" % (lang.date_format, lang.time_format)).encode('utf-8')
+
+        if isinstance(value, basestring):
+            value = datetime.datetime.strptime(value, parse_format)
+
+        value = column.context_timestamp(
+            cr, uid, timestamp=value, context=context)
+
+        return value.strftime(out_format)
 
 class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'

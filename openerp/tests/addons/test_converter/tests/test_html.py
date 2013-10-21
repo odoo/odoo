@@ -263,5 +263,30 @@ class TestHTMLExport(TestBasicExport):
         value = converter(input)
         self.assertEqual(value, input)
 
+class TestDatetimeExport(TestBasicExport):
+    def setUp(self):
+        super(TestDatetimeExport, self).setUp()
+        # set user tz to known value
+        Users = self.registry('res.users')
+        Users.write(self.cr, self.uid, self.uid, {
+            'tz': 'Pacific/Niue'
+        }, context=None)
+
+    def test_date(self):
+        converter = self.get_converter('date')
+
+        value = converter('2011-05-03')
+
+        # default lang/format is US
+        self.assertEqual(value, '05/03/2011')
+
+    def test_datetime(self):
+        converter = self.get_converter('datetime')
+
+        value = converter('2011-05-03 11:12:13')
+
+        # default lang/format is US
+        self.assertEqual(value, '05/03/2011 00:12:13')
+
 # o2m, m2m?
 # reference?
