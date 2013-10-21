@@ -85,7 +85,7 @@
                                     <img class="media-object" t-att-src="partner_id.img('image_small')"/>
                                 </a>
                                 <div class="media-body" style="min-height: 64px;">
-                                    <a class="media-heading" t-href="/partners/#{ partner_id.id }/"><span t-field="partner_id.parent_id"/> <span t-field="partner_id.name"/></a> - <span t-field="partner_id.grade_id"/>
+                                    <a class="media-heading" t-href="/partners/#{ partner_id.id }/"><span t-field="partner_id.parent_id"/> <span t-field="partner_id.name"/></a> <t t-if="partner_id.grade_id"> - <span t-field="partner_id.grade_id"/> </t>
                                     <t t-if="partner_id.website_short_description"><div t-field="partner_id.website_short_description"/></t>
                                 </div>
                             </div>

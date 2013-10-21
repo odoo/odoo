@@ -14,7 +14,7 @@
             <field name="sequence">3</field>
         </record>
         <record id="res_partner_grade_platinium" model="res.partner.grade">
-            <field name="name">Platinium</field>
+            <field name="name">Platinum</field>
             <field name="sequence">4</field>
         </record>
 
@@ -56,7 +56,11 @@
             <field name="grade_id" ref="res_partner_grade_gold"/>
             <field name="partner_weight">10</field>
         </record>
-
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="grade_id" ref="res_partner_grade_gold"/>
+            <field name="partner_weight">10</field>
+        </record>
+        
         <record id="base.res_partner_9" model="res.partner">
             <field name="grade_id" ref="res_partner_grade_platinium"/>
             <field name="partner_weight">10</field>
