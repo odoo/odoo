@@ -38,19 +38,35 @@ class stock_move(osv.osv):
             workflow.trg_trigger(uid, 'stock.move', id, cr)
         return res
 
-#
-# Inherit of picking to add the link to the PO
-#
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
+
+    def _get_to_invoice(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for picking in self.browse(cr, uid, ids, context=context):
+            res[picking.id] = False
+            for move in picking.move_lines:
+                if move.purchase_line_id and move.purchase_line_id.order_id.invoice_method == 'picking':
+                    if not move.move_orig_ids:
+                        res[picking.id] = True
+        return res
+
+    def _get_picking_to_recompute(self, cr, uid, ids, context=None):
+        picking_ids = set()
+        for move in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
+            if move.picking_id:
+                picking_ids.add(move.picking_id.id)
+        return list(picking_ids)
+
     _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
-            ondelete='set null', select=True),
+        'reception_to_invoice': fields.function(_get_to_invoice, type='boolean', string='Invoiceable on incoming shipment?',
+               help='Does the picking contains some moves related to a purchase order invoiceable on the reception?',
+               store={
+                   'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 10),
+                   'stock.move': (_get_picking_to_recompute, ['purchase_line_id', 'picking_id'], 10),
+               }),
     }
 
-    _defaults = {
-        'purchase_id': False,
-    }
 
     # TODO: Invoice based on receptions
     # Here is how it should work:
