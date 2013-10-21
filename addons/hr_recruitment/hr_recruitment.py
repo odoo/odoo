@@ -205,7 +205,7 @@ class hr_applicant(osv.Model):
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
-        'response': fields.integer("Response"),
+        'response_id': fields.many2one('survey.response', 'applicant_id'),
         'reference': fields.char('Referred By', size=128),
         'source_id': fields.many2one('hr.recruitment.source', 'Source'),
         'day_open': fields.function(_compute_day, string='Days to Open', \
@@ -313,7 +313,7 @@ class hr_applicant(osv.Model):
             context = {}
         record = self.browse(cr, uid, ids, context=context)
         record = record and record[0]
-        context.update({'survey_id': record.survey.id, 'response_id': [record.response], 'response_no': 0, })
+        context.update({'survey_id': record.survey.id, 'response_id': [record.response_id], 'response_no': 0, })
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 

@@ -32,7 +32,7 @@ class hr_evaluation_report(osv.osv):
         'overpass_delay':fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
-        'request_id': fields.many2one('survey.request', 'Request_id', readonly=True),
+        'response_id': fields.many2one('survey.response', 'Response_id', readonly=True),
         'closed': fields.date("closed", readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
@@ -66,7 +66,7 @@ class hr_evaluation_report(osv.osv):
                      date_trunc('day',s.create_date) as create_date,
                      to_char(s.create_date, 'YYYY-MM-DD') as day,
                      s.employee_id,
-                     l.request_id,
+                     l.response_id,
                      s.plan_id,
                      s.rating,
                      s.date as deadline,
@@ -91,7 +91,7 @@ class hr_evaluation_report(osv.osv):
                      s.employee_id,
                      s.date,
                      s.date_close,
-                     l.request_id,
+                     l.response_id,
                      s.rating,
                      s.plan_id
             )
