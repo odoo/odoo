@@ -32,23 +32,22 @@ class google_service(osv.osv_memory):
     _name = 'google.service'
 
     def generate_refresh_token(self, cr, uid, service, authorization_code, context=None):
-        if authorization_code:
-            ir_config = self.pool['ir.config_parameter']
-            client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service)
-            client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_secret' % service)
-            redirect_uri = ir_config.get_param(cr, SUPERUSER_ID, 'google_redirect_uri')
+        ir_config = self.pool['ir.config_parameter']
+        client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service)
+        client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_secret' % service)
+        redirect_uri = ir_config.get_param(cr, SUPERUSER_ID, 'google_redirect_uri')
 
-            #Get the Refresh Token From Google And store it in ir.config_parameter
-            headers = {"Content-type": "application/x-www-form-urlencoded"}
-            data = dict(code=authorization_code, client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, grant_type="authorization_code")
-            data = urllib.urlencode(data)
-            try:
-                req = urllib2.Request("https://accounts.google.com/o/oauth2/token", data, headers)
-                content = urllib2.urlopen(req).read()
-            except urllib2.HTTPError:
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"), context=context)
+        #Get the Refresh Token From Google And store it in ir.config_parameter
+        headers = {"Content-type": "application/x-www-form-urlencoded"}
+        data = dict(code=authorization_code, client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, grant_type="authorization_code")
+        data = urllib.urlencode(data)
+        try:
+            req = urllib2.Request("https://accounts.google.com/o/oauth2/token", data, headers)
+            content = urllib2.urlopen(req).read()
+        except urllib2.HTTPError:
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"), context=context)
 
-            content = simplejson.loads(content)
+        content = simplejson.loads(content)
         return content.get('refresh_token')
 
     def _get_google_token_uri(self, cr, uid, service, scope, context=None):
