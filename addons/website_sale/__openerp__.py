@@ -19,6 +19,7 @@ OpenERP E-Commerce
     ],
     'demo': [
         'website_sale_demo.xml',
+        'demo/website_sale_homepage_page.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Events banner for homepage -->
+
+        <template id="website_event_homepage_page" inherit_id="website_sale.website_sale_homepage_page" name="Event banner for Homepage">
+
+            <xpath expr="//*[@id='shop_banner']/div" position="inside">
+                <div style="background-image: url(http://localhost:8069/website/static/src/img/banner/aqua.jpg);" class="item text_only">
+                    <div class="container">
+                        <div contenteditable="false" class="carousel-caption content">
+                            <h2>Promote Your Events</h2>
+
+                            <h3>Sell Tickets Online</h3>
+
+                            <p><a href="/event" class="btn btn-success btn-large">Sample of Events</a></p>
+                        </div>
+
+                        <div class="carousel-image hidden-xs">
+                            <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image" contenteditable="true"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+        </template>
+
+    </data>
+</openerp>
