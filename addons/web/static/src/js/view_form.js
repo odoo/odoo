@@ -4216,6 +4216,7 @@ var lazy_build_o2m_kanban_view = function() {
 
 instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2ManyTags",
+    tag_template: "FieldMany2ManyTag",
     init: function() {
         this._super.apply(this, arguments);
         instance.web.form.CompletionFieldMixin.init.call(this);
@@ -4223,13 +4224,9 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         this._display_orderer = new instance.web.DropMisordered();
         this._drop_shown = false;
     },
-    initialize_content: function() {
-        if (this.get("effective_readonly"))
-            return;
+    initialize_texttext: function(){
         var self = this;
-        var ignore_blur = false;
-        self.$text = this.$("textarea");
-        self.$text.textext({
+        return {
             plugins : 'tags arrow autocomplete',
             autocomplete: {
                 render: function(suggestion) {
@@ -4280,7 +4277,15 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                     },
                 },
             },
-        }).bind('getSuggestions', function(e, data) {
+        }
+    },
+    initialize_content: function() {
+        if (this.get("effective_readonly"))
+            return;
+        var self = this;
+        var ignore_blur = false;
+        self.$text = this.$("textarea");
+        self.$text.textext(self.initialize_texttext()).bind('getSuggestions', function(e, data) {
             var _this = this;
             var str = !!data ? data.query || '' : '';
             self.get_search_result(str).done(function(result) {
@@ -4328,6 +4333,24 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     get_search_blacklist: function() {
         return this.get("value");
     },
+    map_tag: function(data){
+        return _.map(data, function(el) {return {name: el[1], id:el[0]};})
+    },
+    get_render_data: function(ids){
+        var self = this;
+        var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
+        return dataset.name_get(ids);
+    },
+    render_tag: function(data) {
+        var self = this;
+        if (! self.get("effective_readonly")) {
+            self.tags.containerElement().children().remove();
+            self.$('textarea').css("padding-left", "3px");
+            self.tags.addTags(self.map_tag(data));
+        } else {
+            self.$el.html(QWeb.render(self.tag_template, {elements: data}));
+        }
+    },
     render_value: function() {
         var self = this;
         var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
@@ -4340,17 +4363,12 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                 indexed[el[0]] = el;
             });
             data = _.map(values, function(el) { return indexed[el]; });
-            if (! self.get("effective_readonly")) {
-                self.tags.containerElement().children().remove();
-                self.$('textarea').css("padding-left", "3px");
-                self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
-            } else {
-                self.$el.html(QWeb.render("FieldMany2ManyTag", {elements: data}));
-            }
-        };
+            self.render_tag(data);
+        }
         if (! values || values.length > 0) {
-            this._display_orderer.add(dataset.name_get(values)).done(handle_names);
-        } else {
+            this._display_orderer.add(self.get_render_data(values)).done(handle_names);
+        }
+        else{
             handle_names([]);
         }
     },
