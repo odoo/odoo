@@ -32,7 +32,8 @@ class product(osv.osv):
 
 
 class event(osv.osv):
-    _inherit = 'event.event'
+    _name = 'event.event'
+    _inherit = ['event.event','website.seo.metadata']
     _columns = {
         'twitter_hashtag': fields.char('Twitter Hashtag'),
         'website_published': fields.boolean('Available in the website'),
@@ -45,9 +46,6 @@ class event(osv.osv):
             string='Website Messages',
             help="Website communication history",
         ),
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
     _defaults = {
         'website_published': False,
