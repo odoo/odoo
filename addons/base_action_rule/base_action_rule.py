@@ -63,7 +63,10 @@ class base_action_rule(osv.osv):
         'sequence': fields.integer('Sequence',
             help="Gives the sequence order when displaying a list of rules."),
         'kind': fields.selection(
-            [('on_create', 'On Creation'), ('on_write', 'On Update'), ('on_time', 'Based on Timed Condition')],
+            [('on_create', 'On Creation'),
+             ('on_write', 'On Update'),
+             ('on_create_or_write', 'On Creation & Update'),
+             ('on_time', 'Based on Timed Condition')],
             string='When to Run'),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
             help="When should the condition be triggered. If present, will be checked by the scheduler. If empty, will be checked at creation and update.",
@@ -97,9 +100,9 @@ class base_action_rule(osv.osv):
 
     def onchange_kind(self, cr, uid, ids, kind, context=None):
         clear_fields = []
-        if kind == 'on_create':
+        if kind in ['on_create', 'on_create_or_write']:
             clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
-        elif kind == 'on_write':
+        elif kind in ['on_write', 'on_create_or_write']:
             clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_type']
         elif kind == 'on_time':
             clear_fields = ['filter_pre_id']
@@ -156,7 +159,7 @@ class base_action_rule(osv.osv):
             new_id = old_create(cr, uid, vals, context=context)
 
             # retrieve the action rules to run on creation
-            action_dom = [('model', '=', model), ('kind', '=', 'on_create')]
+            action_dom = [('model', '=', model), ('kind', 'in', ['on_create', 'on_create_or_write'])]
             action_ids = self.search(cr, uid, action_dom, context=context)
 
             # check postconditions, and execute actions on the records that satisfy them
@@ -180,7 +183,7 @@ class base_action_rule(osv.osv):
             ids = [ids] if isinstance(ids, (int, long, str)) else ids
 
             # retrieve the action rules to run on update
-            action_dom = [('model', '=', model), ('kind', '=', 'on_write')]
+            action_dom = [('model', '=', model), ('kind', 'in', ['on_write', 'on_create_or_write'])]
             action_ids = self.search(cr, uid, action_dom, context=context)
             actions = self.browse(cr, uid, action_ids, context=context)
 
