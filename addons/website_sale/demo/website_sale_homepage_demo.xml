@@ -5,9 +5,9 @@
         <!--  Shop Banner for homepage -->
 
         <template id="website_sale_homepage" inherit_id="website.homepage" name="Shop banner for Homepage">
-            <xpath expr="//div[@id='wrap']" position="before">
+            <xpath expr="//div[@id='wrap']/section" position="before">
 
-                <div id="shop_banner" contenteditable="false" class="carousel slide oe_medium mb32" data-snippet-id="carousel">
+                <div id="shop_banner" contenteditable="false" class="oe_snippet_body carousel slide oe_medium mb32" data-snippet-id="carousel">
                     <div class="carousel-inner">
                         <div style="background-image: url('/website/static/src/img/banner/color_splash.jpg')" class="item text_only active">
                             <div class="container">
@@ -27,7 +27,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
             </xpath>
