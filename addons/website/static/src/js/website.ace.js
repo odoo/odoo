@@ -100,6 +100,13 @@
                 self.aceEditor.resize();
                 self.$el.width(width);
             }
+            function storeEditorWidth() {
+                window.localStorage.setItem('ace_editor_width', self.$el.width());
+            }
+            function readEditorWidth() {
+                var width = window.localStorage.getItem('ace_editor_width');
+                return parseInt(width || 720, 10);
+            }
             function startResizing (e) {
                 self.refX = e.pageX;
                 self.resizing = true;
@@ -113,6 +120,7 @@
                     var width = self.$el.width() - offset;
                     self.refX = e.pageX;
                     resizeEditor(width);
+                    storeEditorWidth();
                 }
             }
             document.body.addEventListener('mouseup', stopResizing, true);
@@ -121,6 +129,7 @@
             $('button[data-action=edit]').click(function () {
                self.close();
             });
+            resizeEditor(readEditorWidth());
         },
         loadViews: function (views) {
             var self = this;
