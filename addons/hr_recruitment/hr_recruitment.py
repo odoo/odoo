@@ -56,10 +56,6 @@ class hr_recruitment_stage(osv.osv):
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
-        'bar_fold': fields.boolean('Folded in Status Bar',
-                                   help='This stage is folded in the form view when'
-                                   'using the statusbar widget.'),
-        'bar_color': fields.integer('Status Bar Color'),
         'closed': fields.boolean('Closing Stage',
                                  help='Indicates whether this field is the end of'
                                  'the maangement process. This is for example a'
