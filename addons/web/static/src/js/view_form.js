@@ -5523,7 +5523,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                 return self.get_distant_fields().then(function(fields) {
                     return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
                         .read_slice(_.union(_.keys(self.distant_fields), ['id']), {}).then(function (records) {
-                            console.log(records);
                             var ids = _.pluck(records, 'id');
 
                             // var ids = _.map(records, function (val) {return val.id;});

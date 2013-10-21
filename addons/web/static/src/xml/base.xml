@@ -1221,7 +1221,7 @@
 </t>
 <t t-name="FieldStatus.content">
     <t t-foreach="widget.selection.unfolded" t-as="item">
-        <li t-attf-class="#{item.bar_color and ('oe_bar_' + item.bar_color)} #{item.id === widget.get('value') and 'oe_active'}" t-att-data-id="item.id">
+        <li t-attf-class="#{item.id === widget.get('value') and 'oe_active'}" t-att-data-id="item.id">
             <span class="label"><t t-esc="item.name"/></span>
             <!-- are you mit ? -->
             <span class="arrow"><span></span></span>
