@@ -69,6 +69,14 @@ class Float(orm.AbstractModel):
 
     value_from_string = float
 
+class Date(orm.AbstractModel):
+    _name = 'website.qweb.field.date'
+    _inherit = ['website.qweb.field', 'ir.qweb.field.date']
+
+class DateTime(orm.AbstractModel):
+    _name = 'website.qweb.field.datetime'
+    _inherit = ['website.qweb.field', 'ir.qweb.field.datetime']
+
 class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'
     _inherit = ['website.qweb.field', 'ir.qweb.field.text']
