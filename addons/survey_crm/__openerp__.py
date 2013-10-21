@@ -36,6 +36,6 @@ This module adds a survey mass mailing button inside the more option of lead vie
     ],
     'installable': True,
     'auto_install': True,
-    'category': 'Hidden',
+    'category': 'Survey',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
