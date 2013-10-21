@@ -9,12 +9,12 @@
             <field name="model">survey.print.statistics</field>
             <field name="arch" type="xml">
                 <form string="Survey Print Statistics" version="7.0">
-                    <field name="survey_ids"/>
-                    <footer>
+                    <header>
                         <button name="action_next" string="Print" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
+                    </header>
+                    <field name="survey_ids"/>
                 </form>
             </field>
         </record>
@@ -31,7 +31,10 @@
         </record>
 
         <menuitem name="Surveys Statistics" action="action_view_survey_print_statistics" id="menu_print_survey_statistics"
-            parent="base.next_id_10" icon="STOCK_PRINT" groups="base.group_tool_manager"/>
+            parent="base.next_id_10" icon="STOCK_PRINT" groups="base.group_survey_manager"/>
+
+        <menuitem name="Surveys Statistics" action="action_view_survey_print_statistics" id="menu_survey_print_survey_statistics"
+            parent="menu_reporting" sequence="3"/>
 
     </data>
 </openerp>

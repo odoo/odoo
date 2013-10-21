@@ -27,7 +27,6 @@ from openerp import tools
 from openerp.report import report_sxw
 from openerp.report.interface import report_rml
 from openerp.tools import to_xml
-from openerp.tools.translate import _
 
 class survey_browse_response(report_rml):
     def create(self, cr, uid, ids, datas, context):
@@ -70,7 +69,7 @@ class survey_browse_response(report_rml):
             rml +="""
                     <fill color="gray"/>
                     <setFont name="Helvetica" size="10"/>
-                    <drawRightString x='"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+"""' y="0.6cm">"""+_('Page : ')+"""<pageNumber/> </drawRightString>"""
+                    <drawRightString x='"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+"""' y="0.6cm">Page : <pageNumber/> </drawRightString>"""
         rml +="""</pageGraphics>
                     </pageTemplate>
                 </template>
@@ -202,7 +201,7 @@ class survey_browse_response(report_rml):
 
         surv_resp_line_obj = registry['survey.response.line']
         surv_obj = registry['survey']
-
+        
         for response in surv_resp_obj.browse(cr, uid, response_id):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
                 tbl_width = float(_tbl_widths.replace('cm', ''))
@@ -210,29 +209,29 @@ class survey_browse_response(report_rml):
                 resp_create = tools.ustr(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S')))
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
-                            <td><para style="terp_default_9_Bold">""" + _('Print Date : ') + """</para></td>
+                            <td><para style="terp_default_9_Bold">Print Date : </para></td>
                             <td><para style="terp_default_9">""" + to_xml(rml_obj.formatLang(time.strftime("%Y-%m-%d %H:%M:%S"),date_time=True)) + """</para></td>
                             <td><para style="terp_default_9"></para></td>
-                            <td><para style="terp_default_9_Bold">""" +_('Answered by : ') + """</para></td>
-                            <td><para style="terp_default_9">""" + to_xml(response.user_id.login or '') + """</para></td>
+                            <td><para style="terp_default_9_Bold">Answered by : </para></td>
+                            <td><para style="terp_default_9">""" + to_xml(response.partner_id.name or '') + """</para></td>
                           </tr>
                           <tr>
                             <td><para style="terp_default_9"></para></td>
                             <td><para style="terp_default_9"></para></td>
                             <td><para style="terp_default_9"></para></td>
-                            <td><para style="terp_default_9_Bold">""" +_('Answer Date : ') + """</para></td>
+                            <td><para style="terp_default_9_Bold">Answer Date : </para></td>
                             <td><para style="terp_default_9">""" + to_xml(resp_create) +  """</para></td>
                           </tr>
                         </blockTable><para style="P2"></para>"""
 
-                status = _("Not Finished")
-                if response.state == "done": status = _("Finished")
+                status = "Not Finished"
+                if response.state == "done": status = "Finished"
                 colwidth =  str(tbl_width - 7) + "cm,"
                 colwidth +=  "7cm"
                 rml += """<blockTable colWidths='""" + str(colwidth) + """' style="title_tbl">
                             <tr>
                             <td><para style="title">""" + to_xml(tools.ustr(survey.title)) + """</para><para style="P2"><font></font></para></td>
-                            <td><para style="descriptive_text_heading">"""+_('Status :- ')+ to_xml(tools.ustr(status)) + """</para><para style="P2"><font></font></para></td>
+                            <td><para style="descriptive_text_heading">Status :- """ + to_xml(tools.ustr(status)) + """</para><para style="P2"><font></font></para></td>
                             </tr>
                         </blockTable>"""
 
@@ -243,7 +242,7 @@ class survey_browse_response(report_rml):
 
                 for page in survey.page_ids:
                     rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="page_tbl">
-                                  <tr><td><para style="page">"""+_('Page :- ') + to_xml(tools.ustr(page.title or '')) + """</para></td></tr>
+                                  <tr><td><para style="page">Page :- """ + to_xml(tools.ustr(page.title or '')) + """</para></td></tr>
                               </blockTable>"""
                     if page.note:
                         rml += """<para style="P2"></para>
@@ -303,7 +302,7 @@ class survey_browse_response(report_rml):
 
                             else:
                                 rml +="""<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
-                                             <tr><td> <para style="response">"""+ _('No Answer') + """</para></td> </tr>
+                                             <tr><td> <para style="response">No Answer</para></td> </tr>
                                         </blockTable>"""
 
                         elif que.type in ['multiple_choice_only_one_ans','multiple_choice_multiple_ans']:
@@ -427,7 +426,7 @@ class survey_browse_response(report_rml):
                                          <tr>  <td> <para style="response">No Answer</para></td> </tr>
                                         </blockTable>"""
 
-                        elif que.type in ['matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans', 'rating_scale', 'matrix_of_drop_down_menus']:
+                        elif que.type in ['matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans', 'rating_scale']:
                             if len(answer) and answer[0].state == "done":
                                 if que.type  in ['matrix_of_choices_only_one_ans', 'rating_scale'] and que.comment_column:
                                     pass
@@ -482,9 +481,7 @@ class survey_browse_response(report_rml):
                                         for res_ans in answer[0].response_answer_ids:
                                             if res_ans.answer_id.id == ans.id and res_ans.column_id.id == matrix_ans[mat_col][0]:
                                                 comment_value = to_xml(tools.ustr(res_ans.comment_field))
-                                                if que.type in ['matrix_of_drop_down_menus']:
-                                                    value = """<para style="response">""" + to_xml(tools.ustr(res_ans.value_choice)) + """</para>"""
-                                                elif que.type in ['matrix_of_choices_only_one_ans', 'rating_scale']:
+                                                if que.type in ['matrix_of_choices_only_one_ans', 'rating_scale']:
                                                     value = """<illustration><fill color="white"/>
                                                                 <circle x="0.3cm" y="-0.18cm" radius="0.22 cm" fill="yes" stroke="yes"/>
                                                                 <fill color="gray"/>
@@ -499,9 +496,7 @@ class survey_browse_response(report_rml):
                                                                 </illustration>"""
                                                 break
                                             else:
-                                                if que.type in ['matrix_of_drop_down_menus']:
-                                                    value = """"""
-                                                elif que.type in ['matrix_of_choices_only_one_ans','rating_scale']:
+                                                if que.type in ['matrix_of_choices_only_one_ans','rating_scale']:
                                                     value = """<illustration><fill color="white"/>
                                                                     <circle x="0.3cm" y="-0.18cm" radius="0.22 cm" fill="yes" stroke="yes"  round="0.1cm"/>
                                                                 </illustration>"""

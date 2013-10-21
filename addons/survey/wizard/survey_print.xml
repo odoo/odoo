@@ -9,6 +9,11 @@
             <field name="model">survey.print</field>
             <field name="arch" type="xml">
                 <form string="Survey Print" version="7.0">
+                    <header>
+                        <button name="action_next" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
                     <group col="4">
                         <separator string="Survey" colspan="4"/>
                         <field name="survey_ids" nolabel="1" colspan="4" />
@@ -18,11 +23,6 @@
                         <field name="page_number" colspan="4"/>
                         <field name="without_pagebreak" colspan="4"/>
                     </group>
-                    <footer>
-                        <button name="action_next" string="Print" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </footer>
                 </form>
             </field>
         </record>
@@ -39,7 +39,7 @@
 
         <menuitem name="Print Surveys" id="menu_print_survey_form" sequence="1"
             action="action_view_survey_print" parent="base.next_id_10"
-            groups="base.group_tool_manager" icon="STOCK_PRINT"/>
+            groups="base.group_survey_manager" icon="STOCK_PRINT"/>
 
     </data>
 </openerp>

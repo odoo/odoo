@@ -241,16 +241,16 @@ class survey_analysis(report_rml):
                         rml += """</blockTable>"""
 
                         if que.is_comment_require:
-#                            if que.make_comment_field:
-#                                cr.execute("select count(id) from survey_response_line where question_id = %s and comment != ''", (que.id,))
-#                                tot_res = cr.fetchone()[0]
-#                                tot_avg = 0.00
-#                                if que.tot_resp:
-#                                    tot_avg = round(float(tot_res * 100)/ que.tot_resp,2)
-#                                rml+="""<blockTable colWidths="280.0,120,100.0" style="Table1"><tr><td><para style="answer">""" +to_xml(tools.ustr(que.comment_label)) + """</para></td>
-#                                        <td><para style="answer">""" + str(tot_avg) + """%</para></td>
-#                                        <td><para style="answer">""" + tools.ustr(tot_res) + """</para></td></tr></blockTable>"""
-#                            else:
+                           # if que.make_comment_field:
+                           #     cr.execute("select count(id) from survey_response_line where question_id = %s and comment != ''", (que.id,))
+                           #     tot_res = cr.fetchone()[0]
+                           #     tot_avg = 0.00
+                           #     if que.tot_resp:
+                           #         tot_avg = round(float(tot_res * 100)/ que.tot_resp,2)
+                           #     rml+="""<blockTable colWidths="280.0,120,100.0" style="Table1"><tr><td><para style="answer">""" +to_xml(tools.ustr(que.comment_label)) + """</para></td>
+                           #             <td><para style="answer">""" + str(tot_avg) + """%</para></td>
+                           #             <td><para style="answer">""" + tools.ustr(tot_res) + """</para></td></tr></blockTable>"""
+                           # else:
                             cr.execute("select count(id) from survey_response_line where question_id = %s and comment != ''", (que.id,))
                             tot_res = cr.fetchone()[0]
                             rml += """<blockTable colWidths="450.0,50.0" style="Table1"><tr><td><para style="answer_right">""" + to_xml(tools.ustr(que.comment_label)) + """</para></td>
@@ -301,12 +301,12 @@ class survey_analysis(report_rml):
                             rating_weight_sum = 0
                             for mat_col in range(1, len(matrix_ans)):
                                 cr.execute("select count(sra.answer_id) from survey_response_line sr, survey_response_answer sra\
-                                     where sr.id = sra.response_id and  sra.answer_id = %s and sra.column_id ='%s'", (ans.id,matrix_ans[mat_col][0]))
+                                     where sr.id = sra.response_line_id and  sra.answer_id = %s and sra.column_id ='%s'", (ans.id,matrix_ans[mat_col][0]))
                                 tot_res = cr.fetchone()[0]
                                 cr.execute("select count(sra.answer_id),sqc.rating_weight from survey_response_line sr, survey_response_answer sra ,\
-                                        survey_question_column_heading sqc where sr.id = sra.response_id and \
+                                        survey_question_column_heading sqc where sr.id = sra.response_line_id and \
                                         sqc.question_id = sr.question_id  and sra.answer_id = %s and sqc.title ='%s'\
-+                                       group by sra.answer_id,sqc.rating_weight", (ans.id,matrix_ans[mat_col][1]))
+                                        group by sra.answer_id,sqc.rating_weight", (ans.id,matrix_ans[mat_col][1]))
                                 col_weight =  cr.fetchone()
 
                                 if not col_weight:
@@ -331,54 +331,6 @@ class survey_analysis(report_rml):
                             rml += """<td><para style="answer_right">""" + tools.ustr(percantage) + """</para></td>
                                 <td><para style="answer_right">""" + tools.ustr(res_count) + """</para></td></tr>"""
                         rml += """</blockTable>"""
-
-                    elif que.type in['matrix_of_drop_down_menus']:
-                        for column in que.column_heading_ids:
-                            rml += """<blockTable colWidths="500" style="Table1"><tr>
-                                <td><para style="answer">""" + to_xml(tools.ustr(column.title)) + """</para></td></tr></blockTable>"""
-                            menu_choices = column.menu_choice.split('\n')
-                            cols_widhts = []
-                            cols_widhts.append(200)
-                            for col in range(0, len(menu_choices) + 1):
-                                cols_widhts.append(float(300 / (len(menu_choices) + 1)))
-                            colWidths = ",".join(map(tools.ustr, cols_widhts))
-                            rml += """<blockTable colWidths=" """ + colWidths + """ " style="Table1"><tr>
-                                <td><para style="response"></para></td>"""
-
-                            for menu in menu_choices:
-                                rml += """<td><para style="response">""" + to_xml(tools.ustr(menu)) + """</para></td>"""
-                            rml += """<td><para style="response-bold">Answer Count</para></td></tr>"""
-                            cr.execute("select count(id), sra.answer_id from survey_response_answer sra \
-                                     where sra.column_id='%s' group by sra.answer_id ", (column.id,))
-                            res_count = cr.dictfetchall()
-                            cr.execute("select count(sra.id),sra.value_choice, sra.answer_id, sra.column_id from survey_response_answer sra \
-                                 where sra.column_id='%s' group by sra.value_choice ,sra.answer_id, sra.column_id", (column.id,))
-                            calc_percantage = cr.dictfetchall()
-
-                            for ans in que.answer_choice_ids:
-                                rml += """<tr><td><para style="answer_right">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>"""
-                                for mat_col in range(0, len(menu_choices)):
-                                    calc = 0
-                                    response = 0
-                                    for res in res_count:
-                                        if res['answer_id'] == ans.id: response = res['count']
-                                    for per in calc_percantage:
-                                        if ans.id == per['answer_id'] and menu_choices[mat_col] == per['value_choice']:
-                                            calc = per['count']
-                                    percantage = 0.00
-
-                                    if calc and response:
-                                        percantage = round((float(calc)* 100) / response,2)
-                                    if calc:
-                                        rml += """<td><para style="answer_bold">""" +tools.ustr(percantage)+"% (" +  tools.ustr(calc) + """)</para></td>"""
-                                    else:
-                                        rml += """<td><para style="answer">""" +tools.ustr(percantage)+"% (" +  tools.ustr(calc) + """)</para></td>"""
-
-                                response = 0
-                                for res in res_count:
-                                    if res['answer_id'] == ans.id: response = res['count']
-                                rml += """<td><para style="answer_right">""" + tools.ustr(response) + """</para></td></tr>"""
-                            rml += """</blockTable>"""
 
                     elif que.type in['numerical_textboxes']:
                         rml += """<blockTable colWidths="240.0,20,100.0,70,70.0" style="Table1">
@@ -414,8 +366,8 @@ class survey_analysis(report_rml):
                         </tr>
                         <tr>
                             <td><para style="Standard1"></para></td>
-                            <td><para style="Standard1">Skipped Question</para></td>
-                            <td><para style="Standard1">""" + tools.ustr(survey.tot_start_survey - que.tot_resp) + """</para></td>
+                            <td><para style="Standard1">Skipped Questions</para></td>
+                            <td><para style="Standard1">""" + tools.ustr(que.tot_resp - survey.tot_start_survey) + """</para></td>
                         </tr>
                         </blockTable>"""
             rml += """</story>"""

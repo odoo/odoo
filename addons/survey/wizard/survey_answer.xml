@@ -5,23 +5,31 @@
         <!--
             Survey Question Wizard
          -->
-        <record id="view_survey_question_message" model="ir.ui.view">           
+        <record id="view_survey_question_message" model="ir.ui.view">
             <field name="name">Survey Answer</field>
             <field name="model">survey.question.wiz</field>
             <field name="arch" type="xml">
-                <form string="Your Messages"  version="7.0">
-                    <field name="name" nolabel="1" colspan="4" />
+                <form string="Your Survey"  version="7.0">
+                    <field name="survey_id" nolabel="1" colspan="4" invisible="1"/>
+                    <sheet>
+                        <div>
+                            <br/><br/>
+                            <h2>Thanks for completing this survey.</h2>
+                        </div>
+                        <div groups="portal.group_anonymous">
+                            <h2>Now join OpenERP to facilitate your professional life.</h2>
+                            <ul style="margin-top: 26px;">
+                                <li>Surveys</li>
+                                <li>Accounting</li>
+                                <li>CRM and Marketing</li>
+                                <li>Project Managment</li>
+                                <li>...</li>
+                            </ul>
+                            <div style="margin-bottom: 20px;margin-top: 30px;font-weight: bold;">Register with OpenERP today!</div>
+                            <a href="https://accounts.openerp.com/" class="oe_survey_button">Sign Up FREE</a>
+                        </div>
+                    </sheet>
                 </form>
-            </field>
-        </record>
-
-        <record id="view_survey_question_message1" model="ir.ui.view">
-            <field name="name">Survey Search</field>
-            <field name="model">survey.question.wiz</field>
-            <field name="arch" type="xml">
-                <search string="Your Messages">
-                    <field name="name"/>
-                </search>
             </field>
         </record>
 
@@ -31,6 +39,15 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+        </record>
+
+        <record id="action_filling" model="ir.actions.server">
+            <field name="name">Filling Survey</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="model_survey_question_wiz"/>
+            <field name="code">action = self._action_filling(cr, uid, None, context)</field>
+            <field name="condition">True</field>
         </record>
 
     </data>
