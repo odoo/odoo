@@ -118,6 +118,9 @@
             document.body.addEventListener('mouseup', stopResizing, true);
             self.$('.ace_gutter').mouseup(stopResizing).mousedown(startResizing).click(stopResizing);
             $(document).mousemove(updateWidth);
+            $('button[data-action=edit]').click(function () {
+               self.close();
+            });
         },
         loadViews: function (views) {
             var self = this;
