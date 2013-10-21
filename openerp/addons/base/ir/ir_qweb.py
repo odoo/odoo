@@ -9,6 +9,7 @@ import urllib
 import xml # FIXME use lxml and etree
 
 import Image
+import math
 import werkzeug.utils
 
 from openerp.osv import osv, orm, fields
@@ -557,6 +558,24 @@ class FieldConverter(osv.AbstractModel):
         return self.qweb_object().render_element(
             source_element, t_att, g_att, qweb_context, content or '')
 
+    def user_lang(self, cr, uid, context):
+        """
+        Fetches the res.lang object corresponding to the language code stored
+        in the user's context. Fallbacks to en_US if no lang is present in the
+        context *or the language code is not valid*.
+
+        :returns: res.lang browse_record
+        """
+        if context is None: context = {}
+
+        lang_code = context.get('lang') or 'en_US'
+        Lang = self.pool['res.lang']
+
+        lang_ids = Lang.search(cr, uid, [('code', '=', lang_code)], context=context) \
+               or  Lang.search(cr, uid, [('code', '=', 'en_US')], context=context)
+
+        return Lang.browse(cr, uid, lang_ids[0], context=context)
+
 class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
     _inherit = 'ir.qweb.field'
@@ -567,10 +586,12 @@ class FloatConverter(osv.AbstractModel):
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
         precision = self.precision(cr, uid, column, options=options, context=context)
-        fmt = '{value}' if precision is None else '{value:.{precision}f}'
+        fmt = '%s' if precision is None else '%.{precision}f'
+
+        lang = self.user_lang(cr, uid, context)
 
         return werkzeug.utils.escape(
-            fmt.format(value=value, precision=precision, ))
+            lang.format(fmt.format(precision=precision), value, grouping=True))
 
 class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'
@@ -658,22 +679,35 @@ class MonetaryConverter(osv.AbstractModel):
         Currency = self.pool['res.currency']
         display = self.display_currency(cr, uid, options)
 
-        symbol_pre = symbol_post = space_pre = space_post = u''
-        if display.position == 'before':
-            space_pre = u' '
-            symbol_pre = display.symbol
-        else:
-            space_post = u' '
-            symbol_post = display.symbol
+        # lang.format mandates a sprintf-style format. These formats are non-
+        # minimal (they have a default fixed precision instead), and
+        # lang.format will not set one by default. currency.round will not
+        # provide one either. So we need to generate a precision value
+        # (integer > 0) from the currency's rounding (a float generally < 1.0).
+        #
+        # The log10 of the rounding should be the number of digits involved if
+        # negative, if positive clamp to 0 digits and call it a day.
+        # nb: int() ~ floor(), we want nearest rounding instead
+        precision = int(round(math.log10(display.rounding)))
+        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
 
-        return u'{symbol_pre}{space_pre}' \
-               u'<span class="oe_currency_value">{0}</span>' \
-               u'{space_post}{symbol_post}'.format(
-            Currency.round(cr, uid, display, record[field_name]),
-            space_pre=space_pre,
-            symbol_pre=symbol_pre,
-            space_post=space_post,
-            symbol_post=symbol_post,)
+        lang = self.user_lang(cr, uid, context=context)
+        formatted_amount = lang.format(
+            fmt, Currency.round(cr, uid, display, record[field_name]),
+            grouping=True, monetary=True)
+
+        pre = post = u''
+        if display.position == 'before':
+            pre = u'{symbol} '
+        else:
+            post = u' {symbol}'
+
+        return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(
+            formatted_amount,
+            pre=pre, post=post,
+        ).format(
+            symbol=display.symbol,
+        )
 
     def display_currency(self, cr, uid, options):
         return self.qweb_object().eval_object(
