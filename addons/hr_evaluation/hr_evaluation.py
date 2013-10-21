@@ -206,7 +206,7 @@ class hr_evaluation(osv.osv):
                     if phase.wait:
                         wait = True
                     if not wait:
-                        hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [int_id], context=context)
+                        hr_eval_inter_obj.survey_req_open(cr, uid, [int_id], context=context)
 
                     if (not wait) and phase.mail_feature:
                         body = phase.mail_body % {'employee_name': child.name, 'user_signature': child.user_id.signature,
@@ -303,8 +303,8 @@ class hr_evaluation_interview(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def survey_req_waiting_answer(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'waiting_answer'}, context=context)
+    def survey_req_open(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, { 'state': 'open'}, context=context)
         return True
 
     def survey_req_done(self, cr, uid, ids, context=None):
@@ -322,7 +322,7 @@ class hr_evaluation_interview(osv.osv):
                 if child.state != "done":
                     flag = True
             if not flag and wating_id:
-                self.survey_req_waiting_answer(cr, uid, [wating_id], context=context)
+                self.survey_req_open(cr, uid, [wating_id], context=context)
         self.write(cr, uid, ids, { 'state': 'done'}, context=context)
         return True
 
