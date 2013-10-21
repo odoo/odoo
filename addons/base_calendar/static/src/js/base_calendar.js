@@ -57,17 +57,13 @@ instance.base_calendar = {}
             return dataset.call('get_attendee_detail',[ids, self.getParent().datarecord.id || false]);
         },
         render_tag: function(data){
+            this._super(data);
             var self = this;
             if (! self.get("effective_readonly")) {
-                self.tags.containerElement().children().remove();
-                self.$('textarea').css("padding-left", "3px");
-                self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
                 var tag_element = self.tags.tagElements();
                 _.each(data,function(value, key){
                     $(tag_element[key]).find(".custom-edit").addClass(data[key][2])
                 });
-            } else {
-                self.$el.html(QWeb.render(self.tag_template, {elements: data}));
             }
         }
     });
