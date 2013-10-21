@@ -476,7 +476,8 @@ class FieldConverter(osv.AbstractModel):
     _name = 'ir.qweb.field'
 
     def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context):
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
         """
         Generates the metadata attributes (prefixed by ``data-oe-`` for the
         root node of the field conversion. Attribute values are escaped by the
@@ -505,17 +506,17 @@ class FieldConverter(osv.AbstractModel):
             ('data-oe-expression', t_att['field']),
         ]
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         """ Converts a single value to its HTML version/output
         """
         return werkzeug.utils.escape(value)
 
-    def record_to_html(self, cr, uid, field_name, record, column, options=None):
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         """ Converts the specified field of the browse_record ``record`` to
         HTML
         """
         return self.value_to_html(
-            cr, uid, record[field_name], column, options=None)
+            cr, uid, record[field_name], column, options=None, context=context)
 
     def to_html(self, cr, uid, field_name, record, options,
                 source_element, t_att, g_att, qweb_context, context=None):
@@ -531,7 +532,7 @@ class FieldConverter(osv.AbstractModel):
             content = self.record_to_html(
                 cr, uid, field_name, record,
                 record._model._all_columns[field_name].column,
-                options)
+                options, context=context)
         except Exception:
             _logger.warning("Could not get field %s for model %s",
                             field_name, record._model._name, exc_info=True)
@@ -560,7 +561,7 @@ class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         width, precision = column.digits or (None, None)
         fmt = '{value}' if precision is None else '{value:.{precision}f}'
 
@@ -571,7 +572,7 @@ class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         """
         Escapes the value and converts newlines to br. This is bullshit.
         """
@@ -581,8 +582,7 @@ class SelectionConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.selection'
     _inherit = 'ir.qweb.field'
 
-    def record_to_html(self, cr, uid, field_name, record, column, options=None):
-        # FIXME: context
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         value = record[field_name]
         selection = dict(fields.selection.reify(
             cr, uid, record._model, column))
@@ -593,7 +593,7 @@ class ManyToOneConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.many2one'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         # value may be a browse_null
         if not value: return ''
         return werkzeug.utils.escape(value.name_get()[0][1]).replace('\n', '<br>\n')
@@ -602,7 +602,7 @@ class HTMLConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.html'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         return value
 
 class ImageConverter(osv.AbstractModel):
@@ -617,7 +617,7 @@ class ImageConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.image'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         try:
             image = Image.open(cStringIO.StringIO(value.decode('base64')))
             image.verify()
@@ -640,13 +640,13 @@ class MonetaryConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def to_html(self, cr, uid, field_name, record, options,
-                source_element, t_att, g_att, qweb_context):
+                source_element, t_att, g_att, qweb_context, context=None):
         options['_qweb_context'] = qweb_context
         return super(MonetaryConverter, self).to_html(
             cr, uid, field_name, record, options,
-            source_element, t_att, g_att, qweb_context)
+            source_element, t_att, g_att, qweb_context, context=context)
 
-    def record_to_html(self, cr, uid, field_name, record, column, options):
+    def record_to_html(self, cr, uid, field_name, record, column, options, context=None):
         Currency = self.pool['res.currency']
         display = self.display_currency(cr, uid, options)
 
