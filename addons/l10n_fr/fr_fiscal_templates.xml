@@ -2,6 +2,12 @@
 <openerp>
     <data>
 
+    <!-- To solve bug 1240265, we have to delete all fiscal position templates before each update.
+         The valid ones will be re-created later during the update.
+         /!\ This must be executed *before* loading the fiscal position templates!! -->
+    <delete model="account.fiscal.position.template" search="[('chart_template_id','=',ref('l10n_fr_pcg_chart_template'))]"/>
+
+
     <!-- = = = = = = = = = = = = = = = -->
     <!-- Fiscal Position Templates     -->
     <!-- = = = = = = = = = = = = = = = -->
