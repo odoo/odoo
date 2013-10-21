@@ -636,6 +636,10 @@ class MonetaryConverter(osv.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
     ``display_currency``.
 
+    The currency is used for formatting *and rounding* of the float value. It
+    is assumed that the linked res_currency has a non-empty rounding value and
+    res.currency's ``round`` method is used to perform rounding.
+
     .. note:: the monetary converter internally adds the qweb context to its
               options mapping, so that the context is available to callees.
               It's set under the ``_qweb_context`` key.
