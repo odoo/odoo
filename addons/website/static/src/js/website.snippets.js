@@ -341,13 +341,13 @@
                     });
                 },
                 stop: function(ev, ui){
-		    if (action === 'insert' && ! dropped) {
-		        var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first()
-			if (el) {
-			    el.after($toInsert)
-			    dropped = true;
-			}
-		    }
+                    if (action === 'insert' && ! dropped) {
+                        var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first()
+                        if (el) {
+                            el.after($toInsert)
+                            dropped = true;
+                        }
+                    }
 
                     $('.oe_drop_zone').droppable('destroy').remove();
                     if (dropped) {
@@ -967,23 +967,25 @@
 
         _drag_and_drop_after_insert_dropzone: function(){
             var self = this;
-            var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
-                var $row = $(this);
-                var width = $row.innerWidth();
-                var pos = 0;
-                while (width > pos + self.size.width) {
-                    var $last = $row.find("> .oe_drop_zone:last");
-                    $last.each(function () {
-                        pos = $(this).position().left;
-                    });
-                    if (width > pos + self.size.width) {
-                        $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
-                        var $add_drop = $last.clone();
-                        $row.append($add_drop);
-                        self._drag_and_drop_active_drop_zone($add_drop);
-                    }
-                }
-            });
+            // commented for perf
+
+            // var $zones = $(".row:has(> .oe_drop_zone)").each(function () {
+            //     var $row = $(this);
+            //     var width = $row.innerWidth();
+            //     var pos = 0;
+            //     while (width > pos + self.size.width) {
+            //         var $last = $row.find("> .oe_drop_zone:last");
+            //         $last.each(function () {
+            //             pos = $(this).position().left;
+            //         });
+            //         if (width > pos + self.size.width) {
+            //             $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
+            //             var $add_drop = $last.clone();
+            //             $row.append($add_drop);
+            //             self._drag_and_drop_active_drop_zone($add_drop);
+            //         }
+            //     }
+            // });
         },
         _drag_and_drop_start: function () {
             this._super();
@@ -1075,14 +1077,6 @@
                 self.set_options_style();
                 self.set_options_background(".item.active", 'ul[name="carousel-background"]');
                 self.$target.carousel();
-            });
-
-            this.$target.on('dblclick', '.item.active .carousel-image img', function (event) {
-                var $img = $(event.currentTarget);
-                var editor = new website.editor.ImageDialog();
-                editor.on('start', self, function (o) {o.url = $img.attr("src");});
-                editor.on('save', self, function (o) {$img.attr("src", o.url);});
-                editor.appendTo($('body'));
             });
 
             this.rebind_event();
