@@ -7,7 +7,7 @@
             <field name="res_model">hr.evaluation.interview</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
-            <field name="domain">[('is_evaluation' ,'=', True), ('user_id', '=', uid),('state','=','waiting_answer')]</field>
+            <field name="domain">[('is_evaluation' ,'=', True), ('state','=','wait')]</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
         </record>
 

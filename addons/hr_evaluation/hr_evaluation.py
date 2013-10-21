@@ -304,7 +304,7 @@ class hr_evaluation_interview(osv.osv):
         return res
 
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'waiting_answer'}, context=context)
+        self.write(cr, uid, ids, { 'state': 'wait'}, context=context)
         return True
 
     def survey_req_done(self, cr, uid, ids, context=None):
