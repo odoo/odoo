@@ -194,30 +194,24 @@ class lang(osv.osv):
 
     def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False, context=None):
         """ Format() will return the language-specific output for float values"""
-
         if percent[0] != '%':
             raise ValueError("format() must be given exactly one %char format specifier")
 
-        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0], monetary)
-        eval_lang_grouping = eval(lang_grouping)
-
         formatted = percent % value
+
         # floats and decimal ints need special action!
-        if percent[-1] in 'eEfFgG':
-            seps = 0
-            parts = formatted.split('.')
+        if grouping:
+            lang_grouping, thousands_sep, decimal_point = \
+                self._lang_data_get(cr, uid, ids[0], monetary)
+            eval_lang_grouping = eval(lang_grouping)
 
-            if grouping:
-                parts[0], seps = intersperse(parts[0], eval_lang_grouping, thousands_sep)
+            if percent[-1] in 'eEfFgG':
+                parts = formatted.split('.')
+                parts[0], _ = intersperse(parts[0], eval_lang_grouping, thousands_sep)
 
-            formatted = decimal_point.join(parts)
-            while seps:
-                sp = formatted.find(' ')
-                if sp == -1: break
-                formatted = formatted[:sp] + formatted[sp+1:]
-                seps -= 1
-        elif percent[-1] in 'diu':
-            if grouping:
+                formatted = decimal_point.join(parts)
+
+            elif percent[-1] in 'diu':
                 formatted = intersperse(formatted, eval_lang_grouping, thousands_sep)[0]
 
         return formatted
