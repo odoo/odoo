@@ -54,6 +54,7 @@ Dashboard / Reports for Purchase Management will include:
         'purchase_sequence.xml',
         'company_view.xml',
         'purchase_data.xml',
+        'purchase_data.yml',
         'wizard/purchase_order_group_view.xml',
         'wizard/purchase_line_invoice_view.xml',
         'purchase_report.xml',

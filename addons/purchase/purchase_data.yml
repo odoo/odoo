@@ -1,0 +1,6 @@
+-
+  !python {model: ir.values, id: purchase_default_set}: |
+    whr = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0'), context=context)
+    self.set(cr, uid, 'default',False,'picking_type_id', [('purchase.order', False)], whr.in_type_id.id, True, False, False, False, True)
+
+
