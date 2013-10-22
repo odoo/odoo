@@ -8,7 +8,6 @@
         <template id="website.theme" name="Theme">
             <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
-            <link id="website_css" rel='stylesheet' href='/website/static/src/css/style.css' t-ignore="true"/>
         </template>
 
         <template id="layout" name="Main layout">
@@ -462,30 +461,12 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                   <div class="oe_structure"/>
                   <div class="container mb32">
                       <div class="row col-wrap" id="aboutus">
-                          <section class="headertop needhead col-sm-12 text-center parallax" id="header-section" style="background-position: 50% -64px;" data-snippet-id="parallax">
-                              <header class="container">
-                                  <div class="row-fluid">
-                                      <div class="wrap-hero">
-                                          <div class="hero-unit text-center">
-                                              <!--LOGO-->
-                                              <div class="logo">
-                                                 <a href="#" title="openerp">
-                                                    <img src="/website/static/src/img/logo.png" alt="logo"/>
-                                                 </a>
-                                              </div>
-                                              <!--/ LOGO-->
-
-                                              <div class="inner-wrap-hero">
-                                                  <h1 class="text-center main-color">
-                                                      <span class="active">Great Product for Great People</span>
-                                                  </h1>
-                                              </div>
-
-                                          </div>
-                                      </div><!-- / HERO UNIT-->
-                                  </div><!-- / HERO WRAP-->
-                              </header><!-- / HEADER MARKETING SLOGAN container-->
-                          </section>
+                          <div class="col-sm-12 text-center" data-snippet-id="parallax">
+                              <div class="parallax oe_structure oe_big" style="background-image: url('/website/static/src/img/parallax/background1.jpg')" data-stellar-background-ratio="0.3">
+                                 <h1 class="pt90">About us</h1>
+                                 <h3 class="text-muted">A passion for great products</h3>
+                              </div>
+                          </div>
                           <div class="col-sm-8 mt16">
                               <p>
                                   We are a team of passionated people whose goal is to improve everyone's
