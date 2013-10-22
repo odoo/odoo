@@ -170,8 +170,6 @@ class stock_picking(osv.osv):
         return {'value': result.get('value',{}), 'warning':warning}
 
 
-# FIXME:(class stock_picking_in and stock_picking_out) this is a temporary workaround because of a framework bug (ref: lp:996816). 
-# It should be removed as soon as the bug is fixed
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
@@ -218,7 +216,7 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False,
-            fiscal_position=False, flag=False, context=None):
+            fiscal_position=False, flag=False, warehouse_id=False, context=None):
         warning = {}
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
@@ -239,7 +237,7 @@ class sale_order_line(osv.osv):
 
         result =  super(sale_order_line, self).product_id_change( cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
-            lang, update_tax, date_order, packaging, fiscal_position, flag, context=context)
+            lang, update_tax, date_order, packaging, fiscal_position, flag, warehouse_id=warehouse_id, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
