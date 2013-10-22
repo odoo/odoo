@@ -73,9 +73,15 @@ class Date(orm.AbstractModel):
     _name = 'website.qweb.field.date'
     _inherit = ['website.qweb.field', 'ir.qweb.field.date']
 
+    def from_html(self, cr, uid, model, column, element, context=None):
+        raise NotImplementedError("Can not parse and save localized dates")
+
 class DateTime(orm.AbstractModel):
     _name = 'website.qweb.field.datetime'
     _inherit = ['website.qweb.field', 'ir.qweb.field.datetime']
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        raise NotImplementedError("Can not parse and save localized datetimes")
 
 class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'
