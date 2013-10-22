@@ -1,0 +1,13 @@
+-
+  !python {model: stock.warehouse}: |
+    pull_obj = self.pool.get('procurement.rule')
+    wh_to_assign = ['stock_warehouse_shop0','stock_warehouse_shop1','warehouse_icecream']
+    for wh_ref in wh_to_assign:
+      warehouse = self.browse(cr, uid, ref('stock.' + wh_ref), context=context)
+      buy_pull_vals= self._get_buy_pull_rule(cr, uid, warehouse, context=context)
+      pull_id = self.pool.get('procurement.rule').create(cr, uid, buy_pull_vals, context=context)
+      self.write(cr,uid,warehouse.id,{'buy_pull_id':pull_id},context=context)
+
+
+
+

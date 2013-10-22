@@ -51,6 +51,19 @@
                 </xpath>
             </field>
         </record>
+        
+        <record id="view_warehouse_inherited" model="ir.ui.view">
+            <field name="name">Stock Warehouse Inherited</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='default_resupply_wh_id']" position="after">
+                    <field name="can_buy_for_resupply" groups="stock.group_adv_location"/>
+                </xpath>
+            </field>
+        </record>
+      
+
 
         <record id="action_picking_tree_picking_to_invoice" model="ir.actions.act_window">
             <field name="name">On Incoming Shipments</field>

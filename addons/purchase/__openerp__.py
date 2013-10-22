@@ -64,6 +64,7 @@ Dashboard / Reports for Purchase Management will include:
         'report/purchase_report_view.xml',
         'board_purchase_view.xml',
         'edi/purchase_order_action_data.xml',
+        'purchase_stock_data.yml',
         'res_config_view.xml',
     ],
     'test': [
@@ -86,6 +87,7 @@ Dashboard / Reports for Purchase Management will include:
     'demo': [
         'purchase_order_demo.yml',
         'purchase_demo.xml',
+        'purchase_stock_demo.yml',
     ],
     'installable': True,
     'auto_install': False,

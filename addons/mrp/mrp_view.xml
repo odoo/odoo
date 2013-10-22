@@ -1028,5 +1028,16 @@
                 </xpath>
             </field>
         </record>
+        
+        <record id="view_warehouse_inherited" model="ir.ui.view">
+            <field name="name">Stock Warehouse Inherited</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='default_resupply_wh_id']" position="after">
+                    <field name="can_manufacture_for_resupply" groups="stock.group_adv_location"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

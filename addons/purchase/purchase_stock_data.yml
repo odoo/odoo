@@ -1,0 +1,6 @@
+-
+  !python {model: stock.warehouse}: |
+    main_warehouse = self.browse(cr, uid, ref('stock.warehouse0'), context=context)
+    buy_pull_vals= self._get_buy_pull_rule(cr, uid, main_warehouse, context=context)
+    pull_id = self.pool.get('procurement.rule').create(cr, uid, buy_pull_vals, context=context)
+    self.write(cr,uid,main_warehouse.id,{'buy_pull_id':pull_id},context=context)

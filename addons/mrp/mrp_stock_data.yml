@@ -1,0 +1,10 @@
+-
+  Set "can_manufacture_for_resupply" at true for warehouse0 by default 
+-
+  !python {model: stock.warehouse}: |
+    main_warehouse = self.browse(cr, uid, ref('stock.warehouse0'), context=context)
+    main_warehouse.can_manufacture_for_resupply = True
+    manufacture_pull_vals= self._get_manufacture_pull_rule(cr, uid, main_warehouse, context=context) 
+    pull_id = self.pool.get('procurement.rule').create(cr, uid, manufacture_pull_vals, context=context)
+    self.write(cr,uid,main_warehouse.id,{'manufacture_pull_id':pull_id, 'can_manufacture_for_resupply':True},context=context)
+

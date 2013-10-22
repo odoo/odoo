@@ -21,6 +21,7 @@
 
 from openerp.osv import fields
 from openerp.osv import osv
+from openerp.tools.translate import _
 
 
 class StockMove(osv.osv):
@@ -179,4 +180,88 @@ class split_in_production_lot(osv.osv_memory):
         return new_moves
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class stock_warehouse(osv.osv):
+    _inherit = 'stock.warehouse'
+    _columns = {                
+        'can_manufacture_for_resupply': fields.boolean('Can manufacture for resupply this warehouse'),
+        'manufacture_pull_id': fields.many2one('procurement.rule', 'Manufacture rule'),    
+    }
+    _defaults= {
+        'can_manufacture_for_resupply': False,
+        'manufacture_pull_id' : False
+    }
+            
+    def _get_manufacture_pull_rule(self, cr, uid, warehouse, context=None):    
+        if not warehouse.can_manufacture_for_resupply:
+          return False
+#             
+        route_obj = self.pool.get('stock.location.route')        
+        data_obj = self.pool.get('ir.model.data')
+        try:
+            manufacture_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_manufacture')[1]
+        except:
+            manufacture_route_id = route_obj.search(cr, uid, [('name', 'like', _('Manufacture'))], context=context)
+            manufacture_route_id = manufacture_route_id and manufacture_route_id[0] or False
+        if not manufacture_route_id:
+            raise osv.except_osv(_('Error!'), _('Can\'t find any generic Manufacture route.'))                
+        
+        dest_loc = warehouse.in_type_id
+        return {
+            'name': warehouse.name + ': ' + _(' Manufacture') + ' -> ' + dest_loc.name,            
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'route_id': manufacture_route_id,
+            'action': 'move',
+            'picking_type_id': dest_loc.id,
+            'procure_method': 'make_to_order',
+            'active': True,
+        }
+        
+    def create_routes(self, cr, uid, ids, warehouse, context=None):        
+        pull_obj = self.pool.get('procurement.rule')                   
+        res = super(stock_warehouse, self).create_routes(cr, uid, ids, warehouse, context=context)
+        manufacture_pull_vals = self._get_manufacture_pull_rule(cr, uid, warehouse, context=context)
+        if manufacture_pull_vals:
+            manufacture_pull_id = pull_obj.create(cr, uid, manufacture_pull_vals, context=context)
+            res['manufacture_pull_id'] = manufacture_pull_id
+        else:
+            res['manufacture_pull_id'] = False
+        return res
+        
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        pull_obj = self.pool.get('procurement.rule')
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+            
+        #only if update and checkbox have changed !
+        if not vals.get("can_manufacture_for_resupply",None) is None:            
+            
+            if vals.get("can_manufacture_for_resupply",False):
+                for warehouse in self.browse(cr, uid, ids, context=context):
+                    if not warehouse.manufacture_pull_id:
+                        warehouse.can_manufacture_for_resupply = True
+                        manufacture_pull_vals = self._get_manufacture_pull_rule(cr, uid, warehouse, context=context)
+                        manufacture_pull_id = pull_obj.create(cr, uid, manufacture_pull_vals, context=context)
+                        vals['manufacture_pull_id'] = manufacture_pull_id
+            else:
+                 for warehouse in self.browse(cr, uid, ids, context=context):
+                    if warehouse.manufacture_pull_id:
+                          manufacture_pull_id = pull_obj.unlink(cr, uid, warehouse.manufacture_pull_id.id, context=context)
+                          vals['manufacture_pull_id'] = False
+                
+        return super(stock_warehouse,self).write(cr, uid, ids, vals, context=None)
+    
+    def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
+        all_routes = super(stock_warehouse,self).get_all_routes_for_wh(cr,uid,warehouse,context=context)
+        if warehouse.can_manufacture_for_resupply and warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id:
+            all_routes += [warehouse.manufacture_pull_id.route_id.id]        
+        return all_routes
+
+    def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
+        res = super(stock_warehouse,self)._get_all_products_to_resupply(cr, uid, warehouse, context=context)
+        for product_id in res:
+            for route in self.pool.get('product.product').browse(cr, uid, product_id, context=context).route_ids:                       
+                if warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id and route.id == warehouse.manufacture_pull_id.route_id.id:                    
+                    res.remove(product_id)                    
+                    break                
+        return res
