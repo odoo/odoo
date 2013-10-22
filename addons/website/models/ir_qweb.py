@@ -203,4 +203,9 @@ class Monetary(orm.AbstractModel):
     _inherit = ['website.qweb.field', 'ir.qweb.field.monetary']
 
     def from_html(self, cr, uid, model, column, element, context=None):
-        return float(element.find('span').text)
+        lang = self.user_lang(cr, uid, context=context)
+
+        value = element.find('span').text.strip()
+
+        return float(value.replace(lang.thousands_sep, '')
+                          .replace(lang.decimal_point, '.'))
