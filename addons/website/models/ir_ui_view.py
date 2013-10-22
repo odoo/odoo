@@ -2,6 +2,7 @@
 
 from lxml import etree, html
 from openerp.osv import osv, fields
+from urlparse import urlparse
 
 
 class view(osv.osv):
@@ -91,6 +92,23 @@ class view(osv.osv):
             arch = previous_arch
         return arch
 
+    def _normalize_urls(self, element):
+        attr = None
+        if element.tag == 'form':
+            attr = 'action' if 'action' in element.attrib else None
+        elif element.tag in ['a', 'link']:
+            attr = 'href' if 'href' in element.attrib else None
+        elif element.tag in ['frame', 'iframe', 'img', 'input', 'script']:
+            attr = 'src' if 'src' in element.attrib else None
+        if attr:
+            value = element.attrib[attr]
+            if not urlparse(value).scheme:
+                element.attrib.pop(attr)
+                element.attrib['t-' + attr] = value
+        for el in list(element):
+            self._normalize_urls(el)
+        return element
+
     def save(self, cr, uid, res_id, value, xpath=None, context=None):
         """ Update a view section. The view section may embed fields to write
 
@@ -102,6 +120,8 @@ class view(osv.osv):
 
         arch_section = html.fromstring(
             value, parser=html.HTMLParser(encoding='utf-8'))
+
+        self._normalize_urls(arch_section)
 
         if xpath is None:
             # value is an embedded field on its own, not a view section

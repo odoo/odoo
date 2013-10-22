@@ -19,7 +19,7 @@
 
     <!-- List of categories -->
 
-    <template id="categories_recursive">
+    <template id="categories_recursive" name="Category list">
         <li t-att-class="category.id == search.get('category') and 'active' or ''">
             <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/?category=#{ category.id }" t-field="category.name" t-keep-query="search,facettes"></a>
             <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
@@ -32,9 +32,9 @@
         </li>
     </template>
 
-    <!-- Product list --> 
+    <!-- Product list -->
 
-    <template id="products_cart">
+    <template id="products_cart" name="Shopping cart">
       <div class="ribbon-wrapper">
         <div class="ribbon">Promo</div>
       </div>
@@ -65,7 +65,7 @@
       </div>
     </template>
 
-    <template id="products" page="True">
+    <template id="products" name="Products" page="True">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
@@ -108,7 +108,7 @@
                                 t-attf-class="oe_product oe-height-#{td_product['y']*2} #{ td_product['class'] }">
 
                                 <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
-                                  
+
                                   <div class="css_options" t-ignore="true" t-if="editable">
                                     <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
                                       <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
@@ -215,7 +215,7 @@
     </template>
 
 
-    <!-- product --> 
+    <!-- product -->
 
     <template id="product" name="Product">
         <t t-call="website.layout">
@@ -287,7 +287,7 @@
                           <div class="product_price mt16">
                               <h4>
                                   <b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b>
-                              
+
                                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                                     <span class="text-danger" style="text-decoration: line-through;">
                                         <t t-esc="product.product_variant_ids[0].lst_price" /> €
@@ -338,7 +338,7 @@
         </xpath>
     </template>
 
-    <!-- Page Shop my cart --> 
+    <!-- Page Shop my cart -->
 
     <template id="mycart" name="Your Cart" page="True">
         <t t-call="website.layout">
@@ -419,7 +419,7 @@
                                             </a>
                                         </span>
                                     </div>
-                                    
+
                                 </td>
                             </tr>
                         </tbody>
@@ -478,7 +478,7 @@
         </t>
     </template>
 
-    <!-- Page Shop --> 
+    <!-- Page Shop -->
 
     <template id="products_categories" inherit_option_id="website_sale.products" name="Product Categories">
         <xpath expr="//div[@id='products_grid']" position="before">
@@ -622,7 +622,7 @@
                 <div class="row">
                 <div class="col-md-8 oe_mycart">
                     <h3 class="page-header mt16">Set Billing Information
-                        <small t-if="user_id.id == website.public_user.id"> or 
+                        <small t-if="user_id.id == website.public_user.id"> or
                             <a t-if="not partner" t-attf-href="/web#action=redirect&amp;url=#{ request.httprequest.host_url }/shop/checkout/">sign in</a>
                         </small>
                     </h3>

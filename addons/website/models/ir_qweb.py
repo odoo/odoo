@@ -39,12 +39,12 @@ class Field(orm.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context):
+                   source_element, g_att, t_att, qweb_context, context=None):
         column = record._model._all_columns[field_name].column
         return itertools.chain(
             super(Field, self).attributes(cr, uid, field_name, record, options,
                                           source_element, g_att, t_att,
-                                          qweb_context),
+                                          qweb_context, context=context),
             [('data-oe-translate', 1 if column.translate else 0)]
         )
 
@@ -67,7 +67,27 @@ class Float(orm.AbstractModel):
     _name = 'website.qweb.field.float'
     _inherit = ['website.qweb.field', 'ir.qweb.field.float']
 
-    value_from_string = float
+    def from_html(self, cr, uid, model, column, element, context=None):
+        lang = self.user_lang(cr, uid, context=context)
+
+        value = element.text_content().strip()
+
+        return float(value.replace(lang.thousands_sep, '')
+                          .replace(lang.decimal_point, '.'))
+
+class Date(orm.AbstractModel):
+    _name = 'website.qweb.field.date'
+    _inherit = ['website.qweb.field', 'ir.qweb.field.date']
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        raise NotImplementedError("Can not parse and save localized dates")
+
+class DateTime(orm.AbstractModel):
+    _name = 'website.qweb.field.datetime'
+    _inherit = ['website.qweb.field', 'ir.qweb.field.datetime']
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        raise NotImplementedError("Can not parse and save localized datetimes")
 
 class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'
@@ -127,7 +147,7 @@ class Image(orm.AbstractModel):
     _inherit = ['website.qweb.field', 'ir.qweb.field.image']
 
     def to_html(self, cr, uid, field_name, record, options,
-                source_element, t_att, g_att, qweb_context):
+                source_element, t_att, g_att, qweb_context, context=None):
         assert source_element.nodeName != 'img',\
             "Oddly enough, the root tag of an image field can not be img. " \
             "That is because the image goes into the tag, or it gets the " \
@@ -135,9 +155,9 @@ class Image(orm.AbstractModel):
 
         return super(Image, self).to_html(
             cr, uid, field_name, record, options,
-            source_element, t_att, g_att, qweb_context)
+            source_element, t_att, g_att, qweb_context, context=context)
 
-    def record_to_html(self, cr, uid, field_name, record, column, options=None):
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         cls = ''
         if 'class' in options:
             cls = ' class="%s"' % werkzeug.utils.escape(options['class'])
@@ -183,4 +203,9 @@ class Monetary(orm.AbstractModel):
     _inherit = ['website.qweb.field', 'ir.qweb.field.monetary']
 
     def from_html(self, cr, uid, model, column, element, context=None):
-        return float(element.find('span').text)
+        lang = self.user_lang(cr, uid, context=context)
+
+        value = element.find('span').text.strip()
+
+        return float(value.replace(lang.thousands_sep, '')
+                          .replace(lang.decimal_point, '.'))
