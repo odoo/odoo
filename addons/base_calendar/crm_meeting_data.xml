@@ -44,7 +44,7 @@
                     </head>
                     <body>
                         <div style="border-radius: 2px; max-width: 1200px; height: auto;margin-left: auto;margin-right: auto;background-color:#f9f9f9;">
-                            <div style="height: 40px;text-align: center;font-size : 30px;color: #8A89BA;">
+                            <div style="height:auto;text-align: center;font-size : 30px;color: #8A89BA;">
                                 <strong>${object.name}</strong>
                             </div>
                             <div style="height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px">
@@ -65,12 +65,12 @@
                                             <table cellspacing="0" cellpadding="0" border="0" style="margin-top: 15px; margin-left: 10px;font-size: 16px;">
                                                 % if object.location :
                                                     <tr style=" height: 30px;">
-                                                        <td>
+                                                        <td style="vertical-align:top;">
                                                             <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                                 Where
                                                             </div>
                                                         </td>
-                                                        <td colspan="1">
+                                                        <td colspan="1" style="vertical-align:top;">
                                                             <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >
                                                                 : ${object.location}
                                                                 <span style= "color:#A9A9A9; ">(<a href="http://maps.google.com/maps?oi=map&q=${object.location}">View Map</a>)
