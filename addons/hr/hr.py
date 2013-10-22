@@ -157,6 +157,7 @@ class hr_job(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
+        default.update({'employee_ids': []})
         job = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default.update(name=_("%s (copy)") % (job.name))
