@@ -281,21 +281,3 @@ class invite_wizard(osv.osv_memory):
         if 'res_id' in result:
             result['res_id'] = get_real_ids(result['res_id'])
         return result
-
-class res_partner(osv.osv):
-    _inherit = 'res.partner'
-    
-    def get_attendee_detail(self, cr, uid, ids, meeting_id, context=None):
-        datas = []
-        meeting = False
-        if meeting_id:
-            meeting = self.pool.get('crm.meeting').browse(cr, uid, int(meeting_id),context)
-        for partner in self.browse(cr, uid, ids, context=context):
-            data = self.name_get(cr, uid, [partner.id], context)[0]
-            if meeting:
-                for attendee in meeting.attendee_ids:
-                    if attendee.partner_id.id == partner.id:
-                        data = (data[0], data[1], attendee.state)
-            datas.append(data)
-        return datas
-            

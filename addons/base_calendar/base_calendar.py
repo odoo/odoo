@@ -466,7 +466,7 @@ property or property parameter."),
         for attandee in self.browse(cr, uid, ids, context=context):
             meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attandee.id)], context=context)
             if meeting_ids:
-                meeting_obj.message_post(cr, uid, meeting_ids, body=_(("%s has accepted invitation") % (attandee.cn)), context=context)
+                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has accepted invitation") % (attandee.cn)), context=context)
         return res
         
 
@@ -487,7 +487,7 @@ property or property parameter."),
         for attandee in self.browse(cr, uid, ids, context=context):
             meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attandee.id)], context=context)
             if meeting_ids:
-                meeting_obj.message_post(cr, uid, meeting_ids, body=_(("%s has declined invitation") % (attandee.cn)), context=context)
+                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has declined invitation") % (attandee.cn)), context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -707,6 +707,23 @@ class calendar_alarm(osv.osv):
             vals['trigger_date'] = trigger_date
         res = super(calendar_alarm, self).create(cr, uid, vals, context=context)
         return res
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    
+    def get_attendee_detail(self, cr, uid, ids, meeting_id, context=None):
+        datas = []
+        meeting = False
+        if meeting_id:
+            meeting = self.pool.get('crm.meeting').browse(cr, uid, get_real_ids(meeting_id),context)
+        for partner in self.browse(cr, uid, ids, context=context):
+            data = self.name_get(cr, uid, [partner.id], context)[0]
+            if meeting:
+                for attendee in meeting.attendee_ids:
+                    if attendee.partner_id.id == partner.id:
+                        data = (data[0], data[1], attendee.state)
+            datas.append(data)
+        return datas
 
     def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):
