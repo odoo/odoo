@@ -28,19 +28,30 @@ from openerp.tools.translate import _
 import uuid
 from openerp import SUPERUSER_ID
 
+# TO BE REMOVED
+# class survey_type(osv.osv):
+#     _name = 'survey.type'
+#     _description = 'Survey Type'
+#     _columns = {
+#         'name': fields.char("Name", size=128, required=1, translate=True),
+#     }
 
-class survey_type(osv.osv):
-    _name = 'survey.type'
-    _description = 'Survey Type'
-    _columns = {
-        'name': fields.char("Name", size=128, required=1, translate=True),
-    }
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+
 
 class survey(osv.osv):
-    _name = 'survey'
+    '''Settings for a multi-page/multi-question survey.
+    Each survey can have one or more attached pages, and each page can present
+    one or more questions.
+    '''
+
+    _name = 'survey.survey'
     _description = 'Survey'
     _rec_name = 'title'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+
+
+    # Protected methods #
 
     def _needaction_domain_get(self, cr, uid, context=None):
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
@@ -83,14 +94,23 @@ class survey(osv.osv):
             res[survey_browse.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
         return res
 
+
+    # Model fields #
+
     _columns = {
         'title': fields.char('Survey Title', size=128, required=1, translate=True),
-        'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
-        'date_open': fields.datetime('Survey Open Date', readonly=1),
-        'date_close': fields.datetime('Survey Close Date', readonly=1),
-        'max_response_limit': fields.integer('Maximum Answer Limit', help="Set to one if survey is answerable only once"),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Close'), ('cancel', 'Cancelled')], 'Status', required=1),
-        'visible_to_user': fields.boolean('Visible in the survey menu', help="If checked, survey users can see this survey in the kanban view."),
+        'category': fields.char('Category', size=128, translate=True),
+        'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
+        'date_open': fields.datetime('Survey Opening Date', readonly=1), #TODO purpose ?
+        'date_close': fields.datetime('Survey Closing Date', readonly=1), #TODO purpose ?
+        'max_response_limit': fields.integer('Maximum Answer Limit', 
+            help="Set to one if survey is answerable only once"), #TODO field name not expressive
+        'state': fields.selection(
+            [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
+            ('cancel', 'Cancelled')], 'Status', required=1, readonly=1,
+            translate=1),
+        'visible_to_user': fields.boolean('Visible in the survey menu',
+            help="If checked, survey users can see this survey in the kanban view."),
         'authenticate': fields.boolean('A login is required', help="If checked, users who click on the public web link will be redirected to a login page where they must provide a login name and password. If unchecked, they may complete the survey directly."),
         'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
@@ -103,12 +123,15 @@ class survey(osv.osv):
         'email_template_id': fields.many2one('email.template', 'Email Template', ondelete='set null'),
     }
     _defaults = {
-        'state': "draft",
+        'state': 'draft',
         'visible_to_user': True,
         'authenticate': True,
         'date_open': fields.datetime.now,
         'token': lambda s, cr, uid, c: uuid.uuid4(),
     }
+
+
+    # Public methods #
 
     def survey_draft(self, cr, uid, ids, arg):
         return self.write(cr, uid, ids, {'state': 'draft', 'date_open': None})
@@ -277,6 +300,9 @@ class survey(osv.osv):
         return super(survey, self).unlink(cr, uid, ids, context=context)
 
 
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+
+
 class survey_page(osv.osv):
     _name = 'survey.page'
     _description = 'Survey Pages'
@@ -323,6 +349,9 @@ class survey_page(osv.osv):
         return super(survey_page, self).copy(cr, uid, ids, vals, context=context)
 
 
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+
+
 class survey_question(osv.osv):
     _name = 'survey.question'
     _description = 'Survey Question'
@@ -362,18 +391,18 @@ class survey_question(osv.osv):
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id', ' Column heading'),
         'type': fields.selection([('multiple_choice_only_one_ans', 'Multiple Choice (Only One Answer)'),
                 ('multiple_choice_multiple_ans', 'Multiple Choice (Multiple Answer)'),
-                ('matrix_of_choices_only_one_ans', 'Matrix of Choices (Only One Answers Per Row)'),
-                ('matrix_of_choices_only_multi_ans', 'Matrix of Choices (Multiple Answers Per Row)'),
+                ('matrix_of_choices_only_one_ans', 'Matrix of Choices (Only One Answers Per Row)'),  # TDE: replace with matrix that is a container
+                ('matrix_of_choices_only_multi_ans', 'Matrix of Choices (Multiple Answers Per Row)'),  # TDE: replace with matrix that is a container
                 ('rating_scale', 'Rating Scale'),
                 ('single_textbox', 'Single Textbox'),
-                ('multiple_textboxes', 'Multiple Textboxes'),
-                ('multiple_textboxes_diff_type', 'Multiple Textboxes With Different Type'),
+                ('multiple_textboxes', 'Multiple Textboxes'),  # interest ? TDE: should be dropped -> comment box
+                ('multiple_textboxes_diff_type', 'Multiple Textboxes With Different Type'),  # interest ? TDE: should be dropped -> comment box
                 ('comment', 'Comment/Essay Box'),
                 ('numerical_textboxes', 'Numerical Textboxes'),
                 ('date', 'Date'),
-                ('date_and_time', 'Date and Time'),
-                ('descriptive_text', 'Descriptive Text'),
-                ('table', 'Table'),
+                ('date_and_time', 'Date and Time'),  # TDE: rename datetime ^^
+                ('descriptive_text', 'Descriptive Text'),  # TDE: rename free text
+                ('table', 'Table'),  # TDE: drop
             ], 'Question Type', required=1, ),
         'is_comment_require': fields.boolean('Add Comment Field'),
         'comment_label': fields.char('Field Label', translate=True),
@@ -468,8 +497,9 @@ class survey_question(osv.osv):
         return {'value': {}}
 
     def write(self, cr, uid, ids, vals, context=None):
-        questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type', 'required_type', \
-                        'req_ans', 'minimum_req_ans', 'maximum_req_ans', 'column_heading_ids', 'page_id', 'question'])
+        questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type', 
+            'required_type', 'req_ans', 'minimum_req_ans', 'maximum_req_ans',
+            'column_heading_ids', 'page_id', 'question'])
         for question in questions:
             col_len = len(question['column_heading_ids'])
             for col in vals.get('column_heading_ids', []):
@@ -569,6 +599,9 @@ class survey_question(osv.osv):
         }
 
 
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+
+
 class survey_question_column_heading(osv.osv):
     _name = 'survey.question.column.heading'
     _description = 'Survey Question Column Heading'
@@ -602,6 +635,9 @@ class survey_question_column_heading(osv.osv):
         'in_visible_rating_weight': _get_in_visible_rating_weight,
         'in_visible_menu_choice': _get_in_visible_menu_choice,
     }
+
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
 
 
 class survey_answer(osv.osv):
@@ -659,8 +695,11 @@ class survey_answer(osv.osv):
         return data
 
 
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
+
+
 class survey_response(osv.osv):
-    _name = "survey.response"
+    _name = "survey.response"  # survrey.user_answer / user_response
     _rec_name = 'date_create'
 
     _columns = {
@@ -668,7 +707,7 @@ class survey_response(osv.osv):
         'survey_id': fields.many2one('survey', 'Survey', required=1, readonly=1, ondelete='restrict'),
         'date_create': fields.datetime('Create Date', required=1),
         'response_type': fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Answer Type', required=1),
-        'question_ids': fields.one2many('survey.response.line', 'response_id', 'Answer'),
+        'question_ids': fields.one2many('survey.response.line', 'response_id', 'Answer'),  # one2many surveu.user_input.question
         'state': fields.selection([('new', 'Not Started'), ('skip', 'Not Finished'), ('done', 'Finished'), ('cancel', 'Canceled'), ('test', 'Test')], 'Status', readonly=True),
         'token': fields.char("Indentification token", readonly=1),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
@@ -751,21 +790,22 @@ class survey_response(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning!'), _('You cannot duplicate the resource!'))
-
+ 
 
 class survey_response_line(osv.osv):
-    _name = 'survey.response.line'
+    _name = 'survey.response.line'  # surver.user_input.question
     _description = 'Survey Response Line'
     _rec_name = 'date_create'
     _columns = {
-        'response_id': fields.many2one('survey.response', 'Answer', ondelete='cascade'),
-        'date_create': fields.datetime('Create Date', required=1),
-        'state': fields.selection([('draft', 'Draft'), ('done', 'Answered'), ('skip', 'Skiped')], 'Status', readonly=True),
+        'response_id': fields.many2one('survey.response', 'Answer', ondelete='cascade'),  # towards  survey.uyser_intpu.question
+        'date_create': fields.datetime('Create Date', required=1),  # drop
+        'state': fields.selection([('draft', 'Draft'), ('done', 'Answered'), ('skip', 'Skiped')], 'Status', readonly=True),  # drop
+        # add boolean skipped
         'question_id': fields.many2one('survey.question', 'Question', ondelete='restrict'),
-        'page_id': fields.related('question_id', 'page_id', type='many2one', relation='survey.page', string='Page', ondelete='restrict'),
-        'response_answer_ids': fields.one2many('survey.response.answer', 'response_line_id', 'Answer'),
-        'comment': fields.text('Notes'),
-        'single_text': fields.char('Text', size=255),
+        'page_id': fields.related('question_id', 'page_id', type='many2one', relation='survey.page', string='Page', ondelete='restrict'),  # ? probably not useful
+        'response_answer_ids': fields.one2many('survey.response.answer', 'response_line_id', 'Answer'),  # survey.user_input.answer
+        'comment': fields.text('Notes'),  # -> move in answer
+        'single_text': fields.char('Text', size=255),  # should be dropped
     }
     _defaults = {
         'state': "draft",
@@ -773,14 +813,14 @@ class survey_response_line(osv.osv):
 
 
 class survey_response_answer(osv.osv):
-    _name = 'survey.response.answer'
+    _name = 'survey.response.answer'  # survey.user_input.answer
     _description = 'Survey Answer'
     _rec_name = 'response_line_id'
     _columns = {
-        'name': fields.integer('Row Number'),
-        'response_line_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),
-        'answer_id': fields.many2one('survey.answer', 'Answer', required=1, ondelete='cascade'),
-        'column_id': fields.many2one('survey.question.column.heading', 'Column'),
+        'name': fields.integer('Row Number'),  # ? probably drop
+        'response_line_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),   # survey.user_input.question
+        'answer_id': fields.many2one('survey.answer', 'Answer', required=1, ondelete='cascade'),  # survey.question.answer
+        'column_id': fields.many2one('survey.question.column.heading', 'Column'),  # drop
         'answer': fields.char('Value', size=255),
         'value_choice': fields.char('Value Choice', size=255),
         'comment': fields.text('Notes'),
