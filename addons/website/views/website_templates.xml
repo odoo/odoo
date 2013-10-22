@@ -111,7 +111,7 @@
                                                             <a t-att-href="url_for('', lang=lg.code)" role="menuitem">
                                                                 <strong t-att-class="'icon-circle' if lg.code == lang
                                                                     else 'icon-circle-blank'"></strong>
-                                                                <t t-esc="lg.name"/>
+                                                                <t t-esc="lg.name.split('/').pop()"/>
                                                             </a>
                                                         </li>
                                                         <li t-if="editable" class="divider"/>
