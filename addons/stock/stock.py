@@ -2215,6 +2215,14 @@ class stock_inventory_line(osv.osv):
 class stock_warehouse(osv.osv):
     _name = "stock.warehouse"
     _description = "Warehouse"
+    
+    
+    def show_field_default_wh_resupply(self,cr,uid,ids,name,args,context=None):
+        res = {}
+        for wh in self.browse(cr,uid,ids,context=context):            
+            res[wh.id] = (len(wh.resupply_wh_ids) > 0)
+        return res
+    
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -2247,8 +2255,30 @@ class stock_warehouse(osv.osv):
         'resupply_wh_ids': fields.many2many('stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id', 'Resupply Warehouses'),
         'resupply_route_ids': fields.one2many('stock.location.route', 'supplied_wh_id', 'Resupply Routes'),
         'default_resupply_wh_id': fields.many2one('stock.warehouse', 'Default Resupply Warehouse'),
+        'show_default_resupply_wh_id': fields.function(show_field_default_wh_resupply,type='boolean',string="Show field default_resupply_wh_id"),
+        
     }
 
+
+    def onchange_filtre_default_resupply_wh_id(self, cr, uid, ids, resupply_wh_ids,default_resupply_wh_id, context=None):
+        resupply_wh_ids = [x['id'] for x in (self.resolve_2many_commands(cr, uid, 'resupply_wh_ids',resupply_wh_ids, ['id']))]
+        print(default_resupply_wh_id,resupply_wh_ids)
+        
+        retval = {'show_default_resupply_wh_id' :  len(resupply_wh_ids)>0 }
+        warning = {}
+        
+        if (default_resupply_wh_id and default_resupply_wh_id not in resupply_wh_ids):            
+            retval['default_resupply_wh_id'] = False
+            warning = { 
+                       'title': 'Information', 
+                       'message': 'Default resupply warehouse has been changed because ol default value is not in this list !'
+                       }        
+        return {
+                'value': retval,
+                'domain':{ 'default_resupply_wh_id':[('id','in',resupply_wh_ids)] },
+                'warning': warning
+               }
+        
     def _get_inter_wh_location(self, cr, uid, warehouse, context=None):
         ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
         data_obj = self.pool.get('ir.model.data')

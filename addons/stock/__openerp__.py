@@ -113,8 +113,7 @@ Dashboard / Reports for Warehouse Management will include:
         'static/lib/sparkline/jquery.sparkline.js',
         'static/lib/justgage.js',
         'static/src/js/stock_picking_type.js',
-        'static/src/js/widgets.js',
-        'static/src/js/CheckHide.js',
+        'static/src/js/widgets.js',        
     ],
     'qweb': ['static/src/xml/picking.xml'],
 }
