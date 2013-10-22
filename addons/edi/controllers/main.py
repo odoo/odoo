@@ -4,7 +4,7 @@ import urllib
 import openerp
 import openerp.addons.web.controllers.main as webmain
 
-class EDI(openerpweb.Controller):
+class EDI(openerp.http.Controller):
 
     @openerp.http.route('/edi/import_url', type='http', auth='none')
     def import_url(self, url):
