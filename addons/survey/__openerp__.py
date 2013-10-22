@@ -21,8 +21,8 @@
 
 {
     'name': 'Survey',
-    'version': '1.0',
-    'category': 'Tools',
+    'version': '2.0',
+    'category': 'Survey',
     'description': """
 This module is used for surveying.
 ==================================
