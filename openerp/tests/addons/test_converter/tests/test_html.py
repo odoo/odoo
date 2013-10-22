@@ -53,6 +53,12 @@ class TestIntegerExport(TestBasicExport):
         self.assertEqual(value, "42")
 
 class TestFloatExport(TestBasicExport):
+    def setUp(self):
+        super(TestFloatExport, self).setUp()
+        self.registry('res.lang').write(self.cr, self.uid, [1], {
+            'grouping': '[3,0]'
+        })
+
     def test_float(self):
         converter = self.get_converter('float')
 
@@ -64,6 +70,9 @@ class TestFloatExport(TestBasicExport):
 
         value = converter(42.01234)
         self.assertEqual(value, "42.01234")
+
+        value = converter(1234567.89)
+        self.assertEqual(value, '1,234,567.89')
 
     def test_numeric(self):
         converter = self.get_converter('numeric')

@@ -587,12 +587,19 @@ class FloatConverter(osv.AbstractModel):
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
         precision = self.precision(cr, uid, column, options=options, context=context)
-        fmt = '%s' if precision is None else '%.{precision}f'
+        fmt = '%f' if precision is None else '%.{precision}f'
 
         lang = self.user_lang(cr, uid, context)
 
-        return werkzeug.utils.escape(
-            lang.format(fmt.format(precision=precision), value, grouping=True))
+        formatted = lang.format(fmt.format(precision=precision),
+                                value, grouping=True)
+        # %f does not strip trailing zeroes. %g does but its precision causes
+        # it to switch to scientific notation starting at a million *and* to
+        # strip decimals. So use %f and if no precision was specified manually
+        # strip trailing 0.
+        if not precision:
+            formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
+        return werkzeug.utils.escape(formatted)
 
 class DateConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.date'
