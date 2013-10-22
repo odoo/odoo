@@ -2884,9 +2884,10 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         if (! this.get("effective_readonly")) {
             this.$().html(QWeb.render("FieldSelectionSelect", {widget: this}));
             var index = 0;
-            for (var i = 0, ii = this.get("values").length; i < ii; i++) {
-                if (this.get("values")[i][0] === this.get('value')) index = i;
-            }
+            _.each(this.get("values"), function(el, i) {
+                if (el[0] === this.get('value'))
+                    index = i;
+            });
             this.$el.find('select')[0].selectedIndex = index;
         } else {
             var self = this;
