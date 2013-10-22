@@ -664,7 +664,11 @@ class stock_picking(osv.osv):
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),#?
         'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location', readonly=True),
-        'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True),
+        'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True, 
+              store={
+                  'stock.picking': (lambda cr, uid, ids, c: ids, ['move_lines'], 10),
+                  'stock.move': (_get_pickings, ['group_id', 'picking_id'], 10),
+              }),
     }
 
     _defaults = {
@@ -2434,6 +2438,7 @@ class stock_warehouse(osv.osv):
             'product_selectable': True,
             'product_categ_selectable': True,
             'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step',
+            'sequence': 20,
         }
 
     def create_routes(self, cr, uid, ids, warehouse, context=None):

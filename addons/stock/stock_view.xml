@@ -751,6 +751,7 @@
                     <field name="state"/>
                     <field name="priority"/>
                     <field name="picking_type_id" invisible="1"/>
+                    <field name="group_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -862,6 +863,7 @@
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
                         <filter string="Origin" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
+                        <filter string="Procurement Group" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                 </search>
             </field>
