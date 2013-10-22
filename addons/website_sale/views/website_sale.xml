@@ -72,16 +72,15 @@
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
-            <t t-set="additional_title">Our Products</t>
+            <t t-set="additional_title">Shop</t>
             <div id="wrap">
               <div class="oe_structure"/>
               <div class="container oe_website_sale">
                 <div class="row">
-                    <div class="col-sm-4">
-                        <h1>Our Products</h1>
-                    </div><div class="col-sm-2 pagination text-center">
+                    <div class="col-sm-6 pagination" style="padding-left: 15px;">
                         <a t-if="editable" t-href="/shop/add_product/" class="btn btn-primary btn-default" t-keep-query="category,search,facettes">New Product</a>
-                    </div><div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
                         <t t-call="website.pager">
                             <t t-set="classname">pull-right</t>
                         </t>
