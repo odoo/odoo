@@ -350,6 +350,7 @@
                 // The detail attribute indicates the number of times a mouse button has been pressed
                 // we just want the triple click
                 if (e.detail !== 3) { return; }
+                e.preventDefault();
 
                 // Get closest block-level element to the triple-clicked
                 // element (using ckeditor's block list because why not)

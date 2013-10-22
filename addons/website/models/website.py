@@ -386,6 +386,17 @@ class base_language_install(osv.osv):
         'website_ids': fields.many2many('website', string='Websites to translate'),
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        defaults = super(base_language_install, self).default_get(cr, uid, fields, context)
+        website_id = context.get('params', {}).get('website_id')
+        if website_id:
+            if 'website_ids' not in defaults:
+                defaults['website_ids'] = []
+            defaults['website_ids'].append(website_id)
+        return defaults
+
     def lang_install(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

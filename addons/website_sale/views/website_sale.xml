@@ -60,7 +60,7 @@
       </div>
       <div class="oe_product_image text-center">
           <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,facettes">
-              <img class="img" t-att-src="product.img('image')"/>
+              <span t-field="product.image" t-field-options='{"widget": "image"}'/>
           </a>
       </div>
     </template>
