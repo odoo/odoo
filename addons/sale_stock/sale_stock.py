@@ -85,15 +85,14 @@ class sale_order(osv.osv):
             res[sale.id] = list(picking_ids)
         return res
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id = False, context=None):
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         location_id = order.partner_shipping_id.property_stock_customer.id
         vals['location_id'] = location_id
-        
-        routes = []        
-        routes += order.warehouse_id and [(4, x.id) for x in order.warehouse_id.route_ids] or [] #route_ids        
-        routes += line.route_id and [(4, line.route_id.id)] or [] #route_id
-        vals['route_ids'] = routes                
+
+        routes = line.route_id and [(4, line.route_id.id)] or []
+        vals['route_ids'] = routes
+        vals['warehouse_id'] = order.warehouse_id and order.warehouse_id.id or False
         return vals
 
     _columns = {

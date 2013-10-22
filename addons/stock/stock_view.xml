@@ -1667,7 +1667,8 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='origin']" position="after">
-                    <field name="location_id"/>
+                    <field name="warehouse_id" on_change="change_warehouse_id(warehouse_id, context)"/>
+                    <field name="location_id" domain="[('usage', '=', 'internal')]"/>
                 </xpath>
                 <xpath expr="//field[@name='rule_id']" position="after">
                     <field name="route_ids" widget="many2many_tags"/>
@@ -2128,17 +2129,6 @@
         
         <menuitem action="action_routes_form" id="menu_stock_routes"
             parent="stock.menu_stock_configuration" sequence="11" />
-        
-        <record id="procurement_form_view_inherit" model="ir.ui.view">
-            <field name="name">procurement.order.form.view.inherit</field>
-            <field name="inherit_id" ref="procurement.procurement_form_view"/>
-            <field name="model">procurement.order</field>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='rule_id']" position="after">
-                    <field name="route_ids" widget="many2many_tags" />
-                </xpath>
-            </field>
-        </record>
 
         <record id="view_product_procurement_rule_form" model="ir.ui.view">
             <field name="name">product.template.procurement.rule.inherit</field>
