@@ -566,6 +566,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_processed_onchange: function(result, processed) {
         try {
+        var fields = this.fields;
+        _(result.domain).each(function (domain, fieldname) {
+            var field = fields[fieldname];
+            if (!field) { return; }
+            field.node.attrs.domain = domain;
+        });
+            
         if (result.value) {
             this._internal_set_values(result.value, processed);
         }
@@ -578,13 +585,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 ]
             });
         }
-
-        var fields = this.fields;
-        _(result.domain).each(function (domain, fieldname) {
-            var field = fields[fieldname];
-            if (!field) { return; }
-            field.node.attrs.domain = domain;
-        });
 
         return $.Deferred().resolve();
         } catch(e) {
