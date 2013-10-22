@@ -196,7 +196,7 @@
                     }
                     self.make_active($target);
                 });
-            $("[data-oe-model]").on('click', function (ev) {
+            $("[data-oe-model]").on('click', function () {
                     if (!snipped_event_flag && self.$active_snipped_id && !self.$active_snipped_id.parents("[data-snippet-id]:first")) {
                         self.make_active(false);
                     }
@@ -224,6 +224,7 @@
         },
         clean_for_save: function () {
             for (var k in this.snippets) {
+                if (!this.snippets.hasOwnProperty(k)) { continue; }
                 var editor = $(this.snippets[k]).data("snippet-editor");
                 if (editor) {
                     editor.clean_for_save();
@@ -342,9 +343,9 @@
                 },
                 stop: function(ev, ui){
                     if (action === 'insert' && ! dropped) {
-                        var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first()
-                        if (el) {
-                            el.after($toInsert)
+                        var $el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
+                        if ($el) {
+                            $el.after($toInsert);
                             dropped = true;
                         }
                     }
@@ -460,7 +461,7 @@
                 // count += $zones.length;
                 // $zones.remove();
 
-                $zones = $('.oe_drop_zone > .oe_drop_zone:not(.oe_vertical)').remove();   // no recusrive zones
+                $zones = $('.oe_drop_zone > .oe_drop_zone:not(.oe_vertical)').remove();   // no recursive zones
                 count += $zones.length;
                 $zones.remove();
             } while (count > 0);
@@ -471,14 +472,13 @@
                 var zone = $(this);
                 var prev = zone.prev();
                 var next = zone.next();
-                var float_prev = zone.prev().css('float')   || 'none';
-                var float_next = zone.next().css('float')   || 'none';
-                var disp_prev  = zone.prev().css('display') ||  null;
-                var disp_next  = zone.next().css('display') ||  null;
+                var float_prev = prev.css('float')   || 'none';
+                var float_next = next.css('float')   || 'none';
+                var disp_prev  = prev.css('display') ||  null;
+                var disp_next  = next.css('display') ||  null;
                 if(     (float_prev === 'left' || float_prev === 'right')
                     &&  (float_next === 'left' || float_next === 'right')  ){
                     zone.remove();
-                    return;
                 }else if( !( disp_prev === null
                           || disp_next === null
                           || disp_prev === 'block'
@@ -689,7 +689,7 @@
             var self = this;
             var $styles = this.$overlay.find('.oe_options');
             var $ul = $styles.find('ul:first');
-            _.each(this.parent.style_templates, function (val, key) {
+            _.each(this.parent.style_templates, function (val) {
                 if (!self.parent.dom_filter(val.selector).is(self.$target)) {
                     return;
                 }
@@ -757,7 +757,7 @@
 
         /*
         *  build_snippet
-        *  This method is called just after that a thumbnail is drag and droped into a drop zone
+        *  This method is called just after that a thumbnail is drag and dropped into a drop zone
         *  (after the insertion of this.$body, if this.$body exists)
         */
         build_snippet: function ($target) {
@@ -771,7 +771,7 @@
         },
 
         /* onFocus
-        *  This method is called when the user click outide the snippet in the dom, after a focus
+        *  This method is called when the user click outside the snippet in the dom, after a focus
         */
         onBlur : function () {
             this.$overlay.removeClass('oe_active');
@@ -790,7 +790,7 @@
             var $ul = this.$editor.find(ul_options);
             var bg_value = (typeof bg === 'string' ? this.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
 
-            // bind envent on options
+            // bind event on options
             var $li = $ul.find("li");
             $li.on('click', function (event) {
                     if ($(this).data("value")) {
@@ -893,7 +893,8 @@
                     var regClass = new RegExp("\\s*" + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
 
                     var cursor = $handle.css("cursor")+'-important';
-                    $("body").addClass(cursor);
+                    var $body = $(document.body);
+                    $body.addClass(cursor);
 
                     var body_mousemove = function (event){
                         event.preventDefault();
@@ -920,15 +921,15 @@
                             self.parent.cover_target(self.$overlay, self.$target);
                         }
                     };
-                    $('body').mousemove(body_mousemove);
 
                     var body_mouseup = function(){
-                        $('body').unbind('mousemove', body_mousemove);
-                        $('body').unbind('mouseup', body_mouseup);
-                        $("body").removeClass(cursor);
+                        $body.unbind('mousemove', body_mousemove);
+                        $body.unbind('mouseup', body_mouseup);
+                        $body.removeClass(cursor);
                         self.parent.editor_busy = false;
                     };
-                    $('body').mouseup(body_mouseup);
+                    $body.mousemove(body_mousemove);
+                    $body.mouseup(body_mouseup);
                 });
         },
         getSize: function () {
@@ -998,7 +999,7 @@
             if (compass !== 'w')
                 return;
 
-            // don't change the rigth border position when we change the offset (replace col size)
+            // don't change the right border position when we change the offset (replace col size)
             var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
             var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
             var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
@@ -1128,7 +1129,6 @@
             var style = false;
             var $el = this.$inner.find('.item.active');
             var $ul = this.$editor.find('ul[name="carousel-style"]');
-            var $li = $ul.find("li");
 
             if ($el.hasClass('text_only'))
                 style = 'text_only';
@@ -1160,7 +1160,6 @@
                 });
         },
         change_size: function () {
-            var self = this;
             var $el = this.$target;
 
             var size = 'oe_big';
@@ -1197,7 +1196,6 @@
             this.change_size();
         },
         scroll: function(){
-            var self = this;
             var $ul = this.$editor.find('ul[name="parallax-scroll"]');
             var $li = $ul.find("li");
             var $parallax = this.$target.find('.parallax');
@@ -1207,7 +1205,7 @@
             $li.on('click', function (event) {
                 $li.removeClass("active");
                 $(this).addClass("active");
-                var speed =  $(this).data('value')
+                var speed =  $(this).data('value');
                 $parallax.attr('data-stellar-background-ratio', speed);
             });
 

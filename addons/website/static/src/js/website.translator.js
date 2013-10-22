@@ -24,7 +24,7 @@
                 dialog.on('activate', this, function () {
                     localStorage[nodialog] = dialog.$('input[name=do_not_show]').prop('checked') || '';
                     dialog.$el.modal('hide');
-                    this.translate().then(function () {
+                    self.translate().then(function () {
                         mysuper.call(self);
                     });
                 });
@@ -143,7 +143,6 @@
                 if (node.attributes['data-oe-translate'].value == '1') {
                     node.className += ' oe_translatable_field';
                 }
-                return;
             } else if (node.childNodes.length === 1
                     && this.isTextNode(node.childNodes[0])
                     && !node.getAttribute('data-oe-model')) {

@@ -21,9 +21,6 @@
         templates.push(template);
     };
     website.load_templates = function(templates) {
-        var def = $.Deferred();
-        var count = templates.length;
-
         var dones = _(templates).map(function (t) {
             return new $.Deferred(function (d) {
                 openerp.qweb.add_template(t, function(err) {
@@ -151,7 +148,7 @@
                 });
         });
 
-        $(document).on('click', '.js_publish_management .js_publish_btn', function (e) {
+        $(document).on('click', '.js_publish_management .js_publish_btn', function () {
             var $data = $(this).parents(".js_publish_management:first");
             var $btn = $data.find('.btn:first');
             var publish = $btn.hasClass("btn-success");
