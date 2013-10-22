@@ -169,8 +169,10 @@
                     </table>
                   </div>
                 </div>
-                <div class="text-center">
-                    <t t-call="website.pager" />
+                <div>
+                    <t t-call="website.pager">
+                        <t t-set="classname">pull-right</t>
+                    </t>
                 </div>
               </div>
               <div class="oe_structure mb32"/>
@@ -365,7 +367,7 @@
                         </ul>
                         <h4>Secure Payment</h4>
                         <ul class="list-unstyled mb32">
-                            <li>&#9745; Transation 256bit encrypted</li>
+                            <li>&#9745; 256 bit encryption</li>
                             <li>&#9745; Processed by Ogone</li>
                         </ul>
                     </div>
