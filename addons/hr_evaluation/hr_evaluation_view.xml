@@ -335,8 +335,13 @@
                     <field name="survey_id"/>
                     <field name="user_id" string="Interviewer"/>
                     <field name="user_to_review_id"/>
+<<<<<<< TREE
                     <field name="response" readonly="1" invisible="True"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+=======
+                    <field name="response_id" readonly="1" invisible="True"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="open" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+>>>>>>> MERGE-SOURCE
                     <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
                     <field name="state"/>
