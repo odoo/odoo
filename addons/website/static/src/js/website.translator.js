@@ -44,7 +44,7 @@
                 self.translations = translations;
                 self.processTranslatableNodes();
                 // Disable non translatable t-fields
-                $('[data-oe-type][data-oe-translate=0]').removeAttr('data-oe-type');
+                $('[data-oe-type][data-oe-translate="0"]').removeAttr('data-oe-type');
             });
         },
         processTranslatableNodes: function () {
@@ -175,7 +175,7 @@
             $(root).click(function (ev) {
                 ev.preventDefault();
             });
-            return $('[data-oe-translate=1]');
+            return $('[data-oe-translate="1"]');
         }
     });
 
