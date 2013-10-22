@@ -259,7 +259,7 @@
             </t>
         </template>
 
-        <template id="pager">
+        <template id="pager" name="Pager">
             <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination">
                 <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
                      <a t-att-href=" pager['page_start']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
