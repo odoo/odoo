@@ -67,7 +67,13 @@ class Float(orm.AbstractModel):
     _name = 'website.qweb.field.float'
     _inherit = ['website.qweb.field', 'ir.qweb.field.float']
 
-    value_from_string = float
+    def from_html(self, cr, uid, model, column, element, context=None):
+        lang = self.user_lang(cr, uid, context=context)
+
+        value = element.text_content().strip()
+
+        return float(value.replace(lang.thousands_sep, '')
+                          .replace(lang.decimal_point, '.'))
 
 class Date(orm.AbstractModel):
     _name = 'website.qweb.field.date'
