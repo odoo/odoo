@@ -1218,15 +1218,13 @@
         },
         change_size: function () {
             var self = this;
-            var $el = $('.oe_full, .oe_big,.oe_medium,.oe_small', this.$target);
+            var $el = $('.oe_big,.oe_medium,.oe_small', this.$target);
 
             var size = 'oe_big';
             if ($el.hasClass('oe_small'))
                 size = 'oe_small';
             else if ($el.hasClass('oe_medium'))
                 size = 'oe_medium';
-            else if ($el.hasClass('oe_full'))
-                size = 'oe_full';
             var $ul = this.$editor.find('ul[name="parallax-size"]');
             var $li = $ul.find("li");
 
@@ -1237,11 +1235,11 @@
                     $(this).addClass("active");
                 })
                 .on('mouseover', function (event) {
-                    $el.removeClass('oe_big oe_small oe_medium oe_full');
+                    $el.removeClass('oe_big oe_small oe_medium');
                     $el.addClass($(event.currentTarget).data("value"));
                 })
                 .on('mouseout', function (event) {
-                    $el.removeClass('oe_big oe_small oe_medium oe_full');
+                    $el.removeClass('oe_big oe_small oe_medium');
                     $el.addClass($ul.find('li.active').data("value"));
                 });
         }
