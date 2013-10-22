@@ -195,7 +195,10 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
                 cur_char_nbr += len(word)
                 if cur_char_nbr >= position:
                     break
-            stop_idx = node.text.find(word) + len(word)
+            if word:
+                stop_idx = node.text.find(word) + len(word)
+            else:
+                stop_idx = len(node.text)
             if stop_idx == -1:
                 stop_idx = len(node.text)
         else:
