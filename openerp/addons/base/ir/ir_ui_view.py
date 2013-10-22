@@ -775,7 +775,7 @@ class view(osv.osv):
             for key in values:
                 value =  isinstance(values, (dict,)) and values[key] or key
                 if isinstance(value, (browse_record,)):
-                    if value.__dict__.get('_uid') == openerp.SUPERUSER_ID and uid != openerp.SUPERUSER_ID:
+                    if getattr(value, '_uid', None) == openerp.SUPERUSER_ID and uid != openerp.SUPERUSER_ID:
                         message = 'SUPERUSER_ID Access used for rendering "%s" in a xml view: %s' % (key, id_or_xml_id,)
                         _logger.warn(message)
                 elif isinstance(value, (dict, list, browse_record_list,)):
@@ -786,8 +786,9 @@ class view(osv.osv):
             return self.read_template(cr, uid, name, context=context)
 
         return self.pool[engine].render(
-            id_or_xml_id, values,
-            loader=loader, undefined_handler=lambda key, v: None)
+            cr, uid, id_or_xml_id, values,
+            loader=loader, undefined_handler=lambda key, v: None,
+            context=context)
 
     # maybe used to print the workflow ?
 

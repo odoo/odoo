@@ -4,7 +4,6 @@ from xml.dom import minidom as dom
 
 import common
 from openerp.addons.base.ir import ir_qweb
-import openerp.addons.base.ir.ir_qweb
 
 impl = dom.getDOMImplementation()
 document = impl.createDocument(None, None, None)
@@ -14,6 +13,9 @@ class TestQWebTField(common.TransactionCase):
         super(TestQWebTField, self).setUp()
         self.engine = self.registry('ir.qweb')
 
+    def context(self, values):
+        return ir_qweb.QWebContext(self.cr, self.uid, values)
+
     def test_trivial(self):
         field = document.createElement('span')
         field.setAttribute('t-field', u'company.name')
@@ -22,10 +24,8 @@ class TestQWebTField(common.TransactionCase):
         company_id = Companies.create(self.cr, self.uid, {
             'name': "My Test Company"
         })
-        root_company = Companies.browse(self.cr, self.uid, company_id)
-
-        result = self.engine.render_node(field, ir_qweb.QWebContext({
-            'company': root_company,
+        result = self.engine.render_node(field, self.context({
+            'company': Companies.browse(self.cr, self.uid, company_id),
         }))
 
         self.assertEqual(
@@ -45,11 +45,10 @@ class TestQWebTField(common.TransactionCase):
         company_id = Companies.create(self.cr, self.uid, {
             'name': s,
         })
-        root_company = Companies.browse(self.cr, self.uid, company_id)
-
-        result = self.engine.render_node(field, ir_qweb.QWebContext({
-            'company': root_company,
+        result = self.engine.render_node(field, self.context({
+            'company': Companies.browse(self.cr, self.uid, company_id),
         }))
+
         self.assertEqual(
             result,
             '<span data-oe-model="res.company" data-oe-id="%d" '
@@ -65,7 +64,9 @@ class TestQWebTField(common.TransactionCase):
         with self.assertRaisesRegexp(
                 AssertionError,
                 r'^RTE widgets do not work correctly'):
-            self.engine.render_node(field, ir_qweb.QWebContext({'company': None}))
+            self.engine.render_node(field, self.context({
+                'company': None
+            }))
 
     def test_reject_t_tag(self):
         field = document.createElement('t')
@@ -74,4 +75,6 @@ class TestQWebTField(common.TransactionCase):
         with self.assertRaisesRegexp(
                 AssertionError,
                 r'^t-field can not be used on a t element'):
-            self.engine.render_node(field, ir_qweb.QWebContext({'company': None}))
+            self.engine.render_node(field, self.context({
+                'company': None
+            }))

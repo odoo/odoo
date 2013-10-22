@@ -53,6 +53,12 @@ class TestIntegerExport(TestBasicExport):
         self.assertEqual(value, "42")
 
 class TestFloatExport(TestBasicExport):
+    def setUp(self):
+        super(TestFloatExport, self).setUp()
+        self.registry('res.lang').write(self.cr, self.uid, [1], {
+            'grouping': '[3,0]'
+        })
+
     def test_float(self):
         converter = self.get_converter('float')
 
@@ -64,6 +70,9 @@ class TestFloatExport(TestBasicExport):
 
         value = converter(42.01234)
         self.assertEqual(value, "42.01234")
+
+        value = converter(1234567.89)
+        self.assertEqual(value, '1,234,567.89')
 
     def test_numeric(self):
         converter = self.get_converter('numeric')
@@ -98,7 +107,7 @@ class TestCurrencyExport(TestExport):
             self.cr, self.uid, 'value', obj, options,
             doc.createElement('span'),
             {'field': 'obj.value', 'field-options': json.dumps(options)},
-            '', ir_qweb.QWebContext({'obj': obj, 'c2': dest, }))
+            '', ir_qweb.QWebContext(self.cr, self.uid, {'obj': obj, 'c2': dest, }))
         return converted
 
     def test_currency_post(self):
@@ -262,6 +271,31 @@ class TestHTMLExport(TestBasicExport):
         input = '<span>span</span>'
         value = converter(input)
         self.assertEqual(value, input)
+
+class TestDatetimeExport(TestBasicExport):
+    def setUp(self):
+        super(TestDatetimeExport, self).setUp()
+        # set user tz to known value
+        Users = self.registry('res.users')
+        Users.write(self.cr, self.uid, self.uid, {
+            'tz': 'Pacific/Niue'
+        }, context=None)
+
+    def test_date(self):
+        converter = self.get_converter('date')
+
+        value = converter('2011-05-03')
+
+        # default lang/format is US
+        self.assertEqual(value, '05/03/2011')
+
+    def test_datetime(self):
+        converter = self.get_converter('datetime')
+
+        value = converter('2011-05-03 11:12:13')
+
+        # default lang/format is US
+        self.assertEqual(value, '05/03/2011 00:12:13')
 
 # o2m, m2m?
 # reference?
