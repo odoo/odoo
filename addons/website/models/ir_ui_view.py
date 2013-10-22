@@ -106,7 +106,7 @@ class view(osv.osv):
             attr = 'action' if 'action' in element.attrib else None
         elif element.tag in ['a', 'link']:
             attr = 'href' if 'href' in element.attrib else None
-        elif element.tag in ['frame', 'iframe', 'img', 'input', 'script']:
+        elif element.tag in ['frame', 'iframe', 'script']:
             attr = 'src' if 'src' in element.attrib else None
         if attr:
             value = element.attrib[attr]
