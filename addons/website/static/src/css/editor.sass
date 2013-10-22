@@ -466,7 +466,6 @@ $highlighted_text_color: #ffffff
 
 /* ---- ACE EDITOR ---- */
 
-$ace_width: 720px
 $editorbar_height: 30px
 // TODO Fix => might break with themes
 $navbar_height: 51px
@@ -481,7 +480,6 @@ $navbar_height: 51px
     right: 0
     z-index: 1000
     height: 100%
-    width: $ace_width
     .oe_ace_view_editor_title
         width: 100%
         padding-top: 0
@@ -502,9 +500,10 @@ $navbar_height: 51px
         right: 0
         bottom: $navbar_height
         left: 0
-        width: $ace_width
+        .ace_gutter
+            cursor: ew-resize
     &.oe_ace_open
-        +opacity(1)
+        +opacity(0.97)
     &.oe_ace_closed
         z-index: -1000
         +opacity(0)
