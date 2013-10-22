@@ -2887,7 +2887,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
             _.each(this.get("values"), function(el, i) {
                 if (el[0] === this.get('value'))
                     index = i;
-            });
+            }, this);
             this.$el.find('select')[0].selectedIndex = index;
         } else {
             var self = this;
