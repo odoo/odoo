@@ -460,16 +460,14 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <t t-call="website.layout">
                 <div id="wrap">
                     <div data-snippet-id="parallax">
-                        <div style="background-image: url('/website/static/src/img/parallax/background1.jpg')" data-stellar-background-ratio="0.3" class="parallax oe_structure mt32 mb32 oe_big">
+                        <div style="background-image: url('/website/static/src/img/parallax/parallax_bg.jpg')" data-stellar-background-ratio="0.3" class="parallax oe_structure mt32 mb32 oe_big">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-12 mt32 mb32" data-snippet-id="colmd">
-                                        <h1 class="text-center">
-                                            <b>About us</b>
-                                        </h1>
-                                        <h3 class="text-center text-muted">
-                                            A passion for great products
-                                        </h3>
+                                        <div class="text-center">
+                                            <img t-att-src="res_company.img('logo')" class="img img-responsive shadow"/>
+                                        </div>
+                                        <h3 class="text-center text-muted" t-field="res_company.rml_header1"></h3>
                                     </div>
                                 </div>
                             </div>
