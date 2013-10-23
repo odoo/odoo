@@ -82,7 +82,7 @@ class stock_warehouse(osv.osv):
         'buy_pull_id': fields.many2one('procurement.rule', 'BUY rule'),
     }
     _defaults = {
-        'can_buy_for_resupply': True,
+        'buy_to_resupply': True,
     }
 
     def _get_buy_pull_rule(self, cr, uid, warehouse, context=None):
@@ -134,7 +134,7 @@ class stock_warehouse(osv.osv):
 
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
         all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, warehouse, context=context)
-        if warehouse.can_buy_for_resupply and warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
+        if warehouse.buy_to_resupply and warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
             all_routes += [warehouse.buy_pull_id.route_id.id]
         return all_routes
 
