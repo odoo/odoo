@@ -666,7 +666,7 @@ class stock_picking(osv.osv):
         'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location', readonly=True),
         'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True, 
               store={
-                  'stock.picking': (lambda cr, uid, ids, c: ids, ['move_lines'], 10),
+                  'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_lines'], 10),
                   'stock.move': (_get_pickings, ['group_id', 'picking_id'], 10),
               }),
     }
