@@ -6,11 +6,16 @@
     var nodialog = 'website_translator_nodialog';
 
     website.EditorBar.include({
+        events: _.extend({}, website.EditorBar.prototype.events, {
+            'click a[data-action=edit_master]': 'edit_master',
+        }),
         start: function () {
             var self = this;
             this.initial_content = {};
             return this._super.apply(this, arguments).then(function () {
-                self.$('button[data-action=edit]').text("Translate");
+                self.$('button[data-action=edit]')
+                    .text("Translate")
+                    .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
                 self.$('[data-action=snippet]').hide();
                 self.$('#customize-menu-button').hide();
             });
@@ -32,6 +37,14 @@
                 this.translate().then(function () {
                     mysuper.call(self);
                 });
+            }
+        },
+        edit_master: function (ev) {
+            ev.preventDefault();
+            var link = $('.js_language_selector a[data-default-lang]')[0];
+            if (link) {
+                link.search += (link.search ? '&' : '?') + 'unable_editor=1';
+                window.location = link.attributes.href.value;
             }
         },
         translate: function () {
