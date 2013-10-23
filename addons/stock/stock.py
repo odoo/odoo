@@ -664,7 +664,11 @@ class stock_picking(osv.osv):
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),#?
         'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location', readonly=True),
-        'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True),
+        'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True, 
+              store={
+                  'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_lines'], 10),
+                  'stock.move': (_get_pickings, ['group_id', 'picking_id'], 10),
+              }),
     }
 
     _defaults = {
@@ -1310,7 +1314,7 @@ class stock_move(osv.osv):
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Optional: next stock move when chaining them", select=True),
         'move_orig_ids': fields.one2many('stock.move', 'move_dest_id', 'Original Move', help="Optional: previous stock move when chaining them", select=True),
 
-        'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
+        'picking_id': fields.many2one('stock.picking', 'Reference', select=True, states={'done': [('readonly', True)]}),
         'picking_priority': fields.related('picking_id','priority', type='selection', selection=[('0','Low'),('1','Normal'),('2','High')], string='Picking Priority'),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'New'),
@@ -1356,6 +1360,7 @@ class stock_move(osv.osv):
         'restrict_partner_id': fields.many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'"),
         'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions'), 
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order"),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any)."),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1420,6 +1425,7 @@ class stock_move(osv.osv):
             'move_dest_id': move.id,
             'group_id': move.group_id and move.group_id.id or False,
             'route_ids' : [(4, x.id) for x in move.route_ids],
+            'warehouse_id': move.warehouse_id and move.warehouse_id.id or False,
         }
 
     def _push_apply(self, cr, uid, moves, context):
@@ -1429,7 +1435,10 @@ class stock_move(osv.osv):
                 routes = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
                 routes = routes or [x.id for x in move.route_ids]  
                 if routes:
-                    rules = push_obj.search(cr, uid, [('route_id', 'in', routes), ('location_from_id', '=', move.location_dest_id.id)], context=context)
+                    domain = [('route_id', 'in', routes), ('location_from_id', '=', move.location_dest_id.id)]
+                    if move.warehouse_id:
+                        domain += [('warehouse_id', '=', move.warehouse_id.id)]
+                    rules = push_obj.search(cr, uid, domain, context=context)
                     if rules:
                         rule = push_obj.browse(cr, uid, rules[0], context=context)
                         push_obj._apply(cr, uid, rule, move, context=context)
@@ -1591,7 +1600,7 @@ class stock_move(osv.osv):
                 ('group_id', '=', group),
                 ('location_id', '=', move.location_id.id),
                 ('location_dest_id', '=', move.location_dest_id.id),
-                ('state', 'in', ['confirmed', 'waiting'])], context=context)
+                ('state', 'in', ['draft', 'confirmed', 'waiting'])], context=context)
         if picks:
             pick = picks[0]
         else:
@@ -1700,6 +1709,7 @@ class stock_move(osv.osv):
         """ Cancels the moves and if all moves are cancelled it cancels the picking.
         @return: True
         """
+        procurement_obj = self.pool.get('procurement.order')
         context = context or {}
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
@@ -1707,7 +1717,12 @@ class stock_move(osv.osv):
                         _('You cannot cancel a stock move that has been set to \'Done\'.'))
             if move.reserved_quant_ids:
                 self.pool.get("stock.quant").quants_unreserve(cr, uid, move, context=context)
-            if move.move_dest_id:
+            if context.get('cancel_procurement'):
+                if move.propagate:
+                    procurement_ids = procurement_obj.search(cr, uid, [('move_dest_id', '=', move.id)], context=context)
+                    procurement_obj.cancel(cr, uid, procurement_ids, context=context)
+            elif move.move_dest_id:
+                #cancel chained moves
                 if move.propagate:
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
                 elif move.move_dest_id.state == 'waiting':
@@ -2236,6 +2251,7 @@ class stock_warehouse(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Address'),
+        'view_location_id': fields.many2one('stock.location', 'View Location', required=True, domain=[('usage', '=', 'view')]),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
         'code': fields.char('Short Name', size=5, required=True, help="Short name used to identify your warehouse"),
         'route_ids': fields.many2many('stock.location.route', 'stock_route_warehouse', 'warehouse_id', 'route_id', 'Routes', domain="[('warehouse_selectable', '=', True)]", help='Defaults routes through the warehouse'),
@@ -2415,6 +2431,7 @@ class stock_warehouse(osv.osv):
                 'auto': 'manual',
                 'picking_type_id': pick_type_id,
                 'active': active,
+                'warehouse_id': warehouse.id,
             })
             pull_rules_list.append({
                 'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context),
@@ -2425,6 +2442,7 @@ class stock_warehouse(osv.osv):
                 'picking_type_id': pick_type_id,
                 'procure_method': first_rule is True and 'make_to_stock' or 'make_to_order',
                 'active': active,
+                'warehouse_id': warehouse.id,
             })
             first_rule = False
         return push_rules_list, pull_rules_list
@@ -2449,6 +2467,7 @@ class stock_warehouse(osv.osv):
             'picking_type_id': pick_type_id,
             'procure_method': 'make_to_order',
             'active': True,
+            'warehouse_id': warehouse.id,
         }
 
     def _get_crossdock_route(self, cr, uid, warehouse, route_name, context=None):
@@ -2458,6 +2477,7 @@ class stock_warehouse(osv.osv):
             'product_selectable': True,
             'product_categ_selectable': True,
             'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step',
+            'sequence': 20,
         }
 
     def create_routes(self, cr, uid, ids, warehouse, context=None):
@@ -2476,6 +2496,8 @@ class stock_warehouse(osv.osv):
         for push_rule in push_rules_list:
             push_obj.create(cr, uid, vals=push_rule, context=context)
         for pull_rule in pull_rules_list:
+            #all pull rules in reception route are mto, because we don't won't to wait for the scheduler to trigger an orderpoint on input location
+            pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
         #create MTS route and pull rules for delivery a specific route MTO to be set on the product
@@ -2580,6 +2602,7 @@ class stock_warehouse(osv.osv):
                 'usage': 'view',
                 'location_id': data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_locations')[1]
             }, context=context)
+        vals['view_location_id'] = wh_loc_id
         #create all location
         reception_steps = vals.get('reception_steps', False)
         delivery_steps = vals.get('delivery_steps', False)
@@ -2868,6 +2891,7 @@ class stock_location_path(osv.osv):
                     'stock.location.route': (_get_route, ['active'], 20),
                     'stock.location.path': (lambda self, cr, uid, ids, c={}: ids, ['route_id'], 20),},
                 help="If the active field is set to False, it will allow you to hide the rule without removing it." ),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
     }
     _defaults = {
         'auto': 'auto',
@@ -2899,6 +2923,7 @@ class stock_location_path(osv.osv):
                 'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
                 'rule_id': rule.id,
                 'propagate': rule.propagate, 
+                'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
             })
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,

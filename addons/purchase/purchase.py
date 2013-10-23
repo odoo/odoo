@@ -102,13 +102,13 @@ class purchase_order(osv.osv):
         for id in ids:
             res[id] = [0.0,0.0]
         cr.execute('''SELECT
-                p.purchase_id,sum(m.product_qty), m.state
+                p.order_id, sum(m.product_qty), m.state
             FROM
                 stock_move m
             LEFT JOIN
-                stock_picking p on (p.id=m.picking_id)
+                purchase_order_line p on (p.id=m.purchase_line_id)
             WHERE
-                p.purchase_id IN %s GROUP BY m.state, p.purchase_id''',(tuple(ids),))
+                p.order_id IN %s GROUP BY m.state, p.order_id''',(tuple(ids),))
         for oid,nbr,state in cr.fetchall():
             if state=='cancel':
                 continue
@@ -964,6 +964,12 @@ class purchase_order_line(osv.osv):
         supplier_delay = int(supplier_info.delay) if supplier_info else 0
         return datetime.strptime(date_order_str, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=supplier_delay)
 
+    def action_cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+        for po_line in self.browse(cr, uid, ids, context=context):
+            if all([l.state == 'cancel' for l in po_line.order_id.order_line]):
+                self.pool.get('purchase.order').action_cancel(cr, uid, [po_line.order_id.id], context=context)
+
     def _check_product_uom_group(self, cr, uid, context=None):
         group_uom = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'group_uom')
         res = [user for user in group_uom.users if user.id == uid]
@@ -1079,12 +1085,16 @@ class procurement_rule(osv.osv):
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
-        'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order'),
+        'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order Line'),
+        'purchase_id': fields.related('purchase_line_id', 'order_id', type='many2one', relation='purchase.order', string='Purchase Order'),
     }
 
+    def propagate_cancel(self, cr, uid, procurement, context=None):
+        if procurement.rule_id.action == 'buy' and procurement.purchase_line_id:
+            self.pool.get('purchase.order.line').action_cancel(cr, uid, [procurement.purchase_line_id.id], context=context)
+        return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)
+        
     def _run(self, cr, uid, procurement, context=None):
-        if procurement.rule_id:
-            print procurement.rule_id.action
         if procurement.rule_id and procurement.rule_id.action == 'buy':
             #make a purchase order for the procurement
             return self.make_po(cr, uid, [procurement.id], context=context)[procurement.id]
