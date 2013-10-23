@@ -103,15 +103,16 @@
                                                 <li t-if="request.multilang and
                                                             (len(website.language_ids) &gt; 1 or editable)" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
-                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                                        <t t-esc="lang_selected[0]['name']"/> <span class="caret"></span>
+                                                    <a class="dropdown-toggle js_language_selected" data-toggle="dropdown" href="#">
+                                                        <t t-esc="lang_selected[0]['name'].split('/').pop()"/> <span class="caret"></span>
                                                     </a>
-                                                    <ul class="dropdown-menu" role="menu">
+                                                    <ul class="dropdown-menu js_language_selector" role="menu">
                                                         <li t-foreach="website.language_ids" t-as="lg">
-                                                            <a t-att-href="url_for('', lang=lg.code)" role="menuitem">
+                                                            <a t-att-href="url_for('', lang=lg.code)" role="menuitem"
+                                                               t-att-data-default-lang="editable and 'true' if lg.code == website.default_lang_id.code else None">
                                                                 <strong t-att-class="'icon-circle' if lg.code == lang
                                                                     else 'icon-circle-blank'"></strong>
-                                                                <t t-esc="lg.name"/>
+                                                                <t t-esc="lg.name.split('/').pop()"/>
                                                             </a>
                                                         </li>
                                                         <li t-if="editable" class="divider"/>
@@ -120,7 +121,7 @@
                                                             <t t-if="request.httprequest.query_string">
                                                                 <t t-set="url_return" t-value="url_return + '?' + request.httprequest.query_string"/>
                                                             </t>
-                                                            <a t-attf-href="/web#action=base.action_view_base_language_install&amp;url_return=#{url_return}">
+                                                            <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
                                                                 Add a language...
                                                             </a>
                                                         </li>

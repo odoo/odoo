@@ -60,7 +60,7 @@
       </div>
       <div class="oe_product_image text-center">
           <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,facettes">
-              <img class="img" t-att-src="product.img('image')"/>
+              <span t-field="product.image" t-field-options='{"widget": "image"}'/>
           </a>
       </div>
     </template>
@@ -72,16 +72,15 @@
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
-            <t t-set="additional_title">Our Products</t>
+            <t t-set="additional_title">Shop</t>
             <div id="wrap">
               <div class="oe_structure"/>
               <div class="container oe_website_sale">
                 <div class="row">
-                    <div class="col-sm-4">
-                        <h1>Our Products</h1>
-                    </div><div class="col-sm-2 pagination text-center">
+                    <div class="col-sm-6 pagination" style="padding-left: 15px;">
                         <a t-if="editable" t-href="/shop/add_product/" class="btn btn-primary btn-default" t-keep-query="category,search,facettes">New Product</a>
-                    </div><div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
                         <t t-call="website.pager">
                             <t t-set="classname">pull-right</t>
                         </t>
@@ -170,8 +169,10 @@
                     </table>
                   </div>
                 </div>
-                <div class="text-center">
-                    <t t-call="website.pager" />
+                <div>
+                    <t t-call="website.pager">
+                        <t t-set="classname">pull-right</t>
+                    </t>
                 </div>
               </div>
               <div class="oe_structure mb32"/>
@@ -356,120 +357,116 @@
                     <li class="text-muted">Payment<span class="chevron"></span></li>
                     <li class="text-muted">Confirmation<span class="chevron"></span></li>
                 </ul>
-                <h1 class="mb32">Your Cart</h1>
-
+                <h1 class="mb32">Shopping Cart</h1>
                 <div class="row">
-                <div class="col-md-8 oe_mycart">
-                    <div t-if="not website_sale_order or not website_sale_order.order_line" class="well well-lg">
-                        Your cart is empty!
+                    <div class="col-md-3 text-muted" id="right_column">
+                        <h4>Policies</h4>
+                        <ul class="list-unstyled mb32">
+                            <li>&#9745; 30-days money-back guarantee</li>
+                            <li>&#9745; Invoice sent by e-Mail</li>
+                        </ul>
+                        <h4>Secure Payment</h4>
+                        <ul class="list-unstyled mb32">
+                            <li>&#9745; 256 bit encryption</li>
+                            <li>&#9745; Processed by Ogone</li>
+                        </ul>
                     </div>
-                    <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.order_line">
-                        <colgroup>
-                            <col width="80"/>
-                            <col/>
-                            <col width="100"/>
-                            <col width="120"/>
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th colspan="2">Product</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr t-foreach="website_sale_order.order_line" t-as="line">
-                                <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
-                                <td t-if="line.product_id.product_tmpl_id">
-                                    <span t-field="line.product_id.image_small"
-                                          t-field-options='{"widget": "image", "class": "img-rounded"}'/>
-                                </td>
-                                <td t-if="line.product_id.product_tmpl_id">
-                                    <div>
-                                        <a t-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/">
-                                            <strong t-field="line.product_id.name"/>
-                                        </a>
-                                    </div>
-                                    <div class="text-muted" t-field="line.product_id.description_sale"/>
-                                </td>
-                                <td class="text-center">
-                                   <del class="text-danger" t-if="line.product_id.lst_price &gt; line.price_unit">
-                                       <span t-field="line.product_id.lst_price" t-field-options='{
+                    <div class="col-md-8 col-md-offset-1 oe_mycart">
+                        <div t-if="not website_sale_order or not website_sale_order.order_line" class="well well-lg">
+                            Your cart is empty!
+                        </div>
+                        <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.order_line">
+                            <colgroup>
+                                <col width="80"/>
+                                <col/>
+                                <col width="100"/>
+                                <col width="120"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="website_sale_order.order_line" t-as="line">
+                                    <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
+                                    <td t-if="line.product_id.product_tmpl_id">
+                                        <span t-field="line.product_id.image_small"
+                                              t-field-options='{"widget": "image", "class": "img-rounded"}'/>
+                                    </td>
+                                    <td t-if="line.product_id.product_tmpl_id">
+                                        <div>
+                                            <a t-href="/shop/product/#{ line.product_id.product_tmpl_id.id }/">
+                                                <strong t-field="line.product_id.name"/>
+                                            </a>
+                                        </div>
+                                        <div class="text-muted" t-field="line.product_id.description_sale"/>
+                                    </td>
+                                    <td class="text-center">
+                                       <del class="text-danger" t-if="line.product_id.lst_price &gt; line.price_unit">
+                                           <span t-field="line.product_id.lst_price" t-field-options='{
+                                               "widget": "monetary",
+                                               "display_currency": "website.pricelist_id.currency_id"
+                                           }'/>
+                                       </del>
+                                       <span t-field="line.price_unit" t-field-options='{
                                            "widget": "monetary",
                                            "display_currency": "website.pricelist_id.currency_id"
                                        }'/>
-                                   </del>
-                                   <span t-field="line.price_unit" t-field-options='{
-                                       "widget": "monetary",
-                                       "display_currency": "website.pricelist_id.currency_id"
-                                   }'/>
-                                </td>
-                                <td>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 js_add_cart_json">
-                                                <span class="icon-minus"/>
-                                            </a>
-                                        </span>
-                                        <input type="text" class="js_quantity form-control"
-                                            t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
-                                        <span class="input-group-addon">
-                                            <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 float_left js_add_cart_json">
-                                                <span class="icon-plus"/>
-                                            </a>
-                                        </span>
-                                    </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 js_add_cart_json">
+                                                    <span class="icon-minus"/>
+                                                </a>
+                                            </span>
+                                            <input type="text" class="js_quantity form-control"
+                                                t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
+                                            <span class="input-group-addon">
+                                                <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 float_left js_add_cart_json">
+                                                    <span class="icon-plus"/>
+                                                </a>
+                                            </span>
+                                        </div>
 
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class='pull-right mb16' id="mycart_total">
-                        <colgroup>
-                            <col width="100"/>
-                            <col width="120"/>
-                        </colgroup>
-                        <thead>
-                            <tr style="border-top: 1px solid #000">
-                                <th><h3>Total:</h3></th>
-                                <th class="text-right"><h3>
-                                    <span t-field="website_sale_order.amount_total" t-field-options='{
-                                        "widget": "monetary",
-                                        "display_currency": "website.pricelist_id.currency_id"
-                                    }'/></h3>
-                                </th>
-                            </tr>
-                            <tr class="text-muted">
-                                <td><abbr title="Taxes may be updated after providing shipping address">Incl. Taxes:</abbr></td>
-                                <td class="text-right">
-                                    <span t-field="website_sale_order.amount_tax" t-field-options='{
-                                        "widget": "monetary",
-                                        "display_currency": "website.pricelist_id.currency_id"
-                                    }'/>
-                                </td>
-                            </tr>
-                        </thead>
-                    </table>
-                    <div class="clearfix"/>
-
-                    <a t-href="/shop" class="btn btn-default"><span class="icon-long-arrow-left"/> Continue Shopping</a>
-                    <a t-if="website_sale_order and website_sale_order.order_line" t-href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
-                    <div class="oe_structure"/>
-                  </div>
-                  <div class="col-md-3 col-md-offset-1 text-muted" id="right_column">
-                      <h4>Policies</h4>
-                      <ul class="list-unstyled mb32">
-                        <li>&#9745; 30-days money-back guarantee</li>
-                        <li>&#9745; Invoice sent by e-Mail</li>
-                      </ul>
-
-                      <h4>Secure Payment</h4>
-                      <ul class="list-unstyled mb32">
-                        <li>&#9745; Transation 256bit encrypted</li>
-                        <li>&#9745; Processed by Ogone</li>
-                      </ul>
-
-                  </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class='pull-right mb16' id="mycart_total">
+                            <colgroup>
+                                <col width="100"/>
+                                <col width="120"/>
+                            </colgroup>
+                            <thead>
+                                <tr style="border-top: 1px solid #000">
+                                    <th><h3>Total:</h3></th>
+                                    <th class="text-right"><h3>
+                                        <span t-field="website_sale_order.amount_total" t-field-options='{
+                                            "widget": "monetary",
+                                            "display_currency": "website.pricelist_id.currency_id"
+                                        }'/></h3>
+                                    </th>
+                                </tr>
+                                <tr class="text-muted">
+                                    <td><abbr title="Taxes may be updated after providing shipping address">Incl. Taxes:</abbr></td>
+                                    <td class="text-right">
+                                        <span t-field="website_sale_order.amount_tax" t-field-options='{
+                                            "widget": "monetary",
+                                            "display_currency": "website.pricelist_id.currency_id"
+                                        }'/>
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="clearfix"/>
+                        <a t-href="/shop" class="btn btn-default"><span class="icon-long-arrow-left"/> Continue Shopping</a>
+                        <a t-if="website_sale_order and website_sale_order.order_line" t-href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
+                        <div class="oe_structure"/>
+                    </div>
                 </div>
 
               </div>
