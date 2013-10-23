@@ -1095,8 +1095,6 @@ class procurement_order(osv.osv):
         return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)
         
     def _run(self, cr, uid, procurement, context=None):
-        if procurement.rule_id:
-            print procurement.rule_id.action
         if procurement.rule_id and procurement.rule_id.action == 'buy':
             #make a purchase order for the procurement
             return self.make_po(cr, uid, [procurement.id], context=context)[procurement.id]
