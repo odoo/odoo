@@ -87,7 +87,6 @@ class crm_case_section(osv.osv):
         'monthly_invoiced': fields.function(_get_invoices_data,
             type='string', readonly=True,
             string='Rate of sent invoices per duration'),
-        'create_uid': fields.many2one('res.users', 'Create User'),
     }
 
     def action_forecast(self, cr, uid, id, value, context=None):
