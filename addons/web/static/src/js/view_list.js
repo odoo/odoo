@@ -508,10 +508,15 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         var reloaded = $.Deferred();
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
-                if ((self.dataset.index === null || self.dataset.index === undefined) && self.records.length ||
-                    self.dataset.index >= self.records.length) {
+                // Keep '=='. This is not a mistake, this is a wanted behaviour to match null & undefined
+                if (self.dataset.index == null) {
+                    if (self.records.length) {
                         self.dataset.index = 0;
+                    }
+                } else if (self.dataset.index >= self.records.length) {
+                    self.dataset.index = 0;
                 }
+
                 self.compute_aggregates();
                 reloaded.resolve();
             }));
