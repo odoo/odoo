@@ -103,12 +103,13 @@
                                                 <li t-if="request.multilang and
                                                             (len(website.language_ids) &gt; 1 or editable)" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
-                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                    <a class="dropdown-toggle js_language_selected" data-toggle="dropdown" href="#">
                                                         <t t-esc="lang_selected[0]['name'].split('/').pop()"/> <span class="caret"></span>
                                                     </a>
-                                                    <ul class="dropdown-menu" role="menu">
+                                                    <ul class="dropdown-menu js_language_selector" role="menu">
                                                         <li t-foreach="website.language_ids" t-as="lg">
-                                                            <a t-att-href="url_for('', lang=lg.code)" role="menuitem">
+                                                            <a t-att-href="url_for('', lang=lg.code)" role="menuitem"
+                                                               t-att-data-default-lang="editable and 'true' if lg.code == website.default_lang_id.code else None">
                                                                 <strong t-att-class="'icon-circle' if lg.code == lang
                                                                     else 'icon-circle-blank'"></strong>
                                                                 <t t-esc="lg.name.split('/').pop()"/>
