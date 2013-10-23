@@ -200,7 +200,8 @@ class crm_case_section(osv.osv):
         'monthly_planned_revenue': fields.function(_get_opportunities_data,
             type="string", readonly=True, multi='_get_opportunities_data',
             string='Planned Revenue per Month'),
-        'currency_symbol': fields.function(_get_currency_symbol, string='Currency Symbol', method=True, type='char'),
+        'currency_id': fields.many2one('res.currency', 'Currency', required=True),
+        'currency_symbol': fields.function(_get_currency_symbol, string="Current User's Currency Symbol", method=True, type='char'),
     }
 
     def _get_stage_common(self, cr, uid, context):
@@ -211,6 +212,7 @@ class crm_case_section(osv.osv):
         'active': 1,
         'stage_ids': _get_stage_common,
         'use_leads': True,
+        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
     }
 
     _sql_constraints = [

@@ -88,8 +88,6 @@ class crm_case_section(osv.osv):
             type='string', readonly=True,
             string='Rate of sent invoices per duration'),
         'create_uid': fields.many2one('res.users', 'Create User'),
-        'company_id': fields.related('create_uid', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True, readonly=True, string='Currency'),
     }
 
     def action_forecast(self, cr, uid, id, value, context=None):
