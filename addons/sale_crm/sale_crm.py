@@ -70,35 +70,12 @@ class crm_case_section(osv.osv):
             res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date', 'currency_id'], 'price_total', ['date', 'currency_id'], context=context)
         return res
 
-    def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names, args, context=None):
-        """Compute the amounts in the currency of the user """
-        res = {}
-        currency_obj = self.pool.get('res.currency')
-        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-        for item in self.browse(cr, uid, ids, context=context):
-            base_currency_id = item.user_id.company_id.currency_id.id if item.user_id else item.create_uid.company_id.currency_id.id
-            res[item.id] = {
-                'user_currency_invoiced_forecast': currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.invoiced_forecast, context=context),
-                'user_currency_invoiced_target': currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.invoiced_target, context=context),
-            }
-        return res
-
-    def _set_forecast_target(self, cr, uid, team_id, name, value, arg, context=None):
-        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
-        team = self.browse(cr, uid, team_id, context=context)
-        base_currency_id = team.user_id.company_id.currency_id.id if team.user_id else team.create_uid.company_id.currency_id.id
-        amount  = self.pool.get('res.currency').compute(cr, uid, user_currency_id, base_currency_id, value, context=context)
-        self.write(cr, uid, [team_id], {name.strip("user_currency"): amount}, context=context)
-        return True
-
     _columns = {
-        'invoiced_forecast': fields.integer("Invoice Forecast"),
-        'user_currency_invoiced_forecast': fields.function(_compute_amounts_in_user_currency, fnct_inv=_set_forecast_target, string='Invoice Forecast',type='integer', multi="_compute_amounts",
+        'invoiced_forecast': fields.integer("Invoice Forecast",
             help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
                     "team should invoice this month. It is used to compute the progression ratio \n"
                     " of the current and forecast revenue on the kanban view."),
-        'invoiced_target': fields.integer("Invoice Target"),
-        'user_currency_invoiced_target': fields.function(_compute_amounts_in_user_currency, fnct_inv=_set_forecast_target, string='Invoice Target',type='integer', multi="_compute_amounts",
+        'invoiced_target': fields.integer("Invoice Target",
             help="Target of invoice revenue for the current month. This is the amount the sales \n"
                     "team estimates to be able to invoice this month."),
         'monthly_quoted': fields.function(_get_sale_orders_data,
@@ -111,10 +88,12 @@ class crm_case_section(osv.osv):
             type='string', readonly=True,
             string='Rate of sent invoices per duration'),
         'create_uid': fields.many2one('res.users', 'Create User'),
+        'company_id': fields.related('create_uid', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
+        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True, readonly=True, string='Currency'),
     }
 
     def action_forecast(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'user_currency_invoiced_forecast': round(float(value))}, context=context)
+        return self.write(cr, uid, [id], {'invoiced_forecast': round(float(value))}, context=context)
 
 class res_users(osv.Model):
     _inherit = 'res.users'

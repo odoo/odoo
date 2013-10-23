@@ -248,8 +248,9 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='code']" position="after">
-                    <field name="user_currency_invoiced_target" readonly="0"/>
-                    <field name="user_currency_invoiced_forecast" readonly="0"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="invoiced_target" readonly="0" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="invoiced_forecast" readonly="0" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 </xpath>
             </data>
             </field>
@@ -265,8 +266,8 @@
                     <field name="monthly_quoted"/>
                     <field name="monthly_confirmed"/>
                     <field name="monthly_invoiced"/>
-                    <field name="user_currency_invoiced_forecast"/>
-                    <field name="user_currency_invoiced_target"/>
+                    <field name="invoiced_forecast"/>
+                    <field name="invoiced_target"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_salesteams_leads']" position="after">
                     <div class="oe_salesteams_orders">
@@ -297,11 +298,11 @@
                     </div>
                 </xpath>
                 <xpath expr="//div[@class='oe_items_list']" position="after">
-                    <div class="oe_center oe_salesteams_justgage" t-if="record.user_currency_invoiced_target.raw_value">
-                        <field name="monthly_invoiced" widget="gauge" style="width:160px; height: 120px;" options="{'max_field': 'user_currency_invoiced_target'}">Invoiced</field>
-                        <field name="user_currency_invoiced_forecast" widget="gauge" style="width:160px; height: 120px; cursor: pointer;" options="{'max_field': 'user_currency_invoiced_target', 'action_change': 'action_forecast'}">Forecast</field>
+                    <div class="oe_center oe_salesteams_justgage" t-if="record.invoiced_target.raw_value">
+                        <field name="monthly_invoiced" widget="gauge" style="width:160px; height: 120px;" options="{'max_field': 'invoiced_target'}">Invoiced</field>
+                        <field name="invoiced_forecast" widget="gauge" style="width:160px; height: 120px; cursor: pointer;" options="{'max_field': 'invoiced_target', 'action_change': 'action_forecast'}">Forecast</field>
                     </div>
-                    <div class="oe_center oe_salesteams_help" style="color:#bbbbbb;" t-if="!record.user_currency_invoiced_target.raw_value">
+                    <div class="oe_center oe_salesteams_help" style="color:#bbbbbb;" t-if="!record.invoiced_target.raw_value">
                         <br/>Define an invoicing target in the sales team settings to see the period's achievement and forecast at a glance.
                     </div>
                 </xpath>
