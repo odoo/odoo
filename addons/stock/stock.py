@@ -2223,6 +2223,15 @@ class stock_warehouse(osv.osv):
             res[wh.id] = (len(wh.resupply_wh_ids) > 0)
         return res
     
+    def init_filtre_default_resupply_wh_id(self,cr,uid,ids,name,args,context=None):
+        res = {}        
+        for wh in self.browse(cr,uid,ids,context=context):            
+            wh_res = []
+            for resupply_id in wh.resupply_wh_ids:
+                wh_res += [resupply_id.id]            
+            res[wh.id] = [wh_res]
+        return res
+    
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -2254,13 +2263,10 @@ class stock_warehouse(osv.osv):
         'resupply_from_wh': fields.boolean('Resupply From Other Warehouses'),
         'resupply_wh_ids': fields.many2many('stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id', 'Resupply Warehouses'),
         'resupply_route_ids': fields.one2many('stock.location.route', 'supplied_wh_id', 'Resupply Routes'),
-        'default_resupply_wh_id': fields.many2one('stock.warehouse', 'Default Resupply Warehouse'),
-        'show_default_resupply_wh_id': fields.function(show_field_default_wh_resupply,type='boolean',string="Show field default_resupply_wh_id"),
-        #'resupply_init_filter' : fields.function(init_filtre_default_resupply_wh_id, type='char', string='test'),
-        
-    }
-
-    
+        'default_resupply_wh_id': fields.many2one('stock.warehouse', 'Default Resupply Warehouse', domain="[('id','in',resupply_init_filter)]"),
+        'show_default_resupply_wh_id': fields.function(show_field_default_wh_resupply,type='boolean',string="Show field default_resupply_wh_id"),        
+        'resupply_init_filter' : fields.function(init_filtre_default_resupply_wh_id, type='many2one', string='test',relation='stock.warehouse'),        
+    }    
     
     
     def onchange_filtre_default_resupply_wh_id(self, cr, uid, ids, resupply_wh_ids,default_resupply_wh_id, context=None):
