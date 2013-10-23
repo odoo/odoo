@@ -106,6 +106,7 @@ class report_project_task_user(osv.osv):
                     month,
                     day,
                     create_date,
+                    write_date,
                     date_start,
                     date_end,
                     date_deadline,
