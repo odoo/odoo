@@ -356,7 +356,7 @@ class Ecommerce(http.Controller):
     def add_product(self, cat_id=0, **post):
         product_id = request.registry.get('product.product').create(request.cr, request.uid,
             {'name': 'New Product', 'public_categ_id': cat_id}, request.context)
-        return request.redirect("/shop/product/%s/?unable_editor=1" % product_id)
+        return request.redirect("/shop/product/%s/?enable_editor=1" % product_id)
 
     def get_pricelist(self):
         if not request.httprequest.session.get('ecommerce_pricelist'):
