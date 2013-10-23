@@ -1293,7 +1293,7 @@ openerp.testing.section('search.filters.saved', {
         return view.appendTo($fix)
         .then(function () {
             $fix.find('.oe_searchview_custom input#oe_searchview_custom_input')
-                    .text("filter name")
+                    .val("filter name")
                 .end()
                 .find('.oe_searchview_custom button').click();
             return done.promise();
