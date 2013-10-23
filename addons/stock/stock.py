@@ -2457,6 +2457,8 @@ class stock_warehouse(osv.osv):
         for push_rule in push_rules_list:
             push_obj.create(cr, uid, vals=push_rule, context=context)
         for pull_rule in pull_rules_list:
+            #all pull rules in reception route are mto, because we don't won't to wait for the scheduler to trigger an orderpoint on input location
+            pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
         #create MTS route and pull rules for delivery a specific route MTO to be set on the product
