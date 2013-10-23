@@ -28,16 +28,6 @@ from openerp.tools.translate import _
 import uuid
 from openerp import SUPERUSER_ID
 
-# TO BE REMOVED
-# class survey_type(osv.osv):
-#     _name = 'survey.type'
-#     _description = 'Survey Type'
-#     _columns = {
-#         'name': fields.char("Name", size=128, required=1, translate=True),
-#     }
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
-
 
 class survey(osv.osv):
     '''Settings for a multi-page/multi-question survey.
@@ -50,7 +40,6 @@ class survey(osv.osv):
     _rec_name = 'title'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-
     # Protected methods #
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -62,7 +51,8 @@ class survey(osv.osv):
             return []
 
     def _get_tot_start_survey(self, cr, uid, ids, name, arg, context=None):
-        """ Compute if the message is unread by the current user. """
+        """ Returns the number of started instances of this survey, be they
+        completed or not """
         res = dict((id, 0) for id in ids)
         sur_res_obj = self.pool.get('survey.response')
         for id in ids:
@@ -70,7 +60,7 @@ class survey(osv.osv):
         return res
 
     def _get_tot_comp_survey(self, cr, uid, ids, name, arg, context=None):
-        """ Compute if the message is unread by the current user. """
+        """ Returns the number of completed instances of this survey """
         res = dict((id, 0) for id in ids)
         sur_res_obj = self.pool.get('survey.response')
         for id in ids:
@@ -78,11 +68,11 @@ class survey(osv.osv):
         return res
 
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
-        """ Compute if the message is unread by the current user. """
+        """ Computes a public URL for the survey """
         res = dict((id, 0) for id in ids)
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        survey_obj = self.pool.get('survey')
-        for survey_browse in survey_obj.browse(cr, uid, ids, context=context):
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
+            'web.base.url')
+        for survey_browse in self.browse(cr, uid, ids, context=context):
             query = {
                 'db': cr.dbname
             }
@@ -94,42 +84,55 @@ class survey(osv.osv):
             res[survey_browse.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
         return res
 
+    def _check_valid(self, cr, uid, ids, context=None):
+        for survey in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            if not survey.page_ids or not [page.question_ids for page in survey.page_ids if page.question_ids]:
+                raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined.'))
 
     # Model fields #
 
     _columns = {
-        'title': fields.char('Survey Title', size=128, required=1, translate=True),
+        'title': fields.char('Title', size=128, required=1,
+            translate=True),
         'category': fields.char('Category', size=128, translate=True),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
-        'date_open': fields.datetime('Survey Opening Date', readonly=1), #TODO purpose ?
-        'date_close': fields.datetime('Survey Closing Date', readonly=1), #TODO purpose ?
-        'max_response_limit': fields.integer('Maximum Answer Limit', 
-            help="Set to one if survey is answerable only once"), #TODO field name not expressive
+        'date_open': fields.datetime('Opening date', readonly=1),
+        'date_close': fields.datetime('Closing date', readonly=1),
+        'user_input_limit': fields.integer('Automatic closing limit',
+            help="Limits the number of instances of this survey that can be \
+            completed (if set to 0, no limit is applied",
+            oldname='max_response_limit'),
         'state': fields.selection(
             [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
             ('cancel', 'Cancelled')], 'Status', required=1, readonly=1,
             translate=1),
-        'visible_to_user': fields.boolean('Visible in the survey menu',
-            help="If checked, survey users can see this survey in the kanban view."),
-        'authenticate': fields.boolean('A login is required', help="If checked, users who click on the public web link will be redirected to a login page where they must provide a login name and password. If unchecked, they may complete the survey directly."),
-        'tot_start_survey': fields.function(_get_tot_start_survey, string="Total Started Survey", type="integer"),
-        'tot_comp_survey': fields.function(_get_tot_comp_survey, string="Total Completed Survey", type="integer"),
-        'note': fields.text('Description', size=128, translate=True),
-        'type': fields.many2one('survey.type', 'Type'),
+        'visible_to_user': fields.boolean('Visible in the Surveys menu'),
+        'auth_required': fields.boolean('Login required',
+            help="Users with a public link will be requested to login before \
+            takin part to the survey", oldname="authenticate"),
+        'tot_start_survey': fields.function(_get_tot_start_survey,
+            string="Number of started surveys", type="integer"),
+        'tot_comp_survey': fields.function(_get_tot_comp_survey,
+            string="Number of completed surveys", type="integer"),
+        'description': fields.text('Description', size=128, translate=True,
+            oldname="description"),
         'color': fields.integer('Color Index'),
-        'response_ids': fields.one2many('survey.response', 'survey_id', 'Responses', readonly=1),
-        'public_url': fields.function(_get_public_url, string="Public web link", type="char"),
+        'user_input_ids': fields.one2many('survey.user_input', 'survey_id',
+            'User responses', readonly=1,),
+        'public_url': fields.function(_get_public_url,
+            string="Public link", type="char"),
         'token': fields.char('Public token', size=8, required=1),
-        'email_template_id': fields.many2one('email.template', 'Email Template', ondelete='set null'),
+        'email_template_id': fields.many2one('email.template',
+            'Email Template', ondelete='set null'),
     }
     _defaults = {
+        'category': 'Uncategorized',
+        'user_input_limit': 0,
         'state': 'draft',
         'visible_to_user': True,
-        'authenticate': True,
-        'date_open': fields.datetime.now,
+        'auth_required': True,
         'token': lambda s, cr, uid, c: uuid.uuid4(),
     }
-
 
     # Public methods #
 
@@ -137,13 +140,16 @@ class survey(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft', 'date_open': None})
 
     def survey_open(self, cr, uid, ids, arg):
-        return self.write(cr, uid, ids, {'state': 'open', 'date_open': datetime.now()})
+        return self.write(cr, uid, ids, {'state': 'open',
+            'date_open': datetime.now()})
 
     def survey_close(self, cr, uid, ids, arg):
-        return self.write(cr, uid, ids, {'state': 'close', 'date_close': datetime.now()})
+        return self.write(cr, uid, ids, {'state': 'close',
+            'date_close': datetime.now()})
 
     def survey_cancel(self, cr, uid, ids, arg):
-        return self.write(cr, uid, ids, {'state': 'cancel', 'date_close': datetime.now()})
+        return self.write(cr, uid, ids, {'state': 'cancel',
+            'date_close': datetime.now()})
 
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
@@ -214,11 +220,6 @@ class survey(osv.osv):
                 },
             },
         }
-
-    def _check_valid(self, cr, uid, ids, context=None):
-        for survey in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            if not survey.page_ids or not [page.question_ids for page in survey.page_ids if page.question_ids]:
-                raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined.'))
 
     def action_fill_survey(self, cr, uid, ids, context=None):
         id = ids[0]
@@ -300,9 +301,6 @@ class survey(osv.osv):
         return super(survey, self).unlink(cr, uid, ids, context=context)
 
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
-
-
 class survey_page(osv.osv):
     _name = 'survey.page'
     _description = 'Survey Pages'
@@ -347,9 +345,6 @@ class survey_page(osv.osv):
         title = _("%s (copy)") % (current_rec.get('title'))
         vals.update({'title': title})
         return super(survey_page, self).copy(cr, uid, ids, vals, context=context)
-
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
 
 
 class survey_question(osv.osv):
@@ -497,7 +492,7 @@ class survey_question(osv.osv):
         return {'value': {}}
 
     def write(self, cr, uid, ids, vals, context=None):
-        questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type', 
+        questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type',
             'required_type', 'req_ans', 'minimum_req_ans', 'maximum_req_ans',
             'column_heading_ids', 'page_id', 'question'])
         for question in questions:
@@ -599,9 +594,6 @@ class survey_question(osv.osv):
         }
 
 
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
-
-
 class survey_question_column_heading(osv.osv):
     _name = 'survey.question.column.heading'
     _description = 'Survey Question Column Heading'
@@ -635,9 +627,6 @@ class survey_question_column_heading(osv.osv):
         'in_visible_rating_weight': _get_in_visible_rating_weight,
         'in_visible_menu_choice': _get_in_visible_menu_choice,
     }
-
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
 
 
 class survey_answer(osv.osv):
@@ -693,9 +682,6 @@ class survey_answer(osv.osv):
             context = {}
         data = super(survey_answer, self).default_get(cr, uid, fields, context)
         return data
-
-
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
 
 
 class survey_response(osv.osv):
@@ -790,7 +776,7 @@ class survey_response(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning!'), _('You cannot duplicate the resource!'))
- 
+
 
 class survey_response_line(osv.osv):
     _name = 'survey.response.line'  # surver.user_input.question

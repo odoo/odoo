@@ -9,7 +9,7 @@
         <!-- Initial Partner Feedback Demo data -->
 
     <data noupdate="1">
-        <record model="survey" id="survey_Initial_partner_feedback">
+        <record model="survey.survey" id="survey_Initial_partner_feedback">
             <field name="title">Initial Partner Feedback</field>
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type1"/>
@@ -159,7 +159,7 @@
         <!--  Partner Feedback Demo data -->
 
     <data noupdate="1">
-        <record model="survey" id="survey_partner_feedback">
+        <record model="survey.survey" id="survey_partner_feedback">
             <field name="title">Partner Feedback</field>
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type1"/>
@@ -425,7 +425,7 @@
             <field name="question">Which maintenance contract do you sell to your customers.</field>
             <field name="page_id" ref="survey_page_Contracts" />
             <field name="type">multiple_choice_only_one_ans</field>
-            
+
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_answer_maintenance_contract" model="survey.answer">
@@ -461,7 +461,7 @@
             <field name="question">Give your opinion about Launchpad reporting :</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            
+
             <field eval="2" name="sequence"/>
         </record>
         <record id="survey_answer_find_openobject_website1" model="survey.answer">
@@ -511,7 +511,7 @@
             <field name="question">Leads</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            
+
         </record>
         <record id="survey_answer_find_openobject_website" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
@@ -561,7 +561,7 @@
             <field name="question">How is OpenERP SA's communication with partners about...</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            
+
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_answer_Maintenance_contracts" model="survey.answer">
@@ -625,7 +625,7 @@
         <!--  Partner Feedback Demo data -->
 
     <data noupdate="1">
-        <record model="survey" id="survey_odoo_feedback">
+        <record model="survey.survey" id="survey_odoo_feedback">
             <field name="title">Odoo Feedback</field>
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type1"/>
@@ -653,7 +653,7 @@
             <field name="question">What is your company's sector?</field>
             <field name="page_id" ref="survey_page_odoo_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
-            
+
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_question_Agriculture" model="survey.answer">
@@ -1332,7 +1332,7 @@
             <field name="question">Give your opinion about Odoo's</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">matrix_of_choices_only_one_ans</field>
-            
+
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_pricing_criteria" model="survey.answer">
@@ -1393,10 +1393,10 @@
             <field name="question">If you have any additional comments, write them here :</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">comment</field>
-            
+
             <field name="sequence" eval="2"/>
         </record>
-        <record id="survey_0" model="survey">
+        <record id="survey_0" model="survey.survey">
             <field eval="&quot;&quot;&quot;OpenERP Feedback&quot;&quot;&quot;" name="title"/>
             <field name="color">4</field>
             <field name="max_response_limit">20</field>
@@ -2075,7 +2075,7 @@
         <!-- Community Survey -->
 
     <data noupdate="1">
-        <record id="survey_0_Community" model="survey">
+        <record id="survey_0_Community" model="survey.survey">
             <field name="title">Community Survey</field>
             <field name="note">Please take a few minutes to complete this survey on the quality of service we provide. We welcome your feedback and appreciate your honesty. With your help, we hope to strengthen the bond between our clients.</field>
             <field name="state">open</field>

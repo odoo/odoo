@@ -6,7 +6,7 @@
         <!-- Top menu item -->
         <menuitem name="Survey" id="survey_main" sequence="120"/>
         <menuitem name="Survey" id="menu_surveys" parent="survey_main" sequence="10" groups="base.group_survey_user"/>
-        
+
         <menuitem name="Statistics" id="menu_reporting" parent="survey_main" sequence="20" groups="base.group_survey_manager"/>
         <menuitem id="base.next_id_10" name="Survey" parent="base.menu_reporting" sequence="1" groups="base.group_survey_manager"/>
 
@@ -185,6 +185,7 @@
                     <field name="title"/>
                     <field name="type"/>
                     <field name="date_open"  string="Open Date"/>
+                    <field name="date_close"  string="Open Date"/>
                     <field name="tot_start_survey" string="Started"/>
                     <field name="tot_comp_survey" string="Completed"/>
                     <field name="state"/>
@@ -292,7 +293,7 @@
             <field name="search_view_id" ref="survey_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new survey. 
+                Click to create a new survey.
               </p><p>
                 You can create survey for different purposes: recruitment
                 interviews, employee's periodical evaluations, marketing

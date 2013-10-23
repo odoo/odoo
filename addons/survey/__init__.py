@@ -20,7 +20,6 @@
 ##############################################################################
 
 import survey
-import wizard #TODO to be removed
-import report #TODO to be removed
+import wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
