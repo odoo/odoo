@@ -71,11 +71,11 @@ class crm_case_section(osv.osv):
         return res
 
     _columns = {
-        'invoiced_forecast': fields.integer("Invoice Forecast",
+        'invoiced_forecast': fields.float("Invoice Forecast",
             help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
                     "team should invoice this month. It is used to compute the progression ratio \n"
                     " of the current and forecast revenue on the kanban view."),
-        'invoiced_target': fields.integer("Invoice Target",
+        'invoiced_target': fields.float("Invoice Target",
             help="Target of invoice revenue for the current month. This is the amount the sales \n"
                     "team estimates to be able to invoice this month."),
         'monthly_quoted': fields.function(_get_sale_orders_data,
@@ -90,7 +90,7 @@ class crm_case_section(osv.osv):
     }
 
     def action_forecast(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'invoiced_forecast': round(float(value))}, context=context)
+        return self.write(cr, uid, [id], {'invoiced_forecast': value}, context=context)
 
 class res_users(osv.Model):
     _inherit = 'res.users'
