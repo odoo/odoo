@@ -121,7 +121,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
     },
 
     parse_client: function(value) {
-        return openerp.web.parse_value(value, { type:"integer" });
+        return openerp.web.parse_value(value, { type:"float" });
     },
 
 });
