@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -51,13 +51,12 @@ class Env(dict):
         else:
             return super(Env, self).__getitem__(key)
 
-def _eval_expr(cr, ident, workitem, lines):
+def _eval_expr(session, record, workitem, lines):
     """
     Evaluate each line of ``lines`` with the ``Env`` environment, returning
     the value of the last line.
     """
     assert lines, 'You used a NULL action in a workflow, use dummy node instead.'
-    uid, model, id = ident
     result = False
     for line in lines.split('\n'):
         line = line.strip()
@@ -68,30 +67,29 @@ def _eval_expr(cr, ident, workitem, lines):
         elif line == 'False':
             result = False
         else:
-            env = Env(cr, uid, model, id)
+            env = Env(session.cr, session.uid, record.model, record.id)
             result = eval(line, env, nocopy=True)
     return result
 
-def execute_action(cr, ident, workitem, activity):
+def execute_action(session, record, workitem, activity):
     """
     Evaluate the ir.actions.server action specified in the activity.
     """
-    uid, model, id = ident
-    ir_actions_server = openerp.registry(cr.dbname)['ir.actions.server']
-    context = { 'active_model': model, 'active_id': id, 'active_ids': [id] }
-    result = ir_actions_server.run(cr, uid, [activity['action_id']], context)
+    ir_actions_server = openerp.registry(session.cr.dbname)['ir.actions.server']
+    context = { 'active_model': record.model, 'active_id': record.id, 'active_ids': [record.id] }
+    result = ir_actions_server.run(session.cr, session.uid, [activity['action_id']], context)
     return result
 
-def execute(cr, ident, workitem, activity):
+def execute(session, record, workitem, activity):
     """
     Evaluate the action specified in the activity.
     """
-    return _eval_expr(cr, ident, workitem, activity['action'])
+    return _eval_expr(session, record, workitem, activity['action'])
 
-def check(cr, workitem, ident, transition, signal):
+def check(session, record, workitem, transition, signal):
     """
     Test if a transition can be taken. The transition can be taken if:
-    
+
     - the signal name matches,
     - the uid is SUPERUSER_ID or the user groups contains the transition's
       group,
@@ -100,14 +98,13 @@ def check(cr, workitem, ident, transition, signal):
     if transition['signal'] and signal != transition['signal']:
         return False
 
-    uid = ident[0]
-    if uid != openerp.SUPERUSER_ID and transition['group_id']:
-        registry = openerp.registry(cr.dbname)
-        user_groups = registry['res.users'].read(cr, uid, [uid], ['groups_id'])[0]['groups_id']
+    if session.uid != openerp.SUPERUSER_ID and transition['group_id']:
+        registry = openerp.registry(session.cr.dbname)
+        user_groups = registry['res.users'].read(session.cr, session.uid, [session.uid], ['groups_id'])[0]['groups_id']
         if transition['group_id'] not in user_groups:
             return False
 
-    return _eval_expr(cr, ident, workitem, transition['condition'])
+    return _eval_expr(session, record, workitem, transition['condition'])
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

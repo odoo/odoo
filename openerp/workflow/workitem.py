@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -28,22 +28,40 @@ import logging
 import instance
 
 import wkf_expr
+from helpers import Session
+from helpers import Record
 
 logger = logging.getLogger(__name__)
 
-def create(cr, act_datas, inst_id, ident, stack):
-    for act in act_datas:
+def create(session, record, activities, instance_id, stack):
+    assert isinstance(session, Session)
+    assert isinstance(record, Record)
+    assert isinstance(activities, list)
+    assert isinstance(instance_id, (long, int))
+    assert isinstance(stack, list)
+    cr = session.cr
+
+    ident = session.uid, record.model, record.id
+    for activity in activities:
         cr.execute("select nextval('wkf_workitem_id_seq')")
         id_new = cr.fetchone()[0]
-        cr.execute("insert into wkf_workitem (id,act_id,inst_id,state) values (%s,%s,%s,'active')", (id_new, act['id'], inst_id))
+        cr.execute("insert into wkf_workitem (id,act_id,inst_id,state) values (%s,%s,%s,'active')", (id_new, activity['id'], instance_id))
         cr.execute('select * from wkf_workitem where id=%s',(id_new,))
-        res = cr.dictfetchone()
+        work_item = cr.dictfetchone()
         logger.info('Created workflow item in activity %s',
-                    act['id'], extra={'ident': ident})
-        process(cr, res, ident, stack=stack)
+                    activity['id'],
+                    extra={'ident': (session.uid, record.model, record.id)})
 
-def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
+        process(session, record, work_item, stack=stack)
+
+def process(session, record, workitem, signal=None, force_running=False, stack=None):
+    assert isinstance(session, Session)
+    assert isinstance(record, Record)
+    assert isinstance(force_running, bool)
+
     assert stack is not None
+
+    cr = session.cr
 
     cr.execute('select * from wkf_activity where id=%s', (workitem['act_id'],))
     activity = cr.dictfetchone()
@@ -51,18 +69,18 @@ def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
     triggers = False
     if workitem['state'] == 'active':
         triggers = True
-        if not _execute(cr, workitem, activity, ident, stack):
+        if not _execute(session, record, workitem, activity, stack):
             return False
 
     if force_running or workitem['state'] == 'complete':
-        ok = _split_test(cr, workitem, activity['split_mode'], ident, signal, stack)
+        ok = _split_test(session, record, workitem, activity['split_mode'], signal, stack)
         triggers = triggers and not ok
 
     if triggers:
         cr.execute('select * from wkf_transition where act_from=%s', (workitem['act_id'],))
         for trans in cr.dictfetchall():
             if trans['trigger_model']:
-                ids = wkf_expr._eval_expr(cr,ident,workitem,trans['trigger_expr_id'])
+                ids = wkf_expr._eval_expr(session, record, workitem, trans['trigger_expr_id'])
                 for res_id in ids:
                     cr.execute('select nextval(\'wkf_triggers_id_seq\')')
                     id =cr.fetchone()[0]
@@ -73,26 +91,32 @@ def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
 
 # ---------------------- PRIVATE FUNCS --------------------------------
 
-def _state_set(cr, workitem, activity, state, ident):
-    cr.execute('update wkf_workitem set state=%s where id=%s', (state,workitem['id']))
-    workitem['state'] = state
-    logger.info("Changed state of work item %s to \"%s\" in activity %s",
-                workitem['id'], state, activity['id'], extra={'ident': ident})
+# def new_state_set(session, record, workitem, activity, state):
 
-def _execute(cr, workitem, activity, ident, stack):
+def _state_set(session, record, workitem, activity, state):
+    session.cr.execute('update wkf_workitem set state=%s where id=%s', (state, workitem['id']))
+    workitem['state'] = state
+    logger.info('Changed state of work item %s to "%s" in activity %s',
+                workitem['id'], state, activity['id'],
+                extra={'ident': (session.uid, record.model, record.id)})
+
+def _execute(session, record, workitem, activity, stack):
     result = True
     #
     # send a signal to parent workflow (signal: subflow.signal_name)
     #
+    cr = session.cr
+    ident = (session.uid, record.model, record.id)
     signal_todo = []
     if (workitem['state']=='active') and activity['signal_send']:
         cr.execute("select i.id,w.osv,i.res_id from wkf_instance i left join wkf w on (i.wkf_id=w.id) where i.id IN (select inst_id from wkf_workitem where subflow_id=%s)", (workitem['inst_id'],))
-        for i in cr.fetchall():
-            signal_todo.append((i[0], (ident[0],i[1],i[2]), activity['signal_send']))
+        for instance_id, model_name, record_id in cr.fetchall():
+            record = Record(model_name, record_id)
+            signal_todo.append((instance_id, record, activity['signal_send']))
 
     if activity['kind']=='dummy':
         if workitem['state']=='active':
-            _state_set(cr, workitem, activity, 'complete', ident)
+            _state_set(session, record, workitem, activity, 'complete')
             if activity['action_id']:
                 res2 = wkf_expr.execute_action(cr, ident, workitem, activity)
                 if res2:
@@ -100,29 +124,29 @@ def _execute(cr, workitem, activity, ident, stack):
                     result=res2
     elif activity['kind']=='function':
         if workitem['state']=='active':
-            _state_set(cr, workitem, activity, 'running', ident)
-            returned_action = wkf_expr.execute(cr, ident, workitem, activity)
+            _state_set(session, record, workitem, activity, 'running')
+            returned_action = wkf_expr.execute(session, record, workitem, activity)
             if type(returned_action) in (dict,):
                 stack.append(returned_action)
             if activity['action_id']:
-                res2 = wkf_expr.execute_action(cr, ident, workitem, activity)
+                res2 = wkf_expr.execute_action(session, record, workitem, activity)
                 # A client action has been returned
                 if res2:
                     stack.append(res2)
                     result=res2
-            _state_set(cr, workitem, activity, 'complete', ident)
+            _state_set(session, record, workitem, activity, 'complete')
     elif activity['kind']=='stopall':
         if workitem['state']=='active':
-            _state_set(cr, workitem, activity, 'running', ident)
+            _state_set(session, record, workitem, activity, 'running')
             cr.execute('delete from wkf_workitem where inst_id=%s and id<>%s', (workitem['inst_id'], workitem['id']))
             if activity['action']:
-                wkf_expr.execute(cr, ident, workitem, activity)
-            _state_set(cr, workitem, activity, 'complete', ident)
+                wkf_expr.execute(session, record, workitem, activity)
+            _state_set(session, record, workitem, activity, 'complete')
     elif activity['kind']=='subflow':
         if workitem['state']=='active':
-            _state_set(cr, workitem, activity, 'running', ident)
+            _state_set(session, record, workitem, activity, 'running')
             if activity.get('action', False):
-                id_new = wkf_expr.execute(cr, ident, workitem, activity)
+                id_new = wkf_expr.execute(session, record, workitem, activity)
                 if not id_new:
                     cr.execute('delete from wkf_workitem where id=%s', (workitem['id'],))
                     return False
@@ -130,27 +154,29 @@ def _execute(cr, workitem, activity, ident, stack):
                 cr.execute('select id from wkf_instance where res_id=%s and wkf_id=%s', (id_new,activity['subflow_id']))
                 id_new = cr.fetchone()[0]
             else:
-                id_new = instance.create(cr, ident, activity['subflow_id'])
+                id_new = instance.create(session, record, activity['subflow_id'])
             cr.execute('update wkf_workitem set subflow_id=%s where id=%s', (id_new, workitem['id']))
             workitem['subflow_id'] = id_new
         if workitem['state']=='running':
             cr.execute("select state from wkf_instance where id=%s", (workitem['subflow_id'],))
             state= cr.fetchone()[0]
             if state=='complete':
-                _state_set(cr, workitem, activity, 'complete', ident)
-    for t in signal_todo:
-        instance.validate(cr, t[0], t[1], t[2], force_running=True)
+                _state_set(session, record, workitem, activity, 'complete')
+
+    for instance_id, record, signal_send in signal_todo:
+        instance.validate(session, record, signal_send, force_running=True)
 
     return result
 
-def _split_test(cr, workitem, split_mode, ident, signal=None, stack=None):
+def _split_test(session, record, workitem, split_mode, signal, stack):
+    cr = session.cr
     cr.execute('select * from wkf_transition where act_from=%s', (workitem['act_id'],))
     test = False
     transitions = []
     alltrans = cr.dictfetchall()
     if split_mode=='XOR' or split_mode=='OR':
         for transition in alltrans:
-            if wkf_expr.check(cr, workitem, ident, transition,signal):
+            if wkf_expr.check(session, record, workitem, transition,signal):
                 test = True
                 transitions.append((transition['id'], workitem['inst_id']))
                 if split_mode=='XOR':
@@ -158,7 +184,7 @@ def _split_test(cr, workitem, split_mode, ident, signal=None, stack=None):
     else:
         test = True
         for transition in alltrans:
-            if not wkf_expr.check(cr, workitem, ident, transition,signal):
+            if not wkf_expr.check(session, record, workitem, transition,signal):
                 test = False
                 break
             cr.execute('select count(*) from wkf_witm_trans where trans_id=%s and inst_id=%s', (transition['id'], workitem['inst_id']))
@@ -168,15 +194,17 @@ def _split_test(cr, workitem, split_mode, ident, signal=None, stack=None):
         cr.executemany('insert into wkf_witm_trans (trans_id,inst_id) values (%s,%s)', transitions)
         cr.execute('delete from wkf_workitem where id=%s', (workitem['id'],))
         for t in transitions:
-            _join_test(cr, t[0], t[1], ident, stack)
+            _join_test(session, record, t[0], t[1], stack)
         return True
     return False
 
-def _join_test(cr, trans_id, inst_id, ident, stack):
+def _join_test(session, record, trans_id, inst_id, stack):
+    # cr, trans_id, inst_id, ident, stack):
+    cr = session.cr
     cr.execute('select * from wkf_activity where id=(select act_to from wkf_transition where id=%s)', (trans_id,))
     activity = cr.dictfetchone()
     if activity['join_mode']=='XOR':
-        create(cr,[activity], inst_id, ident, stack)
+        create(session, record, [activity], inst_id, stack)
         cr.execute('delete from wkf_witm_trans where inst_id=%s and trans_id=%s', (inst_id,trans_id))
     else:
         cr.execute('select id from wkf_transition where act_to=%s', (activity['id'],))
@@ -191,7 +219,7 @@ def _join_test(cr, trans_id, inst_id, ident, stack):
         if ok:
             for (id,) in trans_ids:
                 cr.execute('delete from wkf_witm_trans where trans_id=%s and inst_id=%s', (id,inst_id))
-            create(cr, [activity], inst_id, ident, stack)
+            create(session, record, [activity], inst_id, stack)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
