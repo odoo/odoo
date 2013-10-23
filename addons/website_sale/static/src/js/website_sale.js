@@ -3,8 +3,8 @@ $(document).ready(function () {
         $(".oe_website_sale .js_shipping").toggle();
     });
 
-    $payment = $(".oe_website_sale .js_payment");
-    $("input[name='payment_type']", $payment).click(function (ev) {
+    var $payment = $(".oe_website_sale .js_payment");
+    $payment.find("input[name='payment_type']").click(function (ev) {
         var payment_id = $(ev.currentTarget).val();
         $("div[data-id]", $payment).addClass("hidden");
         $("a.btn:last, div[data-id='"+payment_id+"']", $payment).removeClass("hidden");
@@ -114,7 +114,7 @@ $(document).ready(function () {
         var y = $td.parent().index()+1;
         openerp.jsonRpc('/shop/change_size/', 'call', {'id': $data.data('id'), 'x': x, 'y': y})
             .then(function () {
-                var search = location.search.replace(/\?|$/, '?unable_editor=1&');
+                var search = location.search.replace(/\?|$/, '?enable_editor=1&');
                 location.href = location.href.replace(/(\?|#).*/, search + location.hash);
             });
     });

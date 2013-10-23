@@ -56,7 +56,7 @@
 
                 //noinspection JSValidateTypes
                 editor.addCommand('link', {
-                    exec: function (editor, data) {
+                    exec: function (editor) {
                         link_dialog(editor);
                         return true;
                     },
@@ -65,7 +65,7 @@
                 });
                 //noinspection JSValidateTypes
                 editor.addCommand('image', {
-                    exec: function (editor, data) {
+                    exec: function (editor) {
                         image_dialog(editor);
                         return true;
                     },
@@ -177,7 +177,7 @@
         var editor = new website.EditorBar();
         var $body = $(document.body);
         editor.prependTo($body).then(function () {
-            if (location.search.indexOf("unable_editor") >= 0) {
+            if (location.search.indexOf("enable_editor") >= 0) {
                 editor.edit();
             }
         });
@@ -219,7 +219,7 @@
                 var view_id = $(event.currentTarget).data('view-id');
                 openerp.jsonRpc('/website/customize_template_toggle', 'call', {
                     'view_id': view_id
-                }).then( function(result) {
+                }).then( function() {
                     window.location.reload();
                 });
             });
@@ -253,7 +253,6 @@
             );
         },
         edit: function () {
-            var self = this;
             this.$buttons.edit.prop('disabled', true);
             this.$('#website-top-view').hide();
             this.$('#website-top-edit').show();
@@ -350,6 +349,7 @@
                 // The detail attribute indicates the number of times a mouse button has been pressed
                 // we just want the triple click
                 if (e.detail !== 3) { return; }
+                e.preventDefault();
 
                 // Get closest block-level element to the triple-clicked
                 // element (using ckeditor's block list because why not)
@@ -422,7 +422,7 @@
 
             return true;
         },
-        start_edition: function ($elements) {
+        start_edition: function () {
             var self = this;
             // create a single editor for the whole page
             var root = document.getElementById('wrapwrap');
@@ -483,7 +483,7 @@
                 .filter(function () {
                     var $this = $(this);
                     // keep view sections and fields which are *not* in
-                    // view sections for toplevel editables
+                    // view sections for top-level editables
                     return $this.data('oe-model') === 'ir.ui.view'
                        || !$this.closest('[data-oe-model = "ir.ui.view"]').length;
                 });
@@ -854,7 +854,7 @@
             this.preview_image();
         },
 
-        file_selection: function (e) {
+        file_selection: function () {
             this.$('button.filepicker').removeClass('btn-danger btn-success');
 
             var self = this;
