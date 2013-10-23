@@ -56,10 +56,6 @@ class hr_recruitment_stage(osv.osv):
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
-        'closed': fields.boolean('Closing Stage',
-                                 help='Indicates whether this field is the end of'
-                                 'the maangement process. This is for example a'
-                                 'stage considering the applicant as hired or refused.'),
     }
     _defaults = {
         'sequence': 1,
@@ -87,8 +83,9 @@ class hr_applicant(osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
         'stage_id': {
-            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
-            'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence != 1,
+            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
+            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
+            'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
         },
     }
 
@@ -99,7 +96,7 @@ class hr_applicant(osv.Model):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         department_id = self._get_default_department_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], department_id, [('sequence', '=', '1')], context=context)
+        return self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
 
     def _resolve_department_id_from_context(self, cr, uid, context=None):
         """ Returns ID of department based on the value of 'default_department_id'
@@ -246,7 +243,7 @@ class hr_applicant(osv.Model):
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
         if not stage_id:
-            stage_id = self.stage_find(cr, uid, [], department_id, [('sequence', '=', '1')], context=context)
+            stage_id = self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
         return {'value': {'stage_id': stage_id}}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
