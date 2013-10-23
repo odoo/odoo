@@ -425,9 +425,3 @@ class SeoMetadata(osv.Model):
         'website_meta_description': fields.text("Website meta description", size=160, translate=True),
         'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
-
-class res_company(osv.osv):
-    _inherit = "res.company"
-
-    def img(self, cr, uid, ids, field='logo', context=None):
-        return "/web/binary/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
