@@ -24,7 +24,7 @@
                 dialog.on('activate', this, function () {
                     localStorage[nodialog] = dialog.$('input[name=do_not_show]').prop('checked') || '';
                     dialog.$el.modal('hide');
-                    this.translate().then(function () {
+                    self.translate().then(function () {
                         mysuper.call(self);
                     });
                 });
@@ -44,7 +44,7 @@
                 self.translations = translations;
                 self.processTranslatableNodes();
                 // Disable non translatable t-fields
-                $('[data-oe-type][data-oe-translate=0]').removeAttr('data-oe-type');
+                $('[data-oe-type][data-oe-translate="0"]').removeAttr('data-oe-type');
             });
         },
         processTranslatableNodes: function () {
@@ -143,7 +143,6 @@
                 if (node.attributes['data-oe-translate'].value == '1') {
                     node.className += ' oe_translatable_field';
                 }
-                return;
             } else if (node.childNodes.length === 1
                     && this.isTextNode(node.childNodes[0])
                     && !node.getAttribute('data-oe-model')) {
@@ -175,7 +174,7 @@
             $(root).click(function (ev) {
                 ev.preventDefault();
             });
-            return $('[data-oe-translate=1]');
+            return $('[data-oe-translate="1"]');
         }
     });
 

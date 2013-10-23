@@ -3,8 +3,8 @@ $(document).ready(function () {
         $(".oe_website_sale .js_shipping").toggle();
     });
 
-    $payment = $(".oe_website_sale .js_payment");
-    $("input[name='payment_type']", $payment).click(function (ev) {
+    var $payment = $(".oe_website_sale .js_payment");
+    $payment.find("input[name='payment_type']").click(function (ev) {
         var payment_id = $(ev.currentTarget).val();
         $("div[data-id]", $payment).addClass("hidden");
         $("a.btn:last, div[data-id='"+payment_id+"']", $payment).removeClass("hidden");

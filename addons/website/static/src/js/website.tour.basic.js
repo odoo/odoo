@@ -10,6 +10,7 @@
         name: "Insert a banner",
         init: function (editor) {
             var self = this;
+            var $body = $(document.body);
             self.steps = [
                 {
                     stepId: 'welcome',
@@ -56,15 +57,16 @@
                     onShow: function () {
                         function beginDrag () {
                             $('.popover.tour').remove();
-                            $('body').off('mousedown', beginDrag);
                             function goToNextStep () {
                                 $('#oe_snippets').hide();
                                 self.movetoStep('edit-title');
-                                $('body').off('mouseup', goToNextStep);
+                                $body.off('mouseup', goToNextStep);
                             }
-                            $('body').on('mouseup', goToNextStep);
+                            $body.off('mousedown', beginDrag);
+                            $body.on('mouseup', goToNextStep);
                         }
-                        $('body').on('mousedown', beginDrag);
+
+                        $body.on('mousedown', beginDrag);
                     },
                 },
                 {
@@ -121,7 +123,7 @@
                     title: "Help is always available",
                     content: "But you can always click here if you want more tutorials.",
                     template: render('website.tour_popover', { end: "Close" }),
-                },
+                }
             ];
             return this._super();
         },
