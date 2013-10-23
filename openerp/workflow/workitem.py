@@ -41,7 +41,6 @@ def create(session, record, activities, instance_id, stack):
     assert isinstance(stack, list)
     cr = session.cr
 
-    ident = session.uid, record.model, record.id
     for activity in activities:
         cr.execute("select nextval('wkf_workitem_id_seq')")
         id_new = cr.fetchone()[0]
@@ -91,8 +90,6 @@ def process(session, record, workitem, signal=None, force_running=False, stack=N
 
 # ---------------------- PRIVATE FUNCS --------------------------------
 
-# def new_state_set(session, record, workitem, activity, state):
-
 def _state_set(session, record, workitem, activity, state):
     session.cr.execute('update wkf_workitem set state=%s where id=%s', (state, workitem['id']))
     workitem['state'] = state
@@ -106,7 +103,6 @@ def _execute(session, record, workitem, activity, stack):
     # send a signal to parent workflow (signal: subflow.signal_name)
     #
     cr = session.cr
-    ident = (session.uid, record.model, record.id)
     signal_todo = []
     if (workitem['state']=='active') and activity['signal_send']:
         cr.execute("select i.id,w.osv,i.res_id from wkf_instance i left join wkf w on (i.wkf_id=w.id) where i.id IN (select inst_id from wkf_workitem where subflow_id=%s)", (workitem['inst_id'],))
@@ -118,7 +114,7 @@ def _execute(session, record, workitem, activity, stack):
         if workitem['state']=='active':
             _state_set(session, record, workitem, activity, 'complete')
             if activity['action_id']:
-                res2 = wkf_expr.execute_action(cr, ident, workitem, activity)
+                res2 = wkf_expr.execute_action(session, record, workitem, activity)
                 if res2:
                     stack.append(res2)
                     result=res2
@@ -199,7 +195,6 @@ def _split_test(session, record, workitem, split_mode, signal, stack):
     return False
 
 def _join_test(session, record, trans_id, inst_id, stack):
-    # cr, trans_id, inst_id, ident, stack):
     cr = session.cr
     cr.execute('select * from wkf_activity where id=(select act_to from wkf_transition where id=%s)', (trans_id,))
     activity = cr.dictfetchone()
