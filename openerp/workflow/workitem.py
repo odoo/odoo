@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 OpenERP S.A. (<http://openerp.com).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,14 +24,100 @@
 # cr.execute('delete from wkf_triggers where model=%s and res_id=%s', (res_type,res_id))
 #
 import logging
-
 import instance
 
-import wkf_expr
-from helpers import Session
-from helpers import Record
+from openerp.workflow.helpers import Session
+from openerp.workflow.helpers import Record
 
 logger = logging.getLogger(__name__)
+
+import openerp
+from openerp.tools.safe_eval import safe_eval as eval
+
+class Env(dict):
+    """
+    Dictionary class used as an environment to evaluate workflow code (such as
+    the condition on transitions).
+
+    This environment provides sybmols for cr, uid, id, model name, model
+    instance, column names, and all the record (the one obtained by browsing
+    the provided ID) attributes.
+    """
+    def __init__(self, cr, uid, model, id):
+        self.cr = cr
+        self.uid = uid
+        self.model = model
+        self.id = id
+        self.ids = [id]
+        self.obj = openerp.registry(cr.dbname)[model]
+        self.columns = self.obj._columns.keys() + self.obj._inherit_fields.keys()
+
+    def __getitem__(self, key):
+        if (key in self.columns) or (key in dir(self.obj)):
+            res = self.obj.browse(self.cr, self.uid, self.id)
+            return res[key]
+        else:
+            return super(Env, self).__getitem__(key)
+
+def wkf_expr_eval_expr(session, record, workitem, lines):
+    """
+    Evaluate each line of ``lines`` with the ``Env`` environment, returning
+    the value of the last line.
+    """
+    assert lines, 'You used a NULL action in a workflow, use dummy node instead.'
+    result = False
+    for line in lines.split('\n'):
+        line = line.strip()
+        if not line:
+            continue
+        if line == 'True':
+            result = True
+        elif line == 'False':
+            result = False
+        else:
+            env = Env(session.cr, session.uid, record.model, record.id)
+            result = eval(line, env, nocopy=True)
+    return result
+
+def wkf_expr_execute_action(session, record, workitem, activity):
+    """
+    Evaluate the ir.actions.server action specified in the activity.
+    """
+    ir_actions_server = openerp.registry(session.cr.dbname)['ir.actions.server']
+    context = { 'active_model': record.model, 'active_id': record.id, 'active_ids': [record.id] }
+    result = ir_actions_server.run(session.cr, session.uid, [activity['action_id']], context)
+    return result
+
+def wkf_expr_execute(session, record, workitem, activity):
+    """
+    Evaluate the action specified in the activity.
+    """
+    return wkf_expr_eval_expr(session, record, workitem, activity['action'])
+
+def wkf_expr_check(session, record, workitem, transition, signal):
+    """
+    Test if a transition can be taken. The transition can be taken if:
+
+    - the signal name matches,
+    - the uid is SUPERUSER_ID or the user groups contains the transition's
+      group,
+    - the condition evaluates to a truish value.
+    """
+    if transition['signal'] and signal != transition['signal']:
+        return False
+
+    if session.uid != openerp.SUPERUSER_ID and transition['group_id']:
+        registry = openerp.registry(session.cr.dbname)
+        user_groups = registry['res.users'].read(session.cr, session.uid, [session.uid], ['groups_id'])[0]['groups_id']
+        if transition['group_id'] not in user_groups:
+            return False
+
+    return wkf_expr_eval_expr(session, record, workitem, transition['condition'])
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+
 
 def create(session, record, activities, instance_id, stack):
     assert isinstance(session, Session)
@@ -79,7 +165,7 @@ def process(session, record, workitem, signal=None, force_running=False, stack=N
         cr.execute('select * from wkf_transition where act_from=%s', (workitem['act_id'],))
         for trans in cr.dictfetchall():
             if trans['trigger_model']:
-                ids = wkf_expr._eval_expr(session, record, workitem, trans['trigger_expr_id'])
+                ids = wkf_expr_eval_expr(session, record, workitem, trans['trigger_expr_id'])
                 for res_id in ids:
                     cr.execute('select nextval(\'wkf_triggers_id_seq\')')
                     id =cr.fetchone()[0]
@@ -98,10 +184,8 @@ def _state_set(session, record, workitem, activity, state):
                 extra={'ident': (session.uid, record.model, record.id)})
 
 def _execute(session, record, workitem, activity, stack):
+    """Send a signal to parenrt workflow (signal: subflow.signal_name)"""
     result = True
-    #
-    # send a signal to parent workflow (signal: subflow.signal_name)
-    #
     cr = session.cr
     signal_todo = []
     if (workitem['state']=='active') and activity['signal_send']:
@@ -114,35 +198,38 @@ def _execute(session, record, workitem, activity, stack):
         if workitem['state']=='active':
             _state_set(session, record, workitem, activity, 'complete')
             if activity['action_id']:
-                res2 = wkf_expr.execute_action(session, record, workitem, activity)
+                res2 = wkf_expr_execute_action(session, record, workitem, activity)
                 if res2:
                     stack.append(res2)
                     result=res2
+
     elif activity['kind']=='function':
         if workitem['state']=='active':
             _state_set(session, record, workitem, activity, 'running')
-            returned_action = wkf_expr.execute(session, record, workitem, activity)
+            returned_action = wkf_expr_execute(session, record, workitem, activity)
             if type(returned_action) in (dict,):
                 stack.append(returned_action)
             if activity['action_id']:
-                res2 = wkf_expr.execute_action(session, record, workitem, activity)
+                res2 = wkf_expr_execute_action(session, record, workitem, activity)
                 # A client action has been returned
                 if res2:
                     stack.append(res2)
                     result=res2
             _state_set(session, record, workitem, activity, 'complete')
+
     elif activity['kind']=='stopall':
         if workitem['state']=='active':
             _state_set(session, record, workitem, activity, 'running')
             cr.execute('delete from wkf_workitem where inst_id=%s and id<>%s', (workitem['inst_id'], workitem['id']))
             if activity['action']:
-                wkf_expr.execute(session, record, workitem, activity)
+                wkf_expr_execute(session, record, workitem, activity)
             _state_set(session, record, workitem, activity, 'complete')
+
     elif activity['kind']=='subflow':
         if workitem['state']=='active':
             _state_set(session, record, workitem, activity, 'running')
             if activity.get('action', False):
-                id_new = wkf_expr.execute(session, record, workitem, activity)
+                id_new = wkf_expr_execute(session, record, workitem, activity)
                 if not id_new:
                     cr.execute('delete from wkf_workitem where id=%s', (workitem['id'],))
                     return False
@@ -172,7 +259,7 @@ def _split_test(session, record, workitem, split_mode, signal, stack):
     alltrans = cr.dictfetchall()
     if split_mode=='XOR' or split_mode=='OR':
         for transition in alltrans:
-            if wkf_expr.check(session, record, workitem, transition,signal):
+            if wkf_expr_check(session, record, workitem, transition,signal):
                 test = True
                 transitions.append((transition['id'], workitem['inst_id']))
                 if split_mode=='XOR':
@@ -180,7 +267,7 @@ def _split_test(session, record, workitem, split_mode, signal, stack):
     else:
         test = True
         for transition in alltrans:
-            if not wkf_expr.check(session, record, workitem, transition,signal):
+            if not wkf_expr_check(session, record, workitem, transition,signal):
                 test = False
                 break
             cr.execute('select count(*) from wkf_witm_trans where trans_id=%s and inst_id=%s', (transition['id'], workitem['inst_id']))

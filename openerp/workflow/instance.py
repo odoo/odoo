@@ -19,8 +19,8 @@
 #
 ##############################################################################
 import workitem
-from helpers import Session
-from helpers import Record
+from openerp.workflow.helpers import Session
+from openerp.workflow.helpers import Record
 
 def create(session, record, workflow_id):
     assert isinstance(session, Session)
