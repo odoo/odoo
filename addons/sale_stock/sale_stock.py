@@ -328,7 +328,7 @@ class sale_order_line(osv.osv):
         return {'value': result, 'warning': warning}
 
 
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+    def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, warehouse_id=False, context=None):
         context = context or {}
