@@ -586,7 +586,7 @@ class project(osv.Model):
         'issue_count': fields.function(_issue_count, type='integer', string="Unclosed Issues",
                                        deprecated="This field will be removed in OpenERP v8. Use issue_ids one2many field instead."),
         'issue_ids': fields.one2many('project.issue', 'project_id',
-                                     domain=[('stage_id.closed', '=', False)])
+                                     domain=[('stage_id.fold', '=', False)])
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):

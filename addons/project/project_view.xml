@@ -19,7 +19,7 @@
                     <field name="name" string="Tasks"/>
                     <field name="categ_ids"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
-                    <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
+                    <filter string="New" name="draft" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
                     <separator/>
                     <filter string="My Tasks" domain="[('user_id','=',uid)]"/>
                     <separator/>
@@ -687,11 +687,10 @@
                         <group>
                             <field name="name"/>
                             <field name="sequence"/>
-                            <field name="case_default"/>
                         </group>
                         <group>
+                            <field name="case_default"/>
                             <field name="fold"/>
-                            <field name="closed"/>
                         </group>
                     </group>
                     <field name="description" placeholder="Add a description..."/>

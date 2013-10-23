@@ -44,10 +44,6 @@ class project_task_type(osv.osv):
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
-        'closed': fields.boolean('Closing Stage',
-                                 help='Indicates whether this field is the end of'
-                                 'the maangement process. This is for example a'
-                                 'stage considering the record as done or canceled.'),
     }
 
     _defaults = {
@@ -271,7 +267,7 @@ class project(osv.osv):
         'task_count': fields.function(_task_count, type='integer', string="Open Tasks",
                                       deprecated="This field will be removed in OpenERP v8. Use task_ids one2many field instead."),
         'task_ids': fields.one2many('project.task', 'project_id',
-                                    domain=[('stage_id.closed', '=', False)]),
+                                    domain=[('stage_id.fold', '=', False)]),
         'color': fields.integer('Color Index'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Internal email associated with this project. Incoming emails are automatically synchronized"
@@ -563,8 +559,9 @@ class task(osv.osv):
     _mail_post_access = 'read'
     _track = {
         'stage_id': {
-            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
-            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id.sequence != 1,
+            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
+            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
+            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id.sequence > 1,
         },
         'user_id': {
             'project.mt_task_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
@@ -589,7 +586,7 @@ class task(osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         project_id = self._get_default_project_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], project_id, [('sequence', '=', '1')], context=context)
+        return self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
         """ Returns ID of project based on the value of 'default_project_id'
@@ -1001,7 +998,7 @@ class task(osv.osv):
 
     def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
         for task in self.browse(cr, uid, ids, context=context):
-            if (task.stage_id and task.stage_id.sequence == 1) or (task.planned_hours == 0.0):
+            if (task.stage_id and task.stage_id.sequence <= 1) or (task.planned_hours == 0.0):
                 self.write(cr, uid, [task.id], {'planned_hours': remaining_time}, context=context)
         self.write(cr, uid, ids, {'remaining_hours': remaining_time}, context=context)
         return True

@@ -23,6 +23,22 @@ from openerp.osv import fields, osv
 from openerp import netsvc
 
 
+class ProjectTaskStageMrp(osv.Model):
+    """ Override project.task.type model to add a 'closed' boolean field allowing
+        to know that tasks in this stage are considered as closed. Indeed since
+        OpenERP 8.0 status is not present on tasks anymore, only stage_id. """
+    _name = 'project.task.type'
+    _inherit = 'project.task.type'
+
+    _columns = {
+        'closed': fields.boolean('Close', help="Tasks in this stage are considered as closed."),
+    }
+
+    _defaults = {
+        'closed': False,
+    }
+
+
 class project_task(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
