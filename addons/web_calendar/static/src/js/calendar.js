@@ -407,7 +407,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             '&', [this.date_start, '<', A], [this.date_stop, '>', B]);
             domain.unshift("|", "|");
         }
-        domain.concat(this.last_search[0].slice(0))
+        domain = domain.concat(this.last_search[0].slice(0));
         return domain;
     },
     do_show: function () {

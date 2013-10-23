@@ -566,6 +566,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_processed_onchange: function(result, processed) {
         try {
+        var fields = this.fields;
+        _(result.domain).each(function (domain, fieldname) {
+            var field = fields[fieldname];
+            if (!field) { return; }
+            field.node.attrs.domain = domain;
+        });
+            
         if (result.value) {
             this._internal_set_values(result.value, processed);
         }
@@ -578,13 +585,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 ]
             });
         }
-
-        var fields = this.fields;
-        _(result.domain).each(function (domain, fieldname) {
-            var field = fields[fieldname];
-            if (!field) { return; }
-            field.node.attrs.domain = domain;
-        });
 
         return $.Deferred().resolve();
         } catch(e) {
@@ -2803,10 +2803,44 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     init: function(field_manager, node) {
         var self = this;
         this._super(field_manager, node);
-        this.values = _(this.field.selection).chain()
-            .reject(function (v) { return v[0] === false && v[1] === ''; })
-            .unshift([false, ''])
-            .value();
+        this.set("value", false);
+        this.set("values", [[false, '']]);
+        this.records_orderer = new instance.web.DropMisordered();
+        this.field_manager.on("view_content_has_changed", this, function() {
+            var domain = new openerp.web.CompoundDomain(this.build_domain()).eval();
+            if (! _.isEqual(domain, this.get("domain"))) {
+                this.set("domain", domain);
+            }
+        });
+    },
+    initialize_field: function() {
+        instance.web.form.ReinitializeFieldMixin.initialize_field.call(this);
+        this.on("change:domain", this, this.query_values);
+        this.set("domain", new openerp.web.CompoundDomain(this.build_domain()).eval());
+        this.on("change:values", this, this.render_value);
+    },
+    query_values: function() {
+        var self = this;
+        var def;
+        if (this.field.type === "many2one") {
+            var model = new openerp.Model(openerp.session, this.field.relation);
+            def = model.call("search", [this.get("domain")], {"context": this.build_context()}).then(function(record_ids) {
+                return model.call("name_get", [record_ids] , {"context": self.build_context()});
+            }).then(function(res) {
+                return [[false, '']].concat(res);
+            });
+        } else {
+            var values = _(this.field.selection).chain()
+                .reject(function (v) { return v[0] === false && v[1] === ''; })
+                .unshift([false, ''])
+                .value();
+            def = $.when(values);
+        }
+        this.records_orderer.add(def).then(function(values) {
+            if (! _.isEqual(values, self.get("values"))) {
+                self.set("values", values);
+            }
+        });
     },
     initialize_content: function() {
         // Flag indicating whether we're in an event chain containing a change
@@ -2838,7 +2872,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     store_dom_value: function () {
         if (!this.get('effective_readonly') && this.$('select').length) {
             this.internal_set_value(
-                this.values[this.$('select')[0].selectedIndex][0]);
+                this.get("values")[this.$('select')[0].selectedIndex][0]);
         }
     },
     set_value: function(value_) {
@@ -2847,17 +2881,19 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         this._super(value_);
     },
     render_value: function() {
-        if (!this.get("effective_readonly")) {
+        if (! this.get("effective_readonly")) {
+            this.$().html(QWeb.render("FieldSelectionSelect", {widget: this}));
             var index = 0;
-            for (var i = 0, ii = this.values.length; i < ii; i++) {
-                if (this.values[i][0] === this.get('value')) index = i;
-            }
+            _.each(this.get("values"), function(el, i) {
+                if (el[0] === this.get('value'))
+                    index = i;
+            }, this);
             this.$el.find('select')[0].selectedIndex = index;
         } else {
             var self = this;
-            var option = _(this.values)
+            var option = _(this.get("values"))
                 .detect(function (record) { return record[0] === self.get('value'); });
-            this.$el.text(option ? option[1] : this.values[0][1]);
+            this.$el.text(option ? option[1] : this.get("values")[0][1]);
         }
     },
     focus: function() {
@@ -3666,7 +3702,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 _.extend(view.options, {
                     addable: null,
                     selectable: self.multi_selection,
-                    sortable: false,
+                    sortable: true,
                     import_enabled: false,
                     deletable: true
                 });
@@ -5477,7 +5513,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         });
         this.get_selection();
         if (this.options.clickable) {
-            this.$el.on('click','li:not(.oe_folded)',this.on_click_stage);
+            this.$el.on('click','li[data-id]',this.on_click_stage);
         }
         if (this.$el.parent().is('header')) {
             this.$el.after('<div class="oe_clear"/>');
@@ -5651,7 +5687,7 @@ instance.web.form.FieldMany2ManyCheckBoxes = instance.web.form.AbstractField.ext
         this.records_orderer = new instance.web.DropMisordered();
     },
     initialize_field: function() {
-        instance.web.form.ReinitializeFieldMixin.initialize_field.call(this)
+        instance.web.form.ReinitializeFieldMixin.initialize_field.call(this);
         this.on("change:domain", this, this.query_records);
         this.set("domain", new openerp.web.CompoundDomain(this.build_domain()).eval());
         this.on("change:records", this, this.render_value);
@@ -5704,6 +5740,59 @@ instance.web.form.FieldMany2ManyCheckBoxes = instance.web.form.AbstractField.ext
 });
 
 /**
+    This field can be applied on many2many and one2many. It is a read-only field that will display a single link whose name is
+    "<number of linked records> <label of the field>". When the link is clicked, it will redirect to another act_window
+    action on the model of the relation and show only the linked records.
+
+    Widget options:
+
+    * views: The views to display in the act_window action. Must be a list of tuples whose first element is the id of the view
+      to display (or False to take the default one) and the second element is the type of the view. Defaults to
+      [[false, "tree"], [false, "form"]] .
+*/
+instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    className: "oe_form_x2many_counter",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set("value", []);
+        _.defaults(this.options, {
+            "views": [[false, "tree"], [false, "form"]],
+        });
+    },
+    render_value: function() {
+        var text = _.str.sprintf("%d %s", this.val().length, this.string);
+        this.$().html(QWeb.render("X2ManyCounter", {text: text}));
+        this.$("a").click(_.bind(this.go_to, this));
+    },
+    go_to: function() {
+        return this.view.recursive_save().then(_.bind(function() {
+            var val = this.val();
+            var context = {};
+            if (this.field.type === "one2many") {
+                context["default_" + this.field.relation_field] = this.view.datarecord.id;
+            }
+            var domain = [["id", "in", val]];
+            return this.do_action({
+                type: 'ir.actions.act_window',
+                name: this.string,
+                res_model: this.field.relation,
+                views: this.options.views,
+                target: 'current',
+                context: context,
+                domain: domain,
+            });
+        }, this));
+    },
+    val: function() {
+        var value = this.get("value") || [];
+        if (value.length >= 1 && value[0] instanceof Array) {
+            value = value[0][2];
+        }
+        return value;
+    }
+});
+
+/**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
  * All referenced classes must implement FieldInterface. Those represent the classes whose instances
@@ -5739,6 +5828,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'statusbar': 'instance.web.form.FieldStatus',
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
+    'x2many_counter': 'instance.web.form.X2ManyCounter',
 });
 
 /**

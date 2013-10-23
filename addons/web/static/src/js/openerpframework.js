@@ -138,6 +138,7 @@ var openerp = {};
                 throw new Error("You can only instanciate objects with the 'new' operator");
             }
             // All construction is actually done in the init method
+            this._super = null;
             if (!initializing && this.init) {
                 var ret = this.init.apply(this, arguments);
                 if (ret) { return ret; }
@@ -385,6 +386,14 @@ var Events = openerp.Class.extend({
     }
 });
 
+/**
+    Mixin containing an event system. Events are also registered by specifying the target object
+    (the object which will receive the event when it is raised). Both the event-emitting object
+    and the target object store or reference to each other. This is used to correctly remove all
+    reference to the event handler when any of the object is destroyed (when the destroy() method
+    from ParentedMixin is called). Removing those references is necessary to avoid memory leak
+    and phantom events (events which are raised and sent to a previously destroyed object).
+*/
 openerp.EventDispatcherMixin = _.extend({}, openerp.ParentedMixin, {
     __eventDispatcherMixin: true,
     init: function() {
@@ -808,7 +817,7 @@ var genericJsonRpc = function(fct_name, params, fct) {
             return result.result;
         }
     }, function() {
-        console.error("JsonRPC communication error", _.toArray(arguments));
+        //console.error("JsonRPC communication error", _.toArray(arguments));
         var def = $.Deferred();
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });
@@ -890,9 +899,27 @@ openerp.jsonpRpc = function(url, fct_name, params, settings) {
             });
             // append the iframe to the DOM (will trigger the first load)
             $form.after($iframe);
+            if (settings.timeout) {
+                realSetTimeout(function() {
+                    deferred.reject({});
+                }, settings.timeout);
+            }
             return deferred;
         }
     });
+};
+
+var realSetTimeout = function(fct, millis) {
+    var finished = new Date().getTime() + millis;
+    var wait = function() {
+        var current = new Date().getTime();
+        if (current < finished) {
+            setTimeout(wait, finished - current);
+        } else {
+            fct();
+        }
+    };
+    setTimeout(wait, millis);
 };
 
 openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
