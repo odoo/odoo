@@ -100,6 +100,19 @@ class crm_case_section(osv.osv):
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))
 
+    def _currency_conversation(self, cr, uid, amount, relation_id, relation_field, context=None): 
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        base_currency_id = user.company_id.currency_id.id
+        if relation_field == 'company_id':
+            base_currency_id = self.pool.get('res.company').browse(cr, uid, relation_id, context=context).currency_id.id
+        elif relation_field == 'pricelist_id':
+            base_currency_id = self.pool.get('product.pricelist').browse(cr, uid, relation_id, context=context).currency_id.id
+        elif relation_field == 'currency_id':
+            currency_rates = self.pool.get('res.currency.rate').search_read(cr, uid, [('rate', '=', 1)], ['currency_id'], limit=1, context=context)
+            if currency_rates:
+                base_currency_id = currency_rates[0]['currency_id'][0]
+        return self.pool.get('res.currency').compute(cr, uid, base_currency_id, user.company_id.currency_id.id, amount, context=context)
+
     def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
         """ Generic method to generate data for bar chart values using SparklineBarWidget.
             This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
@@ -133,16 +146,7 @@ class crm_case_section(osv.osv):
             if inner_groupby:
                 inner_group_obj = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
                 for groupby in inner_group_obj:
-                    user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-                    base_currency_id = user.company_id.currency_id.id
-                    if inner_groupby[0] == 'company_id':
-                        base_currency_id = self.pool.get('res.company').browse(cr, uid, groupby['__domain'][0][2], context=context).currency_id.id
-                    elif inner_groupby[0] == 'pricelist_id':
-                        base_currency_id = self.pool.get('product.pricelist').browse(cr, uid, groupby['__domain'][0][2], context=context).currency_id.id
-                    elif inner_groupby[0] == 'currency_id':
-                        base_currency_id = self.pool.get('res.currency.rate').search_read(cr, uid, [('rate', '=', 1)], ['currency_id'], limit=1, context=context)[0]['currency_id'][0]
-                    value = self.pool.get('res.currency').compute(cr, uid, base_currency_id, user.company_id.currency_id.id, groupby.get(value_field, 0))
-                    section_result[month]['value'] += value
+                    section_result[month]['value'] += self._currency_conversation(cr, uid, groupby.get(value_field, 0), groupby['__domain'][0][2],inner_groupby[0], context=context)
         return section_result
 
     def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
