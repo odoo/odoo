@@ -103,6 +103,7 @@ class stock_warehouse(osv.osv):
             'action': 'buy',
             'picking_type_id': warehouse.in_type_id.id,
             'procure_method': 'make_to_order',
+            'warehouse_id': warehouse.id,
         }
 
     def create_routes(self, cr, uid, ids, warehouse, context=None):
