@@ -36,8 +36,8 @@
     };
     website.reload = function () {
         location.hash = "scrollTop=" + window.document.body.scrollTop;
-        if (location.search.indexOf("unable_editor") > -1) {
-            window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?/g, '');
+        if (location.search.indexOf("enable_editor") > -1) {
+            window.location.href = window.location.href.replace(/enable_editor(=[^&]*)?/g, '');
         } else {
             window.location.reload();
         }

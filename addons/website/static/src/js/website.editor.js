@@ -177,7 +177,7 @@
         var editor = new website.EditorBar();
         var $body = $(document.body);
         editor.prependTo($body).then(function () {
-            if (location.search.indexOf("unable_editor") >= 0) {
+            if (location.search.indexOf("enable_editor") >= 0) {
                 editor.edit();
             }
         });
