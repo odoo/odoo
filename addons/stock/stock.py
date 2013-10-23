@@ -2256,10 +2256,13 @@ class stock_warehouse(osv.osv):
         'resupply_route_ids': fields.one2many('stock.location.route', 'supplied_wh_id', 'Resupply Routes'),
         'default_resupply_wh_id': fields.many2one('stock.warehouse', 'Default Resupply Warehouse'),
         'show_default_resupply_wh_id': fields.function(show_field_default_wh_resupply,type='boolean',string="Show field default_resupply_wh_id"),
+        #'resupply_init_filter' : fields.function(init_filtre_default_resupply_wh_id, type='char', string='test'),
         
     }
 
-
+    
+    
+    
     def onchange_filtre_default_resupply_wh_id(self, cr, uid, ids, resupply_wh_ids,default_resupply_wh_id, context=None):
         resupply_wh_ids = [x['id'] for x in (self.resolve_2many_commands(cr, uid, 'resupply_wh_ids',resupply_wh_ids, ['id']))]
         print(default_resupply_wh_id,resupply_wh_ids)
@@ -2271,7 +2274,7 @@ class stock_warehouse(osv.osv):
             retval['default_resupply_wh_id'] = False
             warning = { 
                        'title': 'Information', 
-                       'message': 'Default resupply warehouse has been changed because ol default value is not in this list !'
+                       'message': 'Default resupply warehouse has been changed because old default value is not in this list !'
                        }        
         return {
                 'value': retval,

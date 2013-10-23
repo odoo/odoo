@@ -130,13 +130,6 @@ class stock_warehouse(osv.osv):
                 
         return super(stock_warehouse,self).write(cr, uid, ids, vals, context=None)
         
-#     def change_route(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
-#         pull_obj = self.pool.get('procurement.rule')
-#         res = super(stock_warehouse, self).change_route(cr, uid, ids, warehouse, new_reception_step, new_delivery_step, context)
-#         buy_pull_vals = self._get_buy_pull_rule(cr, uid, warehouse, context=context)
-#         pull_obj.write(cr, uid, warehouse.buy_pull_id.id, buy_pull_vals, context=context)
-#         return res
-    
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
         all_routes = super(stock_warehouse,self).get_all_routes_for_wh(cr,uid,warehouse,context=context)
         if warehouse.can_buy_for_resupply and warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
@@ -145,9 +138,10 @@ class stock_warehouse(osv.osv):
 
     def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
         res = super(stock_warehouse,self)._get_all_products_to_resupply(cr, uid, warehouse, context=context)
-        for product_id in res:
-            for route in self.pool.get('product.product').browse(cr, uid, product_id, context=context).route_ids:                       
-                if warehouse.buy_pull_id and warehouse.buy_pull_id.route_id and route.id == warehouse.buy_pull_id.route_id.id:                    
-                    res.remove(product_id)                    
-                    break                
+        if warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
+            for product_id in res:
+                for route in self.pool.get('product.product').browse(cr, uid, product_id, context=context).route_ids:                       
+                    if route.id == warehouse.buy_pull_id.route_id.id:                    
+                        res.remove(product_id)                    
+                        break                
         return res

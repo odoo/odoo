@@ -668,8 +668,19 @@
                                         <field name="reception_steps" widget='radio'/>
                                         <field name="delivery_steps" widget='radio'/>
                                         <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' on_change="onchange_filtre_default_resupply_wh_id(resupply_wh_ids, default_resupply_wh_id)"/> 
-                                        <field name="default_resupply_wh_id" attrs="{'invisible': [('show_default_resupply_wh_id','=',False)]}" widget='selection' />    
-                                        <field name="show_default_resupply_wh_id" invisible="1"/>          
+                                        <field name="show_default_resupply_wh_id" invisible="1"/>
+                                        
+                                        <!-- 
+                                        
+                                        <field name="resupply_init_filter" invisible="1" />
+                                        
+                                        -->                                             
+                                        <field name="default_resupply_wh_id"  attrs="{'invisible': [('show_default_resupply_wh_id','=',False)]}"  />
+                                        
+                                        
+                      
+                                          
+
                                     </group>
                                 </page>
                                 <page string="Technical Information" groups='base.group_no_one'>

@@ -186,8 +186,7 @@ class stock_warehouse(osv.osv):
         'can_manufacture_for_resupply': fields.boolean('Can manufacture for resupply this warehouse'),
         'manufacture_pull_id': fields.many2one('procurement.rule', 'Manufacture rule'),    
     }
-    _defaults= {
-        'can_manufacture_for_resupply': False,
+    _defaults= {        
         'manufacture_pull_id' : False
     }
             
@@ -208,14 +207,16 @@ class stock_warehouse(osv.osv):
         dest_loc = warehouse.in_type_id
         return {
             'name': warehouse.name + ': ' + _(' Manufacture') + ' -> ' + dest_loc.name,            
-            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_id': warehouse.lot_stock_id.id,
             'route_id': manufacture_route_id,
-            'action': 'move',
+            'action': 'manufacture',
             'picking_type_id': dest_loc.id,
             'procure_method': 'make_to_order',
             'active': True,
         }
-        
+    
+    
+    
     def create_routes(self, cr, uid, ids, warehouse, context=None):        
         pull_obj = self.pool.get('procurement.rule')                   
         res = super(stock_warehouse, self).create_routes(cr, uid, ids, warehouse, context=context)
@@ -246,7 +247,7 @@ class stock_warehouse(osv.osv):
             else:
                  for warehouse in self.browse(cr, uid, ids, context=context):
                     if warehouse.manufacture_pull_id:
-                          manufacture_pull_id = pull_obj.unlink(cr, uid, warehouse.manufacture_pull_id.id, context=context)
+                          pull_obj.unlink(cr, uid, warehouse.manufacture_pull_id.id, context=context)
                           vals['manufacture_pull_id'] = False
                 
         return super(stock_warehouse,self).write(cr, uid, ids, vals, context=None)
@@ -259,9 +260,10 @@ class stock_warehouse(osv.osv):
 
     def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
         res = super(stock_warehouse,self)._get_all_products_to_resupply(cr, uid, warehouse, context=context)
-        for product_id in res:
-            for route in self.pool.get('product.product').browse(cr, uid, product_id, context=context).route_ids:                       
-                if warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id and route.id == warehouse.manufacture_pull_id.route_id.id:                    
-                    res.remove(product_id)                    
-                    break                
+        if warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id:            
+            for product_id in res:
+                for route in self.pool.get('product.product').browse(cr, uid, product_id, context=context).route_ids:                       
+                    if route.id == warehouse.manufacture_pull_id.route_id.id:                    
+                        res.remove(product_id)                    
+                        break                
         return res
