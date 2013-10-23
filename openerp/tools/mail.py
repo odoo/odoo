@@ -200,8 +200,8 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
                 truncate_idx = node.text.find(word) + len(word)
         else:
             truncate_idx = position
-        if truncate_idx == -1 or truncate_idx >= len(node.text):
-            truncate_idx = len(node.text) - 1
+        if truncate_idx == -1 or truncate_idx > len(node.text):
+            truncate_idx = len(node.text)
 
         # compose new text bits
         innertext = node.text[0:truncate_idx]
