@@ -71,10 +71,6 @@ class crm_case_stage(osv.osv):
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
-        'closed': fields.boolean('Closing Stage',
-                                 help='Indicates whether this field is the end of'
-                                 'the maangement process. This is for example a'
-                                 'stage considering the lead as won or lost.'),
         'type': fields.selection([('lead', 'Lead'),
                                     ('opportunity', 'Opportunity'),
                                     ('both', 'Both')],
