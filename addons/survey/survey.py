@@ -94,7 +94,7 @@ class survey(osv.osv):
     _columns = {
         'title': fields.char('Title', size=128, required=1,
             translate=True),
-        'category': fields.char('Category', size=128, translate=True),
+        'category': fields.char('Category', size=128),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
         'date_open': fields.datetime('Opening date', readonly=1),
         'date_close': fields.datetime('Closing date', readonly=1),
@@ -205,9 +205,7 @@ class survey(osv.osv):
         return report
 
     def print_statistics(self, cr, uid, ids, context=None):
-        """
-        Print Survey Statistics in pdf format.
-        """
+        """ Print survey statistics """
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'survey.analysis',
@@ -302,20 +300,38 @@ class survey(osv.osv):
 
 
 class survey_page(osv.osv):
+    '''A page for a survey.
+
+    Pages are essentially containers, allowing to group questions by ordered
+    screens.
+
+    note::
+        A page should be deleted if the survey it belongs is deleted. '''
+
     _name = 'survey.page'
-    _description = 'Survey Pages'
+    _description = 'Survey Page'
     _rec_name = 'title'
     _order = 'sequence'
+
+    # Model Fields #
+
     _columns = {
-        'title': fields.char('Page Title', size=128, required=1, translate=True),
-        'survey_id': fields.many2one('survey', 'Survey', ondelete='cascade'),
-        'question_ids': fields.one2many('survey.question', 'page_id', 'Questions'),
-        'sequence': fields.integer('Page Nr'),
-        'note': fields.text('Description', translate=True),
+        'title': fields.char('Page Title', size=128, required=1,
+            translate=True),
+        'survey_id': fields.many2one('survey.survey', 'Survey',
+            ondelete='cascade'),
+        'question_ids': fields.one2many('survey.question', 'page_id',
+            'Questions'),
+        'sequence': fields.integer('Page number'),
+        'description': fields.text('Description',
+            help="An introductory text to your page", translate=True,
+            oldname="note"),
     }
     _defaults = {
         'sequence': 1
     }
+
+    # Public methods #
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
@@ -329,7 +345,8 @@ class survey_page(osv.osv):
         if context is None:
             context = {}
         surv_name_wiz = self.pool.get('survey.question.wiz')
-        surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)], {'transfer': True, 'page_no': context.get('page_number', 0)})
+        surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)],
+            {'transfer': True, 'page_no': context.get('page_number', 0)})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -344,14 +361,22 @@ class survey_page(osv.osv):
         current_rec = self.read(cr, uid, ids, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
         vals.update({'title': title})
-        return super(survey_page, self).copy(cr, uid, ids, vals, context=context)
+        return super(survey_page, self).copy(cr, uid, ids, vals,
+            context=context)
 
 
 class survey_question(osv.osv):
+    ''' Questions that will be asked in a survey.
+
+    This version of the model has been simplified in relation to the previous
+    one: some fields were simply a n-time repetition of a simpler field. It is
+    now allowed to have children question that allows to group subquestions. '''
     _name = 'survey.question'
-    _description = 'Survey Question'
+    _description = 'Question'
     _rec_name = 'question'
     _order = 'sequence'
+
+    # Private methods #
 
     def _calc_response(self, cr, uid, ids, field_name, arg, context=None):
         if len(ids) == 0:
@@ -368,20 +393,31 @@ class survey_question(osv.osv):
             val[id] = 0
         return val
 
+    # Model fields #
+
     _columns = {
-        'page_id': fields.many2one('survey.page', 'Survey Page', ondelete='cascade'),
+        'page_id': fields.many2one('survey.page', 'Survey page',
+            ondelete='cascade'),
+        'survey_id': fields.related('page_id', 'survey_id', type='many2one',
+            relation='survey.survey', string='Survey', store=True),
+        'sequence': fields.integer('Sequence'),
+
         'question': fields.char('Question', required=1, translate=True),
-        'answer_choice_ids': fields.one2many('survey.answer', 'question_id', 'Answer'),
-        'is_require_answer': fields.boolean('Require Answer to Question'),
+        'parent_id': fields.many2one('survey.question', 'Parent question'),
+        'children_ids': fields.one2many('survey.question_id', 'parent_id',
+            'Children questions'),
+
+        'mandatory': fields.boolean('Mandatory question',
+            oldname="is_require_answer"),
+
+        #'answer_choice_ids': fields.one2many('survey.answer', 'question_id', 'Answer'),
         'required_type': fields.selection([('all', 'All'), ('at least', 'At Least'), ('at most', 'At Most'), ('exactly', 'Exactly'), ('a range', 'A Range')], 'Respondent must answer'),
         'req_ans': fields.integer('#Required Answer'),
         'maximum_req_ans': fields.integer('Maximum Required Answer'),
         'minimum_req_ans': fields.integer('Minimum Required Answer'),
         'req_error_msg': fields.text('Error Message', translate=True),
         'allow_comment': fields.boolean('Allow Comment Field'),
-        'sequence': fields.integer('Sequence'),
         'tot_resp': fields.function(_calc_response, type="integer", string="Total Answer"),
-        'survey_id': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey', store=True),
         'descriptive_text': fields.text('Descriptive Text', translate=True),
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id', ' Column heading'),
         'type': fields.selection([('multiple_choice_only_one_ans', 'Multiple Choice (Only One Answer)'),
@@ -390,15 +426,18 @@ class survey_question(osv.osv):
                 ('matrix_of_choices_only_multi_ans', 'Matrix of Choices (Multiple Answers Per Row)'),  # TDE: replace with matrix that is a container
                 ('rating_scale', 'Rating Scale'),
                 ('single_textbox', 'Single Textbox'),
-                ('multiple_textboxes', 'Multiple Textboxes'),  # interest ? TDE: should be dropped -> comment box
-                ('multiple_textboxes_diff_type', 'Multiple Textboxes With Different Type'),  # interest ? TDE: should be dropped -> comment box
+#                ('multiple_textboxes', 'Multiple Textboxes'),  # interest ? TDE: should be dropped -> comment box
+#                ('multiple_textboxes_diff_type', 'Multiple Textboxes With Different Type'),  # interest ? TDE: should be dropped -> comment box
                 ('comment', 'Comment/Essay Box'),
                 ('numerical_textboxes', 'Numerical Textboxes'),
-                ('date', 'Date'),
-                ('date_and_time', 'Date and Time'),  # TDE: rename datetime ^^
+                ('datetime', 'Date and Time'),
+                ('checkbox', 'Checkbox'),
+                ('radio_buttons', 'Radio buttons'),
                 ('descriptive_text', 'Descriptive Text'),  # TDE: rename free text
-                ('table', 'Table'),  # TDE: drop
             ], 'Question Type', required=1, ),
+        'display': fields.selection([('horizontal','Horizontal'),
+            ('vertical','Vertical')])
+
         'is_comment_require': fields.boolean('Add Comment Field'),
         'comment_label': fields.char('Field Label', translate=True),
         'comment_field_type': fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
@@ -684,8 +723,9 @@ class survey_answer(osv.osv):
         return data
 
 
-class survey_response(osv.osv):
-    _name = "survey.response"  # survrey.user_answer / user_response
+class survey_user_input(osv.osv):
+    ''' The answers of an user to a survey '''
+    _name = "survey.user_input"
     _rec_name = 'date_create'
 
     _columns = {
