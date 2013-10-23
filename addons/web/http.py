@@ -21,6 +21,7 @@ import urlparse
 import uuid
 import errno
 import re
+import warnings
 
 import babel.core
 import simplejson
@@ -35,7 +36,7 @@ import urllib
 import urllib2
 
 import openerp
-import openerp.service.security as security
+from openerp.service import security, model as service_model
 from openerp.tools import config
 
 import inspect
@@ -181,9 +182,15 @@ class WebRequest(object):
     def debug(self):
         return 'debug' in self.httprequest.args
 
+    @contextlib.contextmanager
+    def registry_cr(self):
+        warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
+        yield (self.registry, self.cr)
 
 def auth_method_user():
     request.uid = request.session.uid
+    if not request.uid:
+        raise SessionExpiredException("Session expired")
 
 def auth_method_admin():
     if not request.db:
@@ -390,7 +397,7 @@ def jsonrequest(f):
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="json", auth="none")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="json", auth="user")(f)
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
@@ -400,21 +407,12 @@ class HttpRequest(WebRequest):
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
-        ex = set(["session_id"])
-        for k in params.keys():
-            if k in ex:
-                del params[k]
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
+        params.pop('session_id', None)
         self.params = params
 
     def dispatch(self):
-        akw = {}
-        for key, value in self.httprequest.args.iteritems():
-            if isinstance(value, basestring) and len(value) < 1024:
-                akw[key] = value
-            else:
-                akw[key] = type(value)
         try:
             r = self._call_function(**self.params)
         except werkzeug.exceptions.HTTPException, e:
@@ -468,7 +466,7 @@ def httprequest(f):
     base = f.__name__.lstrip('/')
     if f.__name__ == "index":
         base = ""
-    return route([base, base + "/<path:_ignored_path>"], type="http", auth="none")(f)
+    return route([base, base + "/<path:_ignored_path>"], type="http", auth="user")(f)
 
 #----------------------------------------------------------
 # Local storage of requests
@@ -477,18 +475,20 @@ from werkzeug.local import LocalStack
 
 _request_stack = LocalStack()
 
-def set_request(request):
-    class with_obj(object):
-        def __enter__(self):
-            _request_stack.push(request)
-        def __exit__(self, *args):
-            _request_stack.pop()
-    return with_obj()
 
+@contextlib.contextmanager
+def set_request(req):
+    _request_stack.push(req)
+    try:
+        yield
+    finally:
+        _request_stack.pop()
+
+
+request = _request_stack()
 """
     A global proxy that always redirect to the current request object.
 """
-request = _request_stack()
 
 #----------------------------------------------------------
 # Controller registration with a metaclass
@@ -974,7 +974,7 @@ class Root(object):
 
     def _build_router(self, db):
         _logger.info("Generating routing configuration for database %s" % db)
-        routing_map = routing.Map()
+        routing_map = routing.Map(strict_slashes=False)
 
         def gen(modules, nodb_only):
             for module in modules:
@@ -1010,11 +1010,11 @@ class Root(object):
         with registry.cursor() as cr:
             m = registry.get('ir.module.module')
             ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')])
-            installed = set([x['name'] for x in m.read(cr, 1, ids, ['name'])])
-            modules_set = modules_set.intersection(set(installed))
-        modules = ["web"] + sorted(modules_set)
+            installed = set(x['name'] for x in m.read(cr, 1, ids, ['name']))
+            modules_set = modules_set & installed
+
         # building all other methods
-        gen(modules, False)
+        gen(["web"] + sorted(modules_set), False)
 
         return routing_map
 
@@ -1040,10 +1040,17 @@ class Root(object):
         func, arguments = urls.match(path)
         arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
 
+        @service_model.check
+        def checked_call(dbname, *a, **kw):
+            return func(*a, **kw)
+
         def nfunc(*args, **kwargs):
             kwargs.update(arguments)
             if getattr(func, '_first_arg_is_req', False):
                 args = (request,) + args
+
+            if request.db:
+                return checked_call(request.db, *args, **kwargs)
             return func(*args, **kwargs)
 
         request.func = nfunc
