@@ -87,12 +87,13 @@ class sale_order_line(osv.osv):
             pricelists = pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
 
             new_list_price = get_real_price(list_price, product.id, qty, uom, pricelist)
-            if (price/new_list_price > 0):
-                result['discount'] = 0.0
-                result['price_unit'] = price
-            else:
-                if(len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price[pricelist] != 0):
-                    discount= (price/new_list_price)
+            if len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price[pricelist] != 0 and new_list_price != 0:
+                discount = (new_list_price - price) / new_list_price * 100
+                if discount > 0:
                     result['price_unit'] = new_list_price
                     result['discount'] = discount
+                else:
+                    result['discount'] = 0.0
+            else:
+                result['discount'] = 0.0
         return res
