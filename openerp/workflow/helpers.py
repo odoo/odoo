@@ -13,3 +13,10 @@ class Record(object):
         assert isinstance(record_id, (int, long))
         self.model = model
         self.id = record_id
+
+class WorkflowActivity(object):
+    KIND_FUNCTION = 'function'
+    KIND_DUMMY = 'dummy'
+    KIND_STOPALL = 'stopall'
+    KIND_SUBFLOW = 'subflow'
+

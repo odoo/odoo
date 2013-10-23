@@ -21,6 +21,7 @@
 import workitem
 from openerp.workflow.helpers import Session
 from openerp.workflow.helpers import Record
+from openerp.workflow.workitem import WorkflowItem
 
 def create(session, record, workflow_id):
     assert isinstance(session, Session)
@@ -33,7 +34,7 @@ def create(session, record, workflow_id):
     cr.execute('select * from wkf_activity where flow_start=True and wkf_id=%s', (workflow_id,))
     activities = cr.dictfetchall()
     stack = []
-    workitem.create(session, record, activities, instance_id, stack=stack)
+    WorkflowItem(session, record).create(activities, instance_id, stack)
     update(session, record, instance_id)
     return instance_id
 
@@ -53,9 +54,10 @@ def validate(session, record, instance_id, signal, force_running=False):
     cr = session.cr
     cr.execute("select * from wkf_workitem where inst_id=%s", (instance_id,))
     stack = []
+    wi = WorkflowItem(session, record)
     for work_item in cr.dictfetchall():
-        stack = []
-        workitem.process(session, record, work_item, signal, force_running, stack=stack)
+        # stack = []
+        wi.process(work_item, signal, force_running, stack=stack)
         # An action is returned
     _update_end(session, record, instance_id)
     return stack and stack[0] or False
@@ -67,9 +69,11 @@ def update(session, record, instance_id):
 
     cr = session.cr
     cr.execute("select * from wkf_workitem where inst_id=%s", (instance_id,))
-    for witem in cr.dictfetchall():
+    wi = WorkflowItem(session, record)
+
+    for work_item in cr.dictfetchall():
         stack = []
-        workitem.process(session, record, witem, stack=stack)
+        wi.process(work_item, stack=stack)
     return _update_end(session, record, instance_id)
 
 def _update_end(session, record, instance_id):
