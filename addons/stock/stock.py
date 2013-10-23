@@ -159,6 +159,10 @@ class stock_location(osv.osv):
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                       """, select = True),
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
+
+        # as discussed on bug 765559, the main purpose of this field is to allow sorting the list of locations
+        # according to the displayed names, and reversing that sort by clicking on a column. It does not work for
+        # translated values though - so it needs fixing.
         'complete_name': fields.function(_complete_name, type='char', size=256, string="Location Name",
                             store={'stock.location': (_get_sublocations, ['name', 'location_id'], 10)}),
 
