@@ -147,3 +147,9 @@ class stock_warehouse(osv.osv):
                         res.remove(product_id)
                         break
         return res
+
+    def change_route(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
+        res = super(stock_warehouse, self).change_route(cr, uid, ids, warehouse, new_reception_step=new_reception_step, new_delivery_step=new_delivery_step, context=context)
+        if warehouse.wh_input_stock_loc_id != warehouse.buy_pull_rule_id.id.location_id:
+            self.pool.get('procurement.rule').write(cr, uid, warehouse.buy_pull_rule_id.id, {'location_id': warehouse.wh_input_stock_loc_id.id}, context=context)
+        return res
