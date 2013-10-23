@@ -1,6 +1,0 @@
--
-  !python {model: stock.warehouse}: |
-    main_warehouse = self.browse(cr, uid, ref('stock.warehouse0'), context=context)
-    #Force the rewriting of route and rule
-    self.write(cr,uid,main_warehouse.id,{'can_buy_for_resupply':True},context=context)
-

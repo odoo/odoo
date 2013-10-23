@@ -65,7 +65,7 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_orderpoint.yml',
         'stock_demo.yml',
         'stock_location_demo_cpu1.xml',
-        'stock_location_demo_cpu3.yml',        
+        'stock_location_demo_cpu3.yml',
     ],
     'data': [
         'security/stock_security.xml',
@@ -113,7 +113,7 @@ Dashboard / Reports for Warehouse Management will include:
         'static/lib/sparkline/jquery.sparkline.js',
         'static/lib/justgage.js',
         'static/src/js/stock_picking_type.js',
-        'static/src/js/widgets.js',        
+        'static/src/js/widgets.js',
     ],
     'qweb': ['static/src/xml/picking.xml'],
 }

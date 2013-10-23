@@ -2280,11 +2280,10 @@ class stock_warehouse(osv.osv):
         'resupply_wh_ids': fields.many2many('stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id', 'Resupply Warehouses'),
         'resupply_route_ids': fields.one2many('stock.location.route', 'supplied_wh_id', 'Resupply Routes'),
         'default_resupply_wh_id': fields.many2one('stock.warehouse', 'Default Resupply Warehouse', domain="[('id','in',resupply_init_filter)]"),
-        'show_default_resupply_wh_id': fields.function(show_field_default_wh_resupply,type='boolean',string="Show field default_resupply_wh_id"),        
-        'resupply_init_filter' : fields.function(init_filtre_default_resupply_wh_id, type='many2one', string='test',relation='stock.warehouse'),        
-    }    
-    
-    
+        'show_default_resupply_wh_id': fields.function(show_field_default_wh_resupply,type='boolean',string="Show field default_resupply_wh_id"),
+        'resupply_init_filter' : fields.function(init_filtre_default_resupply_wh_id, type='many2one', string='test',relation='stock.warehouse'),
+    }
+
     def onchange_filtre_default_resupply_wh_id(self, cr, uid, ids, resupply_wh_ids,default_resupply_wh_id, context=None):
         resupply_wh_ids = [x['id'] for x in (self.resolve_2many_commands(cr, uid, 'resupply_wh_ids',resupply_wh_ids, ['id']))]
         print(default_resupply_wh_id,resupply_wh_ids)
@@ -2303,7 +2302,7 @@ class stock_warehouse(osv.osv):
                 'domain':{ 'default_resupply_wh_id':[('id','in',resupply_wh_ids)] },
                 'warning': warning
                }
-        
+
     def _get_inter_wh_location(self, cr, uid, warehouse, context=None):
         ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
         data_obj = self.pool.get('ir.model.data')
@@ -2371,7 +2370,7 @@ class stock_warehouse(osv.osv):
     }
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
-        ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company !'),        
+        ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company !'),
     ]
 
     def _get_partner_locations(self, cr, uid, ids, context=None):
@@ -2527,12 +2526,12 @@ class stock_warehouse(osv.osv):
 
         #return routes and mto pull rule for warehouse
         return {
-                    'route_ids': wh_route_ids,
-                    'mto_pull_id': mto_pull_id,
-                    'reception_route_id': reception_route_id,
-                    'delivery_route_id': delivery_route_id,
-                    'crossdock_route_id': crossdock_route_id,
-                }                
+            'route_ids': wh_route_ids,
+            'mto_pull_id': mto_pull_id,
+            'reception_route_id': reception_route_id,
+            'delivery_route_id': delivery_route_id,
+            'crossdock_route_id': crossdock_route_id,
+        }
 
     def change_route(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
         picking_type_obj = self.pool.get('stock.picking.type')
@@ -2588,7 +2587,6 @@ class stock_warehouse(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        
         if vals is None:
             vals = {}
         data_obj = self.pool.get('ir.model.data')
@@ -2717,8 +2715,8 @@ class stock_warehouse(osv.osv):
         warehouse.refresh()
 
         #create routes and push/pull rules
-        ret = self.create_routes(cr, uid, new_id, warehouse, context=context)
-        self.write(cr, uid, warehouse.id,  ret , context=context)
+        new_objects_dict = self.create_routes(cr, uid, new_id, warehouse, context=context)
+        self.write(cr, uid, warehouse.id, new_objects_dict, context=context)
         return new_id
 
     def _format_rulename(self, cr, uid, obj, from_loc, dest_loc, context=None):
@@ -2738,7 +2736,7 @@ class stock_warehouse(osv.osv):
             'crossdock': (_('Cross-Dock'), [(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
             'ship_only': (_('Ship Only'), [(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id.id)]),
             'pick_ship': (_('Pick + Ship'), [(warehouse.lot_stock_id, warehouse.wh_output_stock_loc_id, warehouse.pick_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
-            'pick_pack_ship': (_('Pick + Pack + Ship'), [(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),            
+            'pick_pack_ship': (_('Pick + Pack + Ship'), [(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
         }
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -2746,7 +2744,6 @@ class stock_warehouse(osv.osv):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        
         seq_obj = self.pool.get('ir.sequence')
         location_obj = self.pool.get('stock.location')
         route_obj = self.pool.get('stock.location.route')
@@ -3227,16 +3224,6 @@ class stock_warehouse_orderpoint(osv.osv):
 
         return True
 
-    def _check_uniq_name(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
-
-        for name in self.browse(cr, uid, ids, context=context):
-            if rule.product_id.uom_id.category_id.id != rule.product_uom.category_id.id:
-                return False
-
-        return True
-
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
@@ -3267,10 +3254,10 @@ class stock_warehouse_orderpoint(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=context)
     }
     _sql_constraints = [
-        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),        
+        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
     ]
     _constraints = [
-        (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),        
+        (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),
     ]
 
     def default_get(self, cr, uid, fields, context=None):
