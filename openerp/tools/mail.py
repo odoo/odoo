@@ -187,6 +187,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
         if node.text is None:
             node.text = ''
 
+        truncate_idx = -1
         if simplify_whitespaces:
             cur_char_nbr = 0
             word = None
@@ -196,18 +197,15 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
                 if cur_char_nbr >= position:
                     break
             if word:
-                stop_idx = node.text.find(word) + len(word)
-            else:
-                stop_idx = len(node.text)
-            if stop_idx == -1:
-                stop_idx = len(node.text)
+                truncate_idx = node.text.find(word) + len(word)
         else:
-            stop_idx = position
-        stop_idx = stop_idx if len(node.text) >= stop_idx else len(node.text)
+            truncate_idx = position
+        if truncate_idx == -1 or truncate_idx >= len(node.text):
+            truncate_idx = len(node.text) - 1
 
         # compose new text bits
-        innertext = node.text[0:stop_idx]
-        outertext = node.text[stop_idx:]
+        innertext = node.text[0:truncate_idx]
+        outertext = node.text[truncate_idx:]
         node.text = innertext
 
         # create <span> ... <a href="#">read more</a></span> node
@@ -215,7 +213,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
         read_more_link_node = _create_node('a', 'read more', None, {'href': '#', 'class': 'oe_mail_expand'})
         read_more_node.append(read_more_link_node)
         # create outertext node
-        overtext_node = _create_node('span', outertext[stop_idx:])
+        overtext_node = _create_node('span', outertext[truncate_idx:])
         # tag node
         overtext_node.set('in_overlength', '1')
         # add newly created nodes in dom
