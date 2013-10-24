@@ -327,21 +327,14 @@ class Images(http.Controller):
         if response.status_code == 304:
             return response
 
-        return self.set_image_data(
-            response, record[field].decode('base64'),
-            fit=(int(max_width), int(max_height)))
+        data = record[field].decode('base64')
+        fit = int(max_width), int(max_height)
 
-    def set_image_data(self, response, data, fit=(maxint, maxint)):
-        """ Sets an inferred mime type on the response object, and puts the
-        provided image's data in it, possibly after resizing if requested
-
-        Returns the response object after setting its mime and content, so
-        the result of ``get_final_image`` can be returned directly.
-        """
         buf = cStringIO.StringIO(data)
 
         # FIXME: unknown format or not an image
         image = Image.open(buf)
+        image.load()
         response.mimetype = Image.MIME[image.format]
 
         w, h = image.size
