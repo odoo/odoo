@@ -213,7 +213,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300):
         read_more_link_node = _create_node('a', 'read more', None, {'href': '#', 'class': 'oe_mail_expand'})
         read_more_node.append(read_more_link_node)
         # create outertext node
-        overtext_node = _create_node('span', outertext[truncate_idx:])
+        overtext_node = _create_node('span', outertext)
         # tag node
         overtext_node.set('in_overlength', '1')
         # add newly created nodes in dom
