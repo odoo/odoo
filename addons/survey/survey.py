@@ -385,6 +385,9 @@ class survey_question(osv.osv):
     def _gen_constr_error_msg(self, cr, uid, ids, name, arg, context=None):
         pass
 
+    def _gen_val_error_msg(self, cr, uid, ids, name, arg, context=None):
+        pass
+
     # Model fields #
 
     _columns = {
@@ -402,6 +405,10 @@ class survey_question(osv.osv):
         'question': fields.char('Question', required=1, translate=True),
         'description': fields.text('Description', help="Use this field to add \
             additional explanations about your question", translate=True),
+        'display': fields.selection(
+            [('horizontal', 'Horizontal'),
+            ('vertical', 'Vertical')],
+            'Display'),
 
         # Answer
         'type': fields.selection([('textbox', 'Text box'),
@@ -414,11 +421,59 @@ class survey_question(osv.osv):
                 ('multiple_choice', 'Some choices in checkboxes'),
                 ('vector', 'Container of questions'),
                 ('matrix', 'Container of containers of questions')
-            ], 'Question Type', required=1, ),
+            ], 'Question Type', required=1),
 
-        'suggested_answer_num' = fields.char("Suggested answer", translate=True),
+        'suggested_answer_textbox': fields.char("Suggested answer",
+            translate=True),
+        'suggested_answer_num': fields.float("Suggested answer"),
+        'suggested_answer_num': fields.float("Suggested answer"),
+        'suggested_answer_num': fields.float("Suggested answer"),
+        'suggested_answer_num': fields.float("Suggested answer"),
+        'suggested_answer_num': fields.float("Suggested answer"),
+        'suggested_answer_num': fields.float("Suggested answer"),
 
-        # Constraints on answer
+
+
+
+        # Comments
+        # Replace comment by a special child question?
+        'comments_allowed': fields.boolean('Allow comments',
+            oldname="allow_comment"),
+        'comment_children_ids': fields.one2many('survey.question_id',
+            'parent_id', 'Comment question'),  # one2one in fact
+        'comment_count_as_answer': fields.boolean('Make Comment Field an \
+            Answer Choice', oldname='make_comment_field'),
+
+        # Validation
+        'validation_required': fields.boolean('Validate entry',
+            oldname='is_validation_require'),
+        'validation_type': fields.selection([
+            ('none', '''Don't validate'''),
+            ('has_length', 'Must Be Specific Length'),
+            ('is_integer', 'Must Be A Whole Number'),
+            ('is_decimal', 'Must Be A Decimal Number'),
+            ('is_date', 'Must Be A Date'),
+            ('is_email', 'Must Be An Email Address')
+            ], 'Text Validation'),
+        'validation_length': fields.integer('Specific length'),
+        'validation_min_value': fields.float('Minimum value'),
+        'validation_max_value': fields.float('Maximum value'),
+        'validation_min_date': fields.date('Start date range'),
+        'validation_max_date': fields.date('End date range'),
+        'validation_error_msg': fields.function(_gen_constr_error_msg,
+            type="char", string="Error message if validation fails"),
+
+        'numeric_required_sum': fields.integer('Sum of all choices'),
+        'numeric_required_sum_err_msg': fields.text('Error message', translate=True),
+
+        #'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible?'),
+        #'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
+        #'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
+        #'comment_column': fields.boolean('Add comment column in matrix'),
+        #'column_name': fields.char('Column Name', translate=True),
+        #'no_of_rows': fields.integer('No of Rows'),
+
+        # Constraints on number of answers
         'constr_mandatory': fields.boolean('Mandatory question',
             oldname="is_require_answer"),
         'constr_type': fields.selection([('all', 'All'),
@@ -432,63 +487,11 @@ class survey_question(osv.osv):
         'constr_minimum_req_ans': fields.integer('Minimum Required Answer'),
         'constr_error_msg': fields.function(_gen_constr_error_msg, type="char",
             string="Error message"),
-
-
-
-        # Comments
-        'comments_allowed': fields.boolean('Allow comments', oldname="allow_comment"),
-        'comments_required': fields.boolean('Require comments', oldname="is_comment_require"),
-        'comment_label': fields.char('Field Label', translate=True),
-        'comment_field_type': fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
-        'comment_valid_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),
-             ('must_be_specific_length', 'Must Be Specific Length'),
-             ('must_be_whole_number', 'Must Be A Whole Number'),
-             ('must_be_decimal_number', 'Must Be A Decimal Number'),
-             ('must_be_date', 'Must Be A Date'),
-             ('must_be_email_address', 'Must Be An Email Address'),
-             ], 'Text Validation'),
-        'comment_minimum_no': fields.integer('Minimum number'),
-        'comment_maximum_no': fields.integer('Maximum number'),
-        'comment_minimum_float': fields.float('Minimum decimal number'),
-        'comment_maximum_float': fields.float('Maximum decimal number'),
-        'comment_minimum_date': fields.date('Minimum date'),
-        'comment_maximum_date': fields.date('Maximum date'),
-        'comment_valid_err_msg': fields.text('Error message', translate=True),
-        'make_comment_field': fields.boolean('Make Comment Field an Answer Choice'),
-        'make_comment_field_err_msg': fields.text('Error message', translate=True),
-
-
-
-
-        'is_validation_require': fields.boolean('Validate Text'),
-        'validation_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''), \
-             ('must_be_specific_length', 'Must Be Specific Length'), \
-             ('must_be_whole_number', 'Must Be A Whole Number'), \
-             ('must_be_decimal_number', 'Must Be A Decimal Number'), \
-             ('must_be_date', 'Must Be A Date'), \
-             ('must_be_email_address', 'Must Be An Email Address')\
-             ], 'Text Validation'),
-        'validation_minimum_no': fields.integer('Minimum number'),
-        'validation_maximum_no': fields.integer('Maximum number'),
-        'validation_minimum_float': fields.float('Minimum decimal number'),
-        'validation_maximum_float': fields.float('Maximum decimal number'),
-        'validation_minimum_date': fields.date('Minimum date'),
-        'validation_maximum_date': fields.date('Maximum date'),
-        'validation_valid_err_msg': fields.text('Error message', translate=True),
-        'numeric_required_sum': fields.integer('Sum of all choices'),
-        'numeric_required_sum_err_msg': fields.text('Error message', translate=True),
-        'rating_allow_one_column_require': fields.boolean('Allow Only One Answer per Column (Forced Ranking)'),
-        'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible?'),
-        'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
-        'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
-        'comment_column': fields.boolean('Add comment column in matrix'),
-        'column_name': fields.char('Column Name', translate=True),
-        'no_of_rows': fields.integer('No of Rows'),
     }
     _defaults = {
         'sequence': 1,
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
-        'type': lambda s, cr, uid, c: _('multiple_choice_multiple_ans'),
+        'type': lambda s, cr, uid, c: _('multiple_choice'),
         'req_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
         'required_type': 'at least',
         'req_ans': 1,
