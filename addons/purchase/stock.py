@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 from openerp.tools.translate import _
 
 class stock_move(osv.osv):
@@ -98,7 +97,7 @@ class stock_warehouse(osv.osv):
 
         return {
             'name': self._format_routename(cr, uid, warehouse, _(' Buy'), context=context),
-            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_id': warehouse.in_type_id.default_location_dest_id.id,
             'route_id': buy_route_id,
             'action': 'buy',
             'picking_type_id': warehouse.in_type_id.id,
@@ -151,6 +150,6 @@ class stock_warehouse(osv.osv):
 
     def change_route(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
         res = super(stock_warehouse, self).change_route(cr, uid, ids, warehouse, new_reception_step=new_reception_step, new_delivery_step=new_delivery_step, context=context)
-        if warehouse.wh_input_stock_loc_id != warehouse.buy_pull_id.id.location_id:
-            self.pool.get('procurement.rule').write(cr, uid, warehouse.buy_pull_id.id, {'location_id': warehouse.wh_input_stock_loc_id.id}, context=context)
+        if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
+            self.pool.get('procurement.rule').write(cr, uid, warehouse.buy_pull_id.id, {'location_id': warehouse.in_type_id.default_location_dest_id.id}, context=context)
         return res
