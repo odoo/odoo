@@ -7,17 +7,19 @@ Also, adds methods to convert values back to openerp models.
 """
 
 import cStringIO
+import datetime
 import itertools
 import logging
 import re
 import urllib2
 
 import werkzeug.utils
+from dateutil import parser
 from lxml import etree, html
 from PIL import Image as I
 
 from openerp.osv import orm, fields
-from openerp.tools import ustr
+from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -75,19 +77,48 @@ class Float(orm.AbstractModel):
         return float(value.replace(lang.thousands_sep, '')
                           .replace(lang.decimal_point, '.'))
 
+
+def parse_fuzzy(in_format, value):
+    day_first = in_format.find('%d') < in_format.find('%m')
+
+    if '%y' in in_format:
+        year_first = in_format.find('%y') < in_format.find('%d')
+    else:
+        year_first = in_format.find('%Y') < in_format.find('%d')
+
+    return parser.parse(value, dayfirst=day_first, yearfirst=year_first)
+
 class Date(orm.AbstractModel):
     _name = 'website.qweb.field.date'
     _inherit = ['website.qweb.field', 'ir.qweb.field.date']
 
     def from_html(self, cr, uid, model, column, element, context=None):
-        raise NotImplementedError("Can not parse and save localized dates")
+        lang = self.user_lang(cr, uid, context=context)
+        in_format = lang.date_format.encode('utf-8')
+
+        value = element.text_content().strip()
+        try:
+            dt = datetime.datetime.strptime(in_format, value)
+        except ValueError:
+            dt = parse_fuzzy(in_format, value)
+
+        return dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
 class DateTime(orm.AbstractModel):
     _name = 'website.qweb.field.datetime'
     _inherit = ['website.qweb.field', 'ir.qweb.field.datetime']
 
     def from_html(self, cr, uid, model, column, element, context=None):
-        raise NotImplementedError("Can not parse and save localized datetimes")
+        lang = self.user_lang(cr, uid, context=context)
+        in_format = (u"%s %s" % (lang.date_format, lang.time_format)).encode('utf-8')
+
+        value = element.text_content().strip()
+        try:
+            dt = datetime.datetime.strptime(in_format, value)
+        except ValueError:
+            dt = parse_fuzzy(in_format, value)
+
+        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
 class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'

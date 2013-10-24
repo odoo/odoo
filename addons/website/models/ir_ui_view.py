@@ -100,22 +100,24 @@ class view(osv.osv):
 
         return arch
 
-    def _normalize_urls(self, element):
-        attr = None
-        if element.tag == 'form':
-            attr = 'action' if 'action' in element.attrib else None
-        elif element.tag in ['a', 'link']:
-            attr = 'href' if 'href' in element.attrib else None
-        elif element.tag in ['frame', 'iframe', 'script']:
-            attr = 'src' if 'src' in element.attrib else None
-        if attr:
-            value = element.attrib[attr]
+    URL_ATTRS = {
+        'form': 'action',
+        'a': 'href',
+        'link': 'href',
+        'frame': 'src',
+        'iframe': 'src',
+        'script': 'src',
+    }
+    def _normalize_urls(self, root):
+        for element in root.iter():
+            attr = self.URL_ATTRS.get(element.tag)
+            if attr is None or attr not in element.attrib:
+                continue
+
+            value = element.get(attr)
             if not urlparse(value).scheme:
                 element.attrib.pop(attr)
-                element.attrib['t-' + attr] = value
-        for el in list(element):
-            self._normalize_urls(el)
-        return element
+                element.set('t-' + attr, value)
 
     def save(self, cr, uid, res_id, value, xpath=None, context=None):
         """ Update a view section. The view section may embed fields to write

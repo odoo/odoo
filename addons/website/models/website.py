@@ -238,10 +238,26 @@ class website(osv.osv):
         return {
             "page_count": page_count,
             "offset": (page - 1) * step,
-            "page": {'url': get_url(page), 'num': page},
-            "page_start": {'url': get_url(pmin), 'num': pmin},
-            "page_end": {'url': get_url(min(pmax, page + 1)),
-                         'num': min(pmax, page + 1)},
+            "page": {
+                'url': get_url(page),
+                'num': page
+            },
+            "page_start": {
+                'url': get_url(pmin),
+                'num': pmin
+            },
+            "page_previous": {
+                'url': get_url(max(pmin, page - 1)),
+                'num': max(pmin, page - 1)
+            },
+            "page_next": {
+                'url': get_url(min(pmax, page + 1)),
+                'num': min(pmax, page + 1)
+            },
+            "page_end": {
+                'url': get_url(pmax),
+                'num': pmax
+            },
             "pages": [
                 {'url': get_url(page), 'num': page}
                 for page in xrange(pmin, pmax+1)
