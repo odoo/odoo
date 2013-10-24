@@ -293,6 +293,11 @@ class product_template(osv.osv):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
+        product = self.pool.get('product.product')
+        product_ids = product.search(cr, uid, [('product_tmpl_id','in',ids)], context=context)
+        for product_obj in product.browse(cr, uid, product_ids, context=context):
+            if not product_obj.image:
+                product.write(cr, uid, product_obj.id, {'image': product_obj.product_tmpl_id.image}, context=context)
         return result
 
     def _set_image(self, cr, uid, id, name, value, args, context=None):
@@ -548,6 +553,15 @@ class product_product(osv.osv):
         return result
 
 
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
+        return result
+
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
     def _get_name_template_ids(self, cr, uid, ids, context=None):
         result = set()
         template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
@@ -592,11 +606,40 @@ class product_product(osv.osv):
 
             }, select=True),
         'color': fields.integer('Color Index'),
+        # image: all image fields are base64 encoded and PIL-supported
+        'image': fields.binary("Image",
+            help="This field holds the image used as image for the product, limited to 1024x1024px."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized image", type="binary", multi="_get_image",
+            store={
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized image of the product. It is automatically "\
+                 "resized as a 128x128px image, with aspect ratio preserved, "\
+                 "only when the image exceeds one of those sizes. Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Small-sized image", type="binary", multi="_get_image",
+            store={
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized image of the product. It is automatically "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
         'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", string="Supplier Info", multi="seller_info"),
         'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
         'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
+        'description': fields.text('Description',translate=True,
+            help="A precise description of the Product, used only for internal information purposes."),
     }
+
+    def create(self, cr, uid, data, context=None):
+        if 'product_tmpl_id' in data:
+            template = self.pool.get('product.template').browse(cr, uid, data['product_tmpl_id'], context=context)
+            if template.image:
+                data['image'] = template.image
+        return super(product_product, self).create(cr, uid, data, context=context)
+
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []
