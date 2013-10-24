@@ -76,10 +76,22 @@ def _invoke_model(func, model):
     except TypeError:
         return func(model, *scope.args)
 
+from inspect import getmembers
 
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
+
+    def __new__(cls, name, bases, attrs):
+        tmp = type.__new__(cls, name, bases, attrs)
+        is_lazy_property = lambda x: isinstance(x, lazy_property)
+
+        tmp.lazy_properties = [
+            name for name, value in getmembers(tmp, is_lazy_property)
+        ]
+
+        return tmp
+
 
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)

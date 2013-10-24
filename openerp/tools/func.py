@@ -46,9 +46,10 @@ class lazy_property(object):
     @staticmethod
     def reset_all(obj):
         """ Reset all lazy properties on the instance `obj`. """
-        for name, value in getmembers(type(obj)):
-            if isinstance(value, lazy_property):
-                obj.__dict__.pop(name, None)
+        cls = type(obj)
+        pop = obj.__dict__.pop
+        for name in cls.lazy_properties:
+            pop(name, None)
 
 
 def synchronized(lock_attr='_lock'):
@@ -68,7 +69,7 @@ def frame_codeinfo(fframe, back=0):
     """ Return a (filename, line) pair for a previous frame .
         @return (filename, lineno) where lineno is either int or string==''
     """
-    
+
     try:
         if not fframe:
             return "<unknown>", ''
