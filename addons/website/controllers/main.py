@@ -332,7 +332,6 @@ class Images(http.Controller):
 
         buf = cStringIO.StringIO(data)
 
-        # FIXME: unknown format or not an image
         image = Image.open(buf)
         image.load()
         response.mimetype = Image.MIME[image.format]
