@@ -18,7 +18,7 @@ OpenERP E-Commerce
         'security/website_sale.xml',
     ],
     'demo': [
-        'website_sale_demo.xml',
+        # 'website_sale_demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

@@ -43,7 +43,7 @@
               <b t-field="product.name"/>
           </a>
       </div>
-      <div class="product_price">
+      <div class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                 <del class="text-danger"
@@ -285,7 +285,7 @@
                               <br/>
                           </t>
 
-                          <div class="product_price mt16">
+                          <div class="product_price mt16" t-if="product.product_variant_ids">
                               <h4>
                                   <b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b>
 
