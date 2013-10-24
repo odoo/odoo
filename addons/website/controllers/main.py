@@ -51,8 +51,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def index(self, **kw):
         return self.page("website.homepage")
 
-    # FIXME: auth, if /pagenew known anybody can create new empty page
-    @website.route('/pagenew/<path:path>', type='http', auth="admin")
+    @website.route('/pagenew/<path:path>', type='http', auth="user")
     def pagenew(self, path, noredirect=NOPE):
         module = 'website'
         # completely arbitrary max_length
