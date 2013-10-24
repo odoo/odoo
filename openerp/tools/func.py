@@ -23,7 +23,7 @@
 __all__ = ['synchronized', 'lazy_property']
 
 from functools import wraps
-from inspect import getmembers, getsourcefile
+from inspect import getsourcefile
 
 
 class lazy_property(object):
@@ -46,9 +46,11 @@ class lazy_property(object):
     @staticmethod
     def reset_all(obj):
         """ Reset all lazy properties on the instance `obj`. """
-        for name, value in getmembers(type(obj)):
-            if isinstance(value, lazy_property):
-                obj.__dict__.pop(name, None)
+        cls = type(obj)
+        obj_dict = obj.__dict__
+        for name in obj_dict.keys():
+            if isinstance(getattr(cls, name, None), lazy_property):
+                obj_dict.pop(name)
 
 
 def synchronized(lock_attr='_lock'):
