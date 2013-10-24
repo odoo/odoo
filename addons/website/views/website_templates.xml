@@ -10,6 +10,25 @@
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
+        <template id="website.submenu" name="Submenu">
+            <t t-set="children" t-value="submenu['children']"/>
+            <li t-if="not children">
+                <a t-att-href="url_for(submenu['url'])">
+                    <t t-esc="submenu['name']"/>
+                </a>
+            </li>
+            <li t-if="children" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <t t-esc="submenu['name']"/> <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <t t-foreach="children" t-as="submenu">
+                        <t t-call="website.submenu"/>
+                    </t>
+                </ul>
+            </li>
+        </template>
+
         <template id="layout" name="Main layout">
                 &lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang.replace('_', '-')"
@@ -97,6 +116,10 @@
                                         </div>
                                         <div class="collapse navbar-collapse navbar-top-collapse">
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                                <t t-foreach="website.get_menu_tree()['children']" t-as="submenu">
+                                                    <t t-call="website.submenu"/>
+                                                </t>
+
                                                 <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
                                                 <li t-if="user_id.id == website.public_user.id"><a href="/web">Sign in</a></li>
                                                 <li t-if="user_id.id != website.public_user.id"><a href="/web"><span t-field="user_id.name"/></a></li>

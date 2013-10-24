@@ -361,6 +361,39 @@ class website(osv.osv):
             html += request.website.render(template, {'object_id': object_id})
         return html
 
+    def get_menu_tree(self, cr, uid, ids, context=None):
+        return self.pool['website.menu'].get_tree(cr, uid, ids[0])
+
+
+class website_menu(osv.osv):
+    _name = "website.menu"
+    _description = "Website Menu"
+    _columns = {
+        'name': fields.char('Menu', size=64, required=True, translate=True),
+        'url': fields.char('Url', required=True, translate=True),
+        'sequence': fields.integer('Sequence'),
+        # TODO: support multiwebsite once done for ir.ui.views
+        'website_id': fields.many2one('website', 'Website'),
+        'parent_id': fields.many2one('website.menu', 'Parent Menu', select=True, ondelete="restrict"),
+        'parent_left': fields.integer('Parent Left', select=True),
+        'parent_right': fields.integer('Parent Right', select=True),
+    }
+
+    def get_tree(self, cr, uid, website_id=False, context=None):
+        menu_root = {
+            'id': False,
+            'name': 'root',
+            'url': '',
+            'children': [],
+            'parent_id': 0,
+        }
+        domain = [('parent_id', '=', 0)] # ('website_id', '=', website_id)]
+        root = self.search(cr, uid, domain, context=context)
+        if root:
+            pass
+            #menu_ids = Menus.search([('id', 'child_of', root)], 0, False, False, context)
+        return menu_root
+
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
