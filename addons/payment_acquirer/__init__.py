@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import payment_acquirer
+import models
 import controllers

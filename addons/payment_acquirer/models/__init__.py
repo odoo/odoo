@@ -19,18 +19,4 @@
 #
 ##############################################################################
 
-{
-    'name': 'Payment acquirer',
-    'category': 'Hidden',
-    'summary': 'Payment acquirer, display and validate payments',
-    'version': '0.1',
-    'description': """Payment acquirer module, use to display payment method and validate the payments.""",
-    'author': 'OpenERP SA',
-    'depends': ['decimal_precision'],
-    'data': [
-        'views/acquirer_view.xml',
-        'data/payment_acquirer_data.xml',
-        'security/ir.model.access.csv',
-    ],
-    'installable': True,
-}
+import payment_acquirer
