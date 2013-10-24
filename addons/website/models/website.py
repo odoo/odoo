@@ -364,13 +364,18 @@ class website(osv.osv):
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
-        context = context or {}
         result = {}
         for attach in self.browse(cr, uid, ids, context=context):
-            if attach.type=='url':
+            if attach.type == 'url':
                 result[attach.id] = attach.url
             else:
-                result[attach.id] = "/website/attachment/"+str(attach.id)
+                result[attach.id] = urlplus('/website/image', {
+                    'model': 'ir.attachment',
+                    'field': 'datas',
+                    'id': attach.id,
+                    'max_width': 1024,
+                    'max_height': 768,
+                })
         return result
     _columns = {
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')

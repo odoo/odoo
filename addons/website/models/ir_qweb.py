@@ -12,6 +12,7 @@ import itertools
 import logging
 import re
 import urllib2
+import urlparse
 
 import werkzeug.utils
 from dateutil import parser
@@ -199,10 +200,11 @@ class Image(orm.AbstractModel):
     def from_html(self, cr, uid, model, column, element, context=None):
         url = element.find('img').get('src')
 
-        m = re.match(r'^/website/attachment/(\d+)$', url)
-        if m:
+        url_object = urlparse.urlsplit(url)
+        query = urlparse.parse_qs(url_object.query)
+        if url_object.path == '/website/image' and query['model'] == 'ir.attachment':
             attachment = self.pool['ir.attachment'].browse(
-                cr, uid, int(m.group(1)), context=context)
+                cr, uid, int(query['id']), context=context)
             return attachment.datas
 
         # remote URL?
