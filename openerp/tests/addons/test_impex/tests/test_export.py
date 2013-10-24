@@ -324,7 +324,7 @@ class test_o2m(CreatorCase):
         (0, False, {'value': 13, 'str': 'record5'}),
     ]
     names = [
-        u'export_one2many_child:%d' % d['value']
+        u'export.one2many.child:%d' % d['value']
         for c, _, d in commands
     ]
 
@@ -337,13 +337,13 @@ class test_o2m(CreatorCase):
         self.assertEqual(
             self.export([(0, False, {'value': 42})]),
             # name_get result
-            [[u'export_one2many_child:42']])
+            [[u'export.one2many.child:42']])
 
     def test_single_subfield(self):
         self.assertEqual(
             self.export([(0, False, {'value': 42})],
                         fields=['value', 'value/value']),
-            [[u'export_one2many_child:42', u'42']])
+            [[u'export.one2many.child:42', u'42']])
 
     def test_integrate_one_in_parent(self):
         self.assertEqual(
@@ -444,16 +444,16 @@ class test_o2m_multiple(CreatorCase):
     def test_single_per_side(self):
         self.assertEqual(
             self.export(child1=False, child2=[(0, False, {'value': 42})]),
-            [[False, u'export_one2many_child_2:42']])
+            [[False, u'export.one2many.child.2:42']])
 
         self.assertEqual(
             self.export(child1=[(0, False, {'value': 43})], child2=False),
-            [[u'export_one2many_child_1:43', False]])
+            [[u'export.one2many.child.1:43', False]])
 
         self.assertEqual(
             self.export(child1=[(0, False, {'value': 43})],
                         child2=[(0, False, {'value': 42})]),
-            [[u'export_one2many_child_1:43', u'export_one2many_child_2:42']])
+            [[u'export.one2many.child.1:43', u'export.one2many.child.2:42']])
 
     def test_single_integrate_subfield(self):
         fields = ['const', 'child1/value', 'child2/value']
@@ -527,7 +527,7 @@ class test_m2m(CreatorCase):
         (0, False, {'value': 13, 'str': 'record100'}),
     ]
     names = [
-        u'export_many2many_other:%d' % d['value']
+        u'export.many2many.other:%d' % d['value']
         for c, _, d in commands
     ]
 
@@ -540,13 +540,13 @@ class test_m2m(CreatorCase):
         self.assertEqual(
             self.export([(0, False, {'value': 42})]),
             # name_get result
-            [[u'export_many2many_other:42']])
+            [[u'export.many2many.other:42']])
 
     def test_single_subfield(self):
         self.assertEqual(
             self.export([(0, False, {'value': 42})],
                         fields=['value', 'value/value']),
-            [[u'export_many2many_other:42', u'42']])
+            [[u'export.many2many.other:42', u'42']])
 
     def test_integrate_one_in_parent(self):
         self.assertEqual(

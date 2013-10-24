@@ -33,7 +33,7 @@ import openerp.osv.orm
 import openerp.tools
 import openerp.modules.db
 import openerp.tools.config
-from openerp.tools import assertion_report, snake_dict
+from openerp.tools import assertion_report
 
 _logger = logging.getLogger(__name__)
 
@@ -47,10 +47,10 @@ class Registry(Mapping):
 
     def __init__(self, db_name):
         super(Registry, self).__init__()
-        self.models = snake_dict()                  # {model: model_obj, ...}
+        self.models = {}    # model name/model instance mapping
         self._sql_error = {}
-        self._store_function = snake_dict()         # {model: [tuple, ...], ...}
-        self._pure_function_fields = snake_dict()   # {model: [field, ...], ...}
+        self._store_function = {}
+        self._pure_function_fields = {}         # {model: [field, ...], ...}
         self._init = True
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()

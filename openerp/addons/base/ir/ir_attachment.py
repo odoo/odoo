@@ -153,7 +153,7 @@ class ir_attachment(osv.osv):
         'datas_fname': fields.char('File Name',size=256),
         'description': fields.text('Description'),
         'res_name': fields.function(_name_get_resname, type='char', size=128, string='Resource Name', store=True),
-        'res_model': fields.model('Resource Model',size=64, readonly=True, help="The database object this attachment will be attached to"),
+        'res_model': fields.char('Resource Model',size=64, readonly=True, help="The database object this attachment will be attached to"),
         'res_id': fields.integer('Resource ID', readonly=True, help="The record id this is attached to"),
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),

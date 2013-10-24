@@ -27,18 +27,17 @@ Miscellaneous tools used by OpenERP.
 
 from functools import wraps
 import cProfile
+import subprocess
 import logging
 import os
 import pdb
-import re
 import socket
-import subprocess
 import sys
 import threading
 import time
 import types
 import zipfile
-from collections import defaultdict, Mapping, MutableMapping
+from collections import defaultdict
 from datetime import datetime
 from itertools import islice, izip, groupby
 from lxml import etree
@@ -936,82 +935,6 @@ def attrgetter(*items):
         def g(obj):
             return tuple(resolve_attr(obj, attr) for attr in items)
     return g
-
-#
-# Conversion and comparison for model names
-#
-
-camel_re = re.compile('((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))')
-
-def snake_case(name):
-    """ convert a dotted or camel-case name into a snake-case name """
-    if isinstance(name, SnakeString):
-        return unicode(name)
-    elif '.' in name:
-        # 'res.partner.category' -> 'res_partner_category'
-        return name.replace('.', '_')
-    else:
-        # 'ResPartnerCategory' -> 'res_partner_category'
-        return camel_re.sub(r'_\1', name).lower()
-
-class snake_dict(MutableMapping):
-    """ dictionary where keys are automatically snake-cased """
-    def __init__(self, *args, **kwargs):
-        self._data = {}
-        if args or kwargs:
-            self.update(*args, **kwargs)
-
-    def __getitem__(self, key):
-        if not isinstance(key, basestring):
-            raise KeyError(key)
-        return self._data[snake_case(key)]
-
-    def __setitem__(self, key, val):
-        if not isinstance(key, basestring):
-            raise KeyError(key)
-        self._data[snake_case(key)] = val
-
-    def __delitem__(self, key):
-        if not isinstance(key, basestring):
-            raise KeyError(key)
-        del self._data[snake_case(key)]
-
-    def __iter__(self):
-        return iter(self._data)
-
-    def __len__(self):
-        return len(self._data)
-
-    def __eq__(self, other):
-        try:
-            return self._data == snake_dict(other)._data
-        except KeyError:
-            return False
-
-    def __ne__(self, other):
-        return not self == other
-
-class SnakeString(unicode):
-    """ snake-case string that implements equivalence up to snake-casing """
-    def __eq__(self, other):
-        return isinstance(other, basestring) and unicode(self) == snake_case(other)
-
-    def __ne__(self, other):
-        return not self == other
-
-    def __getitem__(self, i):
-        return SnakeString(unicode(self)[i])
-
-    def __getslice__(self, i, j):
-        return SnakeString(unicode(self)[i:j])
-
-def snake_str(name):
-    """ snake-case `name` and make result comparable with dotted name """
-    return SnakeString(snake_case(name))
-
-#
-# Quoting
-#
 
 class unquote(str):
     """A subclass of str that implements repr() without enclosing quotation marks

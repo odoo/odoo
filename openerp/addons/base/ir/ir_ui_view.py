@@ -62,7 +62,7 @@ class view(osv.osv):
 
     _columns = {
         'name': fields.char('View Name', required=True),
-        'model': fields.model('Object', size=64, required=True, select=True),
+        'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
         'type': fields.function(_type_field, type='selection', selection=[
             ('tree','Tree'),
@@ -194,8 +194,7 @@ class view(osv.osv):
         if self.pool._init:
             # Module init currently in progress, only consider views from modules whose code was already loaded 
             check_view_ids = context and context.get('check_view_ids') or (0,)
-            query = """SELECT v.id FROM ir_ui_view v
-                       LEFT JOIN ir_model_data md ON (md.model = 'ir_ui_view' AND md.res_id = v.id)
+            query = """SELECT v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                        WHERE v.inherit_id=%s AND v.model=%s AND (md.module in %s OR v.id in %s)
                        ORDER BY priority"""
             query_params = (view_id, model, tuple(self.pool._init_modules), tuple(check_view_ids))
@@ -297,7 +296,7 @@ class view(osv.osv):
         """
         cr.execute("""SELECT max(v.id)
                         FROM ir_ui_view v
-                   LEFT JOIN ir_model_data md ON (md.model = 'ir_ui_view' AND md.res_id = v.id)
+                   LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                        WHERE md.module IS NULL
                          AND v.model = %s
                     GROUP BY coalesce(v.inherit_id, v.id)

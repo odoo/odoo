@@ -24,7 +24,7 @@ from openerp.osv import fields, osv
 class ir_default(osv.osv):
     _name = 'ir.default'
     _columns = {
-        'field_tbl': fields.model('Object',size=64),
+        'field_tbl': fields.char('Object',size=64),
         'field_name': fields.char('Object Field',size=64),
         'value': fields.char('Default Value',size=64),
         'uid': fields.many2one('res.users', 'Users'),

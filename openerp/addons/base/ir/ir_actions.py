@@ -134,7 +134,7 @@ class ir_actions_report_xml(osv.osv):
     _order = 'name'
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
-        'model': fields.model('Object', size=64, required=True),
+        'model': fields.char('Object', size=64, required=True),
         'type': fields.char('Action Type', size=32, required=True),
         'report_name': fields.char('Service Name', size=64, required=True),
         'usage': fields.char('Action Usage', size=32),
@@ -243,9 +243,9 @@ class ir_actions_act_window(osv.osv):
         'context': fields.char('Context Value', required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
         'res_id': fields.integer('Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only"),
-        'res_model': fields.model('Destination Model', size=64, required=True,
+        'res_model': fields.char('Destination Model', size=64, required=True,
             help="Model name of the object to open in the view window"),
-        'src_model': fields.model('Source Model', size=64,
+        'src_model': fields.char('Source Model', size=64,
             help="Optional model name of the objects on which this action should be visible"),
         'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline Edit'),('inlineview','Inline View')], 'Target Window'),
         'view_mode': fields.char('View Mode', size=250, required=True,
@@ -1114,7 +1114,7 @@ class ir_actions_act_client(osv.osv):
                            help="An arbitrary string, interpreted by the client"
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
-        'res_model': fields.model('Destination Model', size=64, 
+        'res_model': fields.char('Destination Model', size=64, 
             help="Optional model, mostly used for needactions."),
         'context': fields.char('Context Value', size=250, required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),

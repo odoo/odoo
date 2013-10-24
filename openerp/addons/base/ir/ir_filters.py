@@ -21,7 +21,6 @@
 
 from openerp import exceptions
 from openerp.osv import osv, fields
-from openerp.tools import snake_case
 from openerp.tools.translate import _
 
 class ir_filters(osv.osv):
@@ -44,7 +43,6 @@ class ir_filters(osv.osv):
             ``name``, ``is_default``, ``domain``, ``user_id`` (m2o tuple) and
             ``context`` of the matching ``ir.filters``.
         """
-        model = snake_case(model)
         # available filters: private filters (user_id=uid) and public filters (uid=NULL) 
         filter_ids = self.search(cr, uid,
             [('model_id','=',model),('user_id','in',[uid, False])])
@@ -83,17 +81,7 @@ class ir_filters(osv.osv):
                 'model': vals['model_id']
             })
 
-    def create(self, cr, uid, vals, context=None):
-        vals['model_id'] = snake_case(vals['model_id'])
-        return super(ir_filters, self).create(cr, uid, vals, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'model_id' in vals:
-            vals['model_id'] = snake_case(vals['model_id'])
-        return super(ir_filters, self).write(cr, uid, ids, vals, context=context)
-
     def create_or_replace(self, cr, uid, vals, context=None):
-        vals['model_id'] = snake_case(vals['model_id'])
         lower_name = vals['name'].lower()
         matching_filters = [f for f in self.get_filters(cr, uid, vals['model_id'])
                                 if f['name'].lower() == lower_name

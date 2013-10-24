@@ -29,7 +29,7 @@ class workflow(osv.osv):
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'osv': fields.model('Resource Object', size=64, required=True,select=True),
+        'osv': fields.char('Resource Object', size=64, required=True,select=True),
         'on_create': fields.boolean('On Create', select=True),
         'activities': fields.one2many('workflow.activity', 'wkf_id', 'Activities'),
     }
@@ -105,7 +105,7 @@ class wkf_transition(osv.osv):
     _name = "workflow.transition"
     _rec_name = 'signal'
     _columns = {
-        'trigger_model': fields.model('Trigger Object', size=128),
+        'trigger_model': fields.char('Trigger Object', size=128),
         'trigger_expr_id': fields.char('Trigger Expression', size=128),
         'signal': fields.char('Signal (Button Name)', size=64,
                               help="When the operation of transition comes from a button pressed in the client form, "\
@@ -133,7 +133,7 @@ class wkf_instance(osv.osv):
     _columns = {
         'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='cascade', select=True),
         'res_id': fields.integer('Resource ID'),
-        'res_type': fields.model('Resource Object', size=64),
+        'res_type': fields.char('Resource Object', size=64),
         'state': fields.char('Status', size=32),
     }
     def _auto_init(self, cr, context=None):
@@ -167,7 +167,7 @@ class wkf_triggers(osv.osv):
     _log_access = False
     _columns = {
         'res_id': fields.integer('Resource ID', size=128),
-        'model': fields.model('Object', size=128),
+        'model': fields.char('Object', size=128),
         'instance_id': fields.many2one('workflow.instance', 'Destination Instance', ondelete="cascade"),
         'workitem_id': fields.many2one('workflow.workitem', 'Workitem', required=True, ondelete="cascade"),
     }

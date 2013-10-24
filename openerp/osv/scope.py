@@ -153,10 +153,6 @@ class Scope(object):
         """ return a given model """
         return self.registry[model_name]
 
-    def __getattr__(self, model_name):
-        """ return a given model """
-        return self.registry[model_name]
-
     def __call__(self, cr=None, user=None, context=(), **kwargs):
         """ Return a scope based on `self` with modified parameters.
 

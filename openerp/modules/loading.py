@@ -379,9 +379,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     where
                         (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
                     and
-                        (id not IN (select res_id from ir_values where model='ir_ui_menu'))
+                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
                     and
-                        (id not IN (select res_id from ir_model_data where model='ir_ui_menu'))''')
+                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
                 cr.commit()
                 if not cr.rowcount:
                     break
