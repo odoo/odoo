@@ -309,8 +309,9 @@ class test_m2o(CreatorCase):
     def test_external_id(self):
         integer_id = self.registry('export.integer').create(
             self.cr, openerp.SUPERUSER_ID, {'value': 42})
-        # __export__.$class.$id
-        external_id = u'__export__.export_many2one_%d' % integer_id
+        # Expecting the m2o target model name in the external id,
+        # not this model's name
+        external_id = u'__export__.export_integer_%d' % integer_id
         self.assertEqual(
             self.export(integer_id, fields=['value/id']),
             [[external_id]])
