@@ -941,18 +941,15 @@ def attrgetter(*items):
 # Conversion and comparison for model names
 #
 
-camel_re = re.compile('((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))')
-
 def snake_case(name):
-    """ convert a dotted or camel-case name into a snake-case name """
+    """ convert a dotted into a snake-case name """
     if isinstance(name, SnakeString):
         return unicode(name)
     elif '.' in name:
         # 'res.partner.category' -> 'res_partner_category'
         return name.replace('.', '_')
     else:
-        # 'ResPartnerCategory' -> 'res_partner_category'
-        return camel_re.sub(r'_\1', name).lower()
+        return name
 
 class snake_dict(MutableMapping):
     """ dictionary where keys are automatically snake-cased """
