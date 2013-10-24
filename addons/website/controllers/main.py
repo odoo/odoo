@@ -214,7 +214,6 @@ class Website(openerp.addons.web.controllers.main.Home):
                         'value': new_content,
                     }
                     irt.create(request.cr, request.uid, new_trans)
-        irt._get_source.clear_cache(irt) # FIXME: find why ir.translation does not invalidate
         return True
 
     @website.route('/website/attach', type='http', auth='user')
