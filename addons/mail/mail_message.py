@@ -170,7 +170,7 @@ class mail_message(osv.Model):
         'parent_id': fields.many2one('mail.message', 'Parent Message', select=True,
             ondelete='set null', help="Initial thread message."),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
-        'model': fields.model('Related Document Model', size=128, select=1),
+        'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.function(_get_record_name, type='char',
             store=True, string='Message Record Name',

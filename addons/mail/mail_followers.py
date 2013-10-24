@@ -37,7 +37,7 @@ class mail_followers(osv.Model):
     _log_access = False
     _description = 'Document Followers'
     _columns = {
-        'res_model': fields.model('Related Document Model', size=128,
+        'res_model': fields.char('Related Document Model', size=128,
                         required=True, select=1,
                         help='Model of the followed resource'),
         'res_id': fields.integer('Related Document ID', select=1,

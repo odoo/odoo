@@ -83,7 +83,7 @@ class test_message_compose(TestMail):
         # 2. Save current composition form as a template
         mail_compose.save_as_template(cr, uid, [compose_id], context={'default_model': 'mail.group'})
         # Test: email_template subject, body_html, model
-        last_template_id = email_template.search(cr, uid, [('model', '=', 'mail_group'), ('subject', '=', 'Forget me subject')], limit=1)[0]
+        last_template_id = email_template.search(cr, uid, [('model', '=', 'mail.group'), ('subject', '=', 'Forget me subject')], limit=1)[0]
         self.assertTrue(last_template_id, 'email_template not found for model mail.group, subject Forget me subject')
         last_template = email_template.browse(cr, uid, last_template_id)
         self.assertEqual(last_template.body_html, '<p>Dummy body</p>', 'email_template incorrect body_html')
