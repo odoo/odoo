@@ -21,7 +21,8 @@
 from helpers import Session
 from helpers import Record
 
-import instance
+from openerp.workflow.instance import WorkflowInstance
+# import instance
 
 
 class WorkflowService(object):
@@ -49,7 +50,7 @@ class WorkflowService(object):
             (self.record.id or None, self.record.model or None, 'active')
         )
         for (instance_id,) in self.cr.fetchall():
-            instance.update(self.session, self.record, instance_id)
+            WorkflowInstance(self.session, self.record, {'id': instance_id}).update()
 
     def trigger(self):
         self.cr.execute('select instance_id from wkf_triggers where res_id=%s and model=%s', (self.record.id, self.record.model))
@@ -61,10 +62,10 @@ class WorkflowService(object):
             current_session = Session(self.session.cr, current_uid)
             current_record = Record(current_model_name, current_record_id)
 
-            instance.update(current_session, current_record, instance_id)
+            WorkflowInstance(current_session, current_record, {'id': instance_id}).update()
 
     def delete(self):
-        instance.delete(self.session, self.record)
+        WorkflowInstance(self.session, self.record, {}).delete()
 
     def create(self):
         WorkflowService.CACHE.setdefault(self.cr.dbname, {})
@@ -77,14 +78,18 @@ class WorkflowService(object):
             WorkflowService.CACHE[self.cr.dbname][self.record.model] = wkf_ids
 
         for (wkf_id, ) in wkf_ids:
-            instance.create(self.session, self.record, wkf_id)
+            WorkflowInstance.create(self.session, self.record, wkf_id)
 
     def validate(self, signal):
         result = False
         # ids of all active workflow instances for a corresponding resource (id, model_nam)
         self.cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s', (self.record.id, self.record.model, 'active'))
+        # TODO: Refactor the workflow instance object
         for (instance_id,) in self.cr.fetchall():
-            res2 = instance.validate(self.session, self.record, instance_id, signal)
+            wi = WorkflowInstance(self.session, self.record, {'id': instance_id})
+
+            res2 = wi.validate(signal)
+
             result = result or res2
         return result
 
