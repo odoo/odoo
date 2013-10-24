@@ -1,4 +1,7 @@
 import lru
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ormcache(object):
     """ LRU cache decorator for orm methods,
@@ -54,15 +57,11 @@ class ormcache(object):
         """
         d = self.lru(self2)
         if args:
-            try:
-                key = args[self.skiparg-2:]
-                del d[key]
-                self2.pool._any_cache_cleared = True
-            except KeyError:
-                pass
-        else:
-            d.clear()
-            self2.pool._any_cache_cleared = True
+            logger.warn("ormcache.clear arguments are deprecated and ignored "
+                        "(while clearing caches on (%s).%s)",
+                        self2._name, self.method.__name__)
+        d.clear()
+        self2.pool._any_cache_cleared = True
 
 class ormcache_multi(ormcache):
     def __init__(self, skiparg=2, size=8192, multi=3):

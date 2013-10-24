@@ -933,8 +933,8 @@ class ir_model_data(osv.osv):
             results = cr.fetchall()
             for imd_id2,res_id2,real_id2,real_model in results:
                 if not real_id2:
-                    self._get_id.clear_cache(self, uid, module, xml_id)
-                    self.get_object_reference.clear_cache(self, uid, module, xml_id)
+                    self._get_id.clear_cache(self)
+                    self.get_object_reference.clear_cache(self)
                     cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:
