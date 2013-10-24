@@ -20,13 +20,44 @@
 ##############################################################################
 
 import openerp
+from openerp.addons.payment_acquirer.models import ogone_errors
 from openerp.osv import osv, fields
 from openerp.tools import float_repr
-import urlparse
-import requests
+from openerp.tools.safe_eval import safe_eval
+
+from hashlib import sha1
+from lxml import etree, objectify
 import logging
+from pprint import pformat
+import requests
+import urlparse
+import time
+from urllib import urlencode
+import urllib2
 
 _logger = logging.getLogger(__name__)
+
+
+def _generate_ogone_shasign(acc, inout, values):
+    assert inout in ('in', 'out')
+    assert acc.provider == 'ogone'
+    key = acc['ogone_shakey_' + inout]
+
+    def filter_key(key):
+        if inout == 'in':
+            return True
+        else:
+            keys = "ORDERID CURRENCY AMOUNT PM ACCEPTANCE STATUS CARDNO ALIAS ED CN TRXDATE PAYID NCERROR BRAND ECI IP COMPLUS".split()
+            return key.upper() in keys
+
+    items = sorted((k.upper(), v) for k, v in values.items())
+    sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
+    shasign = sha1(sign).hexdigest()
+    return shasign
+
+
+class ValidationError(ValueError):
+    pass
 
 
 class Payment(osv.Model):
@@ -41,7 +72,7 @@ class Payment(osv.Model):
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'reference': fields.char('Order Reference'),
         'acquirer_ref': fields.char('Payment Acquirer Ref'),
-        'state': fields.selection([("pending", "Pending"),("validated", "Validated"),("refused", "Refused")], 'Status', required=True),
+        'state': fields.selection([("pending", "Pending"), ("validated", "Validated"), ("refused", "Refused")], 'Status', required=True),
         'res_model': fields.char('Object Model'),
         'res_id': fields.char('Object Id'),
     }
@@ -50,14 +81,14 @@ class Payment(osv.Model):
 class acquirer(osv.Model):
     _name = 'payment.acquirer'
     _description = 'Online Payment Acquirer'
-    
+
     def list_acquirers(self, cr, uid, context=None):
         return [("virement", "Virement")]
 
     _columns = {
         'name': fields.char('Name', required=True),
         'acquirer': fields.selection(lambda self, *a, **k: self.list_acquirers(*a, **k), 'Acquirer', required=True),
-        'form_template_id': fields.many2one('ir.ui.view', required=True), 
+        'form_template_id': fields.many2one('ir.ui.view', required=True),
         'visible': fields.boolean('Visible', help="Make this payment acquirer available (Customer invoices, etc.)"),
     }
 
@@ -118,22 +149,23 @@ class acquirer(osv.Model):
         method = getattr(self, '_validate_payement_%s' % pay.acquirer)
         status, retry_time, log = method(object, reference, currency, amount, context=context)
 
-
         # log transaction and payment
         if getattr(object, 'message_post'):
-            object.message_post(cr, uid, False,
+            object.message_post(
+                cr, uid, False,
                 body=log or "",
                 subject="%s%s" % (status, retry_time and ": %s" % retry_time or ""),
                 type='notification',
-                context=context)
+                context=context
+            )
 
         if status == "validated":
-            _logger.info("Payment Validate for %s:%s" % (object._name, reference) )
+            _logger.info("Payment Validate for %s:%s" % (object._name, reference))
         elif status == "pending":
-            _logger.debug("Payment Pending for %s:%s. Reason: %s" % (object._name, reference, log) )
+            _logger.debug("Payment Pending for %s:%s. Reason: %s" % (object._name, reference, log))
         else:
-            _logger.error("Payment Refused for %s:%s. Reason: %s" % (object._name, reference, log) )
-        
+            _logger.error("Payment Refused for %s:%s. Reason: %s" % (object._name, reference, log))
+
         return (status, retry_time, log)
 
     def _validate_payement_virement(self, object, reference, currency, amount, context=None):
@@ -156,7 +188,6 @@ class acquirer_paypal(osv.osv):
         return l
 
     def _validate_payement_paypal(self, object, reference, currency, amount, context=None):
-        
         parameters = {}
         parameters.update(
             cmd='_notify-validate',
@@ -186,8 +217,8 @@ class acquirer_paypal(osv.osv):
             retry_time = 60
 
         return (status, retry_time, "payment_status=%s&pending_reason=%s&reason_code=%s" % (
-                response["payment_status"], 
-                response.get("pending_reason"), 
+                response["payment_status"],
+                response.get("pending_reason"),
                 response.get("reason_code")))
 
     def _transaction_feedback_paypal(self, **values):
@@ -320,11 +351,11 @@ class acquirer_ogone(osv.Model):
                 return check_status(tree, tries - 1)
             else:
                 error_code = tree.get('NCERROR')
-                if tries and retryable(error_code):
+                if tries and ogone_errors.retryable(error_code):
                     return check_status(tree, tries - 1)
 
                 error_str = tree.get('NCERRORPLUS')
-                error_msg = OGONE_ERROR_MAP.get(error_code)
+                error_msg = ogone_errors.OGONE_ERROR_MAP.get(error_code)
                 error = 'ERROR: %s\n\n%s: %s' % (error_str, error_code, error_msg)
                 _logger.info(error)
                 raise Exception(error)
@@ -379,7 +410,7 @@ class acquirer_ogone(osv.Model):
         else:
             error_code = data.get('NCERROR')
             error_str = data.get('NCERRORPLUS')
-            error_msg = OGONE_ERROR_MAP.get(error_code)
+            error_msg = ogone_errors.OGONE_ERROR_MAP.get(error_code)
             error = 'ERROR: %s\n\n%s: %s' % (error_str, error_code, error_msg)
             _logger.info(error)
             payment.write({'state': 'error', 'error': error})
