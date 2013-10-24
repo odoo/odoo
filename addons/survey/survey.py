@@ -50,6 +50,13 @@ class survey(osv.osv):
         else:
             return []
 
+    def _check_valid(self, cr, uid, ids, context=None):
+        for survey in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            if not survey.page_ids or not [page.question_ids for page in survey.page_ids if page.question_ids]:
+                raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined.'))
+
+    ## Function fields ##
+
     def _get_tot_start_survey(self, cr, uid, ids, name, arg, context=None):
         """ Returns the number of started instances of this survey, be they
         completed or not """
@@ -79,15 +86,10 @@ class survey(osv.osv):
             fragment = {
                 'active_id': survey_browse.id,
                 'action': 'survey.action_filling',
-                'params': survey_browse.token,
+                'params': survey_browse.uuid,
             }
             res[survey_browse.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
         return res
-
-    def _check_valid(self, cr, uid, ids, context=None):
-        for survey in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            if not survey.page_ids or not [page.question_ids for page in survey.page_ids if page.question_ids]:
-                raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined.'))
 
     # Model fields #
 
@@ -121,7 +123,7 @@ class survey(osv.osv):
             'User responses', readonly=1,),
         'public_url': fields.function(_get_public_url,
             string="Public link", type="char"),
-        'token': fields.char('Public token', size=8, required=1),
+        'uuid': fields.char('Public token', size=8, required=1, oldname="token"),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
     }
@@ -370,7 +372,7 @@ class survey_question(osv.osv):
 
     This version of the model has been simplified in relation to the previous
     one: some fields were simply a n-time repetition of a simpler field. It is
-    now allowed to have children question that allows to group subquestions. '''
+    now allowed to have children question that allows to group subquestions.'''
     _name = 'survey.question'
     _description = 'Question'
     _rec_name = 'question'
@@ -378,67 +380,64 @@ class survey_question(osv.osv):
 
     # Private methods #
 
-    def _calc_response(self, cr, uid, ids, field_name, arg, context=None):
-        if len(ids) == 0:
-            return {}
-        val = {}
-        cr.execute("select question_id, count(id) as Total_response from \
-                survey_response_line where state='done' and question_id IN %s\
-                 group by question_id", (tuple(ids), ))
-        ids1 = copy.deepcopy(ids)
-        for rec in cr.fetchall():
-            ids1.remove(rec[0])
-            val[rec[0]] = int(rec[1])
-        for id in ids1:
-            val[id] = 0
-        return val
+    ## Function fields ##
+
+    def _gen_constr_error_msg(self, cr, uid, ids, name, arg, context=None):
+        pass
 
     # Model fields #
 
     _columns = {
+        # Question metadata
         'page_id': fields.many2one('survey.page', 'Survey page',
             ondelete='cascade'),
         'survey_id': fields.related('page_id', 'survey_id', type='many2one',
             relation='survey.survey', string='Survey', store=True),
-        'sequence': fields.integer('Sequence'),
-
-        'question': fields.char('Question', required=1, translate=True),
         'parent_id': fields.many2one('survey.question', 'Parent question'),
         'children_ids': fields.one2many('survey.question_id', 'parent_id',
             'Children questions'),
+        'sequence': fields.integer('Sequence'),
 
-        'mandatory': fields.boolean('Mandatory question',
-            oldname="is_require_answer"),
+        # Question
+        'question': fields.char('Question', required=1, translate=True),
+        'description': fields.text('Description', help="Use this field to add \
+            additional explanations about your question", translate=True),
 
-        #'answer_choice_ids': fields.one2many('survey.answer', 'question_id', 'Answer'),
-        'required_type': fields.selection([('all', 'All'), ('at least', 'At Least'), ('at most', 'At Most'), ('exactly', 'Exactly'), ('a range', 'A Range')], 'Respondent must answer'),
-        'req_ans': fields.integer('#Required Answer'),
-        'maximum_req_ans': fields.integer('Maximum Required Answer'),
-        'minimum_req_ans': fields.integer('Minimum Required Answer'),
-        'req_error_msg': fields.text('Error Message', translate=True),
-        'allow_comment': fields.boolean('Allow Comment Field'),
-        'tot_resp': fields.function(_calc_response, type="integer", string="Total Answer"),
-        'descriptive_text': fields.text('Descriptive Text', translate=True),
-        'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id', ' Column heading'),
-        'type': fields.selection([('multiple_choice_only_one_ans', 'Multiple Choice (Only One Answer)'),
-                ('multiple_choice_multiple_ans', 'Multiple Choice (Multiple Answer)'),
-                ('matrix_of_choices_only_one_ans', 'Matrix of Choices (Only One Answers Per Row)'),  # TDE: replace with matrix that is a container
-                ('matrix_of_choices_only_multi_ans', 'Matrix of Choices (Multiple Answers Per Row)'),  # TDE: replace with matrix that is a container
-                ('rating_scale', 'Rating Scale'),
-                ('single_textbox', 'Single Textbox'),
-#                ('multiple_textboxes', 'Multiple Textboxes'),  # interest ? TDE: should be dropped -> comment box
-#                ('multiple_textboxes_diff_type', 'Multiple Textboxes With Different Type'),  # interest ? TDE: should be dropped -> comment box
-                ('comment', 'Comment/Essay Box'),
-                ('numerical_textboxes', 'Numerical Textboxes'),
+        # Answer
+        'type': fields.selection([('textbox', 'Text box'),
+                ('numerical_box', 'Numerical box'),
+                ('free_text', 'Free Text'),
                 ('datetime', 'Date and Time'),
                 ('checkbox', 'Checkbox'),
-                ('radio_buttons', 'Radio buttons'),
-                ('descriptive_text', 'Descriptive Text'),  # TDE: rename free text
+                ('simple_choice_scale', 'One choice on a scale'),
+                ('simple_choice_dropdown', 'One choice in a menu'),
+                ('multiple_choice', 'Some choices in checkboxes'),
+                ('vector', 'Container of questions'),
+                ('matrix', 'Container of containers of questions')
             ], 'Question Type', required=1, ),
-        'display': fields.selection([('horizontal','Horizontal'),
-            ('vertical','Vertical')])
 
-        'is_comment_require': fields.boolean('Add Comment Field'),
+        'suggested_answer_num' = fields.char("Suggested answer", translate=True),
+
+        # Constraints on answer
+        'constr_mandatory': fields.boolean('Mandatory question',
+            oldname="is_require_answer"),
+        'constr_type': fields.selection([('all', 'All'),
+            ('at least', 'At Least'),
+            ('at most', 'At Most'),
+            ('exactly', 'Exactly'),
+            ('a range', 'A Range')],
+            'Respondent must answer'),
+        'constr_req_ans': fields.integer('#Required Answer'),
+        'constr_maximum_req_ans': fields.integer('Maximum Required Answer'),
+        'constr_minimum_req_ans': fields.integer('Minimum Required Answer'),
+        'constr_error_msg': fields.function(_gen_constr_error_msg, type="char",
+            string="Error message"),
+
+
+
+        # Comments
+        'comments_allowed': fields.boolean('Allow comments', oldname="allow_comment"),
+        'comments_required': fields.boolean('Require comments', oldname="is_comment_require"),
         'comment_label': fields.char('Field Label', translate=True),
         'comment_field_type': fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
         'comment_valid_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),
@@ -457,6 +456,10 @@ class survey_question(osv.osv):
         'comment_valid_err_msg': fields.text('Error message', translate=True),
         'make_comment_field': fields.boolean('Make Comment Field an Answer Choice'),
         'make_comment_field_err_msg': fields.text('Error message', translate=True),
+
+
+
+
         'is_validation_require': fields.boolean('Validate Text'),
         'validation_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''), \
              ('must_be_specific_length', 'Must Be Specific Length'), \
@@ -633,116 +636,41 @@ class survey_question(osv.osv):
         }
 
 
-class survey_question_column_heading(osv.osv):
-    _name = 'survey.question.column.heading'
-    _description = 'Survey Question Column Heading'
-    _rec_name = 'title'
-    _order = 'sequence'
-
-    def _get_in_visible_rating_weight(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if context.get('in_visible_rating_weight', False):
-            return context['in_visible_rating_weight']
-        return False
-
-    def _get_in_visible_menu_choice(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if context.get('in_visible_menu_choice', False):
-            return context['in_visible_menu_choice']
-        return False
-
-    _columns = {
-        'title': fields.char('Column Heading', size=128, required=1, translate=True),
-        'sequence': fields.integer('Sequence'),
-        'menu_choice': fields.text('Menu Choice'),
-        'rating_weight': fields.integer('Weight'),
-        'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
-        'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible ??'),
-        'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible??')
-    }
-    _defaults = {
-        'in_visible_rating_weight': _get_in_visible_rating_weight,
-        'in_visible_menu_choice': _get_in_visible_menu_choice,
-    }
-
-
-class survey_answer(osv.osv):
-    _name = 'survey.answer'
-    _description = 'Survey Answer'
-    _rec_name = 'answer'
-    _order = 'sequence'
-
-    def _calc_response_avg(self, cr, uid, ids, field_name, arg, context=None):
-        val = {}
-        for rec in self.browse(cr, uid, ids, context=context):
-            cr.execute("select count(question_id), (select count(answer_id) \
-                from survey_response_answer sra, survey_response_line sa \
-                where sra.response_line_id = sa.id and sra.answer_id = %d \
-                and sa.state='done') as tot_ans from survey_response_line \
-                where question_id = %d and state = 'done'"\
-                     % (rec.id, rec.question_id.id))
-            res = cr.fetchone()
-            if res[0]:
-                avg = float(res[1]) * 100 / res[0]
-            else:
-                avg = 0.0
-            val[rec.id] = {
-                'response': res[1],
-                'average': round(avg, 2),
-            }
-        return val
-
-    def _get_in_visible_answer_type(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        return context.get('in_visible_answer_type', False)
-
-    _columns = {
-        'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
-        'answer': fields.char('Answer', size=128, required=1, translate=True),
-        'sequence': fields.integer('Sequence'),
-        'response': fields.function(_calc_response_avg, string="#Answer", multi='sums'),
-        'average': fields.function(_calc_response_avg, string="#Avg", multi='sums'),
-        'type': fields.selection([('char', 'Character'), ('date', 'Date'), ('datetime', 'Date & Time'), \
-            ('integer', 'Integer'), ('float', 'Float'), ('selection', 'Selection'), \
-            ('email', 'Email')], "Type of Answer", required=1),
-        'menu_choice': fields.text('Menu Choices', translate=True),
-        'in_visible_answer_type': fields.boolean('Is Answer Type Invisible??')
-    }
-    _defaults = {
-        'type': 'char',
-        'in_visible_answer_type': _get_in_visible_answer_type,
-    }
-
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        data = super(survey_answer, self).default_get(cr, uid, fields, context)
-        return data
-
-
 class survey_user_input(osv.osv):
-    ''' The answers of an user to a survey '''
+    ''' Metadata for a set of one user's answers to a particular survey '''
     _name = "survey.user_input"
     _rec_name = 'date_create'
 
     _columns = {
-        'date_deadline': fields.date("Deadline date", help="Date by which the person can respond to the survey"),
-        'survey_id': fields.many2one('survey', 'Survey', required=1, readonly=1, ondelete='restrict'),
-        'date_create': fields.datetime('Create Date', required=1),
-        'response_type': fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Answer Type', required=1),
-        'question_ids': fields.one2many('survey.response.line', 'response_id', 'Answer'),  # one2many surveu.user_input.question
-        'state': fields.selection([('new', 'Not Started'), ('skip', 'Not Finished'), ('done', 'Finished'), ('cancel', 'Canceled'), ('test', 'Test')], 'Status', readonly=True),
+        'survey_id': fields.many2one('survey', 'Survey', required=True,
+            readonly=1, ondelete='restrict'),
+        'date_create': fields.datetime('Creation Date', required=,
+            readonly=1),
+        'deadline': fields.date("Deadline",
+            help="Date by which the person can take part to the survey",
+            oldname="date_deadline"),
+        'type': fields.selection([('manually', 'Manually'), ('link', 'Link')],
+            'Answer Type', required=1, oldname="response_type"),
+        'state': fields.selection([('new', 'Not started yet'),
+            ('skip', 'Partially completed'),
+            ('done', 'Completed'),
+            ('cancel', 'Cancelled'),
+            ('test', 'Test')], 'Status',
+            readonly=True),
+
+        # Optional Identification data
         'token': fields.char("Indentification token", readonly=1),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
-        'email': fields.char("Email", size=64, readonly=1),
+        'email': fields.char("E-mail", size=64, readonly=1),
+
+        # The answers !
+        'user_input_line_ids': fields.one2many('survey.user_input.line',
+            'user_input_id', 'Answers'),
     }
     _defaults = {
         'date_create': datetime.now(),
-        'state': "new",
-        'response_type': "manually",
+        'type': 'manually',
+        'state': 'new',
         'token': lambda s, cr, uid, c: uuid.uuid4(),
     }
 
@@ -818,40 +746,32 @@ class survey_user_input(osv.osv):
         raise osv.except_osv(_('Warning!'), _('You cannot duplicate the resource!'))
 
 
-class survey_response_line(osv.osv):
-    _name = 'survey.response.line'  # surver.user_input.question
-    _description = 'Survey Response Line'
+class survey_user_input_line(osv.osv):
+    _name = 'survey.user_input.line'
+    _description = 'User input line'
     _rec_name = 'date_create'
     _columns = {
-        'response_id': fields.many2one('survey.response', 'Answer', ondelete='cascade'),  # towards  survey.uyser_intpu.question
+        'survey_id' = fields.many2one('survey', 'Survey', required=True,
+            readonly=1, ondelete='cascade'),
+        'user_input_id': fields.many2one('survey.user_input', 'User Input',
+            ondelete='cascade', required=True),
         'date_create': fields.datetime('Create Date', required=1),  # drop
-        'state': fields.selection([('draft', 'Draft'), ('done', 'Answered'), ('skip', 'Skiped')], 'Status', readonly=True),  # drop
-        # add boolean skipped
-        'question_id': fields.many2one('survey.question', 'Question', ondelete='restrict'),
-        'page_id': fields.related('question_id', 'page_id', type='many2one', relation='survey.page', string='Page', ondelete='restrict'),  # ? probably not useful
-        'response_answer_ids': fields.one2many('survey.response.answer', 'response_line_id', 'Answer'),  # survey.user_input.answer
-        'comment': fields.text('Notes'),  # -> move in answer
-        'single_text': fields.char('Text', size=255),  # should be dropped
+        'skipped': fields.boolean('Skipped'),
+        'question_id': fields.many2one('survey.question', 'Question',
+            ondelete='restrict'),
+
+        ## Store here the answer to the question
+        'answer_type' = fields.selection(),  # see types defined in question
+        #'answer_value' = fields.
+
+
+        ## Comment storage
+        'comment': fields.text('Notes'),
+        'single_text': fields.char('Text', size=255),
+
     }
     _defaults = {
-        'state': "draft",
-    }
-
-
-class survey_response_answer(osv.osv):
-    _name = 'survey.response.answer'  # survey.user_input.answer
-    _description = 'Survey Answer'
-    _rec_name = 'response_line_id'
-    _columns = {
-        'name': fields.integer('Row Number'),  # ? probably drop
-        'response_line_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),   # survey.user_input.question
-        'answer_id': fields.many2one('survey.answer', 'Answer', required=1, ondelete='cascade'),  # survey.question.answer
-        'column_id': fields.many2one('survey.question.column.heading', 'Column'),  # drop
-        'answer': fields.char('Value', size=255),
-        'value_choice': fields.char('Value Choice', size=255),
-        'comment': fields.text('Notes'),
-        'comment_field': fields.char('Comment', size=255),
-        'value': fields.char('Value', size=255),
+        'skipped': False,
     }
 
 # vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:
