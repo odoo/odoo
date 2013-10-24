@@ -56,7 +56,7 @@
 
                 //noinspection JSValidateTypes
                 editor.addCommand('link', {
-                    exec: function (editor, data) {
+                    exec: function (editor) {
                         link_dialog(editor);
                         return true;
                     },
@@ -65,7 +65,7 @@
                 });
                 //noinspection JSValidateTypes
                 editor.addCommand('image', {
-                    exec: function (editor, data) {
+                    exec: function (editor) {
                         image_dialog(editor);
                         return true;
                     },
@@ -177,7 +177,7 @@
         var editor = new website.EditorBar();
         var $body = $(document.body);
         editor.prependTo($body).then(function () {
-            if (location.search.indexOf("unable_editor") >= 0) {
+            if (location.search.indexOf("enable_editor") >= 0) {
                 editor.edit();
             }
         });
@@ -219,7 +219,7 @@
                 var view_id = $(event.currentTarget).data('view-id');
                 openerp.jsonRpc('/website/customize_template_toggle', 'call', {
                     'view_id': view_id
-                }).then( function(result) {
+                }).then( function() {
                     window.location.reload();
                 });
             });
@@ -253,7 +253,6 @@
             );
         },
         edit: function () {
-            var self = this;
             this.$buttons.edit.prop('disabled', true);
             this.$('#website-top-view').hide();
             this.$('#website-top-edit').show();
@@ -273,30 +272,58 @@
             editor.destroy();
             // FIXME: select editables then filter by dirty?
             var defs = this.rte.fetch_editables(root)
-                .removeClass('oe_editable cke_focus')
-                .removeAttr('contentEditable')
                 .filter('.oe_dirty')
+                .removeAttr('contentEditable')
+                .removeClass('oe_dirty oe_editable cke_focus oe_carlos_danger')
                 .map(function () {
                     var $el = $(this);
                     // TODO: Add a queue with concurrency limit in webclient
                     // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
                     return self.saving_mutex.exec(function () {
                         return self.saveElement($el)
-                            .fail(function () {
-                                var data = $el.data();
-                                console.error(_.str.sprintf('Could not save %s(%d).%s', data.oeModel, data.oeId, data.oeField));
+                            .then(undefined, function (thing, response) {
+                                // because ckeditor regenerates all the dom,
+                                // we can't just setup the popover here as
+                                // everything will be destroyed by the DOM
+                                // regeneration. Add markings instead, and
+                                // returns a new rejection with all relevant
+                                // info
+                                var id = _.uniqueId('carlos_danger_');
+                                $el.addClass('oe_dirty oe_carlos_danger');
+                                $el.addClass(id);
+                                return $.Deferred().reject({
+                                    id: id,
+                                    error: response.data,
+                                });
                             });
                     });
                 }).get();
             return $.when.apply(null, defs).then(function () {
                 website.reload();
+            }, function (failed) {
+                // If there were errors, re-enable edition
+                self.rte.start_edition(true).then(function () {
+                    // jquery's deferred being a pain in the ass
+                    if (!_.isArray(failed)) { failed = [failed]; }
+
+                    _(failed).each(function (failure) {
+                        $(root).find('.' + failure.id)
+                            .removeClass(failure.id)
+                            .popover({
+                                trigger: 'hover',
+                                content: failure.error.message,
+                                placement: 'auto top',
+                            })
+                            // Force-show popovers so users will notice them.
+                            .popover('show');
+                    })
+                });
             });
         },
         /**
          * Saves an RTE content, which always corresponds to a view section (?).
          */
         saveElement: function ($el) {
-            $el.removeClass('oe_dirty');
             var markup = $el.prop('outerHTML');
             return openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
@@ -350,6 +377,7 @@
                 // The detail attribute indicates the number of times a mouse button has been pressed
                 // we just want the triple click
                 if (e.detail !== 3) { return; }
+                e.preventDefault();
 
                 // Get closest block-level element to the triple-clicked
                 // element (using ckeditor's block list because why not)
@@ -422,15 +450,25 @@
 
             return true;
         },
-        start_edition: function ($elements) {
+        /**
+         * Makes the page editable
+         *
+         * @param {Boolean} [restart=false] in case the edition was already set
+         *                                  up once and is being re-enabled.
+         * @returns {$.Deferred} deferred indicating when the RTE is ready
+         */
+        start_edition: function (restart) {
             var self = this;
             // create a single editor for the whole page
             var root = document.getElementById('wrapwrap');
-            $(root).on('dragstart', 'img', function (e) {
-                e.preventDefault();
-            });
-            this.webkitSelectionFixer(root);
-            this.tableNavigation(root);
+            if (!restart) {
+                $(root).on('dragstart', 'img', function (e) {
+                    e.preventDefault();
+                });
+                this.webkitSelectionFixer(root);
+                this.tableNavigation(root);
+            }
+            var def = $.Deferred();
             var editor = this.editor = CKEDITOR.inline(root, self._config());
             editor.on('instanceReady', function () {
                 editor.setReadOnly(false);
@@ -446,7 +484,9 @@
                 document.execCommand("enableInlineTableEditing", false, "false");
 
                 self.trigger('rte:ready');
+                def.resolve();
             });
+            return def;
         },
 
         setup_editables: function (root) {
@@ -483,7 +523,7 @@
                 .filter(function () {
                     var $this = $(this);
                     // keep view sections and fields which are *not* in
-                    // view sections for toplevel editables
+                    // view sections for top-level editables
                     return $this.data('oe-model') === 'ir.ui.view'
                        || !$this.closest('[data-oe-model = "ir.ui.view"]').length;
                 });
@@ -854,7 +894,7 @@
             this.preview_image();
         },
 
-        file_selection: function (e) {
+        file_selection: function () {
             this.$('button.filepicker').removeClass('btn-danger btn-success');
 
             var self = this;

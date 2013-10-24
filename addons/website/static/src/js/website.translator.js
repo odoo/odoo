@@ -6,11 +6,16 @@
     var nodialog = 'website_translator_nodialog';
 
     website.EditorBar.include({
+        events: _.extend({}, website.EditorBar.prototype.events, {
+            'click a[data-action=edit_master]': 'edit_master',
+        }),
         start: function () {
             var self = this;
             this.initial_content = {};
             return this._super.apply(this, arguments).then(function () {
-                self.$('button[data-action=edit]').text("Translate");
+                self.$('button[data-action=edit]')
+                    .text("Translate")
+                    .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
                 self.$('[data-action=snippet]').hide();
                 self.$('#customize-menu-button').hide();
             });
@@ -24,7 +29,7 @@
                 dialog.on('activate', this, function () {
                     localStorage[nodialog] = dialog.$('input[name=do_not_show]').prop('checked') || '';
                     dialog.$el.modal('hide');
-                    this.translate().then(function () {
+                    self.translate().then(function () {
                         mysuper.call(self);
                     });
                 });
@@ -32,6 +37,14 @@
                 this.translate().then(function () {
                     mysuper.call(self);
                 });
+            }
+        },
+        edit_master: function (ev) {
+            ev.preventDefault();
+            var link = $('.js_language_selector a[data-default-lang]')[0];
+            if (link) {
+                link.search += (link.search ? '&' : '?') + 'enable_editor=1';
+                window.location = link.attributes.href.value;
             }
         },
         translate: function () {
@@ -44,7 +57,7 @@
                 self.translations = translations;
                 self.processTranslatableNodes();
                 // Disable non translatable t-fields
-                $('[data-oe-type][data-oe-translate=0]').removeAttr('data-oe-type');
+                $('[data-oe-type][data-oe-translate="0"]').removeAttr('data-oe-type');
             });
         },
         processTranslatableNodes: function () {
@@ -143,7 +156,6 @@
                 if (node.attributes['data-oe-translate'].value == '1') {
                     node.className += ' oe_translatable_field';
                 }
-                return;
             } else if (node.childNodes.length === 1
                     && this.isTextNode(node.childNodes[0])
                     && !node.getAttribute('data-oe-model')) {
@@ -175,7 +187,7 @@
             $(root).click(function (ev) {
                 ev.preventDefault();
             });
-            return $('[data-oe-translate=1]');
+            return $('[data-oe-translate="1"]');
         }
     });
 

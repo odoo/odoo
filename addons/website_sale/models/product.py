@@ -30,14 +30,22 @@ class product_pricelist(osv.Model):
 
 
 class product_template(osv.Model):
-    _inherit = "product.template"
+    _inherit = ["product.template", "website.seo.metadata"]
     _order = 'website_sequence desc, website_published, name'
+    _name = 'product.template'
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
+        """ TDE-NOTE: as someone wrote this method without any clue on about what it
+        does, fixing bugs about product_variant_ids not existing will be done
+        based on the weather, the sun and Lilo's feelings about pigs.
+
+        If you see this comment in trunk, this means that the website branch has
+        been merged without any review, which is quite questionable. """
+        res = dict.fromkeys(ids, '')
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        for prod in self.browse(cr, uid, ids, context=context):
-            res[prod.id] = "%s/shop/product/%s/" % (base_url, prod.product_variant_ids[0].id)
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.product_variant_ids:
+                res[product.id] = "%s/shop/product/%s/" % (base_url, product.product_variant_ids[0].id)
         return res
 
     _columns = {
@@ -47,12 +55,9 @@ class product_template(osv.Model):
         'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
         'website_size_x': fields.integer('Size X'),
         'website_size_y': fields.integer('Size Y'),
-        'website_style_ids' : fields.many2many('website.product.style','product_website_style_rel', 'product_id', 'style_id', 'Styles'),
+        'website_style_ids': fields.many2many('website.product.style', 'product_website_style_rel', 'product_id', 'style_id', 'Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
         'website_url': fields.function(_website_url, string="Website url"),
-        'website_meta_title': fields.char("Website meta title", size=70, translate=True),
-        'website_meta_description': fields.text("Website meta description", size=160, translate=True),
-        'website_meta_keywords': fields.char("Website meta keywords", translate=True),
     }
     _defaults = {
         'website_size_x': 1,

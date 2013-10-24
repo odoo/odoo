@@ -238,10 +238,26 @@ class website(osv.osv):
         return {
             "page_count": page_count,
             "offset": (page - 1) * step,
-            "page": {'url': get_url(page), 'num': page},
-            "page_start": {'url': get_url(pmin), 'num': pmin},
-            "page_end": {'url': get_url(min(pmax, page + 1)),
-                         'num': min(pmax, page + 1)},
+            "page": {
+                'url': get_url(page),
+                'num': page
+            },
+            "page_start": {
+                'url': get_url(pmin),
+                'num': pmin
+            },
+            "page_previous": {
+                'url': get_url(max(pmin, page - 1)),
+                'num': max(pmin, page - 1)
+            },
+            "page_next": {
+                'url': get_url(min(pmax, page + 1)),
+                'num': min(pmax, page + 1)
+            },
+            "page_end": {
+                'url': get_url(pmax),
+                'num': pmax
+            },
             "pages": [
                 {'url': get_url(page), 'num': page}
                 for page in xrange(pmin, pmax+1)
@@ -348,13 +364,18 @@ class website(osv.osv):
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
-        context = context or {}
         result = {}
         for attach in self.browse(cr, uid, ids, context=context):
-            if attach.type=='url':
+            if attach.type == 'url':
                 result[attach.id] = attach.url
             else:
-                result[attach.id] = "/website/attachment/"+str(attach.id)
+                result[attach.id] = urlplus('/website/image', {
+                    'model': 'ir.attachment',
+                    'field': 'datas',
+                    'id': attach.id,
+                    'max_width': 1024,
+                    'max_height': 768,
+                })
         return result
     _columns = {
         'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
@@ -385,6 +406,17 @@ class base_language_install(osv.osv):
     _columns = {
         'website_ids': fields.many2many('website', string='Websites to translate'),
     }
+
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        defaults = super(base_language_install, self).default_get(cr, uid, fields, context)
+        website_id = context.get('params', {}).get('website_id')
+        if website_id:
+            if 'website_ids' not in defaults:
+                defaults['website_ids'] = []
+            defaults['website_ids'].append(website_id)
+        return defaults
 
     def lang_install(self, cr, uid, ids, context=None):
         if context is None:

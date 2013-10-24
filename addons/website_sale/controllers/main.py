@@ -28,7 +28,7 @@ def get_order(order_id=None):
         order_value['pricelist_id'] = request.httprequest.session['ecommerce_pricelist']
     order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, context=request.context).partner_id.id
     order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], order_value['partner_id'], context=request.context)['value'])
-    
+
     # add website_session_id key for access rules
     if not request.httprequest.session.get('website_session_id'):
         request.httprequest.session['website_session_id'] = str(uuid.uuid4())
@@ -113,7 +113,7 @@ class Ecommerce(http.Controller):
         request.context['pricelist'] = self.get_pricelist()
 
         # search for checking of access rules and keep order
-        product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
+        product_ids = product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)
 
         size_ids = {}
         style_ids = style_obj.search(request.cr, SUPERUSER_ID, [('html_class', 'like', 'size_%')], context=request.context)
@@ -182,7 +182,7 @@ class Ecommerce(http.Controller):
                             bin_packing[line + copy_y][col + copy_x] = False
                     bin_packing[line + copy_y][col + copy_x] = product_list[index]
                     break
-            
+
                 if not insert:
                     line += 1
                 else:
@@ -212,6 +212,7 @@ class Ecommerce(http.Controller):
                 col += 1
             line += 1
 
+        print bin_packing_list
         return bin_packing_list
 
     def get_products(self, product_ids):
@@ -272,6 +273,9 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
     def category(self, category=0, attributes="", page=0, **post):
+        # TDE-NOTE: shouldn't we do somethign about product_template without variants ???
+        # TDE-NOTE: is there a reason to call a method category when the route is
+        # basically a shop without category_id speceified ?
 
         if 'promo' in post:
             self.change_pricelist(post.get('promo'))
@@ -281,7 +285,7 @@ class Ecommerce(http.Controller):
 
         if post.get("search"):
             domain += ['|', '|', '|',
-                ('name', 'ilike', "%%%s%%" % post.get("search")), 
+                ('name', 'ilike', "%%%s%%" % post.get("search")),
                 ('description', 'ilike', "%%%s%%" % post.get("search")),
                 ('website_description', 'ilike', "%%%s%%" % post.get("search")),
                 ('product_variant_ids.public_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
@@ -298,7 +302,7 @@ class Ecommerce(http.Controller):
 
         step = 20
         product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
-        pager = request.website.pager(url="/shop/%s" % post, total=product_count, page=page, step=step, scope=7, url_args=post)
+        pager = request.website.pager(url="/shop/", total=product_count, page=page, step=step, scope=7, url_args=post)
 
         request.context['pricelist'] = self.get_pricelist()
 
@@ -354,9 +358,9 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="public", multilang=True)
     def add_product(self, cat_id=0, **post):
-        product_id = request.registry.get('product.product').create(request.cr, request.uid, 
+        product_id = request.registry.get('product.product').create(request.cr, request.uid,
             {'name': 'New Product', 'public_categ_id': cat_id}, request.context)
-        return request.redirect("/shop/product/%s/?unable_editor=1" % product_id)
+        return request.redirect("/shop/product/%s/?enable_editor=1" % product_id)
 
     def get_pricelist(self):
         if not request.httprequest.session.get('ecommerce_pricelist'):
@@ -376,7 +380,7 @@ class Ecommerce(http.Controller):
         if not pricelist_id:
             partner_id = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, request.context).partner_id.id
             pricelist_id = request.registry['sale.order'].onchange_partner_id(request.cr, SUPERUSER_ID, [], partner_id, context=request.context)['value']['pricelist_id']
-        
+
         request.httprequest.session['ecommerce_pricelist'] = pricelist_id
 
         order = get_current_order()

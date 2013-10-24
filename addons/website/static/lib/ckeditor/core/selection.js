@@ -798,7 +798,7 @@
 	 *
 	 * @method
 	 * @member CKEDITOR.editor
-	 * @param {Boolean} forceRealSelection Return real selection, instead of saved or fake one.
+	 * @param {Boolean} [forceRealSelection] Return real selection, instead of saved or fake one.
 	 * @returns {CKEDITOR.dom.selection} A selection object or null if not available for the moment.
 	 */
 	CKEDITOR.editor.prototype.getSelection = function( forceRealSelection ) {

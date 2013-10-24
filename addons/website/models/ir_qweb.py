@@ -7,17 +7,20 @@ Also, adds methods to convert values back to openerp models.
 """
 
 import cStringIO
+import datetime
 import itertools
 import logging
 import re
 import urllib2
+import urlparse
 
 import werkzeug.utils
+from dateutil import parser
 from lxml import etree, html
 from PIL import Image as I
 
 from openerp.osv import orm, fields
-from openerp.tools import ustr
+from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -39,12 +42,12 @@ class Field(orm.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context):
+                   source_element, g_att, t_att, qweb_context, context=None):
         column = record._model._all_columns[field_name].column
         return itertools.chain(
             super(Field, self).attributes(cr, uid, field_name, record, options,
                                           source_element, g_att, t_att,
-                                          qweb_context),
+                                          qweb_context, context=context),
             [('data-oe-translate', 1 if column.translate else 0)]
         )
 
@@ -67,7 +70,56 @@ class Float(orm.AbstractModel):
     _name = 'website.qweb.field.float'
     _inherit = ['website.qweb.field', 'ir.qweb.field.float']
 
-    value_from_string = float
+    def from_html(self, cr, uid, model, column, element, context=None):
+        lang = self.user_lang(cr, uid, context=context)
+
+        value = element.text_content().strip()
+
+        return float(value.replace(lang.thousands_sep, '')
+                          .replace(lang.decimal_point, '.'))
+
+
+def parse_fuzzy(in_format, value):
+    day_first = in_format.find('%d') < in_format.find('%m')
+
+    if '%y' in in_format:
+        year_first = in_format.find('%y') < in_format.find('%d')
+    else:
+        year_first = in_format.find('%Y') < in_format.find('%d')
+
+    return parser.parse(value, dayfirst=day_first, yearfirst=year_first)
+
+class Date(orm.AbstractModel):
+    _name = 'website.qweb.field.date'
+    _inherit = ['website.qweb.field', 'ir.qweb.field.date']
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        lang = self.user_lang(cr, uid, context=context)
+        in_format = lang.date_format.encode('utf-8')
+
+        value = element.text_content().strip()
+        try:
+            dt = datetime.datetime.strptime(in_format, value)
+        except ValueError:
+            dt = parse_fuzzy(in_format, value)
+
+        return dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+class DateTime(orm.AbstractModel):
+    _name = 'website.qweb.field.datetime'
+    _inherit = ['website.qweb.field', 'ir.qweb.field.datetime']
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        lang = self.user_lang(cr, uid, context=context)
+        in_format = (u"%s %s" % (lang.date_format, lang.time_format)).encode('utf-8')
+
+        value = element.text_content().strip()
+        try:
+            dt = datetime.datetime.strptime(in_format, value)
+        except ValueError:
+            dt = parse_fuzzy(in_format, value)
+
+        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
 class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'
@@ -127,7 +179,7 @@ class Image(orm.AbstractModel):
     _inherit = ['website.qweb.field', 'ir.qweb.field.image']
 
     def to_html(self, cr, uid, field_name, record, options,
-                source_element, t_att, g_att, qweb_context):
+                source_element, t_att, g_att, qweb_context, context=None):
         assert source_element.nodeName != 'img',\
             "Oddly enough, the root tag of an image field can not be img. " \
             "That is because the image goes into the tag, or it gets the " \
@@ -135,9 +187,9 @@ class Image(orm.AbstractModel):
 
         return super(Image, self).to_html(
             cr, uid, field_name, record, options,
-            source_element, t_att, g_att, qweb_context)
+            source_element, t_att, g_att, qweb_context, context=context)
 
-    def record_to_html(self, cr, uid, field_name, record, column, options=None):
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         cls = ''
         if 'class' in options:
             cls = ' class="%s"' % werkzeug.utils.escape(options['class'])
@@ -148,10 +200,11 @@ class Image(orm.AbstractModel):
     def from_html(self, cr, uid, model, column, element, context=None):
         url = element.find('img').get('src')
 
-        m = re.match(r'^/website/attachment/(\d+)$', url)
-        if m:
+        url_object = urlparse.urlsplit(url)
+        query = urlparse.parse_qs(url_object.query)
+        if url_object.path == '/website/image' and query['model'] == 'ir.attachment':
             attachment = self.pool['ir.attachment'].browse(
-                cr, uid, int(m.group(1)), context=context)
+                cr, uid, int(query['id']), context=context)
             return attachment.datas
 
         # remote URL?
@@ -183,4 +236,9 @@ class Monetary(orm.AbstractModel):
     _inherit = ['website.qweb.field', 'ir.qweb.field.monetary']
 
     def from_html(self, cr, uid, model, column, element, context=None):
-        return float(element.find('span').text)
+        lang = self.user_lang(cr, uid, context=context)
+
+        value = element.find('span').text.strip()
+
+        return float(value.replace(lang.thousands_sep, '')
+                          .replace(lang.decimal_point, '.'))

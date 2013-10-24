@@ -28,7 +28,7 @@ class TestConvertBack(common.TransactionCase):
         e.setAttribute('t-field', field_value)
 
         rendered = self.registry('website.qweb').render_tag_field(
-            e, {'field': field_value}, '', ir_qweb.QWebContext({
+            e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
                 'record': record,
             }))
         element = html.fromstring(
@@ -53,6 +53,7 @@ class TestConvertBack(common.TransactionCase):
 
     def test_float(self):
         self.field_roundtrip('float', 42.567890)
+        self.field_roundtrip('float', 324542.567890)
 
     def test_numeric(self):
         self.field_roundtrip('numeric', 42.77)

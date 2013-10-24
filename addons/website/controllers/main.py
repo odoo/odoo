@@ -218,8 +218,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         irt._get_source.clear_cache(irt) # FIXME: find why ir.translation does not invalidate
         return True
 
-    #  # FIXME: auth, anybody can upload an attachment if URL known/found
-    @website.route('/website/attach', type='http', auth='admin')
+    @website.route('/website/attach', type='http', auth='user')
     def attach(self, func, upload):
         req = request.httprequest
         if req.method != 'POST':
@@ -229,12 +228,18 @@ class Website(openerp.addons.web.controllers.main.Home):
         try:
             attachment_id = request.registry['ir.attachment'].create(request.cr, request.uid, {
                 'name': upload.filename,
-                'datas': base64.encodestring(upload.read()),
+                'datas': upload.read().encode('base64'),
                 'datas_fname': upload.filename,
                 'res_model': 'ir.ui.view',
             }, request.context)
-            # FIXME: auth=user... no good.
-            url = '/website/attachment/%d' % attachment_id
+
+            url = website.urlplus('/website/image', {
+                'model': 'ir.attachment',
+                'id': attachment_id,
+                'field': 'datas',
+                'max_height': MAX_IMAGE_HEIGHT,
+                'max_width': MAX_IMAGE_WIDTH,
+            })
         except Exception, e:
             logger.exception("Failed to upload image to attachment")
             message = str(e)
@@ -283,7 +288,7 @@ class Images(http.Controller):
             return response.make_conditional(request.httprequest)
 
     @website.route('/website/image', auth="public")
-    def image(self, model, id, field):
+    def image(self, model, id, field, max_width=maxint, max_height=maxint):
         Model = request.registry[model]
 
         response = werkzeug.wrappers.Response()
@@ -291,7 +296,7 @@ class Images(http.Controller):
         id = int(id)
 
         ids = Model.search(request.cr, request.uid,
-                           [('id', '=', id)], context=request.context)\
+                           [('id', '=', id)], context=request.context) \
             or Model.search(request.cr, openerp.SUPERUSER_ID,
                             [('id', '=', id), ('website_published', '=', True)], context=request.context)
 
@@ -312,8 +317,8 @@ class Images(http.Controller):
                 response.last_modified = datetime.datetime.strptime(
                     record[concurrency], server_format)
 
+        # Field does not exist on model or field set to False
         if not record.get(field):
-            # Field does not exist on model or field set to False
             # FIXME: maybe a field which does not exist should be a 404?
             return self.placeholder(response)
 
@@ -324,19 +329,9 @@ class Images(http.Controller):
         if response.status_code == 304:
             return response
 
-        return self.set_image_data(response, record[field].decode('base64'))
-
-    # FIXME: auth
-    # FIXME: delegate to image?
-    @website.route('/website/attachment/<int:id>', auth='admin')
-    def attachment(self, id):
-        attachment = request.registry['ir.attachment'].browse(
-            request.cr, request.uid, id, request.context)
-
         return self.set_image_data(
-            werkzeug.wrappers.Response(),
-            attachment.datas.decode('base64'),
-            fit=IMAGE_LIMITS,)
+            response, record[field].decode('base64'),
+            fit=(int(max_width), int(max_height)))
 
     def set_image_data(self, response, data, fit=(maxint, maxint)):
         """ Sets an inferred mime type on the response object, and puts the
@@ -356,10 +351,13 @@ class Images(http.Controller):
 
         if w < max_w and h < max_h:
             response.set_data(data)
-            return response
+        else:
+            image.thumbnail(fit, Image.ANTIALIAS)
+            image.save(response.stream, image.format)
+            # invalidate content-length computed by make_conditional as writing
+            # to response.stream does not do it (as of werkzeug 0.9.3)
+            del response.headers['Content-Length']
 
-        image.thumbnail(fit, Image.ANTIALIAS)
-        image.save(response.stream, image.format)
         return response
 
 

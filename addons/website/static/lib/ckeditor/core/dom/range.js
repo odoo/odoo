@@ -1360,7 +1360,7 @@ CKEDITOR.dom.range = function( root ) {
 		 * * {@link CKEDITOR#SHRINK_TEXT} - Shrink the range boudaries to anchor by the side of enclosed text
 		 *     node, range remains if there's no text nodes on boundaries at all.
 		 *
-		 * @param {Boolean} selectContents Whether result range anchors at the inner OR outer boundary of the node.
+		 * @param {Boolean} [selectContents] Whether result range anchors at the inner OR outer boundary of the node.
 		 */
 		shrink: function( mode, selectContents, shrinkOnBlockBoundary ) {
 			// Unable to shrink a collapsed range.

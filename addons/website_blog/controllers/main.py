@@ -57,7 +57,7 @@ class WebsiteBlog(http.Controller):
                             post pager.
         :param dict post: kwargs, may contain
 
-         - 'unable_editor': editor control
+         - 'enable_editor': editor control
 
         :return dict values: values for the templates, containing
 
@@ -147,7 +147,7 @@ class WebsiteBlog(http.Controller):
             'blog_posts': blog_posts,
             'pager': pager,
             'nav_list': nav,
-            'unable_editor': post.get('unable_editor')
+            'enable_editor': post.get('enable_editor')
         }
 
         if blog_post:
@@ -196,7 +196,7 @@ class WebsiteBlog(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
             request.session.body = False
 
-        return werkzeug.utils.redirect("/blog/%s/?unable_editor=1" % (blog_post_id))
+        return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % (blog_post_id))
 
     @website.route(['/blog/<int:category_id>/new'], type='http', auth="public")
     def blog_post_create(self, category_id=None, **post):
@@ -209,11 +209,11 @@ class WebsiteBlog(http.Controller):
                 'content': '',
                 'website_published': False,
             }, context=create_context)
-        return werkzeug.utils.redirect("/blog/%s/?unable_editor=1" % (new_blog_post_id))
+        return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % (new_blog_post_id))
 
     @website.route(['/blog/<int:blog_post_id>/duplicate'], type='http', auth="public")
     def blog_post_copy(self, blog_post_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
-        return werkzeug.utils.redirect("/blog/%s/?unable_editor=1" % (new_blog_post_id))
+        return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % (new_blog_post_id))
