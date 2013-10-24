@@ -113,7 +113,7 @@ class Ecommerce(http.Controller):
         request.context['pricelist'] = self.get_pricelist()
 
         # search for checking of access rules and keep order
-        product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
+        product_ids = product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)
 
         size_ids = {}
         style_ids = style_obj.search(request.cr, SUPERUSER_ID, [('html_class', 'like', 'size_%')], context=request.context)
@@ -212,6 +212,7 @@ class Ecommerce(http.Controller):
                 col += 1
             line += 1
 
+        print bin_packing_list
         return bin_packing_list
 
     def get_products(self, product_ids):
@@ -272,6 +273,9 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
     def category(self, category=0, attributes="", page=0, **post):
+        # TDE-NOTE: shouldn't we do somethign about product_template without variants ???
+        # TDE-NOTE: is there a reason to call a method category when the route is
+        # basically a shop without category_id speceified ?
 
         if 'promo' in post:
             self.change_pricelist(post.get('promo'))
