@@ -45,6 +45,19 @@ class sale_order(osv.osv):
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
+    def _currency_conversation(self, cr, uid, amount, relation_id, relation_field, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        base_currency_id = user.company_id.currency_id.id
+        if relation_field not in ['pricelist_id', 'currency_id']:
+            return super(crm_case_section, self)._currency_conversation(cr, uid, amount, relation_id, relation_field, context=context)
+        if relation_field == 'pricelist_id':
+            base_currency_id = self.pool.get('product.pricelist').browse(cr, uid, relation_id, context=context).currency_id.id
+        elif relation_field == 'currency_id':
+            currency_rates = self.pool.get('res.currency.rate').search_read(cr, uid, [('rate', '=', 1)], ['currency_id'], limit=1, context=context)
+            if currency_rates:
+                base_currency_id = currency_rates[0]['currency_id'][0]
+        return self.pool.get('res.currency').compute(cr, uid, base_currency_id, user.company_id.currency_id.id, amount, context=context)
+
     def _get_sale_orders_data(self, cr, uid, ids, field_name, arg, context=None):
         obj = self.pool.get('sale.order')
         res = dict.fromkeys(ids, False)
