@@ -496,7 +496,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      *
      * @returns {$.Deferred} promise to content reloading
      */
-    reload_content: function () {
+    reload_content: synchronized(function () {
         var self = this;
         self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
@@ -519,7 +519,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             limit: this._limit
         });
         return reloaded.promise();
-    },
+    }),
     reload: function () {
         return this.reload_content();
     },
@@ -1601,6 +1601,22 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     }
 });
 
+/**
+ * Serializes concurrent calls to this asynchronous method. The method must
+ * return a deferred or promise.
+ *
+ * Current-implementation is class-serialized (the mutex is common to all
+ * instances of the list view). Can be switched to instance-serialized if
+ * having concurrent list views becomes possible and common.
+ */
+function synchronized(fn) {
+    var fn_mutex = new $.Mutex();
+    return function () {
+        var args = _.toArray(arguments);
+        args.unshift(this);
+        return fn_mutex.exec(fn.bind.apply(fn, args));
+    };
+}
 var DataGroup =  instance.web.Class.extend({
    init: function(parent, model, domain, context, group_by, level) {
        this.model = new instance.web.Model(model, context, domain);
