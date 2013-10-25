@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import fnmatch
 import functools
+import operator
 import simplejson
 
 import openerp
@@ -362,8 +363,7 @@ class website(osv.osv):
         return html
 
     def get_menu_tree(self, cr, uid, ids, context=None):
-        return self.pool['website.menu'].get_tree(cr, uid, ids[0])
-
+        return self.pool['website.menu'].get_tree(cr, uid, ids[0], context=context)
 
 class website_menu(osv.osv):
     _name = "website.menu"
@@ -378,21 +378,50 @@ class website_menu(osv.osv):
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
     }
+    _defaults = {
+        'url': '',
+        'sequence': 0,
+    }
+    _order = "parent_left"
 
-    def get_tree(self, cr, uid, website_id=False, context=None):
-        menu_root = {
-            'id': False,
-            'name': 'root',
-            'url': '',
-            'children': [],
-            'parent_id': 0,
-        }
-        domain = [('parent_id', '=', 0)] # ('website_id', '=', website_id)]
-        root = self.search(cr, uid, domain, context=context)
-        if root:
-            pass
-            #menu_ids = Menus.search([('id', 'child_of', root)], 0, False, False, context)
-        return menu_root
+    # TODO: ormcache
+    def get_tree(self, cr, uid, website_id, fields=None, context=None):
+        if not fields:
+            fields = ['id', 'name', 'url', 'sequence', 'parent_id']
+        root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
+        root_menu_id = self.search(cr, uid, root_domain, limit=1, context=context)[0]
+        menu_ids = self.search(cr, uid, [('id', 'child_of', root_menu_id)], 0, False, False, context)
+        menu_items = self.read(cr, uid, menu_ids, fields, context=context)
+        menu_items_map = dict(
+            (menu_item["id"], menu_item) for menu_item in menu_items)
+        for menu_item in menu_items:
+            if menu_item['parent_id']:
+                parent = menu_item['parent_id'][0]
+            else:
+                parent = False
+            if parent in menu_items_map:
+                menu_items_map[parent].setdefault(
+                    'children', []).append(menu_item)
+
+        # sort by sequence a tree using parent_id
+        for menu_item in menu_items:
+            menu_item.setdefault('children', []).sort(
+                key=operator.itemgetter('sequence'))
+
+        return menu_items[0]
+
+    def get_list(self, cr, uid, website_id, context=None):
+        def get_menu_item(node, level=0):
+            item = node.copy()
+            item['level'] = level
+            item.pop('children')
+            yield item
+            level += 1
+            for child in node['children']:
+                yield get_menu_item(child, level)
+        tree = self.get_tree(cr, uid, website_id)
+        return list(get_menu_item(tree))
+
 
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"

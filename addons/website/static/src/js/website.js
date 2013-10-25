@@ -114,6 +114,7 @@
             var tpl = website.load_templates(templates);
             all_ready = dom_ready.then(function () {
                 if ($('html').data('editable')) {
+                    website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
                     var modules = ['website'];
                     return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);

@@ -4,9 +4,6 @@
 
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout">
-        <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
-            <li><a t-href="/event">Events</a></li>
-        </xpath>
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
             <li><a t-href="/event">Events</a></li>
         </xpath>

@@ -120,7 +120,6 @@
                                                     <t t-call="website.submenu"/>
                                                 </t>
 
-                                                <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
                                                 <li t-if="user_id.id == website.public_user.id"><a href="/web">Sign in</a></li>
                                                 <li t-if="user_id.id != website.public_user.id"><a href="/web"><span t-field="user_id.name"/></a></li>
                                                 <li t-if="request.multilang and
