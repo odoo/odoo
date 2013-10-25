@@ -2004,7 +2004,7 @@ class stock_inventory(osv.osv):
         'location_id': _default_stock_location,
     }
 
-    def set_checked_qty(self , cr ,uid ,ids ,context=None):
+    def set_checked_qty(self, cr, uid, ids, context=None):
         inventory = self.browse(cr, uid, ids[0], context=context)
         line_ids = [line.id for line in inventory.line_ids]
         self.pool.get('stock.inventory.line').write(cr, uid, line_ids, {'product_qty': 0})
@@ -2144,7 +2144,7 @@ class stock_inventory(osv.osv):
         for product_line in cr.dictfetchall():
             #replace the None the dictionary by False, because falsy values are tested later on
             for key, value in product_line.items():
-                if value == None:
+                if not value:
                     product_line[key] = False
             product_line['inventory_id'] = inventory.id
             product_line['th_qty'] = product_line['product_qty']
@@ -2211,7 +2211,7 @@ class stock_inventory_line(osv.osv):
         if not product:
             return {'value': {'product_qty': 0.0, 'product_uom_id': False}}
         uom_obj = self.pool.get('product.uom')
-        ctx=context.copy()
+        ctx = context.copy()
         ctx['location'] = location_id
         ctx['lot_id'] = lot_id
         ctx['owner_id'] = owner_id
@@ -2230,23 +2230,7 @@ class stock_inventory_line(osv.osv):
 class stock_warehouse(osv.osv):
     _name = "stock.warehouse"
     _description = "Warehouse"
-    
-    
-    def show_field_default_wh_resupply(self,cr,uid,ids,name,args,context=None):
-        res = {}
-        for wh in self.browse(cr,uid,ids,context=context):            
-            res[wh.id] = (len(wh.resupply_wh_ids) > 0)
-        return res
-    
-    def init_filtre_default_resupply_wh_id(self,cr,uid,ids,name,args,context=None):
-        res = {}        
-        for wh in self.browse(cr,uid,ids,context=context):            
-            wh_res = []
-            for resupply_id in wh.resupply_wh_ids:
-                wh_res += [resupply_id.id]            
-            res[wh.id] = [wh_res]
-        return res
-    
+
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -2280,28 +2264,13 @@ class stock_warehouse(osv.osv):
         'resupply_wh_ids': fields.many2many('stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id', 'Resupply Warehouses'),
         'resupply_route_ids': fields.one2many('stock.location.route', 'supplied_wh_id', 'Resupply Routes'),
         'default_resupply_wh_id': fields.many2one('stock.warehouse', 'Default Resupply Warehouse', domain="[('id','in',resupply_init_filter)]"),
-        'show_default_resupply_wh_id': fields.function(show_field_default_wh_resupply,type='boolean',string="Show field default_resupply_wh_id"),
-        'resupply_init_filter' : fields.function(init_filtre_default_resupply_wh_id, type='many2one', string='test',relation='stock.warehouse'),
     }
 
-    def onchange_filtre_default_resupply_wh_id(self, cr, uid, ids, resupply_wh_ids,default_resupply_wh_id, context=None):
-        resupply_wh_ids = [x['id'] for x in (self.resolve_2many_commands(cr, uid, 'resupply_wh_ids',resupply_wh_ids, ['id']))]
-        print(default_resupply_wh_id,resupply_wh_ids)
-        
-        retval = {'show_default_resupply_wh_id' :  len(resupply_wh_ids)>0 }
-        warning = {}
-        
-        if (default_resupply_wh_id and default_resupply_wh_id not in resupply_wh_ids):            
-            retval['default_resupply_wh_id'] = False
-            warning = { 
-                       'title': 'Information', 
-                       'message': 'Default resupply warehouse has been changed because old default value is not in this list !'
-                       }        
-        return {
-                'value': retval,
-                'domain':{ 'default_resupply_wh_id':[('id','in',resupply_wh_ids)] },
-                'warning': warning
-               }
+    def onchange_filter_default_resupply_wh_id(self, cr, uid, ids, default_resupply_wh_id, resupply_wh_ids, context=None):
+        resupply_wh_ids = set([x['id'] for x in (self.resolve_2many_commands(cr, uid, 'resupply_wh_ids', resupply_wh_ids, ['id']))])
+        resupply_wh_ids.add(default_resupply_wh_id)
+        resupply_wh_ids = list(resupply_wh_ids)
+        return {'value': {'resupply_wh_ids': resupply_wh_ids}}
 
     def _get_inter_wh_location(self, cr, uid, warehouse, context=None):
         ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
@@ -2357,7 +2326,7 @@ class stock_warehouse(osv.osv):
     def _default_stock_id(self, cr, uid, context=None):
         #lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
         try:
-            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')            
+            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')
             return warehouse.lot_stock_id.id
         except:
             return False
@@ -2370,7 +2339,8 @@ class stock_warehouse(osv.osv):
     }
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
-        ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company !'),
+        ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
+        ('default_resupply_wh_diff', 'check (id != default_resupply_wh_id)', 'The default resupply warehouse should be different that the warehouse itself!'),
     ]
 
     def _get_partner_locations(self, cr, uid, ids, context=None):
@@ -2447,6 +2417,7 @@ class stock_warehouse(osv.osv):
         return push_rules_list, pull_rules_list
 
     def _get_mto_pull_rule(self, cr, uid, warehouse, values, context=None):
+        route_obj = self.pool.get('stock.location.route')
         data_obj = self.pool.get('ir.model.data')
         try:
             mto_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')[1]
@@ -2817,7 +2788,7 @@ class stock_warehouse(osv.osv):
         return super(stock_warehouse, self).unlink(cr, uid, ids, context=context)
 
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
-        all_routes = []        
+        all_routes = []
         all_routes += [warehouse.crossdock_route_id.id]
         all_routes += [warehouse.reception_route_id.id]
         all_routes += [warehouse.delivery_route_id.id]
@@ -2830,8 +2801,7 @@ class stock_warehouse(osv.osv):
         all_routes = []
         for wh in self.browse(cr, uid, ids, context=context):
             all_routes += self.get_all_routes_for_wh(cr, uid, wh, context=context)
-                        
-        res_id = ids and ids[0] or False
+
         domain = [('id', 'in', all_routes)]
         return {
             'name': _('Warehouse\'s Routes'),
