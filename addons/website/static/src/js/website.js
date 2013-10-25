@@ -12,7 +12,8 @@
     website.get_context = function (dict) {
         var html = document.documentElement;
         return _.extend({
-            lang: html.getAttribute('lang').replace('-', '_')
+            lang: html.getAttribute('lang').replace('-', '_'),
+            website_id: html.getAttribute('data-website-id')|0
         }, dict);
     };
 
