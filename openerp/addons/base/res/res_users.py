@@ -171,13 +171,6 @@ class res_users(osv.osv):
     def on_change_login(self, cr, uid, ids, login, context=None):
         return {'value': {'email': login}}
 
-    def on_change_company_id(self, cr, uid, ids, company_id):
-        return {'warning' : {
-                    'title': _("Company Switch Warning"),
-                    'message': _("Please keep in mind that documents currently displayed may not be relevant after switching to another company. If you have unsaved changes, please make sure to save and close all forms before switching to a different company. (You can click on Cancel in the User Preferences now)"),
-                }
-        }
-
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
         return self.pool.get('res.partner').onchange_state(cr, uid, partner_ids, state_id, context=context)
