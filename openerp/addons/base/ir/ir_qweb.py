@@ -662,7 +662,9 @@ class ManyToOneConverter(osv.AbstractModel):
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
         # value may be a browse_null
         if not value: return ''
-        return werkzeug.utils.escape(value.name_get()[0][1]).replace('\n', '<br>\n')
+        name_got = value._model.name_get(
+            cr, openerp.SUPERUSER_ID, value.id, context=context)[0][1]
+        return werkzeug.utils.escape(name_got).replace('\n', '<br>\n')
 
 class HTMLConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.html'
