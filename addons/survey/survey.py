@@ -50,10 +50,15 @@ class survey(osv.osv):
         else:
             return []
 
-    def _check_valid(self, cr, uid, ids, context=None):
+    def _empty_check(self, cr, uid, ids, context=None):
+        """ Ensure that this survey has at least one page with at least one
+        question. If not, raises an exception. """
         for survey in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            if not survey.page_ids or not [page.question_ids for page in survey.page_ids if page.question_ids]:
-                raise osv.except_osv(_('Warning!'), _('This survey has no question defined or has no pages defined.'))
+            if not survey.page_ids or not [page.question_ids
+                            for page in survey.page_ids if page.question_ids]:
+                raise osv.except_osv(_('Warning!'),
+                    _('This survey has no question defined or has no pages \
+                        defined.'))
 
     ## Function fields ##
 
@@ -123,7 +128,8 @@ class survey(osv.osv):
             'User responses', readonly=1,),
         'public_url': fields.function(_get_public_url,
             string="Public link", type="char"),
-        'uuid': fields.char('Public token', size=8, required=1, oldname="token"),
+        'uuid': fields.char('Public token', size=8, required=1,
+            oldname="token"),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
     }
@@ -137,6 +143,8 @@ class survey(osv.osv):
     }
 
     # Public methods #
+
+    ## Workflow transitions ##
 
     def survey_draft(self, cr, uid, ids, arg):
         return self.write(cr, uid, ids, {'state': 'draft', 'date_open': None})
@@ -153,75 +161,29 @@ class survey(osv.osv):
         return self.write(cr, uid, ids, {'state': 'cancel',
             'date_close': datetime.now()})
 
+    ## Actions ##
+
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
         current_rec = self.read(cr, uid, ids, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
-        vals.update({'title': title})
+        vals['title'] = title
         return super(survey, self).copy(cr, uid, ids, vals, context=context)
 
-    def action_print_survey(self, cr, uid, ids, context=None):
-        """
-        If response is available then print this response otherwise print survey form(print template of the survey).
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID forsecurity checks,
-        @param ids: List of Survey IDs
-        @param context: A standard dictionary forcontextual values
-        @return: Dictionary value forprint survey form.
-        """
-        page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
+    def action_print_survey_questions(self, cr, uid, ids, context=None):
+        ''' Generates a printable view of an empty survey '''
+        pass
 
-        if context is None:
-            context = {}
-        datas = {}
-        response_id = None
-        if 'response_id' in context:
-            response_id = context.get('response_id', 0)
-            datas['ids'] = [context.get('survey_id', 0)]
-        elif 'print_response' in context:
-            response_id = self.pool.get('survey.response').search(cr, uid, [('survey_id', '=', ids)], context=context)
-            datas['ids'] = ids
-        report = {}
-        if response_id and response_id[0]:
-            context.update({'survey_id': datas['ids']})
-            datas['form'] = page_setting
-            datas['model'] = 'survey.print.answer'
-            report = {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'survey.browse.response',
-                'datas': datas,
-                'context': context,
-                'nodestroy': True,
-            }
-        else:
-            datas['form'] = page_setting
-            datas['model'] = 'survey.print'
-            report = {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'survey.form',
-                'datas': datas,
-                'context': context,
-                'nodestroy': True,
-            }
-        return report
+    def action_print_survey_user_inputs(self, cr, uid, ids, context=None):
+        ''' Generates printable views of answered surveys '''
+        pass
 
-    def print_statistics(self, cr, uid, ids, context=None):
-        """ Print survey statistics """
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'survey.analysis',
-            'datas': {
-                'model': 'survey.print.statistics',
-                'ids': [],
-                'form': {
-                    'id': None,
-                    'survey_ids': ids
-                },
-            },
-        }
+    def action_print_survey_statistics(self, cr, uid, ids, context=None):
+        ''' Generates a printable view of the survey results '''
+        pass
 
     def action_fill_survey(self, cr, uid, ids, context=None):
+        ''' Open a survey in filling view '''
         id = ids[0]
         survey = self.browse(cr, uid, id, context=context)
         context.update({'edit': False, 'survey_id': id, 'survey_token': survey.token, 'ir_actions_act_window_target': 'inline'})
@@ -236,10 +198,12 @@ class survey(osv.osv):
         }
 
     def action_test_survey(self, cr, uid, ids, context=None):
+        ''' Open a survey in filling view '''
         context.update({'survey_test': True})
         return self.action_fill_survey(cr, uid, ids, context=context)
 
     def action_edit_survey(self, cr, uid, ids, context=None):
+        ''' Open a survey in edition view '''
         id = ids[0]
         context.update({
             'survey_id': id,
@@ -256,26 +220,29 @@ class survey(osv.osv):
             'context': context
         }
 
-    def action_survey_sent(self, cr, uid, ids, context=None):
-        '''
-        This function opens a window to compose an email, with the survey template message loaded by default
-        '''
-        self._check_valid(cr, uid, ids, context=context)
+    def action_send_survey(self, cr, uid, ids, context=None):
+        ''' Open a window to compose an email, pre-filled with the survey
+        message '''
+        self._empty_check(cr, uid, ids, context=context)
 
-        survey_browse = self.pool.get('survey').browse(cr, uid, ids, context=context)[0]
+        survey_browse = self.pool.get('survey.survey').browse(cr, uid, ids,
+            context=context)[0]
         if survey_browse.state != "open":
-            raise osv.except_osv(_('Warning!'), _("You cannot send invitations because the survey is not open."))
+            raise osv.except_osv(_('Warning!'),
+                _("You cannot send invitations since the survey is not open."))
 
-        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        assert len(ids) == 1, 'This option should only be used for a single \
+                                survey at a time.'
         ir_model_data = self.pool.get('ir.model.data')
         try:
-            template_id = ir_model_data.get_object_reference(cr, uid, 'survey', 'email_template_survey')[1]
+            template_id = ir_model_data.get_object_reference(cr, uid, 'survey',
+                                                    'email_template_survey')[1]
         except ValueError:
             template_id = False
         ctx = dict(context)
 
         ctx.update({
-            'default_model': 'survey',
+            'default_model': 'survey.survey',
             'default_res_id': ids[0],
             'default_survey_id': ids[0],
             'default_use_template': bool(template_id),
@@ -293,11 +260,13 @@ class survey(osv.osv):
         }
 
     def unlink(self, cr, uid, ids, context=None):
+        ''' Delete survey and linked email templates (if any) '''
         email_template_ids = list()
         for survey in self.browse(cr, uid, ids, context=context):
             email_template_ids.append(survey.email_template_id.id)
         if email_template_ids:
-            self.pool.get('email.template').unlink(cr, uid, email_template_ids, context=context)
+            self.pool.get('email.template').unlink(cr, uid, email_template_ids,
+                                                context=context)
         return super(survey, self).unlink(cr, uid, ids, context=context)
 
 
@@ -647,7 +616,7 @@ class survey_user_input(osv.osv):
     _columns = {
         'survey_id': fields.many2one('survey', 'Survey', required=True,
             readonly=1, ondelete='restrict'),
-        'date_create': fields.datetime('Creation Date', required=,
+        'date_create': fields.datetime('Creation Date', required=True,
             readonly=1),
         'deadline': fields.date("Deadline",
             help="Date by which the person can take part to the survey",
@@ -762,6 +731,17 @@ class survey_user_input_line(osv.osv):
         'skipped': fields.boolean('Skipped'),
         'question_id': fields.many2one('survey.question', 'Question',
             ondelete='restrict'),
+        'type': fields.selection([('textbox', 'Text box'),
+                ('numerical_box', 'Numerical box'),
+                ('free_text', 'Free Text'),
+                ('datetime', 'Date and Time'),
+                ('checkbox', 'Checkbox'),
+                ('simple_choice_scale', 'One choice on a scale'),
+                ('simple_choice_dropdown', 'One choice in a menu'),
+                ('multiple_choice', 'Some choices in checkboxes'),
+            ], 'Question Type', required=1),
+
+
 
         ## Store here the answer to the question
         'answer_type' = fields.selection(),  # see types defined in question
