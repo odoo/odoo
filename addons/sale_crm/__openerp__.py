@@ -37,7 +37,7 @@ modules.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/crm_statistics_dashboard.jpeg', 'images/opportunity_to_quote.jpeg'],
-    'depends': ['sale', 'crm'],
+    'depends': ['sale', 'crm', 'web_kanban_gauge'],
     'data': [
         'wizard/crm_make_sale_view.xml',
         'sale_crm_view.xml',
@@ -47,7 +47,10 @@ modules.
         'security/ir.model.access.csv',
         'report/sale_crm_account_invoice_report_view.xml',
     ],
-    'demo': [],
+    'js': [
+        'static/src/js/sale_crm.js',
+    ],
+    'demo': ['sale_crm_demo.xml'],
     'test': ['test/sale_crm.yml'],
     'installable': True,
     'auto_install': True,

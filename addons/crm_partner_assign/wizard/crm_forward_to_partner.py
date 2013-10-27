@@ -20,152 +20,189 @@
 #
 ##############################################################################
 
-import re
-import time
-from openerp import tools
-
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-class crm_lead_forward_to_partner(osv.osv_memory):
+
+class crm_lead_forward_to_partner(osv.TransientModel):
     """ Forward info history to partners. """
     _name = 'crm.lead.forward.to.partner'
-    _inherit = "mail.compose.message"
+
+    def _convert_to_assignation_line(self, cr, uid, lead, partner, context=None):
+        lead_location = []
+        partner_location = []
+        if lead.country_id:
+            lead_location.append(lead.country_id.name)
+        if lead.city:
+            lead_location.append(lead.city)
+        if partner:
+            if partner.country_id:
+                partner_location.append(partner.country_id.name)
+            if partner.city:
+                partner_location.append(partner.city)
+        return {'lead_id': lead.id,
+                'lead_location': ", ".join(lead_location),
+                'partner_assigned_id': partner and partner.id or False,
+                'partner_location': ", ".join(partner_location),
+                'lead_link': self.get_lead_portal_url(cr, uid, lead.id, lead.type, context=context),
+                }
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
-        # set as comment, perform overrided document-like action that calls get_record_data
-        old_mode = context.get('default_composition_mode', 'forward')
-        context['default_composition_mode'] = 'comment'
+        lead_obj = self.pool.get('crm.lead')
+        email_template_obj = self.pool.get('email.template')
+        try:
+            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'email_template_lead_forward_mail')[1]
+        except ValueError:
+            template_id = False
         res = super(crm_lead_forward_to_partner, self).default_get(cr, uid, fields, context=context)
-        # back to forward mode
-        context['default_composition_mode'] = old_mode
-        res['composition_mode'] = context['default_composition_mode']
+        active_ids = context.get('active_ids')
+        default_composition_mode = context.get('default_composition_mode')
+        res['assignation_lines'] = []
+        if template_id:
+            res['body'] = email_template_obj.get_email_template(cr, uid, template_id).body_html
+        if active_ids:
+            lead_ids = lead_obj.browse(cr, uid, active_ids, context=context)
+            if default_composition_mode == 'mass_mail':
+                partner_assigned_ids = lead_obj.search_geo_partner(cr, uid, active_ids, context=context)
+            else:
+                partner_assigned_ids = dict((lead.id, lead.partner_assigned_id and lead.partner_assigned_id.id or False) for lead in lead_ids)
+                res['partner_id'] = lead_ids[0].partner_assigned_id.id
+            for lead in lead_ids:
+                partner_id = partner_assigned_ids.get(lead.id) or False
+                partner = False
+                if partner_id:
+                    partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+                res['assignation_lines'].append(self._convert_to_assignation_line(cr, uid, lead, partner))
         return res
 
-    def _get_composition_mode_selection(self, cr, uid, context=None):
-        composition_mode = super(crm_lead_forward_to_partner, self)._get_composition_mode_selection(cr, uid, context=context)
-        composition_mode.append(('forward', 'Forward'))
-        return composition_mode
+    def action_forward(self, cr, uid, ids, context=None):
+        lead_obj = self.pool.get('crm.lead')
+        record = self.browse(cr, uid, ids[0], context=context)
+        email_template_obj = self.pool.get('email.template')
+        try:
+            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'email_template_lead_forward_mail')[1]
+        except ValueError:
+            raise osv.except_osv(_('Email Template Error'),
+                                 _('The Forward Email Template is not in the database'))
+        try:
+            portal_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal')[1]
+        except ValueError:
+            raise osv.except_osv(_('Portal Group Error'),
+                                 _('The Portal group cannot be found'))
+
+        local_context = context.copy()
+        if not (record.forward_type == 'single'):
+            no_email = set()
+            for lead in record.assignation_lines:
+                if lead.partner_assigned_id and not lead.partner_assigned_id.email:
+                    no_email.add(lead.partner_assigned_id.name)
+            if no_email:
+                raise osv.except_osv(_('Email Error'),
+                                    ('Set an email address for the partner(s): %s' % ", ".join(no_email)))
+        if record.forward_type == 'single' and not record.partner_id.email:
+            raise osv.except_osv(_('Email Error'),
+                                ('Set an email address for the partner %s' % record.partner_id.name))
+
+        partners_leads = {}
+        for lead in record.assignation_lines:
+            partner = record.forward_type == 'single' and record.partner_id or lead.partner_assigned_id
+            lead_details = {
+                'lead_link': lead.lead_link,
+                'lead_id': lead.lead_id,
+            }
+            if partner:
+                partner_leads = partners_leads.get(partner.id)
+                if partner_leads:
+                    partner_leads['leads'].append(lead_details)
+                else:
+                    partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
+        stage_id = False
+        if record.assignation_lines and record.assignation_lines[0].lead_id.type == 'lead':
+            try:
+                stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', 'stage_portal_lead_assigned')[1]
+            except ValueError:
+                pass
+
+        for partner_id, partner_leads in partners_leads.items():
+            in_portal = False
+            for contact in (partner.child_ids or [partner]):
+                if contact.user_ids:
+                    in_portal = portal_id in [g.id for g in contact.user_ids[0].groups_id]
+
+            local_context['partner_id'] = partner_leads['partner']
+            local_context['partner_leads'] = partner_leads['leads']
+            local_context['partner_in_portal'] = in_portal
+            email_template_obj.send_mail(cr, uid, template_id, ids[0], context=local_context)
+            lead_ids = [lead['lead_id'].id for lead in partner_leads['leads']]
+            values = {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id}
+            if stage_id:
+                values['stage_id'] = stage_id
+            lead_obj.write(cr, uid, lead_ids, values)
+            self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
+        return True
+
+    def get_lead_portal_url(self, cr, uid, lead_id, type, context=None):
+        action = type == 'opportunity' and 'action_portal_opportunities' or 'action_portal_leads'
+        try:
+            action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', action)[1]
+        except ValueError:
+            action_id = False
+        portal_link = "%s/?db=%s#id=%s&action=%s&view_type=form" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname, lead_id, action_id)
+        return portal_link
+
+    def get_portal_url(self, cr, uid, ids, context=None):
+        portal_link = "%s/?db=%s" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname)
+        return portal_link
 
     _columns = {
-        'partner_ids': fields.many2many('res.partner',
-            'lead_forward_to_partner_res_partner_rel',
-            'wizard_id', 'partner_id', 'Additional contacts'),
-        'attachment_ids': fields.many2many('ir.attachment',
-            'lead_forward_to_partner_attachment_rel',
-            'wizard_id', 'attachment_id', 'Attachments'),
-        'history_mode': fields.selection([('info', 'Case Information'),
-            ('latest', 'Latest email'), ('whole', 'Whole Story')],
-            'Send history', required=True),
+        'forward_type': fields.selection([('single', 'a single partner: manual selection of partner'), ('assigned', "several partners: automatic assignation, using GPS coordinates and partner's grades"), ], 'Forward selected leads to'),
+        'partner_id': fields.many2one('res.partner', 'Forward Leads To'),
+        'assignation_lines': fields.one2many('crm.lead.assignation', 'forward_id', 'Partner Assignation'),
+        'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
     }
 
     _defaults = {
-        'history_mode': 'latest',
+        'forward_type': lambda self, cr, uid, c: c.get('forward_type') or 'single',
     }
 
-    def get_record_data(self, cr, uid, model, res_id, context=None):
-        """ Override of mail.compose.message, to add default values coming
-            form the related lead.
-        """
-        res = super(crm_lead_forward_to_partner, self).get_record_data(cr, uid, model, res_id, context=context)
-        if model not in ('crm.lead') or not res_id:
-            return res
-        lead_obj = self.pool.get(model)
-        lead = lead_obj.browse(cr, uid, res_id, context=context)
-        subject = '%s: %s - %s' % (_('Fwd'), _('Lead forward'), lead.name)
-        body = self._get_message_body(cr, uid, lead, 'info', context=context)
-        res.update({
-            'subject': subject,
-            'body': body,
-            })
-        return res
 
-    def on_change_history_mode(self, cr, uid, ids, history_mode, model, res_id, context=None):
-        """ Update body when changing history_mode """
-        if model and model == 'crm.lead' and res_id:
-            lead = self.pool.get(model).browse(cr, uid, res_id, context=context)
-            body = self._get_message_body(cr, uid, lead, history_mode, context=context)
-            return {'value': {'body': body}}
+class crm_lead_assignation (osv.TransientModel):
+    _name = 'crm.lead.assignation'
+    _columns = {
+        'forward_id': fields.many2one('crm.lead.forward.to.partner', 'Partner Assignation'),
+        'lead_id': fields.many2one('crm.lead', 'Lead'),
+        'lead_location': fields.char('Lead Location', size=128),
+        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner'),
+        'partner_location': fields.char('Partner Location', size=128),
+        'lead_link': fields.char('Lead  Single Links', size=128),
+    }
 
-    def create(self, cr, uid, values, context=None):
-        """ TDE-HACK: remove 'type' from context, because when viewing an
-            opportunity form view, a default_type is set and propagated
-            to the wizard, that has a not matching type field. """
-        default_type = context.pop('default_type', None)
-        new_id = super(crm_lead_forward_to_partner, self).create(cr, uid, values, context=context)
-        if default_type:
-            context['default_type'] = default_type
-        return new_id
-
-    def action_forward(self, cr, uid, ids, context=None):
-        """ Forward the lead to a partner """
-        if context is None:
+    def on_change_lead_id(self, cr, uid, ids, lead_id, context=None):
+        if not context:
             context = {}
-        res = {'type': 'ir.actions.act_window_close'}
-        wizard = self.browse(cr, uid, ids[0], context=context)
-        if wizard.model not in ('crm.lead'):
-            return res
+        if not lead_id:
+            return {'value': {'lead_location': False}}
+        lead = self.pool.get('crm.lead').browse(cr, uid, lead_id, context=context)
+        lead_location = []
+        if lead.country_id:
+            lead_location.append(lead.country_id.name)
+        if lead.city:
+            lead_location.append(lead.city)
+        return {'value': {'lead_location': ", ".join(lead_location)}}
 
-        lead = self.pool.get(wizard.model)
-        lead_ids = wizard.res_id and [wizard.res_id] or []
+    def on_change_partner_assigned_id(self, cr, uid, ids, partner_assigned_id, context=None):
+        if not context:
+            context = {}
+        if not partner_assigned_id:
+            return {'value': {'lead_location': False}}
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_assigned_id, context=context)
+        partner_location = []
+        if partner.country_id:
+            partner_location.append(partner.country_id.name)
+        if partner.city:
+            partner_location.append(partner.city)
+        return {'value': {'partner_location': ", ".join(partner_location)}}
 
-        if wizard.composition_mode == 'mass_mail':
-            lead_ids = context and context.get('active_ids', []) or []
-            value = self.default_get(cr, uid, ['body', 'email_to', 'email_cc', 'subject', 'history_mode'], context=context)
-            self.write(cr, uid, ids, value, context=context)
-
-        self.send_mail(cr, uid, ids, context=context)
-        # for case in lead.browse(cr, uid, lead_ids, context=context):
-            # TODO: WHAT TO DO WITH THAT ?
-            # if (this.send_to == 'partner' and this.partner_id):
-            #     lead.assign_partner(cr, uid, [case.id], this.partner_id.id, context=context)
-
-            # if this.send_to == 'user':
-            #     lead.allocate_salesman(cr, uid, [case.id], [this.user_id.id], context=context)
-        return res
-
-    def _get_info_body(self, cr, uid, lead, context=None):
-        field_names = []
-        proxy = self.pool.get(lead._name)
-        if lead.type == 'opportunity':
-            field_names += ['partner_id']
-        field_names += [
-            'partner_name' , 'title', 'function', 'street', 'street2',
-            'zip', 'city', 'country_id', 'state_id', 'email_from',
-            'phone', 'fax', 'mobile', 'categ_id', 'description',
-        ]
-        return proxy._mail_body(cr, uid, lead, field_names, context=context)
-
-    def _get_message_body(self, cr, uid, lead, history_mode='whole', context=None):
-        """ This function gets whole communication history and returns as top
-            posting style
-            #1: form a body, based on the lead
-            #2: append to the body the communication history, based on the
-                history_mode parameter
-
-            - info: Forward the case information
-            - latest: Send the latest history
-            - whole: Send the whole history
-
-            :param lead: browse_record on crm.lead
-            :param history_mode: 'whole' or 'latest'
-        """
-        mail_message = self.pool.get('mail.message')
-        body = self._get_info_body(cr, uid, lead, context=context)
-        if history_mode not in ('whole', 'latest'):
-            return body or ''
-        for message in lead.message_ids:
-            header = '-------- Original Message --------'
-            sentdate = 'Date: %s' % (message.date or '')
-            desc = '\n%s'%(message.body)
-            original = [header, sentdate, desc, '\n']
-            original = '\n'.join(original)
-            body += original
-            if history_mode == 'latest':
-                break
-        return body or ''
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

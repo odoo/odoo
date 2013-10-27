@@ -54,7 +54,6 @@ class stock_location_path(osv.osv):
         'invoice_state': 'none',
         'picking_type': 'internal',
     }
-stock_location_path()
 
 class product_pulled_flow(osv.osv):
     _name = 'product.pulled.flow'
@@ -85,7 +84,6 @@ class product_pulled_flow(osv.osv):
         'invoice_state': 'none',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.pulled.flow', context=c),
     }
-product_pulled_flow()
 
 class product_product(osv.osv):
     _inherit = 'product.product'
@@ -96,7 +94,6 @@ class product_product(osv.osv):
             help="These rules set the right path of the product in the "\
             "whole location tree.")
     }
-product_product()
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -114,7 +111,6 @@ class stock_move(osv.osv):
         res = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
         res.update({'invoice_state': moves_todo[0][1][6] or 'none'})
         return res
-stock_move()
 
 class stock_location(osv.osv):
     _inherit = 'stock.location'
@@ -124,5 +120,4 @@ class stock_location(osv.osv):
                 if path.location_from_id.id == location.id:
                     return path.location_dest_id, path.auto, path.delay, path.journal_id and path.journal_id.id or False, path.company_id and path.company_id.id or False, path.picking_type, path.invoice_state
         return super(stock_location, self).chained_location_get(cr, uid, location, partner, product, context)
-stock_location()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -33,7 +33,6 @@ class l10n_fr_report(osv.osv):
         ('code_uniq', 'unique (code)','The code report must be unique !')
     ]
 
-l10n_fr_report()
 
 class l10n_fr_line(osv.osv):
     _name = 'l10n.fr.line'
@@ -48,7 +47,6 @@ class l10n_fr_line(osv.osv):
         ('code_uniq', 'unique (code)', 'The variable name must be unique !')
     ]
 
-l10n_fr_line()
 
 class res_company(osv.osv):
     _inherit = 'res.company'
@@ -58,6 +56,5 @@ class res_company(osv.osv):
         'ape': fields.char('APE', size=64),
     }
 
-res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -49,7 +49,7 @@
                             name="view_picking"
                             string="Incoming Shipments" states="approved"/>
                         <button type="object"  name="invoice_open"
-                            string="Invoices" attrs="{'invisible': [('state', '=', 'draft')]}"/> 
+                            string="Invoices" attrs="{'invisible': [('state', 'in', ['draft','sent'])]}"/> 
                     </div>
                 </xpath>
             </field>
@@ -65,7 +65,9 @@
             <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
             <field name="search_view_id" ref="stock.view_picking_in_search"/>
             <field name="help" type="html">
-              <p>
+              <p class="oe_view_nocontent_create">
+                Click to create a new incoming shipment.
+              </p><p> 
                 Here you can track all the product receptions of purchase
                 orders where the invoicing is "Based on Incoming Shipments",
                 and for which you have not received a supplier invoice yet.

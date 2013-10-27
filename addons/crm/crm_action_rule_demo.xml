@@ -5,7 +5,7 @@
         <record id="filter_draft_lead" model="ir.filters">
             <field name="name">Draft Leads</field>
             <field name="model_id">crm.lead</field>
-            <field name="domain">[('state','=','draft')]</field>
+            <field name="domain">[('stage_id.sequence', '=', 1)]</field>
             <field name="user_id" eval="False"/>
         </record>
         <record id="action_email_reminder_lead" model="ir.actions.server">
@@ -14,18 +14,13 @@
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">email</field>
-            <field name="email">object.user_id.email</field>
-            <field name="subject">Reminder on Lead: [[object.id ]] [[object.partner_id and 'of ' +object.partner_id.name or '']]</field>
-            <field name="message">Warning unprocessed incoming lead is more than 5 day old.
-Name: [[object.name ]]
-ID: [[object.id ]]
-Description: [[object.description]]
-            </field>
+            <field name="template_id" ref="email_template_opportunity_reminder_mail"/>
         </record>
         <record id="rule_set_reminder_lead" model="base.action.rule">
             <field name="name">Set Auto Reminder on leads which are not open since 5 days.</field>
             <field name="model_id" ref="model_crm_lead"/>
             <field name="sequence">1</field>
+            <field name="kind">on_time</field>
             <field name="filter_id" ref="filter_draft_lead"/>
             <field name="trg_date_id" ref="field_crm_lead_create_date"/>
             <field name="trg_date_range">5</field>
@@ -54,12 +49,10 @@ object.write({'section_id': sales_team.id})
             <field name="name">Set Auto Followers on leads which are urgent and come from USA.</field>
             <field name="model_id" ref="model_crm_lead"/>
             <field name="sequence">2</field>
+            <field name="kind">on_create</field>
             <field name="filter_id" ref="filter_usa_lead"/>
-            <field name="act_followers" eval="[(6,0,[ref('base.res_partner_4'), ref('base.res_partner_5'), ref('base.res_partner_6')])]"/>
             <field name="act_user_id" ref="base.user_root"/>
-            <field name="trg_date_id" ref="field_crm_lead_create_date"/>
-            <field name="trg_date_range">0</field>
-            <field name="trg_date_range_type">minutes</field>
+            <field name="act_followers" eval="[(6,0,[ref('base.res_partner_4'), ref('base.res_partner_5'), ref('base.res_partner_6')])]"/>
             <field name="server_action_ids" eval="[(6,0,[ref('action_set_team_sales_department')])]"/>
         </record>
     </data>

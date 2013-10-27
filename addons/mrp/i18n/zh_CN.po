@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-11-28 14:03+0000\n"
-"Last-Translator: hifly <Unknown>\n"
+"PO-Revision-Date: 2013-08-07 16:09+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:18+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:05+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -69,7 +69,7 @@ msgstr "周期数"
 msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
-msgstr "最小库存规则允许系统在达到最小库存数量的时候立即创建补货单"
+msgstr "最小库存规则允许系统在达到最小库存数量的时会自动创建补货单"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
@@ -199,7 +199,7 @@ msgstr "用于外购的物料"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "制造单计划"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -286,7 +286,7 @@ msgstr "从一个生产订单生产几个产品"
 msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
-msgstr ""
+msgstr "被正确使用的BOM依赖于销售单和BOM中指定的属性"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -294,7 +294,7 @@ msgid ""
 "When processing a sales order for this product, the delivery order\n"
 "                                will contain the raw materials, instead of "
 "the finished product."
-msgstr ""
+msgstr "当处理该产品的销售单时，发运单将以原料来替代成品"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -490,6 +490,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                创建新属性\n"
+"              </p><p>\n"
+"                当同一个产品有多种组成的方式，\n"
+"                OpenERP会根据属性来选择合适的BoM。\n"
+"                你可以给每个物料清单分配若干个属性，\n"
+"                当销售人员创建销售订单，根据需要指定几个属性，\n"
+"                然后OpenERP 会根据其来自动选择相应的BoM。\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -499,7 +509,7 @@ msgid "Scheduled Date"
 msgstr "下单日期"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:124
+#: code:addons/mrp/procurement.py:129
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "生产订单 <em>%s</em>  创建。"
@@ -684,7 +694,7 @@ msgid "Work Center Load"
 msgstr "工作中心负载"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:50
+#: code:addons/mrp/procurement.py:55
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "该产品尚未定义物料清单！"
@@ -991,7 +1001,7 @@ msgid "BoM Type"
 msgstr "物料清单类型"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:52
+#: code:addons/mrp/procurement.py:57
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -1082,7 +1092,6 @@ msgstr "未活动的"
 #: view:mrp.config.settings:0
 #: view:mrp.product.produce:0
 #: view:mrp.product_price:0
-#: view:mrp.production:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
 msgstr "取消"
@@ -1121,7 +1130,7 @@ msgstr "生产订单"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "等待原材料"
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -1630,6 +1639,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建属性组\n"
+"              </p><p>\n"
+"                可以定义特定的属性组用来分配到BoM和销售订单。\n"
+"                根据销售人员在销售订单上选取的属性，OpenERP可以\n"
+"                自动选择相应的BoM。\n"
+"              </p><p>\n"
+"                例如，在属性组“保修” ，你有两个属性：1年保修，3年保修。\n"
+"                根据销售订单上的选择，OpenERP会自动选择对应的BoM排单生产。\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1775,8 +1795,8 @@ msgid ""
 "the quantity selected and it will finish the production order when total "
 "ordered quantities are produced."
 msgstr ""
-"'废料' 模式会仅消耗对应成品数量的原材料而无产成品产出。\n"
-"'报工' 模式会消耗对应成品数量的原材料而且产出对应数量的产成品。"
+"'投料' 模式会仅消耗对应成品数量的原材料暂无产成品产出。\n"
+"'投料并产出' 模式会消耗对应成品数量的原材料并立即产出对应数量的产成品。"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1982,7 +2002,7 @@ msgstr "新建"
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr "废料"
+msgstr "投料"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -2162,7 +2182,7 @@ msgstr "用户"
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume & Produce"
-msgstr "报工"
+msgstr "投料并产出"
 
 #. module: mrp
 #: field:mrp.bom,bom_id:0
@@ -2192,7 +2212,7 @@ msgstr "产品类型是可库存或消耗品"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr "生产开始了"
+msgstr "已开始生产"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0

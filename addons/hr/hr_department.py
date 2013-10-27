@@ -79,7 +79,6 @@ class hr_department(osv.osv):
         (_check_recursion, 'Error! You cannot create recursive departments.', ['parent_id'])
     ]
 
-hr_department()
 
 class ir_action_window(osv.osv):
     _inherit = 'ir.actions.act_window'
@@ -103,7 +102,6 @@ class ir_action_window(osv.osv):
                 return False
         return res
 
-ir_action_window()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

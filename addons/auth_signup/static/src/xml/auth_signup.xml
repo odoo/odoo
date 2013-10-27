@@ -5,25 +5,34 @@
 
     <t t-extend="Login">
         <t t-jquery="form ul:first li:contains('Username')" t-operation="before">
-            <li class="oe_signup_show">Name</li>
-            <li class="oe_signup_show"><input name="name" type="text"/></li>
+            <li data-modes="signup reset">Name</li>
+            <li data-modes="signup reset"><input name="name" type="text"/></li>
         </t>
         <t t-jquery="form ul:first li:contains('Username')" t-operation="replace">
-            <li class="oe_signup_hide">Username</li>
-            <li class="oe_signup_show">Username (Email)</li>
+            <li data-modes="default">Username</li>
+            <li data-modes="signup reset">Username (Email)</li>
+        </t>
+        <t t-jquery="form ul:first li:has(input[name=login], input[name=password]), form ul:first li:contains('Password')">
+            this.attr('data-modes', 'default signup reset');
         </t>
         <t t-jquery="form ul:first li:has(input[name=password])" t-operation="after">
-            <li class="oe_signup_show">Confirm Password</li>
-            <li class="oe_signup_show"><input name="confirm_password" type="password"/></li>
+            <li data-modes="signup reset">Confirm Password</li>
+            <li data-modes="signup reset"><input name="confirm_password" type="password"/></li>
         </t>
         <t t-jquery="form ul:first li:has(button[name=submit])" t-operation="replace">
             <li>
-                <button class="oe_signup_hide" name="submit">Log in</button>
-                <button class="oe_signup_show" name="submit">Sign up</button>
-                <a class="oe_signup_hide oe_signup_signup" href="#">Sign Up</a>
-                <a class="oe_signup_show oe_signup_back" href="#">Back to Login</a>
-                <a class="oe_signup_reset_password" href="#">Reset password</a>
+                <button name="submit">
+                    <span data-modes="default">Log in</span>
+                    <span data-modes="signup">Sign Up</span>
+                    <span data-modes="reset">Reset password</span>
+                </button>
+                <a class="oe_signup_signup" data-modes="default" href="#">Sign Up</a>
+                <a class="oe_signup_back" data-modes="signup reset" href="#">Back to Login</a>
+                <a class="oe_signup_reset_password" data-modes="default" href="#">Reset password</a>
             </li>
+        </t>
+        <t t-jquery=".oe_login_manage_db">
+            this.attr('data-modes', 'default');
         </t>
     </t>
 

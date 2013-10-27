@@ -70,7 +70,7 @@
                 <header>
                     <button name="do_confirm" string="Confirm" states="tentative,cancelled" type="object" class="oe_highlight"/>
                     <button name="do_tentative" states="confirmed,cancelled" string="Uncertain" type="object" class="oe_highlight"/>
-                    <button name="do_cancel" string="Cancel" states="tentative,confirmed" type="object"/>
+                    <button name="do_cancel" string="Cancel Event" states="tentative,confirmed" type="object"/>
                     <field name="state" widget="statusbar"
                         statusbar_visible="tentative,confirmed" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
@@ -265,7 +265,7 @@
                         <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}"/>
                         <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Event Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Start Date of Event by Month"/>
                     </group>
                 </search>
             </field>

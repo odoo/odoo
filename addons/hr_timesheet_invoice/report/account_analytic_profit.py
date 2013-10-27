@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.report import report_sxw
-from openerp import pooler
 
 class account_analytic_profit(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -32,13 +31,13 @@ class account_analytic_profit(report_sxw.rml_parse):
             'line': self._line,
         })
     def _user_ids(self, lines):
-        user_obj=pooler.get_pool(self.cr.dbname).get('res.users')
+        user_obj = self.pool['res.users']
         ids=list(set([b.user_id.id for b in lines]))
         return user_obj.browse(self.cr, self.uid, ids)
 
     def _journal_ids(self, form, user_id):
-        line_obj=pooler.get_pool(self.cr.dbname).get('account.analytic.line')
-        journal_obj=pooler.get_pool(self.cr.dbname).get('account.analytic.journal')
+        line_obj = self.pool['account.analytic.line']
+        journal_obj = self.pool['account.analytic.journal']
         line_ids=line_obj.search(self.cr, self.uid, [
             ('date', '>=', form['date_from']),
             ('date', '<=', form['date_to']),
@@ -49,10 +48,9 @@ class account_analytic_profit(report_sxw.rml_parse):
         return journal_obj.browse(self.cr, self.uid, ids)
 
     def _line(self, form, journal_ids, user_ids):
-        pool=pooler.get_pool(self.cr.dbname)
-        line_obj=pool.get('account.analytic.line')
-        product_obj=pool.get('product.product')
-        price_obj=pool.get('product.pricelist')
+        line_obj = self.pool['account.analytic.line']
+        product_obj = self.pool['product.product']
+        price_obj = self.pool['product.pricelist']
         ids=line_obj.search(self.cr, self.uid, [
                 ('date', '>=', form['date_from']),
                 ('date', '<=', form['date_to']),
@@ -109,7 +107,7 @@ class account_analytic_profit(report_sxw.rml_parse):
         return res.values()
 
     def _lines(self, form):
-        line_obj=pooler.get_pool(self.cr.dbname).get('account.analytic.line')
+        line_obj = self.pool['account.analytic.line']
         ids=line_obj.search(self.cr, self.uid, [
             ('date', '>=', form['date_from']),
             ('date', '<=', form['date_to']),

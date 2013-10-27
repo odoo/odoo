@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields,osv
-from openerp import netsvc
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp.tools.translate import _
@@ -314,9 +313,7 @@ class mrp_repair(osv.osv):
         for repair in self.browse(cr, uid, ids):
             mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'draft'})
         self.write(cr, uid, ids, {'state':'draft'})
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_create(uid, 'mrp.repair', id, cr)
+        self.create_workflow(cr, uid, ids)        
         return True
 
     def action_confirm(self, cr, uid, ids, *args):
@@ -350,8 +347,9 @@ class mrp_repair(osv.osv):
         return self.write(cr,uid,ids,{'state':'cancel'})
 
     def wkf_invoice_create(self, cr, uid, ids, *args):
-        return self.action_invoice_create(cr, uid, ids)
-
+        self.action_invoice_create(cr, uid, ids)
+        return True
+        
     def action_invoice_create(self, cr, uid, ids, group=False, context=None):
         """ Creates invoice(s) for repair order.
         @param group: It is set to true when group invoice is to be generated.
@@ -368,7 +366,7 @@ class mrp_repair(osv.osv):
             if repair.state in ('draft','cancel') or repair.invoice_id:
                 continue
             if not (repair.partner_id.id and repair.partner_invoice_id.id):
-                raise osv.except_osv(_('No partner !'),_('You have to select a Partner Invoice Address in the repair form !'))
+                raise osv.except_osv(_('No partner!'),_('You have to select a Partner Invoice Address in the repair form!'))
             comment = repair.quotation_notes
             if (repair.invoice_method != 'none'):
                 if group and repair.partner_invoice_id.id in invoices_group:
@@ -505,7 +503,6 @@ class mrp_repair(osv.osv):
         """
         res = {}
         move_obj = self.pool.get('stock.move')
-        wf_service = netsvc.LocalService("workflow")
         repair_line_obj = self.pool.get('mrp.repair.line')
         seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
@@ -521,8 +518,9 @@ class mrp_repair(osv.osv):
                     'location_dest_id': move.location_dest_id.id,
                     'tracking_id': False,
                     'prodlot_id': move.prodlot_id and move.prodlot_id.id or False,
-                    'state': 'done',
+                    'state': 'assigned',
                 })
+                move_obj.action_done(cr, uid, [move_id], context=context)
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
             if repair.deliver_bool:
                 pick_name = seq_obj.get(cr, uid, 'stock.picking.out')
@@ -548,7 +546,7 @@ class mrp_repair(osv.osv):
                     'tracking_id': False,
                     'state': 'assigned',
                 })
-                wf_service.trg_validate(uid, 'stock.picking', picking, 'button_confirm', cr)
+                pick_obj.signal_button_confirm(cr, uid, [picking])
                 self.write(cr, uid, [repair.id], {'state': 'done', 'picking_id': picking})
                 res[repair.id] = picking
             else:
@@ -586,7 +584,7 @@ class ProductChangeMixin(object):
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False
             if not pricelist:
                 warning = {
-                    'title':'No Pricelist !',
+                    'title':'No Pricelist!',
                     'message':
                         'You have to select a pricelist in the Repair form !\n'
                         'Please set one before choosing a product.'
@@ -703,7 +701,6 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'location_dest_id': scrap_location_ids and scrap_location_ids[0] or False,
                 }}
 
-mrp_repair_line()
 
 class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.fee'
@@ -745,5 +742,4 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         'to_invoice': lambda *a: True,
     }
 
-mrp_repair_fee()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

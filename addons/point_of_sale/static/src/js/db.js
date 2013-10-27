@@ -43,6 +43,7 @@ function openerp_pos_db(instance, module){
             this.product_by_id = {};
             this.product_by_ean13 = {};
             this.product_by_category_id = {};
+            this.product_by_reference = {};
 
             this.category_by_id = {};
             this.root_category_id  = 0;
@@ -150,6 +151,9 @@ function openerp_pos_db(instance, module){
             if(product.ean13){
                 str += '|' + product.ean13;
             }
+            if(product.default_code){
+                str += '|' + product.default_code;
+            }
             var packagings = this.packagings_by_product_id[product.id] || [];
             for(var i = 0; i < packagings.length; i++){
                 str += '|' + packagings[i].ean;
@@ -178,7 +182,7 @@ function openerp_pos_db(instance, module){
 
                 var ancestors = this.get_category_ancestors_ids(categ_id) || [];
 
-                for(var j = 0; j < ancestors.length; j++){
+                for(var j = 0, jlen = ancestors.length; j < jlen; j++){
                     var ancestor = ancestors[j];
                     if(! stored_categories[ancestor]){
                         stored_categories[ancestor] = [];
@@ -194,6 +198,9 @@ function openerp_pos_db(instance, module){
                 if(product.ean13){
                     this.product_by_ean13[product.ean13] = product;
                 }
+                if(product.default_code){
+                    this.product_by_reference[product.default_code] = product;
+                }
             }
         },
         add_packagings: function(packagings){
@@ -204,8 +211,8 @@ function openerp_pos_db(instance, module){
                     this.packagings_by_product_id[pack.product_id[0]] = [];
                 }
                 this.packagings_by_product_id[pack.product_id[0]].push(pack);
-                if(pack.ean13){
-                    this.packagings_by_ean13[pack.ean13] = pack;
+                if(pack.ean){
+                    this.packagings_by_ean13[pack.ean] = pack;
                 }
             }
         },
@@ -238,6 +245,9 @@ function openerp_pos_db(instance, module){
             }
             return undefined;
         },
+        get_product_by_reference: function(ref){
+            return this.product_by_reference[ref];
+        },
         get_product_by_category: function(category_id){
             var product_ids  = this.product_by_category_id[category_id];
             var list = [];
@@ -267,11 +277,21 @@ function openerp_pos_db(instance, module){
             return results;
         },
         add_order: function(order){
-            var last_id = this.load('last_order_id',0);
+            var order_id = order.uid;
             var orders  = this.load('orders',[]);
-            orders.push({id: last_id + 1, data: order});
-            this.save('last_order_id',last_id+1);
+
+            // if the order was already stored, we overwrite its data
+            for(var i = 0, len = orders.length; i < len; i++){
+                if(orders[i].id === order_id){
+                    orders[i].data = order;
+                    this.save('orders',orders);
+                    return order_id;
+                }
+            }
+
+            orders.push({id: order_id, data: order});
             this.save('orders',orders);
+            return order_id;
         },
         remove_order: function(order_id){
             var orders = this.load('orders',[]);
@@ -282,6 +302,15 @@ function openerp_pos_db(instance, module){
         },
         get_orders: function(){
             return this.load('orders',[]);
+        },
+        get_order: function(order_id){
+            var orders = this.get_orders();
+            for(var i = 0, len = orders.length; i < len; i++){
+                if(orders[i].id === order_id){
+                    return orders[i];
+                }
+            }
+            return undefined;
         },
     });
 }

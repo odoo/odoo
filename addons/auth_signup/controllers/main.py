@@ -19,21 +19,19 @@
 #
 ##############################################################################
 import logging
-import urllib
-
-import werkzeug
 
 import openerp
 from openerp.modules.registry import RegistryManager
 from ..res_users import SignupError
+import openerp.addons.web.http as http
+from openerp.addons.web.http import request
 
 _logger = logging.getLogger(__name__)
 
-class Controller(openerp.addons.web.http.Controller):
-    _cp_path = '/auth_signup'
+class Controller(http.Controller):
 
-    @openerp.addons.web.http.jsonrequest
-    def get_config(self, req, dbname):
+    @http.route('/auth_signup/get_config', type='json', auth="none")
+    def get_config(self, dbname):
         """ retrieve the module config (which features are enabled) for the login page """
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
@@ -44,8 +42,8 @@ class Controller(openerp.addons.web.http.Controller):
             }
         return config
 
-    @openerp.addons.web.http.jsonrequest
-    def retrieve(self, req, dbname, token):
+    @http.route('/auth_signup/retrieve', type='json', auth="none")
+    def retrieve(self, dbname, token):
         """ retrieve the user info (name, login or email) corresponding to a signup token """
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
@@ -53,24 +51,23 @@ class Controller(openerp.addons.web.http.Controller):
             user_info = res_partner.signup_retrieve_info(cr, openerp.SUPERUSER_ID, token)
         return user_info
 
-    @openerp.addons.web.http.jsonrequest
-    def signup(self, req, dbname, token, name, login, password):
+    @http.route('/auth_signup/signup', type='json', auth="none")
+    def signup(self, dbname, token, **values):
         """ sign up a user (new or existing)"""
-        values = {'name': name, 'login': login, 'password': password}
         try:
-            self._signup_with_values(req, dbname, token, values)
+            self._signup_with_values(dbname, token, values)
         except SignupError, e:
             return {'error': openerp.tools.exception_to_unicode(e)}
         return {}
 
-    def _signup_with_values(self, req, dbname, token, values):
+    def _signup_with_values(self, dbname, token, values):
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
             res_users = registry.get('res.users')
             res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
 
-    @openerp.addons.web.http.httprequest
-    def reset_password(self, req, dbname, login):
+    @http.route('/auth_signup/reset_password', type='json', auth="none")
+    def reset_password(self, dbname, login):
         """ retrieve user, and perform reset password """
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
@@ -78,12 +75,10 @@ class Controller(openerp.addons.web.http.Controller):
                 res_users = registry.get('res.users')
                 res_users.reset_password(cr, openerp.SUPERUSER_ID, login)
                 cr.commit()
-                message = 'An email has been sent with credentials to reset your password'
             except Exception as e:
                 # signup error
                 _logger.exception('error when resetting password')
-                message = e.message
-        params = [('action', 'login'), ('error_message', message)]
-        return werkzeug.utils.redirect("/#" + urllib.urlencode(params))
+                raise(e)
+        return True
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

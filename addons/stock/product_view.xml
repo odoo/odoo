@@ -8,8 +8,8 @@
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <field name="pricelist_id" position="before">
-                    <field name="location_id" context="{'location': self}"/>
-                    <field name="warehouse_id" context="{'warehouse': self}"/>
+                    <field name="location_id" widget="selection" context="{'location': self}"/>
+                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
                 </field>
             </field>
         </record>
@@ -60,6 +60,9 @@
                         </group>
                     </page>
                 </page>
+                <field name="product_manager" position="attributes" version="7.0">
+                    <attribute name="context">{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}</attribute>
+                </field>
             </field>
         </record>
 
@@ -68,6 +71,10 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button string="Inventory" name="%(action_product_location_tree)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
+                   <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
+                </xpath>
                 <group name="procurement_uom" position="before">
                     <group name="delay" string="Delays">
                         <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
@@ -88,13 +95,16 @@
                         <label for="qty_available"/>
                             <div>
                                 <field name="qty_available" class="oe_inline"/>
-                                <button name="%(action_view_change_product_quantity)d" string="update"
-                                type="action"
-                                class="oe_link"/>
+                                <button name="%(action_view_change_product_quantity)d" string="⇒ Update"
+                                    type="action"
+                                    class="oe_link"/>
                             </div>
+                        <label for="incoming_qty"/>
+                        <div>
                             <field name="incoming_qty" class="oe_inline"/>
-                            <field name="outgoing_qty" class="oe_inline"/>
-                            <field name="virtual_available" class="oe_inline"/>
+                        </div>
+                        <field name="outgoing_qty" class="oe_inline"/>
+                        <field name="virtual_available" class="oe_inline"/>
                     </group>
                     <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
                         <field name="track_production" groups="stock.group_production_lot"/>
@@ -103,12 +113,11 @@
                     </group>
                 </group>
                 <group name="status" position="after" version="7.0">
-                     <group name="store" string="Storage Location">
-                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                         <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
-                         <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
-                         <field name="loc_case" attrs="{'invisible':[('type','=','service')]}"/>
-                     </group>
+                    <group name="store" string="Storage Location" attrs="{'invisible':[('type','=','service')]}">
+                        <field name="loc_rack"/>
+                        <field name="loc_row"/>
+                        <field name="loc_case"/>
+                    </group>
                 </group>
                 <group name="Weights" position="after">
                      <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
@@ -117,6 +126,9 @@
                          <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
                      </group>
                 </group>
+                <field name="product_manager" position="attributes" version="7.0">
+                    <attribute name="context">{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}</attribute>
+                </field>
             </field>
         </record>
 

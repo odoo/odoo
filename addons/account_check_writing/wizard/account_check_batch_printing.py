@@ -83,5 +83,4 @@ class account_check_write(osv.osv_memory):
             'nodestroy': True
             }
 
-account_check_write()
 

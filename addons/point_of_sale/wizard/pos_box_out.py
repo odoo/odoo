@@ -100,7 +100,6 @@ class pos_box_out(osv.osv_memory):
             statement_line_obj.create(cr, uid, vals, context=context)
         return {}
 
-pos_box_out()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

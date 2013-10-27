@@ -61,8 +61,8 @@ class RPCSession(object):
         protocol = m.group(1)
         if not m:
             return -1
-        if protocol == 'http://' or protocol == 'http://':
-            self.gateway = XMLRPCGateway(host, port, 'http')
+        if protocol == 'http://' or protocol == 'https://':
+            self.gateway = XMLRPCGateway(host, port, protocol[:-3])
         elif protocol == 'socket://':
 
             self.gateway = NETRPCGateway(host, port)

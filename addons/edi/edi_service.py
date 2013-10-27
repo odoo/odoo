@@ -21,45 +21,46 @@
 import logging
 
 import openerp
-import openerp.netsvc as netsvc
 
 _logger = logging.getLogger(__name__)
 
-class edi(netsvc.ExportService):
+# TODO this is not needed anymore:
+# - the exposed new service just forward to the model service
+# - the service is called by the web controller, which can
+# now directly call into openerp as the web server is always
+# embedded in openerp.
 
-    def __init__(self, name="edi"):
-        netsvc.ExportService.__init__(self, name)
+def _edi_dispatch(db_name, method_name, *method_args):
+    try:
+        registry = openerp.modules.registry.RegistryManager.get(db_name)
+        assert registry, 'Unknown database %s' % db_name
+        edi = registry['edi.edi']
+        cr = registry.db.cursor()
+        res = None
+        res = getattr(edi, method_name)(cr, *method_args)
+        cr.commit()
+    except Exception, e:
+        _logger.exception('Failed to execute EDI method %s with args %r.',
+            method_name, method_args)
+        raise
+    finally:
+        cr.close()
+    return res
 
-    def _edi_dispatch(self, db_name, method_name, *method_args):
-        try:
-            registry = openerp.modules.registry.RegistryManager.get(db_name)
-            assert registry, 'Unknown database %s' % db_name
-            edi = registry['edi.edi']
-            cr = registry.db.cursor()
-            res = None
-            res = getattr(edi, method_name)(cr, *method_args)
-            cr.commit()
-        except Exception:
-            _logger.exception('Failed to execute EDI method %s with args %r.', method_name, method_args)
-            raise
-        finally:
-            cr.close()
-        return res
+def exp_import_edi_document(db_name, uid, passwd, edi_document, context=None):
+    return _edi_dispatch(db_name, 'import_edi', uid, edi_document, None)
 
-    def exp_import_edi_document(self, db_name, uid, passwd, edi_document, context=None):
-        return self._edi_dispatch(db_name, 'import_edi', uid, edi_document, None)
+def exp_import_edi_url(db_name, uid, passwd, edi_url, context=None):
+    return _edi_dispatch(db_name, 'import_edi', uid, None, edi_url)
 
-    def exp_import_edi_url(self, db_name, uid, passwd, edi_url, context=None):
-        return self._edi_dispatch(db_name, 'import_edi', uid, None, edi_url)
+@openerp.http.rpc('edi')
+def dispatch(method, params):
+    if method in ['import_edi_document',  'import_edi_url']:
+        (db, uid, passwd) = params[0:3]
+        openerp.service.security.check(db, uid, passwd)
+    else:
+        raise KeyError("Method not found: %s." % method)
+    fn = globals()['exp_' + method]
+    return fn(*params)
 
-    def dispatch(self, method, params):
-        if method in ['import_edi_document',  'import_edi_url']:
-            (db, uid, passwd ) = params[0:3]
-            openerp.service.security.check(db, uid, passwd)
-        else:
-            raise KeyError("Method not found: %s." % method)
-        fn = getattr(self, 'exp_'+method)
-        return fn(*params)
-
-edi()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

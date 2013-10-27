@@ -80,7 +80,7 @@
                     <header>
                         <button name="confirm_sheet"  string="Confirm Sheet" states="draft" type="object" class="oe_highlight"/>
                         <button name="compute_advice" string="Compute Advice" states="draft" type="object" class="oe_highlight"/>
-                        <button name="cancel_sheet" string="Cancel" states="draft"  type="object"/>
+                        <button name="cancel_sheet" string="Cancel Advice" states="draft"  type="object"/>
                         <button name="set_to_draft" string="Set to Draft" states="cancel,confirm" type="object"/>
                         <div class="oe_right">
                             <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft"/>
@@ -92,7 +92,7 @@
                             <label for="Name" class="oe_edit_only" string="Name"/>
                             <h2><field name="name"/></h2>
                             <label for="date" class="oe_edit_only"/>
-                            <h2><field name="date"/></h2>
+                            <div><field name="date"/></div>
                             <group colspan="3" col="6">
                                 <field name="bank_id"/>
                                 <field name="number"/>

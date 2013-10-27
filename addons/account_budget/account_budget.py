@@ -48,7 +48,6 @@ class account_budget_post(osv.osv):
     }
     _order = "name"
 
-account_budget_post()
 
 
 class crossovered_budget(osv.osv):
@@ -104,7 +103,6 @@ class crossovered_budget(osv.osv):
         })
         return True
 
-crossovered_budget()
 
 class crossovered_budget_lines(osv.osv):
 
@@ -202,7 +200,6 @@ class crossovered_budget_lines(osv.osv):
         'company_id': fields.related('crossovered_budget_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
-crossovered_budget_lines()
 
 class account_analytic_account(osv.osv):
     _inherit = "account.analytic.account"
@@ -211,6 +208,5 @@ class account_analytic_account(osv.osv):
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'analytic_account_id', 'Budget Lines'),
     }
 
-account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

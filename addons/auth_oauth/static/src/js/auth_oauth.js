@@ -1,16 +1,21 @@
 openerp.auth_oauth = function(instance) {
+    var _t = instance.web._t,
+        _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
 
     instance.web.Login.include({
         start: function(parent, params) {
             var self = this;
             var d = this._super.apply(this, arguments);
+            this.$el.hide();
             this.$el.on('click', 'a.zocial', this.on_oauth_sign_in);
             this.oauth_providers = [];
             if(this.params.oauth_error === 1) {
-                this.do_warn("Sign up error.","Sign up is not allowed on this database.");
+                this.do_warn(_t("Sign up error"),_t("Sign up is not allowed on this database."), true);
             } else if(this.params.oauth_error === 2) {
-                this.do_warn("Authentication error","");
+                this.do_warn(_t("Authentication error"),_t("Access Denied"), true);
+            } else if(this.params.oauth_error === 3) {
+                this.do_warn(_t("Authentication error"),_t("You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."), true);
             }
             return d.done(this.do_oauth_load).fail(function() {
                 self.do_oauth_load([]);
@@ -24,6 +29,8 @@ openerp.auth_oauth = function(instance) {
             var db = this.$("form [name=db]").val();
             if (db) {
                 this.rpc("/auth_oauth/list_providers", { dbname: db }).done(this.on_oauth_loaded);
+            } else {
+                this.$el.show();
             }
         },
         on_oauth_loaded: function(result) {
@@ -32,6 +39,7 @@ openerp.auth_oauth = function(instance) {
             if (this.oauth_providers.length === 1 && params.type === 'signup') {
                 this.do_oauth_sign_in(this.oauth_providers[0]);
             } else {
+                this.$el.show();
                 this.$('.oe_oauth_provider_login_button').remove();
                 var buttons = QWeb.render("auth_oauth.Login.button",{"widget":this});
                 this.$(".oe_login_pane form ul").after(buttons);
@@ -57,7 +65,7 @@ openerp.auth_oauth = function(instance) {
                 state: JSON.stringify(state),
             };
             var url = provider.auth_endpoint + '?' + $.param(params);
-            window.location = url;
+            instance.web.redirect(url);
         },
         _oauth_state: function(provider) {
             // return the state object sent back with the redirected uri

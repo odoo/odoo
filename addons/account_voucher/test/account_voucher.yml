@@ -1,4 +1,10 @@
 -
+  I check the voucher module with user who is accountant.
+-
+  !context
+    uid: 'res_users_account_voucher_user'
+
+-
   In order to check account voucher module in OpenERP I create a customer voucher
 -
   !record {model: account.voucher, id: account_voucher_voucherforaxelor0, view: view_sale_receipt_form}:
@@ -6,7 +12,7 @@
     account_id: account.cash
     amount: 1000.0
     company_id: base.main_company
-    journal_id: account.bank_journal
+    journal_id: account.sales_journal
     name: Voucher for Axelor
     narration: Basic Pc
     line_cr_ids:

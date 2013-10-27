@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.report import report_sxw
-from hr_payroll import report
+from openerp.addons.hr_payroll import report
 
 class payslip_details_report_in(report.report_payslip_details.payslip_details_report):
 

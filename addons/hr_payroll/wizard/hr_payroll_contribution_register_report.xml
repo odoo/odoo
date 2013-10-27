@@ -7,14 +7,16 @@
             <field name="model">payslip.lines.contribution.register</field>
             <field name="arch" type="xml">
             <form string="Contribution Register's Payslip Lines" version="7.0">
-                <header>
-                    <button name="print_report" string="Print" type="object" icon="gtk-print" class="oe_highlight"/>
-                </header>
                 <group col="4" colspan="6">
                     <field name="date_from"/>
                     <newline/>
                     <field name="date_to"/>
                 </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
         </record>

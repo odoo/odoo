@@ -414,7 +414,7 @@
               <xsl:value-of select="$size" />
             </xsl:attribute>
           </xsl:if>
-          <seq id="{../../@text:style-name}"/>.</bullet>
+          <seq id="{../../@text:style-name}"/></bullet>
 
       </xsl:otherwise>
     </xsl:choose>

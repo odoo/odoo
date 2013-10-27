@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-
         <!--
             CRM CASE STAGE
         -->
@@ -13,9 +12,10 @@
             <field name="model">crm.case.stage</field>
             <field name="arch" type="xml">
                 <search string="Stage Search">
-                    <field name="name" string="Stage Name"/>
-                    <field name="state"/>
+                    <field name="name"/>
                     <field name="type"/>
+                    <field name="sequence"/>
+                    <field name="probability"/>
                 </search>
             </field>
         </record>
@@ -95,22 +95,20 @@
             <form string="Leads Form" version="7.0">
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
-                            states="draft,open,pending" help="Convert to Opportunity" class="oe_highlight"/>
-                    <button name="case_reset" string="Reset" type="object"
-                            states="cancel"/>
-                    <button name="case_cancel" string="Cancel" type="object"
-                            states="draft,open,pending"/>
+                            attrs="{'invisible': [('probability', '=', 100)]}"
+                            help="Convert to Opportunity" class="oe_highlight"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
+                            domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button type="action"
-                            name="%(act_crm_opportunity_crm_phonecall_new)d"
-                            string="Phone Calls"/>
+                        <button string="Schedule/Log Call" 
+                                name="%(opportunity2phonecall_act)d"
+                                type="action"/>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Lead Description"/>
+                        <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
                     </div>
                     <group>
@@ -118,7 +116,7 @@
                             <field name="partner_name" string="Company Name"/>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner(partner_id)"
+                                on_change="on_change_partner_id(partner_id)"
                                 options='{"create_name_field": "name"}'
                                 context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
                             <label for="street" string="Address"/>
@@ -144,19 +142,16 @@
                             <field name="phone"/>
                             <field name="mobile"/>
                             <field name="fax"/>
-                            <!--
-                            This should be integrated in Open Chatter
-                            <button string="Mail"
-                                name="%(mail.action_email_compose_message_wizard)d"
-                                icon="terp-mail-message-new" type="action" colspan="1"/>
-                            -->
                         </group>
                         <group>
-                            <field name="user_id"/>
-                            <label for="section_id"/>
-                            <div>
+                            <field name="user_id" on_change="on_change_user(user_id, context)"
+                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'] }"/>
+                            <label for="section_id" groups="base.group_multi_salesteams"/>
+                            <div groups="base.group_multi_salesteams">
                                 <field name="section_id"/>
-                                <button name="case_escalate" string="Escalate" type="object" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
+                                <button name="case_escalate" string="Escalate"
+                                        type="object" class="oe_link"
+                                        attrs="{'invisible': ['|', ('section_id','=',False), ('probability', '=', 100)]}"/>
                             </div>
                             <field name="type" invisible="1"/>
                         </group>
@@ -164,7 +159,9 @@
                             <field name="priority"/>
                             <field name="categ_ids"
                                 widget="many2many_tags"
-                                domain="[('object_id.model','=','crm.lead')]"/>
+                                domain="[('object_id.model','=','crm.lead')]"
+                                context="{'object_name': 'crm.lead'}"
+                            />
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -176,15 +173,20 @@
                             <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
                                 <field name="company_id"
                                     groups="base.group_multi_company"
-                                    widget="selection" colspan="2"/>
-                                <field name="state" groups="base.group_no_one"/>
+                                    widget="selection"/>
                             </group>
                             <group string="Mailings">
                                 <field name="opt_out"/>
+                                <field name="message_bounce"/>
                             </group>
                             <group string="Misc">
+                                <field name="probability" groups="base.group_no_one"/>
                                 <field name="active"/>
                                 <field name="referred"/>
+                            </group>
+                            <group>
+                                <field name="date_open" groups="base.group_no_one"/>
+                                <field name="date_closed" groups="base.group_no_one"/>
                             </group>
                         </group>
                     </page>
@@ -215,11 +217,10 @@
             <field name="name">Leads</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Leads" fonts="bold:message_unread==True" colors="grey:state in ('cancel', 'done')">
+                <tree string="Leads" fonts="bold:message_unread==True" colors="grey:probability == 100">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="create_date"/>
                     <field name="name"/>
-                    <field name="type"/>
                     <field name="contact_name"/>
                     <field name="country_id" invisible="context.get('invisible_country', True)"/>
                     <field name="email_from"/>
@@ -227,8 +228,8 @@
                     <field name="stage_id"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
-                    <field name="section_id" invisible="context.get('invisible_section', True)"/>
-                    <field name="state" invisible="1"/>
+                    <field name="section_id" invisible="context.get('invisible_section', True)" groups="base.group_multi_salesteams"/>
+                    <field name="probability" invisible="1"/>
                     <field name="type_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
                     <field name="channel_id" invisible="1"/>
@@ -258,7 +259,6 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
-                    <field name="state" groups="base.group_no_one"/>
                     <field name="stage_id"/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -325,37 +325,42 @@
                 <search string="Search Leads">
                     <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]"/>
-                    <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
+                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="create_date"/>
                     <field name="country_id" context="{'invisible_country': False}"/>
                     <separator/>
-                    <filter string="Open" name="open" domain="[('state','!=','cancel')]" help="Open Leads"/>
-                    <filter string="Dead" name="dead" domain="[('state','=','cancel')]"/>
-                    <filter string="Unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
-                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
+                    <filter string="Unassigned" name="unassigned"
+                            domain="[('user_id','=', False)]"
+                            help="No salesperson"/>
                     <filter string="Assigned to Me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
                             help="Leads that are assigned to me"/>
-                    <filter string="Assigned to My Team(s)"
+                    <filter string="Assigned to My Team(s)" groups="base.group_multi_salesteams"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                             help="Leads that are assigned to any sales teams I am member of"/>
-                    <separator/>
+                    <filter string="Dead" name="dead"
+                            domain="[('probability', '=', '0'), ('stage_id.sequence', '!=', 1)]"/>
+                    <separator />
+                    <filter string="Available for mass mailing"
+                            name='not_opt_out' domain="[('opt_out', '=', False)]"
+                            help="Leads that did not ask not to be included in mass mailing campaigns"/>
+                    <separator />
                     <group expand="0" string="Group By...">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}"/>
+                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
-                        <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
-                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
+                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team" groups="base.group_multi_salesteams"/>
                     </group>
                 </search>
             </field>
@@ -374,23 +379,20 @@
             <field name="arch" type="xml">
                 <form string="Opportunities" version="7.0">
                     <header>
-                        <button name="case_mark_won" string="Mark Won" type="object"
-                                states="draft,open,pending" class="oe_highlight"/>
-                        <button name="case_mark_lost" string="Mark Lost" type="object"
-                                states="draft,open" class="oe_highlight"/>
-                        <button name="new_mail_send" string="Send Mail" type="object" states="draft,open,pending"/>
-                        <field name="stage_id" widget="statusbar" clickable="True"/>
+                        <button name="case_mark_won" string="Mark Won" type="object" class="oe_highlight"
+                                attrs="{'invisible': [('probability', '=', 100)]}"/>
+                        <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"
+                                attrs="{'invisible': ['|', ('probability', '=', 0), ('probability', '=', 100)]}"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"
+                                domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button string="Schedule/Log Call"
-                                name="%(opportunity2phonecall_act)d"
-                                type="action"/>
-                            <button string="Meeting"
+                            <button string="Schedule/Log Call" type="action"
+                                name="%(opportunity2phonecall_act)d"/>
+                            <button string="Meeting" type="object"
                                 name="action_makeMeeting"
-                                type="object"
-                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"
-                               />
+                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -406,7 +408,7 @@
                         <group>
                             <group>
                                 <field name="partner_id"
-                                    on_change="onchange_partner_id(partner_id, email_from)"
+                                    on_change="on_change_partner_id(partner_id)"
                                     string="Customer"
                                     context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
                                 <field name="email_from" string="Email"/>
@@ -424,17 +426,18 @@
                             </group>
 
                             <group>
-                                <field name="user_id"/>
-                                <label for="section_id"/>
-                                <div>
+                                <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
+                                <label for="section_id" groups="base.group_multi_salesteams"/>
+                                <div groups="base.group_multi_salesteams">
                                     <field name="section_id" widget="selection"/>
-                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
+                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link"
+                                            attrs="{'invisible': ['|', ('section_id','=',False), ('probability', '=', 100)]}"/>
                                 </div>
                             </group>
                             <group>
                                 <field name="categ_ids"
                                     string="Categories" widget="many2many_tags"
-                                    context = "{'object_name': 'crm.lead'}"
+                                    context="{'object_name': 'crm.lead'}"
                                     domain="[('object_id.model', '=', 'crm.lead')]"/>
 
                             </group>
@@ -479,7 +482,6 @@
                                     <field name="day_open" groups="base.group_no_one"/>
                                     <field name="day_close" groups="base.group_no_one"/>
                                     <field name="referred"/>
-                                    <field name="state" invisible="1"/>
                                     <field name="type" invisible="1"/>
                                 </group>
                                 <group string="References">
@@ -509,9 +511,9 @@
             <field name="name">Opportunities Tree</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" fonts="bold:message_unread==True" colors="gray:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
+                <tree string="Opportunities" fonts="bold:message_unread==True" colors="gray:probability == 100;red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
-                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="create_date"/>
                     <field name="name" string="Opportunity"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="country_id" invisible="context.get('invisible_country', True)"/>
@@ -522,12 +524,13 @@
                     <field name="stage_id"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
                     <field name="probability" avg="Avg. of Probability"/>
-                    <field name="section_id" invisible="context.get('invisible_section', True)"/>
+                    <field name="section_id" invisible="context.get('invisible_section', True)" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="referred" invisible="1"/>
                     <field name="priority" invisible="1"/>
-                    <field name="state" groups="base.group_no_one"/>
                     <field name="message_unread" invisible="1"/>
+                    <field name="probability" invisible="1"/>
+                    <field name="write_date" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -541,18 +544,22 @@
                 <search string="Search Opportunities">
                     <field name="name" string="Opportunity" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]"/>
-                    <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
+                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                    <field name="stage_id" domain="[]"/>
+                    <field name="probability"/>
                     <separator/>
-                    <filter string="New" name="new" domain="[('state','=','draft')]" help="New Opportunities"/>
-                    <filter string="In Progress" name="open" domain="[('state','=','open')]" help="Open Opportunities"/>
-                    <filter string="Won" name="won" domain="[('state','=','done')]"/>
-                    <filter string="Lost" name="lost" domain="[('state','=','cancel')]"/>
-                    <filter string="Unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
-                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
-                    <filter string="Assigned to Me"
-                            domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
+                    <filter string="New" name="new"
+                            domain="[('probability', '=', 0), ('stage_id.sequence', '=', 1)]"/>
+                    <filter string="Won" name="won"
+                            domain="[('probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
+                    <filter string="Lost" name="lost"
+                            domain="[('probability', '=', 0), ('stage_id.sequence', '!=', 1)]"/>
+                    <filter string="Unassigned" name="unassigned"
+                            domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="My Opportunities" name="assigned_to_me"
+                            domain="[('user_id', '=', uid)]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to me"/>
                     <filter string="Assigned to My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
@@ -569,14 +576,59 @@
                         <filter string="Referrer" domain="[]" context="{'group_by':'referred'}"/>
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Last Update Month" domain="[]" context="{'group_by':'write_date'}"/>
                     </group>
                     <group string="Display">
-                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
+                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team" groups="base.group_multi_salesteams"/>
                         <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
                     </group>
                 </search>
             </field>
+        </record>
+
+        <!--
+            MASS MAILING
+        -->
+        <act_window name="Lead/Opportunity Mass Mail"
+                res_model="mail.compose.message"
+                src_model="crm.lead"
+                view_mode="form"
+                multi="True"
+                target="new"
+                key2="client_action_multi"
+                id="crm.action_lead_mass_mail"
+                context="{
+                            'default_composition_mode': 'mass_mail',
+                            'default_email_to':'{$object.email or \'\'}',
+                            'default_use_template': True,
+                            'default_template_id': ref('crm.email_template_opportunity_mail'),
+                        }"
+                groups="base.group_sale_salesman"
+                />
+
+        <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
+            allowing to have a well formed email template (context action considered as set). -->
+        <record id="email_template_opportunity_mail" model="email.template">
+            <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
+        </record>
+
+        <record id="action_mark_as_lost" model="ir.actions.server">
+            <field name="name">Mark As Lost</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">
+                if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
+                    self.case_mark_lost(cr, uid, context['active_ids'], context=context)
+            </field>
+            <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/>
+        </record>
+
+        <record id="ir_mark_as_lost" model="ir.values">
+            <field eval="'client_action_multi'" name="key2"/>
+            <field eval="'crm.lead'" name="model"/>
+            <field name="name">Mark As Lost</field>
+            <field eval="'ir.actions.server,%d'%action_mark_as_lost" name="value"/>
         </record>
 
     </data>

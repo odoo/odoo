@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -16,7 +15,7 @@ class PosBox(CashBox):
         active_ids = context.get('active_ids', []) or []
 
         if active_model == 'pos.session':
-            records = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)
+            records = self.pool[active_model].browse(cr, uid, active_ids, context=context)
             bank_statements = [record.cash_register_id for record in records if record.cash_register_id]
 
             if not bank_statements:
@@ -31,13 +30,17 @@ class PosBoxIn(PosBox):
     _inherit = 'cash.box.in'
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+        
+        if context is None:
+            context = {}
+    
         values = super(PosBoxIn, self)._compute_values_for_statement_line(cr, uid, box, record, context=context)
 
         active_model = context.get('active_model', False) or False
         active_ids = context.get('active_ids', []) or []
 
         if active_model == 'pos.session':
-            session = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)[0]
+            session = self.pool[active_model].browse(cr, uid, active_ids, context=context)[0]
             values['ref'] = session.name
 
         return values
@@ -53,7 +56,7 @@ class PosBoxOut(PosBox):
         active_ids = context.get('active_ids', []) or []
 
         if active_model == 'pos.session':
-            session = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)[0]
+            session = self.pool[active_model].browse(cr, uid, active_ids, context=context)[0]
             values['ref'] = session.name
 
         return values

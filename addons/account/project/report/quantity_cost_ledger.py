@@ -20,7 +20,6 @@
 ##############################################################################
 import time
 
-from openerp import pooler
 from openerp.report import report_sxw
 
 class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):

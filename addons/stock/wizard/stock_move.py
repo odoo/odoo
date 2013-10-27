@@ -78,7 +78,6 @@ class stock_move_consume(osv.osv_memory):
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-stock_move_consume()
 
 
 class stock_move_scrap(osv.osv_memory):
@@ -139,7 +138,6 @@ class stock_move_scrap(osv.osv_memory):
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-stock_move_scrap()
 
 
 class split_in_production_lot(osv.osv_memory):
@@ -255,7 +253,6 @@ class split_in_production_lot(osv.osv_memory):
 
         return new_move
 
-split_in_production_lot()
 
 class stock_move_split_lines_exist(osv.osv_memory):
     _name = "stock.move.split.lines"

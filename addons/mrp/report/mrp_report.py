@@ -52,7 +52,6 @@ class report_workcenter_load(osv.osv):
                     to_char(p.date_planned,'YYYY:mm:dd')
             )""")
 
-report_workcenter_load()
 
 
 class report_mrp_inout(osv.osv):
@@ -97,7 +96,6 @@ class report_mrp_inout(osv.osv):
                     to_char(sm.date,'YYYY:IW')
             )""")
 
-report_mrp_inout()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

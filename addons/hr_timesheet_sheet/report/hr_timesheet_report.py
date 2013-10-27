@@ -79,6 +79,5 @@ class hr_timesheet_report(osv.osv):
                     l.currency_id
             )
         """)
-hr_timesheet_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

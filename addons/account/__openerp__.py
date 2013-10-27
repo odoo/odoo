@@ -99,7 +99,6 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/wizard/project_account_analytic_line_view.xml',
         'account_end_fy.xml',
         'account_invoice_view.xml',
-        'partner_view.xml',
         'data/account_data.xml',
         'data/data_account_type.xml',
         'data/configurable_account_chart.xml',
@@ -112,6 +111,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/wizard/account_analytic_journal_report_view.xml',
         'project/wizard/account_analytic_cost_ledger_for_journal_report_view.xml',
         'project/wizard/account_analytic_chart_view.xml',
+        'partner_view.xml',
         'product_view.xml',
         'account_assert_test.xml',
         'process/statement_process.xml',
@@ -146,6 +146,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'account_unit_test.xml',
     ],
     'test': [
+        'test/account_test_users.yml',
         'test/account_customer_invoice.yml',
         'test/account_supplier_invoice.yml',
         'test/account_change_currency.yml',
@@ -153,12 +154,11 @@ for a particular financial year and for preparation of vouchers there is a modul
         'test/account_period_close.yml',
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
-        'test/account_fiscalyear_close.yml',
         #'test/account_bank_statement.yml',
         #'test/account_cash_statement.yml',
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
-        'test/account_fiscalyear_close_state.yml', #last test, as it will definitively close the demo fiscalyear
+        'test/account_fiscalyear_close.yml', #last test, as it will definitively close the demo fiscalyear
     ],
     'installable': True,
     'auto_install': False,

@@ -87,16 +87,16 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Product to member&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Define product for membership.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_waitingmember0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_membershipproduct0"/>
+            <field name="target_node_id" ref="process_node_waitingmember0"/>
+            <field name="source_node_id" ref="process_node_membershipproduct0"/>
         </record>
 
         <record id="process_transition_waitingtoinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Waiting to invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Draft invoice is now open.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_invoicedmember0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_waitingmember0"/>
+            <field name="target_node_id" ref="process_node_invoicedmember0"/>
+            <field name="source_node_id" ref="process_node_waitingmember0"/>
         </record>
 
         <record id="process_transition_action_create0" model="process.transition.action">
@@ -110,24 +110,24 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Invoice to paid&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Invoice is be paid.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_paidmember0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_invoicedmember0"/>
+            <field name="target_node_id" ref="process_node_paidmember0"/>
+            <field name="source_node_id" ref="process_node_invoicedmember0"/>
         </record>
 
         <record id="process_transition_invoicetoassociate0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;invoice to associate&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Invoiced member may be Associated member.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_associatedmember0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_invoicedmember0"/>
+            <field name="target_node_id" ref="process_node_associatedmember0"/>
+            <field name="source_node_id" ref="process_node_invoicedmember0"/>
         </record>
 
         <record id="process_transition_associationpartner0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Association Partner&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Associated partner.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_associatedmember0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_setassociation0"/>
+            <field name="target_node_id" ref="process_node_associatedmember0"/>
+            <field name="source_node_id" ref="process_node_setassociation0"/>
         </record>
 
     </data>

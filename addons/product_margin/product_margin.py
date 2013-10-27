@@ -128,6 +128,5 @@ class product_product(osv.osv):
             help="Expected margin * 100 / Expected Sale"),
     }
 
-product_product()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

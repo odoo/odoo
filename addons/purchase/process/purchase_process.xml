@@ -154,16 +154,16 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a Pick list&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A Pick list generates a supplier invoice. Depending on the Invoicing control of the purchase order, the invoice is based on received or on ordered quantities.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="account.process_node_supplierdraftinvoices0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_productrecept0"/>
+            <field name="target_node_id" ref="account.process_node_supplierdraftinvoices0"/>
+            <field name="source_node_id" ref="process_node_productrecept0"/>
         </record>
 
         <record id="process_transition_confirmingpurchaseorder0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirmation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The buyer has to approve the RFQ before being sent to the supplier. The RFQ becomes a confirmed Purchase Order.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_confirmpurchaseorder0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_draftpurchaseorder0"/>
+            <field name="target_node_id" ref="process_node_confirmpurchaseorder0"/>
+            <field name="source_node_id" ref="process_node_draftpurchaseorder0"/>
             <field eval="[(6,0,[ref('purchase.trans_draft_confirmed')])]" name="transition_ids"/>
         </record>
 
@@ -171,24 +171,24 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirmation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In case there is no supplier for this product, the buyer can fill the form manually and confirm it. The RFQ becomes a confirmed Purchase Order.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_confirmpurchaseorder0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_draftpurchaseorder1"/>
+            <field name="target_node_id" ref="process_node_confirmpurchaseorder0"/>
+            <field name="source_node_id" ref="process_node_draftpurchaseorder1"/>
         </record>
 
         <record id="process_transition_approvingpurchaseorder0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Approbation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The supplier approves the Purchase Order.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_approvepurchaseorder0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_confirmpurchaseorder0" />
+            <field name="target_node_id" ref="process_node_approvepurchaseorder0"/>
+            <field name="source_node_id" ref="process_node_confirmpurchaseorder0" />
         </record>
 
         <record id="process_transition_invoicefrompurchase0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The invoice is created automatically if the Invoice control of the purchase order is 'On order'. The invoice can also be generated manually by the accountant (Invoice control = Manual).&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_invoicecontrol0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_approvepurchaseorder0"/>
+            <field name="target_node_id" ref="process_node_invoicecontrol0"/>
+            <field name="source_node_id" ref="process_node_approvepurchaseorder0"/>
             <field eval="[(6,0,[ref('purchase.trans_router_invoice')])]" name="transition_ids"/>
         </record>
 
@@ -196,32 +196,32 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Pick list generated&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A pick list is generated to track the incoming products.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_packinglist0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_approvepurchaseorder0"/>
+            <field name="target_node_id" ref="process_node_packinglist0"/>
+            <field name="source_node_id" ref="process_node_approvepurchaseorder0"/>
         </record>
 
         <record id="process_transition_invoicefrompackinglist0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The invoice is created automatically if the Invoice control of the purchase order is 'On picking'. The invoice can also be generated manually by the accountant (Invoice control = Manual).&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_invoiceafterpacking0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_packinglist0"/>
+            <field name="target_node_id" ref="process_node_invoiceafterpacking0"/>
+            <field name="source_node_id" ref="process_node_packinglist0"/>
         </record>
 
         <record id="process_transition_purchaseinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a purchase order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A purchase order generates a supplier invoice, as soon as it is confirmed by the buyer. Depending on the Invoicing control of the purchase order, the invoice is based on received or on ordered quantities.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="account.process_node_supplierdraftinvoices0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_purchaseorder0"/>
+            <field name="target_node_id" ref="account.process_node_supplierdraftinvoices0"/>
+            <field name="source_node_id" ref="process_node_purchaseorder0"/>
         </record>
 
         <record id="process_transition_packinginvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a Pick list&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A Pick list generates an invoice. Depending on the Invoicing control of the sales order, the invoice is based on delivered or on ordered quantities.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="account.process_node_draftinvoices0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_packinginvoice0"/>
+            <field name="target_node_id" ref="account.process_node_draftinvoices0"/>
+            <field name="source_node_id" ref="process_node_packinginvoice0"/>
         </record>
 
         <!--

@@ -4,6 +4,7 @@
 
     <record id="group_mrp_user" model="res.groups">
         <field name="name">User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="category_id" ref="base.module_category_manufacturing"/>
     </record>
     <record id="group_mrp_manager" model="res.groups">

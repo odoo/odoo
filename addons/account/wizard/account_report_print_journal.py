@@ -72,7 +72,6 @@ class account_print_journal(osv.osv_memory):
             report_name = 'account.journal.period.print'
         return {'type': 'ir.actions.report.xml', 'report_name': report_name, 'datas': data}
 
-account_print_journal()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -186,8 +186,8 @@
     </para>
     <blockTable colWidths="85.0,80.0,80.0,120.0,70.0,100.0" style="Table2">
       <tr>
-          <td><para style="terp_tblheader_General_Centre">  [[ data['model']=='account.journal.period'and 'Company' or removeParentNode('para') ]]</para>
-              <para style="terp_tblheader_General_Centre">[[ data['model']=='ir.ui.menu' and 'Chart of Accounts' or removeParentNode('para') ]]</para></td>
+          <td><para style="terp_tblheader_General_Centre">Company[[ data['model']=='account.journal.period'and ' ' or removeParentNode('para') ]]</para>
+              <para style="terp_tblheader_General_Centre">Chart of Accounts[[ data['model']=='ir.ui.menu' and ' ' or removeParentNode('para') ]]</para></td>
           <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
           <td><para style="terp_tblheader_General_Centre">Journal</para></td>
           <td><para style="terp_tblheader_General_Centre">Period</para></td>
@@ -199,8 +199,10 @@
           <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data) or '' ]]</para></td>
           <td><para style="terp_default_Centre_8">[[ o.journal_id.name  ]]</para></td>
           <td><para style="terp_default_Centre_8">[[ o.period_id.name ]] </para></td>
-          <td><para style="terp_default_Centre_8">[[ get_sortby(data) ]]</para></td>
-          <td><para style="terp_default_Centre_8">[[ get_target_move(data) ]] </para></td>
+          <td>
+             <para style="terp_default_Centre_8">Date[[ data['form'].get('sort_selection', 'date') == 'date' and ' ' or removeParentNode('para') ]]</para>
+             <para style="terp_default_Centre_8">Reference Number[[ data['form'].get('sort_selection', 'date') == 'ref' and ' ' or removeParentNode('para') ]]</para>
+          </td>
       </tr>
     </blockTable>
     <para style="P9">

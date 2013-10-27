@@ -50,14 +50,6 @@
                 <field name="create_date" invisible="1"/>
                 <field name="opportunity_id" invisible="1"/>
                 <field name="state"/>
-                <button name="case_open" string="Confirm" type="object"
-                        states="draft,pending" icon="gtk-go-forward"/>
-                <button name="case_close" string="Held" type="object"
-                        states="open,pending" icon="gtk-jump-to"/>
-                <button name="case_cancel" string="Cancel" type="object"
-                        states="draft,open,pending" icon="gtk-cancel"/>
-                <button name="case_reset" string="Reset to Todo" type="object"
-                        states="cancel" icon="gtk-convert"/>
             </tree>
         </field>
     </record>
@@ -69,13 +61,7 @@
         <field name="arch" type="xml">
             <form string="Phone Call" version="7.0">
                 <header>
-                    <button name="case_close" string="Call Done" type="object" class="oe_highlight"
-                            states="open,pending"/>
-                    <button name="case_reset" string="Reset to Todo" type="object"
-                            states="cancel"/>
-                    <button name="case_cancel" string="Cancel" type="object"
-                            states="draft,open,pending"/>
-                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="open,done"/>
+                    <field name="state" nolabel="1" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet string="Phone Call">
                     <div class="oe_right">
@@ -101,11 +87,14 @@
 
                     <group col="4">
                         <field name="date"/>
-                        <field name="user_id"/>
-                        <field name="duration" widget="float_time"/>
-                        <field name="section_id" colspan="1" widget="selection"/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                        <field name="email_from" invisible="1"/> <!--not needed because of the chatter, thus invisible, but must be in the view as it's returned by onchange_partner_id()-->
+                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
+                        <label for="duration"/>
+                        <div>
+                        	<field name="duration" widget="float_time" class="oe_inline" style="vertical-align:baseline"/> <b> min(s)</b>
+                        </div>
+                        <field name="section_id" colspan="1" widget="selection"
+                                groups="base.group_multi_salesteams"/>
+                        <field name="partner_id" on_change="on_change_partner_id(partner_id)"/>
                         <field name="categ_id" widget="selection"
                             domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                         <field name="partner_mobile"/>
@@ -134,7 +123,7 @@
                     on_change="onchange_partner_id(partner_id)"/>
                 <field name="partner_phone"
                     invisible="1"/>
-                <field name="user_id"/>
+                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                 <field name="categ_id" widget="selection"
                     domain="[('object_id.model', '=', 'crm.phonecall')]"
                     invisible="1"/>
@@ -152,7 +141,7 @@
                     name="action_button_convert2opportunity"
                     states="open,pending"
                     icon="gtk-index"
-                    type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                    type="object" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
             </tree>
         </field>
     </record>
@@ -185,14 +174,15 @@
                <separator/>
                <filter string="Phone Calls Assigned to Me or My Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('user_id', '=', uid)]"
                        help="Phone Calls Assigned to the current user or with a team having the current user as team leader"/>
-               <field name="partner_id"/>
+               <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                <field name="user_id"/>
-               <field name="section_id" string="Sales Team"/>
+               <field name="section_id" string="Sales Team"
+                        groups="base.group_multi_salesteams"/>
                <group expand="0" string="Group By...">
                    <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                    <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                    <filter string="Creation" icon="terp-go-month" help="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
-                   <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Date of Call"/>
+                   <filter string="Calls Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Calls Date by Month"/>
                </group>
            </search>
         </field>

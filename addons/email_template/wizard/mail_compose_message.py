@@ -22,6 +22,7 @@
 from openerp import tools
 from openerp.osv import osv, fields
 
+
 def _reopen(self, res_id, model):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -34,57 +35,70 @@ def _reopen(self, res_id, model):
             'context': {
                 'default_model': model,
             },
-    }
+            }
+
 
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
-    def _get_templates(self, cr, uid, context=None):
+    _columns = {
+        'template_id': fields.many2one('email.template', 'Use template', select=True),
+        'partner_to': fields.char('To (Partner IDs)',
+            help="Comma-separated list of recipient partners ids (placeholders may be used here)"),
+        'email_to': fields.char('To (Emails)',
+            help="Comma-separated recipient addresses (placeholders may be used here)",),
+        'email_cc': fields.char('Cc (Emails)',
+            help="Carbon copy recipients (placeholders may be used here)"),
+    }
+
+    def send_mail(self, cr, uid, ids, context=None):
+        """ Override of send_mail to duplicate attachments linked to the email.template.
+            Indeed, basic mail.compose.message wizard duplicates attachments in mass
+            mailing mode. But in 'single post' mode, attachments of an email template
+            also have to be duplicated to avoid changing their ownership. """
         if context is None:
             context = {}
-        model = False
-        email_template_obj = self.pool.get('email.template')
-        message_id = context.get('default_parent_id', context.get('message_id', context.get('active_id')))
-
-        if context.get('default_composition_mode') == 'reply' and message_id:
-            message_data = self.pool.get('mail.message').browse(cr, uid, message_id, context=context)
-            if message_data:
-                model = message_data.model
-        else:
-            model = context.get('default_model', context.get('active_model'))
-
-        record_ids = email_template_obj.search(cr, uid, [('model', '=', model)], context=context)
-        return email_template_obj.name_get(cr, uid, record_ids, context) + [(False, '')]
-
-    _columns = {
-        # incredible hack of the day: size=-1 means we want an int db column instead of an str one
-        'template_id': fields.selection(_get_templates, 'Template', size=-1),
-    }
+        wizard_context = dict(context)
+        for wizard in self.browse(cr, uid, ids, context=context):
+            if wizard.template_id:
+                wizard_context['mail_notify_user_signature'] = False  # template user_signature is added when generating body_html
+                wizard_context['mail_auto_delete'] = wizard.template_id.auto_delete  # mass mailing: use template auto_delete value -> note, for emails mass mailing only
+            if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
+                continue
+            new_attachment_ids = []
+            for attachment in wizard.attachment_ids:
+                if attachment in wizard.template_id.attachment_ids:
+                    new_attachment_ids.append(self.pool.get('ir.attachment').copy(cr, uid, attachment.id, {'res_model': 'mail.compose.message', 'res_id': wizard.id}, context=context))
+                else:
+                    new_attachment_ids.append(attachment.id)
+                self.write(cr, uid, wizard.id, {'attachment_ids': [(6, 0, new_attachment_ids)]}, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=wizard_context)
 
     def onchange_template_id(self, cr, uid, ids, template_id, composition_mode, model, res_id, context=None):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html'], context)
-            values.pop('id')
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids', 'mail_server_id']
+            template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
+            values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         elif template_id:
-            # FIXME odo: change the mail generation to avoid attachment duplication
-            values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
-            # transform attachments into attachment_ids
-            values['attachment_ids'] = []
+            values = self.generate_email_for_composer_batch(cr, uid, template_id, [res_id], context=context)[res_id]
+            # transform attachments into attachment_ids; not attached to the document because this will
+            # be done further in the posting process, allowing to clean database if email not send
+            values['attachment_ids'] = values.pop('attachment_ids', [])
             ir_attach_obj = self.pool.get('ir.attachment')
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
                     'name': attach_fname,
                     'datas': attach_datas,
                     'datas_fname': attach_fname,
-                    'res_model': model,
-                    'res_id': res_id,
-                    'type': 'binary', # override default_type from context, possibly meant for another model!
+                    'res_model': 'mail.compose.message',
+                    'res_id': 0,
+                    'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, ['body', 'subject', 'partner_ids', 'attachment_ids'], context=context)
+            values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids', 'mail_server_id'], context=context)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
@@ -107,53 +121,82 @@ class mail_compose_message(osv.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model_id or False,
-                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
+                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
             }
             template_id = email_template.create(cr, uid, values, context=context)
-            record.write(record.onchange_template_id(template_id, record.composition_mode, record.model, record.res_id)['value'])
+            # generate the saved template
+            template_values = record.onchange_template_id(template_id, record.composition_mode, record.model, record.res_id)['value']
+            template_values['template_id'] = template_id
+            record.write(template_values)
             return _reopen(self, record.id, record.model)
 
     #------------------------------------------------------
     # Wizard validation and send
     #------------------------------------------------------
 
-    def generate_email_for_composer(self, cr, uid, template_id, res_id, context=None):
-        """ Call email_template.generate_email(), get fields relevant for
-            mail.compose.message, transform email_cc and email_to into partner_ids """
-        template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
-        # filter template values
-        fields = ['body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachments']
-        values = dict((field, template_values[field]) for field in fields if template_values.get(field))
-        values['body'] = values.pop('body_html', '')
-        # transform email_to, email_cc into partner_ids
-        values['partner_ids'] = []
-
-        mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
+    def _get_or_create_partners_from_values(self, cr, uid, rendered_values, context=None):
+        """ Check for email_to, email_cc, partner_to """
+        partner_ids = []
+        mails = tools.email_split(rendered_values.pop('email_to', '') + ' ' + rendered_values.pop('email_cc', ''))
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
-            values['partner_ids'].append(partner_id)
-        email_recipients = values.pop('email_recipients', '')
-        if email_recipients:
-            for partner_id in email_recipients.split(','):
-                values['partner_ids'].append(int(partner_id))
+            partner_ids.append(partner_id)
+        partner_to = rendered_values.pop('partner_to', '')
+        if partner_to:
+            for partner_id in partner_to.split(','):
+                if partner_id:  # placeholders could generate '', 3, 2 due to some empty field values
+                    partner_ids.append(int(partner_id))
+        return partner_ids
 
-        values['partner_ids'] = list(set(values['partner_ids']))
+    def generate_email_for_composer_batch(self, cr, uid, template_id, res_ids, context=None):
+        """ Call email_template.generate_email(), get fields relevant for
+            mail.compose.message, transform email_cc and email_to into partner_ids """
+        # filter template values
+        fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'attachments', 'mail_server_id']
+        values = dict.fromkeys(res_ids, False)
 
+        template_values = self.pool.get('email.template').generate_email_batch(cr, uid, template_id, res_ids, context=context)
+        for res_id in res_ids:
+            res_id_values = dict((field, template_values[res_id][field]) for field in fields if template_values[res_id].get(field))
+            res_id_values['body'] = res_id_values.pop('body_html', '')
+
+            # transform email_to, email_cc into partner_ids
+            ctx = dict((k, v) for k, v in (context or {}).items() if not k.startswith('default_'))
+            partner_ids = self._get_or_create_partners_from_values(cr, uid, res_id_values, context=ctx)
+            # legacy template behavior: void values do not erase existing values and the
+            # related key is removed from the values dict
+            if partner_ids:
+                res_id_values['partner_ids'] = list(partner_ids)
+
+            values[res_id] = res_id_values
         return values
 
-    def render_message(self, cr, uid, wizard, res_id, context=None):
+    def render_message_batch(self, cr, uid, wizard, res_ids, context=None):
         """ Override to handle templates. """
-        # generate the composer email
+        # generate template-based values
         if wizard.template_id:
-            values = self.generate_email_for_composer(cr, uid, wizard.template_id, res_id, context=context)
+            template_values = self.generate_email_for_composer_batch(cr, uid, wizard.template_id.id, res_ids, context=context)
         else:
-            values = {}
-        # get values to return
-        email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
-        email_dict.update(values)
-        return email_dict
+            template_values = dict.fromkeys(res_ids, dict())
+        # generate composer values
+        composer_values = super(mail_compose_message, self).render_message_batch(cr, uid, wizard, res_ids, context)
 
-    def render_template(self, cr, uid, template, model, res_id, context=None):
-        return self.pool.get('email.template').render_template(cr, uid, template, model, res_id, context=context)
+        for res_id in res_ids:
+            # remove attachments from template values as they should not be rendered
+            template_values[res_id].pop('attachment_ids', None)
+            # remove some keys from composer that are readonly
+            composer_values[res_id].pop('email_to', None)
+            composer_values[res_id].pop('email_cc', None)
+            composer_values[res_id].pop('partner_to', None)
+            # update template values by composer values
+            template_values[res_id].update(composer_values[res_id])
+        return template_values
+
+    def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
+        return self.pool.get('email.template').render_template_batch(cr, uid, template, model, res_ids, context=context)
+
+    # Compatibility methods
+    def generate_email_for_composer(self, cr, uid, template_id, res_id, context=None):
+        return self.generate_email_for_composer_batch(cr, uid, template_id, [res_id], context)[res_id]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

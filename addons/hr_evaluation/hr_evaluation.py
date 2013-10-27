@@ -45,7 +45,6 @@ class hr_evaluation_plan(osv.osv):
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 
-hr_evaluation_plan()
 
 class hr_evaluation_plan_phase(osv.osv):
     _name = "hr_evaluation.plan.phase"
@@ -98,7 +97,6 @@ Thanks,
         '''),
     }
 
-hr_evaluation_plan_phase()
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
@@ -272,7 +270,6 @@ class hr_evaluation(osv.osv):
                     obj_hr_eval_iterview.write(cr, uid, [survey_req.id], new_vals, context=context)
         return super(hr_evaluation, self).write(cr, uid, ids, vals, context=context)
 
-hr_evaluation()
 
 class survey_request(osv.osv):
     _inherit = "survey.request"
@@ -280,7 +277,6 @@ class survey_request(osv.osv):
         'is_evaluation': fields.boolean('Is Appraisal?'),
     }
 
-survey_request()
 
 class hr_evaluation_interview(osv.osv):
     _name = 'hr.evaluation.interview'
@@ -357,6 +353,5 @@ class hr_evaluation_interview(osv.osv):
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
-hr_evaluation_interview()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1

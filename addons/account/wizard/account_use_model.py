@@ -71,6 +71,5 @@ class account_use_model(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
 
-account_use_model()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

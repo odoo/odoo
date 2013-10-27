@@ -52,6 +52,5 @@ class mrp_price(osv.osv_memory):
             'datas' : datas,
        }
 
-mrp_price()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

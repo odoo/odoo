@@ -57,7 +57,7 @@
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">invoice</field>
             <field name="kind">subflow</field>
-            <field name="subflow_id" search="[('osv','=','account.invoice')]" type="int"/>
+            <field name="subflow_id" search="[('osv','=','account.invoice')]"/>
             <field name="action">action_invoice_create()</field>
         </record>
         <record id="act_invoice_done" model="workflow.activity">

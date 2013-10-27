@@ -56,7 +56,6 @@ class sale_order_line(osv.osv):
         'purchase_price': fields.float('Cost Price', digits=(16,2))
     }
 
-sale_order_line()
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
@@ -82,6 +81,5 @@ class sale_order(osv.osv):
                 }),
     }
 
-sale_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

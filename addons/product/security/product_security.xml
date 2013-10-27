@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data noupdate="0">
+    <!-- Change name of group for 7.0 users since product variant module doesn't exist anymore
+    DO NOT CHANGE IT IN TRUNK -->
 
     <record id="group_product_variant" model="res.groups">
-        <field name="name">Product Variant</field>
+        <field name="name">Product Variant (not supported)</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 

@@ -61,7 +61,7 @@ class account_bank_statement(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid,context=context)
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         if periods:
             return periods[0]
         return False
@@ -420,7 +420,7 @@ class account_bank_statement(osv.osv):
             for st_line in st.line_ids:
                 if st_line.analytic_account_id:
                     if not st.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to assign an analytic journal on the '%s' journal!") % (st.journal_id.name,))
+                        raise osv.except_osv(_('No Analytic Journal!'),_("You have to assign an analytic journal on the '%s' journal!") % (st.journal_id.name,))
                 if not st_line.amount:
                     continue
                 st_line_number = self.get_next_st_line_number(cr, uid, st_number, st_line, context)
@@ -500,7 +500,6 @@ class account_bank_statement(osv.osv):
         'context':ctx,
       }
 
-account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
 
@@ -576,6 +575,5 @@ class account_bank_statement_line(osv.osv):
         'type': 'general',
     }
 
-account_bank_statement_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

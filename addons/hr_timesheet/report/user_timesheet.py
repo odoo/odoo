@@ -20,12 +20,12 @@
 ##############################################################################
 
 import datetime
+import time
 
+import openerp
 from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
 from openerp.tools.translate import _
-import time
-from openerp import pooler
 from openerp.report import report_sxw
 from openerp.tools import ustr
 from openerp.tools import to_xml
@@ -45,10 +45,11 @@ class report_custom(report_rml):
         return _weekdays[weekday]
 
     def create_xml(self, cr, uid, ids, data, context):
+        registry = openerp.registry(cr.dbname)
 
         # Get the user id from the selected employee record
         emp_id = data['form']['employee_id']
-        emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        emp_obj = registry['hr.employee']
         user_id = emp_obj.browse(cr, uid, emp_id).user_id.id
         empl_name = emp_obj.browse(cr, uid, emp_id).name
 
@@ -87,7 +88,7 @@ class report_custom(report_rml):
             <amount>%.2f</amount>
         </time-element>
         '''
-        rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        rpt_obj = registry['hr.employee']
         rml_obj = report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         if user_id:
             header_xml = '''
@@ -95,12 +96,12 @@ class report_custom(report_rml):
             <date>%s</date>
             <company>%s</company>
             </header>
-            ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),to_xml(pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,user_id).company_id.name))
+            ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),to_xml(registry['res.users'].browse(cr,uid,user_id).company_id.name))
 
         account_xml = []
         for account, telems in accounts.iteritems():
             aid, aname = account
-            aname = pooler.get_pool(cr.dbname).get('account.analytic.account').name_get(cr, uid, [aid], context)
+            aname = registry['account.analytic.account'].name_get(cr, uid, [aid], context)
             aname = aname[0][1]
 
             account_xml.append('<account id="%d" name="%s">' % (aid, toxml(aname)))

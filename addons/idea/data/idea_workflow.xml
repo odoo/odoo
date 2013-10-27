@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="workflow" id="wkf_idea">
+            <field name="name">idea.wkf</field>
+            <field name="osv">idea.idea</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record model="workflow.activity" id="act_normal">
+            <field name="wkf_id" ref="wkf_idea" />
+            <field name="flow_start">True</field>
+            <field name="name">normal</field>
+            <field name="kind">function</field>
+            <field name="action">idea_set_normal_priority()</field>
+        </record>
+
+        <record model="workflow.activity" id="act_low">
+            <field name="wkf_id" ref="wkf_idea" />
+            <field name="name">low</field>
+            <field name="kind">function</field>
+            <field name="action">idea_set_low_priority()</field>
+        </record>
+
+        <record model="workflow.activity" id="act_high">
+            <field name="wkf_id" ref="wkf_idea" />
+            <field name="name">high</field>
+            <field name="kind">function</field>
+            <field name="action">idea_set_high_priority()</field>
+        </record>
+
+        <record model="workflow.transition" id="t1">
+            <field name="act_from" ref="act_normal" />
+            <field name="act_to" ref="act_low" />
+            <field name="signal">idea_set_low_priority</field>
+        </record>
+
+        <record model="workflow.transition" id="t2">
+            <field name="act_from" ref="act_low" />
+            <field name="act_to" ref="act_normal" />
+            <field name="signal">idea_set_normal_priority</field>
+        </record>
+
+        <record model="workflow.transition" id="t3">
+            <field name="act_from" ref="act_normal" />
+            <field name="act_to" ref="act_high" />
+            <field name="signal">idea_set_high_priority</field>
+        </record>
+
+        <record model="workflow.transition" id="t4">
+            <field name="act_from" ref="act_high" />
+            <field name="act_to" ref="act_normal" />
+            <field name="signal">idea_set_normal_priority</field>
+        </record>
+
+    </data>
+</openerp>

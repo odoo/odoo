@@ -1,6 +1,24 @@
 -
+   Create a user as 'MRP User'
+-
+  !record {model: res.users, id: res_mrp_operation_user, view: False}:
+    company_id: base.main_company
+    name: MRP User
+    login: maou
+    password: maou
+    email: mrp_operation_user@yourcompany.com
+-
+  I added groups for MRP User.
+-
+  !record {model: res.users, id: res_mrp_operation_user}:
+    groups_id:
+      - mrp.group_mrp_user
+-
   In order to test mrp_operations with OpenERP, I refer created production order of PC Assemble SC349
-  with routing - Manual Component's Assembly to test complete production process with respect of workcenter.
+  with routing - Manual Component's Assembly to test complete production process with respect of workcenter with giving access rights of MRP User.
+-
+  !context
+    uid: 'res_mrp_operation_user'
 -
   I compute the production order.
 -
@@ -39,62 +57,48 @@
   Production start on first work center, so I start work operation on first work center.
 -
   !python {model: mrp.production}: |
-    import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_start_working', cr)
+    self.pool.get('mrp.production.workcenter.line').signal_button_start_working(cr, uid, [order.workcenter_lines[0].id])
 -
   Now I pause first work operation due to technical fault of work center.
 -
   !python {model: mrp.production}: |
-    import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_pause', cr)
+    self.pool.get('mrp.production.workcenter.line').signal_button_pause(cr, uid, [order.workcenter_lines[0].id])
 -
   I resume first work operation.
 -
   !python {model: mrp.production}: |
-    import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_resume', cr)
+    self.pool.get('mrp.production.workcenter.line').signal_button_resume(cr, uid, [order.workcenter_lines[0].id])
     
 -
   I cancel first work operation.
 -
   !python {model: mrp.production}: |
-    import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_cancel', cr)
+    self.pool.get('mrp.production.workcenter.line').signal_button_cancel(cr, uid, [order.workcenter_lines[0].id])
 -
   I reset first work operation and start after resolving techninal fault of work center.
 -
   !python {model: mrp.production}: |
-    import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_draft', cr)
-    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_start_working', cr)
+    self.pool.get('mrp.production.workcenter.line').signal_button_draft(cr, uid, [order.workcenter_lines[0].id])
+    self.pool.get('mrp.production.workcenter.line').signal_button_start_working(cr, uid, [order.workcenter_lines[0].id])
 -
   I close first work operation as this work center completed its process.
 -
   !python {model: mrp.production}: |
-    import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_done', cr)
+    self.pool.get('mrp.production.workcenter.line').signal_button_done(cr, uid, [order.workcenter_lines[0].id])
 -
   Now I close other operations one by one which are in start state.
 -
   !python {model: mrp.production}: |
-    import netsvc
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    wf_service = netsvc.LocalService("workflow")
     for work_line in order.workcenter_lines[1:]:
-        wf_service.trg_validate(uid, 'mrp.production.workcenter.line', work_line.id, 'button_start_working', cr)
-        wf_service.trg_validate(uid, 'mrp.production.workcenter.line', work_line.id, 'button_done', cr)
+        self.pool.get('mrp.production.workcenter.line').signal_button_start_working(cr, uid, [work_line.id])
+        self.pool.get('mrp.production.workcenter.line').signal_button_done(cr, uid, [work_line.id])
 
 -
   I check that the production order is now done.
@@ -106,7 +110,7 @@
   I print a Barcode Report of Operation line.
 -
   !python {model: mrp_operations.operation.code}: |
-    import netsvc, tools, os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.mrp.code.barcode').create(cr, uid, [ref('mrp_operations.mrp_op_1'),ref('mrp_operations.mrp_op_2'),ref('mrp_operations.mrp_op_3'),ref('mrp_operations.mrp_op_4'),ref('mrp_operations.mrp_op_5')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-barcode_report.'+format), 'wb+').write(data)
@@ -115,7 +119,7 @@
   I print Workcenter's Barcode Report.
 -
   !python {model: mrp.workcenter}: |
-    import netsvc, tools, os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.mrp.wc.barcode').create(cr, uid, [ref('mrp.mrp_workcenter_0'),ref('mrp.mrp_workcenter_1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-workcenter_barcode_report.'+format), 'wb+').write(data)

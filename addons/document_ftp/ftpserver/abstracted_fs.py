@@ -9,11 +9,13 @@ import errno
 import glob
 import fnmatch
 
-from openerp import pooler, netsvc, sql_db
+import openerp
+from openerp import sql_db
+import openerp.service
 from openerp.service import security
 from openerp.osv import osv
 
-from document.document import get_node_context
+from openerp.addons.document.document import get_node_context
 
 def _get_month_name(month):
     month=int(month)
@@ -60,7 +62,7 @@ class abstracted_fs(object):
     def db_list(self):
         """Get the list of available databases, with FTPd support
         """
-        s = netsvc.ExportService.getService('db')
+        s = openerp.service.db
         result = s.exp_list(document=True)
         self.db_name_list = []
         for db_name in result:
@@ -191,7 +193,7 @@ class abstracted_fs(object):
         if dir:
             cr = dir.cr
             uid = dir.uid
-            pool = pooler.get_pool(node.context.dbname)
+            pool = openerp.registry(node.context.dbname)
             object=dir and dir.object or False
             object2=dir and dir.object2 or False
             res=pool.get('ir.attachment').search(cr,uid,[('name','like',prefix),('parent_id','=',object and object.type in ('directory','ressource') and object.id or False),('res_id','=',object2 and object2.id or False),('res_model','=',object2 and object2._name or False)])
@@ -290,7 +292,7 @@ class abstracted_fs(object):
             if dbname not in self.db_list():
                 raise IOError(errno.ENOENT,'Invalid database path: %s.' % dbname)
             try:
-                db = pooler.get_db(dbname)
+                db = openerp.registry(dbname).db
             except Exception:
                 raise OSError(1, 'Database cannot be used.')
             cr = db.cursor()
@@ -323,7 +325,7 @@ class abstracted_fs(object):
         """ Get cr, uid, pool from a node
         """
         assert node
-        db = pooler.get_db(node.context.dbname)
+        db = openerp.registry(node.context.dbname).db
         return db.cursor(), node.context.uid
 
     def get_node_cr(self, node):

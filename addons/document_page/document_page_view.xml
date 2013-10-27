@@ -26,6 +26,7 @@
                 <tree string="Document Page">
                     <field name="name"/>
                     <field name="parent_id"/>
+                    <field name="create_uid" invisible="1"/>
                     <field name="write_uid"/>
                     <field name="write_date"/>
                 </tree>
@@ -44,7 +45,7 @@
                             <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Category"/>
                         </group>
                         <group>
-                            <field name="write_uid" groups="base.group_no_one"/>
+                            <field name="write_uid" groups="base.group_no_one" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
                             <field name="write_date" groups="base.group_no_one"/>
                             <field name="menu_id" groups="base.group_no_one"/>
                         </group>
@@ -87,7 +88,11 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
             <field name="search_view_id" ref="view_wiki_filter"/>
-            <field name="help">Create web pages</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new web page.
+              </p>
+            </field>
         </record>
         <menuitem id="menu_page" parent="menu_wiki" name="Pages" action="action_page" sequence="10"/>
         <record id="action_category" model="ir.actions.act_window">

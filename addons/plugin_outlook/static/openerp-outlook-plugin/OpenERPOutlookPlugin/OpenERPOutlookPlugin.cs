@@ -95,7 +95,6 @@ namespace OpenERPOutlookPlugin
             /*
              * Will open the url into the web browser.
              */
-
             System.Diagnostics.Process.Start(web_url.ToString());
         }
 
@@ -163,9 +162,16 @@ namespace OpenERPOutlookPlugin
                 args.Add(attachments);
                 object push_mail = this.Connection.Execute("plugin.handler", "push_message_outlook", args.ToArray());
                 object[] push = (object[])push_mail;
-                this.RedirectWeb(push[2].ToString());               
-                return true;            
+                if (Convert.ToInt32(push[1]) == 0)
+                {
+                   MessageBox.Show(push[3].ToString());
 
+                }
+                else
+                {
+                    this.RedirectWeb(push[2].ToString());      
+                }
+                return true;
         }       
         public long CreatePartnerRecord(string name)
         {

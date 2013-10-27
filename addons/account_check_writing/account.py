@@ -29,7 +29,6 @@ class account_journal(osv.osv):
         'use_preprint_check': fields.boolean('Use Preprinted Check'),
         }
 
-account_journal()
 
 class res_company(osv.osv):
     _inherit = "res.company"
@@ -46,5 +45,4 @@ class res_company(osv.osv):
         'check_layout' : lambda *a: 'top',
     }
     
-res_company()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

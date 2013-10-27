@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -53,7 +54,7 @@ class stock_picking(osv.osv):
             We select the partner of the sales order as the partner of the customer invoice
         """
         if picking.sale_id:
-            return picking.sale_id.partner_id
+            return picking.sale_id.partner_invoice_id
         return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)
 
     def _get_comment_invoice(self, cursor, user, picking):
@@ -119,6 +120,15 @@ class stock_picking(osv.osv):
                 'invoice_ids': [(4, invoice_id)],
                 })
         return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
+    
+    def action_done(self, cr, uid, ids, context=None):
+        """ Changes picking state to done. This method is called at the end of
+            the workflow by the activity "done".
+        """
+        for record in self.browse(cr, uid, ids, context):
+            if record.type == "out" and record.sale_id:
+                self.pool.get('sale.order').message_post(cr, uid, [record.sale_id.id], body=_("Products delivered"), context=context)
+        return super(stock_picking, self).action_done(cr, uid, ids, context=context)
 
 # Redefinition of the new field in order to update the model stock.picking.out in the orm
 # FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as

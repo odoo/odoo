@@ -19,11 +19,16 @@
 #
 ##############################################################################
 
-from openerp import addons
 import logging
+
+from openerp.modules.module import get_module_resource
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 from openerp import tools
+from openerp.tools.translate import _
+
 _logger = logging.getLogger(__name__)
+
 
 class hr_employee_category(osv.osv):
 
@@ -46,9 +51,9 @@ class hr_employee_category(osv.osv):
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
-        'name': fields.char("Category", size=64, required=True),
+        'name': fields.char("Employee Tag", size=64, required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
+        'parent_id': fields.many2one('hr.employee.category', 'Parent Employee Tag', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
         'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
@@ -67,7 +72,6 @@ class hr_employee_category(osv.osv):
         (_check_recursion, 'Error! You cannot create recursive Categories.', ['parent_id'])
     ]
 
-hr_employee_category()
 
 class hr_job(osv.osv):
 
@@ -93,6 +97,10 @@ class hr_job(osv.osv):
     _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
+        # TO CLEAN: when doing a cleaning, we should change like this:
+        #   no_of_recruitment: a function field
+        #   expected_employees: float
+        # This would allow a clean update when creating new employees.
         'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
@@ -121,7 +129,7 @@ class hr_job(osv.osv):
     }
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'The name of the job position must be unique per company!'),
+        ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
     ]
 
 
@@ -140,22 +148,25 @@ class hr_job(osv.osv):
         self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0})
         return True
 
-hr_job()
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
+    _order = 'name_related'
     _inherits = {'resource.resource': "resource_id"}
+    _inherit = ['mail.thread']
+
+    _mail_post_access = 'read'
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
-    
+
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-    
+
     _columns = {
         #we need a related field in order to be able to sort the employee by name
         'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
@@ -165,12 +176,12 @@ class hr_employee(osv.osv):
         'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
         'identification_id': fields.char('Identification No', size=32),
         'otherid': fields.char('Other Id', size=64),
-        'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
+        'gender': fields.selection([('male', 'Male'), ('female', 'Female')], 'Gender'),
         'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
-        'department_id':fields.many2one('hr.department', 'Department'),
+        'department_id': fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner', 'Working Address'),
         'address_home_id': fields.many2one('res.partner', 'Home Address'),
-        'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
+        'bank_account_id': fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
         'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
         'work_email': fields.char('Work Email', size=240),
@@ -181,7 +192,7 @@ class hr_employee(osv.osv):
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
-        'job_id': fields.many2one('hr.job', 'Job'),
+        'job_id': fields.many2one('hr.job', 'Job Title'),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Photo",
             help="This field holds the image used as photo for the employee, limited to 1024x1024px."),
@@ -201,25 +212,42 @@ class hr_employee(osv.osv):
             help="Small-sized photo of the employee. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'passport_id':fields.char('Passport No', size=64),
+        'passport_id': fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
 
-    _order='name_related'
+    def _get_default_image(self, cr, uid, context=None):
+        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+
+    defaults = {
+        'active': 1,
+        'image': _get_default_image,
+        'color': 0,
+    }
 
     def create(self, cr, uid, data, context=None):
-        employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
-        try:
-            (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
-            employee = self.browse(cr, uid, employee_id, context=context)
-            self.pool.get('mail.group').message_post(cr, uid, [mail_group_id],
-                body='Welcome to %s! Please help them take the first steps with OpenERP!' % (employee.name),
-                subtype='mail.mt_comment', context=context)
-        except:
-            pass # group deleted: do not push a message
+        if context is None:
+            context = {}
+        create_ctx = dict(context, mail_create_nolog=True)
+        employee_id = super(hr_employee, self).create(cr, uid, data, context=create_ctx)
+        employee = self.browse(cr, uid, employee_id, context=context)
+        if employee.user_id:
+            # send a copy to every user of the company
+            company_id = employee.user_id.partner_id.company_id.id
+            partner_ids = self.pool.get('res.partner').search(cr, uid, [
+                ('company_id', '=', company_id),
+                ('user_ids', '!=', False)], context=context)
+        else:
+            partner_ids = []
+        self.message_post(cr, uid, [employee_id],
+            body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
+            partner_ids=partner_ids,
+            subtype='mail.mt_comment', context=context
+        )
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
@@ -240,7 +268,7 @@ class hr_employee(osv.osv):
             company_id = self.pool.get('res.company').browse(cr, uid, company, context=context)
             address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
             address_id = address and address['default'] or False
-        return {'value': {'address_id' : address_id}}
+        return {'value': {'address_id': address_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id, context=None):
         value = {'parent_id': False}
@@ -253,17 +281,36 @@ class hr_employee(osv.osv):
         work_email = False
         if user_id:
             work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).email
-        return {'value': {'work_email' : work_email}}
+        return {'value': {'work_email': work_email}}
 
-    def _get_default_image(self, cr, uid, context=None):
-        image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+    def action_follow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_subscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_subscribe_users(cr, uid, ids, context=context)
 
-    _defaults = {
-        'active': 1,
-        'image': _get_default_image,
-        'color': 0,
-    }
+    def action_unfollow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_unsubscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_unsubscribe_users(cr, uid, ids, context=context)
+
+    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
+        """Show the suggestion of employees if display_employees_suggestions if the
+        user perference allows it. """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        if not user.display_employees_suggestions:
+            return []
+        else:
+            return super(hr_employee, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
+
+    def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
+        """ Overwrite of the original method to always follow user_id field,
+        even when not track_visibility so that a user will follow it's employee
+        """
+        user_field_lst = []
+        for name, column_info in self._all_columns.items():
+            if name in auto_follow_fields and name in updated_fields and column_info.column._obj == 'res.users':
+                user_field_lst.append(name)
+        return user_field_lst
 
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
@@ -279,7 +326,6 @@ class hr_employee(osv.osv):
         (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
 
-hr_employee()
 
 class hr_department(osv.osv):
     _description = "Department"
@@ -300,28 +346,10 @@ class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
 
-    def create(self, cr, uid, data, context=None):
-        user_id = super(res_users, self).create(cr, uid, data, context=context)
-
-        # add shortcut unless 'noshortcut' is True in context
-        if not(context and context.get('noshortcut', False)):
-            data_obj = self.pool.get('ir.model.data')
-            try:
-                data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
-                view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-                self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                            'user_id': user_id}, context=context)
-            except:
-                # Tolerate a missing shortcut. See product/product.py for similar code.
-                _logger.debug('Skipped meetings shortcut for user "%s".', data.get('name','<new'))
-
-        return user_id
-
     _columns = {
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
-        }
+    }
 
-res_users()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

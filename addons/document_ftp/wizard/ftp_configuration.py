@@ -47,6 +47,5 @@ class document_ftp_configuration(osv.osv_memory):
         self.pool.get('ir.actions.act_url').write(cr, uid, [aid], 
                 {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/' + cr.dbname+'/'})
 
-document_ftp_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

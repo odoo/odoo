@@ -10,15 +10,15 @@
             <field name="model">survey.name.wiz</field>
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
-                    <header>
-                        <button name="action_next" string="Start" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <field name="survey_id" on_change="on_change_survey(survey_id)"/>
                     </group>
                     <field name="note" placeholder="Add Description" attrs="{'readonly': [('survey_id','=',False)]}"/>
+                    <footer>
+                        <button name="action_next" string="Start" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

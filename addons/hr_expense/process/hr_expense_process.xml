@@ -101,48 +101,48 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirm expense&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Expense is confirmed.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_confirmedexpenses0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_draftexpenses0"/>
+            <field name="target_node_id" ref="process_node_confirmedexpenses0"/>
+            <field name="source_node_id" ref="process_node_draftexpenses0"/>
         </record>
 
         <record id="process_transition_refuseexpense0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Refuse expense&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Expense is refused.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_refused0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_confirmedexpenses0"/>
+            <field name="target_node_id" ref="process_node_refused0"/>
+            <field name="source_node_id" ref="process_node_confirmedexpenses0"/>
         </record>
 
         <record id="process_transition_approveexpense0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Approve expense&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Expense is approved.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_approved0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_confirmedexpenses0"/>
+            <field name="target_node_id" ref="process_node_approved0"/>
+            <field name="source_node_id" ref="process_node_confirmedexpenses0"/>
         </record>
 
         <record id="process_transition_approveinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Supplier Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Creates supplier invoice.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_supplierinvoice0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_approved0"/>
+            <field name="target_node_id" ref="process_node_supplierinvoice0"/>
+            <field name="source_node_id" ref="process_node_approved0"/>
         </record>
 
         <record id="process_transition_reimburseexpense0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Reimburse expense&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;After creating invoice, reimburse expenses&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_reimbursement0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_supplierinvoice0"/>
+            <field name="target_node_id" ref="process_node_reimbursement0"/>
+            <field name="source_node_id" ref="process_node_supplierinvoice0"/>
         </record>
 
         <record id="process_transition_reimbursereinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Reinvoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Create Customer invoice&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_reinvoicing0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_reimbursement0"/>
+            <field name="target_node_id" ref="process_node_reinvoicing0"/>
+            <field name="source_node_id" ref="process_node_reimbursement0"/>
         </record>
 
         <!--

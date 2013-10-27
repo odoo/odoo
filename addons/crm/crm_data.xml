@@ -27,8 +27,11 @@
         </record>
 
         <record model="crm.case.section" id="section_sales_department">
-            <field name="name">Sales Department</field>
-            <field name="code">Sales</field>
+            <field name="name">Direct Sales</field>
+            <field name="code">DM</field>
+            <field name="use_leads">True</field>
+            <field name="alias_name">info</field>
+            <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
         <!-- Payment Mode -->
@@ -64,28 +67,6 @@
 <p>To manage quotations and sale orders, install the "Sales Management" application.</p>]]></field>
         </record>
 
-        <record model="mail.alias" id="default_sales_alias">
-            <field name="alias_name">sales</field>
-            <field name="alias_model_id" ref="model_crm_lead"/>
-            <field name="alias_user_id" ref="base.user_root"/>
-            <field name="alias_defaults">{'type':'lead'}</field>
-        </record>
     </data>
 
-    <!-- Mail template is done in a NOUPDATE block
-         so users can freely customize/delete them -->
-    <data noupdate="1">
-
-        <!--Definition of an email template with an empty body that will be used in opportunity mailing. Used to give a
-            basis for email recipients, name and to ease the definition of a further elaborated template. -->
-        <record id="email_template_opportunity_mail" model="email.template">
-            <field name="name">Opportunity - Send Emails</field>
-            <field name="email_from">${object.user_id.email or ''}</field>
-            <field name="subject">Opportunity ${object.name | h})</field>
-            <field name="model_id" ref="crm.model_crm_lead"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="email_recipients">${object.partner_id.id}</field>
-            <field name="body_html"></field> 
-        </record>
-    </data>
 </openerp>

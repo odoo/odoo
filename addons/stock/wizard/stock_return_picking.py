@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import netsvc
 import time
 
 from openerp.osv import osv,fields
@@ -29,14 +28,16 @@ import openerp.addons.decimal_precision as dp
 class stock_return_picking_memory(osv.osv_memory):
     _name = "stock.return.picking.memory"
     _rec_name = 'product_id'
+
     _columns = {
         'product_id' : fields.many2one('product.product', string="Product", required=True),
         'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'wizard_id' : fields.many2one('stock.return.picking', string="Wizard"),
         'move_id' : fields.many2one('stock.move', "Move"),
+        'prodlot_id': fields.related('move_id', 'prodlot_id', type='many2one', relation='stock.production.lot', string='Serial Number', readonly=True),
+
     }
 
-stock_return_picking_memory()
 
 
 class stock_return_picking(osv.osv_memory):
@@ -74,7 +75,7 @@ class stock_return_picking(osv.osv_memory):
             for line in pick.move_lines:
                 qty = line.product_qty - return_history.get(line.id, 0)
                 if qty > 0:
-                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
+                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id, 'prodlot_id': line.prodlot_id and line.prodlot_id.id or False})
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
         return res
@@ -151,7 +152,6 @@ class stock_return_picking(osv.osv_memory):
         data_obj = self.pool.get('stock.return.picking.memory')
         act_obj = self.pool.get('ir.actions.act_window')
         model_obj = self.pool.get('ir.model.data')
-        wf_service = netsvc.LocalService("workflow")
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0], context=context)
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -159,13 +159,15 @@ class stock_return_picking(osv.osv_memory):
         returned_lines = 0
         
 #        Create new picking for returned products
+
+        seq_obj_name = 'stock.picking'
+        new_type = 'internal'
         if pick.type =='out':
             new_type = 'in'
+            seq_obj_name = 'stock.picking.in'
         elif pick.type =='in':
             new_type = 'out'
-        else:
-            new_type = 'internal'
-        seq_obj_name = 'stock.picking.' + new_type
+            seq_obj_name = 'stock.picking.out'
         new_pick_name = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
         new_picking = pick_obj.copy(cr, uid, pick.id, {
                                         'name': _('%s-%s-return') % (new_pick_name, pick.name),
@@ -180,6 +182,8 @@ class stock_return_picking(osv.osv_memory):
         for v in val_id:
             data_get = data_obj.browse(cr, uid, v, context=context)
             mov_id = data_get.move_id.id
+            if not mov_id:
+                raise osv.except_osv(_('Warning !'), _("You have manually created product lines, please delete them to proceed"))
             new_qty = data_get.quantity
             move = move_obj.browse(cr, uid, mov_id, context=context)
             new_location = move.location_dest_id.id
@@ -206,7 +210,7 @@ class stock_return_picking(osv.osv_memory):
 
         if set_invoice_state_to_none:
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'}, context=context)
-        wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
+        pick_obj.signal_button_confirm(cr, uid, [new_picking])
         pick_obj.force_assign(cr, uid, [new_picking], context)
         # Update view id in context, lp:702939
         model_list = {
@@ -224,6 +228,5 @@ class stock_return_picking(osv.osv_memory):
             'context':context,
         }
 
-stock_return_picking()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

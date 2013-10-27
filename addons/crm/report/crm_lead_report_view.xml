@@ -13,13 +13,14 @@
                 <field name="creation_month" invisible="1"/>
                 <field name="creation_day" invisible="1"/>
                 <field name="deadline_month" invisible="1"/>
-                <field name="state"  invisible="1"/>
+                <field name="date_last_stage_update" invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="priority" invisible="1"/>
-                <field name="section_id" invisible="1"/>
+                <field name="section_id" invisible="1"
+                        groups="base.group_multi_salesteams"/>
                 <field name="user_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
@@ -68,19 +69,22 @@
                     <filter icon="terp-personal" name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
                     <filter icon="terp-personal+" string="Opportunity" name="opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
-                    <filter icon="terp-check" string="New" domain="[('state','=','draft')]" help="Leads/Opportunities which are in New state"/>
-                    <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Leads/Opportunities which are in open state"/>
-                    <filter icon="gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Leads/Opportunities which are in pending state"/>
-                    <filter icon="terp-dialog-close" string="Closed" domain="[('state','=','done')]" help="Leads/Opportunities which are in done state"/>
+                    <filter string="New" name="new"
+                            domain="[('probability', '=', 0), ('stage_id.sequence', '=', 1)]"/>
+                    <filter string="Won" name="won"
+                            domain="[('probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
+                    <filter string="Lost" name="lost"
+                            domain="[('probability', '=', 0), ('stage_id.sequence', '!=', 1)]"/>
                     <separator/>
                     <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]"
-                            help="Leads/Opportunities that are assigned to one of the sale teams I manage"/>
+                            help="Leads/Opportunities that are assigned to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
-                    <field name="section_id" context="{'invisible_section': False}"/>
+                    <field name="section_id" context="{'invisible_section': False}"
+                            groups="base.group_multi_salesteams"/>
                     <field name="user_id" string="Salesperson"/>
                     <group expand="0" string="Extended Filters...">
-                        <field name="partner_id"/>
+                        <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />
                         <field name="type_id"/>
                         <field name="channel_id"/>
@@ -118,6 +122,7 @@
                         <separator orientation="vertical" />
                         <filter string="Exp. Closing"  icon="terp-go-month"
                             domain="[]" context="{'group_by':'deadline_month'}"/>
+                        <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" />
                     </group>
                 </search>
             </field>
@@ -129,16 +134,16 @@
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state in ('open','pending','done');gray:state == 'cancel' " create="false" string="Opportunities Analysis">
+            <tree create="false" string="Opportunities Analysis">
                 <field name="creation_year" invisible="1"/>
                 <field name="creation_month" invisible="1"/>
                 <field name="creation_day" invisible="1"/>
                 <field name="deadline_month" invisible="1"/>
-                <field name="section_id" invisible="1"/>
+                <field name="section_id" invisible="1"
+                        groups="base.group_multi_salesteams"/>
                 <field name="user_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="country_id" invisible="1"/>
-                <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="priority"  invisible="1"/>
                 <field name="type_id" invisible="1"/>
@@ -147,8 +152,9 @@
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="nbr" string="#Opportunities" sum="#Opportunities"/>
                 <field name="planned_revenue" sum="Planned Revenues"/>
-                <field name="delay_open" sum='Delay to open'/>
+                <field name="delay_open" sum='Delay to Assign'/>
                 <field name="delay_close" sum='Delay to close'/>
+                <field name="date_last_stage_update"/>
                 <field name="delay_expected"/>
                 <field name="probability" widget="progressbar"/>
                 <field name="probable_revenue"/>

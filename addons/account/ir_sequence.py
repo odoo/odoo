@@ -38,7 +38,6 @@ class ir_sequence_fiscalyear(osv.osv):
             'Main Sequence must be different from current !'),
     ]
 
-ir_sequence_fiscalyear()
 
 class ir_sequence(osv.osv):
     _inherit = 'ir.sequence'
@@ -56,6 +55,5 @@ class ir_sequence(osv.osv):
                     return super(ir_sequence, self)._next(cr, uid, [line.sequence_id.id], context)
         return super(ir_sequence, self)._next(cr, uid, seq_ids, context)
 
-ir_sequence()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,49 +1,26 @@
-##########################################################################
+#########################################################################
 #
-# Portions of this file are under the following copyright and license:
+#  Copyright (c) 2003-2004 Danny Brewer d29583@groovegarden.com
+#  Copyright (C) 2004-2013 OpenERP SA (<http://openerp.com>).
 #
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
 #
-#   Copyright (c) 2003-2004 Danny Brewer
-#   d29583@groovegarden.com
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
 #
-#   This library is free software; you can redistribute it and/or
-#   modify it under the terms of the GNU Lesser General Public
-#   License as published by the Free Software Foundation; either
-#   version 2.1 of the License, or (at your option) any later version.
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
-#   This library is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#   Lesser General Public License for more details.
+#  See:  http://www.gnu.org/licenses/lgpl.html
 #
-#   You should have received a copy of the GNU Lesser General Public
-#   License along with this library; if not, write to the Free Software
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-#
-#   See:  http://www.gnu.org/licenses/lgpl.html
-#
-#
-# and other portions are under the following copyright and license:
-#
-#
-#    OpenERP, Open Source Management Solution>..
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-##############################################################################
+#############################################################################
+
 import os
 import uno
 import unohelper
@@ -92,16 +69,16 @@ class ExportToRML( unohelper.Base, XJobExecutor ):
         if docinfo.getUserFieldValue(2) == "":
             ErrorDialog("Please Save this file on server","Use Send To Server Option in OpenERP Report Menu","Error")
             exit(1)
-    	filename = self.GetAFileName()
-    	if not filename:
-    	    exit(1)
+        filename = self.GetAFileName()
+        if not filename:
+            exit(1)
         global passwd
         self.password = passwd
         try:
 
             res = self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'sxwtorml',base64.encodestring(data),file_type)
             if res['report_rml_content']:
-                write_data_to_file( get_absolute_file_path( filename[7:] ), res['report_rml_content'] )
+                write_data_to_file(get_absolute_file_path(filename), res['report_rml_content'])
         except Exception,e:
             import traceback,sys
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
@@ -118,12 +95,16 @@ class ExportToRML( unohelper.Base, XJobExecutor ):
         initPath = tempfile.gettempdir()
         oUcb = createUnoService("com.sun.star.ucb.SimpleFileAccess")
         if oUcb.exists(initPath):
-	    oFileDialog.setDisplayDirectory('file://' + ( os.name == 'nt' and '/' or '' ) + initPath )
+            oFileDialog.setDisplayDirectory('file://' + ( os.name == 'nt' and '/' or '' ) + initPath )
 
         oFileDialog.setDefaultName(f_path )
 
-        sPath = oFileDialog.execute() == 1 and oFileDialog.Files[0] or None
+        sPath = oFileDialog.execute() == 1 and oFileDialog.Files[0] or ''
         oFileDialog.dispose()
+        sPath = sPath[7:]
+        if sPath.startswith('localhost/'):
+            slash = int(os.name == 'nt')
+            sPath = sPath[9 + slash:]
         return sPath
 
 if __name__<>"package" and __name__=="__main__":

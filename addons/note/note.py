@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 
@@ -141,12 +142,19 @@ class note_note(osv.osv):
                 #note without user's stage
                 nb_notes_ws = self.search(cr,uid, domain+[('stage_ids', 'not in', current_stage_ids)], context=context, count=True)
                 if nb_notes_ws:
-                    result += [{ #notes for unknown stage and if stage_ids is not empty
-                        '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids', 'not in', current_stage_ids)],
-                        'stage_id': (0, 'Unknown'),
-                        'stage_id_count':nb_notes_ws
-                    }]
+                    # add note to the first column if it's the first stage
+                    dom_not_in = ('stage_ids', 'not in', current_stage_ids)
+                    if result and result[0]['stage_id'][0] == current_stage_ids[0]:
+                        dom_in = result[0]['__domain'].pop()
+                        result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
+                    else:
+                        # add the first stage column
+                        result = [{
+                            '__context': {'group_by': groupby[1:]},
+                            '__domain': domain + [dom_not_in],
+                            'stage_id': (current_stage_ids[0], stage_name[current_stage_ids[0]]),
+                            'stage_id_count':nb_notes_ws
+                        }] + result
 
             else: # if stage_ids is empty
 
@@ -156,7 +164,7 @@ class note_note(osv.osv):
                     result = [{ #notes for unknown stage
                         '__context': {'group_by': groupby[1:]},
                         '__domain': domain,
-                        'stage_id': (0, 'Unknown'),
+                        'stage_id': False,
                         'stage_id_count':nb_notes_ws
                     }]
                 else:
@@ -181,15 +189,15 @@ class res_users(osv.Model):
     _inherit = ['res.users']
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        user = self.browse(cr, uid, uid, context=context)
-        note_obj = self.pool.get('note.stage')
-        data_obj = self.pool.get('ir.model.data')
-        model_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user') #Employee Group
-        group_id = model_id and model_id[1] or False
-        if group_id in [x.id for x in user.groups_id]:
-            for note_xml_id in ['note_stage_01','note_stage_02','note_stage_03','note_stage_04']:
-                data_id = data_obj._get_id(cr, uid, 'note', note_xml_id)
-                stage_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-                note_obj.copy(cr, uid, stage_id, default = { 
-                                        'user_id': user_id}, context=context)
+        note_obj = self.pool['note.stage']
+        data_obj = self.pool['ir.model.data']
+        is_employee = self.has_group(cr, user_id, 'base.group_user')
+        if is_employee:
+            for n in range(5):
+                xmlid = 'note_stage_%02d' % (n,)
+                try:
+                    _model, stage_id = data_obj.get_object_reference(cr, SUPERUSER_ID, 'note', xmlid)
+                except ValueError:
+                    continue
+                note_obj.copy(cr, SUPERUSER_ID, stage_id, default={'user_id': user_id}, context=context)
         return user_id

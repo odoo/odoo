@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-04 10:56+0000\n"
-"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
+"PO-Revision-Date: 2013-03-15 07:51+0000\n"
+"Last-Translator: Quentin THEURET <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:54+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:07+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -296,7 +296,7 @@ msgstr " En-tête de colonne"
 #: code:addons/survey/wizard/survey_send_invitation.py:71
 #, python-format
 msgid "The following surveys are not in open state: %s"
-msgstr ""
+msgstr "Le questionnaire suivant n'est pas dans un état ouvert : %s"
 
 #. module: survey
 #: field:survey,tot_comp_survey:0
@@ -333,6 +333,8 @@ msgid ""
 "This survey has no question defined. Please define the questions and answers "
 "first."
 msgstr ""
+"Aucune question n'est attachée à ce questionnaire. Veuillez d'abord définir "
+"des questions et des réponses."
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -358,7 +360,7 @@ msgstr "Vous ne pouvez pas sélectionner la même réponse plusieurs fois."
 #. module: survey
 #: field:survey,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Code couleur"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -375,7 +377,7 @@ msgstr "Éditer un sondage"
 #: code:addons/survey/wizard/survey_answer.py:961
 #, python-format
 msgid "Please enter an integer value."
-msgstr ""
+msgstr "Merci de saisir une valeur entière."
 
 #. module: survey
 #: field:survey.question.column.heading,menu_choice:0
@@ -388,7 +390,7 @@ msgstr "Choix du menu"
 msgid ""
 "You must enter one or more menu choices                                 in "
 "column heading."
-msgstr ""
+msgstr "Vous devez donner un ou plusieurs choix dans la colonne d'en-tête."
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -428,6 +430,23 @@ msgid ""
 "\n"
 "Thanks,"
 msgstr ""
+"\n"
+"Bonjour %%(name)s, \n"
+"\n"
+"\n"
+"Veuillez prendre quelques minutes pour remplir notre questionnaire :\n"
+"%s\n"
+"\n"
+"Vous pouvez accéder à ce questionnaire avec les paramètres suivants :\n"
+" URL: %s\n"
+" Votre identifiant : %%(login)s\n"
+"\n"
+" Votre mot de passe : %%(passwd)s\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"Merci,"
 
 #. module: survey
 #: field:survey.response.line,single_text:0
@@ -437,7 +456,7 @@ msgstr "Texte"
 #. module: survey
 #: view:survey:0
 msgid "Edit..."
-msgstr ""
+msgstr "Modifier…"
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -494,7 +513,7 @@ msgstr "Ne pas valider le texte de commentaire."
 #: code:addons/survey/survey.py:532
 #, python-format
 msgid "You must enter one or more menu choices in column heading."
-msgstr ""
+msgstr "Vous devez donner un ou plusieurs choix dans la colonne d'en-tête."
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -532,7 +551,7 @@ msgstr "Phase du plan d'évaluation"
 #: code:addons/survey/wizard/survey_send_invitation.py:199
 #, python-format
 msgid "Unknown"
-msgstr ""
+msgstr "Inconnu"
 
 #. module: survey
 #: view:survey:0
@@ -575,7 +594,7 @@ msgstr "Courriel"
 #: code:addons/survey/survey.py:259
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (copie)"
 
 #. module: survey
 #: selection:survey.response,state:0
@@ -597,11 +616,12 @@ msgstr "Sélectionner un partenaire"
 #, python-format
 msgid "Maximum Required Answer is greater than Minimum Required Answer."
 msgstr ""
+"La réponse maximale requise est plus grande que la réponse minimale requise."
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Rapports"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_answer
@@ -628,7 +648,7 @@ msgstr "Numéro de page"
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_form
 msgid "Print Surveys"
-msgstr ""
+msgstr "Imprimer les questionnaires"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_menu_choice:0
@@ -649,7 +669,7 @@ msgstr "Message d'erreur"
 #: code:addons/survey/wizard/survey_answer.py:124
 #, python-format
 msgid "You cannot answer this survey more than %s times."
-msgstr ""
+msgstr "Vous ne pouvez pas répondre à ce questionnaire plus de %s fois."
 
 #. module: survey
 #: field:survey.request,date_deadline:0
@@ -733,11 +753,13 @@ msgstr "Options"
 #, python-format
 msgid "You must enter one or more Answers for question \"%s\" of page %s."
 msgstr ""
+"Vous devez donner une ou plusieurs réponses pour la question \"%s\" de la "
+"page %s."
 
 #. module: survey
 #: view:survey:0
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #. module: survey
 #: field:survey.response.answer,comment_field:0
@@ -840,6 +862,8 @@ msgstr "Mettez \"1\" si vous ne voulez qu'une seule réponse par utilisateur"
 msgid ""
 "You must enter one or more column headings for question \"%s\" of page %s."
 msgstr ""
+"Vous devez donner une ou plusieurs en-tête de colonnes pour la question "
+"\"%s\" de la page %s."
 
 #. module: survey
 #: model:ir.model,name:survey.model_res_users
@@ -859,6 +883,8 @@ msgid ""
 "You must enter one or more menu                                 choices in "
 "column heading (white spaces not allowed)."
 msgstr ""
+"Vous devez donner un ou plusieurs choix dans l'en-tête de colonne (les "
+"espaces ne sont pas acceptés)."
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
@@ -918,6 +944,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un nouveau questionnaire.\n"
+"              </p><p>\n"
+"                Vous pouvez créer un questionnaire pour différentes choses : "
+"entretien de\n"
+"                recrutement, les évaluations périodiques des employés, "
+"campagnes\n"
+"                marketing, etc.\n"
+"              </p><p>\n"
+"                Un questionnaire est fait de pages contenant des questions\n"
+"                de différents types : texte, choix multiple, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: survey
 #: field:survey,date_close:0
@@ -1011,6 +1050,8 @@ msgid ""
 "You cannot give more responses. Please contact the author of this survey for "
 "further assistance."
 msgstr ""
+"Vous ne pouvez pas donner plus de réponses. Veuillez contacter l'auteur de "
+"cette enquête pour obtenir de l'aide."
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1090,7 +1131,7 @@ msgstr "Réponse obligatoire"
 #. module: survey
 #: model:survey.type,name:survey.survey_type2
 msgid "Customer Feeback"
-msgstr ""
+msgstr "Retour client"
 
 #. module: survey
 #: view:survey:0
@@ -1157,6 +1198,8 @@ msgid ""
 "You must enter one or more menu choices in column heading (white spaces not "
 "allowed)."
 msgstr ""
+"Vous devez remplir un ou plusieurs choix dans l'en-tête des colonnes (les "
+"espaces ne sont pas acceptés)."
 
 #. module: survey
 #: field:survey.print,paper_size:0
@@ -1185,6 +1228,8 @@ msgstr "Ligne de réponse au sondage"
 #, python-format
 msgid "This survey has no pages defined. Please define pages first."
 msgstr ""
+"Ce questionnaire n'a pas de page définie. Veuillez commencer par définir une "
+"page."
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.report_survey_form
@@ -1305,13 +1350,11 @@ msgid "Allow Only One Answer per Column (Forced Ranking)"
 msgstr "Permettre une seule réponse par colonne (classement forcé)"
 
 #. module: survey
-#: view:survey:0
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
-#: view:survey.request:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Annuler"
@@ -1338,6 +1381,8 @@ msgstr "Ouvert"
 #, python-format
 msgid "You must enter one or more answers for question \"%s\" of page %s ."
 msgstr ""
+"Vous devez entrer une ou plusieurs réponses pour la question \"%s\" de la "
+"page %s."
 
 #. module: survey
 #: field:survey,tot_start_survey:0
@@ -1400,7 +1445,7 @@ msgstr "Répondu"
 #. module: survey
 #: field:survey,send_response:0
 msgid "Email Notification on Answer"
-msgstr ""
+msgstr "Notification par courriel à chaque réponse"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:445
@@ -1433,7 +1478,7 @@ msgstr "Envoyer des invitations"
 #: code:addons/survey/wizard/survey_selection.py:80
 #, python-format
 msgid "You cannot give response for this survey more than %s times."
-msgstr ""
+msgstr "Vous ne pouvez pas répondre à cette enquête plus de %s fois."
 
 #. module: survey
 #: view:survey.question:0
@@ -1481,7 +1526,7 @@ msgstr "Portrait (vertical)"
 #: code:addons/survey/wizard/survey_send_invitation.py:68
 #, python-format
 msgid "Invitation for %s"
-msgstr ""
+msgstr "Invitation pour %s"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -1492,13 +1537,13 @@ msgstr "Doit être d'une longueur définie"
 #. module: survey
 #: model:survey.type,name:survey.survey_type3
 msgid "Supplier Selection"
-msgstr ""
+msgstr "Sélection de fournisseur"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:992
 #, python-format
 msgid "You cannot select same answer more than one time.'"
-msgstr ""
+msgstr "Vous ne pouvez pas sélectionner la même réponse plus d'une fois.'"
 
 #. module: survey
 #: code:addons/survey/survey.py:685
@@ -1572,7 +1617,7 @@ msgstr "Somme de tous les choix"
 #. module: survey
 #: view:survey.request:0
 msgid "Request"
-msgstr ""
+msgstr "Demande"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response
@@ -1636,7 +1681,7 @@ msgstr "Message d'erreur"
 #: code:addons/survey/wizard/survey_send_invitation.py:71
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Attention !"
 
 #. module: survey
 #: code:addons/survey/survey.py:465
@@ -1718,7 +1763,7 @@ msgstr "Nombre à virgule flottante"
 #: view:survey.print.statistics:0
 #: view:survey.send.invitation:0
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #. module: survey
 #: field:survey,title:0
@@ -1769,7 +1814,7 @@ msgstr "Table"
 #: code:addons/survey/wizard/survey_answer.py:117
 #, python-format
 msgid "You cannot answer because the survey is not open."
-msgstr ""
+msgstr "Vous ne pouvez pas répondre car l'enquête n'est pas ouverte."
 
 #. module: survey
 #: field:survey.question,comment_minimum_date:0

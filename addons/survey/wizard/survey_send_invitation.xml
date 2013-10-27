@@ -9,11 +9,6 @@
             <field name="model">survey.send.invitation</field>
             <field name="arch" type="xml">
                 <form string="Send Invitation" version="7.0">
-                    <header>
-                        <button name="action_send" string="_Send" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group col="4">
                         <separator string="Select Partner" colspan="4"/>
                         <field name="partner_ids" nolabel="1" colspan="4" widget="many2many_tags"/>
@@ -28,6 +23,11 @@
                         <separator string="Message" colspan="4"/>
                         <field name="mail" nolabel="1" colspan="4"/>
                     </group>
+                    <footer>
+                        <button name="action_send" string="_Send" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

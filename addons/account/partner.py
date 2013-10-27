@@ -66,7 +66,6 @@ class account_fiscal_position(osv.osv):
                 break
         return account_id
 
-account_fiscal_position()
 
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
@@ -84,7 +83,6 @@ class account_fiscal_position_tax(osv.osv):
          'A tax fiscal position could be defined only once time on same taxes.')
     ]
 
-account_fiscal_position_tax()
 
 class account_fiscal_position_account(osv.osv):
     _name = 'account.fiscal.position.account'
@@ -102,7 +100,6 @@ class account_fiscal_position_account(osv.osv):
          'An account fiscal position could be defined only once time on same accounts.')
     ]
 
-account_fiscal_position_account()
 
 class res_partner(osv.osv):
     _name = 'res.partner'
@@ -116,7 +113,8 @@ class res_partner(osv.osv):
                       LEFT JOIN account_account a ON (l.account_id=a.id)
                       WHERE a.type IN ('receivable','payable')
                       AND l.partner_id IN %s
-                      AND l.reconcile_id IS NULL
+                      AND (l.reconcile_id IS NULL OR 
+                           reconcile_id in (SELECT id FROM account_move_reconcile WHERE opening_reconciliation is TRUE))
                       AND """ + query + """
                       GROUP BY l.partner_id, a.type
                       """,
@@ -192,50 +190,44 @@ class res_partner(osv.osv):
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
         'property_account_payable': fields.property(
-            'account.account',
             type='many2one',
             relation='account.account',
             string="Account Payable",
-            view_load=True,
             domain="[('type', '=', 'payable')]",
             help="This account will be used instead of the default one as the payable account for the current partner",
             required=True),
         'property_account_receivable': fields.property(
-            'account.account',
             type='many2one',
             relation='account.account',
             string="Account Receivable",
-            view_load=True,
             domain="[('type', '=', 'receivable')]",
             help="This account will be used instead of the default one as the receivable account for the current partner",
             required=True),
         'property_account_position': fields.property(
-            'account.fiscal.position',
             type='many2one',
             relation='account.fiscal.position',
             string="Fiscal Position",
-            view_load=True,
             help="The fiscal position will determine taxes and accounts used for the partner.",
         ),
         'property_payment_term': fields.property(
-            'account.payment.term',
             type='many2one',
             relation='account.payment.term',
             string ='Customer Payment Term',
-            view_load=True,
             help="This payment term will be used instead of the default one for sale orders and customer invoices"),
         'property_supplier_payment_term': fields.property(
-            'account.payment.term',
              type='many2one',
              relation='account.payment.term',
              string ='Supplier Payment Term',
-             view_load=True,
              help="This payment term will be used instead of the default one for purchase orders and supplier invoices"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
-        'last_reconciliation_date': fields.datetime('Latest Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the date of the last reconciliation made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 ways: either the last debit/credit entry was reconciled, either the user pressed the button "Fully Reconciled" in the manual reconciliation process')
+        'last_reconciliation_date': fields.datetime('Latest Full Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the last date where a reconciliation has been made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 different ways: either the last unreconciled debit/credit entry of this partner was reconciled, either the user pressed the button "Nothing more to reconcile" during the manual reconciliation process.')
     }
 
-res_partner()
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + \
+            ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
+             'property_payment_term', 'property_supplier_payment_term', 'last_reconciliation_date']
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,5 +1,8 @@
 -
-  In order to test "mrp_repair" module, I start with confirm state, and start repair.
+  In order to test "mrp_repair" module, I start with confirm state, and start repair with giving the access rights of mrp user.
+-
+  !context
+    uid: 'res_mrp_repair_user'
 -
   I confirm Repair order for Invoice Method 'No Invoice'.
 -
@@ -23,5 +26,5 @@
 -
   !python {model: mrp.repair}: |
      repair_id = self.browse(cr, uid, [ref('mrp_repair_rmrp1')], context=context)[0]
-     assert not repair_id.invoice_id.id, _("Invoice should not be exists for this repair order")
+     assert not repair_id.invoice_id.id, "Invoice should not be exists for this repair order"
 

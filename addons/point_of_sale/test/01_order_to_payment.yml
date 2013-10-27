@@ -27,10 +27,23 @@
     account_collected_id: account.iva
     price_include: 0
 -
-  I assign this 5 percent tax on the PCSC349 product as a sale tax
+  I will create a second VAT tax of 5% but this time for a child company, to
+  ensure that only product taxes of the current session's company are considered
+  (this tax should be ignore when computing order's taxes in following tests)
+-
+  !record {model: account.tax, id: account_tax_05_incl_chicago}:
+    name: VAT 05 perc Excl (US)
+    type: percent
+    amount: 0.05
+    account_paid_id: account.iva
+    account_collected_id: account.iva
+    price_include: 0
+    company_id: stock.res_company_1
+-
+  I assign those 5 percent taxes on the PCSC349 product as a sale taxes
 -
   !record {model: product.product, id: product.product_product_4}:
-    taxes_id: [account_tax_05_incl]
+    taxes_id: [account_tax_05_incl, account_tax_05_incl_chicago]
 -
   I create a new session
 -

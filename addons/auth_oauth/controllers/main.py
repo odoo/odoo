@@ -2,10 +2,13 @@ import functools
 import logging
 
 import simplejson
+import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
+import openerp
 from openerp import SUPERUSER_ID
-import openerp.addons.web.http as oeweb
+import openerp.addons.web.http as http
+from openerp.addons.web.http import request
 from openerp.addons.web.controllers.main import db_monodb, set_cookie_and_redirect, login_and_redirect
 from openerp.modules.registry import RegistryManager
 
@@ -16,7 +19,7 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 def fragment_to_query_string(func):
     @functools.wraps(func)
-    def wrapper(self, req, **kw):
+    def wrapper(self, **kw):
         if not kw:
             return """<html><head><script>
                 var l = window.location;
@@ -28,18 +31,17 @@ def fragment_to_query_string(func):
                 }
                 window.location = r;
             </script></head><body></body></html>"""
-        return func(self, req, **kw)
+        return func(self, **kw)
     return wrapper
 
 
 #----------------------------------------------------------
 # Controller
 #----------------------------------------------------------
-class OAuthController(oeweb.Controller):
-    _cp_path = '/auth_oauth'
+class OAuthController(http.Controller):
 
-    @oeweb.jsonrequest
-    def list_providers(self, req, dbname):
+    @http.route('/auth_oauth/list_providers', type='json', auth='none')
+    def list_providers(self, dbname):
         try:
             registry = RegistryManager.get(dbname)
             with registry.cursor() as cr:
@@ -49,9 +51,9 @@ class OAuthController(oeweb.Controller):
             l = []
         return l
 
-    @oeweb.httprequest
+    @http.route('/auth_oauth/signin', type='http', auth='none')
     @fragment_to_query_string
-    def signin(self, req, **kw):
+    def signin(self, **kw):
         state = simplejson.loads(kw['state'])
         dbname = state['d']
         provider = state['p']
@@ -62,33 +64,48 @@ class OAuthController(oeweb.Controller):
                 u = registry.get('res.users')
                 credentials = u.auth_oauth(cr, SUPERUSER_ID, provider, kw, context=context)
                 cr.commit()
-                action = state.get('a', None)
-                url = '/#action=' + action if action else '/'
-                return login_and_redirect(req, *credentials, redirect_url=url)
+                action = state.get('a')
+                menu = state.get('m')
+                url = '/'
+                if action:
+                    url = '/#action=%s' % action
+                elif menu:
+                    url = '/#menu_id=%s' % menu
+                return login_and_redirect(*credentials, redirect_url=url)
             except AttributeError:
                 # auth_signup is not installed
                 _logger.error("auth_signup not installed on database %s: oauth sign up cancelled." % (dbname,))
                 url = "/#action=login&oauth_error=1"
+            except openerp.exceptions.AccessDenied:
+                # oauth credentials not valid, user could be on a temporary session
+                _logger.info('OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
+                url = "/#action=login&oauth_error=3"
+                redirect = werkzeug.utils.redirect(url, 303)
+                redirect.autocorrect_location_header = False
+                return redirect
             except Exception, e:
                 # signup error
                 _logger.exception("OAuth2: %s" % str(e))
                 url = "/#action=login&oauth_error=2"
 
-        return set_cookie_and_redirect(req, url)
+        return set_cookie_and_redirect(url)
 
-    @oeweb.httprequest
-    def oea(self, req, **kw):
+    @http.route('/auth_oauth/oea', type='http', auth='none')
+    def oea(self, **kw):
         """login user via OpenERP Account provider"""
         dbname = kw.pop('db', None)
         if not dbname:
-            dbname = db_monodb(req)
+            dbname = db_monodb()
         if not dbname:
             return BadRequest()
 
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
             IMD = registry['ir.model.data']
-            model, provider_id = IMD.get_object_reference(cr, SUPERUSER_ID, 'auth_oauth', 'provider_openerp')
+            try:
+                model, provider_id = IMD.get_object_reference(cr, SUPERUSER_ID, 'auth_oauth', 'provider_openerp')
+            except ValueError:
+                return set_cookie_and_redirect('/?db=%s' % dbname)
             assert model == 'auth.oauth.provider'
 
         state = {
@@ -98,6 +115,6 @@ class OAuthController(oeweb.Controller):
         }
 
         kw['state'] = simplejson.dumps(state)
-        return self.signin(req, **kw)
+        return self.signin(**kw)
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

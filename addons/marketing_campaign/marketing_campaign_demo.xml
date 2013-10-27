@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <openerp>
     <data>
         <!-- Email tempalte -->
@@ -66,13 +65,13 @@
 
     <!-- Transition -->
         <record id="marketing_campaign_transition_0" model="marketing.campaign.transition">
-            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_0"/>
-            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_1"/>
+            <field name="activity_from_id" ref="marketing_campaign_activity_0"/>
+            <field name="activity_to_id" ref="marketing_campaign_activity_1"/>
         </record>
 
         <record id="marketing_campaign_transition_1" model="marketing.campaign.transition">
-            <field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_1"/>
-            <field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_2"/>
+            <field name="activity_from_id" ref="marketing_campaign_activity_1"/>
+            <field name="activity_to_id" ref="marketing_campaign_activity_2"/>
         </record>
 
     <!-- Segment -->
@@ -85,7 +84,7 @@
             <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="date_run"/>
             <field name="name">OpenERP Partner</field>
             <field name="sync_mode">create_date</field>
-            <field name="ir_filter_id" ref="filter0"></field>
+            <field name="ir_filter_id" ref="filter0"/>
             <field name="campaign_id" ref="marketing_campaign_openerppartnerchannel"/>
         </record>
 

@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Timesheets',
+    'name': 'Time Tracking',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 23,
@@ -57,6 +57,7 @@ up a management by affair.
     ],
     'demo': ['hr_timesheet_demo.xml'],
     'test': [
+        'test/hr_timesheet_users.yml',
         'test/test_hr_timesheet.yml',
         'test/hr_timesheet_report.yml',
         'test/hr_timesheet_demo.yml',

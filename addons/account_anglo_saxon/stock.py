@@ -57,7 +57,6 @@ class stock_picking(osv.osv):
                             self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
         return res
 
-stock_picking()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

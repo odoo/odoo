@@ -4,7 +4,7 @@
 
     <record id="account_followup_comp_rule" model="ir.rule">
         <field name="name">Account Follow-up multi company rule</field>
-        <field model="ir.model" name="model_id" ref="model_account_followup_followup"/>
+        <field name="model_id" ref="model_account_followup_followup"/>
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>

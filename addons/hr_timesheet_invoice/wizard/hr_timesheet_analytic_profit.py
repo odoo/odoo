@@ -70,6 +70,5 @@ class account_analytic_profit(osv.osv_memory):
             'datas': datas,
              }
 
-account_analytic_profit()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

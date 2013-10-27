@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-11-27 09:28+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
+"PO-Revision-Date: 2013-07-28 11:18+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:41+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:45+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -513,7 +513,7 @@ msgstr "标准耳机"
 #. module: product
 #: model:product.uom,name:product.product_uom_day
 msgid "Day(s)"
-msgstr ""
+msgstr "天"
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -800,7 +800,7 @@ msgstr "结束日期"
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
 msgid "Liter(s)"
-msgstr ""
+msgstr "升"
 
 #. module: product
 #: view:product.price_list:0
@@ -843,7 +843,7 @@ msgstr "价格表"
 #. module: product
 #: model:product.uom,name:product.product_uom_hour
 msgid "Hour(s)"
-msgstr ""
+msgstr "小时"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1114,7 +1114,7 @@ msgstr "右父项"
 #. module: product
 #: field:product.product,price:0
 msgid "Price"
-msgstr ""
+msgstr "价格"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
@@ -1147,7 +1147,6 @@ msgstr "逻辑单位"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1193,7 +1192,7 @@ msgstr "显示产品列表的顺序号"
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen(s)"
-msgstr ""
+msgstr "打"
 
 #. module: product
 #: field:product.uom,factor:0
@@ -1339,7 +1338,7 @@ msgstr "指定一个产品分类 ，规则只被应用在与这个分类以及�
 #. module: product
 #: view:product.product:0
 msgid "Inventory"
-msgstr "盘点"
+msgstr "库存"
 
 #. module: product
 #: field:product.product,seller_info_id:0
@@ -1347,7 +1346,7 @@ msgid "Supplier Info"
 msgstr "供应商信息"
 
 #. module: product
-#: code:addons/product/product.py:729
+#: code:addons/product/product.py:732
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -1892,7 +1891,7 @@ msgstr "消息"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr ""
+msgstr "件"
 
 #. module: product
 #: code:addons/product/product.py:176
@@ -2280,6 +2279,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                创建一个价格表。\n"
+"              </p><p>\n"
+"                价格表包括了计算订单采购价格的规则。\n"
+"                默认的价格表有一个规则：使用产品表单里定义的成 \n"
+"                本价。如果你有非常简单的需求，这样你就不必担心\n"
+"                供应商的价目表，。\n"
+"              </p><p>\n"
+"                但是你也能从供应商那里导入复杂的价格表，可能依\n"
+"                赖于订购的数量，或者当前的促销活动。\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2342,7 +2353,7 @@ msgstr "序列"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "生成该产品的平均延时天数。在多级BoM的情况下，部件的制造提前期将被累加"
 
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
@@ -2365,6 +2376,8 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"单击以创建一个新的计量单位\n"
+"            "
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
@@ -2436,7 +2449,6 @@ msgstr "供应商单位"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "产品系列"
 
@@ -2446,7 +2458,7 @@ msgid "15” LCD Monitor"
 msgstr "15” LCD 显示器"
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"

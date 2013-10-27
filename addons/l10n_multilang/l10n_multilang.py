@@ -78,7 +78,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     else:
                         #replace the value in the destination object only if it's the user lang
                         if context.get('lang') == lang:
-                            self.pool.get(out_obj._name).write(cr, uid, out_ids[j], {in_field: value[in_id]})
+                            self.pool[out_obj._name].write(cr, uid, out_ids[j], {in_field: value[in_id]})
                 else:
                     _logger.info('Language: %s. Translation from template: there is no translation available for %s!' %(lang,  src[in_id]))#out_obj._name))
         return True
@@ -150,6 +150,5 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         out_ids = obj_fiscal_position.search(cr, uid, [('company_id', '=', company_id)], order='id')
         return self.process_translations(cr, uid, langs, obj_fiscal_position_template, field, in_ids, obj_fiscal_position, out_ids, force_write=False, context=context)
 
-wizard_multi_charts_accounts()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

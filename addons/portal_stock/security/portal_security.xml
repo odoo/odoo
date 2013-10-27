@@ -17,19 +17,5 @@
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
         </record>
 
-        <record id="portal_stock_move_user_rule" model="ir.rule">
-            <field name="name">Portal Personal Stock Moves</field>
-            <field name="model_id" ref="stock.model_stock_move"/>
-            <field name="domain_force">[('message_follower_ids','in',[user.partner_id.id])]</field>
-            <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
-        </record>
-
-        <record id="portal_stock_warehouse_orderpoint_user_rule" model="ir.rule">
-            <field name="name">Portal Personal Stock Warehouse Orderpoints</field>
-            <field name="model_id" ref="procurement.model_stock_warehouse_orderpoint"/>
-            <field name="domain_force">[('message_follower_ids','in',[user.partner_id.id])]</field>
-            <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
-        </record>
-
     </data>
 </openerp>

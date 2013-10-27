@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-11-26 10:00+0000\n"
-"Last-Translator: Daniel Reis (SECURITAS SA) <Unknown>\n"
+"Last-Translator: Daniel Reis <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:12+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-09-12 04:55+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: project
 #: view:project.project:0
@@ -82,7 +82,7 @@ msgid "Start Task"
 msgstr "Iniciar Tarefa"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Aviso !"
@@ -132,8 +132,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "Aviso!"
@@ -392,7 +392,7 @@ msgid "Assigned to"
 msgstr "Atribuído a"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Utilizador delegado deve ser especificado"
@@ -922,7 +922,6 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.config.settings:0
-#: view:project.project:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
@@ -1204,9 +1203,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Processado como: Tempo Gasto + Tempo Restante."
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -1338,6 +1337,9 @@ msgid "Pending"
 msgstr "Pendente"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_category_action
+#: model:ir.ui.menu,name:project.menu_project_category_act
+#: view:project.category:0
 #: field:project.task,categ_ids:0
 msgid "Tags"
 msgstr "Marcas"
@@ -1411,7 +1413,7 @@ msgstr ""
 "do projeto quando a tarefa está no estado rascunho."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "Anexos"
@@ -1541,7 +1543,7 @@ msgid "Overpassed Tasks"
 msgstr "Tarefas superada"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1603,7 +1605,7 @@ msgid "CHECK: "
 msgstr "VERIFICAR: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "Deve atribuir os membros em projeto '%s'!"
@@ -1702,6 +1704,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1830,7 +1833,7 @@ msgid "Starting Date"
 msgstr "Data Inicial"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1991,7 +1994,7 @@ msgid "Reevaluation Task"
 msgstr "Tarefa reavaliação"
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Por favor, excluir o projeto ligado a esta conta primeiro."
@@ -2137,7 +2140,6 @@ msgid "Year"
 msgstr "Ano"
 
 #. module: project
-#: view:project.project:0
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"

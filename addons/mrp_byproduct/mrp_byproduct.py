@@ -64,7 +64,6 @@ class mrp_subproduct(osv.osv):
             res['value'].update({'product_uom': product.uom_id.id})
         return res
 
-mrp_subproduct()
 
 class mrp_bom(osv.osv):
     _name = 'mrp.bom'
@@ -75,7 +74,6 @@ class mrp_bom(osv.osv):
         'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'Byproducts'),
     }
 
-mrp_bom()
 
 class mrp_production(osv.osv):
     _description = 'Production'
@@ -143,7 +141,6 @@ class mrp_production(osv.osv):
                 return subproduct_factor
         return super(mrp_production, self)._get_subproduct_factor(cr, uid, production_id, move_id, context=context)
 
-mrp_production()
 
 class change_production_qty(osv.osv_memory):
     _inherit = 'change.production.qty'

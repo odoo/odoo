@@ -22,8 +22,10 @@
 
 import datetime
 import time
-from report import report_sxw
+
+from openerp.report import report_sxw
 from openerp.tools.translate import _
+
 #
 # Use period and Journal for selection or resources
 #

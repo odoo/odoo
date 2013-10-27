@@ -19,16 +19,16 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
 from openerp import tools
-from .. import crm
+from openerp.addons.crm import crm
+from openerp.osv import fields, osv
 
 AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Todo'),
+    ('draft', 'Draft'),
+    ('open', 'Todo'),
     ('cancel', 'Cancelled'),
     ('done', 'Held'),
-    ('pending','Pending')
+    ('pending', 'Pending')
 ]
 
 
@@ -98,6 +98,5 @@ class crm_phonecall_report(osv.osv):
                 from
                     crm_phonecall c
             )""")
-crm_phonecall_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -53,7 +53,6 @@ have a new option to import payment orders as bank statement lines.
         'account_payment_view.xml',
         'account_payment_workflow.xml',
         'account_payment_sequence.xml',
-        'account_invoice_view.xml',
         'account_payment_report.xml',
     ],
     'demo': ['account_payment_demo.xml'],

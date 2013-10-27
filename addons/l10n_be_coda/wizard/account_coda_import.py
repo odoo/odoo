@@ -117,6 +117,8 @@ class account_coda_import(osv.osv_memory):
                     # and so a 'like' operator would return the first account number in the database which matches.
                     cr.execute("select id from res_partner_bank where replace(replace(acc_number,' ',''),'-','') = %s", (statement['acc_number'],))
                 bank_ids = [id[0] for id in cr.fetchall()]
+                # Filter bank accounts which are not allowed
+                bank_ids = self.pool.get('res.partner.bank').search(cr, uid, [('id', 'in', bank_ids)])
                 if bank_ids and len(bank_ids) > 0:
                     bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
                     for bank_acc in bank_accs:
@@ -128,6 +130,8 @@ class account_coda_import(osv.osv_memory):
                     raise osv.except_osv(_('Error') + ' R1004', _("No matching Bank Account (with Account Journal) found.\n\nPlease set-up a Bank Account with as Account Number '%s' and as Currency '%s' and an Account Journal.") % (statement['acc_number'], statement['currency']))
                 statement['description'] = rmspaces(line[90:125])
                 statement['balance_start'] = float(rmspaces(line[43:58])) / 1000
+                if line[42] == '1':    #1 = Debit, the starting balance is negative
+                    statement['balance_start'] = - statement['balance_start']
                 statement['balance_start_date'] = time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT, time.strptime(rmspaces(line[58:64]), '%d%m%y'))
                 statement['accountHolder'] = rmspaces(line[64:90])
                 statement['paperSeqNumber'] = rmspaces(line[2:5])
@@ -237,16 +241,16 @@ class account_coda_import(osv.osv_memory):
                 if statement['debit'] == '1':    # 1=Debit
                     statement['balance_end_real'] = - statement['balance_end_real']
                 if statement['balance_end_realDate']:
-                    period_id = self.pool.get('account.period').search(cr, uid, [('date_start', '<=', statement['balance_end_realDate']), ('date_stop', '>=', statement['balance_end_realDate'])])
+                    period_id = self.pool.get('account.period').search(cr, uid, [('company_id', '=', statement['journal_id'].company_id.id), ('date_start', '<=', statement['balance_end_realDate']), ('date_stop', '>=', statement['balance_end_realDate'])])
                 else:
-                    period_id = self.pool.get('account.period').search(cr, uid, [('date_start', '<=', statement['date']), ('date_stop', '>=', statement['date'])])
+                    period_id = self.pool.get('account.period').search(cr, uid, [('company_id', '=', statement['journal_id'].company_id.id), ('date_start', '<=', statement['date']), ('date_stop', '>=', statement['date'])])
                 if not period_id and len(period_id) == 0:
-                    raise osv.except_osv(_('Error') + 'R0002', _("The CODA Statement New Balance date doesn't fall within a defined Accounting Period! Please create the Accounting Period for date %s.") % statement['balance_end_realDate'])
+                    raise osv.except_osv(_('Error') + 'R0002', _("The CODA Statement New Balance date doesn't fall within a defined Accounting Period! Please create the Accounting Period for date %s for the company %s.") % (statement['balance_end_realDate'], statement['journal_id'].company_id.name))
                 statement['period_id'] = period_id[0]
             elif line[0] == '9':
                 statement['balanceMin'] = float(rmspaces(line[22:37])) / 1000
                 statement['balancePlus'] = float(rmspaces(line[37:52])) / 1000
-                if not statement['balance_end_real']:
+                if not statement.get('balance_end_real'):
                     statement['balance_end_real'] = statement['balance_start'] + statement['balancePlus'] - statement['balanceMin']
         for i, statement in enumerate(statements):
             statement['coda_note'] = ''
@@ -264,6 +268,8 @@ class account_coda_import(osv.osv_memory):
                     raise osv.except_osv(_('Error'), _("Configuration Error in journal %s!\nPlease verify the Default Debit and Credit Account settings.") % statement['journal_id'].name)
             if balance_start_check != statement['balance_start']:
                 statement['coda_note'] = _("The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!") % (statement['description'] + ' #' + statement['paperSeqNumber'], statement['balance_start'], balance_start_check, statement['journal_id'].name)
+            if not(statement.get('period_id')):
+                raise osv.except_osv(_('Error') + ' R3006', _(' No transactions or no period in coda file !'))
             data = {
                 'name': statement['paperSeqNumber'],
                 'date': statement['date'],
@@ -389,7 +395,7 @@ class account_coda_import(osv.osv_memory):
             if statement['coda_note'] != '':
                 self.pool.get('account.bank.statement').write(cr, uid, [statement['id']], {'coda_note': statement['coda_note']}, context=context)
         model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_bank_statement_tree')
-        action = self.pool.get(model).browse(cr, uid, action_id, context=context)
+        action = self.pool[model].browse(cr, uid, action_id, context=context)
         return {
             'name': action.name,
             'view_type': action.view_type,

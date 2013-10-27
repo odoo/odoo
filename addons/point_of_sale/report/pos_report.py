@@ -21,7 +21,6 @@
 
 from openerp.osv import fields, osv
 import time
-from openerp import netsvc
 from openerp import tools
 
 class report_transaction_pos(osv.osv):
@@ -75,7 +74,6 @@ class report_transaction_pos(osv.osv):
         """)
                     #to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')
                     #to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text as date_create,
-report_transaction_pos()
 
 class report_sales_by_user_pos(osv.osv):
     _name = "report.sales.by.user.pos"
@@ -108,7 +106,6 @@ class report_sales_by_user_pos(osv.osv):
 
                 )
         """)
-report_sales_by_user_pos()
 
 class report_sales_by_user_pos_month(osv.osv):
     _name = "report.sales.by.user.pos.month"
@@ -141,7 +138,6 @@ class report_sales_by_user_pos_month(osv.osv):
 
                 )
         """)
-report_sales_by_user_pos_month()
 
 class report_sales_by_margin_pos(osv.osv):
     _name = "report.sales.by.margin.pos"
@@ -188,7 +184,6 @@ class report_sales_by_margin_pos(osv.osv):
 
                 )
         """)
-report_sales_by_margin_pos()
 
 class report_sales_by_margin_pos_month(osv.osv):
     _name = "report.sales.by.margin.pos.month"
@@ -234,6 +229,5 @@ class report_sales_by_margin_pos_month(osv.osv):
 
                 )
         """)
-report_sales_by_margin_pos_month()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

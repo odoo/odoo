@@ -55,7 +55,6 @@ class pos_sale_user(osv.osv_memory):
             'datas': datas,
        }
 
-pos_sale_user()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

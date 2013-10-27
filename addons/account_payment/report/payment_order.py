@@ -21,7 +21,6 @@
 
 import time
 
-from openerp import pooler
 from openerp.report import report_sxw
 
 class payment_order(report_sxw.rml_parse):
@@ -38,8 +37,7 @@ class payment_order(report_sxw.rml_parse):
 
     def _get_invoice_name(self, invoice_id):
         if invoice_id:
-            pool = pooler.get_pool(self.cr.dbname)
-            value_name = pool.get('account.invoice').name_get(self.cr, self.uid, [invoice_id])
+            value_name = self.pool['account.invoice'].name_get(self.cr, self.uid, [invoice_id])
             if value_name:
                 return value_name[0][1]
         return False
@@ -67,8 +65,7 @@ class payment_order(report_sxw.rml_parse):
 
     def _get_account_name(self,bank_id):
         if bank_id:
-            pool = pooler.get_pool(self.cr.dbname)
-            value_name = pool.get('res.partner.bank').name_get(self.cr, self.uid, [bank_id])
+            value_name = self.pool['res.partner.bank'].name_get(self.cr, self.uid, [bank_id])
             if value_name:
                 return value_name[0][1]
         return False

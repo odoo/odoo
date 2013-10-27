@@ -59,9 +59,12 @@ You can manage:
         'hr_installer.xml',
         'hr_data.xml',
         'res_config_view.xml',
+        'mail_hr_view.xml',
+        'res_users_view.xml',
     ],
     'demo': ['hr_demo.xml'],
     'test': [
+        'test/hr_users.yml',
         'test/open2recruit2close_job.yml',
         'test/hr_demo.yml',
     ],
@@ -69,5 +72,7 @@ You can manage:
     'application': True,
     'auto_install': False,
     'css': [ 'static/src/css/hr.css' ],
+    'js': [ 'static/src/js/suggestions.js' ],
+    'qweb': [ 'static/src/xml/suggestions.xml' ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

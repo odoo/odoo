@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-Today OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,29 +22,39 @@
 
 {
     'name': 'Ideas',
-    'version': '0.1',
+    'summary': 'Share and Discuss your Ideas',
+    'version': '1.0',
     'category': 'Tools',
     'description': """
-This module allows user to easily and efficiently participate in enterprise innovation.
-=======================================================================================
+Share your ideas and participate in enterprise innovation
+=========================================================
 
-It allows everybody to express ideas about different subjects.
-Then, other users can comment on these ideas and vote for particular ideas.
-Each idea has a score based on the different votes.
+The Ideas module give users a way to express and discuss ideas, allowing everybody
+to participate in enterprise innovation. Every user can suggest, comment ideas.
 The managers can obtain an easy view of best ideas from all the users.
 Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'author': 'OpenERP SA',
-    'website': 'http://openerp.com',
+    'website': 'http://www.openerp.com',
     'depends': ['mail'],
     'data': [
-        'security/idea_security.xml',
+        'security/idea.xml',
         'security/ir.model.access.csv',
-        'idea_view.xml',
-        'idea_workflow.xml',
+        'views/idea.xml',
+        'views/category.xml',
+        'data/idea.xml',
+        'data/idea_workflow.xml',
     ],
-    'demo': ['idea_data.xml'],
-    'test':[],
+    'demo': [
+        'demo/idea.xml',
+    ],
     'installable': True,
+    'application': True,
     'images': [],
+    'css': [
+        'static/src/css/idea_idea.css',
+    ],
+    'js': [],
+    'qweb': [],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

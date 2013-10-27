@@ -175,7 +175,7 @@
       <field name="view_type">form</field>
       <field name="view_mode">kanban,tree,form</field>
       <field name="search_view_id" ref="view_note_note_filter"/>
-      <field name="context">{'search_default_open_true':True}</field>
+      <field name="context">{}</field>
       <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a personal note.
@@ -193,7 +193,7 @@
     </record>
 
     <menuitem name="Notes" id="menu_note_notes" parent="mail.mail_my_stuff" sequence="20" action="note.action_note_note"/>
-    <menuitem name="Categories" id="menu_notes_stage" parent="mail.mail_my_stuff" action="note.action_note_stage" sequence="21" groups="base.group_no_one"/>
+    <menuitem name="Stages" id="menu_notes_stage" parent="mail.mail_my_stuff" action="note.action_note_stage" sequence="21" groups="base.group_no_one"/>
 
   </data>
 </openerp>

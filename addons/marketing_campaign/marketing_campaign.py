@@ -32,7 +32,6 @@ import re
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 from openerp.osv import fields, osv
-from openerp import netsvc
 from openerp.tools.translate import _
 
 _intervalTypes = {
@@ -166,7 +165,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # dead code
     def signal(self, cr, uid, model, res_id, signal, run_existing=True, context=None):
-        record = self.pool.get(model).browse(cr, uid, res_id, context)
+        record = self.pool[model].browse(cr, uid, res_id, context)
         return self._signal(cr, uid, record, signal, run_existing, context)
 
     #dead code
@@ -229,7 +228,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
             if unique_value:
                 if unique_field.ttype == 'many2one':
                     unique_value = unique_value.id
-                similar_res_ids = self.pool.get(campaign_rec.object_id.model).search(cr, uid,
+                similar_res_ids = self.pool[campaign_rec.object_id.model].search(cr, uid,
                                     [(unique_field.name, '=', unique_value)], context=context)
                 if similar_res_ids:
                     duplicate_workitem_domain = [('res_id','in', similar_res_ids),
@@ -237,7 +236,6 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         return Workitems.search(cr, uid, duplicate_workitem_domain, context=context)
 
 
-marketing_campaign()
 
 class marketing_campaign_segment(osv.osv):
     _name = "marketing.campaign.segment"
@@ -350,7 +348,7 @@ class marketing_campaign_segment(osv.osv):
             act_ids = self.pool.get('marketing.campaign.activity').search(cr,
                   uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)], context=context)
 
-            model_obj = self.pool.get(segment.object_id.model)
+            model_obj = self.pool[segment.object_id.model]
             criteria = []
             if segment.sync_last_date and segment.sync_mode != 'all':
                 criteria += [(segment.sync_mode, '>', segment.sync_last_date)]
@@ -384,7 +382,6 @@ class marketing_campaign_segment(osv.osv):
         Workitems.process_all(cr, uid, list(campaigns), context=context)
         return True
 
-marketing_campaign_segment()
 
 class marketing_campaign_activity(osv.osv):
     _name = "marketing.campaign.activity"
@@ -511,7 +508,6 @@ class marketing_campaign_activity(osv.osv):
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
         return action(cr, uid, activity, workitem, context=context)
 
-marketing_campaign_activity()
 
 class marketing_campaign_transition(osv.osv):
     _name = "marketing.campaign.transition"
@@ -583,7 +579,6 @@ class marketing_campaign_transition(osv.osv):
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
 
-marketing_campaign_transition()
 
 class marketing_campaign_workitem(osv.osv):
     _name = "marketing.campaign.workitem"
@@ -595,7 +590,7 @@ class marketing_campaign_workitem(osv.osv):
             if not wi.res_id:
                 continue
 
-            proxy = self.pool.get(wi.object_id.model)
+            proxy = self.pool[wi.object_id.model]
             if not proxy.exists(cr, uid, [wi.res_id]):
                 continue
             ng = proxy.name_get(cr, uid, [wi.res_id], context=context)
@@ -629,7 +624,7 @@ class marketing_campaign_workitem(osv.osv):
         for id, res_id, model in res:
             workitem_map.setdefault(model,{}).setdefault(res_id,set()).add(id)
         for model, id_map in workitem_map.iteritems():
-            model_pool = self.pool.get(model)
+            model_pool = self.pool[model]
             condition_name[0] = model_pool._rec_name
             condition = [('id', 'in', id_map.keys()), condition_name]
             for res_id in model_pool.search(cr, uid, condition, context=context):
@@ -677,7 +672,7 @@ class marketing_campaign_workitem(osv.osv):
             return False
 
         activity = workitem.activity_id
-        proxy = self.pool.get(workitem.object_id.model)
+        proxy = self.pool[workitem.object_id.model]
         object_id = proxy.browse(cr, uid, workitem.res_id, context=context)
 
         eval_context = {
@@ -819,7 +814,6 @@ class marketing_campaign_workitem(osv.osv):
             raise osv.except_osv(_('No preview'),_('The current step for this item has no email or report to preview.'))
         return res
 
-marketing_campaign_workitem()
 
 class email_template(osv.osv):
     _inherit = "email.template"
@@ -829,7 +823,6 @@ class email_template(osv.osv):
 
     # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign
 
-email_template()
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
@@ -842,7 +835,6 @@ class report_xml(osv.osv):
             args.append(('model', '=', model))
         return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
 
-report_xml()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

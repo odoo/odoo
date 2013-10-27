@@ -150,7 +150,6 @@ class event_moodle(osv.osv):
             name_user = "moodle_" + "%d" % (response_courses,) + "%d" % (random.randint(1,999999),)
         return name_user
 
-event_moodle()
 
 class event_event(osv.osv):
     _inherit = "event.event"
@@ -221,7 +220,6 @@ class event_event(osv.osv):
             moodle_pool.moodle_enrolled(cr, uid, moodle_config_wiz_id, enrolled, context=context)
         return res
 
-event_event()
 
 class event_registration(osv.osv):
 
@@ -286,4 +284,3 @@ class event_registration(osv.osv):
                     'city': reg.city,
                     'street': reg.street}}
         return res
-event_registration()

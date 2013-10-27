@@ -160,14 +160,19 @@
                     <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object" class="oe_highlight"/>
                     <button name="button_done" string="Done" states="progress" type="object" class="oe_highlight"/>
                     <button name="button_draft" string="Reset to Draft" states="cancel" type="object" />
-                    <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"/>
+                    <button name="button_cancel" string="Cancel Appraisal" states="draft,wait,progress" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                 </header>
                 <sheet>
                     <label for="employee_id" class="oe_edit_only"/>
-                    <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline"/>, <field name="date" class="oe_inline"/></h1>
+                    <h1><field name="employee_id" class="oe_inline"
+                                attrs="{'readonly': [('state', '=', 'done')]}"
+                                on_change="onchange_employee_id(employee_id)"/>,
+                        <field name="date"
+                                attrs="{'readonly': [('state', '=', 'done')]}"/>
+                    </h1>
                     <label for="plan_id" class="oe_edit_only"/>
-                    <h2><field name="plan_id"/></h2>
+                    <h2><field name="plan_id" attrs="{'readonly': [('state', '=', 'done')]}"/></h2>
                     <group>
                         <group colspan="4" attrs="{'invisible':['|', ('state','=','draft'), ('state', '=', 'wait')]}">
                             <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')]}"/>
@@ -175,7 +180,7 @@
                         </group>
                     </group>
                     <group string="Appraisal Forms" attrs="{'invisible':[('state','=','draft')]}">
-                        <field nolabel="1" name="survey_request_ids">
+                        <field nolabel="1" name="survey_request_ids" attrs="{'readonly': [('state', '=', 'done')]}">
                             <form string="Interview Appraisal" version="7.0">
                                 <div class="oe_right oe_button_box">
                                     <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
@@ -185,7 +190,7 @@
                                     <group>
                                         <field name="survey_id"/>
                                         <field name="user_to_review_id"/>
-                                        <field name="user_id" string="Interviewer"/>
+                                        <field name="user_id" string="Interviewer" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
                                     </group>
                                     <group>              
                                         <field name="date_deadline"/>
@@ -246,7 +251,7 @@
                         <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by' : 'employee_id'}" />
                         <filter string='Plan' icon="terp-stock_align_left_24" domain="[]" context="{'group_by' : 'plan_id'}" />
                         <filter string='Status' icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
-                        <filter string='Date' icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
+                        <filter string='Appraisals Month' icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" help="Appraisals by Month" />
                    </group>
                </search>
             </field>
@@ -282,7 +287,7 @@
             <field name="arch" type="xml">
                 <form string="Interview Appraisal" version="7.0">
                     <header>
-                        <button string="Cancel" name="survey_req_cancel" type="object"
+                        <button string="Cancel Survey" name="survey_req_cancel" type="object"
                             states="draft,waiting_answer" class="oe_left"/>
                         <button string="Print Survey" name="action_print_survey"  type="object"
                             states="draft" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}"
@@ -308,7 +313,7 @@
                             <group>
                                 <field name="survey_id"/>
                                 <field name="user_to_review_id"/>
-                                <field name="user_id" string="Interviewer"/>
+                                <field name="user_id" string="Interviewer" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
                             </group>
                             <group>
                                 <field name="date_deadline"/>

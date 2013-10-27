@@ -152,6 +152,7 @@
     </blockTable>
   </pto_header>
     <para style="terp_default_8">[[repeatIn(objects,'picking')]] </para>
+    <para style="terp_default_8">[[picking.type == 'out' and picking.partner_id and setLang(picking.partner_id.lang) or '']]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
@@ -257,7 +258,9 @@
             <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ move_lines.state ]]</para>
+            <para style="terp_default_9">Waiting Availability[[ move_lines.state == 'confirmed' and ' ' or removeParentNode('para') ]]</para>
+            <para style="terp_default_9">Done[[ move_lines.state == 'done' and ' ' or removeParentNode('para') ]]</para>
+            <para style="terp_default_9">Available[[ move_lines.state == 'assigned' and ' ' or removeParentNode('para') ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]] </para>

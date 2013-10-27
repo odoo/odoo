@@ -9,12 +9,12 @@
             <field name="model">survey.print.statistics</field>
             <field name="arch" type="xml">
                 <form string="Survey Print Statistics" version="7.0">
-                    <header>
+                    <field name="survey_ids"/>
+                    <footer>
                         <button name="action_next" string="Print" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
-                    <field name="survey_ids"/>
+                    </footer>
                 </form>
             </field>
         </record>

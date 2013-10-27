@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
@@ -21,9 +20,9 @@ class CashBox(osv.osv_memory):
         active_model = context.get('active_model', False) or False
         active_ids = context.get('active_ids', []) or []
 
-        records = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)
+        records = self.pool[active_model].browse(cr, uid, active_ids, context=context)
 
-        return self._run(cr, uid, ids, records, context=None)
+        return self._run(cr, uid, ids, records, context=context)
 
     def _run(self, cr, uid, ids, records, context=None):
         for box in self.browse(cr, uid, ids, context=context):
@@ -63,10 +62,11 @@ class CashBoxIn(CashBox):
             'name' : box.name,
         }
 
-CashBoxIn()
 
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
+
+    _columns = CashBox._columns.copy()
 
     def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
         amount = box.amount or 0.0
@@ -78,4 +78,3 @@ class CashBoxOut(CashBox):
             'name' : box.name,
         }
 
-CashBoxOut()

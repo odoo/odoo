@@ -76,7 +76,7 @@ class mail_group(osv.Model):
             help="Small-sized photo of the group. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="The email address associated with this group. New emails received will automatically "
                  "create new topics."),
     }
@@ -93,17 +93,16 @@ class mail_group(osv.Model):
         'public': 'groups',
         'group_public_id': _get_default_employee_group,
         'image': _get_default_image,
-        'alias_domain': False,  # always hide alias during creation
     }
 
     def _generate_header_description(self, cr, uid, group, context=None):
         header = ''
         if group.description:
             header = '%s' % group.description
-        if group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain:
+        if group.alias_id and group.alias_name and group.alias_domain:
             if header:
                 header = '%s<br/>' % header
-            return '%sGroup email gateway: %s@%s' % (header, group.alias_id.alias_name, group.alias_id.alias_domain)
+            return '%sGroup email gateway: %s@%s' % (header, group.alias_name, group.alias_domain)
         return header
 
     def _subscribe_users(self, cr, uid, ids, context=None):
@@ -114,15 +113,8 @@ class mail_group(osv.Model):
             self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id'):
-            vals.pop('alias_name', None)  # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid,
-                          # Using '+' allows using subaddressing for those who don't
-                          # have a catchall domain setup.
-                          {'alias_name': "group+" + vals['name']},
-                          model_name=self._name, context=context)
-            vals['alias_id'] = alias_id
+        if context is None:
+            context = {}
 
         # get parent menu
         menu_parent = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
@@ -134,8 +126,10 @@ class mail_group(osv.Model):
         vals['menu_id'] = menu_id
 
         # Create group and alias
-        mail_group_id = super(mail_group, self).create(cr, uid, vals, context=context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
+        create_context = dict(context, alias_model_name=self._name, alias_parent_model_name=self._name)
+        mail_group_id = super(mail_group, self).create(cr, uid, vals, context=create_context)
+        group = self.browse(cr, uid, mail_group_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [group.alias_id.id], {"alias_force_thread_id": mail_group_id, 'alias_parent_thread_id': mail_group_id}, context)
         group = self.browse(cr, uid, mail_group_id, context=context)
 
         # Create client action for this group and link the menu to it
@@ -144,11 +138,19 @@ class mail_group(osv.Model):
             search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search')
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
-                'domain': [('model', '=', 'mail.group'), ('res_id', '=', mail_group_id)],
-                'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id, 'search_default_message_unread': True},
+                'domain': [
+                    ('model', '=', 'mail.group'),
+                    ('res_id', '=', mail_group_id),
+                ],
+                'context': {
+                    'default_model': 'mail.group',
+                    'default_res_id': mail_group_id,
+                },
                 'res_model': 'mail.message',
                 'thread_level': 1,
-                'header_description': self._generate_header_description(cr, uid, group, context=context)
+                'header_description': self._generate_header_description(cr, uid, group, context=context),
+                'view_mailbox': True,
+                'compose_placeholder': 'Send a message to the group',
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
@@ -200,3 +202,12 @@ class mail_group(osv.Model):
         """ Wrapper because message_unsubscribe_users take a user_ids=None
             that receive the context without the wrapper. """
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
+
+    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
+        """Show the suggestion of groups if display_groups_suggestions if the
+        user perference allows it."""
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        if not user.display_groups_suggestions:
+            return []
+        else:
+            return super(mail_group, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)

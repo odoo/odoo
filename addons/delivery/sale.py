@@ -51,10 +51,10 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
-                raise osv.except_osv(_('No grid available !'), _('No grid matching for this carrier !'))
+                raise osv.except_osv(_('No Grid Available!'), _('No grid matching for this carrier!'))
 
             if not order.state in ('draft'):
-                raise osv.except_osv(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
+                raise osv.except_osv(_('Order not in Draft State!'), _('The order state have to be draft to add delivery lines.'))
 
             grid = grid_obj.browse(cr, uid, grid_id, context=context)
 
@@ -76,7 +76,6 @@ class sale_order(osv.osv):
         return self.write(cr, uid, ids, {'carrier_id': False}, context=context)
         #return {'type': 'ir.actions.act_window_close'} action reload?
 
-sale_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

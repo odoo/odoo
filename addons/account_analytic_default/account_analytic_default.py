@@ -67,14 +67,13 @@ class account_analytic_default(osv.osv):
                 best_index = index
         return res
 
-account_analytic_default()
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     _description = "Invoice Line"
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
-        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id=currency_id, context=context, company_id=company_id)
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
+        res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id=currency_id, context=context, company_id=company_id)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context=context)
         if rec:
             res_prod['value'].update({'account_analytic_id': rec.analytic_id.id})
@@ -82,7 +81,6 @@ class account_invoice_line(osv.osv):
             res_prod['value'].update({'account_analytic_id': False})
         return res_prod
 
-account_invoice_line()
 
 
 class stock_picking(osv.osv):
@@ -97,7 +95,6 @@ class stock_picking(osv.osv):
 
         return super(stock_picking, self)._get_account_analytic_invoice(cursor, user, picking, move_line)
 
-stock_picking()
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
@@ -118,6 +115,5 @@ class sale_order_line(osv.osv):
                 inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)
         return create_ids
 
-sale_order_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

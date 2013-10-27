@@ -20,17 +20,10 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
 from openerp.addons.crm import crm
 
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
-]
 class project_issue_report(osv.osv):
     _name = "project.issue.report"
     _auto = False
@@ -38,18 +31,13 @@ class project_issue_report(osv.osv):
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'month':fields.selection(fields.date.MONTHS, 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'opening_date': fields.date('Date of Opening', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Date of Closing', readonly=True),
+        'date_last_stage_update': fields.date('Last Stage Update', readonly=True),
         'stage_id': fields.many2one('project.task.type', 'Stage'),
         'nbr': fields.integer('# of Issues', readonly=True),
         'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True, group_operator="avg"),
@@ -63,9 +51,9 @@ class project_issue_report(osv.osv):
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'user_id' : fields.many2one('res.users', 'Assigned to',readonly=True),
-        'partner_id': fields.many2one('res.partner','Contact',domain="[('object_id.model', '=', 'project.issue')]"),
+        'partner_id': fields.many2one('res.partner','Contact'),
         'channel_id': fields.many2one('crm.case.channel', 'Channel',readonly=True),
-        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
+        'task_id': fields.many2one('project.task', 'Task'),
         'email': fields.integer('# Emails', size=128, readonly=True),
     }
 
@@ -80,7 +68,7 @@ class project_issue_report(osv.osv):
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
-                    c.state,
+                    date_trunc('day',c.date_last_stage_update) as date_last_stage_update,
                     c.user_id,
                     c.working_hours_open,
                     c.working_hours_close,
@@ -96,8 +84,8 @@ class project_issue_report(osv.osv):
                     c.channel_id,
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
-                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
-                    extract('epoch' from (c.date_closed-c.date_open))/(3600*24) as  delay_close,
+                    c.day_open as delay_open,
+                    c.day_close as delay_close,
                     (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email
 
                 FROM
@@ -105,6 +93,5 @@ class project_issue_report(osv.osv):
                 WHERE c.active= 'true'
             )""")
 
-project_issue_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

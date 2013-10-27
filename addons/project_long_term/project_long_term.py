@@ -198,7 +198,6 @@ class project_phase(osv.osv):
             result += "\n"
 
         return result
-project_phase()
 
 class project_user_allocation(osv.osv):
     _name = 'project.user.allocation'
@@ -211,7 +210,6 @@ class project_user_allocation(osv.osv):
         'date_start': fields.datetime('Start Date', help="Starting Date"),
         'date_end': fields.datetime('End Date', help="Ending Date"),
     }
-project_user_allocation()
 
 class project(osv.osv):
     _inherit = "project.project"
@@ -267,7 +265,6 @@ class project(osv.osv):
                     'date_end': p.end.strftime('%Y-%m-%d %H:%M:%S')
                 }, context=context)
         return True
-project()
 
 class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
@@ -283,17 +280,17 @@ class account_analytic_account(osv.osv):
             res['value']['use_phases'] = template.use_phases
         return res
 
-    def _trigger_project_creation(self, cr, uid, vals, context=None):
-        res= super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
-        return res or vals.get('use_phases')
 
-account_analytic_account()
+    def _trigger_project_creation(self, cr, uid, vals, context=None):
+        if context is None: context = {}
+        res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
+        return res or (vals.get('use_phases') and not 'project_creation_in_progress' in context)
+
 
 class project_task(osv.osv):
     _inherit = "project.task"
     _columns = {
         'phase_id': fields.many2one('project.phase', 'Project Phase', domain="[('project_id', '=', project_id)]"),
     }
-project_task()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

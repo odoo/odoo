@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from openerp import pooler
 from openerp.tools.translate import _
 
+# Mixin to use with rml_parse, so self.pool will be defined.
 class common_report_header(object):
 
     def _sum_debit(self, period_id=False, journal_id=False):
@@ -75,17 +75,17 @@ class common_report_header(object):
 
     def get_start_period(self, data):
         if data.get('form', False) and data['form'].get('period_from', False):
-            return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,data['form']['period_from']).name
+            return self.pool.get('account.period').browse(self.cr,self.uid,data['form']['period_from']).name
         return ''
 
     def get_end_period(self, data):
         if data.get('form', False) and data['form'].get('period_to', False):
-            return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr, self.uid, data['form']['period_to']).name
+            return self.pool.get('account.period').browse(self.cr, self.uid, data['form']['period_to']).name
         return ''
 
     def _get_account(self, data):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
-            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).name
+            return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).name
         return ''
 
     def _get_sortby(self, data):
@@ -120,12 +120,12 @@ class common_report_header(object):
 
     def _get_fiscalyear(self, data):
         if data.get('form', False) and data['form'].get('fiscalyear_id', False):
-            return pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr, self.uid, data['form']['fiscalyear_id']).name
+            return self.pool.get('account.fiscalyear').browse(self.cr, self.uid, data['form']['fiscalyear_id']).name
         return ''
 
     def _get_company(self, data):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
-            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.name
+            return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.name
         return ''
 
     def _get_journal(self, data):
@@ -137,7 +137,7 @@ class common_report_header(object):
 
     def _get_currency(self, data):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
-            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.symbol
+            return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.symbol
         return ''
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -69,16 +69,16 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;To Buy&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In case the Supply method of the product is Buy, the system creates a purchase order.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_rfq0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_stock0"/>
+            <field name="target_node_id" ref="process_node_rfq0"/>
+            <field name="source_node_id" ref="process_node_stock0"/>
         </record>
 
         <record id="process_transition_stockproduction0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;To Produce&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;In case the Supply method of the product is Produce, the system creates a production order.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_production0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_stock0"/>
+            <field name="target_node_id" ref="process_node_production0"/>
+            <field name="source_node_id" ref="process_node_stock0"/>
         </record>
 
     </data>
