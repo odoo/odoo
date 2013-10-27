@@ -33,10 +33,9 @@ import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
 from openerp.tools import config
+from openerp import http
 
-from .. import http
-
-from openerp.addons.web.http import request
+from openerp.http import request
 
 #----------------------------------------------------------
 # OpenERP Web helpers

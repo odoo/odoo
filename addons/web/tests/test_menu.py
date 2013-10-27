@@ -4,7 +4,7 @@ import collections
 import mock
 import unittest2
 
-from openerp.addons.web.http import request as req
+from openerp.http import request as req
 
 from . import common
 
