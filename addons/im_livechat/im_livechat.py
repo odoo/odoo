@@ -27,7 +27,7 @@ import openerp
 import openerp.addons.im.im as im
 from openerp.osv import osv, fields
 from openerp import tools
-from openerp.http as http
+from openerp import http
 from openerp.http import request
 
 env = jinja2.Environment(
