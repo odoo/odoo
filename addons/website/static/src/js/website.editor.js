@@ -272,30 +272,58 @@
             editor.destroy();
             // FIXME: select editables then filter by dirty?
             var defs = this.rte.fetch_editables(root)
-                .removeClass('oe_editable cke_focus')
-                .removeAttr('contentEditable')
                 .filter('.oe_dirty')
+                .removeAttr('contentEditable')
+                .removeClass('oe_dirty oe_editable cke_focus oe_carlos_danger')
                 .map(function () {
                     var $el = $(this);
                     // TODO: Add a queue with concurrency limit in webclient
                     // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
                     return self.saving_mutex.exec(function () {
                         return self.saveElement($el)
-                            .fail(function () {
-                                var data = $el.data();
-                                console.error(_.str.sprintf('Could not save %s(%d).%s', data.oeModel, data.oeId, data.oeField));
+                            .then(undefined, function (thing, response) {
+                                // because ckeditor regenerates all the dom,
+                                // we can't just setup the popover here as
+                                // everything will be destroyed by the DOM
+                                // regeneration. Add markings instead, and
+                                // returns a new rejection with all relevant
+                                // info
+                                var id = _.uniqueId('carlos_danger_');
+                                $el.addClass('oe_dirty oe_carlos_danger');
+                                $el.addClass(id);
+                                return $.Deferred().reject({
+                                    id: id,
+                                    error: response.data,
+                                });
                             });
                     });
                 }).get();
             return $.when.apply(null, defs).then(function () {
                 website.reload();
+            }, function (failed) {
+                // If there were errors, re-enable edition
+                self.rte.start_edition(true).then(function () {
+                    // jquery's deferred being a pain in the ass
+                    if (!_.isArray(failed)) { failed = [failed]; }
+
+                    _(failed).each(function (failure) {
+                        $(root).find('.' + failure.id)
+                            .removeClass(failure.id)
+                            .popover({
+                                trigger: 'hover',
+                                content: failure.error.message,
+                                placement: 'auto top',
+                            })
+                            // Force-show popovers so users will notice them.
+                            .popover('show');
+                    })
+                });
             });
         },
         /**
          * Saves an RTE content, which always corresponds to a view section (?).
          */
         saveElement: function ($el) {
-            $el.removeClass('oe_dirty');
             var markup = $el.prop('outerHTML');
             return openerp.jsonRpc('/web/dataset/call', 'call', {
                 model: 'ir.ui.view',
@@ -422,15 +450,25 @@
 
             return true;
         },
-        start_edition: function () {
+        /**
+         * Makes the page editable
+         *
+         * @param {Boolean} [restart=false] in case the edition was already set
+         *                                  up once and is being re-enabled.
+         * @returns {$.Deferred} deferred indicating when the RTE is ready
+         */
+        start_edition: function (restart) {
             var self = this;
             // create a single editor for the whole page
             var root = document.getElementById('wrapwrap');
-            $(root).on('dragstart', 'img', function (e) {
-                e.preventDefault();
-            });
-            this.webkitSelectionFixer(root);
-            this.tableNavigation(root);
+            if (!restart) {
+                $(root).on('dragstart', 'img', function (e) {
+                    e.preventDefault();
+                });
+                this.webkitSelectionFixer(root);
+                this.tableNavigation(root);
+            }
+            var def = $.Deferred();
             var editor = this.editor = CKEDITOR.inline(root, self._config());
             editor.on('instanceReady', function () {
                 editor.setReadOnly(false);
@@ -446,7 +484,9 @@
                 document.execCommand("enableInlineTableEditing", false, "false");
 
                 self.trigger('rte:ready');
+                def.resolve();
             });
+            return def;
         },
 
         setup_editables: function (root) {
@@ -477,7 +517,6 @@
 
         fetch_editables: function (root) {
             return $(root).find('[data-oe-model]')
-                // FIXME: propagation should make "meta" blocks non-editable in the first place...
                 .not('link, script')
                 .not('.oe_snippet_editor')
                 .filter(function () {

@@ -43,7 +43,7 @@
               <b t-field="product.name"/>
           </a>
       </div>
-      <div class="product_price">
+      <div class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                 <del class="text-danger"
@@ -285,7 +285,7 @@
                               <br/>
                           </t>
 
-                          <div class="product_price mt16">
+                          <div class="product_price mt16" t-if="product.product_variant_ids">
                               <h4>
                                   <b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b>
 
@@ -463,7 +463,7 @@
                             </thead>
                         </table>
                         <div class="clearfix"/>
-                        <a t-href="/shop" class="btn btn-default"><span class="icon-long-arrow-left"/> Continue Shopping</a>
+                        <a t-href="/shop" class="btn btn-default mb32"><span class="icon-long-arrow-left"/> Continue Shopping</a>
                         <a t-if="website_sale_order and website_sale_order.order_line" t-href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
                         <div class="oe_structure"/>
                     </div>
@@ -618,7 +618,7 @@
 
                 <div class="row">
                 <div class="col-md-8 oe_mycart">
-                    <h3 class="page-header mt16">Set Billing Information
+                    <h3 class="page-header mt16">Billing Information
                         <small t-if="user_id.id == website.public_user.id"> or
                             <a t-if="not partner" t-attf-href="/web#action=redirect&amp;url=#{ request.httprequest.host_url }/shop/checkout/">sign in</a>
                         </small>
@@ -749,10 +749,6 @@
                             "display_currency": "website.pricelist_id.currency_id"
                         }'/></h4></div>
                     </div>
-                    <button type="submit" class="btn btn-default btn-primary pull-right mt16" t-if="user_id.id != website.public_user.id">
-                        Confirm <span class="icon-long-arrow-right"/>
-                    </button>
-
                 </div>
             </div>
             </form>
