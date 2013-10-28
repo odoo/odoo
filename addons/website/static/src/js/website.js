@@ -21,9 +21,6 @@
         templates.push(template);
     };
     website.load_templates = function(templates) {
-        var def = $.Deferred();
-        var count = templates.length;
-
         var dones = _(templates).map(function (t) {
             return new $.Deferred(function (d) {
                 openerp.qweb.add_template(t, function(err) {
@@ -39,8 +36,8 @@
     };
     website.reload = function () {
         location.hash = "scrollTop=" + window.document.body.scrollTop;
-        if (location.search.indexOf("unable_editor") > -1) {
-            window.location.href = window.location.href.replace(/unable_editor(=[^&]*)?/g, '');
+        if (location.search.indexOf("enable_editor") > -1) {
+            window.location.href = window.location.href.replace(/enable_editor(=[^&]*)?/g, '');
         } else {
             window.location.reload();
         }
@@ -151,7 +148,7 @@
                 });
         });
 
-        $(document).on('click', '.js_publish_management .js_publish_btn', function (e) {
+        $(document).on('click', '.js_publish_management .js_publish_btn', function () {
             var $data = $(this).parents(".js_publish_management:first");
             var $btn = $data.find('.btn:first');
             var publish = $btn.hasClass("btn-success");
