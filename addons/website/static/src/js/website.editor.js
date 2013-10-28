@@ -517,7 +517,6 @@
 
         fetch_editables: function (root) {
             return $(root).find('[data-oe-model]')
-                // FIXME: propagation should make "meta" blocks non-editable in the first place...
                 .not('link, script')
                 .not('.oe_snippet_editor')
                 .filter(function () {

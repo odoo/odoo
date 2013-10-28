@@ -25,8 +25,8 @@
         save: function () {
             this.snippets.make_active(false);
 
-	    // TODO TOFIX: call clean_for_save on all snippets of the page, not only modified ones
-	    // important for banner of parallax that changes data automatically.
+            // FIXME: call clean_for_save on all snippets of the page, not only modified ones
+            // important for banner of parallax that changes data automatically.
             this.snippets.clean_for_save();
             remove_added_snippet_id();
             this._super();
