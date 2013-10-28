@@ -1332,6 +1332,9 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                                 .removeClass('ui-icon-triangle-1-s')
                                 .addClass('ui-icon-triangle-1-e');
                         child.close();
+                        // force recompute the selection as closing group reset properties
+                        var selection = self.get_selection();
+                        $(self).trigger('selected', [selection.ids, this.records]);
                     }
                 });
             }
