@@ -62,6 +62,7 @@ Print product labels with barcode.
         'product_pricelist_demo.yml',
         'test/product_uom.yml',
         'test/product_pricelist.yml',
+        'test/compute_price_margin.yml',
     ],
     'installable': True,
     'auto_install': False,
