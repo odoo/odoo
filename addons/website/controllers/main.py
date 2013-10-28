@@ -51,8 +51,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def index(self, **kw):
         return self.page("website.homepage")
 
-    # FIXME: auth, if /pagenew known anybody can create new empty page
-    @website.route('/pagenew/<path:path>', type='http', auth="admin")
+    @website.route('/pagenew/<path:path>', type='http', auth="user")
     def pagenew(self, path, noredirect=NOPE):
         module = 'website'
         # completely arbitrary max_length
@@ -131,7 +130,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             html = request.website.render('website.404', values)
         return html
 
-    @website.route('/website/customize_template_toggle', type='json', auth='admin') # FIXME: auth
+    @website.route('/website/customize_template_toggle', type='json', auth='user')
     def customize_template_set(self, view_id):
         view_obj = request.registry.get("ir.ui.view")
         view = view_obj.browse(request.cr, request.uid, int(view_id),
@@ -145,7 +144,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         }, context=request.context)
         return True
 
-    @website.route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
+    @website.route('/website/customize_template_get', type='json', auth='user')
     def customize_template_get(self, xml_id, optional=True):
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
@@ -215,7 +214,6 @@ class Website(openerp.addons.web.controllers.main.Home):
                         'value': new_content,
                     }
                     irt.create(request.cr, request.uid, new_trans)
-        irt._get_source.clear_cache(irt) # FIXME: find why ir.translation does not invalidate
         return True
 
     @website.route('/website/attach', type='http', auth='user')
@@ -329,21 +327,13 @@ class Images(http.Controller):
         if response.status_code == 304:
             return response
 
-        return self.set_image_data(
-            response, record[field].decode('base64'),
-            fit=(int(max_width), int(max_height)))
+        data = record[field].decode('base64')
+        fit = int(max_width), int(max_height)
 
-    def set_image_data(self, response, data, fit=(maxint, maxint)):
-        """ Sets an inferred mime type on the response object, and puts the
-        provided image's data in it, possibly after resizing if requested
-
-        Returns the response object after setting its mime and content, so
-        the result of ``get_final_image`` can be returned directly.
-        """
         buf = cStringIO.StringIO(data)
 
-        # FIXME: unknown format or not an image
         image = Image.open(buf)
+        image.load()
         response.mimetype = Image.MIME[image.format]
 
         w, h = image.size

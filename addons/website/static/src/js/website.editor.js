@@ -174,6 +174,157 @@
             }
         });
 
+        CKEDITOR.plugins.add('bootstrapcombo', {
+            requires: 'richcombo',
+
+            init: function (editor) {
+                var config = editor.config;
+
+                editor.ui.addRichCombo('BootstrapLinkCombo', {
+                    // default title
+                    label: "Links",
+                    // hover
+                    title: "Link styling",
+                    toolbar: 'styles,10',
+                    allowedContent: ['a'],
+
+                    panel: {
+					    css: [
+                            '/website/static/lib/bootstrap/css/bootstrap.css',
+                            CKEDITOR.skin.getPath( 'editor' )
+                        ].concat( config.contentsCss ),
+                        multiSelect: true,
+                    },
+
+                    types: {
+                        'basic': 'btn-default',
+                        'primary': 'btn-primary',
+                        'success': 'btn-success',
+                        'info': 'btn-info',
+                        'warning': 'btn-warning',
+                        'danger': 'btn-danger',
+                    },
+
+                    sizes: {
+                        'large': 'btn-lg',
+                        'default': '',
+                        'small': 'btn-sm',
+                        'extra small': 'btn-xs',
+                    },
+
+                    init: function () {
+                        this.add('', 'Reset');
+                        this.startGroup("Types");
+                        for(var type in this.types) {
+                            if (!this.types.hasOwnProperty(type)) { continue; }
+                            var cls = this.types[type];
+                            var el = _.str.sprintf(
+                                '<span class="btn %s">%s</span>',
+                                cls, type);
+                            this.add(type, el);
+                        }
+                        this.startGroup("Sizes");
+                        for (var size in this.sizes) {
+                            if (!this.sizes.hasOwnProperty(size)) { continue; }
+                            cls = this.sizes[size];
+
+                            el = _.str.sprintf(
+                                '<span class="btn btn-default %s">%s</span>',
+                                cls, size);
+                            this.add(size, el);
+                        }
+                        this.commit();
+                    },
+                    onRender: function () {
+                        var self = this;
+                        editor.on('selectionChange', function (e) {
+                            var path = e.data.path, el;
+
+                            if (!(el = path.contains('a'))) {
+                                self.element = null;
+                                self.disable();
+                                return;
+                            }
+
+                            self.enable();
+                            // This is crap, but getting the currently selected
+                            // element from within onOpen absolutely does not
+                            // work, so store the "current" element in the
+                            // widget instead
+                            self.element = el;
+                        });
+                        setTimeout(function () {
+                            // Because I can't find any normal hook where the
+                            // bloody button's bloody element is available
+                            self.disable();
+                        }, 0);
+                    },
+                    onOpen: function () {
+                        this.showAll();
+                        this.unmarkAll();
+
+                        for(var val in this.types) {
+                            if (!this.types.hasOwnProperty(val)) { continue; }
+                            var cls = this.types[val];
+                            if (!this.element.hasClass(cls)) { continue; }
+
+                            this.mark(val);
+                            break;
+                        }
+
+                        var found;
+                        for(val in this.sizes) {
+                            if (!this.sizes.hasOwnProperty(val)) { continue; }
+                            cls = this.sizes[val];
+                            if (!cls || !this.element.hasClass(cls)) { continue; }
+
+                            found = true;
+                            this.mark(val);
+                            break;
+                        }
+                        if (!found && this.element.hasClass('btn')) {
+                            this.mark('default');
+                        }
+                    },
+                    onClick: function (value) {
+                        editor.focus();
+                        editor.fire('saveShapshot');
+
+                        // basic btn setup
+                        var el = this.element;
+                        if (!el.hasClass('btn')) {
+                            el.addClass('btn');
+                            el.addClass('btn-default');
+                        }
+
+                        if (!value) {
+                            this.setClass(this.types);
+                            this.setClass(this.sizes);
+                            el.removeClass('btn');
+                        } else if (value in this.types) {
+                            this.setClass(this.types, value);
+                        } else if (value in this.sizes) {
+                            this.setClass(this.sizes, value);
+                        }
+
+                        editor.fire('saveShapshot');
+                    },
+                    setClass: function (classMap, value) {
+                        var element = this.element;
+                        _(classMap).each(function (cls) {
+                            if (!cls) { return; }
+                            element.removeClass(cls);
+                        }.bind(this));
+
+                        var cls = classMap[value];
+                        if (cls) {
+                            element.addClass(cls);
+                        }
+                    }
+                });
+            },
+        });
+
         var editor = new website.EditorBar();
         var $body = $(document.body);
         editor.prependTo($body).then(function () {
@@ -517,7 +668,6 @@
 
         fetch_editables: function (root) {
             return $(root).find('[data-oe-model]')
-                // FIXME: propagation should make "meta" blocks non-editable in the first place...
                 .not('link, script')
                 .not('.oe_snippet_editor')
                 .filter(function () {
@@ -567,7 +717,7 @@
                 fillEmptyBlocks: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref',
+                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref,bootstrapcombo',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [{
@@ -589,7 +739,7 @@
                         "Image", "TableButton"
                     ]},{
                     name: 'styles', items: [
-                        "Styles"
+                        "Styles", "BootstrapLinkCombo"
                     ]}
                 ],
                 // styles dropdown in toolbar
@@ -602,14 +752,7 @@
                     {name: "Heading 5", element: 'h5'},
                     {name: "Heading 6", element: 'h6'},
                     {name: "Formatted", element: 'pre'},
-                    {name: "Address", element: 'address'},
-                    // emphasis
-                    {name: "Muted", element: 'span', attributes: {'class': 'text-muted'}},
-                    {name: "Primary", element: 'span', attributes: {'class': 'text-primary'}},
-                    {name: "Warning", element: 'span', attributes: {'class': 'text-warning'}},
-                    {name: "Danger", element: 'span', attributes: {'class': 'text-danger'}},
-                    {name: "Success", element: 'span', attributes: {'class': 'text-success'}},
-                    {name: "Info", element: 'span', attributes: {'class': 'text-info'}}
+                    {name: "Address", element: 'address'}
                 ],
             };
         },
