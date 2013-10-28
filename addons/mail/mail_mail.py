@@ -157,9 +157,9 @@ class mail_mail(osv.Model):
                 'action': 'mail.action_mail_redirect',
             }
             if mail.notification:
-                fragment.update({
-                    'message_id': mail.mail_message_id.id,
-                })
+                fragment['message_id'] = mail.mail_message_id.id
+            elif mail.model and mail.res_id:
+                fragment.update(model=mail.model, res_id=mail.res_id)
             url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
             return _("""<small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small>""") % url
         else:

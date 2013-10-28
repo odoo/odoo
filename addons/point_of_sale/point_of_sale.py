@@ -280,7 +280,7 @@ class pos_session(osv.osv):
             # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
             domain = [
                 ('state', 'not in', ('closed','closing_control')),
-                ('user_id', '=', uid)
+                ('user_id', '=', session.user_id.id)
             ]
             count = self.search_count(cr, uid, domain, context=context)
             if count>1:
