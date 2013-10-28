@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv, api
 from lxml import etree
+from lxml.builder import E
 
 from openerp.tools.translate import _
 
@@ -238,6 +239,28 @@ class res_partner(osv.osv):
         """
         from report import account_followup_print
 
+        tag_td = lambda value: E.td(value)
+        tag_td_bold = lambda value: E.td(E.b(value))
+
+        def generate_element_lines(iterable, current_date):
+            lines = []
+            for item in iterable:
+                date = item['date_maturity'] or item['date']
+
+                condition = date <= current_date and item['balance'] > 0
+                td = tag_td_bold if condition else tag_td
+
+                line = E.tr(
+                    td(str(item['date'])),
+                    td(item['name']),
+                    td(item['ref'] or ''),
+                    td(date),
+                    td(str(item['balance'])),
+                    td('X' if item['blocked'] else ' '),
+                )
+                lines.append(line)
+            return lines
+
         assert len(ids) == 1
         if context is None:
             context = {}
@@ -245,7 +268,9 @@ class res_partner(osv.osv):
         #copy the context to not change global context. Overwrite it because _() looks for the lang in local variable 'context'.
         #Set the language to use = the partner language
         context = dict(context, lang=partner.lang)
-        followup_table = ''
+
+        followup_table = []
+
         if partner.unreconciled_aml_ids:
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             current_date = fields.date.context_today(self, cr, uid, context=context)
@@ -254,33 +279,29 @@ class res_partner(osv.osv):
 
             for currency_dict in final_res:
                 currency = currency_dict.get('line', [{'currency_id': company.currency_id}])[0]['currency_id']
-                followup_table += '''
-                <table border="2" width=100%%>
-                <tr>
-                    <td>''' + _("Invoice Date") + '''</td>
-                    <td>''' + _("Description") + '''</td>
-                    <td>''' + _("Reference") + '''</td>
-                    <td>''' + _("Due Date") + '''</td>
-                    <td>''' + _("Amount") + " (%s)" % (currency.symbol) + '''</td>
-                    <td>''' + _("Lit.") + '''</td>
-                </tr>
-                ''' 
-                total = 0
-                for aml in currency_dict['line']:
-                    block = aml['blocked'] and 'X' or ' '
-                    total += aml['balance']
-                    strbegin = "<TD>"
-                    strend = "</TD>"
-                    date = aml['date_maturity'] or aml['date']
-                    if date <= current_date and aml['balance'] > 0:
-                        strbegin = "<TD><B>"
-                        strend = "</B></TD>"
-                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['name'] + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
-                total = rml_parse.formatLang(total, dp='Account', currency_obj=currency)
-                followup_table += '''<tr> </tr>
-                                </table>
-                                <center>''' + _("Amount due") + ''' : %s </center>''' % (total)
-        return followup_table
+                total = rml_parse.formatLang(
+                    sum(aml['balance'] for aml in currency_dict['line']),
+                    dp='Account',
+                    currency_obj=currency
+                )
+
+                table = E.table(
+                    E.tr(
+                        E.td(_('Invoice Date')),
+                        E.td(_('Description')),
+                        E.td(_('Reference')),
+                        E.td(_('Due Date')),
+                        E.td("%s (%s)" % (_('Amount'), currency.symbol)),
+                        E.td(_('Lit.'))
+                    ),
+                    *generate_element_lines(currency_dict['line'], current_date),
+                    border='2',
+                    width='100%'
+                )
+                followup_table.append(table)
+                followup_table.append(E.center("%s : %s".format(_('Amount due'), total)))
+
+        return ''.join(map(etree.tostring, followup_table))
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get("payment_responsible_id", False):
