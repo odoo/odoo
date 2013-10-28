@@ -19,14 +19,12 @@
 #
 ##############################################################################
 
-import copy
 from urllib import urlencode
 from urlparse import urljoin
 from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import uuid
-from openerp import SUPERUSER_ID
 
 
 class survey_survey(osv.osv):
@@ -45,7 +43,7 @@ class survey_survey(osv.osv):
     def _empty_check(self, cr, uid, ids, context=None):
         """ Ensure that this survey has at least one page with at least one
         question. If not, raises an exception. """
-        for survey in self.browse(cr, SUPERUSER_ID, ids, context=context):
+        for survey in self.browse(cr, uid, ids, context=context):
             if not survey.page_ids or not [page.question_ids
                             for page in survey.page_ids if page.question_ids]:
                 raise osv.except_osv(_('Warning!'),
@@ -60,7 +58,7 @@ class survey_survey(osv.osv):
         res = dict((id, 0) for id in ids)
         sur_res_obj = self.pool.get('survey.user_input')
         for id in ids:
-            res[id] = sur_res_obj.search(cr, SUPERUSER_ID,
+            res[id] = sur_res_obj.search(cr, uid,  # SUPERUSER_ID,
                 [('survey_id', '=', id), ('state', '=', 'skip')],
                 context=context, count=True)
         return res
@@ -70,7 +68,7 @@ class survey_survey(osv.osv):
         res = dict((id, 0) for id in ids)
         sur_res_obj = self.pool.get('survey.user_input')
         for id in ids:
-            res[id] = sur_res_obj.search(cr, SUPERUSER_ID,
+            res[id] = sur_res_obj.search(cr, uid,  # SUPERUSER_ID,
                 [('survey_id', '=', id), ('state', '=', 'done')],
                 context=context, count=True)
         return res
@@ -85,9 +83,9 @@ class survey_survey(osv.osv):
                 'db': cr.dbname
             }
             fragment = {
-                'active_id': survey_browse.id,
+                #'survey_id': survey_browse.id,
                 'action': 'survey.action_filling',
-                'params': survey_browse.token,
+                'survey_token': survey_browse.token,
             }
             res[survey_browse.id] = urljoin(base_url, "?%s#%s"
                                     % (urlencode(query), urlencode(fragment)))
@@ -124,9 +122,9 @@ class survey_survey(osv.osv):
         'user_input_ids': fields.one2many('survey.user_input', 'survey_id',
             'User responses', readonly=1,),
         'public_url': fields.function(_get_public_url,
-            string="Public link", type="char"),
-        'token': fields.char('Public token', size=36, required=True, readonly=True,
-            hidden=True),
+            string="Public link", type="char", store=True),
+        'token': fields.char('Public token', size=36, required=True,
+            readonly=True,),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
     }
@@ -165,7 +163,8 @@ class survey_survey(osv.osv):
         current_rec = self.read(cr, uid, ids, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
         vals['title'] = title
-        return super(survey_survey, self).copy(cr, uid, ids, vals, context=context)
+        return super(survey_survey, self).copy(cr, uid, ids, vals,
+            context=context)
 
     def action_print_survey_questions(self, cr, uid, ids, context=None):
         ''' Generates a printable view of an empty survey '''
@@ -258,15 +257,15 @@ class survey_survey(osv.osv):
             'context': ctx,
         }
 
-    def unlink(self, cr, uid, ids, context=None):
-        ''' Delete survey and linked email templates (if any) '''
-        # email_template_ids = list()
-        # for survey in self.browse(cr, uid, ids, context=context):
-        #     email_template_ids.append(survey.email_template_id.id)
-        # if email_template_ids:
-        #     self.pool.get('email.template').unlink(cr, uid, email_template_ids,
-        #                                         context=context)
-        return super(survey_survey, self).unlink(cr, uid, ids, context=context)
+    # def unlink(self, cr, uid, ids, context=None):
+    #     ''' Delete survey and linked email templates (if any) '''
+    #     email_template_ids = list()
+    #     for survey in self.browse(cr, uid, ids, context=context):
+    #         email_template_ids.append(survey.email_template_id.id)
+    #     if email_template_ids:
+    #         self.pool.get('email.template').unlink(cr, uid, email_template_ids,
+    #                                             context=context)
+    #     return super(survey_survey, self).unlink(cr, uid, ids, context=context)
 
 
 class survey_page(osv.osv):
@@ -413,12 +412,12 @@ class survey_question(osv.osv):
         'numeric_required_sum_err_msg': fields.text('Error message',
             translate=True),
 
-        #'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible?'),
-        #'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
-        #'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
-        #'comment_column': fields.boolean('Add comment column in matrix'),
-        #'column_name': fields.char('Column Name', translate=True),
-        #'no_of_rows': fields.integer('No of Rows'),
+        # 'in_visible_rating_weight': fields.boolean('Is Rating Scale nvisible?'),
+        # 'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
+        # 'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
+        # 'comment_column': fields.boolean('Add comment column in matrix'),
+        # 'column_name': fields.char('Column Name', translate=True),
+        # 'no_of_rows': fields.integer('No of Rows'),
 
         # Constraints on number of answers
         'constr_mandatory': fields.boolean('Mandatory question',
@@ -452,7 +451,8 @@ class survey_question(osv.osv):
         #'in_visible_answer_type': 1
     }
 
-    def on_change_type(self, cr, uid, ids, type, context=None):  # useful ?
+    def on_change_type(self, cr, uid, ids, type, context=None):
+        ''' Updates the editing view in relation with the question type '''
         val = {}
         val['is_require_answer'] = False
         val['is_comment_require'] = False
@@ -464,21 +464,25 @@ class survey_question(osv.osv):
             return {'value': val}
 
         if type in ['rating_scale']:
-            val.update({'in_visible_rating_weight': False, 'in_visible_menu_choice': True})
+            val.update({'in_visible_rating_weight': False,
+                        'in_visible_menu_choice': True})
             return {'value': val}
 
         elif type in ['single_textbox']:
-            val.update({'in_visible_rating_weight': True, 'in_visible_menu_choice': True})
+            val.update({'in_visible_rating_weight': True,
+                        'in_visible_menu_choice': True})
             return {'value': val}
 
         else:
-            val.update({'in_visible_rating_weight': True, 'in_visible_menu_choice': True, \
-                         'in_visible_answer_type': True})
+            val.update({'in_visible_rating_weight': True,
+                        'in_visible_menu_choice': True,
+                        'in_visible_answer_type': True})
             return {'value': val}
 
     def on_change_page_id(self, cr, uid, ids, page_id, context=None):
         if page_id:
-            page = self.pool.get('survey.page').browse(cr, uid, page_id, context=context)
+            page = self.pool.get('survey.page').browse(cr, uid, page_id,
+                                    context=context)
             return {'survey_id': page.survey_id and page.survey_id.id}
         return {'value': {}}
 
@@ -574,7 +578,8 @@ class survey_question(osv.osv):
         if context is None:
             context = {}
         surv_name_wiz = self.pool.get('survey.question.wiz')
-        surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)], {'transfer': True, 'page_no': context.get('page_number', False)})
+        surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)],
+            {'transfer': True, 'page_no': context.get('page_number', False)})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -593,7 +598,8 @@ class survey_suggestion(osv.osv):
     _columns = {
         'question_id': fields.many2one('survey.question', 'Question',
             required=True, ondelete='cascade'),
-        'value': fields.char(length=128, translate=True, required=True)
+        'value': fields.char("Suggested value", length=128, translate=True,
+            required=True)
     }
 
 
@@ -644,7 +650,8 @@ class survey_user_input(osv.osv):
             'default_multi_email': record.email or "",
             'default_public': 'email_private',
         })
-        return self.pool.get('survey.survey').action_survey_sent(cr, uid, [record.survey_id.id], context=context)
+        return self.pool.get('survey.survey').action_survey_sent(cr, uid,
+            [record.survey_id.id], context=context)
 
     def action_print_response(self, cr, uid, ids, context=None):
         """
@@ -657,11 +664,11 @@ class survey_user_input(osv.osv):
             'datas': {
                 'model': 'survey.print.statistics',
                 'form': {
-                        'response_ids': ids,
-                        'orientation': 'vertical',
-                        'paper_size': 'letter',
-                        'page_number': 0,
-                        'without_pagebreak': 0
+                    'response_ids': ids,
+                    'orientation': 'vertical',
+                    'paper_size': 'letter',
+                    'page_number': 0,
+                    'without_pagebreak': 0
                     }
                 },
             }
@@ -696,7 +703,8 @@ class survey_user_input(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['partner_id', 'date_create'], context=context)
+        reads = self.read(cr, uid, ids, ['partner_id', 'date_create'],
+            context=context)
         res = []
         for record in reads:
             name = (record['partner_id'] and record['partner_id'][1] or '') + ' (' + record['date_create'].split('.')[0] + ')'
@@ -704,7 +712,8 @@ class survey_user_input(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate the resource!'))
+        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
+            element!'))
 
 
 class survey_user_input_line(osv.osv):
