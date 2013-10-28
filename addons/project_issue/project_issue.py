@@ -465,18 +465,20 @@ class project_issue(osv.Model):
             return stage_ids[0]
         return False
 
-    def case_escalate(self, cr, uid, ids, context=None):
-        cases = self.browse(cr, uid, ids)
-        for case in cases:
+    def case_escalate(self, cr, uid, ids, context=None):        # FIXME rename this method to issue_escalate
+        for issue in self.browse(cr, uid, ids, context=context):
             data = {}
-            if case.project_id.project_escalation_id:
-                data['project_id'] = case.project_id.project_escalation_id.id
-                if case.project_id.project_escalation_id.user_id:
-                    data['user_id'] = case.project_id.project_escalation_id.user_id.id
-                if case.task_id:
-                    self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
-            else:
+            esc_proj = issue.project_id.project_escalation_id
+            if not esc_proj:
                 raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+
+            data['project_id'] = esc_proj.id
+            if esc_proj.user_id:
+                data['user_id'] = esc_proj.user_id.id
+            issue.write(data)
+
+            if issue.task_id:
+                issue.task_id.write({'project_id': esc_proj.id, 'user_id': False})
         return True
 
     # -------------------------------------------------------
