@@ -119,7 +119,7 @@
                     var modules = ['website'];
                     return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);
                 }
-            }).then(tpl).promise();
+            }).always(tpl).promise();
         }
         return all_ready;
     };
