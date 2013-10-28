@@ -849,21 +849,24 @@
             var context = website.get_context();
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website.menu',
-                method: 'get_list',
+                method: 'get_tree',
                 args: [[context.website_id]],
                 kwargs: {
                     context: context
                 },
             });
         },
-        fill_menus: function (results) {
+        fill_menus: function (tree) {
             var self = this;
             var menus = this.$('select.add-to-menu')[0];
-            _(results).each(function (result) {
-                var name = (new Array(result.level).join('|-')) + ' ' + result.name;
-                menus.options[menus.options.length] =
-                    new Option(name, result.id || 0);
-            });
+            var process_tree = function(node) {
+                var name = (new Array(node.level + 1).join('|-')) + ' ' + node.name;
+                menus.options[menus.options.length] = new Option(name, node.id);
+                node.children.forEach(function (child) {
+                    process_tree(child);
+                });
+            };
+            process_tree(tree);
         },
     });
     /**
