@@ -130,7 +130,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             html = request.website.render('website.404', values)
         return html
 
-    @website.route('/website/customize_template_toggle', type='json', auth='admin') # FIXME: auth
+    @website.route('/website/customize_template_toggle', type='json', auth='user')
     def customize_template_set(self, view_id):
         view_obj = request.registry.get("ir.ui.view")
         view = view_obj.browse(request.cr, request.uid, int(view_id),
@@ -144,7 +144,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         }, context=request.context)
         return True
 
-    @website.route('/website/customize_template_get', type='json', auth='admin') # FIXME: auth
+    @website.route('/website/customize_template_get', type='json', auth='user')
     def customize_template_get(self, xml_id, optional=True):
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
