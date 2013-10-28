@@ -107,14 +107,15 @@ class res_partner(osv.osv):
     _description = 'Partner'
 
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context=None):
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        ctx = context.copy()
+        ctx['all_fiscalyear'] = True
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=ctx)
         cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
                       WHERE a.type IN ('receivable','payable')
                       AND l.partner_id IN %s
-                      AND (l.reconcile_id IS NULL OR 
-                           reconcile_id in (SELECT id FROM account_move_reconcile WHERE opening_reconciliation is TRUE))
+                      AND l.reconcile_id IS NULL
                       AND """ + query + """
                       GROUP BY l.partner_id, a.type
                       """,
