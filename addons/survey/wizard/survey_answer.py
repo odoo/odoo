@@ -39,7 +39,7 @@ class survey_question_wiz(osv.osv_memory):
     _name = 'survey.question.wiz'
 
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey', required=True, ondelete='cascade', domain=[('state', 'in', ['draft', 'open'])]),
+        'survey_id': fields.many2one('survey.survey', 'Survey', required=True, ondelete='cascade', domain=[('state', 'in', ['draft', 'open'])]),
         'page_no': fields.integer('Page Number'),
         'page': fields.char('Page Position'),
         'transfer': fields.boolean('Page Transfer'),
@@ -200,7 +200,7 @@ class survey_question_wiz(osv.osv_memory):
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         val = {
             'type': 'notification',
-            'model': 'survey',
+            'model': 'survey.survey',
             'res_id': survey_id,
             'record_name': _("Survey N° %s") % survey_id,
             'body': _("%s have post a new response on this survey.") % user_browse.name,

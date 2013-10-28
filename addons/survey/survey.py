@@ -87,7 +87,7 @@ class survey_survey(osv.osv):
             fragment = {
                 'active_id': survey_browse.id,
                 'action': 'survey.action_filling',
-                'params': survey_browse.uuid,
+                'params': survey_browse.token,
             }
             res[survey_browse.id] = urljoin(base_url, "?%s#%s"
                                     % (urlencode(query), urlencode(fragment)))
@@ -100,8 +100,8 @@ class survey_survey(osv.osv):
             translate=True),
         'category': fields.char('Category', size=128),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
-        'date_open': fields.datetime('Opening date', readonly=1),
-        'date_close': fields.datetime('Closing date', readonly=1),
+        'date_open': fields.datetime('Opening date'),
+        'date_close': fields.datetime('Closing date'),
         'user_input_limit': fields.integer('Automatic closing limit',
             help="Limits the number of instances of this survey that can be \
             completed (if set to 0, no limit is applied",
@@ -125,8 +125,8 @@ class survey_survey(osv.osv):
             'User responses', readonly=1,),
         'public_url': fields.function(_get_public_url,
             string="Public link", type="char"),
-        'uuid': fields.char('Public token', size=8, required=1,
-            oldname="token"),
+        'token': fields.char('Public token', size=36, required=True, readonly=True,
+            hidden=True),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
     }
@@ -136,7 +136,7 @@ class survey_survey(osv.osv):
         'state': 'draft',
         'visible_to_user': True,
         'auth_required': True,
-        'uuid': lambda s, cr, uid, c: uuid.uuid4(),
+        'token': lambda s, cr, uid, c: uuid.uuid4().__str__(),
     }
 
     # Public methods #
@@ -148,15 +148,15 @@ class survey_survey(osv.osv):
 
     def survey_open(self, cr, uid, ids, arg):
         return self.write(cr, uid, ids, {'state': 'open',
-            'date_open': datetime.now()})
+            'date_open': fields.datetime.now})
 
     def survey_close(self, cr, uid, ids, arg):
         return self.write(cr, uid, ids, {'state': 'close',
-            'date_close': datetime.now()})
+            'date_close': fields.datetime.now})
 
     def survey_cancel(self, cr, uid, ids, arg):
         return self.write(cr, uid, ids, {'state': 'cancel',
-            'date_close': datetime.now()})
+            'date_close': fields.datetime.now})
 
     ## Actions ##
 
@@ -165,7 +165,7 @@ class survey_survey(osv.osv):
         current_rec = self.read(cr, uid, ids, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
         vals['title'] = title
-        return super(survey, self).copy(cr, uid, ids, vals, context=context)
+        return super(survey_survey, self).copy(cr, uid, ids, vals, context=context)
 
     def action_print_survey_questions(self, cr, uid, ids, context=None):
         ''' Generates a printable view of an empty survey '''
@@ -183,7 +183,9 @@ class survey_survey(osv.osv):
         ''' Open a survey in filling view '''
         id = ids[0]
         survey = self.browse(cr, uid, id, context=context)
-        context.update({'edit': False, 'survey_id': id, 'survey_token': survey.token, 'ir_actions_act_window_target': 'inline'})
+        context.update({'edit': False, 'survey_id': id,
+            'survey_token': survey.token,
+            'ir_actions_act_window_target': 'inline'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -258,13 +260,13 @@ class survey_survey(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         ''' Delete survey and linked email templates (if any) '''
-        email_template_ids = list()
-        for survey in self.browse(cr, uid, ids, context=context):
-            email_template_ids.append(survey.email_template_id.id)
-        if email_template_ids:
-            self.pool.get('email.template').unlink(cr, uid, email_template_ids,
-                                                context=context)
-        return super(survey, self).unlink(cr, uid, ids, context=context)
+        # email_template_ids = list()
+        # for survey in self.browse(cr, uid, ids, context=context):
+        #     email_template_ids.append(survey.email_template_id.id)
+        # if email_template_ids:
+        #     self.pool.get('email.template').unlink(cr, uid, email_template_ids,
+        #                                         context=context)
+        return super(survey_survey, self).unlink(cr, uid, ids, context=context)
 
 
 class survey_page(osv.osv):
@@ -274,7 +276,7 @@ class survey_page(osv.osv):
     screens.
 
     .. note::
-        A page should be deleted if the survey it belongs is deleted. '''
+        A page should be deleted if the survey it belongs to is deleted. '''
 
     _name = 'survey.page'
     _description = 'Survey Page'
@@ -328,6 +330,8 @@ class survey_page(osv.osv):
 class survey_question(osv.osv):
     ''' Questions that will be asked in a survey.
 
+    Each question can have one of more suggested answers (eg. in case of
+    dropdown choices, multi-answer checkboxes, radio buttons...)
 
     Changes
     -------
@@ -339,16 +343,6 @@ class survey_question(osv.osv):
     _description = 'Question'
     _rec_name = 'question'
     _order = 'sequence'
-
-    # Private methods #
-
-    ## Function fields ##
-
-    def _gen_constr_error_msg(self, cr, uid, ids, name, arg, context=None):
-        return "constraint failed"
-
-    def _gen_val_error_msg(self, cr, uid, ids, name, arg, context=None):
-        return "validation failed"
 
     # Model fields #
 
@@ -385,20 +379,10 @@ class survey_question(osv.osv):
                 ('matrix', 'Container of containers of questions')
             ], 'Question Type', required=1),
 
-        'suggested_answer_textbox': fields.char("Suggested answer",
-            translate=True),
-        'suggested_answer_num': fields.float("Suggested answer"),
-        'suggested_answer_num': fields.float("Suggested answer"),
-        'suggested_answer_num': fields.float("Suggested answer"),
-        'suggested_answer_num': fields.float("Suggested answer"),
-        'suggested_answer_num': fields.float("Suggested answer"),
-        'suggested_answer_num': fields.float("Suggested answer"),
-
-
-
+        'suggested_answers': fields.one2many('survey.suggestion',
+            'question_id', 'Suggested answers'),
 
         # Comments
-        # Replace comment by a special child question?
         'comments_allowed': fields.boolean('Allow comments',
             oldname="allow_comment"),
         'comment_children_ids': fields.one2many('survey.question_id',
@@ -422,11 +406,12 @@ class survey_question(osv.osv):
         'validation_max_value': fields.float('Maximum value'),
         'validation_min_date': fields.date('Start date range'),
         'validation_max_date': fields.date('End date range'),
-        'validation_error_msg': fields.function(_gen_val_error_msg,
-            type="char", string="Error message if validation fails"),
+        'validation_error_msg': fields.char("Error message if validation \
+            fails"),
 
         'numeric_required_sum': fields.integer('Sum of all choices'),
-        'numeric_required_sum_err_msg': fields.text('Error message', translate=True),
+        'numeric_required_sum_err_msg': fields.text('Error message',
+            translate=True),
 
         #'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible?'),
         #'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
@@ -443,12 +428,11 @@ class survey_question(osv.osv):
             ('at most', 'At Most'),
             ('exactly', 'Exactly'),
             ('a range', 'A Range')],
-            'Respondent must answer'),
-        'constr_req_ans': fields.integer('#Required Answer'),
+            'Constraint on answers number'),
+        #'constr_req_ans': fields.integer('Number of required answers'),
         'constr_maximum_req_ans': fields.integer('Maximum Required Answer'),
         'constr_minimum_req_ans': fields.integer('Minimum Required Answer'),
-        'constr_error_msg': fields.function(_gen_constr_error_msg, type="char",
-            string="Error message"),
+        'constr_error_msg': fields.char("Error message if constraints fails"),
     }
     _defaults = {
         'sequence': 1,
@@ -468,7 +452,7 @@ class survey_question(osv.osv):
         #'in_visible_answer_type': 1
     }
 
-    def on_change_type(self, cr, uid, ids, type, context=None):
+    def on_change_type(self, cr, uid, ids, type, context=None):  # useful ?
         val = {}
         val['is_require_answer'] = False
         val['is_comment_require'] = False
@@ -601,6 +585,18 @@ class survey_question(osv.osv):
         }
 
 
+class survey_suggestion(osv.osv):
+    ''' A suggested answer for a question '''
+    _name = 'survey.suggestion'
+    _rec_name = 'value'
+
+    _columns = {
+        'question_id': fields.many2one('survey.question', 'Question',
+            required=True, ondelete='cascade'),
+        'value': fields.char(length=128, translate=True, required=True)
+    }
+
+
 class survey_user_input(osv.osv):
     ''' Metadata for a set of one user's answers to a particular survey '''
     _name = "survey.user_input"
@@ -724,27 +720,17 @@ class survey_user_input_line(osv.osv):
         'skipped': fields.boolean('Skipped'),
         'question_id': fields.many2one('survey.question', 'Question',
             ondelete='restrict'),
-        'type': fields.selection([('textbox', 'Text box'),
+        'answer_type': fields.selection([('textbox', 'Text box'),
                 ('numerical_box', 'Numerical box'),
                 ('free_text', 'Free Text'),
                 ('datetime', 'Date and Time'),
                 ('checkbox', 'Checkbox'),
-                ('simple_choice_scale', 'One choice on a scale'),
-                ('simple_choice_dropdown', 'One choice in a menu'),
-                ('multiple_choice', 'Some choices in checkboxes'),
             ], 'Question Type', required=1),
-
-
-
-        ## Store here the answer to the question
-        #'answer_type': fields.selection(),  # see types defined in question
-        #'answer_value' = fields.
-
-
-        ## Comment storage
-        'comment': fields.text('Notes'),
-        'single_text': fields.char('Text', size=255),
-
+        'value_text': fields.char("Text answer"),
+        'value_number': fields.float("Numerical answer"),
+        'value_date': fields.datetime("Date answer"),
+        'value_free_text': fields.text("Free Text answer"),
+        'value_suggested': fields.many2one('survey.suggestion'),
     }
     _defaults = {
         'skipped': False,

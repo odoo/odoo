@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Survey users -->
         <record model="res.groups" id="base.group_survey_user">
             <field name="name">User</field>
             <field name="category_id" ref="base.module_category_survey"/>
         </record>
+        <!-- Survey managers -->
         <record model="res.groups" id="base.group_survey_manager">
             <field name="name">Manager</field>
             <field name="category_id" ref="base.module_category_survey"/>
@@ -14,7 +16,7 @@
 
         <record id="survey_rule" model="ir.rule">
             <field name="name">Survey</field>
-            <field ref="survey.model_survey" name="model_id"/>
+            <field name="model_id" ref="survey.model_survey_survey"/>
             <field name="domain_force">[('state', '=', 'open'), ('visible_to_user', '=', True)]</field>
             <field name="groups" eval="[(4, ref('base.group_survey_user'))]"/>
             <field eval="0" name="perm_unlink"/>
@@ -25,7 +27,7 @@
 
         <record id="survey_rule_manager" model="ir.rule">
             <field name="name">Survey</field>
-            <field ref="survey.model_survey" name="model_id"/>
+            <field name="model_id" ref="survey.model_survey_survey"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('base.group_survey_manager'))]"/>
             <field eval="1" name="perm_unlink"/>
