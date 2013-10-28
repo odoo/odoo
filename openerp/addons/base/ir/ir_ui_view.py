@@ -60,7 +60,7 @@ class view(osv.osv):
                 result[record.id] = etree.fromstring(record.arch.encode('utf8')).tag
         return result
 
-    def _acceptable_view_types(self, cr, uid, context=None):
+    def _valid_view_types(self, cr, uid, context=None):
         return [
             ('tree','Tree'),
             ('form','Form'),
@@ -78,7 +78,7 @@ class view(osv.osv):
         'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
         'type': fields.function(_type_field, type='selection',
-            selection=lambda self, *args, **kwargs: self._acceptable_view_types(*args, **kwargs),
+            selection=lambda self, *args, **kwargs: self._valid_view_types(*args, **kwargs),
             string='View Type', required=True, select=True, store=True),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
