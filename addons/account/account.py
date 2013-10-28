@@ -3573,10 +3573,9 @@ class account_bank_accounts_wizard(osv.osv_memory):
 class ir_ui_view(osv.Model):
     _inherit = 'ir.ui.view'
 
-    def _acceptable_view_types(self, cr, uid, context=None):
-        values = super(ir_ui_view, self)._acceptable_view_types(cr, uid, context=context)
+    def _valid_view_types(self, cr, uid, context=None):
+        values = super(ir_ui_view, self)._valid_view_types(cr, uid, context=context)
         values.append(('tree_account_reconciliation', 'Tree Account Reconciliation (Custom)'))
-
         return values
 
 
