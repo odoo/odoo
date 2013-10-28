@@ -83,7 +83,7 @@
                                     <group>
                                         <field name="type"/>
                                         <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                        <field name="list_price"/>
+                                        <field name="list_price" string="Sale Price of Template"/>
                                     </group>
                                     <group>
                                         <field name="default_code"/>
@@ -100,7 +100,7 @@
                                 <group name="procurement">
                                     <group name="general">
                                         <field name="cost_method" groups="product.group_costing_method"/>
-                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                        <field name="standard_price" string="Cost Price of Template" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
                                     <group name="procurement_uom" groups="product.group_uom" string="Purchase">
                                         <field name="uom_po_id"/>
@@ -784,7 +784,7 @@
                                         <field name="state"/>
                                         <field name="product_manager"/>
                                     </group>
-                                    <group string="Weights">
+                                    <group name ="weight" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
@@ -793,7 +793,7 @@
                             </page>
                             <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}">   
                                 <group name="sale">
-                                    <group string="Sale Conditions">
+                                    <group name="sale_condition" string="Sale Conditions">
                                         <label for="warranty"/>
                                         <div>
                                             <field name="warranty" class="oe_inline" style="vertical-align:baseline"/> months
