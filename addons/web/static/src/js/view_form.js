@@ -2804,7 +2804,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         var self = this;
         this._super(field_manager, node);
         this.set("value", false);
-        this.set("values", [[false, '']]);
+        this.set("values", []);
         this.records_orderer = new instance.web.DropMisordered();
         this.field_manager.on("view_content_has_changed", this, function() {
             var domain = new openerp.web.CompoundDomain(this.build_domain()).eval();
@@ -2826,14 +2826,9 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
             var model = new openerp.Model(openerp.session, this.field.relation);
             def = model.call("search", [this.get("domain")], {"context": this.build_context()}).then(function(record_ids) {
                 return model.call("name_get", [record_ids] , {"context": self.build_context()});
-            }).then(function(res) {
-                return [[false, '']].concat(res);
             });
         } else {
-            var values = _(this.field.selection).chain()
-                .reject(function (v) { return v[0] === false && v[1] === ''; })
-                .unshift([false, ''])
-                .value();
+            var values = _.reject(this.field.selection, function (v) { return v[0] === false && v[1] === ''; });
             def = $.when(values);
         }
         this.records_orderer.add(def).then(function(values) {
@@ -2871,8 +2866,8 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     },
     store_dom_value: function () {
         if (!this.get('effective_readonly') && this.$('select').length) {
-            this.internal_set_value(
-                this.get("values")[this.$('select')[0].selectedIndex][0]);
+            var val = JSON.parse(this.$('select').val());
+            this.internal_set_value(val);
         }
     },
     set_value: function(value_) {
@@ -2881,19 +2876,18 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         this._super(value_);
     },
     render_value: function() {
+        var values = this.get("values");
+        values =  [[false, this.node.attrs.placeholder || '']].concat(values);
+        var found = _.find(values, function(el) { return el[0] === this.get("value"); }, this);
+        if (! found) {
+            found = [this.get("value"), _t('Unknown')];
+            values = [found].concat(values);
+        }
         if (! this.get("effective_readonly")) {
-            this.$().html(QWeb.render("FieldSelectionSelect", {widget: this}));
-            var index = 0;
-            _.each(this.get("values"), function(el, i) {
-                if (el[0] === this.get('value'))
-                    index = i;
-            }, this);
-            this.$el.find('select')[0].selectedIndex = index;
+            this.$().html(QWeb.render("FieldSelectionSelect", {widget: this, values: values}));
+            this.$("select").val(JSON.stringify(found[0]));
         } else {
-            var self = this;
-            var option = _(this.get("values"))
-                .detect(function (record) { return record[0] === self.get('value'); });
-            this.$el.text(option ? option[1] : this.get("values")[0][1]);
+            this.$el.text(found[1]);
         }
     },
     focus: function() {
