@@ -31,7 +31,7 @@ class followup(osv.osv):
     _columns = {
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'name': fields.related('company_id', 'name', string = "Name"),
+        'name': fields.related('company_id', 'name', string="Name", type='char', size=128),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
