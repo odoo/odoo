@@ -205,7 +205,7 @@ class survey_question_wiz(osv.osv_memory):
             'record_name': _("Survey N° %s") % survey_id,
             'body': _("%s have post a new response on this survey.") % user_browse.name,
         }
-        self.pool.get('survey').message_post(cr, SUPERUSER_ID, survey_id, context=context, **val)
+        self.pool.get('survey.survey').message_post(cr, SUPERUSER_ID, survey_id, context=context, **val)
 
     def get_response_info_from_token(self, cr, uid, survey_id, survey_token, context=None):
         """
@@ -224,7 +224,7 @@ class survey_question_wiz(osv.osv_memory):
         if not survey_id:
             return res
 
-        survey_obj = self.pool.get('survey')
+        survey_obj = self.pool.get('survey.survey')
         survey_browse = survey_obj.browse(cr, SUPERUSER_ID, survey_id, context=context)
         user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         pid = user_browse.partner_id.id
@@ -308,7 +308,7 @@ class survey_question_wiz(osv.osv_memory):
 
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
-        survey_obj = self.pool.get('survey')
+        survey_obj = self.pool.get('survey.survey')
         page_obj = self.pool.get('survey.page')
         que_obj = self.pool.get('survey.question')
 
@@ -470,7 +470,7 @@ class survey_question_wiz(osv.osv_memory):
 
         sur_response_obj = self.pool.get('survey.response')
         user_obj = self.pool.get('res.users')
-        survey_obj = self.pool.get('survey')
+        survey_obj = self.pool.get('survey.survey')
 
         for field in fields_list:
             if field.split('_')[0] == 'progress':
@@ -840,7 +840,7 @@ class survey_question_wiz(osv.osv_memory):
                 context.pop(key)
 
         self.pool.get('survey.page').unlink(cr, uid, [context.get('page_id', False)])
-        for survey in self.pool.get('survey').browse(cr, uid, [context.get('survey_id', False)], context=context):
+        for survey in self.pool.get('survey.survey').browse(cr, uid, [context.get('survey_id', False)], context=context):
             if not survey.page_ids:
                 return {'type': 'ir.actions.act_window_close'}
 
@@ -976,7 +976,7 @@ class survey_question_wiz(osv.osv_memory):
             'ir_actions_act_window_target': 'inline'})
 
         # check if the user must be authenticate
-        survey_browse = self.pool.get('survey').browse(cr, SUPERUSER_ID, context['survey_id'], context=context)
+        survey_browse = self.pool.get('survey.survey').browse(cr, SUPERUSER_ID, context['survey_id'], context=context)
         anonymous = self.check_anonymous(cr, uid, [uid], context=context)
         if anonymous and survey_browse.state == "open" and survey_browse.authenticate:
             context.update({'force_login': True})

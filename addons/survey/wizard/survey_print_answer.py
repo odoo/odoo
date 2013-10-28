@@ -25,7 +25,7 @@ from openerp.osv import fields, osv
 class survey_print_answer(osv.osv_memory):
     _name = 'survey.print.answer'
     _columns = {
-        'response_ids': fields.many2many('survey.response', 'survey_print_response',\
+        'response_ids': fields.many2many('survey.user_input', 'survey_print_response',\
                             'response_id', 'print_id', "Answer", required="1"),
         'orientation': fields.selection([('vertical', 'Portrait(Vertical)'),\
                             ('horizontal', 'Landscape(Horizontal)')], 'Orientation'),

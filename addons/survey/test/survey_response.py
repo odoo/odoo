@@ -31,7 +31,7 @@ class test_survey_answer():
         # Usefull models
         self.ir_model = self.registry('ir.model')
         self.ir_model_data = self.registry('ir.model.data')
-        self.obj_survey = self.registry('survey')
+        self.obj_survey = self.registry('survey.survey')
         self.obj_survey_response = self.registry('survey.response')
         self.obj_survey_question_wiz = self.registry('survey.question.wiz')
         self.obj_survey_print = self.registry('survey.print')
@@ -78,7 +78,7 @@ class test_survey_answer():
         self.obj_survey_question_wiz.action_next(cr, uid, [id], ctx)
 
         # # I give the answer of the first and second page of the survey.
-        # #ctx = {'active_model':'survey', 'active_id': self.survey_id, 'active_ids': [self.survey_id]}
+        # #ctx = {'active_model':'survey.survey', 'active_id': self.survey_id, 'active_ids': [self.survey_id]}
         # self.obj_survey_question_wiz.fields_view_get(cr, uid, ref("survey.view_survey_question_message"),"form", context=ctx)
         # values = self.obj_survey_question_wiz.default_get(cr, uid, ['name'], ctx)
         # id = self.obj_survey_question_wiz.create(cr, uid, {str(ref("survey_initial_question_company_name")) +"_single" :'Tiny' , str(ref("survey_initial_question_company_size")) + "_selection" : int(ref("survey.survey_initial_question_company_size_51")), }, context)

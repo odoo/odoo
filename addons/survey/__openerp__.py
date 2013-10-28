@@ -33,34 +33,31 @@ question may have multiple answers. Different users may give different answers o
 question and according to that survey is done. Partners are also sent mails with
 user name and password for the invitation of the survey.
     """,
-    'summary': 'Create survey, collect answers and print statistics',
+    'summary': 'Create surveys, collect answers and print statistics',
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'website': 'https://www.openerp.com/',
     'depends': ['email_template', 'mail'],
     'data': [
-        'survey_report.xml',
-        'survey_data.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
         'survey_view.xml',
-        'wizard/survey_answer.xml',
-        'wizard/survey_print_statistics.xml',
-        'wizard/survey_print_answer.xml',
-        'wizard/survey_print.xml',
+        #'wizard/survey_answer.xml',
+        #'wizard/survey_print_statistics.xml',
+        #'wizard/survey_print_answer.xml',
+        #'wizard/survey_print.xml',
         'wizard/survey_email_compose_message.xml',
     ],
-    'demo': ['survey_demo.xml'],
-    'test': [
-        'test/survey_report.yml',
-        'test/survey_response.py',
-    ],
+    #'demo': ['survey_demo.xml'],
+    #'test': [
+    #    'test/survey_report.yml',
+    #    'test/survey_response.py',
+    #],
     'installable': True,
     'auto_install': False,
     'application': True,
     'sequence': 10,
-    'images': ['images/survey_answers.jpeg', 'images/survey_pages.jpeg', 'images/surveys.jpeg'],
+    #'images': [''],
     'css': ['static/src/css/survey.css'],
     'js': ['static/src/js/survey.js'],
-    'category' : 'Survey'
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

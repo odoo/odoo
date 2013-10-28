@@ -29,7 +29,7 @@ import uuid
 from openerp import SUPERUSER_ID
 
 
-class survey(osv.osv):
+class survey_survey(osv.osv):
     '''Settings for a multi-page/multi-question survey.
     Each survey can have one or more attached pages, and each page can present
     one or more questions.
@@ -41,14 +41,6 @@ class survey(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     # Protected methods #
-
-    def _needaction_domain_get(self, cr, uid, context=None):
-        user_browse = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_survey_manager')
-        if group_id in [x.id for x in user_browse.groups_id]:
-            return ['&', ('response_ids.state', 'in', ['new', 'skip']), ('response_ids.partner_id.user_id', '=', uid)]
-        else:
-            return []
 
     def _empty_check(self, cr, uid, ids, context=None):
         """ Ensure that this survey has at least one page with at least one
@@ -66,17 +58,21 @@ class survey(osv.osv):
         """ Returns the number of started instances of this survey, be they
         completed or not """
         res = dict((id, 0) for id in ids)
-        sur_res_obj = self.pool.get('survey.response')
+        sur_res_obj = self.pool.get('survey.user_input')
         for id in ids:
-            res[id] = sur_res_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', id), ('state', '=', 'skip')], context=context, count=True)
+            res[id] = sur_res_obj.search(cr, SUPERUSER_ID,
+                [('survey_id', '=', id), ('state', '=', 'skip')],
+                context=context, count=True)
         return res
 
     def _get_tot_comp_survey(self, cr, uid, ids, name, arg, context=None):
         """ Returns the number of completed instances of this survey """
         res = dict((id, 0) for id in ids)
-        sur_res_obj = self.pool.get('survey.response')
+        sur_res_obj = self.pool.get('survey.user_input')
         for id in ids:
-            res[id] = sur_res_obj.search(cr, SUPERUSER_ID, [('survey_id', '=', id), ('state', '=', 'done')], context=context, count=True)
+            res[id] = sur_res_obj.search(cr, SUPERUSER_ID,
+                [('survey_id', '=', id), ('state', '=', 'done')],
+                context=context, count=True)
         return res
 
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
@@ -93,7 +89,8 @@ class survey(osv.osv):
                 'action': 'survey.action_filling',
                 'params': survey_browse.uuid,
             }
-            res[survey_browse.id] = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+            res[survey_browse.id] = urljoin(base_url, "?%s#%s"
+                                    % (urlencode(query), urlencode(fragment)))
         return res
 
     # Model fields #
@@ -139,7 +136,7 @@ class survey(osv.osv):
         'state': 'draft',
         'visible_to_user': True,
         'auth_required': True,
-        'token': lambda s, cr, uid, c: uuid.uuid4(),
+        'uuid': lambda s, cr, uid, c: uuid.uuid4(),
     }
 
     # Public methods #
@@ -235,8 +232,8 @@ class survey(osv.osv):
                                 survey at a time.'
         ir_model_data = self.pool.get('ir.model.data')
         try:
-            template_id = ir_model_data.get_object_reference(cr, uid, 'survey',
-                                                    'email_template_survey')[1]
+            template_id = ir_model_data.get_object_reference(cr, uid,
+                                'survey.survey', 'email_template_survey')[1]
         except ValueError:
             template_id = False
         ctx = dict(context)
@@ -276,7 +273,7 @@ class survey_page(osv.osv):
     Pages are essentially containers, allowing to group questions by ordered
     screens.
 
-    note::
+    .. note::
         A page should be deleted if the survey it belongs is deleted. '''
 
     _name = 'survey.page'
@@ -303,14 +300,6 @@ class survey_page(osv.osv):
     }
 
     # Public methods #
-
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        data = super(survey_page, self).default_get(cr, uid, fields, context)
-        if context.get('survey_id'):
-            data['survey_id'] = context.get('survey_id', False)
-        return data
 
     def survey_save(self, cr, uid, ids, context=None):
         if context is None:
@@ -339,6 +328,10 @@ class survey_page(osv.osv):
 class survey_question(osv.osv):
     ''' Questions that will be asked in a survey.
 
+
+    Changes
+    -------
+
     This version of the model has been simplified in relation to the previous
     one: some fields were simply a n-time repetition of a simpler field. It is
     now allowed to have children question that allows to group subquestions.'''
@@ -352,10 +345,10 @@ class survey_question(osv.osv):
     ## Function fields ##
 
     def _gen_constr_error_msg(self, cr, uid, ids, name, arg, context=None):
-        pass
+        return "constraint failed"
 
     def _gen_val_error_msg(self, cr, uid, ids, name, arg, context=None):
-        pass
+        return "validation failed"
 
     # Model fields #
 
@@ -429,7 +422,7 @@ class survey_question(osv.osv):
         'validation_max_value': fields.float('Maximum value'),
         'validation_min_date': fields.date('Start date range'),
         'validation_max_date': fields.date('End date range'),
-        'validation_error_msg': fields.function(_gen_constr_error_msg,
+        'validation_error_msg': fields.function(_gen_val_error_msg,
             type="char", string="Error message if validation fails"),
 
         'numeric_required_sum': fields.integer('Sum of all choices'),
@@ -461,18 +454,18 @@ class survey_question(osv.osv):
         'sequence': 1,
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
         'type': lambda s, cr, uid, c: _('multiple_choice'),
-        'req_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
-        'required_type': 'at least',
-        'req_ans': 1,
-        'comment_field_type': 'char',
-        'comment_label': lambda s, cr, uid, c: _('Other (please specify)'),
-        'comment_valid_type': 'do_not_validate',
-        'comment_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
+        #'req_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
+        #'required_type': 'at least',
+        #'req_ans': 1,
+        #'comment_field_type': 'char',
+        #'comment_label': lambda s, cr, uid, c: _('Other (please specify)'),
+        #'comment_valid_type': 'do_not_validate',
+        #'comment_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
         'validation_type': 'do_not_validate',
-        'validation_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
-        'numeric_required_sum_err_msg': lambda s, cr, uid, c: _('The choices need to add up to [enter sum here].'),
-        'make_comment_field_err_msg': lambda s, cr, uid, c: _('Please enter a comment.'),
-        'in_visible_answer_type': 1
+        #'validation_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
+        #'numeric_required_sum_err_msg': lambda s, cr, uid, c: _('The choices need to add up to [enter sum here].'),
+        #'make_comment_field_err_msg': lambda s, cr, uid, c: _('Please enter a comment.'),
+        #'in_visible_answer_type': 1
     }
 
     def on_change_type(self, cr, uid, ids, type, context=None):
@@ -614,7 +607,7 @@ class survey_user_input(osv.osv):
     _rec_name = 'date_create'
 
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey', required=True,
+        'survey_id': fields.many2one('survey.survey', 'Survey', required=True,
             readonly=1, ondelete='restrict'),
         'date_create': fields.datetime('Creation Date', required=True,
             readonly=1),
@@ -655,7 +648,7 @@ class survey_user_input(osv.osv):
             'default_multi_email': record.email or "",
             'default_public': 'email_private',
         })
-        return self.pool.get('survey').action_survey_sent(cr, uid, [record.survey_id.id], context=context)
+        return self.pool.get('survey.survey').action_survey_sent(cr, uid, [record.survey_id.id], context=context)
 
     def action_print_response(self, cr, uid, ids, context=None):
         """
@@ -682,7 +675,7 @@ class survey_user_input(osv.osv):
         Get preview response
         """
         context = context or {}
-        self.pool.get('survey').check_access_rights(cr, uid, 'write')
+        self.pool.get('survey.survey').check_access_rights(cr, uid, 'write')
 
         record = self.browse(cr, uid, ids[0], context=context)
         context.update({
@@ -701,7 +694,7 @@ class survey_user_input(osv.osv):
         }
 
     def action_cancel(self, cr, uid, ids, context=None):
-        self.pool.get('survey').check_access_rights(cr, uid, 'write')
+        self.pool.get('survey.survey').check_access_rights(cr, uid, 'write')
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def name_get(self, cr, uid, ids, context=None):
@@ -723,10 +716,10 @@ class survey_user_input_line(osv.osv):
     _description = 'User input line'
     _rec_name = 'date_create'
     _columns = {
-        'survey_id' = fields.many2one('survey', 'Survey', required=True,
+        'survey_id': fields.many2one('survey.survey', 'Survey', required=1,
             readonly=1, ondelete='cascade'),
         'user_input_id': fields.many2one('survey.user_input', 'User Input',
-            ondelete='cascade', required=True),
+            ondelete='cascade', required=1),
         'date_create': fields.datetime('Create Date', required=1),  # drop
         'skipped': fields.boolean('Skipped'),
         'question_id': fields.many2one('survey.question', 'Question',
@@ -744,7 +737,7 @@ class survey_user_input_line(osv.osv):
 
 
         ## Store here the answer to the question
-        'answer_type' = fields.selection(),  # see types defined in question
+        #'answer_type': fields.selection(),  # see types defined in question
         #'answer_value' = fields.
 
 

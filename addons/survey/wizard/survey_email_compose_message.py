@@ -38,7 +38,7 @@ class survey_mail_compose_message(osv.TransientModel):
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, 0) for id in ids)
-        survey_obj = self.pool.get('survey')
+        survey_obj = self.pool.get('survey.survey')
         for wizard in self.browse(cr, uid, ids, context=context):
             res[wizard.id] = survey_obj.browse(cr, uid, wizard.survey_id, context=context).public_url
         return res
@@ -51,7 +51,7 @@ class survey_mail_compose_message(osv.TransientModel):
         return urls
 
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey', required=True),
+        'survey_id': fields.many2one('survey.survey', 'Survey', required=True),
         'public': fields.selection([('public_link', 'Share the public web link to your audience.'), \
                 ('email_public_link', 'Send by email the public web link to your audience.'),\
                 ('email_private', 'Send private invitation to your audience (only one response per recipient and per invitation).')],
@@ -100,7 +100,7 @@ class survey_mail_compose_message(osv.TransientModel):
     def onchange_survey_id(self, cr, uid, ids, survey_id, context=None):
         """ Compute if the message is unread by the current user. """
         if survey_id:
-            survey = self.pool.get('survey').browse(cr, uid, survey_id, context=context)
+            survey = self.pool.get('survey.survey').browse(cr, uid, survey_id, context=context)
             return {
                 'value': {
                     'subject': survey.title,
@@ -125,7 +125,7 @@ class survey_mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
 
-        survey_response_obj = self.pool.get('survey.response')
+        survey_response_obj = self.pool.get('survey.user_input')
         partner_obj = self.pool.get('res.partner')
         mail_mail_obj = self.pool.get('mail.mail')
         try:

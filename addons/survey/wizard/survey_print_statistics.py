@@ -25,7 +25,7 @@ from openerp.tools.translate import _
 class survey_print_statistics(osv.osv_memory):
     _name = 'survey.print.statistics'
     _columns = {
-        'survey_ids': fields.many2many('survey', string="Survey", required="1"),
+        'survey_ids': fields.many2many('survey.survey', string="Survey", required="1"),
     }
 
     def action_next(self, cr, uid, ids, context=None):
