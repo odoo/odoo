@@ -2168,7 +2168,12 @@ class BaseModel(object):
             :rtype: tuple
             :return: the :meth:`~.name_get` pair value of the created record
         """
-        record = self.create({'display_name': name})
+        # Shortcut the inverse function of 'display_name' with self._rec_name.
+        # This is useful when self._rec_name is a required field: in that case,
+        # create() creates a record without the field, and inverse display_name
+        # afterwards.
+        field_name = self._rec_name if self._rec_name else 'display_name'
+        record = self.create({field_name: name})
         return (record.id, record.display_name)
 
     @api.model
