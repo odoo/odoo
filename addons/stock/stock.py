@@ -2004,7 +2004,7 @@ class stock_inventory(osv.osv):
         'location_id': _default_stock_location,
     }
 
-    def set_checked_qty(self , cr ,uid ,ids ,context=None):
+    def set_checked_qty(self, cr, uid, ids, context=None):
         inventory = self.browse(cr, uid, ids[0], context=context)
         line_ids = [line.id for line in inventory.line_ids]
         self.pool.get('stock.inventory.line').write(cr, uid, line_ids, {'product_qty': 0})
@@ -2144,7 +2144,7 @@ class stock_inventory(osv.osv):
         for product_line in cr.dictfetchall():
             #replace the None the dictionary by False, because falsy values are tested later on
             for key, value in product_line.items():
-                if value == None:
+                if not value:
                     product_line[key] = False
             product_line['inventory_id'] = inventory.id
             product_line['th_qty'] = product_line['product_qty']
@@ -2211,7 +2211,7 @@ class stock_inventory_line(osv.osv):
         if not product:
             return {'value': {'product_qty': 0.0, 'product_uom_id': False}}
         uom_obj = self.pool.get('product.uom')
-        ctx=context.copy()
+        ctx = context.copy()
         ctx['location'] = location_id
         ctx['lot_id'] = lot_id
         ctx['owner_id'] = owner_id
@@ -2230,6 +2230,7 @@ class stock_inventory_line(osv.osv):
 class stock_warehouse(osv.osv):
     _name = "stock.warehouse"
     _description = "Warehouse"
+
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -2264,6 +2265,12 @@ class stock_warehouse(osv.osv):
         'resupply_route_ids': fields.one2many('stock.location.route', 'supplied_wh_id', 'Resupply Routes'),
         'default_resupply_wh_id': fields.many2one('stock.warehouse', 'Default Resupply Warehouse'),
     }
+
+    def onchange_filter_default_resupply_wh_id(self, cr, uid, ids, default_resupply_wh_id, resupply_wh_ids, context=None):
+        resupply_wh_ids = set([x['id'] for x in (self.resolve_2many_commands(cr, uid, 'resupply_wh_ids', resupply_wh_ids, ['id']))])
+        resupply_wh_ids.add(default_resupply_wh_id)
+        resupply_wh_ids = list(resupply_wh_ids)
+        return {'value': {'resupply_wh_ids': resupply_wh_ids}}
 
     def _get_inter_wh_location(self, cr, uid, warehouse, context=None):
         ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
@@ -2319,7 +2326,7 @@ class stock_warehouse(osv.osv):
     def _default_stock_id(self, cr, uid, context=None):
         #lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
         try:
-            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')            
+            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')
             return warehouse.lot_stock_id.id
         except:
             return False
@@ -2331,8 +2338,9 @@ class stock_warehouse(osv.osv):
         'delivery_steps': 'ship_only',
     }
     _sql_constraints = [
-        ('warehouse_name_uniq', 'unique (name, company_id)', 'The name of the warehouse must be unique per company!'),
-        ('warehouse_code_uniq', 'unique (code, company_id)', 'The code of the warehouse must be unique per company !'),
+        ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
+        ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
+        ('default_resupply_wh_diff', 'check (id != default_resupply_wh_id)', 'The default resupply warehouse should be different that the warehouse itself!'),
     ]
 
     def _get_partner_locations(self, cr, uid, ids, context=None):
@@ -2409,6 +2417,7 @@ class stock_warehouse(osv.osv):
         return push_rules_list, pull_rules_list
 
     def _get_mto_pull_rule(self, cr, uid, warehouse, values, context=None):
+        route_obj = self.pool.get('stock.location.route')
         data_obj = self.pool.get('ir.model.data')
         try:
             mto_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')[1]
@@ -2457,7 +2466,7 @@ class stock_warehouse(osv.osv):
         for push_rule in push_rules_list:
             push_obj.create(cr, uid, vals=push_rule, context=context)
         for pull_rule in pull_rules_list:
-            #all pull rules in reception route are mto, because we don't won't to wait for the scheduler to trigger an orderpoint on input location
+            #all pull rules in reception route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
             pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
@@ -2486,14 +2495,14 @@ class stock_warehouse(osv.osv):
         #create route selectable on the product to resupply the warehouse from another one
         self._create_resupply_routes(cr, uid, warehouse, warehouse.resupply_wh_ids, warehouse.default_resupply_wh_id, context=context)
 
-        #set routes and mto pull rule on warehouse
-        return self.write(cr, uid, warehouse.id, {
+        #return routes and mto pull rule for warehouse
+        return {
             'route_ids': wh_route_ids,
             'mto_pull_id': mto_pull_id,
             'reception_route_id': reception_route_id,
             'delivery_route_id': delivery_route_id,
             'crossdock_route_id': crossdock_route_id,
-        }, context=context)
+        }
 
     def change_route(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
         picking_type_obj = self.pool.get('stock.picking.type')
@@ -2536,6 +2545,8 @@ class stock_warehouse(osv.osv):
         for push_rule in push_rules_list:
             push_obj.create(cr, uid, vals=push_rule, context=context)
         for pull_rule in pull_rules_list:
+            #all pull rules in reception route are mto, because we don't want to wait for the scheduler to trigger an orderpoint on input location
+            pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
         route_obj.write(cr, uid, warehouse.crossdock_route_id.id, {'active': new_reception_step != 'one_step' and new_delivery_step != 'ship_only'}, context=context)
@@ -2677,7 +2688,8 @@ class stock_warehouse(osv.osv):
         warehouse.refresh()
 
         #create routes and push/pull rules
-        self.create_routes(cr, uid, new_id, warehouse, context=context)
+        new_objects_dict = self.create_routes(cr, uid, new_id, warehouse, context=context)
+        self.write(cr, uid, warehouse.id, new_objects_dict, context=context)
         return new_id
 
     def _format_rulename(self, cr, uid, obj, from_loc, dest_loc, context=None):
@@ -2705,8 +2717,6 @@ class stock_warehouse(osv.osv):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if context is None:
-            context = {}
         seq_obj = self.pool.get('ir.sequence')
         location_obj = self.pool.get('stock.location')
         route_obj = self.pool.get('stock.location.route')
@@ -2778,7 +2788,7 @@ class stock_warehouse(osv.osv):
         return super(stock_warehouse, self).unlink(cr, uid, ids, context=context)
 
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
-        all_routes = []        
+        all_routes = []
         all_routes += [warehouse.crossdock_route_id.id]
         all_routes += [warehouse.reception_route_id.id]
         all_routes += [warehouse.delivery_route_id.id]
@@ -2791,8 +2801,7 @@ class stock_warehouse(osv.osv):
         all_routes = []
         for wh in self.browse(cr, uid, ids, context=context):
             all_routes += self.get_all_routes_for_wh(cr, uid, wh, context=context)
-                        
-        res_id = ids and ids[0] or False
+
         domain = [('id', 'in', all_routes)]
         return {
             'name': _('Warehouse\'s Routes'),

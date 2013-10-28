@@ -42,12 +42,6 @@
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist_purchase')]"/>
             <field eval="'product.pricelist,'+str(list0)" name="value"/>
         </record>
-        
-        <function
-            eval="('default',False,'picking_type_id', [('purchase.order', False)], ref('stock.picking_type_in'), True, False, False, False, True)"
-            id="purchase_default_set"
-            model="ir.values"
-            name="set"/>
 
         <!-- Purchase-related subtypes for messaging / Chatter -->
         <record id="mt_rfq_confirmed" model="mail.message.subtype">
@@ -76,13 +70,6 @@
         </record>
 
         <!-- TODO: use a yaml file with python code to enable purcahse on main warehouse, so that the location_id is correct -->
-        <record id="procurement_rule_supply_stock" model="procurement.rule">
-            <field name="name">WH: Buy</field>
-            <field name="action">buy</field>
-            <field name="location_id" ref="stock.stock_location_stock"/>
-            <field name="picking_type_id" ref="stock.picking_type_in"/>
-            <field name="route_id" ref="route_warehouse0_buy"/>
-        </record>
 
     </data>
 </openerp>

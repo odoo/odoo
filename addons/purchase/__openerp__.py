@@ -54,6 +54,7 @@ Dashboard / Reports for Purchase Management will include:
         'purchase_sequence.xml',
         'company_view.xml',
         'purchase_data.xml',
+        'purchase_data.yml',
         'wizard/purchase_order_group_view.xml',
         'wizard/purchase_line_invoice_view.xml',
         'purchase_report.xml',
@@ -86,6 +87,7 @@ Dashboard / Reports for Purchase Management will include:
     'demo': [
         'purchase_order_demo.yml',
         'purchase_demo.xml',
+        'purchase_stock_demo.yml',
     ],
     'installable': True,
     'auto_install': False,

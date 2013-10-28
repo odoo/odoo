@@ -137,7 +137,7 @@ class procurement_order(osv.osv):
         pull_obj = self.pool.get('procurement.rule')
         warehouse_route_ids = []
         if procurement.warehouse_id:
-            domain += [('warehouse_id', '=', procurement.warehouse_id.id)]
+            domain += ['|', ('warehouse_id', '=', procurement.warehouse_id.id), ('warehouse_id', '=', False)]
             warehouse_route_ids = [x.id for x in procurement.warehouse_id.route_ids]
         product_route_ids = [x.id for x in procurement.product_id.route_ids + procurement.product_id.categ_id.total_route_ids]
         procurement_route_ids = [x.id for x in procurement.route_ids]

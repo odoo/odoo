@@ -667,8 +667,8 @@
                                     <group colspan="4">
                                         <field name="reception_steps" widget='radio'/>
                                         <field name="delivery_steps" widget='radio'/>
-                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
-                                        <field name="default_resupply_wh_id"/> <!-- TODO should be filtered on resupply_wh_ids only... -->
+                                        <field name="default_resupply_wh_id" widget='selection' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/>
+                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/> 
                                     </group>
                                 </page>
                                 <page string="Technical Information" groups='base.group_no_one'>
