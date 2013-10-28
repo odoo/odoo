@@ -117,8 +117,7 @@ class _column(object):
         self.groups = False  # CSV list of ext IDs of groups that can access this field
         self.deprecated = False # Optional deprecation warning
         for a in args:
-            if args[a]:
-                setattr(self, a, args[a])
+            setattr(self, a, args[a])
  
     def restart(self):
         pass
@@ -208,27 +207,29 @@ class reference(_column):
                 return model.name_get(cr, uid, [int(res_id)], context=context)[0][1]
         return tools.ustr(value)
 
+# takes a string (encoded in utf8) and returns a string (encoded in utf8)
+def _symbol_set_char(self, symb):
+
+    #TODO:
+    # * we need to remove the "symb==False" from the next line BUT
+    #   for now too many things rely on this broken behavior
+    # * the symb==None test should be common to all data types
+    if symb is None or symb == False:
+        return None
+
+    # we need to convert the string to a unicode object to be able
+    # to evaluate its length (and possibly truncate it) reliably
+    u_symb = tools.ustr(symb)
+    return u_symb[:self.size].encode('utf8')
+
 class char(_column):
     _type = 'char'
 
     def __init__(self, string="unknown", size=None, **args):
         _column.__init__(self, string=string, size=size or None, **args)
-        self._symbol_set = (self._symbol_c, self._symbol_set_char)
-
-    # takes a string (encoded in utf8) and returns a string (encoded in utf8)
-    def _symbol_set_char(self, symb):
-        #TODO:
-        # * we need to remove the "symb==False" from the next line BUT
-        #   for now too many things rely on this broken behavior
-        # * the symb==None test should be common to all data types
-        if symb is None or symb == False:
-            return None
-
-        # we need to convert the string to a unicode object to be able
-        # to evaluate its length (and possibly truncate it) reliably
-        u_symb = tools.ustr(symb)
-
-        return u_symb[:self.size].encode('utf8')
+        # self._symbol_set_char defined to keep the backward compatibility
+        self._symbol_f = self._symbol_set_char = lambda x: _symbol_set_char(self, x)
+        self._symbol_set = (self._symbol_c, self._symbol_f)
 
 
 class text(_column):
@@ -1149,6 +1150,11 @@ class function(_column):
             self._symbol_c = integer._symbol_c
             self._symbol_f = integer._symbol_f
             self._symbol_set = integer._symbol_set
+
+        if type == 'char':
+            self._symbol_c = char._symbol_c
+            self._symbol_f = lambda x: _symbol_set_char(self, x)
+            self._symbol_set = (self._symbol_c, self._symbol_f)
 
     def digits_change(self, cr):
         if self._type == 'float':

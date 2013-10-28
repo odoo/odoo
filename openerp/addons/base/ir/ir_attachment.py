@@ -262,10 +262,14 @@ class ir_attachment(osv.osv):
         return len(result) if count else list(result)
 
     def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self.check(cr, uid, ids, 'read', context=context)
         return super(ir_attachment, self).read(cr, uid, ids, fields_to_read, context, load)
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self.check(cr, uid, ids, 'write', context=context, values=vals)
         if 'file_size' in vals:
             del vals['file_size']
@@ -276,6 +280,8 @@ class ir_attachment(osv.osv):
         return super(ir_attachment, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self.check(cr, uid, ids, 'unlink', context=context)
         location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
         if location:

@@ -1010,8 +1010,10 @@ class BaseModel(object):
                     raise except_orm('Error',
                         ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
                 self.pool._store_function.setdefault(object, [])
-                self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
-                self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
+                t = (self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length)
+                if not t in self.pool._store_function[object]:
+                    self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
+                    self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
             self.pool._sql_error[self._table+'_'+key] = msg
@@ -2461,8 +2463,12 @@ class BaseModel(object):
         """
         Record the creation of a constraint for this model, to make it possible
         to delete it later when the module is uninstalled. Type can be either
-        'f' or 'u' depending on the constraing being a foreign key or not.
+        'f' or 'u' depending on the constraint being a foreign key or not.
         """
+        if not self._module:
+            # no need to save constraints for custom models as they're not part
+            # of any module
+            return
         assert type in ('f', 'u')
         cr.execute("""
             SELECT 1 FROM ir_model_constraint, ir_module_module
@@ -4122,9 +4128,9 @@ class BaseModel(object):
             return browse_null()
 
     def _store_get_values(self, cr, uid, ids, fields, context):
-        """Returns an ordered list of fields.functions to call due to
+        """Returns an ordered list of fields.function to call due to
            an update operation on ``fields`` of records with ``ids``,
-           obtained by calling the 'store' functions of these fields,
+           obtained by calling the 'store' triggers of these fields,
            as setup by their 'store' attribute.
 
            :return: [(priority, model_name, [record_ids,], [function_fields,])]
@@ -4133,42 +4139,46 @@ class BaseModel(object):
         stored_functions = self.pool._store_function.get(self._name, [])
 
         # use indexed names for the details of the stored_functions:
-        model_name_, func_field_to_compute_, id_mapping_fnct_, trigger_fields_, priority_ = range(5)
+        model_name_, func_field_to_compute_, target_ids_func_, trigger_fields_, priority_ = range(5)
 
-        # only keep functions that should be triggered for the ``fields``
+        # only keep store triggers that should be triggered for the ``fields``
         # being written to.
-        to_compute = [f for f in stored_functions \
+        triggers_to_compute = [f for f in stored_functions \
                 if ((not f[trigger_fields_]) or set(fields).intersection(f[trigger_fields_]))]
 
-        mapping = {}
-        for function in to_compute:
-            # use admin user for accessing objects having rules defined on store fields
-            target_ids = [id for id in function[id_mapping_fnct_](self, cr, SUPERUSER_ID, ids, context) if id]
+        to_compute_map = {}
+        target_id_results = {}
+        for store_trigger in triggers_to_compute:
+            target_func_id_ = id(store_trigger[target_ids_func_])
+            if not target_func_id_ in target_id_results:
+                # use admin user for accessing objects having rules defined on store fields
+                target_id_results[target_func_id_] = [i for i in store_trigger[target_ids_func_](self, cr, SUPERUSER_ID, ids, context) if i]
+            target_ids = target_id_results[target_func_id_]
 
             # the compound key must consider the priority and model name
-            key = (function[priority_], function[model_name_])
+            key = (store_trigger[priority_], store_trigger[model_name_])
             for target_id in target_ids:
-                mapping.setdefault(key, {}).setdefault(target_id,set()).add(tuple(function))
+                to_compute_map.setdefault(key, {}).setdefault(target_id,set()).add(tuple(store_trigger))
 
-        # Here mapping looks like:
-        # { (10, 'model_a') : { target_id1: [ (function_1_tuple, function_2_tuple) ], ... }
-        #   (20, 'model_a') : { target_id2: [ (function_3_tuple, function_4_tuple) ], ... }
-        #   (99, 'model_a') : { target_id1: [ (function_5_tuple, function_6_tuple) ], ... }
+        # Here to_compute_map looks like:
+        # { (10, 'model_a') : { target_id1: [ (trigger_1_tuple, trigger_2_tuple) ], ... }
+        #   (20, 'model_a') : { target_id2: [ (trigger_3_tuple, trigger_4_tuple) ], ... }
+        #   (99, 'model_a') : { target_id1: [ (trigger_5_tuple, trigger_6_tuple) ], ... }
         # }
 
         # Now we need to generate the batch function calls list
         # call_map =
         #   { (10, 'model_a') : [(10, 'model_a', [record_ids,], [function_fields,])] }
         call_map = {}
-        for ((priority,model), id_map) in mapping.iteritems():
-            functions_ids_maps = {}
+        for ((priority,model), id_map) in to_compute_map.iteritems():
+            trigger_ids_maps = {}
             # function_ids_maps =
             #   { (function_1_tuple, function_2_tuple) : [target_id1, target_id2, ..] }
-            for id, functions in id_map.iteritems():
-                functions_ids_maps.setdefault(tuple(functions), []).append(id)
-            for functions, ids in functions_ids_maps.iteritems():
-                call_map.setdefault((priority,model),[]).append((priority, model, ids,
-                                                                 [f[func_field_to_compute_] for f in functions]))
+            for target_id, triggers in id_map.iteritems():
+                trigger_ids_maps.setdefault(tuple(triggers), []).append(target_id)
+            for triggers, target_ids in trigger_ids_maps.iteritems():
+                call_map.setdefault((priority,model),[]).append((priority, model, target_ids,
+                                                                 [t[func_field_to_compute_] for t in triggers]))
         ordered_keys = call_map.keys()
         ordered_keys.sort()
         result = []
