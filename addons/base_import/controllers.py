@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import simplejson
 
-from openerp.addons.web.http import Controller, route
+from openerp.http import Controller, route
 
 class ImportController(Controller):
     @route('/base_import/set_file')
