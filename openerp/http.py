@@ -917,6 +917,12 @@ class Root(object):
 
             if httprequest.session.should_save:
                 self.session_store.save(httprequest.session)
+            # We must not set the cookie if the session id was specified using a http header or a GET parameter.
+            # There are two reasons to this:
+            # - When using one of those two means we consider that we are overriding the cookie, which means creating a new
+            #   session on top of an already existing session and we don't want to create a mess with the 'normal' session
+            #   (the one using the cookie). That is a special feature of the Session Javascript class.
+            # - It could allow session fixation attacks.
             if not explicit_session and hasattr(response, 'set_cookie'):
                 response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
 
