@@ -195,18 +195,6 @@ class stock_location_route(osv.osv):
 # Quants
 #----------------------------------------------------------
 
-# Useful model for the stock_quant_move_rel many2many relation table.
-# In particular provide a ID column used in reporting (see the quant_history
-# model).
-class quant_history_rel(osv.osv):
-    _name = 'quant.history.rel'
-    _table = 'stock_quant_move_rel'
-
-    _columns = {
-        'move_id': fields.many2one('stock.move'),
-        'quant_id': fields.many2one('stock.quant'),
-    }
-
 class stock_quant(osv.osv):
     """
     Quants are the smallest unit of stock physical instances

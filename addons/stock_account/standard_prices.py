@@ -7,23 +7,22 @@ wuants creation.
 
 """
 
-import openerp
-from openerp.osv import expression
+from openerp import tools
+from openerp.osv import fields, osv
 
-class price_history(openerp.osv.orm.Model):
+class price_history(osv.osv):
 
     _name = 'price.history'
+    _rec_name = 'datetime'
 
     _columns = {
-        'company_id': openerp.osv.fields.many2one('res.company',
-            required=True),
-        'product_id': openerp.osv.fields.many2one('product.product'), # required = True
-        'datetime': openerp.osv.fields.datetime(),
-        'cost': openerp.osv.fields.float(), # called standard_price on
-                                            # product.product
-        'reason': openerp.osv.fields.char(),
+        'company_id': fields.many2one('res.company', required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'datetime': fields.datetime('Historization Time'),
+        'cost': fields.float('Historized Cost'),
+        'reason': fields.char('Reason'),
         # TODO 'origin': openerp.osv.fields.reference(),
-        'quant_id': openerp.osv.fields.many2one('stock.quant'),
+        #'quant_id': openerp.osv.fields.many2one('stock.quant'),
     }
 
     def _get_default_company(self, cr, uid, context=None):
@@ -35,45 +34,49 @@ class price_history(openerp.osv.orm.Model):
             return company.id if company else False
 
     _defaults = {
-        'quant_id': False,
-        'datetime': openerp.osv.fields.datetime.now,
+        #'quant_id': False,
+        'datetime': fields.datetime.now,
         'company_id': _get_default_company,
     }
 
-class quant_history(openerp.osv.orm.Model):
 
-    _name = 'quant.history'
-
+class stock_history(osv.osv):
+    _name = 'stock.history'
     _auto = False
 
     _columns = {
-        'id': openerp.osv.fields.integer(),
-        'move_id': openerp.osv.fields.many2one('stock.move'),
-        'quant_id': openerp.osv.fields.many2one('stock.quant'),
-        'location_id': openerp.osv.fields.many2one('stock.location'),
-        'product_id': openerp.osv.fields.many2one('product.product'),
-        'quantity': openerp.osv.fields.integer(),
-        'date': openerp.osv.fields.datetime(),
-        'cost': openerp.osv.fields.float(),
+        'move_id': fields.many2one('stock.move', 'Stock Move'),
+        #'quant_id': fields.many2one('stock.quant'),
+        'location_id': fields.many2one('stock.location', 'Location'),
+        'product_id': fields.many2one('product.product', 'Product'),
+        'quantity': fields.integer('Quantity'),
+        'date': fields.datetime('Date'),
+        'cost': fields.float('Value'),
     }
 
     def init(self, cr):
-        openerp.tools.drop_view_if_exists(cr, 'stock_valuation')
+        tools.drop_view_if_exists(cr, 'stock_history')
         cr.execute("""
-            create or replace view quant_history as (
-                select
-                    history.id as id,
-                    history.move_id as move_id,
-                    history.quant_id as quant_id,
-		    stock_quant.location_id as location_id,
-		    stock_quant.product_id as product_id,
-		    stock_quant.qty as quantity,
-                    stock_move.date as date,
-                    (select price_history.cost from price_history where price_history.datetime < stock_move.date order by price_history.datetime asc limit 1) as cost
-                from
-                    stock_quant_move_rel as history
-                left join
-                    stock_move on stock_move.id = history.move_id
-                left join
-                    stock_quant on stock_quant.id = history.quant_id
+            CREATE OR REPLACE VIEW stock_history AS (
+                SELECT
+                    stock_move.id AS id,
+                    stock_move.id AS move_id,
+                    stock_move.location_id AS location_id,
+                    stock_move.product_id AS product_id,
+                    stock_move.product_qty AS quantity,
+                    stock_move.date AS date,
+                    CASE
+                      WHEN ir_property.value_text <> 'real'
+                        THEN (SELECT price_history.cost FROM price_history WHERE price_history.datetime <= stock_move.date AND price_history.product_id = stock_move.product_id ORDER BY price_history.datetime ASC limit 1)
+                      ELSE stock_move.price_unit
+                    END AS cost
+                FROM
+                    stock_move
+                LEFT JOIN
+                    product_product ON product_product.id = stock_move.product_id
+                LEFT JOIN
+                    product_template ON product_template.id = product_product.product_tmpl_id
+                LEFT JOIN
+                    ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
+                WHERE stock_move.state = 'done'
             )""")

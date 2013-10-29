@@ -25,9 +25,9 @@
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Valuation, Accounting',
     'description': """
-TODO
+#TODO
 ======================
-TODO
+#TODO
 
 Key Features
 ------------
