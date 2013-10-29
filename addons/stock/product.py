@@ -272,7 +272,7 @@ class product_product(osv.osv):
             product_route_ids |= set([r.id for r in product.route_ids])
             product_route_ids |= set([r.id for r in product.categ_id.total_route_ids])
         route_ids = route_obj.search(cr, uid, ['|', ('id', 'in', list(product_route_ids)), ('warehouse_selectable', '=', True)], context=context)
-        result = mod_obj.get_object_reference(cr, uid, 'stock_location', 'action_routes_form')
+        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_routes_form')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
