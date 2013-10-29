@@ -392,9 +392,9 @@ class pos_session(osv.osv):
             if not record.start_at:
                 values['start_at'] = time.strftime('%Y-%m-%d %H:%M:%S')
             values['state'] = 'opened'
-            record.write(values, context=context)
+            record.write(values)
             for st in record.statement_ids:
-                st.button_open(context=context)
+                st.button_open()
 
         return self.open_frontend_cb(cr, uid, ids, context=context)
 
