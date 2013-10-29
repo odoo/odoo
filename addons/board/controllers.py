@@ -4,14 +4,12 @@ from xml.etree import ElementTree
 import openerp
 from openerp.addons.web.controllers.main import load_actions_from_ir_values
 
-class Board(openerp.addons.web.http.Controller):
-    _cp_path = '/board'
-
-    @openerp.addons.web.http.jsonrequest
-    def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
+class Board(openerp.http.Controller):
+    @openerp.http.route('/board/add_to_dashboard', type='json', auth='user')
+    def add_to_dashboard(self, menu_id, action_id, context_to_save, domain, view_mode, name=''):
+        req = openerp.http.request
         # FIXME move this method to board.board model
-        dashboard_action = load_actions_from_ir_values(
-            req, 'action', 'tree_but_open', [('ir.ui.menu', menu_id)], False)
+        dashboard_action = load_actions_from_ir_values('action', 'tree_but_open', [('ir.ui.menu', menu_id)], False)
 
         if dashboard_action:
             action = dashboard_action[0][2]

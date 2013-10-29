@@ -655,7 +655,7 @@ class account_analytic_account(osv.osv):
         if not contract.partner_id:
             raise osv.except_osv(_('No Customer Defined!'),_("You must first select a Customer for Contract %s!") % contract.name )
 
-        fpos = contract.partner_id.property_account_position.id or False
+        fpos = contract.partner_id.property_account_position or False
         journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id or False)], limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error!'),
@@ -673,7 +673,7 @@ class account_analytic_account(osv.osv):
            'journal_id': len(journal_ids) and journal_ids[0] or False,
            'date_invoice': contract.recurring_next_date,
            'origin': contract.name,
-           'fiscal_position': fpos,
+           'fiscal_position': fpos and fpos.id,
            'payment_term': partner_payment_term,
            'company_id': contract.company_id.id or False,
         }
@@ -687,7 +687,7 @@ class account_analytic_account(osv.osv):
                 account_id = res.categ_id.property_account_income_categ.id
             account_id = fpos_obj.map_account(cr, uid, fpos, account_id)
 
-            taxes = res.taxes_id and res.taxes_id or False
+            taxes = res.taxes_id or False
             tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
 
             invoice_line_vals = {

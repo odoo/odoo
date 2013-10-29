@@ -24,6 +24,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
+            this.proxy_queue = new module.JobQueue();         // used to prevent parallels communications to the proxy
             this.db = new module.PosLS();                       // a database used to store the products and categories
             this.db.clear('products','categories');
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
@@ -51,11 +52,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'pos_config':       null,
                 'units':            null,
                 'units_by_id':      null,
+                'pricelist':        null,
 
                 'selectedOrder':    null,
             });
 
-            this.get('orders').bind('remove', function(){ self.on_removed_order(); });
+            this.get('orders').bind('remove', function(order,_unused_,options){ 
+                self.on_removed_order(order,options.index,options.reason); 
+            });
             
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
@@ -69,6 +73,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     //the error messages will be displayed in PosWidget
                     self.ready.reject();
                 });
+        },
+
+        // releases ressources holds by the model at the end of life of the posmodel
+        destroy: function(){
+            // FIXME, should wait for flushing, return a deferred to indicate successfull destruction
+            // this.flush();
+            this.proxy.close();
+            this.barcode_reader.disconnect();
         },
 
         // helper function to load data from the server
@@ -101,10 +113,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
                 }).then(function(company_partners){
                     self.get('company').contact_address = company_partners[0].contact_address;
-
-                    return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.get('company').currency_id[0]]]);
-                }).then(function(currencies){
-                    self.set('currency',currencies[0]);
 
                     return self.fetch('product.uom', null, null);
                 }).then(function(units){
@@ -161,6 +169,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(shops){
                     self.set('shop',shops[0]);
 
+                    return self.fetch('product.pricelist',['currency_id'],[['id','=',self.get('pos_config').pricelist_id[0]]]);
+                }).then(function(pricelists){
+                    self.set('pricelist',pricelists[0]);
+
+                    return self.fetch('res.currency',['symbol','position','rounding','accuracy'],[['id','=',self.get('pricelist').currency_id[0]]]);
+                }).then(function(currencies){
+                    self.set('currency',currencies[0]);
+
                     return self.fetch('product.packaging',['ean','product_id']);
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
@@ -171,10 +187,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return self.fetch(
                         'product.product', 
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code',
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
-                        {pricelist: self.get('pos_config').pricelist_id[0]} // context for price
+                        {pricelist: self.get('pricelist').id} // context for price
                     );
                 }).then(function(products){
                     self.db.add_products(products);
@@ -231,11 +247,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         
         // this is called when an order is removed from the order collection. It ensures that there is always an existing
         // order and a valid selected order
-        on_removed_order: function(removed_order){
-            if( this.get('orders').isEmpty()){
-                this.add_new_order();
+        on_removed_order: function(removed_order,index,reason){
+            if(reason === 'abandon' && this.get('orders').size() > 0){
+                // when we intentionally remove an unfinished order, and there is another existing one
+                this.set({'selectedOrder' : this.get('orders').at(index) || this.get('orders').last()});
             }else{
-                this.set({ selectedOrder: this.get('orders').last() });
+                // when the order was automatically removed after completion, 
+                // or when we intentionally delete the only concurrent order
+                this.add_new_order();
             }
         },
 
@@ -246,10 +265,16 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.set('selectedOrder', order);
         },
 
+        //removes the current order
+        delete_current_order: function(){
+            this.get('selectedOrder').destroy({'reason':'abandon'});
+        },
+
         // saves the order locally and try to send it to the backend. 
         // it returns a deferred that succeeds after having tried to send the order and all the other pending orders.
         push_order: function(order) {
             var self = this;
+            this.proxy.log('push_order',order.export_as_JSON());
             var order_id = this.db.add_order(order.export_as_JSON());
             var pushed = new $.Deferred();
 
@@ -403,19 +428,23 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return tried_all;
         },
 
-        scan_product: function(parsed_ean){
+        scan_product: function(parsed_code){
             var self = this;
-            var product = this.db.get_product_by_ean13(parsed_ean.base_ean);
             var selectedOrder = this.get('selectedOrder');
+            if(parsed_code.encoding === 'ean13'){
+                var product = this.db.get_product_by_ean13(parsed_code.base_code);
+            }else if(parsed_code.encoding === 'reference'){
+                var product = this.db.get_product_by_reference(parsed_code.code);
+            }
 
             if(!product){
                 return false;
             }
 
-            if(parsed_ean.type === 'price'){
-                selectedOrder.addProduct(new module.Product(product), {price:parsed_ean.value});
-            }else if(parsed_ean.type === 'weight'){
-                selectedOrder.addProduct(new module.Product(product), {quantity:parsed_ean.value, merge:false});
+            if(parsed_code.type === 'price'){
+                selectedOrder.addProduct(new module.Product(product), {price:parsed_code.value});
+            }else if(parsed_code.type === 'weight'){
+                selectedOrder.addProduct(new module.Product(product), {quantity:parsed_code.value, merge:false});
             }else{
                 selectedOrder.addProduct(new module.Product(product));
             }

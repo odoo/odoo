@@ -20,6 +20,8 @@
 ##############################################################################
 
 import logging
+import re
+
 from openerp import tools
 
 from email.header import decode_header
@@ -98,7 +100,7 @@ class mail_message(osv.Model):
     def _get_to_read(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, False) for id in ids)
-        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
@@ -117,7 +119,7 @@ class mail_message(osv.Model):
     def _get_starred(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, False) for id in ids)
-        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
@@ -206,11 +208,11 @@ class mail_message(osv.Model):
         raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     def _get_default_author(self, cr, uid, context=None):
-        return self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
 
     _defaults = {
         'type': 'email',
-        'date': lambda *a: fields.datetime.now(),
+        'date': fields.datetime.now,
         'author_id': lambda self, cr, uid, ctx=None: self._get_default_author(cr, uid, ctx),
         'body': '',
         'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
@@ -264,7 +266,7 @@ class mail_message(osv.Model):
             :return number of message mark as read
         """
         notification_obj = self.pool.get('mail.notification')
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
         if not create_missing:
             domain += [('read', '=', not read)]
@@ -292,7 +294,7 @@ class mail_message(osv.Model):
                 (i.e. when acting on displayed messages not notified)
         """
         notification_obj = self.pool.get('mail.notification')
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        user_pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
         if not create_missing:
             domain += [('starred', '=', not starred)]
@@ -330,7 +332,7 @@ class mail_message(osv.Model):
         """
         res_partner_obj = self.pool.get('res.partner')
         ir_attachment_obj = self.pool.get('ir.attachment')
-        pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
+        pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
 
         # 1. Aggregate partners (author_id and partner_ids) and attachments
         partner_ids = set()
@@ -376,6 +378,7 @@ class mail_message(osv.Model):
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
+                'user_pid': pid
                 })
         return True
 
@@ -645,7 +648,7 @@ class mail_message(osv.Model):
         elif not ids:
             return ids
 
-        pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'])['partner_id'][0]
+        pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
         model_ids = {}
 
@@ -679,14 +682,14 @@ class mail_message(osv.Model):
                 - no model, no res_id, I create a private message OR
                 - pid in message_follower_ids if model, res_id OR
                 - mail_notification (parent_id.id, pid) exists, uid has been notified of the parent, OR
-                - uid have write access on the related document if model, res_id, OR
+                - uid have write or create access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
                 - author_id == pid, uid is the author, OR
-                - uid has write access on the related document if model, res_id
+                - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
             - unlink: if
-                - uid has write access on the related document if model, res_id
+                - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
         """
         def _generate_model_record_ids(msg_val, msg_ids=[]):
@@ -705,7 +708,7 @@ class mail_message(osv.Model):
             ids = [ids]
         not_obj = self.pool.get('mail.notification')
         fol_obj = self.pool.get('mail.followers')
-        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
+        partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
 
         # Read mail_message.ids to have their values
         message_values = dict.fromkeys(ids)
@@ -774,17 +777,66 @@ class mail_message(osv.Model):
                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                             (self._description, operation))
 
+    def _get_reply_to(self, cr, uid, values, context=None):
+        """ Return a specific reply_to: alias of the document through message_get_reply_to
+            or take the email_from
+        """
+        email_reply_to = None
+
+        ir_config_parameter = self.pool.get("ir.config_parameter")
+        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
+
+        # model, res_id, email_from: comes from values OR related message
+        model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
+
+        # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
+        if not email_reply_to and model and res_id and catchall_domain and hasattr(self.pool[model], 'message_get_reply_to'):
+            email_reply_to = self.pool[model].message_get_reply_to(cr, uid, [res_id], context=context)[0]
+        # no alias reply_to -> catchall alias
+        if not email_reply_to and catchall_domain:
+            catchall_alias = ir_config_parameter.get_param(cr, uid, "mail.catchall.alias", context=context)
+            if catchall_alias:
+                email_reply_to = '%s@%s' % (catchall_alias, catchall_domain)
+        # still no reply_to -> reply_to will be the email_from
+        if not email_reply_to and email_from:
+            email_reply_to = email_from
+
+        # format 'Document name <email_address>'
+        if email_reply_to and model and res_id:
+            emails = tools.email_split(email_reply_to)
+            if emails:
+                email_reply_to = emails[0]
+            document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
+            if document_name:
+                # sanitize document name
+                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
+                # generate reply to
+                email_reply_to = _('"Followers of %s" <%s>') % (sanitized_doc_name, email_reply_to)
+
+        return email_reply_to
+
+    def _get_message_id(self, cr, uid, values, context=None):
+        message_id = None
+        if not values.get('message_id') and values.get('reply_to'):
+            message_id = tools.generate_tracking_message_id('reply_to')
+        elif not values.get('message_id') and values.get('res_id') and values.get('model'):
+            message_id = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
+        elif not values.get('message_id'):
+            message_id = tools.generate_tracking_message_id('private')
+        return message_id
+
     def create(self, cr, uid, values, context=None):
         if context is None:
             context = {}
         default_starred = context.pop('default_starred', False)
-        # generate message_id, to redirect answers to the right discussion thread
-        if not values.get('message_id') and values.get('reply_to'):
-            values['message_id'] = tools.generate_tracking_message_id('reply_to')
-        elif not values.get('message_id') and values.get('res_id') and values.get('model'):
-            values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
-        elif not values.get('message_id'):
-            values['message_id'] = tools.generate_tracking_message_id('private')
+
+        if 'email_from' not in values:  # needed to compute reply_to
+            values['email_from'] = self._get_default_from(cr, uid, context=context)
+        if not values.get('message_id'):
+            values['message_id'] = self._get_message_id(cr, uid, values, context=context)
+        if 'reply_to' not in values:
+            values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
+
         newid = super(mail_message, self).create(cr, uid, values, context)
         self._notify(cr, uid, newid, context=context,
                      force_send=context.get('mail_notify_force_send', True),
@@ -914,26 +966,28 @@ class mail_message(osv.Model):
         if message.subtype_id and message.model and message.res_id:
             fol_obj = self.pool.get("mail.followers")
             # browse as SUPERUSER because rules could restrict the search results
-            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
-                ('res_model', '=', message.model),
-                ('res_id', '=', message.res_id),
-                ('subtype_ids', 'in', message.subtype_id.id)
+            fol_ids = fol_obj.search(
+                cr, SUPERUSER_ID, [
+                    ('res_model', '=', message.model),
+                    ('res_id', '=', message.res_id),
+                    ('subtype_ids', 'in', message.subtype_id.id)
                 ], context=context)
-            partners_to_notify |= set(fo.partner_id for fo in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context))
+            partners_to_notify |= set(fo.partner_id.id for fo in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context))
         # remove me from notified partners, unless the message is written on my own wall
         if message.subtype_id and message.author_id and message.model == "res.partner" and message.res_id == message.author_id.id:
-            partners_to_notify |= set([message.author_id])
+            partners_to_notify |= set([message.author_id.id])
         elif message.author_id:
-            partners_to_notify -= set([message.author_id])
+            partners_to_notify -= set([message.author_id.id])
 
         # all partner_ids of the mail.message have to be notified regardless of the above (even the author if explicitly added!)
         if message.partner_ids:
-            partners_to_notify |= set(message.partner_ids)
+            partners_to_notify |= set([p.id for p in message.partner_ids])
 
         # notify
-        if partners_to_notify:
-            notification_obj._notify(cr, uid, newid, partners_to_notify=[p.id for p in partners_to_notify], context=context,
-                                            force_send=force_send, user_signature=user_signature)
+        notification_obj._notify(
+            cr, uid, newid, partners_to_notify=list(partners_to_notify), context=context,
+            force_send=force_send, user_signature=user_signature
+        )
         message.refresh()
 
         # An error appear when a user receive a notification without notifying

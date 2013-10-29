@@ -38,8 +38,8 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp.modules.registry import RegistryManager
 from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+import openerp.http as http
+from openerp.http import request
 
 from .. import utils
 

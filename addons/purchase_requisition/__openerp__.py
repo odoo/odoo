@@ -43,6 +43,7 @@ keep track and order all your purchase orders.
     ],
     'auto_install': False,
     'test': [
+        'test/purchase_requisition_users.yml',
         'test/purchase_requisition_demo.yml',
         'test/purchase_requisition.yml',
         'test/cancel_purchase_requisition.yml',

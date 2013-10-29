@@ -127,6 +127,22 @@ class procurement_order(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
 
+    def message_track(self, cr, uid, ids, tracked_fields, initial_values, context=None):
+        """ Overwrite message_track to avoid tracking more than once the confirm-exception loop
+        Add '_first_pass_done_' to the note field only the first time stuck in exception state
+        Will avoid getting furthur confirmed and exception change of state messages
+
+        TODO: this hack is necessary for a stable version but should be avoided for the next release.
+        Instead find a more elegant way to prevent redundant messages or entirely stop tracking states on procurement orders
+        """
+        for proc in self.browse(cr, uid, ids, context=context):
+            if not proc.note or '_first_pass_done_' not in proc.note or proc.state not in ('confirmed', 'exception'):
+                super(procurement_order, self).message_track(cr, uid, [proc.id], tracked_fields, initial_values, context=context)
+                if proc.state == 'exception':
+                    cr.execute("""UPDATE procurement_order set note = TRIM(both E'\n' FROM COALESCE(note, '') || %s) WHERE id = %s""", ('\n\n_first_pass_done_',proc.id))
+
+        return True
+
     def unlink(self, cr, uid, ids, context=None):
         procurements = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
@@ -371,7 +387,6 @@ class procurement_order(osv.osv):
                     ctx_wkf = dict(context or {})
                     ctx_wkf['workflow.trg_write.%s' % self._name] = False
                     self.write(cr, uid, [procurement.id], {'message': message},context=ctx_wkf)
-                    self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
 
     def step_workflow(self, cr, uid, ids, context=None):

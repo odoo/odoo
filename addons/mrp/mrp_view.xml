@@ -422,6 +422,7 @@
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
                     <field name="name" string="Bill Of Material" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <field name="bom_lines" string="Components"/>
                     <field name="product_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
@@ -429,7 +430,7 @@
                         <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Starting Date"/>
+                        <filter string=" Valid From Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
             </field>
@@ -511,7 +512,18 @@
               </p>
             </field>
         </record>
-        
+        <record id="product_search_form_view_procurment" model="ir.ui.view">
+             <field name="name">product.search.bom</field>
+             <field name="model">product.product</field>
+             <field name="inherit_id" ref="product.product_search_form_view"/>
+             <field name="arch" type="xml">
+                 <xpath expr="//filter[@string='Consumable']" position="after">
+                     <separator/>
+                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[]),('bom_ids.bom_id','!=',False)]" invisible="not context.get('search_default_filter_supply_method_produce', False)"/>
+                 </xpath>
+             </field>
+        </record>
+
         <record id="product_supply_method_produce" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="res_model">product.product</field>
@@ -535,16 +547,16 @@
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
             parent="menu_mrp_configuration"
-            groups="base.group_no_one"
             sequence="20"/>
 
         <record id="action2" model="ir.actions.act_window">
             <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
-            <field name="domain">[('bom_id', '=',active_ids)]</field>
+            <field name="domain">[('id', 'in', active_ids)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
+            <field name="view_type">tree</field>
         </record>
         <record id="ir_BOM_structure" model="ir.values">
             <field eval="'client_action_multi'" name="key2"/>
@@ -655,7 +667,7 @@
                         <group>
                             <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)" required="1"/>
                             <field name="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
-                            <field name="user_id"/>
+                            <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'mrp.group_mrp_user']}"/>
                             <field name="origin"/>
                         </group>
                         <group groups="stock.group_locations">
@@ -692,7 +704,7 @@
                                     </field>
                                 </group>
                                 <group string="Consumed Products">
-                                    <field name="move_lines2" nolabel="1">
+                                    <field name="move_lines2" nolabel="1" options="{'reload_on_button': true}">
                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
                                            <field name="product_qty" readonly="1"/>
@@ -708,7 +720,7 @@
                         <page string="Finished Products">
                             <group>
                                 <group string="Products to Produce">
-                                    <field name="move_created_ids" nolabel="1">
+                                    <field name="move_created_ids" nolabel="1" options="{'reload_on_button': true}">
                                         <tree string="Products to Finish">
                                             <field name="product_id"/>
                                             <field name="product_qty"/>
@@ -722,7 +734,7 @@
                                     </field>
                                 </group>
                                 <group string="Produced Products">
-                                    <field name="move_created_ids2" nolabel="1">
+                                    <field name="move_created_ids2" nolabel="1" options="{'reload_on_button': true}">
                                         <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                             <field name="product_id" readonly="1"/>
                                             <field name="product_qty" readonly="1"/>
@@ -815,7 +827,7 @@
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" help="Scheduled Date"/>
+                        <filter string="Scheduled Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" help="Scheduled Date by Month"/>
                     </group>
                </search>
             </field>
@@ -1015,6 +1027,7 @@
             <field name="name">Bill of Materials</field>
             <field name="domain">[('bom_id','=',False)]</field>
             <field name="res_model">mrp.bom</field>
+            <field name="view_type">form</field>
         </record>
         <record id="act_product_mrp_production" model="ir.actions.act_window">
             <field name="context">{'search_default_product_id': [active_id]}</field>

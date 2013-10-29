@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 from openerp.tools import mute_logger
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
@@ -81,172 +81,87 @@ Please call me as soon as possible this afternoon!
 Sylvie
 """
 
+MAIL_MULTIPART_MIXED = """Return-Path: <ignasse.carambar@gmail.com>
+X-Original-To: raoul@grosbedon.fr
+Delivered-To: raoul@grosbedon.fr
+Received: by mail1.grosbedon.com (Postfix, from userid 10002)
+    id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on mail1.grosbedon.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,FREEMAIL_FROM,
+    HTML_MESSAGE,RCVD_IN_DNSWL_LOW autolearn=unavailable version=3.3.1
+Received: from mail-ie0-f173.google.com (mail-ie0-f173.google.com [209.85.223.173])
+    by mail1.grosbedon.com (Postfix) with ESMTPS id 9BBD7BFAAA
+    for <raoul@openerp.fr>; Fri, 23 Aug 2013 13:17:55 +0200 (CEST)
+Received: by mail-ie0-f173.google.com with SMTP id qd12so575130ieb.4
+        for <raoul@grosbedon.fr>; Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20120113;
+        h=mime-version:date:message-id:subject:from:to:content-type;
+        bh=dMNHV52EC7GAa7+9a9tqwT9joy9z+1950J/3A6/M/hU=;
+        b=DGuv0VjegdSrEe36ADC8XZ9Inrb3Iu+3/52Bm+caltddXFH9yewTr0JkCRQaJgMwG9
+         qXTQgP8qu/VFEbCh6scu5ZgU1hknzlNCYr3LT+Ih7dAZVUEHUJdwjzUU1LFV95G2RaCd
+         /Lwff6CibuUvrA+0CBO7IRKW0Sn5j0mukYu8dbaKsm6ou6HqS8Nuj85fcXJfHSHp6Y9u
+         dmE8jBh3fHCHF/nAvU+8aBNSIzl1FGfiBYb2jCoapIuVFitKR4q5cuoodpkH9XqqtOdH
+         DG+YjEyi8L7uvdOfN16eMr7hfUkQei1yQgvGu9/5kXoHg9+Gx6VsZIycn4zoaXTV3Nhn
+         nu4g==
+MIME-Version: 1.0
+X-Received: by 10.50.124.65 with SMTP id mg1mr1144467igb.43.1377256674216;
+ Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
+Received: by 10.43.99.71 with HTTP; Fri, 23 Aug 2013 04:17:54 -0700 (PDT)
+Date: Fri, 23 Aug 2013 13:17:54 +0200
+Message-ID: <CAP76m_V4BY2F7DWHzwfjteyhW8L2LJswVshtmtVym+LUJ=rASQ@mail.gmail.com>
+Subject: Test mail multipart/mixed
+From: =?ISO-8859-1?Q?Raoul Grosbedon=E9e?= <ignasse.carambar@gmail.com>
+To: Followers of ASUSTeK-Joseph-Walters <raoul@grosbedon.fr>
+Content-Type: multipart/mixed; boundary=089e01536c4ed4d17204e49b8e96
 
-class TestMailgateway(TestMailBase):
+--089e01536c4ed4d17204e49b8e96
+Content-Type: multipart/alternative; boundary=089e01536c4ed4d16d04e49b8e94
 
-    def test_00_partner_find_from_email(self):
-        """ Tests designed for partner fetch based on emails. """
-        cr, uid, user_raoul, group_pigs = self.cr, self.uid, self.user_raoul, self.group_pigs
+--089e01536c4ed4d16d04e49b8e94
+Content-Type: text/plain; charset=ISO-8859-1
 
-        # --------------------------------------------------
-        # Data creation
-        # --------------------------------------------------
-        # 1 - Partner ARaoul
-        p_a_id = self.res_partner.create(cr, uid, {'name': 'ARaoul', 'email': 'test@test.fr'})
+Should create a multipart/mixed: from gmail, *bold*, with attachment.
 
-        # --------------------------------------------------
-        # CASE1: without object
-        # --------------------------------------------------
+-- 
+Marcel Boitempoils.
 
-        # Do: find partner with email -> first partner should be found
-        partner_info = self.mail_thread.message_partner_info_from_emails(cr, uid, None, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
-        self.assertEqual(partner_info['full_name'], 'Maybe Raoul <test@test.fr>',
-                         'mail_thread: message_partner_info_from_emails did not handle email')
-        self.assertEqual(partner_info['partner_id'], p_a_id,
-                         'mail_thread: message_partner_info_from_emails wrong partner found')
+--089e01536c4ed4d16d04e49b8e94
+Content-Type: text/html; charset=ISO-8859-1
 
-        # Data: add some data about partners
-        # 2 - User BRaoul
-        p_b_id = self.res_partner.create(cr, uid, {'name': 'BRaoul', 'email': 'test@test.fr', 'user_ids': [(4, user_raoul.id)]})
+<div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"><div><br></div>-- <br>Marcel Boitempoils.</div>
 
-        # Do: find partner with email -> first user should be found
-        partner_info = self.mail_thread.message_partner_info_from_emails(cr, uid, None, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
-        self.assertEqual(partner_info['partner_id'], p_b_id,
-                         'mail_thread: message_partner_info_from_emails wrong partner found')
+--089e01536c4ed4d16d04e49b8e94--
+--089e01536c4ed4d17204e49b8e96
+Content-Type: text/plain; charset=US-ASCII; name="test.txt"
+Content-Disposition: attachment; filename="test.txt"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_hkpb27k00
 
-        # --------------------------------------------------
-        # CASE1: with object
-        # --------------------------------------------------
+dGVzdAo=
+--089e01536c4ed4d17204e49b8e96--"""
 
-        # Do: find partner in group where there is a follower with the email -> should be taken
-        self.mail_group.message_subscribe(cr, uid, [group_pigs.id], [p_b_id])
-        partner_info = self.mail_group.message_partner_info_from_emails(cr, uid, group_pigs.id, ['Maybe Raoul <test@test.fr>'], link_mail=False)[0]
-        self.assertEqual(partner_info['partner_id'], p_b_id,
-                         'mail_thread: message_partner_info_from_emails wrong partner found')
 
-    def test_05_mail_message_mail_mail(self):
-        """ Tests designed for testing email values based on mail.message, aliases, ... """
-        cr, uid, user_raoul_id = self.cr, self.uid, self.user_raoul_id
+class TestMailgateway(TestMail):
 
-        # Data: update + generic variables
-        reply_to1 = '_reply_to1@example.com'
-        reply_to2 = '_reply_to2@example.com'
-        email_from1 = 'from@example.com'
-        alias_domain = 'schlouby.fr'
-        raoul_from = 'Raoul Grosbedon <raoul@raoul.fr>'
-        raoul_from_alias = 'Raoul Grosbedon <raoul@schlouby.fr>'
-        raoul_reply = '"Followers of Pigs" <raoul@raoul.fr>'
-        raoul_reply_alias = '"Followers of Pigs" <group+pigs@schlouby.fr>'
-        # Data: remove alias_domain to see emails with alias
-        param_ids = self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.domain')])
-        self.registry('ir.config_parameter').unlink(cr, uid, param_ids)
+    def test_00_message_parse(self):
+        """ Testing incoming emails parsing """
+        cr, uid = self.cr, self.uid
 
-        # Do: free message; specified values > default values
-        msg_id = self.mail_message.create(cr, user_raoul_id, {'reply_to': reply_to1, 'email_from': email_from1})
-        msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
-        # Test: message content
-        self.assertIn('reply_to', msg.message_id,
-                      'mail_message: message_id should be specific to a mail_message with a given reply_to')
-        self.assertEqual(msg.reply_to, reply_to1,
-                         'mail_message: incorrect reply_to: should come from values')
-        self.assertEqual(msg.email_from, email_from1,
-                         'mail_message: incorrect email_from: should come from values')
-        # Do: create a mail_mail with the previous mail_message
-        mail_id = self.mail_mail.create(cr, user_raoul_id, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, user_raoul_id, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, reply_to1,
-                         'mail_mail: incorrect reply_to: should come from mail.message')
-        self.assertEqual(mail.email_from, email_from1,
-                         'mail_mail: incorrect email_from: should come from mail.message')
-        # Do: create a mail_mail with the previous mail_message + specified reply_to
-        mail_id = self.mail_mail.create(cr, user_raoul_id, {'mail_message_id': msg_id, 'state': 'cancel', 'reply_to': reply_to2})
-        mail = self.mail_mail.browse(cr, user_raoul_id, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, reply_to2,
-                         'mail_mail: incorrect reply_to: should come from values')
-        self.assertEqual(mail.email_from, email_from1,
-                         'mail_mail: incorrect email_from: should come from mail.message')
+        res = self.mail_thread.message_parse(cr, uid, MAIL_TEMPLATE_PLAINTEXT)
+        self.assertIn('Please call me as soon as possible this afternoon!', res.get('body', ''),
+                      'message_parse: missing text in text/plain body after parsing')
 
-        # Do: mail_message attached to a document
-        msg_id = self.mail_message.create(cr, user_raoul_id, {'model': 'mail.group', 'res_id': self.group_pigs_id})
-        msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
-        # Test: message content
-        self.assertIn('mail.group', msg.message_id,
-                      'mail_message: message_id should contain model')
-        self.assertIn('%s' % self.group_pigs_id, msg.message_id,
-                      'mail_message: message_id should contain res_id')
-        self.assertFalse(msg.reply_to,
-                         'mail_message: incorrect reply_to: should not be generated if not specified')
-        self.assertEqual(msg.email_from, raoul_from,
-                         'mail_message: incorrect email_from: should be Raoul')
-        # Do: create a mail_mail based on the previous mail_message
-        mail_id = self.mail_mail.create(cr, user_raoul_id, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, user_raoul_id, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, raoul_reply,
-                         'mail_mail: incorrect reply_to: should be Raoul')
+        res = self.mail_thread.message_parse(cr, uid, MAIL_TEMPLATE)
+        self.assertIn('<p>Please call me as soon as possible this afternoon!</p>', res.get('body', ''),
+                      'message_parse: missing html in multipart/alternative body after parsing')
 
-        # Data: set catchall domain
-        self.registry('ir.config_parameter').set_param(cr, uid, 'mail.catchall.domain', alias_domain)
-        self.registry('ir.config_parameter').unlink(cr, uid, self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.alias')]))
-
-        # Update message
-        self.mail_message.write(cr, user_raoul_id, [msg_id], {'email_from': False, 'reply_to': False})
-        msg.refresh()
-        # Do: create a mail_mail based on the previous mail_message
-        mail_id = self.mail_mail.create(cr, user_raoul_id, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, user_raoul_id, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, raoul_reply_alias,
-                         'mail_mail: incorrect reply_to: should be Pigs alias')
-
-        # Update message: test alias on email_from
-        msg_id = self.mail_message.create(cr, user_raoul_id, {})
-        msg = self.mail_message.browse(cr, user_raoul_id, msg_id)
-        # Do: create a mail_mail based on the previous mail_message
-        mail_id = self.mail_mail.create(cr, user_raoul_id, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, user_raoul_id, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, raoul_from_alias,
-                         'mail_mail: incorrect reply_to: should be message email_from using Raoul alias')
-
-        # Update message
-        self.mail_message.write(cr, user_raoul_id, [msg_id], {'res_id': False, 'email_from': 'someone@schlouby.fr', 'reply_to': False})
-        msg.refresh()
-        # Do: create a mail_mail based on the previous mail_message
-        mail_id = self.mail_mail.create(cr, user_raoul_id, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, user_raoul_id, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, msg.email_from,
-                         'mail_mail: incorrect reply_to: should be message email_from')
-
-        # Data: set catchall alias
-        self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.alias', 'gateway')
-
-        # Update message
-        self.mail_message.write(cr, uid, [msg_id], {'email_from': False, 'reply_to': False})
-        msg.refresh()
-        # Do: create a mail_mail based on the previous mail_message
-        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail Content-Type
-        self.assertEqual(mail.reply_to, 'gateway@schlouby.fr',
-                         'mail_mail: reply_to should equal the catchall email alias')
-
-        # Do: create a mail_mail
-        mail_id = self.mail_mail.create(cr, uid, {'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, 'gateway@schlouby.fr',
-                         'mail_mail: reply_to should equal the catchall email alias')
-
-        # Do: create a mail_mail
-        mail_id = self.mail_mail.create(cr, uid, {'state': 'cancel', 'reply_to': 'someone@example.com'})
-        mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, 'someone@example.com',
-                         'mail_mail: reply_to should equal the rpely_to given to create')
+        res = self.mail_thread.message_parse(cr, uid, MAIL_MULTIPART_MIXED)
+        self.assertNotIn('Should create a multipart/mixed: from gmail, *bold*, with attachment', res.get('body', ''),
+                         'message_parse: text version should not be in body after parsing multipart/mixed')
+        self.assertIn('<div dir="ltr">Should create a multipart/mixed: from gmail, <b>bold</b>, with attachment.<br clear="all"><div><br></div>', res.get('body', ''),
+                      'message_parse: html version should be in body after parsing multipart/mixed')
 
     @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_10_message_process(self):
@@ -659,9 +574,7 @@ class TestMailgateway(TestMailBase):
                          'message_post: private discussion: incorrect notified recipients')
         self.assertEqual(msg.model, False,
                          'message_post: private discussion: context key "thread_model" not correctly ignored when having no res_id')
-        # Test: message reply_to and message-id
-        self.assertFalse(msg.reply_to,
-                         'message_post: private discussion: initial message should not have any reply_to specified')
+        # Test: message-id
         self.assertIn('openerp-private', msg.message_id,
                       'message_post: private discussion: message-id should contain the private keyword')
 

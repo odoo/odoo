@@ -8,11 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Analytic Account Charts" version="7.0">
                     <group string="Select the Period for Analysis" col="4">
-                        <label string="Keep empty to open the current situation" colspan="4"/>
-                        <group>
-                            <field name="from_date"/>
-                            <field name="to_date"/>
-                        </group>
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                        <label string="(Keep empty to open the current situation)" colspan="4"/>
                     </group>
                     <footer>
                         <button name="analytic_account_chart_open_window" string="Open Charts" type="object" class="oe_highlight"/>

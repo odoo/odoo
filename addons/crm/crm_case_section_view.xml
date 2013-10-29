@@ -99,11 +99,11 @@
                                     <div class="oe_items_list">
                                         <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
                                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                                            <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar_link"><field name="monthly_open_leads" widget="sparkline_bar">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field></a>
+                                            <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar_link"><field name="monthly_open_leads" widget="sparkline_bar" options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field></a>
                                         </div>
                                         <div class="oe_salesteams_opportunities">
                                             <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                                            <a name="%(action_report_crm_opportunity)d" type="action"><field name="monthly_planned_revenue" widget="sparkline_bar">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field></a>
+                                            <a name="%(action_report_crm_opportunity)d" type="action"><field name="monthly_planned_revenue" widget="sparkline_bar" height="20px" barWidth="4" barSpacing="1">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field></a>
                                         </div>
                                     </div>
                                 </div>
@@ -174,7 +174,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="user_id"/>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                                 <field name="code"/>
                                 <field name="parent_id"/>
                                 <field name="change_responsible"/>
