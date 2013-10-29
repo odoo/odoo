@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:25+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:46+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -107,7 +107,7 @@ msgid "Sum of timesheet lines invoiced for this contract."
 msgstr "Ennek a szerződéshez tartozó időkimutatás számlázott sorai."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
 #, python-format
 msgid "Sales Order Lines of %s"
 msgstr "Megrendelés sorok ebből %s"
@@ -152,6 +152,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új szerződés létrehozásához.\n"
+"              </p><p>\n"
+"                Itt találhatók a frissítendő szerződések, melyeknek a "
+"lejárati\n"
+"                ideje túllépett, vagy a belelőlt energia nagyobb mint a\n"
+"                maximum megengedett.\n"
+"              </p><p>\n"
+"                OpenERP automatikusan frissítésre állítja a függőben\n"
+"                lévőket. A tárgyalás után, az értékesítőnek le kell zárnia "
+"vagy meg \n"
+"                kell újítania a fügőben lévő szerződéseket.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -234,7 +248,7 @@ msgstr "Nincs mit számlázni, hozzon létre"
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
-msgstr ""
+msgstr "Kizárólag sablonok használhatóak a szerződésekhez"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -325,6 +339,8 @@ msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
 msgstr ""
+"Idő mennyisége (órák/napok) (Az 'általános' típusú naplóból) melyek "
+"számlázhatóak, ha a számlázás a gyüjtőkódon alapszik."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -360,6 +376,7 @@ msgstr ""
 "kapcsoltak."
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
 msgstr "Vevői megrendelések"
@@ -401,6 +418,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Kattintson szerződés sablon létrehozásához.\n"
+"                </p><p>\n"
+"                    Sablonokat használ a szerződések/projektek "
+"elképzelésénak kialakításához, \n"
+"                    melyeket az értékesítő kiválaszthat és gyorsan "
+"beállíthat a szerződés\n"
+"                    feltételeihez és részleteihez.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user

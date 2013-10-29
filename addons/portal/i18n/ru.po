@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:50+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:33+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -107,6 +107,8 @@ msgid ""
 "Make this payment acquirer available in portal forms (Customer invoices, "
 "etc.)"
 msgstr ""
+"Сделать получателя платежа видимым в документах портала (счета заказчиков и "
+"пр.)"
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
@@ -161,7 +163,7 @@ msgstr "Оплатить безопасно онлайн"
 #: code:addons/portal/acquirer.py:77
 #, python-format
 msgid "No online payment acquirers configured"
-msgstr ""
+msgstr "Получатели эл. платежей не настроены"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -169,11 +171,13 @@ msgid ""
 "kind: the kind of document on which the payment form is rendered (translated "
 "to user language, e.g. \"Invoice\")"
 msgstr ""
+"тип: тип документа по которому заполняется форма платежа (переведённая на "
+"язык пользователя , например \"Счёт\")"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Портал, в котором можно добавить или удалить пользователей."
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:38
@@ -189,6 +193,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    У Вас нет непрочитанных предложений работы.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -209,7 +217,7 @@ msgstr "Портал"
 #: code:addons/portal/wizard/portal_wizard.py:34
 #, python-format
 msgid "Your OpenERP account at %(company)s"
-msgstr ""
+msgstr "Ваш аккаунт OpenERP в %(company)s"
 
 #. module: portal
 #: model:res.groups,name:portal.group_anonymous
@@ -219,7 +227,7 @@ msgstr "Анонимно"
 #. module: portal
 #: field:portal.wizard.user,in_portal:0
 msgid "In Portal"
-msgstr ""
+msgstr "В портале"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_news
@@ -239,6 +247,10 @@ msgid ""
 "restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
+"Члены портала имеют специальные права доступа (такие как правила доступа и "
+"ограниченное меню).\n"
+"                Обычно они не принадлежат к другим группам пользователей "
+"OpenERP."
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.action_acquirer_list
@@ -328,11 +340,15 @@ msgid ""
 "restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
+"Анонимные пользователи имеют ограниченные права доступа (такие как правила "
+"доступа и ограниченное меню).\n"
+"                Обычно они не принадлежат к другим группам пользователей "
+"OpenERP."
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
-msgstr ""
+msgstr "Получатель электронного платежа"
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -345,6 +361,7 @@ msgstr "Новости компании"
 msgid ""
 "You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
 msgstr ""
+"Вы можете завершить настройку в <a href=\"%s\">Настройках платежей</a>"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -381,6 +398,8 @@ msgid ""
 "object: the document on which the payment form is rendered (usually an "
 "invoice or sales order record)"
 msgstr ""
+"объект: документ, для которого заполняется форма платежа (обычно, счёт или "
+"заказ на продажу)"
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
@@ -398,12 +417,12 @@ msgstr "О нас"
 msgid ""
 "currency: the currency record in which the document is issued (e.g. "
 "currency.name could be EUR)"
-msgstr ""
+msgstr "валюта: валюта документа (например, валютой может быть EUR)"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Получатель платежа"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:35
@@ -426,6 +445,22 @@ msgid ""
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
 msgstr ""
+"Уважаемый %(name)s,\n"
+"\n"
+"Вам предоставлен доступ к %(portal)s.\n"
+"\n"
+"Данные Вашего аккаунта:\n"
+"База данных: %(db)s\n"
+"Имя пользователя: %(login)s\n"
+"\n"
+"Для завершения процесса входа, перейдите по приведенной ниже ссылке:\n"
+"%(url)s\n"
+"\n"
+"%(welcome_message)s\n"
+"\n"
+"--\n"
+"OpenERP - Open Source Business Applications\n"
+"http://www.openerp.com\n"
 
 #. module: portal
 #: view:portal.wizard:0
@@ -516,4 +551,4 @@ msgstr "Шаблон формы"
 #: model:ir.model,name:portal.model_portal_wizard
 #: view:portal.wizard:0
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Доступ к порталу"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:08+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:15+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -31,7 +31,7 @@ msgstr ""
 "pistes à partir de courriels entrant."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:881
+#: code:addons/crm/crm_lead.py:898
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -71,7 +71,7 @@ msgstr "Action"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
 msgid "Set team to Sales Department"
-msgstr ""
+msgstr "Définir l'équipe du service commercial"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -192,8 +192,8 @@ msgstr ""
 "est au format HTML pour permettre son utilisation dans la vue kanban"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
-#: code:addons/crm/crm_lead.py:744
+#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:761
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
@@ -305,7 +305,7 @@ msgid "Prospect Partner"
 msgstr "Prospect"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:982
+#: code:addons/crm/crm_lead.py:1002
 #, python-format
 msgid "No Subject"
 msgstr "Pas de sujet"
@@ -479,7 +479,7 @@ msgid "#Opportunities"
 msgstr "Nb. d'opportunités"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:640
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -777,7 +777,7 @@ msgid "Statistics Dashboard"
 msgstr "Tableau de bord de statistiques"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:861
+#: code:addons/crm/crm_lead.py:878
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -839,7 +839,7 @@ msgid "Exclusive"
 msgstr "Sélection exclusive"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:584
+#: code:addons/crm/crm_lead.py:600
 #, python-format
 msgid "From %s : %s"
 msgstr "De %s: %s"
@@ -1011,7 +1011,7 @@ msgid "Next Action"
 msgstr "Prochaine action"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:763
+#: code:addons/crm/crm_lead.py:780
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr "<b>Les partenaire</b> à été positionné  à <em>%s</em>."
@@ -1104,7 +1104,7 @@ msgid "Creation Date"
 msgstr "Date de création"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:698
+#: code:addons/crm/crm_lead.py:715
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr "Piste <b>convertie en opportunité</b>"
@@ -1319,7 +1319,9 @@ msgid "Days to Close"
 msgstr "Jours avant clôture"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1057
 #: field:crm.case.section,complete_name:0
+#, python-format
 msgid "unknown"
 msgstr "inconnu"
 
@@ -1409,7 +1411,7 @@ msgid "Lead Description"
 msgstr "Description de la piste"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:565
+#: code:addons/crm/crm_lead.py:581
 #, python-format
 msgid "Merged opportunities"
 msgstr "Opportunités fusionnées"
@@ -1945,7 +1947,7 @@ msgstr "Équipes commerciales"
 #. module: crm
 #: field:crm.case.stage,case_default:0
 msgid "Default to New Sales Team"
-msgstr ""
+msgstr "Par défaut à la nouvelle équipe commerciale"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1984,7 +1986,7 @@ msgid "Leads"
 msgstr "Pistes"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:563
+#: code:addons/crm/crm_lead.py:579
 #, python-format
 msgid "Merged leads"
 msgstr "Pistes fusionnées"
@@ -2080,7 +2082,6 @@ msgid "Global CC"
 msgstr "Copie à"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
@@ -2506,6 +2507,7 @@ msgstr "Confirmée"
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Handle partner binding or generation in CRM wizards."
 msgstr ""
+"Gère la relation ou la génération du partenaire dans les assistants du CRM"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_oppor_stage_user
@@ -2862,7 +2864,7 @@ msgstr "Rue 2"
 #. module: crm
 #: field:sale.config.settings,module_crm_helpdesk:0
 msgid "Manage Helpdesk and Support"
-msgstr "Gérer l'assitance et le support"
+msgstr "Gérer l'assistance et le support"
 
 #. module: crm
 #: field:crm.lead.report,delay_open:0
@@ -3086,7 +3088,7 @@ msgid "Working Hours"
 msgstr "Heures de travail"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:968
+#: code:addons/crm/crm_lead.py:986
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0

@@ -235,7 +235,7 @@ openerp.mail = function (session) {
             this.attachment_ids = datasets.attachment_ids ||  [],
             this.partner_ids = datasets.partner_ids || [];
             this.date = datasets.date;
-
+            this.user_pid = datasets.user_pid || false;
             this.format_data();
 
             // update record_name: Partner profile
@@ -565,6 +565,7 @@ openerp.mail = function (session) {
                     'default_partner_ids': partner_ids,
                     'mail_post_autofollow': true,
                     'mail_post_autofollow_partner_ids': partner_ids,
+                    'is_private': self.is_private
                 };
                 if (self.is_log) {
                     _.extend(context, {'mail_compose_log': true});
@@ -773,7 +774,7 @@ openerp.mail = function (session) {
             // if clicked: call for suggested recipients
             if (event.type == 'click') {
                 this.is_log = $input.hasClass('oe_compose_log');
-                suggested_partners = this.parent_thread.ds_thread.call('message_get_suggested_recipients', [[this.context.default_res_id]]).done(function (additional_recipients) {
+                suggested_partners = this.parent_thread.ds_thread.call('message_get_suggested_recipients', [[this.context.default_res_id], this.context]).done(function (additional_recipients) {
                     var thread_recipients = additional_recipients[self.context.default_res_id];
                     _.each(thread_recipients, function (recipient) {
                         var parsed_email = mail.ChatterUtils.parse_email(recipient[1]);
@@ -1217,7 +1218,7 @@ openerp.mail = function (session) {
         init: function (parent, datasets, options) {
             var self = this;
             this._super(parent, options);
-            this.MailWidget = parent.__proto__ == mail.Widget.prototype ? parent : false;
+            this.MailWidget = parent instanceof mail.Widget ? parent : false;
             this.domain = options.domain || [];
             this.context = _.extend(options.context || {});
 
@@ -1239,9 +1240,9 @@ openerp.mail = function (session) {
             if (datasets.author_id && !_.contains(_.flatten(datasets.partner_ids),datasets.author_id[0]) && datasets.author_id[0]) {
                 datasets.partner_ids.push(datasets.author_id);
             }
+            this.user_pid = datasets.user_pid || false;
             this.partner_ids = datasets.partner_ids;
             this.messages = [];
-
             this.options.flat_mode = (this.options.display_indented_thread - this.thread_level > 0);
 
             // object compose message

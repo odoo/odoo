@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:23+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:42+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -124,7 +124,7 @@ msgid "March"
 msgstr "Marzo"
 
 #. module: sale
-#: code:addons/sale/sale.py:567
+#: code:addons/sale/sale.py:565
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "Primero cancele todas las facturas relativas a este pedido de venta."
@@ -290,9 +290,9 @@ msgstr "Proyecto"
 
 #. module: sale
 #: code:addons/sale/sale.py:185
-#: code:addons/sale/sale.py:368
-#: code:addons/sale/sale.py:509
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:363
+#: code:addons/sale/sale.py:504
+#: code:addons/sale/sale.py:598
 #: code:addons/sale/sale.py:763
 #: code:addons/sale/sale.py:780
 #, python-format
@@ -426,7 +426,7 @@ msgid "Tax"
 msgstr "Impuesto"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #: code:addons/sale/sale.py:820
 #: code:addons/sale/sale.py:983
 #, python-format
@@ -490,7 +490,7 @@ msgid "Fax :"
 msgstr "Fax :"
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -514,8 +514,8 @@ msgid "Contract Features"
 msgstr "Características del contrato"
 
 #. module: sale
-#: code:addons/sale/sale.py:288
-#: code:addons/sale/sale.py:586
+#: code:addons/sale/sale.py:287
+#: code:addons/sale/sale.py:584
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -876,7 +876,7 @@ msgid "Sales Order done"
 msgstr "Orden de venta completa"
 
 #. module: sale
-#: code:addons/sale/sale.py:369
+#: code:addons/sale/sale.py:364
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -932,7 +932,7 @@ msgid "Sales Make Invoice"
 msgstr "Ventas. Realizar factura"
 
 #. module: sale
-#: code:addons/sale/sale.py:308
+#: code:addons/sale/sale.py:307
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "¡Advertencia de la lista de precios!"
@@ -943,7 +943,7 @@ msgid "Discount (%)"
 msgstr "Descuento (%)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
+#: code:addons/sale/wizard/sale_line_invoice.py:107
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1011,7 +1011,7 @@ msgid "Category of Product"
 msgstr "Categoría de producto"
 
 #. module: sale
-#: code:addons/sale/sale.py:566
+#: code:addons/sale/sale.py:564
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "¡No se puede cancelar este pedido de venta!"
@@ -1068,7 +1068,7 @@ msgid "Open Sale Menu"
 msgstr "Abrir menú de ventas"
 
 #. module: sale
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:598
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "No puede confirmar un pedido de venta que no tiene ninguna línea."
@@ -1500,10 +1500,10 @@ msgstr "Tarifa"
 #. module: sale
 #: report:sale.order:0
 msgid "TVA :"
-msgstr "IVA :"
+msgstr "CIF/NIF :"
 
 #. module: sale
-#: code:addons/sale/sale.py:449
+#: code:addons/sale/sale.py:444
 #, python-format
 msgid "Customer Invoices"
 msgstr "Facturas de cliente"
@@ -1529,7 +1529,7 @@ msgid "Sales"
 msgstr "Ventas"
 
 #. module: sale
-#: code:addons/sale/sale.py:309
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1574,7 +1574,8 @@ msgid "Invoice address :"
 msgstr "Dirección de factura :"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:124
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
 #: view:sale.order:0
 #, python-format
@@ -1659,7 +1660,7 @@ msgid "Shipping address :"
 msgstr "Dirección de envío :"
 
 #. module: sale
-#: code:addons/sale/sale.py:510
+#: code:addons/sale/sale.py:505
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -2172,8 +2173,9 @@ msgid "Manual In Progress"
 msgstr "Manual en proceso"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
-#: code:addons/sale/wizard/sale_make_invoice.py:43
+#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "Warning!"
 msgstr "¡Advertencia!"
@@ -2710,6 +2712,9 @@ msgstr "Fecha ordenada de los pedidos de venta"
 
 #~ msgid "Compute"
 #~ msgstr "Calcular"
+
+#~ msgid "VAT"
+#~ msgstr "IVA"
 
 #, python-format
 #~ msgid "Error"
@@ -3679,9 +3684,6 @@ msgstr "Fecha ordenada de los pedidos de venta"
 #~ msgstr ""
 #~ "Para eliminar un pedido confirmado, debe cancelarlo primero! Para "
 #~ "cancelarlo, debe primero cancelar los albaranes relacionados"
-
-#~ msgid "VAT"
-#~ msgstr "CIF/NIF"
 
 #~ msgid "Based on Delivery Orders"
 #~ msgstr "Basado en albaranes de salida"

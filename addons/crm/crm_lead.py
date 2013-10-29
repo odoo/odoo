@@ -23,6 +23,7 @@ import crm
 from datetime import datetime
 from operator import itemgetter
 
+import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.addons.base.res.res_partner import format_address
@@ -253,11 +254,13 @@ class crm_lead(format_address, osv.osv):
                                 multi='day_close', type="float", store=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
+        # Messaging and marketing
+        'message_bounce': fields.integer('Bounce'),
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)', group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue', track_visibility='always'),
-        'ref': fields.reference('Reference', selection=crm._links_get, size=128),
-        'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
+        'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
+        'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         'date_action': fields.date('Next Action Date', select=True),
@@ -296,7 +299,7 @@ class crm_lead(format_address, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
-        'date_last_stage_update': fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
     }
 
     _sql_constraints = [
@@ -349,10 +352,14 @@ class crm_lead(format_address, osv.osv):
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
+        if context is None:
+            context = {}
+        # check whether we should try to add a condition on type
+        avoid_add_type_term = any([term for term in domain if len(term) == 3 if term[0] == 'type'])
         # collect all section_ids
         section_ids = set()
         types = ['both']
-        if not cases:
+        if not cases and context.get('default_type'):
             ctx_type = context.get('default_type')
             types += [ctx_type]
         if section_id:
@@ -370,7 +377,8 @@ class crm_lead(format_address, osv.osv):
                 search_domain.append(('section_ids', '=', section_id))
         search_domain.append(('case_default', '=', True))
         # AND with cases types
-        search_domain.append(('type', 'in', types))
+        if not avoid_add_type_term:
+            search_domain.append(('type', 'in', types))
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
@@ -604,10 +612,12 @@ class crm_lead(format_address, osv.osv):
 
         opportunities = self.browse(cr, uid, ids, context=context)
         sequenced_opps = []
+        # Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
+        # The confidence level increases with the stage sequence, except when the stage probability is 0.0 (Lost cases)
+        # An Opportunity always has higher confidence level than a lead, unless its stage probability is 0.0
         for opportunity in opportunities:
             sequence = -1
-            # TDE: was "if opportunity.stage_id and opportunity.stage_id.state != 'cancel':"
-            if opportunity.probability == 0 and opportunity.stage_id and opportunity.stage_id.sequence != 1 and opportunity.stage_id.fold:
+            if opportunity.stage_id and (opportunity.stage_id.probability != 0 or opportunity.stage_id.sequence == 1):
                 sequence = opportunity.stage_id.sequence
             sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
 
@@ -634,7 +644,7 @@ class crm_lead(format_address, osv.osv):
         # Merge notifications about loss of information
         opportunities = [highest]
         opportunities.extend(opportunities_rest)
-        self._merge_notify(cr, uid, highest, opportunities, context=context)
+        self._merge_notify(cr, uid, highest.id, opportunities, context=context)
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('section_id'):
             section_stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('section_ids', 'in', merged_data['section_id']), ('type', '=', merged_data.get('type'))], order='sequence', context=context)

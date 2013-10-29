@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-import openerp
-import openerp.addons.im.im as im
 import json
 import random
 import jinja2
+
+import openerp
+import openerp.addons.im.im as im
 from openerp.osv import osv, fields
 from openerp import tools
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 
 env = jinja2.Environment(
     loader=jinja2.PackageLoader('openerp.addons.im_livechat', "."),
@@ -75,7 +76,7 @@ class LiveChatController(http.Controller):
     def available(self, db, channel):
         reg, uid = self._auth(db)
         with reg.cursor() as cr:
-            return reg.get('im_livechat.channel').get_available_user(cr, uid, channel) > 0
+            return len(reg.get('im_livechat.channel').get_available_users(cr, uid, channel)) > 0
 
 class im_livechat_channel(osv.osv):
     _name = 'im_livechat.channel'
@@ -159,7 +160,7 @@ class im_livechat_channel(osv.osv):
         'image': _get_default_image,
     }
 
-    def get_available_user(self, cr, uid, channel_id, context=None):
+    def get_available_users(self, cr, uid, channel_id, context=None):
         channel = self.browse(cr, openerp.SUPERUSER_ID, channel_id, context=context)
         im_user_ids = self.pool.get("im.user").search(cr, uid, [["user_id", "in", [user.id for user in channel.user_ids]]], context=context)
         users = []
@@ -167,9 +168,17 @@ class im_livechat_channel(osv.osv):
             imuser = self.pool.get("im.user").browse(cr, uid, iuid, context=context)
             if imuser.im_status:
                 users.append(imuser)
+        return users
+
+    def get_session(self, cr, uid, channel_id, uuid, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        users = self.get_available_users(cr, uid, channel_id, context=context)
         if len(users) == 0:
             return False
-        return random.choice(users).id
+        user_id = random.choice(users).id
+        session = self.pool.get("im.session").session_get(cr, uid, [user_id], uuid, context=context)
+        self.pool.get("im.session").write(cr, openerp.SUPERUSER_ID, session.get("id"), {'channel_id': channel_id}, context=context)
+        return session.get("id")
 
     def test_channel(self, cr, uid, channel, context=None):
         if not channel:
@@ -198,49 +207,9 @@ class im_livechat_channel(osv.osv):
         self.write(cr, uid, ids, {'user_ids': [(3, uid)]})
         return True
 
-
-class im_message(osv.osv):
-    _inherit = 'im.message'
-
-    def _support_member(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = False
-            if record.to_id.user_id and record.from_id.user_id:
-                continue
-            elif record.to_id.user_id:
-                res[record.id] = record.to_id.user_id.id
-            elif record.from_id.user_id:
-                res[record.id] = record.from_id.user_id.id
-        return res
-
-    def _customer(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = False
-            if record.to_id.uuid and record.from_id.uuid:
-                continue
-            elif record.to_id.uuid:
-                res[record.id] = record.to_id.id
-            elif record.from_id.uuid:
-                res[record.id] = record.from_id.id
-        return res
-
-    def _direction(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = False
-            if not not record.to_id.user_id and not not record.from_id.user_id:
-                continue
-            elif not not record.to_id.user_id:
-                res[record.id] = "c2s"
-            elif not not record.from_id.user_id:
-                res[record.id] = "s2c"
-        return res
+class im_session(osv.osv):
+    _inherit = 'im.session'
 
     _columns = {
-        'support_member_id': fields.function(_support_member, type='many2one', relation='res.users', string='Support Member', store=True, select=True),
-        'customer_id': fields.function(_customer, type='many2one', relation='im.user', string='Customer', store=True, select=True),
-        'direction': fields.function(_direction, type="selection", selection=[("s2c", "Support Member to Customer"), ("c2s", "Customer to Support Member")],
-            string='Direction', store=False),
+        'channel_id': fields.many2one("im.user", "Channel"),
     }
