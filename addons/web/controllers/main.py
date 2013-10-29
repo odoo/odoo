@@ -91,7 +91,7 @@ db_list = http.db_list
 db_monodb = http.db_monodb
 
 def redirect_with_hash(url, code=303):
-    redirect_code = "<html><head><script>window.location = '%s#' + location.hash;</script></head></html>" % url
+    redirect_code = "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
     if request.httprequest.user_agent.browser == 'msie':
         try:
             version = float(request.httprequest.user_agent.version)
