@@ -8,7 +8,7 @@
               <form string="Create invoice" version="7.0">
                   <group string="Create Invoice">
                       <field name="journal_id"/>
-                      <field name="group"/>
+                      <field name="group" invisible="context.get('group_field_invisible', False)"/>
                       <field name="invoice_date" />
                   </group>
                   <footer>

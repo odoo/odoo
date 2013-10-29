@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:08+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:16+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -32,7 +32,7 @@ msgstr ""
 "олгодог."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:881
+#: code:addons/crm/crm_lead.py:898
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -103,7 +103,7 @@ msgstr "Үеийн нэр"
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "Salesperson"
-msgstr "Худалдагч"
+msgstr "Борлуулалтын ажилтан"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_report
@@ -193,8 +193,8 @@ msgstr ""
 "html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
-#: code:addons/crm/crm_lead.py:744
+#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:761
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
@@ -296,8 +296,8 @@ msgid ""
 "If opt-out is checked, this contact has refused to receive emails or "
 "unsubscribed to a campaign."
 msgstr ""
-"Хэрэв хүлээж авахгүй-г чеклвэл магадлагдаагүй компанит ажил буюу э-"
-"мэйлүүдийг хүлээж авахаас татгалзана."
+"Хэрэв хүлээж авахгүйг чеклвэл энэхүү гэрээ нь имэйл хүлээж авахаас "
+"татгалзсан байна."
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadpartner0
@@ -305,7 +305,7 @@ msgid "Prospect Partner"
 msgstr "Хэтийн түнш"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:982
+#: code:addons/crm/crm_lead.py:1002
 #, python-format
 msgid "No Subject"
 msgstr "Гарчиг үгүй"
@@ -369,7 +369,7 @@ msgstr "Уулзах боломж"
 #: help:crm.lead.report,delay_close:0
 #: help:crm.phonecall.report,delay_close:0
 msgid "Number of Days to close the case"
-msgstr "Хэрэгийг хаах өдрийн тоо"
+msgstr "Хэрэгийг хаах хоногийн тоо"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_opportunities0
@@ -474,7 +474,7 @@ msgid "#Opportunities"
 msgstr "#Боломжууд"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:640
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -764,7 +764,7 @@ msgid "Statistics Dashboard"
 msgstr "Статистик хянах самбар"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:861
+#: code:addons/crm/crm_lead.py:878
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -825,7 +825,7 @@ msgid "Exclusive"
 msgstr "Дээд зиндаанд зориулсан"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:584
+#: code:addons/crm/crm_lead.py:600
 #, python-format
 msgid "From %s : %s"
 msgstr "%s -ээс: %s"
@@ -997,7 +997,7 @@ msgid "Next Action"
 msgstr "Дараагийн үйл ажиллагаа"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:763
+#: code:addons/crm/crm_lead.py:780
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr "<b>Харилцаг</b> нь <em>%s</em> гэж тохируулагдлаа."
@@ -1089,7 +1089,7 @@ msgid "Creation Date"
 msgstr "Үүсгэх огноо"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:698
+#: code:addons/crm/crm_lead.py:715
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr "Сэжим нь <b>Боломж бол хөрвүүлэгдлээ</b>"
@@ -1297,7 +1297,9 @@ msgid "Days to Close"
 msgstr "Хаах өдөр"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1057
 #: field:crm.case.section,complete_name:0
+#, python-format
 msgid "unknown"
 msgstr "тодорхой бус"
 
@@ -1386,7 +1388,7 @@ msgid "Lead Description"
 msgstr "Сэжимийн тодорхойлолт"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:565
+#: code:addons/crm/crm_lead.py:581
 #, python-format
 msgid "Merged opportunities"
 msgstr "Нийлүүлсэн боломж"
@@ -1958,7 +1960,7 @@ msgid "Leads"
 msgstr "Сэжим"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:563
+#: code:addons/crm/crm_lead.py:579
 #, python-format
 msgid "Merged leads"
 msgstr "Нэгтгэгдсэн сэжимүүд"
@@ -2054,7 +2056,6 @@ msgid "Global CC"
 msgstr "Глобал CC"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
@@ -2071,7 +2072,7 @@ msgstr "Шатын Хайлт"
 #: help:crm.lead.report,delay_open:0
 #: help:crm.phonecall.report,delay_open:0
 msgid "Number of Days to open the case"
-msgstr "Хэрэгийг нээх хүртэлх өдрийн тоо"
+msgstr "Хэрэгийг нээх хүртэлх хоногийн тоо"
 
 #. module: crm
 #: field:crm.lead,phone:0
@@ -3053,7 +3054,7 @@ msgid "Working Hours"
 msgstr "Ажлын цаг"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:968
+#: code:addons/crm/crm_lead.py:986
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0

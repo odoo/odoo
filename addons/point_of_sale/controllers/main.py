@@ -3,12 +3,19 @@ import logging
 import simplejson
 import os
 import openerp
+import time
+import random
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 
+_logger = logging.getLogger(__name__)
+
 class PointOfSaleController(http.Controller):
+    def __init__(self):
+        self.scale = 'closed'
+        self.scale_weight = 0.0
 
     @http.route('/pos/app', type='http', auth='admin')
     def app(self):
@@ -64,21 +71,23 @@ class PointOfSaleController(http.Controller):
 
         return m
 
+    @http.route('/pos/test_connection', type='json', auth='admin')
+    def test_connection(self):
+        _logger.info('Received Connection Test from the Point of Sale');
+
     @http.route('/pos/scan_item_success', type='json', auth='admin')
     def scan_item_success(self, ean):
         """
         A product has been scanned with success
         """
         print 'scan_item_success: ' + str(ean)
-        return 
 
-    @http.route('/pos/scan_item_error_unrecognized')
+    @http.route('/pos/scan_item_error_unrecognized', type='json', auth='admin')
     def scan_item_error_unrecognized(self, ean):
         """
         A product has been scanned without success
         """
         print 'scan_item_error_unrecognized: ' + str(ean)
-        return 
 
     @http.route('/pos/help_needed', type='json', auth='admin')
     def help_needed(self):
@@ -86,7 +95,6 @@ class PointOfSaleController(http.Controller):
         The user wants an help (ex: light is on)
         """
         print "help_needed"
-        return 
 
     @http.route('/pos/help_canceled', type='json', auth='admin')
     def help_canceled(self):
@@ -94,22 +102,40 @@ class PointOfSaleController(http.Controller):
         The user stops the help request
         """
         print "help_canceled"
-        return 
 
     @http.route('/pos/weighting_start', type='json', auth='admin')
     def weighting_start(self):
-        print "weighting_start"
-        return 
+        if self.scale == 'closed':
+            print "Opening (Fake) Connection to Scale..."
+            self.scale = 'open'
+            self.scale_weight = 0.0
+            time.sleep(0.1)
+            print "... Scale Open."
+        else:
+            print "WARNING: Scale already Connected !!!"
 
     @http.route('/pos/weighting_read_kg', type='json', auth='admin')
     def weighting_read_kg(self):
-        print "weighting_read_kg"
-        return 3.14
+        if self.scale == 'open':
+            print "Reading Scale..."
+            time.sleep(0.025)
+            self.scale_weight += 0.01
+            print "... Done."
+            return self.scale_weight
+        else:
+            print "WARNING: Reading closed scale !!!"
+            return 0.0
 
     @http.route('/pos/weighting_end', type='json', auth='admin')
     def weighting_end(self):
-        print "weighting_end"
-        return 
+        if self.scale == 'open':
+            print "Closing Connection to Scale ..."
+            self.scale = 'closed'
+            self.scale_weight = 0.0
+            time.sleep(0.1)
+            print "... Scale Closed."
+        else:
+            print "WARNING: Scale already Closed !!!"
 
     @http.route('/pos/payment_request', type='json', auth='admin')
     def payment_request(self, price):
@@ -127,41 +153,37 @@ class PointOfSaleController(http.Controller):
     @http.route('/pos/payment_cancel', type='json', auth='admin')
     def payment_cancel(self):
         print "payment_cancel"
-        return 
 
     @http.route('/pos/transaction_start', type='json', auth='admin')
     def transaction_start(self):
         print 'transaction_start'
-        return 
 
     @http.route('/pos/transaction_end', type='json', auth='admin')
     def transaction_end(self):
         print 'transaction_end'
-        return 
 
     @http.route('/pos/cashier_mode_activated', type='json', auth='admin')
     def cashier_mode_activated(self):
         print 'cashier_mode_activated'
-        return 
 
     @http.route('/pos/cashier_mode_deactivated', type='json', auth='admin')
     def cashier_mode_deactivated(self):
         print 'cashier_mode_deactivated'
-        return 
 
     @http.route('/pos/open_cashbox', type='json', auth='admin')
     def open_cashbox(self):
         print 'open_cashbox'
-        return
 
     @http.route('/pos/print_receipt', type='json', auth='admin')
     def print_receipt(self, receipt):
         print 'print_receipt' + str(receipt)
-        return
+
+    @http.route('/pos/log', type='json', auth='admin')
+    def log(self, arguments):
+        _logger.info(' '.join(str(v) for v in arguments))
 
     @http.route('/pos/print_pdf_invoice', type='json', auth='admin')
     def print_pdf_invoice(self, pdfinvoice):
         print 'print_pdf_invoice' + str(pdfinvoice)
-        return
 
 

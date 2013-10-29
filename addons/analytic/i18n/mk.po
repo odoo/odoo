@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:41+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 06:14+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "Сметка (дете)"
+msgstr "Сметки (дете)"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -40,6 +40,7 @@ msgstr "Урнек"
 
 #. module: analytic
 #: view:account.analytic.account:0
+#: field:account.analytic.account,date:0
 msgid "End Date"
 msgstr "Краен датум"
 
@@ -66,11 +67,11 @@ msgid ""
 "default data that you can reuse easily."
 msgstr ""
 "Доколку изберете тип за Преглед, тоа значи дека нема да биде дозволено "
-"внесување на записи во записникот користејки ја таа сметка.\n"
+"креирање на внесови во дневникот користејки ја таа сметка.\n"
 "Типот 'Аналитичка сметка' значи обични корисници што ќе се користат во "
 "сметководството.\n"
-"Доколку одберете Договор или Проект, тоа ви ја нуди можноста за менаџирање "
-"на валидноста и опциите за фактурирање за оваа сметка.\n"
+"Доколку одберете Договор или Проект, тоа ви ја нуди можноста за управување "
+"со валидноста и опциите за фактурирање за оваа сметка.\n"
 "Специјалниот тип 'Шаблон на договор' ви овозможува да дефинирате шаблон со "
 "стандардни податоци кои може лесно да ги менувате."
 
@@ -93,7 +94,7 @@ msgstr ""
 "                                        на сервисни единици, менаџерот на "
 "сметката \n"
 "                                        се известува преку e-mail за да го \n"
-"                                        обнови договорот со клиентот."
+"                                        обнови договорот со купувачот."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -113,7 +114,7 @@ msgstr "Менаџер на сметка"
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
-msgstr "Следбеници"
+msgstr "Пратители"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -181,7 +182,7 @@ msgstr "Обновување"
 #. module: analytic
 #: help:account.analytic.account,message_ids:0
 msgid "Messages and communication history"
-msgstr "Пораки и историја на комуникација"
+msgstr "Историја на пораки и комуникација"
 
 #. module: analytic
 #: model:mail.message.subtype,description:analytic.mt_account_opened
@@ -194,8 +195,8 @@ msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
 msgstr ""
-"Сетирање на горна граница на време за работана договорот, базирано на "
-"контролната картица. (на пример, број на часови во договор со ограничена "
+"Подесување на горна граница на време за работа на договорот, базирано на "
+"временската таблица. (на пример, број на часови во договор со ограничена "
 "поддршка)"
 
 #. module: analytic
@@ -211,7 +212,7 @@ msgid ""
 msgstr ""
 "Доколку поставите компанија, избраната валута мора да биде иста како на "
 "компанијата. \n"
-"Може да отстранете каде компанијата припаѓа и со тоа да извршите промена на "
+"Може да отстраните каде припаѓа компанијата и со тоа да извршите промена на "
 "валутата, само на аналитичка сметка со тип 'преглед'. Ова може да биде "
 "навистина корисно во консолидациски цели кај табели со различни валути на "
 "неколку компании, на пример."
@@ -219,7 +220,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Е следбеник"
+msgstr "Пратител"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -258,7 +259,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Customer"
-msgstr "Клиент"
+msgstr "Купувач"
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
@@ -284,7 +285,7 @@ msgstr "Информации за договорот"
 #: field:account.analytic.account,template_id:0
 #: selection:account.analytic.account,type:0
 msgid "Template of Contract"
-msgstr "Шаблон на договор"
+msgstr "Урнек на договор"
 
 #. module: analytic
 #: field:account.analytic.account,message_summary:0
@@ -299,7 +300,7 @@ msgstr "Припејд сервисни единици"
 #. module: analytic
 #: field:account.analytic.account,credit:0
 msgid "Credit"
-msgstr "Кредит"
+msgstr "Побарување"
 
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_opened
@@ -324,7 +325,7 @@ msgstr "Аналитички приказ"
 #. module: analytic
 #: field:account.analytic.account,balance:0
 msgid "Balance"
-msgstr "Биланс"
+msgstr "Салдо"
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
@@ -408,9 +409,9 @@ msgstr "Почетен датум"
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
-msgstr "Неможе да креирате аналитичка линија на сметка за преглед."
+msgstr "Не може да креирате аналитичка ставка на сметка приказ."
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr "Аналитички записи"
+msgstr "Аналитички внесови"

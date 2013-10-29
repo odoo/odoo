@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
 "PO-Revision-Date: 2012-12-09 19:07+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:01+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:03+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -46,7 +46,7 @@ msgstr "Aantal cycli"
 #. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
-msgstr "Locatie waar het systeem zoekt voor componeten"
+msgstr "Locatie waar het systeem zoekt voor componenten."
 
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
@@ -94,7 +94,7 @@ msgstr "Productiestap"
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "Productiestappen"
+msgstr "Productieroutes"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -354,7 +354,7 @@ msgstr "Refereert aan een positie in een extern plan."
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr "Productiestappen beheren"
+msgstr "Productieroutes beheren"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -560,7 +560,7 @@ msgid "Scheduled Date"
 msgstr "Geplande datum"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:124
+#: code:addons/mrp/procurement.py:129
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Productieorder <em>%s</em> aangemaakt."
@@ -741,7 +741,7 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
-msgstr "Materiaal productiestappen"
+msgstr "Materiaal productieroute"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -758,7 +758,7 @@ msgid "Work Center Load"
 msgstr "Productiestap belasting"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:50
+#: code:addons/mrp/procurement.py:55
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Geen materiaallijst opgegeven voor dit product !"
@@ -966,7 +966,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Mark as Started"
-msgstr "Markeert als gestart"
+msgstr "Markeer als gestart"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1096,7 +1096,7 @@ msgid "BoM Type"
 msgstr "Materiaallijst soort"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:52
+#: code:addons/mrp/procurement.py:57
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -1173,7 +1173,7 @@ msgstr "Eigenschappengroep"
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_routings:0
 msgid "Manage routings and work orders "
-msgstr "Productiestappen en werkopdrachten beheren "
+msgstr "Productieroutes en werkopdrachten beheren "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_production0
@@ -1402,7 +1402,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Work Center Operations"
-msgstr "Productiestappen"
+msgstr "Productiestap bewerkingen"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1452,7 +1452,7 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
 msgstr ""
-"Productie routes geven alle gebruikte productiestappen weer, voor hoe lang "
+"Productieroutes geven alle gebruikte productiestappen weer, voor hoe lang "
 "en/of cycly. Indien een productie route is aangegeven dan wordt het derde "
 "tabblad van een productieorder (productiestappen) automatisch van tevoren "
 "ingevuld."
@@ -1556,7 +1556,7 @@ msgstr "Verwerving"
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
 msgid "Define manufacturers on products "
-msgstr "Definieer producenten bij producten "
+msgstr "Definieer fabrikanten bij producten "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1632,8 +1632,8 @@ msgid ""
 "are attached to bills of materials\n"
 "                that will define the required raw materials."
 msgstr ""
-"Productie routes geven u de mogelijkheid om productie bewerkingen te maken "
-"en te beheren,\n"
+"Productieroutes geven u de mogelijkheid om productie bewerkingen te maken en "
+"te beheren,\n"
 "                welke moeten worden opgevolgd binnen uw productiestappen om "
 "een product te produceren. Ze zijn gekoppeld aan\n"
 "                een materiaallijst, welke de benodigde materialen beschrijft."
@@ -1694,7 +1694,7 @@ msgstr "Algemene rekening"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "SO Number"
-msgstr "Nummer verkoopopdracht"
+msgstr "Verkooporder nummer"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:505
@@ -1846,7 +1846,7 @@ msgstr "Produceren"
 #: model:process.transition,name:mrp.process_transition_servicemto0
 #: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Make to Order"
-msgstr "Maak op bestelling"
+msgstr "Maak op order"
 
 #. module: mrp
 #: help:mrp.workcenter,note:0
@@ -2414,8 +2414,9 @@ msgid ""
 "                        The delivery order will be ready once the production "
 "is done."
 msgstr ""
-"Gebruik makende van de materiaallijst, toegewezen aan dit product.\n"
-"                        De uitgaande order is gereed, wanneer de "
+"aanmaken. Hierbij wordt gebruik gemaakt van de materiaallijst welke is "
+"toegewezen aan dit product.\n"
+"                        De uitgaande levering is gereed, wanneer de "
 "productieorder gereed is."
 
 #. module: mrp
@@ -2567,7 +2568,7 @@ msgstr "Eigenschap groepen"
 #: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
-msgstr "Productiestappen"
+msgstr "Productieroutes"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurestockableproduct0

@@ -28,8 +28,8 @@ class hr_timesheet_settings(osv.osv_memory):
         'timesheet_range': fields.selection([('day','Day'),('week','Week'),('month','Month')],
             'Validate timesheets every', help="Periodicity on which you validate your timesheets."),
         'timesheet_max_difference': fields.float('Allow a difference of time between timesheets and attendances of (in hours)',
-            help="""Allowed difference in hours between the sign in/out and the timesheet
-                computation for one sheet. Set this to 0 if you do not want any control."""),
+            help='Allowed difference in hours between the sign in/out and the timesheet '
+                 'computation for one sheet. Set this to 0 if you do not want any control.'),
     }
 
     def get_default_timesheet(self, cr, uid, fields, context=None):

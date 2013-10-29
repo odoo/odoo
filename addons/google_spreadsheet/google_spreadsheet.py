@@ -60,7 +60,7 @@ class config(osv.osv):
         user = self.pool['res.users'].read(cr, uid, uid, ['login', 'password'], context=context)
         username = user['login']
         password = user['password']
-        if self.pool['ir.module.module'].search_count(cr, SUPERUSER_ID, ['&', ('name', '=', 'auth_crypt'), ('state', '=', 'installed')]) == 1:
+        if not password:
             config_formula = '=oe_settings("%s";"%s")' % (url, dbname)
         else:
             config_formula = '=oe_settings("%s";"%s";"%s";"%s")' % (url, dbname, username, password)
