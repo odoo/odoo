@@ -1,0 +1,7 @@
+-
+  Enable the manufacturing in warehouse0
+-
+  !python {model: stock.warehouse}: |
+    main_warehouse = self.browse(cr, uid, ref('stock.warehouse0'), context=context)
+    self.write(cr, uid, main_warehouse.id, {'manufacture_to_resupply': True}, context=context)
+

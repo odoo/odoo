@@ -66,9 +66,18 @@
     prod_lot_id: lot_icecream_1
     location_id: location_refrigerator
 -
- !record {model: stock.picking, id: outgoing_shipment}:
-    location_dest_id: location_delivery_counter
-    picking_type_id: picking_type_out
+    Create STOCK_PICKING for OUT
+-
+  !python {model: stock.picking}: |
+    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
+    my_picking_type_out = main_warehouse.out_type_id.id
+    create_id = self.create(cr,uid,{'location_dest_id':ref('location_delivery_counter'),'picking_type_id':my_picking_type_out})
+    for xml_record in [{'name':'outgoing_shipment','module':'stock', 'model':'stock.picking','res_id':create_id}]:
+        xml_ids = self.pool.get('ir.model.data').search(cr, uid, [('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])], context=context)
+        if not xml_ids:
+            self.pool.get('ir.model.data').create(cr, uid, xml_record, context=context)
+        #avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it
+        self.pool.get('ir.model.data')._update_dummy(cr, uid, xml_record['model'], xml_record['module'], xml_record['name'])
 -
  !record {model: stock.move, id: outgoing_shipment_icecream}:
     picking_id: outgoing_shipment
@@ -78,10 +87,18 @@
     location_id: location_refrigerator
     location_dest_id: location_delivery_counter
 -
- !record {model: stock.picking, id: incomming_shipment}:
-    partner_id: base.res_partner_address_9
-    location_dest_id: location_refrigerator
-    picking_type_id: picking_type_in
+    Create STOCK_PICKING for IN
+-
+  !python {model: stock.picking}: |
+    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
+    my_picking_type = main_warehouse.in_type_id.id
+    create_id = self.create(cr,uid,{'location_dest_id':ref('location_refrigerator'),'picking_type_id':my_picking_type,'partner_id':ref('base.res_partner_address_9')});
+    for xml_record in [{'name':'incomming_shipment','module':'stock', 'model':'stock.picking','res_id':create_id}]:
+        xml_ids = self.pool.get('ir.model.data').search(cr, uid, [('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])], context=context)
+        if not xml_ids:
+            self.pool.get('ir.model.data').create(cr, uid, xml_record, context=context)
+        #avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it
+        self.pool.get('ir.model.data')._update_dummy(cr, uid, xml_record['model'], xml_record['module'], xml_record['name'])
 -
  !record {model: stock.move, id: incomming_shipment_icecream}:
     picking_id: incomming_shipment

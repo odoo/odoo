@@ -71,8 +71,9 @@
 - 
     !python {model: stock.picking}: |
         po_id = self.pool.get('purchase.order').search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
-        picking_id = self.search(cr, uid, [('purchase_id', '=', po_id[0])])
-        self.do_partial(cr, uid, picking_id)
+        assert po_id and len(po_id) == 1, 'Problem with the Purchase Order detected'
+        picking_ids = [pick.id for pick in self.pool.get('purchase.order').browse(cr, uid, po_id[0]).picking_ids]
+        self.do_partial(cr, uid, picking_ids)
 - 
   Check one quant was created in Customers location with 200 pieces and one move in the history_ids
 - 

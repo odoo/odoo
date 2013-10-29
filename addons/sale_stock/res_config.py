@@ -52,6 +52,9 @@ class sale_configuration(osv.osv_memory):
             help="Allows you to tag sales order lines with properties."),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
+        'group_route_so_lines': fields.boolean('Choose MTO, Dropship, ... on sale order lines',
+            implied_group='sale_stock.group_route_so_lines',
+            help="Allows you to set route on sale order lines."),
     }
 
     _defaults = {

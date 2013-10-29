@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
          <record id="view_sales_config_sale_stock" model="ir.ui.view">
              <field name="name">sale settings</field>
              <field name="model">sale.config.settings</field>
@@ -68,9 +67,14 @@
                              <field name="time_unit" domain="[('category_id.name','=','Working Time')]" class="oe_inline"/>
                          </div>
                      </xpath>
+                     <xpath expr="//div[@name='Sale Features']" position="inside">
+                         <div>
+                              <field name="group_route_so_lines" class="oe_inline"/>
+                              <label for="group_route_so_lines"/>
+                         </div>
+                     </xpath>
                 </data>
              </field>
          </record>
-
     </data>
 </openerp>

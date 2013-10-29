@@ -85,10 +85,14 @@ class sale_order(osv.osv):
             res[sale.id] = list(picking_ids)
         return res
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id = False, context=None):
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
         vals = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
         location_id = order.partner_shipping_id.property_stock_customer.id
         vals['location_id'] = location_id
+
+        routes = line.route_id and [(4, line.route_id.id)] or []
+        vals['route_ids'] = routes
+        vals['warehouse_id'] = order.warehouse_id and order.warehouse_id.id or False
         return vals
 
     _columns = {
@@ -131,6 +135,7 @@ class sale_order(osv.osv):
         of given sales order ids. It can either be a in a list or in a form
         view, if there is only one delivery order to show.
         '''
+        
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
 
@@ -142,6 +147,7 @@ class sale_order(osv.osv):
         pick_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
+            
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
             result['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
@@ -251,6 +257,7 @@ class sale_order_line(osv.osv):
     _columns = {
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
+        'route_id': fields.many2one('stock.location.route', 'Route', domain=[('sale_selectable', '=', True)]),
     }
 
     _defaults = {
@@ -321,7 +328,7 @@ class sale_order_line(osv.osv):
         return {'value': result, 'warning': warning}
 
 
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+    def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, warehouse_id=False, context=None):
         context = context or {}
@@ -395,6 +402,15 @@ class sale_order_line(osv.osv):
 class stock_move(osv.osv):
     _inherit = 'stock.move'
 
+    def action_cancel(self, cr, uid, ids, context=None):
+        sale_ids = []
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.procurement_id and move.procurement_id.sale_line_id:
+                sale_ids.append(move.procurement_id.sale_line_id.order_id.id)
+        if sale_ids:
+            self.pool.get('sale.order').signal_ship_except(cr, uid, sale_ids)
+        return super(stock_move, self).action_cancel(cr, uid, ids, context=context)
+
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
         if move.procurement_id and move.procurement_id.sale_line_id:
@@ -422,3 +438,10 @@ class stock_move(osv.osv):
             res['price_unit'] = sale_line.price_unit
             res['discount'] = sale_line.discount
         return res
+
+
+class stock_location_route(osv.osv):
+    _inherit = "stock.location.route"
+    _columns = {
+        'sale_selectable':fields.boolean("Selectable on Sales Order Line")
+        }

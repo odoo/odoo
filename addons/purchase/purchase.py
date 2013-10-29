@@ -102,13 +102,13 @@ class purchase_order(osv.osv):
         for id in ids:
             res[id] = [0.0,0.0]
         cr.execute('''SELECT
-                p.purchase_id,sum(m.product_qty), m.state
+                p.order_id, sum(m.product_qty), m.state
             FROM
                 stock_move m
             LEFT JOIN
-                stock_picking p on (p.id=m.picking_id)
+                purchase_order_line p on (p.id=m.purchase_line_id)
             WHERE
-                p.purchase_id IN %s GROUP BY m.state, p.purchase_id''',(tuple(ids),))
+                p.order_id IN %s GROUP BY m.state, p.order_id''',(tuple(ids),))
         for oid,nbr,state in cr.fetchall():
             if state=='cancel':
                 continue
@@ -154,6 +154,16 @@ class purchase_order(osv.osv):
         obj_data = self.pool.get('ir.model.data')
         return obj_data.get_object_reference(cr, uid, 'stock','picking_type_in') and obj_data.get_object_reference(cr, uid, 'stock','picking_type_in')[1] or False
 
+    def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for purchase_id in ids:
+            picking_ids = set()
+            move_ids = self.pool.get('stock.move').search(cr, uid, [('purchase_line_id.order_id','=', purchase_id)] , context=context)
+            for move in self.pool.get('stock.move').browse(cr, uid, move_ids, context=context):
+                picking_ids.add(move.picking_id.id)
+            res[purchase_id] = list(picking_ids)
+        return res
+    
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
         ('sent', 'RFQ Sent'),
@@ -196,7 +206,7 @@ class purchase_order(osv.osv):
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Terms and Conditions'),
         'invoice_ids': fields.many2many('account.invoice', 'purchase_invoice_rel', 'purchase_id', 'invoice_id', 'Invoices', help="Invoices generated for a purchase order"),
-        'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of incoming shipments that have been generated for this purchase order."),
+        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking List', help="This is the list of operations that have been generated for this purchase order."),
         'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, string='Received Ratio', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoice Received', type='boolean', help="It indicates that an invoice has been paid"),
@@ -235,7 +245,7 @@ class purchase_order(osv.osv):
         'bid_validity': fields.date('Bid Valid Until', help="Date on which the bid expired"),
         'picking_type_id': fields.many2one('stock.picking.type', 'Deliver To', help="This will determine picking type of incoming shipment", required=True,
                                            states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}),
-        'related_location_id': fields.related('picking_type_id', 'default_location_dest_id', type='many2one', relation='stock.location', string="Related location", store=True),
+        'related_location_id': fields.related('picking_type_id', 'default_location_dest_id', type='many2one', relation='stock.location', string="Related location", store=True),        
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -394,32 +404,22 @@ class purchase_order(osv.osv):
         if context is None:
             context = {}
         mod_obj = self.pool.get('ir.model.data')
+        dummy, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree'))
+        action = self.pool.get('ir.actions.act_window').read(cr, uid, action_id, context=context)
+
         pick_ids = []
         for po in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in po.picking_ids]
 
-        action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree'))
-        action = self.pool[action_model].read(cr, uid, action_id, context=context)
-        active_id = context.get('active_id',ids[0])
-        picking_type_id = self.browse(cr, uid, active_id, context=context)['picking_type_id'].id
-
-        ctx = eval(action['context'],{'active_id': picking_type_id}, nocopy=True)
-        ctx.update({
-            'search_default_purchase_id': ids[0]
-        })
-        if pick_ids and len(pick_ids) == 1:
-            form_view_ids = [view_id for view_id, view in action['views'] if view == 'form']
-            view_id = form_view_ids and form_view_ids[0] or False
-            action.update({
-                'views': [],
-                'view_mode': 'form',
-                'view_id': view_id,
-                'res_id': pick_ids[0]
-            })
-
-        action.update({
-            'context': ctx,
-        })
+        #override the context to get rid of the default filtering on picking type
+        action['context'] = {}
+        #choose the view_mode accordingly
+        if len(pick_ids) > 1:
+            action['domain'] = "[('id','in',[" + ','.join(map(str, pick_ids)) + "])]"
+        else:
+            res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')
+            action['views'] = [(res and res[1] or False, 'form')]
+            action['res_id'] = pick_ids and pick_ids[0] or False
         return action
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
@@ -428,15 +428,6 @@ class purchase_order(osv.osv):
 
     def wkf_bid_received(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'bid', 'bid_date': fields.date.context_today(self,cr,uid,context=context)})
-
-    def print_confirm(self,cr,uid,ids,context=None):
-        print "Confirmed"
-
-    def print_double(self,cr,uid,ids,context=None):
-        print "double Approval"
-
-    def print_router(self,cr,uid,ids,context=None):
-        print "Routed"
 
     def wkf_send_rfq(self, cr, uid, ids, context=None):
         '''
@@ -497,8 +488,7 @@ class purchase_order(osv.osv):
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a purchase order without any purchase order line.'))
             for line in po.order_line:
                 if line.state=='draft':
-                    todo.append(line.id)
-
+                    todo.append(line.id)        
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
@@ -666,20 +656,6 @@ class purchase_order(osv.osv):
             return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-    def _prepare_order_picking(self, cr, uid, order, context=None):
-        return {
-            'name': self.pool.get('ir.sequence').get_id(cr, uid, order.picking_type_id.sequence_id.id, 'id'),
-            'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
-            'date': self.date_to_datetime(cr, uid, order.date_order, context),
-            'partner_id': order.dest_address_id.id or order.partner_id.id,
-            'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
-            'partner_id': order.dest_address_id.id or order.partner_id.id,
-            'purchase_id': order.id,
-            'company_id': order.company_id.id,
-            'move_lines' : [],
-            'picking_type_id': order.picking_type_id.id, 
-        }
-
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, group_id, context=None):
         ''' prepare the stock move data from the PO line '''
         price_unit = order_line.price_unit
@@ -687,7 +663,7 @@ class purchase_order(osv.osv):
             price_unit *= order_line.product_uom.factor
         if order.currency_id.id != order.company_id.currency_id.id:
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, context=context)
-
+        
         return {
             'name': order_line.name or '',
             'product_id': order_line.product_id.id,
@@ -708,15 +684,16 @@ class purchase_order(osv.osv):
             'price_unit': price_unit,
             'picking_type_id': order.picking_type_id.id, 
             'group_id': group_id, 
+            'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
         }
 
-    def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, context=None):
-        """Creates pickings and appropriate stock moves for given order lines, then
-        confirms the moves, makes them available, and confirms the picking.
+    def _create_stock_moves(self, cr, uid, order, order_lines, picking_id=False, context=None):
+        """Creates appropriate stock moves for given order lines, whose can optionally create a
+        picking if none is given or no suitable is found, then confirms the moves, makes them
+        available, and confirms the pickings.
 
-        If ``picking_id`` is provided, the stock moves will be added to it, otherwise
-        a standard outgoing picking will be created to wrap the stock moves, as returned
-        by :meth:`~._prepare_order_picking`.
+        If ``picking_id`` is provided, the stock moves will be added to it, otherwise a standard
+        incoming picking will be created to wrap the stock moves (default behavior of the stock.move)
 
         Modules that wish to customize the procurements or partition the stock moves over
         multiple stock pickings may override this method and call ``super()`` with
@@ -727,19 +704,16 @@ class purchase_order(osv.osv):
                                                 and moves should be created.
         :param int picking_id: optional ID of a stock picking to which the created stock moves
                                will be added. A new picking will be created if omitted.
-        :return: list of IDs of pickings used/created for the given order lines (usually just one)
+        :return: None
         """
         stock_picking = self.pool.get('stock.picking')
-        if not picking_id:
-            picking_id = stock_picking.create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
         todo_moves = []
         stock_move = self.pool.get('stock.move')
         
         new_group = False
         if any([(not x.group_id) for x in order_lines]):
             new_group = self.pool.get("procurement.group").create(cr, uid, {'name':order.name, 'partner_id': order.partner_id.id}, context=context)
-        
-        
+                
         for order_line in order_lines:
             if not order_line.product_id:
                 continue
@@ -750,9 +724,9 @@ class purchase_order(osv.osv):
                 if order_line.move_dest_id:
                     order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
+        
         stock_move.action_confirm(cr, uid, todo_moves)
         stock_move.force_assign(cr, uid, todo_moves)
-        return [picking_id]
 
     def test_moves_done(self, cr, uid, ids, context=None):
         '''PO is done at the delivery side if all the incoming shipments are done'''
@@ -784,15 +758,8 @@ class purchase_order(osv.osv):
         return res
 
     def action_picking_create(self, cr, uid, ids, context=None):
-        picking_ids = []
         for order in self.browse(cr, uid, ids):
-            picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, context=context))
-
-        # Must return one unique picking ID: the one to connect in the subflow of the purchase order.
-        # In case of multiple (split) pickings, we should return the ID of the critical one, i.e. the
-        # one that should trigger the advancement of the purchase workflow.
-        # By default we will consider the first one as most important, but this behavior can be overridden.
-        return picking_ids[0] if picking_ids else False
+            self._create_stock_moves(cr, uid, order, order.order_line, None, context=context)
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
@@ -997,6 +964,12 @@ class purchase_order_line(osv.osv):
         supplier_delay = int(supplier_info.delay) if supplier_info else 0
         return datetime.strptime(date_order_str, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=supplier_delay)
 
+    def action_cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+        for po_line in self.browse(cr, uid, ids, context=context):
+            if all([l.state == 'cancel' for l in po_line.order_id.order_line]):
+                self.pool.get('purchase.order').action_cancel(cr, uid, [po_line.order_id.id], context=context)
+
     def _check_product_uom_group(self, cr, uid, context=None):
         group_uom = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'group_uom')
         res = [user for user in group_uom.users if user.id == uid]
@@ -1112,12 +1085,16 @@ class procurement_rule(osv.osv):
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
-        'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order'),
+        'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order Line'),
+        'purchase_id': fields.related('purchase_line_id', 'order_id', type='many2one', relation='purchase.order', string='Purchase Order'),
     }
 
+    def propagate_cancel(self, cr, uid, procurement, context=None):
+        if procurement.rule_id.action == 'buy' and procurement.purchase_line_id:
+            self.pool.get('purchase.order.line').action_cancel(cr, uid, [procurement.purchase_line_id.id], context=context)
+        return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)
+        
     def _run(self, cr, uid, procurement, context=None):
-        if procurement.rule_id:
-            print procurement.rule_id.action
         if procurement.rule_id and procurement.rule_id.action == 'buy':
             #make a purchase order for the procurement
             return self.make_po(cr, uid, [procurement.id], context=context)[procurement.id]
@@ -1135,28 +1112,25 @@ class procurement_order(osv.osv):
         partner_obj = self.pool.get('res.partner')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
-            if not procurement.product_id.seller_ids:
-                message = _('No supplier defined for this product !')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
+            message = ''
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
-            if not partner:
+            if not procurement.product_id.seller_ids:
+                message = _('No supplier defined for this product !')
+            elif not partner:
                 message = _('No default supplier defined for this product')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+            elif not partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']:
+                message = _('No address defined for the supplier')
+
+            if message:
+                if procurement.message != message:
+                    cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
+
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
                     raise osv.except_osv(_('Configuration Error!'), _('The product "%s" has been defined with your company as reseller which seems to be a configuration error!' % procurement.product_id.name))
 
-            address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
-            if not address_id:
-                message = _('No address defined for the supplier')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
         return True
 
     #def action_po_assign(self, cr, uid, ids, context=None):

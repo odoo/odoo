@@ -129,9 +129,9 @@
                         </group>
                         <group>
                             <field name="product_id" domain="[('type','=','product')]" attrs="{'invisible': [('filter', 'not in', ('product', 'product_owner'))]}"/>
-                            <field name="lot_id" attrs="{'invisible': [('filter', '!=', 'lot')]}"/>
-                            <field name="partner_id" attrs="{'invisible': [('filter', 'not in', ('owner', 'product_owner'))]}"/>
-                            <field name="package_id" attrs="{'invisible': [('filter', '!=', 'pack')]}"/>
+                            <field name="lot_id" attrs="{'invisible': [('filter', '!=', 'lot')]}" groups="stock.group_production_lot" />
+                            <field name="partner_id" attrs="{'invisible': [('filter', 'not in', ('owner', 'product_owner'))]}" groups="stock.group_tracking_owner"/>
+                            <field name="package_id" attrs="{'invisible': [('filter', '!=', 'pack')]}" groups="stock.group_tracking_lot"/>
                         </group>
                     </group>
                     <notebook attrs="{'invisible':[('state','=','draft')]}">
@@ -142,9 +142,9 @@
                                     <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('type','=','product')]"/>
                                     <field name="product_uom_id" groups="product.group_uom" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
                                     <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
-                                    <field name="prod_lot_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
-                                    <field name="package_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
-                                    <field name="partner_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
+                                    <field name="prod_lot_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
+                                    <field name="package_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_lot"/>
+                                    <field name="partner_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_owner"/>
                                     <field name="th_qty" readonly="1"/>
                                     <field name="product_qty" string="Checked Quantity"/>
                                     <field name="state" invisible="True"/>
@@ -390,6 +390,37 @@
                             <field name="posz"/>
                         </group>
                     </group>
+                    <separator string="Removal Strategies" groups="stock.group_adv_location"/>
+                    <group  groups="stock.group_adv_location">
+                        <div class="oe_inline">
+                            <p class="oe_grey">
+                                Removal strategies define the method used for suggesting the 
+                                location to take the products from
+                            </p>
+                            <field name="removal_strategy_ids" class ="oe_inline">
+                                <tree editable="bottom" string="removal">
+                                    <field name="product_categ_id"/>
+                                    <field name="method"/>
+                                </tree>
+                            </field>
+                        </div>
+                        <newline/>
+                        <separator string="Putaway Strategies"/>
+                        <newline/>
+                        <div class="oe_inline">
+                            <p class="oe_grey">
+                                Putaway strategies define the method used for suggesting the 
+                                location to put the products
+                            </p>
+                            <field name="putaway_strategy_ids" class="oe_inline">
+                                <tree string="Put Away" editable="bottom">
+                                    <field name="product_categ_id"/>
+                                    <field name="method"/>
+                                    <field name="location_spec_id"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </group>                   
                     <separator string="Additional Information"/>
                     <field name="comment"/>
                 </form>
@@ -422,6 +453,120 @@
                 </tree>
             </field>
         </record>
+        
+        <record id="view_putaway" model="ir.ui.view">
+            <field name="name">product.putaway.form</field>
+            <field name="model">product.putaway</field>
+            <field name="arch" type="xml">
+                <form string="Putaway">
+                   <field name="product_categ_id"/>
+                   <field name="location_id"/>
+                   <field name="method"/>
+                   <field name="location_spec_id"/>
+               </form>
+            </field>
+        </record>
+
+        <record id="view_removal" model="ir.ui.view">
+            <field name="name">product.removal.form</field>
+            <field name="model">product.removal</field>
+            <field name="arch" type="xml">
+                <form string="Removal">
+                   <field name="product_categ_id"/>
+                   <field name="location_id"/>
+                   <field name="method"/>
+               </form>
+            </field>
+        </record>
+
+        <record id="stock_location_path_tree" model="ir.ui.view">
+            <field name="name">stock.location.path.tree</field>
+            <field name="model">stock.location.path</field>
+            <field name="arch" type="xml">
+                <tree string="Location Paths">
+                    <field name="location_from_id" />
+                    <field name="location_dest_id" />
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="stock_location_path_form" model="ir.ui.view">
+            <field name="name">stock.location.path.form</field>
+            <field name="model">stock.location.path</field>
+            <field name="arch" type="xml">
+                <form string="Location Paths" version="7.0">
+                    <group col="4">
+                        <group>
+                            <field name="name"/>
+                            <field name="location_from_id"/>
+                            <field name="location_dest_id"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="picking_type_id"/>
+                            <field name="auto"/>
+                            <label for="delay" string="Delay"/>
+                        <div>
+                            <field name="delay" class="oe_inline"/>days
+                        </div>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_category_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <group string="Routes" colspan="4">
+                        <div class="oe_inline">
+                            <p attrs="{'invisible':[('route_ids','=',False)]}">
+                            <field name="route_ids" nolabel="1" widget="many2many_tags" class="oe_inline"/>
+                            </p>
+                            <p attrs="{'invisible':[('parent_id','=',False)]}">
+                            The following routes will apply to the products in this category taking into account parent categories: 
+                            <field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
+                            </p>
+                        </div>
+                    </group>
+                    <separator string="Removal Strategies"/>
+                        <div class="oe_inline">
+                        <p class="oe_grey">
+                            Removal strategies define the method used for suggesting the 
+                            location to take the products from
+                        </p>
+                        <field name="removal_strategy_ids">
+                            <tree editable="bottom" string="removal">
+                                <field name="location_id"/>
+                                <field name="method"/>
+                            </tree>
+                        </field>
+
+                        </div>
+                        <newline/>
+                        <separator string="Putaway Strategies"/>
+                        <newline/>
+                        <div class="oe_inline">
+                        <p class="oe_grey">
+                            Putaway strategies define the method used for suggesting the 
+                            location to put the products
+                        </p>
+                        <field name="putaway_strategy_ids">
+                            <tree string="Put Away" editable="bottom">
+                                <field name="location_id"/>
+                                <field name="method"/>
+                                <field name="location_spec_id"/>
+                            </tree>
+                        </field>
+                        </div>
+                </xpath>
+            </field>
+        </record>
+        
 
         <record id="action_location_form" model="ir.actions.act_window">
             <field name="name">Locations</field>
@@ -503,19 +648,49 @@
             <field name="arch" type="xml">
                 <form string="Warehouse" version="7.0">
                     <sheet>
-                    <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
-                    <group>
+                        <div class="oe_right oe_button_box">                        
+                            <button name="view_all_routes_for_wh" string="View Warehouse Routes" type="object"/> 
+                        </div>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
                         <group>
-                            <field name="code"/>
-                            <field name="lot_stock_id" groups="stock.group_locations" string="Inventory Location" invisible="1"/>
+                            <group>
+                                <field name="code"/>
+                                <field name="lot_stock_id" groups="stock.group_locations" string="Inventory Location" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="partner_id"/>
+                            </group>
+                            <notebook colspan="4" groups="stock.group_adv_location">
+                                <page string="Warehouse Configuration" colspan="4">
+                                    <group colspan="4">
+                                        <field name="reception_steps" widget='radio'/>
+                                        <field name="delivery_steps" widget='radio'/>
+                                        <field name="default_resupply_wh_id" widget='selection' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/>
+                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/> 
+                                    </group>
+                                </page>
+                                <page string="Technical Information" groups='base.group_no_one'>
+                                    <group>
+                                        <group string="Locations">
+                                            <field name="wh_input_stock_loc_id" readonly="1"/>
+                                            <field name="wh_qc_stock_loc_id" readonly="1"/>
+                                            <field name="wh_pack_stock_loc_id" readonly="1"/>
+                                            <field name="wh_output_stock_loc_id" readonly="1"/>
+                                        </group>
+                                        <group string="Picking Types">
+                                            <field name="in_type_id" readonly="1"/>
+                                            <field name="int_type_id" readonly="1"/>
+                                            <field name="pick_type_id" readonly="1"/>
+                                            <field name="pack_type_id" readonly="1"/>
+                                            <field name="out_type_id" readonly="1"/>
+                                        </group>
+                                    </group>
+                                </page>
+                            </notebook>
                         </group>
-                        <group>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="partner_id"/>
-                        </group>
-                    </group>
-                </sheet>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -576,6 +751,7 @@
                     <field name="state"/>
                     <field name="priority"/>
                     <field name="picking_type_id" invisible="1"/>
+                    <field name="group_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -611,6 +787,12 @@
                             <field name="date"/>
                             <field name="min_date"/>
                             <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
+                            <label for="owner_id" groups="stock.group_tracking_owner"/>
+                            <div groups="stock.group_tracking_owner">
+                                <field name="owner_id"/>
+                                <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
+                                    class="oe_link oe_edit_only"/>
+                            </div>
                         </group>
                     </group>
                     <notebook>
@@ -621,8 +803,8 @@
                             <field name="pack_operation_exist" invisible="1"/>
                             <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"/>
                             <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}"/>
-                            <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}">
-                                <tree editable="top">
+                            <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}" context="{'default_owner_id': owner_id}">
+                                <tree editable="top">   
                                     <field name="product_id"/>
                                     <field name="product_uom_id" groups="product.group_uom"/>
                                     <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
@@ -681,6 +863,7 @@
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
                         <filter string="Origin" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="Picking Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
+                        <filter string="Procurement Group" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                 </search>
             </field>
@@ -1119,7 +1302,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain" eval="['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_type_id','=',ref('picking_type_in'))]"/>
+            <field name="domain" eval="['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.picking_type_id.code_id','=','outgoing')]"/>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
@@ -1486,7 +1669,11 @@
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='origin']" position="after">
-                    <field name="location_id"/>
+                    <field name="warehouse_id" on_change="change_warehouse_id(warehouse_id, context)"/>
+                    <field name="location_id" domain="[('usage', '=', 'internal')]"/>
+                </xpath>
+                <xpath expr="//field[@name='rule_id']" position="after">
+                    <field name="route_ids" widget="many2many_tags"/>
                 </xpath>
             </field>
         </record>
@@ -1543,12 +1730,18 @@
                                 <field name="procure_method" attrs="{'invisible': [('action', '!=', 'move')]}"/>
                                 <field name="location_src_id" attrs="{'invisible': [('action', '!=', 'move')]}"/>
                                 <field name="location_id"/>
+                                <field name="partner_address_id" groups="stock.group_adv_location"/>
                                 
                             </group>
                             <group>
                                 <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
                                 <field name="route_id"/>
                                 <field name="group_id" groups="base.group_no_one"/>
+                                <field name="propagate" groups="stock.group_adv_location"/>
+                                <label for="delay" string="Delay"  groups="stock.group_adv_location"/>
+                                <div>
+                                   <field name="delay" class="oe_inline" groups="stock.group_adv_location"/>days
+                                </div>
                             </group>
                         </group>
                     </sheet>
@@ -1572,20 +1765,19 @@
                 <search string="Quants">
                     <field name="product_id"/>
                     <field name="location_id"/>
-                    <field name="package_id"/>
-                    <field name="lot_id"/>
-                    <field name="owner_id"/>
+                    <field name="package_id" groups="stock.group_tracking_lot"/>
+                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="owner_id" groups="stock.group_tracking_owner"/>
                     <group expand='0' string='Filters'>
                         <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     </group>
                     <group expand='0' string='Group by...'>
                        <filter name="productgroup" string='Product' context="{'group_by' : 'product_id'}"/>
-                       <filter string='Owner' context="{'group_by' : 'owner_id'}"/>
-                       <filter string='Lot' context="{'group_by' : 'lot_id'}"/>
+                       <filter string='Owner' context="{'group_by' : 'owner_id'}" groups="stock.group_tracking_owner"/>
+                       <filter string='Lot' context="{'group_by' : 'lot_id'}" groups="stock.group_production_lot"/>
                        <filter name="locationgroup" string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
-                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}"/>
-                       <filter string='Packaging Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}"/>
-                       <filter name="partnergroup" string='Partner' domain="[]" context="{'group_by': 'partner_id'}"/>
+                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}" groups="stock.group_tracking_lot"/>
+                       <filter string='Packaging Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}" groups="stock.group_tracking_lot"/>
                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
                 </search>
@@ -1606,14 +1798,14 @@
                 <form string="Quants">
                     <field name="product_id"/>
                     <field name="qty"/>
-                    <field name="lot_id"/>
-                    <field name="package_id"/>
+                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="package_id" groups="stock.group_tracking_lot"/>
                     <field name="location_id"/>
                     <field name="in_date"/>
                     <field name="reservation_id"/>
                     <field name="propagated_from_id"/>
                     <field name="history_ids"/>
-                    <field name="owner_id"/>
+                    <field name="owner_id" groups="stock.group_tracking_owner"/>
                 </form>
             </field>
         </record>
@@ -1628,9 +1820,9 @@
                     <field name="product_id"/>
                     <field name="qty"/>
                     <field name="location_id"/>
-                    <field name="owner_id"/>
-                    <field name="lot_id"/>
-                    <field name="package_id"/>
+                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="package_id" groups="stock.group_tracking_lot"/>
                     <field name="packaging_type_id" invisible="1"/>
                     <field name="in_date"/>
                     <field name="reservation_id" invisible='1'/>
@@ -1866,6 +2058,20 @@
         
         
         <!--Routes-->
+        <record id="stock_location_route_tree" model="ir.ui.view">
+            <field name="name">stock.location.route.tree</field>
+            <field name="model">stock.location.route</field>
+            <field name="arch" type="xml">
+                <tree string="Routes">
+                    <field name="sequence" widget="handle" />
+                    <field name="name"/>
+                    <field name="product_selectable"/>
+                    <field name="product_categ_selectable"/>
+                    <field name="warehouse_selectable"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="stock_location_route_form_view" model="ir.ui.view">
             <field name="name">stock.location.route.form</field>
             <field name="model">stock.location.route</field>
@@ -1880,7 +2086,22 @@
                         </group>
                         <group>
                             <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                            <field name="active" groups="stock.group_adv_location" />
                         </group>
+                    </group>
+                    <separator string="Applicable On"/>
+                    <p class="oe_grey">Check these box so that the user can select this route during the following operations</p>
+                    <group>
+                        <group>
+                            <field name="product_categ_selectable" string="Product Categories"/>
+                            <field name="product_selectable" string="Products"/>
+                        </group>
+                        <group>
+                            <field name="warehouse_selectable" string="Warehouses"/>
+                        </group>
+                    </group>
+                    <group string="Push Rules" colspan="4" >
+                        <field name="push_ids" colspan="4" nolabel="1"/>
                     </group>
                     <group string="Pull Rules" colspan="4" >
                         <field name="pull_ids" colspan="4" nolabel="1"/>
@@ -1889,13 +2110,45 @@
                 </form>
             </field>
         </record>
+        
+        <record id="action_routes_form" model="ir.actions.act_window">
+            <field name="name">Routes</field>
+            <field name="res_model">stock.location.route</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="stock_location_route_tree" />
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a route.
+              </p>
+                <p>You can define here the main routes that run through
+                    your warehouses and that define the flows of your products. These
+                    routes can be assigned to a product, a product category or be fixed
+                    on procurement or sales order. </p>
+            </field>
+        </record>
+        
+        <menuitem action="action_routes_form" id="menu_stock_routes"
+            parent="stock.menu_stock_configuration" sequence="11" />
+
+        <record id="view_product_procurement_rule_form" model="ir.ui.view">
+            <field name="name">product.template.procurement.rule.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button name="action_view_routes" string="View Logistic Flows" type="object"  />
+                </xpath>
+            </field>
+        </record>
 
         <record id="do_view_pickings" model="ir.actions.act_window">
             <field name="name">Pickings for Groups</field>
             <field name="res_model">stock.picking</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-			<field name="domain">[('group_id','=',active_id)]</field>			
+	    <field name="domain">[('group_id','=',active_id)]</field>			
         </record>
         <record id="procurement_group_form_view_herited" model="ir.ui.view">
             <field name="name">procurement.group.form.herited</field>

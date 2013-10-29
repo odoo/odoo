@@ -12,24 +12,13 @@
             </field>
         </record>
 
-        <record id="stock_picking_in_inherit_purchase" model="ir.ui.view">
-            <field name="name">Picking Inherited</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='move_type']" position="before">
-                    <field name="purchase_id" domain="[('invoice_method','=','picking')]" groups="base.group_no_one" context="{'search_default_partner_id':partner_id,'default_partner_id':partner_id, 'default_invoice_method':'picking'}"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_picking_in_search_picking_inherit" model="ir.ui.view">
             <field name="name">stock.picking.in.search.inherit</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="before">
-                    <field name="purchase_id"/>
+                    <filter name="reception_to_invoice" string="Incoming Shipments to Invoice" domain="[('reception_to_invoice', '=', True)]"/>
                 </xpath>
             </field>
         </record>
@@ -51,6 +40,17 @@
                 </xpath>
             </field>
         </record>
+        
+        <record id="view_warehouse_inherited" model="ir.ui.view">
+            <field name="name">Stock Warehouse Inherited</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                 <xpath expr="//field[@name='default_resupply_wh_id']" position="before">
+                    <field name="buy_to_resupply" />
+                </xpath>
+            </field>
+        </record>
 
         <record id="action_picking_tree_picking_to_invoice" model="ir.actions.act_window">
             <field name="name">On Incoming Shipments</field>
@@ -58,8 +58,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('purchase_id.invoice_method','=','picking')]</field>
-            <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
+            <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_reception_to_invoice": 1}</field>
             <field name="search_view_id" ref="stock.view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

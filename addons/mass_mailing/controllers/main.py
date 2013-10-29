@@ -1,7 +1,6 @@
 
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
-
+from openerp import http
+from openerp.http import request
 
 class MassMailController(http.Controller):
     @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='admin')

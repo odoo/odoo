@@ -40,6 +40,11 @@ class procurement_order(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
 
+    def propagate_cancel(self, cr, uid, procurement, context=None):
+        if procurement.rule_id.action == 'manufacture' and procurement.production_id:
+            self.pool.get('mrp.production').action_cancel(cr, uid, [procurement.production_id.id], context=context)
+        return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)
+
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'manufacture':
             #make a manufacturing order for the procurement
@@ -55,10 +60,6 @@ class procurement_order(osv.osv):
         result = super(procurement_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context)
         result['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
         return result
-
-    def check_produce_product(self, cr, uid, procurement, context=None):
-        ''' Depict the capacity of the procurement workflow to produce products (not services)'''
-        return True
 
     def check_bom_exists(self, cr, uid, ids, context=None):
         """ Finds the bill of material for the product from procurement order.
@@ -76,30 +77,6 @@ class procurement_order(osv.osv):
                 return False
         return True
 
-    def check_conditions_confirm2wait(self, cr, uid, ids):
-        """ condition on the transition to go from 'confirm' activity to 'confirm_wait' activity """
-        res = super(procurement_order, self).check_conditions_confirm2wait(cr, uid, ids)
-        return res and not self.get_phantom_bom_id(cr, uid, ids)
-
-    def get_phantom_bom_id(self, cr, uid, ids, context=None):
-        for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.move_dest_id:
-                    phantom_bom_id = self.pool.get('mrp.bom').search(cr, uid, [
-                        ('product_id', '=', procurement.move_dest_id.product_id.id),
-                        ('bom_id', '=', False),
-                        ('type', '=', 'phantom')]) 
-                    return phantom_bom_id 
-        return False
-    
-    def action_produce_assign_product(self, cr, uid, ids, context=None):
-        """ This is action which call from workflow to assign production order to procurements
-        @return: True
-        """
-        procurement_obj = self.pool.get('procurement.order')
-        res = procurement_obj.make_mo(cr, uid, ids, context=context)
-        res = res.values()
-        return len(res) and res[0] or 0
-    
     def make_mo(self, cr, uid, ids, context=None):
         """ Make Manufacturing(production) order from procurement
         @return: New created Production Orders procurement wise 

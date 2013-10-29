@@ -1,0 +1,5 @@
+-
+  !python {model: res.partner}: |
+    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
+    self.write(cr, uid, ref('base.main_partner'), {'property_stock_customer':main_warehouse.lot_stock_id.id})
+

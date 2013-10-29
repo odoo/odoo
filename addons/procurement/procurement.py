@@ -136,6 +136,19 @@ class procurement_order(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        procurements = self.read(cr, uid, ids, ['state'], context=context)
+        unlink_ids = []
+        for s in procurements:
+            if s['state'] in ['draft','cancel']:
+                unlink_ids.append(s['id'])
+            else:
+                raise osv.except_osv(_('Invalid Action!'),
+                        _('Cannot delete Procurement Order(s) which are in %s state.') % \
+                        s['state'])
+        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+
     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
         """ Finds UoM and UoS of changed product.
         @param product_id: Changed id of product.

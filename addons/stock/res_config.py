@@ -46,11 +46,6 @@ The following dates can be tracked:
     - removal date
     - alert date.
 This installs the module product_expiry."""),
-        'module_stock_location': fields.boolean("Create push/pull logistic rules",
-            help='Provide push and pull inventory flows. Typical uses of this feature are: '
-                 'manage product manufacturing chains, manage default locations per product, '
-                 'define routes within your warehouse according to business needs, etc.\n'
-                 '-This installs the module stock_location.'),
         'group_uom': fields.boolean("Manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
@@ -74,8 +69,11 @@ This installs the module product_expiry."""),
             help="""Allows to configure inventory valuations on products and product categories."""),
         'group_stock_multiple_locations': fields.boolean("Manage multiple locations and warehouses",
             implied_group='stock.group_locations',
-            help='This allows to configure and use multiple stock locations and warehouses, '
-                 'instead of having a single default one.'),
+            help="""This allows to configure and use multiple stock locations and warehouses,
+                instead of having a single default one."""),
+        'group_stock_adv_location': fields.boolean("Active Push and Pull inventory flows", 
+            implied_group='stock.group_adv_location', 
+            help="""This option supplements the warehouse application by effectively implementing Push and Pull inventory flows. """),
         'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
     }
 

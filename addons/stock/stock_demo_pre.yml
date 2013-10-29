@@ -1,0 +1,34 @@
+-
+  !record {model: stock.location, id: stock_location_14}:
+    name: Shelf 2
+    posx: 0
+
+-
+  !record {model: stock.location, id: stock_location_components}:
+    name: Shelf 1
+    posx: 0
+
+-
+  !python {model: ir.model.data}: |
+    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('warehouse0'), context=context)
+    main_stock = main_warehouse.lot_stock_id.id
+    self.pool.get('stock.location').write(cr, uid, [ref('stock_location_14'), ref('stock_location_components')], {'location_id':main_stock}, context=context)
+
+    #create xml ids for demo data that are widely used in tests, for more convenience
+    xml_references = [
+        {'name': 'stock_location_stock', 'module': 'stock', 'model': 'stock.location', 'res_id': main_warehouse.lot_stock_id.id},
+        {'name': 'stock_location_company', 'module': 'stock', 'model': 'stock.location', 'res_id': main_warehouse.wh_input_stock_loc_id.id},
+        {'name':'stock_location_output','module':'stock', 'model':'stock.location','res_id':main_warehouse.wh_output_stock_loc_id.id},
+        {'name':'location_pack_zone','module':'stock', 'model':'stock.location','res_id':main_warehouse.wh_pack_stock_loc_id.id},
+        {'name':'picking_type_internal','module':'stock', 'model':'stock.picking.type','res_id':main_warehouse.int_type_id.id},
+        {'name':'picking_type_in','module':'stock', 'model':'stock.picking.type','res_id':main_warehouse.in_type_id.id},
+        {'name':'picking_type_out','module':'stock', 'model':'stock.picking.type','res_id':main_warehouse.out_type_id.id},
+    ]
+    for xml_record in xml_references:
+        xml_ids = self.search(cr, uid, [('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])], context=context)
+        if not xml_ids:
+            self.create(cr, uid, xml_record, context=context)
+        #avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it
+        self._update_dummy(cr, uid, xml_record['model'], xml_record['module'], xml_record['name'])
+
+    

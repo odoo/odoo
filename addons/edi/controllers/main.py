@@ -1,15 +1,15 @@
 import simplejson
 import urllib
 
-import openerp.addons.web.http as openerpweb
+import openerp
 import openerp.addons.web.controllers.main as webmain
 
-class EDI(openerpweb.Controller):
-    # http://hostname:8069/edi/import_url?url=URIEncodedURL
-    _cp_path = "/edi"
+class EDI(openerp.http.Controller):
 
-    @openerpweb.httprequest
-    def import_url(self, req, url):
+    @openerp.http.route('/edi/import_url', type='http', auth='none')
+    def import_url(self, url):
+        # http://hostname:8069/edi/import_url?url=URIEncodedURL
+        req = openerp.http.request
         modules = webmain.module_boot(req) + ['edi']
         modules_str = ','.join(modules)
         modules_json = simplejson.dumps(modules)
@@ -26,8 +26,9 @@ class EDI(openerpweb.Controller):
             'init': 's.edi.edi_import("%s");' % safe_url,
         }
 
-    @openerpweb.jsonrequest
-    def import_edi_url(self, req, url):
+    @openerp.http.route('/edi/import_edi_url', type='http', auth='none')
+    def import_edi_url(self, url):
+        req = openerp.http.request
         result = req.session.proxy('edi').import_edi_url(req.session._db, req.session._uid, req.session._password, url)
         if len(result) == 1:
             return {"action": webmain.clean_action(req, result[0][2])}

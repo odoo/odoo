@@ -103,8 +103,6 @@ class stock_change_product_qty(osv.osv_memory):
                 'prod_lot_id' : data.lot_id.id
             }
             inventry_line_obj.create(cr , uid, line_data, context=context)
-
-            inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
 
