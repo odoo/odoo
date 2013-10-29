@@ -13,8 +13,17 @@
                         <field name="res_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
                         <field name="mail_server_id" invisible="1"/>
+                        <!-- Various warnings -->
                         <field name="use_active_domain" invisible="1"/>
-                        <field name="active_domain" invisible="1"/>
+                        <div colspan="2" class="oe_form_box_info oe_text_center"
+                                attrs="{'invisible': [('use_active_domain', '!=', True)]}">
+                            <p>
+                                <strong>All records matching your current search filter will be mailed,
+                                    not only the ids selected in the list view.</strong><br />
+                                If you want to work only with selected ids, please uncheck the
+                                list header checkbox.
+                            </p>
+                        </div>
                         <!-- visible wizard -->
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
