@@ -1,6 +1,6 @@
 <templates id="template" xml:space="preserve">
 <t t-name="website.menu.dialog.submenu">
-    <li>
+    <li t-att-data-menu-id="submenu.id">
         <div>
             <t t-esc="submenu.name"/>
             <button type="button" class="btn-xs pull-right delete-menu btn-danger">

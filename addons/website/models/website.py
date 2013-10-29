@@ -412,6 +412,22 @@ class website_menu(osv.osv):
 
         return menu_items[0]
 
+    def save(self, cr, uid, website_id, data=[], context=None):
+        def replace_id(old_id, new_id):
+            for menu in data:
+                if menu['id'] == old_id:
+                    menu['id'] = new_id
+                if menu['parent_id'] == old_id:
+                    menu['parent_id'] = new_id
+        for menu in data:
+            old_id = menu['id']
+            if isinstance(old_id, str):
+                new_id = self.create(cr, uid, {'name': menu['name']}, context=context)
+                replace_id(old_id, new_id)
+        for menu in data:
+            self.write(cr, uid, [menu['id']], menu, context=context)
+        return True
+
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
