@@ -14,7 +14,7 @@
 -
   I assign this 10 percent tax on the [PCSC234] PC Assemble SC234 product as a sale tax
 -
-  !record {model: product.product, id: product.product_product_3}:
+  !record {model: product.product, id: product.product_product_3, view: False}:
     taxes_id: [account_tax_10_incl]
 - |
   I create a VAT tax of 5%, which is added to the public price
@@ -42,7 +42,7 @@
 -
   I assign those 5 percent taxes on the PCSC349 product as a sale taxes
 -
-  !record {model: product.product, id: product.product_product_4}:
+  !record {model: product.product, id: product.product_product_4, view: False}:
     taxes_id: [account_tax_05_incl, account_tax_05_incl_chicago]
 -
   I create a new session
