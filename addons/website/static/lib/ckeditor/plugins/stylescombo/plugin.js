@@ -129,7 +129,6 @@
 						element = selection.getSelectedElement(),
 						elementPath = editor.elementPath( element ),
 						counter = [ 0, 0, 0, 0 ];
-
 					this.showAll();
 					this.unmarkAll();
 					for ( var name in styles ) {

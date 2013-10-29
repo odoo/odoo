@@ -18,19 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+import json
+import logging
+import select
+import time
 
 import openerp
 import openerp.tools.config
 import openerp.modules.registry
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-import datetime
+from openerp import http
+from openerp.http import request
 from openerp.osv import osv, fields
-import time
-import logging
-import json
-import select
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 

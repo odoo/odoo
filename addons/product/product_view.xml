@@ -15,7 +15,7 @@
                    <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                    <field name="categ_id"/>
                    <group expand="0" string="Context...">
-                       <field name="pricelist_id" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/>
+                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                        <field name="company_id" groups="base.group_multi_company"/>
                    </group>
                    <group  expand='0' string='Group by...'>
