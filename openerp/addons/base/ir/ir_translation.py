@@ -161,18 +161,18 @@ class ir_translation(osv.osv):
         '''
         if context is None:
             context = {}
-        res = {}
+        res = dict.fromkeys(ids, False)
         for record in self.browse(cr, uid, ids, context=context):
             if record.type != 'model':
                 res[record.id] = record.src
             else:
                 model_name, field = record.name.split(',')
                 model = self.pool.get(model_name)
-                #We need to take the context without the language information, because we want to read the
-                #value store in db and not on the one associate with current language.
-                context_wo_lang = context.copy()
-                context_wo_lang.pop('lang', None)
-                res[record.id] = model.read(cr, uid, record.res_id, [field], context=context_wo_lang)[field]
+                if model and model.exists(cr, uid, record.res_id, context=context):
+                    # Pass context without lang, need to read real stored field, not translation
+                    context_no_lang = dict(context, lang=None)
+                    result = model.read(cr, uid, record.res_id, [field], context=context_no_lang)
+                    res[record.id] = result[field] if result else False
         return res
 
     def _set_src(self, cr, uid, id, name, value, args, context=None):
@@ -268,13 +268,8 @@ class ir_translation(osv.osv):
         return translations
 
     def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
-        # clear the caches
-        tr = self._get_ids(cr, uid, name, tt, lang, ids)
-        for res_id in tr:
-            if tr[res_id]:
-                self._get_source.clear_cache(self, uid, name, tt, lang, tr[res_id])
-            self._get_ids.clear_cache(self, uid, name, tt, lang, res_id)
-        self._get_source.clear_cache(self, uid, name, tt, lang)
+        self._get_ids.clear_cache(self)
+        self._get_source.clear_cache(self)
 
         cr.execute('delete from ir_translation '
                 'where lang=%s '
@@ -346,8 +341,8 @@ class ir_translation(osv.osv):
         if context is None:
             context = {}
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
-        self._get_source.clear_cache(self, uid, vals.get('name',0), vals.get('type',0),  vals.get('lang',0), vals.get('src',0))
-        self._get_ids.clear_cache(self, uid, vals.get('name',0), vals.get('type',0), vals.get('lang',0), vals.get('res_id',0))
+        self._get_source.clear_cache(self)
+        self._get_ids.clear_cache(self)
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
@@ -360,9 +355,8 @@ class ir_translation(osv.osv):
         if vals.get('value'):
             vals.update({'state':'translated'})
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
-        for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
-            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
+        self._get_source.clear_cache(self)
+        self._get_ids.clear_cache(self)
         return result
 
     def unlink(self, cursor, user, ids, context=None):
@@ -370,9 +364,9 @@ class ir_translation(osv.osv):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
-            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
+
+        self._get_source.clear_cache(self)
+        self._get_ids.clear_cache(self)
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 

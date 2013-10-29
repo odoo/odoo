@@ -149,6 +149,59 @@ class TestCleaner(unittest2.TestCase):
             for text in out_lst:
                 self.assertNotIn(text, new_html, 'html_email_cleaner did not remove unwanted content')
 
+    def test_05_shorten(self):
+        # TEST: shorten length
+        test_str = '''<div>
+        <span>
+        </span>
+        <p>Hello, <span>Raoul</span> 
+    <bold>You</bold> are 
+    pretty</p>
+<span>Really</span>
+</div>
+'''
+        # shorten at 'H' of Hello -> should shorten after Hello,
+        html = html_email_clean(test_str, shorten=True, max_length=1, remove=True)
+        self.assertIn('Hello,', html, 'html_email_cleaner: shorten error or too short')
+        self.assertNotIn('Raoul', html, 'html_email_cleaner: shorten error or too long')
+        self.assertIn('read more', html, 'html_email_cleaner: shorten error about read more inclusion')
+        # shorten at 'are' -> should shorten after are
+        html = html_email_clean(test_str, shorten=True, max_length=17, remove=True)
+        self.assertIn('Hello,', html, 'html_email_cleaner: shorten error or too short')
+        self.assertIn('Raoul', html, 'html_email_cleaner: shorten error or too short')
+        self.assertIn('are', html, 'html_email_cleaner: shorten error or too short')
+        self.assertNotIn('pretty', html, 'html_email_cleaner: shorten error or too long')
+        self.assertNotIn('Really', html, 'html_email_cleaner: shorten error or too long')
+        self.assertIn('read more', html, 'html_email_cleaner: shorten error about read more inclusion')
+
+        # TEST: shorten in quote
+        test_str = '''<div> Blahble         
+            bluih      blouh   
+        <blockquote>This is a quote
+        <span>And this is quite a long quote, after all.</span>
+        </blockquote>
+</div>'''
+        # shorten in the quote
+        html = html_email_clean(test_str, shorten=True, max_length=25, remove=True)
+        self.assertIn('Blahble', html, 'html_email_cleaner: shorten error or too short')
+        self.assertIn('bluih', html, 'html_email_cleaner: shorten error or too short')
+        self.assertIn('blouh', html, 'html_email_cleaner: shorten error or too short')
+        self.assertNotIn('quote', html, 'html_email_cleaner: shorten error or too long')
+        self.assertIn('read more', html, 'html_email_cleaner: shorten error about read more inclusion')
+        # shorten in second word
+        html = html_email_clean(test_str, shorten=True, max_length=9, remove=True)
+        self.assertIn('Blahble', html, 'html_email_cleaner: shorten error or too short')
+        self.assertIn('bluih', html, 'html_email_cleaner: shorten error or too short')
+        self.assertNotIn('blouh', html, 'html_email_cleaner: shorten error or too short')
+        self.assertNotIn('quote', html, 'html_email_cleaner: shorten error or too long')
+        self.assertIn('read more', html, 'html_email_cleaner: shorten error about read more inclusion')
+        # shorten waaay too large
+        html = html_email_clean(test_str, shorten=True, max_length=900, remove=True)
+        self.assertIn('Blahble', html, 'html_email_cleaner: shorten error or too short')
+        self.assertIn('bluih', html, 'html_email_cleaner: shorten error or too short')
+        self.assertIn('blouh', html, 'html_email_cleaner: shorten error or too short')
+        self.assertNotIn('quote', html, 'html_email_cleaner: shorten error or too long')
+
     def test_10_email_text(self):
         """ html_email_clean test for text-based emails """
         new_html = html_email_clean(test_mail_examples.TEXT_1, remove=True)
@@ -256,6 +309,19 @@ class TestCleaner(unittest2.TestCase):
                 '<span class="span_class">Herbert Einstein<br_lapin></br_lapin><a href="#" class="a_class">read mee</a></span>',
                 'tasks using the gantt chart and control deadlines']:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly take into account specific expand options')
+
+    def test_70_read_more(self):
+        new_html = html_email_clean(test_mail_examples.BUG1, remove=True, shorten=True, max_length=100)
+        for ext in test_mail_examples.BUG_1_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed valid content')
+        for ext in test_mail_examples.BUG_1_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed invalid content')
+
+        new_html = html_email_clean(test_mail_examples.BUG2, remove=True, shorten=True, max_length=250)
+        for ext in test_mail_examples.BUG_2_IN:
+            self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed valid content')
+        for ext in test_mail_examples.BUG_2_OUT:
+            self.assertNotIn(ext, new_html, 'html_email_cleaner did not removed invalid content')
 
     def test_90_misc(self):
         # False boolean for text must return empty string

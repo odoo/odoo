@@ -2,17 +2,18 @@
 import cStringIO
 import json
 import datetime
-import dateutil
+import dateutil.relativedelta
 import logging
 import re
-import traceback
 import urllib
 import xml # FIXME use lxml and etree
 
 import Image
+import math
 import werkzeug.utils
 
 from openerp.osv import osv, orm, fields
+import openerp.tools
 
 _logger = logging.getLogger(__name__)
 
@@ -44,6 +45,13 @@ BUILTINS = {
     'relativedelta': lambda *a, **kw : dateutil.relativedelta.relativedelta(*a, **kw),
 }
 
+class QWebException(Exception):
+    def __init__(self, message, template=None, node=None, attribute=None):
+        self.message = message
+        self.template = template
+        self.node = node
+        self.attribute = attribute
+
 ## We use a jinja2 sandboxed environment to render qWeb templates.
 #from openerp.tools.safe_eval import safe_eval as eval
 #from jinja2.sandbox import SandboxedEnvironment
@@ -52,9 +60,14 @@ BUILTINS = {
 #SAFE = ["_name"]
 
 class QWebContext(dict):
-    def __init__(self, data, undefined_handler=None, loader=None):
+    def __init__(self, cr, uid, data, undefined_handler=None, loader=None,
+                 templates=None, context=None):
+        self.cr = cr
+        self.uid = uid
         self.loader = loader
         self.undefined_handler = undefined_handler
+        self.templates = templates or {}
+        self.context = context
         dic = BUILTINS.copy()
         dic.update(data)
         super(QWebContext, self).__init__(dic)
@@ -90,9 +103,11 @@ class QWebContext(dict):
         return eval(expr, None, self)
 
     def copy(self):
-        return QWebContext(dict.copy(self),
+        return QWebContext(self.cr, self.uid, dict.copy(self),
                            undefined_handler=self.undefined_handler,
-                           loader=self.loader)
+                           loader=self.loader,
+                           templates=self.templates,
+                           context=self.context)
 
     def __copy__(self):
         return self.copy()
@@ -142,7 +157,6 @@ class QWeb(orm.AbstractModel):
 
     def __init__(self, pool, cr):
         super(QWeb, self).__init__(pool, cr)
-        self._t = {}
 
         self._render_tag = self.prefixed_methods('render_tag_')
         self._render_att = self.prefixed_methods('render_att_')
@@ -163,7 +177,7 @@ class QWeb(orm.AbstractModel):
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def load_document(self, x):
+    def load_document(self, x, into):
         """
         Loads an XML document and installs any contained template in the engine
         """
@@ -176,15 +190,15 @@ class QWeb(orm.AbstractModel):
 
         for n in dom.documentElement.childNodes:
             if n.nodeType == self.node.ELEMENT_NODE and n.getAttribute('t-name'):
-                self._t[str(n.getAttribute("t-name"))] = n
+                into[str(n.getAttribute("t-name"))] = n
 
     def get_template(self, name, context):
-        if context.loader and name not in self._t:
+        if context.loader and name not in context.templates:
             xml_doc = context.loader(name)
-            self.load_document(xml_doc)
+            self.load_document(xml_doc, into=context.templates)
 
-        if name in self._t:
-            return self._t[name]
+        if name in context.templates:
+            return context.templates[name]
 
         raise KeyError('qweb: template "%s" not found' % name)
 
@@ -194,7 +208,8 @@ class QWeb(orm.AbstractModel):
         except (osv.except_osv, orm.except_orm), err:
             raise orm.except_orm("QWeb Error", "Invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), err[1]))
         except Exception:
-            raise SyntaxError("QWeb: invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), traceback.format_exc()))
+            raise QWebException("QWeb: invalid expression %r while rendering template '%s'." % (expr, v.get('__template__')),
+                template=v.get('__template__'))
 
     def eval_object(self, expr, v):
         return self.eval(expr, v)
@@ -227,11 +242,13 @@ class QWeb(orm.AbstractModel):
         else:
             return 0
 
-    def render(self, tname, v=None, out=None, loader=None, undefined_handler=None):
+    def render(self, cr, uid, tname, v=None, loader=None,
+               undefined_handler=None, context=None):
         if v is None:
             v = {}
         if not isinstance(v, QWebContext):
-            v = QWebContext(v, undefined_handler=undefined_handler, loader=loader)
+            v = QWebContext(cr, uid, v, undefined_handler=undefined_handler,
+                            loader=loader, context=context)
         v['__template__'] = tname
         stack = v.get('__stack__', [])
         if stack:
@@ -289,7 +306,16 @@ class QWeb(orm.AbstractModel):
         else:
             g_inner = []
             for n in e.childNodes:
-                g_inner.append(self.render_node(n, v))
+                try:
+                    g_inner.append(self.render_node(n, v))
+                except (osv.except_osv, orm.except_orm), err:
+                    raise err
+                except QWebException, err:
+                    if not err.node:
+                        err.node = e
+                    raise err
+                except Exception, err:
+                    raise QWebException("%s" % err, template=v.get('__template__'), node=e)
         name = str(e.nodeName)
         inner = "".join(g_inner)
         trim = t_att.get("trim", 0)
@@ -402,7 +428,7 @@ class QWeb(orm.AbstractModel):
         d = v if 'import' in t_att else v.copy()
         d[0] = self.render_element(e, t_att, g_att, d)
 
-        return self.render(self.eval_format(t_att["call"], d), d)
+        return self.render(None, None, self.eval_format(t_att["call"], d), d)
 
     def render_tag_set(self, e, t_att, g_att, v):
         if "value" in t_att:
@@ -431,8 +457,8 @@ class QWeb(orm.AbstractModel):
 
         converter = self.get_converter_for(field_type)
 
-        return converter.to_html(record._cr, record._uid, field_name, record, options,
-                                 e, t_att, g_att, v)
+        return converter.to_html(v.cr, v.uid, field_name, record, options,
+                                 e, t_att, g_att, v, context=v.context)
 
     def get_converter_for(self, field_type):
         return self.pool.get('ir.qweb.field.' + field_type,
@@ -452,7 +478,8 @@ class FieldConverter(osv.AbstractModel):
     _name = 'ir.qweb.field'
 
     def attributes(self, cr, uid, field_name, record, options,
-                   source_element, g_att, t_att, qweb_context):
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
         """
         Generates the metadata attributes (prefixed by ``data-oe-`` for the
         root node of the field conversion. Attribute values are escaped by the
@@ -481,20 +508,20 @@ class FieldConverter(osv.AbstractModel):
             ('data-oe-expression', t_att['field']),
         ]
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         """ Converts a single value to its HTML version/output
         """
         return werkzeug.utils.escape(value)
 
-    def record_to_html(self, cr, uid, field_name, record, column, options=None):
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         """ Converts the specified field of the browse_record ``record`` to
         HTML
         """
         return self.value_to_html(
-            cr, uid, record[field_name], column, options=None)
+            cr, uid, record[field_name], column, options=None, context=context)
 
     def to_html(self, cr, uid, field_name, record, options,
-                source_element, t_att, g_att, qweb_context):
+                source_element, t_att, g_att, qweb_context, context=None):
         """ Converts a ``t-field`` to its HTML output. A ``t-field`` may be
         extended by a ``t-field-options``, which is a JSON-serialized mapping
         of configuration values.
@@ -507,7 +534,7 @@ class FieldConverter(osv.AbstractModel):
             content = self.record_to_html(
                 cr, uid, field_name, record,
                 record._model._all_columns[field_name].column,
-                options)
+                options, context=context)
         except Exception:
             _logger.warning("Could not get field %s for model %s",
                             field_name, record._model._name, exc_info=True)
@@ -532,22 +559,86 @@ class FieldConverter(osv.AbstractModel):
         return self.qweb_object().render_element(
             source_element, t_att, g_att, qweb_context, content or '')
 
+    def user_lang(self, cr, uid, context):
+        """
+        Fetches the res.lang object corresponding to the language code stored
+        in the user's context. Fallbacks to en_US if no lang is present in the
+        context *or the language code is not valid*.
+
+        :returns: res.lang browse_record
+        """
+        if context is None: context = {}
+
+        lang_code = context.get('lang') or 'en_US'
+        Lang = self.pool['res.lang']
+
+        lang_ids = Lang.search(cr, uid, [('code', '=', lang_code)], context=context) \
+               or  Lang.search(cr, uid, [('code', '=', 'en_US')], context=context)
+
+        return Lang.browse(cr, uid, lang_ids[0], context=context)
+
 class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
-        width, precision = column.digits or (None, None)
-        fmt = '{value}' if precision is None else '{value:.{precision}f}'
+    def precision(self, cr, uid, column, options=None, context=None):
+        _, precision = column.digits or (None, None)
+        return precision
 
-        return werkzeug.utils.escape(
-            fmt.format(value=value, width=width, precision=precision, ))
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        precision = self.precision(cr, uid, column, options=options, context=context)
+        fmt = '%f' if precision is None else '%.{precision}f'
+
+        lang = self.user_lang(cr, uid, context)
+
+        formatted = lang.format(fmt.format(precision=precision),
+                                value, grouping=True)
+        # %f does not strip trailing zeroes. %g does but its precision causes
+        # it to switch to scientific notation starting at a million *and* to
+        # strip decimals. So use %f and if no precision was specified manually
+        # strip trailing 0.
+        if not precision:
+            formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
+        return werkzeug.utils.escape(formatted)
+
+class DateConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.date'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        lang = self.user_lang(cr, uid, context=context)
+
+        parse_format = openerp.tools.DEFAULT_SERVER_DATE_FORMAT
+        out_format = lang.date_format.encode('utf-8')
+
+        if isinstance(value, basestring):
+            value = datetime.datetime.strptime(value, parse_format)
+
+        return value.strftime(out_format)
+
+class DateTimeConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.datetime'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        lang = self.user_lang(cr, uid, context=context)
+
+        parse_format = openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT
+        out_format = (u"%s %s" % (lang.date_format, lang.time_format)).encode('utf-8')
+
+        if isinstance(value, basestring):
+            value = datetime.datetime.strptime(value, parse_format)
+
+        value = column.context_timestamp(
+            cr, uid, timestamp=value, context=context)
+
+        return value.strftime(out_format)
 
 class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         """
         Escapes the value and converts newlines to br. This is bullshit.
         """
@@ -557,8 +648,7 @@ class SelectionConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.selection'
     _inherit = 'ir.qweb.field'
 
-    def record_to_html(self, cr, uid, field_name, record, column, options=None):
-        # FIXME: context
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         value = record[field_name]
         selection = dict(fields.selection.reify(
             cr, uid, record._model, column))
@@ -569,16 +659,18 @@ class ManyToOneConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.many2one'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         # value may be a browse_null
         if not value: return ''
-        return werkzeug.utils.escape(value.name_get()[0][1]).replace('\n', '<br>\n')
+        name_got = value._model.name_get(
+            cr, openerp.SUPERUSER_ID, value.id, context=context)[0][1]
+        return werkzeug.utils.escape(name_got).replace('\n', '<br>\n')
 
 class HTMLConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.html'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         return value
 
 class ImageConverter(osv.AbstractModel):
@@ -593,7 +685,7 @@ class ImageConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.image'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None):
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
         try:
             image = Image.open(cStringIO.StringIO(value.decode('base64')))
             image.verify()
@@ -608,6 +700,10 @@ class MonetaryConverter(osv.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
     ``display_currency``.
 
+    The currency is used for formatting *and rounding* of the float value. It
+    is assumed that the linked res_currency has a non-empty rounding value and
+    res.currency's ``round`` method is used to perform rounding.
+
     .. note:: the monetary converter internally adds the qweb context to its
               options mapping, so that the context is available to callees.
               It's set under the ``_qweb_context`` key.
@@ -616,32 +712,45 @@ class MonetaryConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def to_html(self, cr, uid, field_name, record, options,
-                source_element, t_att, g_att, qweb_context):
+                source_element, t_att, g_att, qweb_context, context=None):
         options['_qweb_context'] = qweb_context
         return super(MonetaryConverter, self).to_html(
             cr, uid, field_name, record, options,
-            source_element, t_att, g_att, qweb_context)
+            source_element, t_att, g_att, qweb_context, context=context)
 
-    def record_to_html(self, cr, uid, field_name, record, column, options):
+    def record_to_html(self, cr, uid, field_name, record, column, options, context=None):
         Currency = self.pool['res.currency']
         display = self.display_currency(cr, uid, options)
 
-        symbol_pre = symbol_post = space_pre = space_post = u''
-        if display.position == 'before':
-            space_pre = u' '
-            symbol_pre = display.symbol
-        else:
-            space_post = u' '
-            symbol_post = display.symbol
+        # lang.format mandates a sprintf-style format. These formats are non-
+        # minimal (they have a default fixed precision instead), and
+        # lang.format will not set one by default. currency.round will not
+        # provide one either. So we need to generate a precision value
+        # (integer > 0) from the currency's rounding (a float generally < 1.0).
+        #
+        # The log10 of the rounding should be the number of digits involved if
+        # negative, if positive clamp to 0 digits and call it a day.
+        # nb: int() ~ floor(), we want nearest rounding instead
+        precision = int(round(math.log10(display.rounding)))
+        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
 
-        return u'{symbol_pre}{space_pre}' \
-               u'<span class="oe_currency_value">{0}</span>' \
-               u'{space_post}{symbol_post}'.format(
-            Currency.round(cr, uid, display, record[field_name]),
-            space_pre=space_pre,
-            symbol_pre=symbol_pre,
-            space_post=space_post,
-            symbol_post=symbol_post,)
+        lang = self.user_lang(cr, uid, context=context)
+        formatted_amount = lang.format(
+            fmt, Currency.round(cr, uid, display, record[field_name]),
+            grouping=True, monetary=True)
+
+        pre = post = u''
+        if display.position == 'before':
+            pre = u'{symbol} '
+        else:
+            post = u' {symbol}'
+
+        return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(
+            formatted_amount,
+            pre=pre, post=post,
+        ).format(
+            symbol=display.symbol,
+        )
 
     def display_currency(self, cr, uid, options):
         return self.qweb_object().eval_object(
