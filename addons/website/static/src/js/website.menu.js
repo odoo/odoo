@@ -3,7 +3,7 @@
 
     var website = openerp.website;
     website.menu = {};
-    website.templates.push('/website/static/src/xml/website.menu.xml');
+    website.add_template_file('/website/static/src/xml/website.menu.xml');
 
     website.menu.EditMenuDialog = website.editor.Dialog.extend({
         template: 'website.menu.dialog.edit',
