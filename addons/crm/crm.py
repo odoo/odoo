@@ -100,14 +100,14 @@ class crm_case_section(osv.osv):
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))
 
-    def _currency_conversation(self, cr, uid, amount, relation_id, relation_field, context=None): 
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        base_currency_id = user.company_id.currency_id.id
+    def _currency_conversation(self, cr, uid, id, amount, relation_id, relation_field, context=None): 
+        team = self.browse(cr, uid, id, context=context)
+        base_currency_id = team.currency_id.id
         if relation_field == 'company_id':
             base_currency_id = self.pool.get('res.company').browse(cr, uid, relation_id, context=context).currency_id.id
-        return self.pool.get('res.currency').compute(cr, uid, base_currency_id, user.company_id.currency_id.id, amount, context=context)
+        return self.pool.get('res.currency').compute(cr, uid, base_currency_id, team.currency_id.id, amount, context=context)
 
-    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
+    def __get_bar_values(self, cr, uid, id, obj, domain, read_fields, value_field, groupby_field, context=None):
         """ Generic method to generate data for bar chart values using SparklineBarWidget.
             This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
 
@@ -140,7 +140,7 @@ class crm_case_section(osv.osv):
             if inner_groupby:
                 inner_group_obj = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
                 for groupby in inner_group_obj:
-                    section_result[month]['value'] += self._currency_conversation(cr, uid, groupby.get(value_field, 0), groupby['__domain'][0][2], inner_groupby[0], context=context)
+                    section_result[month]['value'] += self._currency_conversation(cr, uid, id, groupby.get(value_field, 0), groupby['__domain'][0][2], inner_groupby[0], context=context)
         return section_result
 
     def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -157,16 +157,9 @@ class crm_case_section(osv.osv):
         for id in ids:
             res[id] = dict()
             lead_domain = date_domain + [('type', '=', 'lead'), ('section_id', '=', id)]
-            res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date','company_id'], 'create_date_count', ['create_date', 'company_id'], context=context)
+            res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, id, obj, lead_domain, ['create_date','company_id'], 'create_date_count', ['create_date', 'company_id'], context=context)
             opp_domain = date_domain + [('type', '=', 'opportunity'), ('section_id', '=', id)]
-            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'create_date', 'company_id'], 'planned_revenue', ['create_date', 'company_id'], context=context)
-        return res
-
-    def _get_currency_symbol(self, cr, uid, ids, name, arg, context=None):
-        """Set currency symbole of company currency"""
-        res = {}
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        res = dict.fromkeys(ids, user.company_id.currency_id.symbol)
+            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, id, obj, opp_domain, ['planned_revenue', 'create_date', 'company_id'], 'planned_revenue', ['create_date', 'company_id'], context=context)
         return res
 
     _columns = {
@@ -200,7 +193,7 @@ class crm_case_section(osv.osv):
             string='Planned Revenue per Month'),
         'create_uid': fields.many2one('res.users', 'Create User'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'currency_symbol': fields.function(_get_currency_symbol, string="Current User's Currency Symbol", method=True, type='char'),
+        'currency_symbol': fields.related('currency_id', 'symbol', type='char', string='Currency Symbol'),
     }
 
     def _get_stage_common(self, cr, uid, context):
