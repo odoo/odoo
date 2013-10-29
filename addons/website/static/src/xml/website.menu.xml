@@ -1,7 +1,47 @@
 <templates id="template" xml:space="preserve">
-    <t t-name="website.menu.dialog" t-extend="website.editor.dialog.link">
-        <t t-jquery="t[t-set='title']" t-operation="inner">
-            Add Menu
-        </t>
+<t t-name="website.menu.dialog.submenu">
+    <li>
+        <div>
+            <t t-esc="submenu.name"/>
+            <button type="button" class="btn-xs pull-right delete-menu btn-danger">
+                <i class="icon-trash"/>
+            </button>
+            <button type="button" class="btn-xs pull-right edit-menu btn-primary">
+                <i class="icon-edit"/>
+            </button>
+        </div>
+        <t t-set="children" t-value="submenu.children"/>
+        <ul t-if="children">
+            <t t-foreach="children" t-as="submenu">
+                <t t-call="website.menu.dialog.submenu"/>
+            </t>
+        </ul>
+    </li>
+</t>
+<t t-name="website.menu.dialog.footer-button">
+    <button type="button" class="btn pull-left add-menu btn-success">
+        <i class="icon-plus-sign"/> Add Menu Item
+    </button>
+</t>
+<t t-name="website.menu.dialog.edit">
+    <t t-call="website.editor.dialog">
+        <t t-set="title">Edit Menu</t>
+        <ul class="oe_menu_editor">
+            <t t-foreach="widget.menu.children" t-as="submenu">
+                <t t-call="website.menu.dialog.submenu"/>
+            </t>
+        </ul>
     </t>
+</t>
+<t t-name="website.menu.dialog.add" t-extend="website.editor.dialog.link">
+    <t t-jquery="t[t-set='title']" t-operation="inner">
+        Add Menu Entry
+    </t>
+    <t t-jquery="select.add-to-menu">
+        this.css('display', 'none');
+    </t>
+    <t t-jquery="label[for='link-text']" t-operation="replace">
+        Menu Label
+    </t>
+</t>
 </templates>
