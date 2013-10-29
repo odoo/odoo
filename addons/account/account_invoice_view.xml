@@ -192,6 +192,7 @@
                         <page string="Invoice">
                             <field context="{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type}" name="invoice_line">
                                 <tree string="Invoice lines" editable="bottom">
+                                    <field name="sequence" widget="handle" />
                                     <field name="product_id"
                                         on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                                     <field name="name"/>
@@ -348,6 +349,7 @@
                         <page string="Invoice Lines">
                             <field name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}">
                                 <tree string="Invoice Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
                                     <field name="product_id"
                                         on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
                                     <field name="name"/>
@@ -461,7 +463,7 @@
                     <separator/>
                     <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
                     <group expand="0" string="Group By...">
-                    	<filter name="partner_id" string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    	<filter name="group_by_partner_id" string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                     	<filter name="commercial_partner_id" string="Commercial Partner" domain="[]" context="{'group_by':'commercial_partner_id'}"/>
                         <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>

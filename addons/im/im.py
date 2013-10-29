@@ -18,19 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+import json
+import logging
+import select
+import time
 
 import openerp
 import openerp.tools.config
 import openerp.modules.registry
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-import datetime
+from openerp import http
+from openerp.http import request
 from openerp.osv import osv, fields
-import time
-import logging
-import json
-import select
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -303,7 +303,7 @@ class im_user(osv.osv):
         'name': fields.function(_get_name, type='char', size=200, string="Name", store=True, readonly=True),
         'assigned_name': fields.char(string="Assigned Name", size=200, required=False),
         'image': fields.related('user_id', 'image_small', type='binary', string="Image", readonly=True),
-        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
+        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade', oldname='user'),
         'uuid': fields.char(string="UUID", size=50, select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),

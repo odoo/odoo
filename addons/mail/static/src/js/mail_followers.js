@@ -151,7 +151,7 @@ openerp_mail_followers = function(session, mail) {
         },
 
         fetch_followers: function (value_) {
-            this.value = value_ || {};
+            this.value = value_ || [];
             return this.ds_model.call('read_followers_data', [this.value])
                 .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
                 .then(this.proxy('display_buttons'))

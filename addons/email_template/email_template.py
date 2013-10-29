@@ -21,6 +21,8 @@
 ##############################################################################
 
 import base64
+import datetime
+import dateutil.relativedelta as relativedelta
 import logging
 
 import openerp
@@ -57,6 +59,12 @@ try:
         'str': str,
         'quote': quote,
         'urlencode': urlencode,
+        'datetime': datetime,
+
+        # dateutil.relativedelta is an old-style class and cannot be directly
+        # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
+        # is needed, apparently.
+        'relativedelta': lambda *a, **kw : relativedelta.relativedelta(*a, **kw),
     })
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
@@ -67,7 +75,7 @@ class email_template(osv.osv):
     _description = 'Email Templates'
     _order = 'name'
 
-    def render_template(self, cr, uid, template, model, res_id, context=None):
+    def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
         """Render the given template text, replace mako expressions ``${expr}``
            with the result of evaluating these expressions with
            an evaluation context containing:
@@ -79,46 +87,60 @@ class email_template(osv.osv):
 
            :param str template: the template text to render
            :param str model: model name of the document record this mail is related to.
-           :param int res_id: id of the document record this mail is related to.
+           :param int res_ids: list of ids of document records those mails are related to.
         """
-        if not template:
-            return u""
         if context is None:
             context = {}
-        try:
-            template = tools.ustr(template)
-            record = None
-            if res_id:
-                record = self.pool[model].browse(cr, uid, res_id, context=context)
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            variables = {
-                'object': record,
-                'user': user,
-                'ctx': context,     # context kw would clash with mako internals
-            }
-            result = mako_template_env.from_string(template).render(variables)
-            if result == u"False":
-                result = u""
-            return result
-        except Exception:
-            _logger.exception("failed to render mako template value %r", template)
-            return u""
+        results = dict.fromkeys(res_ids, u"")
 
-    def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):
+        # try to load the template
+        try:
+            template = mako_template_env.from_string(tools.ustr(template))
+        except Exception:
+            _logger.exception("Failed to load template %r", template)
+            return results
+
+        # prepare template variables
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        records = self.pool[model].browse(cr, uid, res_ids, context=context) or [None]
+        variables = {
+            'user': user,
+            'ctx': context,  # context kw would clash with mako internals
+        }
+        for record in records:
+            res_id = record.id if record else None
+            variables['object'] = record
+            try:
+                render_result = template.render(variables)
+            except Exception:
+                _logger.exception("Failed to render template %r using values %r" % (template, variables))
+                render_result = u""
+            if render_result == u"False":
+                render_result = u""
+            results[res_id] = render_result
+        return results
+
+    def get_email_template_batch(self, cr, uid, template_id=False, res_ids=None, context=None):
         if context is None:
             context = {}
+        if res_ids is None:
+            res_ids = [None]
+        results = dict.fromkeys(res_ids, False)
+
         if not template_id:
-            return False
+            return results
         template = self.browse(cr, uid, template_id, context)
-        lang = self.render_template(cr, uid, template.lang, template.model, record_id, context)
-        if lang:
-            # Use translated template if necessary
-            ctx = context.copy()
-            ctx['lang'] = lang
-            template = self.browse(cr, uid, template.id, ctx)
-        else:
-            template = self.browse(cr, uid, int(template_id), context)
-        return template
+        langs = self.render_template_batch(cr, uid, template.lang, template.model, res_ids, context)
+        for res_id, lang in langs.iteritems():
+            if lang:
+                # Use translated template if necessary
+                ctx = context.copy()
+                ctx['lang'] = lang
+                template = self.browse(cr, uid, template.id, ctx)
+            else:
+                template = self.browse(cr, uid, int(template_id), context)
+            results[res_id] = template
+        return results
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
         mod_name = False
@@ -300,64 +322,75 @@ class email_template(osv.osv):
                         })
         return {'value': result}
 
-    def generate_email(self, cr, uid, template_id, res_id, context=None):
-        """Generates an email from the template for given (model, res_id) pair.
+    def generate_email_batch(self, cr, uid, template_id, res_ids, context=None, fields=None):
+        """Generates an email from the template for given the given model based on
+        records given by res_ids.
 
-           :param template_id: id of the template to render.
-           :param res_id: id of the record to use for rendering the template (model
-                          is taken from template definition)
-           :returns: a dict containing all relevant fields for creating a new
-                     mail.mail entry, with one extra key ``attachments``, in the
-                     format expected by :py:meth:`mail_thread.message_post`.
+        :param template_id: id of the template to render.
+        :param res_id: id of the record to use for rendering the template (model
+                       is taken from template definition)
+        :returns: a dict containing all relevant fields for creating a new
+                  mail.mail entry, with one extra key ``attachments``, in the
+                  format expected by :py:meth:`mail_thread.message_post`.
         """
         if context is None:
             context = {}
+        if fields is None:
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to']
+
         report_xml_pool = self.pool.get('ir.actions.report.xml')
-        template = self.get_email_template(cr, uid, template_id, res_id, context)
-        values = {}
-        for field in ['subject', 'body_html', 'email_from',
-                      'email_to', 'partner_to', 'email_cc', 'reply_to']:
-            values[field] = self.render_template(cr, uid, getattr(template, field),
-                                                 template.model, res_id, context=context) \
-                                                 or False
-        if template.user_signature:
-            signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-            values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
+        res_ids_to_templates = self.get_email_template_batch(cr, uid, template_id, res_ids, context)
 
-        if values['body_html']:
-            values['body'] = tools.html_sanitize(values['body_html'])
+        # templates: res_id -> template; template -> res_ids
+        templates_to_res_ids = {}
+        for res_id, template in res_ids_to_templates.iteritems():
+            templates_to_res_ids.setdefault(template, []).append(res_id)
 
-        values.update(mail_server_id=template.mail_server_id.id or False,
-                      auto_delete=template.auto_delete,
-                      model=template.model,
-                      res_id=res_id or False)
+        results = dict()
+        for template, template_res_ids in templates_to_res_ids.iteritems():
+            # generate fields value for all res_ids linked to the current template
+            for field in ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to']:
+                generated_field_values = self.render_template_batch(cr, uid, getattr(template, field), template.model, template_res_ids, context=context)
+                for res_id, field_value in generated_field_values.iteritems():
+                    results.setdefault(res_id, dict())[field] = field_value
+            # update values for all res_ids
+            for res_id in template_res_ids:
+                values = results[res_id]
+                if template.user_signature:
+                    signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
+                    values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
+                if values['body_html']:
+                    values['body'] = tools.html_sanitize(values['body_html'])
+                values.update(
+                    mail_server_id=template.mail_server_id.id or False,
+                    auto_delete=template.auto_delete,
+                    model=template.model,
+                    res_id=res_id or False,
+                    attachment_ids=[attach.id for attach in template.attachment_ids],
+                )
 
-        attachments = []
-        # Add report in attachments
-        if template.report_template:
-            report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
-            report_service = report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
-            # Ensure report is rendered using template's language
-            ctx = context.copy()
-            if template.lang:
-                ctx['lang'] = self.render_template(cr, uid, template.lang, template.model, res_id, context)
-            result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
-            result = base64.b64encode(result)
-            if not report_name:
-                report_name = 'report.' + report_service
-            ext = "." + format
-            if not report_name.endswith(ext):
-                report_name += ext
-            attachments.append((report_name, result))
+            # Add report in attachments
+            if template.report_template:
+                for res_id in template_res_ids:
+                    attachments = []
+                    report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
+                    report_service = report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
+                    # Ensure report is rendered using template's language
+                    ctx = context.copy()
+                    if template.lang:
+                        ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, res_id, context)  # take 0 ?
+                    result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
+                    result = base64.b64encode(result)
+                    if not report_name:
+                        report_name = 'report.' + report_service
+                    ext = "." + format
+                    if not report_name.endswith(ext):
+                        report_name += ext
+                    attachments.append((report_name, result))
 
-        attachment_ids = []
-        # Add template attachments
-        for attach in template.attachment_ids:
-            attachment_ids.append(attach.id)
+                    values['attachments'] = attachments
 
-        values['attachments'] = attachments
-        values['attachment_ids'] = attachment_ids
-        return values
+        return results
 
     def send_mail(self, cr, uid, template_id, res_id, force_send=False, raise_exception=False, context=None):
         """Generates a new mail message for the given template and record,
@@ -403,5 +436,15 @@ class email_template(osv.osv):
         if force_send:
             mail_mail.send(cr, uid, [msg_id], raise_exception=raise_exception, context=context)
         return msg_id
+
+    # Compatibility method
+    def render_template(self, cr, uid, template, model, res_id, context=None):
+        return self.render_template_batch(cr, uid, template, model, [res_id], context)[res_id]
+
+    def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):
+        return self.get_email_template_batch(cr, uid, template_id, [record_id], context)[record_id]
+
+    def generate_email(self, cr, uid, template_id, res_id, context=None):
+        return self.generate_email_batch(cr, uid, template_id, [res_id], context)[res_id]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

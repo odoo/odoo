@@ -1041,28 +1041,25 @@ class procurement_order(osv.osv):
         partner_obj = self.pool.get('res.partner')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
-            if not procurement.product_id.seller_ids:
-                message = _('No supplier defined for this product !')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
+            message = ''
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
-            if not partner:
+            if not procurement.product_id.seller_ids:
+                message = _('No supplier defined for this product !')
+            elif not partner:
                 message = _('No default supplier defined for this product')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
+            elif not partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']:
+                message = _('No address defined for the supplier')
+
+            if message:
+                if procurement.message != message:
+                    cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
+
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
                     raise osv.except_osv(_('Configuration Error!'), _('The product "%s" has been defined with your company as reseller which seems to be a configuration error!' % procurement.product_id.name))
 
-            address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
-            if not address_id:
-                message = _('No address defined for the supplier')
-                self.message_post(cr, uid, [procurement.id], body=message)
-                cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                return False
         return True
 
 
@@ -1238,8 +1235,8 @@ class account_invoice(osv.Model):
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
         purchase_order_obj = self.pool.get('purchase.order')
         po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
-        if po_ids:
-            purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice received"), context=context)
+        for po_id in po_ids:
+            purchase_order_obj.message_post(cr, uid, po_id, body=_("Invoice received"), context=context)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

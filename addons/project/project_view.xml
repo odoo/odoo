@@ -93,8 +93,7 @@
                         </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
-                        <button name="%(act_project_project_2_project_task_all)d" string="Tasks"
-                            type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
+                        <field name="tasks" widget="x2many_counter" string="Tasks" attrs="{'invisible':[('use_tasks','=', False)]}" options='{"views": [[false, "kanban"], [false, "tree"], [false, "form"], [false, "calendar"], [false, "gantt"], [false, "graph"]]}'/>
                         <button name="attachment_tree_view" string="Documents" type="object"/>
                     </div>
                     <group>
@@ -128,7 +127,7 @@
                     <notebook>
                         <page string="Team" name="team">
                             <field colspan="4" name="members" widget="many2many_kanban" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'group_project_user']}">
-                                <kanban quick_create="false" create="true">
+                                <kanban quick_create="false" create="true" delete="true">
                                     <field name="name"/>
                                     <templates>
                                         <t t-name="kanban-box">

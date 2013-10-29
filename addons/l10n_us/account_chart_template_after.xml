@@ -6,33 +6,43 @@
             <field name="account_root_id" ref="coa_basic"/>
             <field name="bank_account_view_id" ref="cash_expenditure"/>
             <field name="tax_code_root_id" ref="tax_code_chart_root"/>
+            <field name="property_account_receivable" ref="account_receivable"/>
+            <field name="property_account_payable" ref="account_payable"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
         <record id="account_chart_template_advertising" model="account.chart.template">
             <field name="bank_account_view_id" ref="cash_expenditure"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record id="account_chart_template_agriculture" model="account.chart.template">
             <field name="bank_account_view_id" ref="cash_expenditure"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record id="account_chart_template_construction" model="account.chart.template">
             <field name="bank_account_view_id" ref="cash_expenditure"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record id="account_chart_template_financial_service" model="account.chart.template">
             <field name="bank_account_view_id" ref="cash_expenditure"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record id="account_chart_template_general_service" model="account.chart.template">
             <field name="bank_account_view_id" ref="cash_expenditure"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record id="account_chart_template_legal_service" model="account.chart.template">
             <field name="bank_account_view_id" ref="cash_expenditure"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record id="account_chart_template_general_product" model="account.chart.template">
             <field name="bank_account_view_id" ref="cash_expenditure"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
     </data>
 </openerp>
