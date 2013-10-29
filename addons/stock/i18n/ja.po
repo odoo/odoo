@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-10-27 10:08+0000\n"
+"Last-Translator: kohji katayama <kohji.jyoji4113@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:23+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-10-28 05:42+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -24,7 +24,7 @@ msgstr ""
 #: field:stock.move.split,line_exist_ids:0
 #: field:stock.move.split,line_ids:0
 msgid "Serial Numbers"
-msgstr ""
+msgstr "シリアル番号"
 
 #. module: stock
 #: help:stock.config.settings,group_product_variant:0
@@ -32,7 +32,7 @@ msgid ""
 "Allow to manage several variants per product. As an example, if you  sell T-"
 "Shirts, for the same \"Linux T-Shirt\", you may have variants on  sizes or "
 "colors; S, M, L, XL, XXL."
-msgstr ""
+msgstr "製品ごとの型式管理を許可する。例：「リナックス T-シャツ」を販売する場合、色やサイズ(S、M、L、XL、XXL)等の型式を保持する。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -54,13 +54,13 @@ msgstr ""
 #. module: stock
 #: view:stock.picking.out:0
 msgid "Confirm & Deliver"
-msgstr ""
+msgstr "確認および出荷"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: view:stock.change.product.qty:0
 msgid "Update Product Quantity"
-msgstr ""
+msgstr "製品数変更"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -79,14 +79,14 @@ msgstr "新しいパックに入れる"
 #: view:stock.tracking:0
 #, python-format
 msgid "Upstream Traceability"
-msgstr "上流追跡能力"
+msgstr "フォワードトレース"
 
 #. module: stock
 #: field:stock.picking,date_done:0
 #: field:stock.picking.in,date_done:0
 #: field:stock.picking.out,date_done:0
 msgid "Date of Transfer"
-msgstr ""
+msgstr "移動日"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -128,7 +128,7 @@ msgstr "製品移動"
 #: code:addons/stock/stock.py:2585
 #, python-format
 msgid "Please provide proper quantity."
-msgstr ""
+msgstr "数量を入力してください。"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -140,30 +140,30 @@ msgstr "棚卸制御"
 msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
-msgstr "製造シリアル番号とは異なる場合に備えた内部参照番号"
+msgstr "製造シリアル番号とは別に設定する内部参照番号"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:59
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
-msgstr "１つの棚卸を超えて、この操作の実行はできません。"
+msgstr "この操作は複数の棚卸在庫に対して実行できません。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:91
 #, python-format
 msgid "Quantity cannot be negative."
-msgstr "数量は交渉不可"
+msgstr "負の数は入力できません。"
 
 #. module: stock
 #: view:stock.picking:0
 #: view:stock.picking.in:0
 msgid "Picking list"
-msgstr "集荷リスト"
+msgstr "ピッキングリスト"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "e.g. Annual inventory"
-msgstr ""
+msgstr "[例] 年次棚卸"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -199,7 +199,7 @@ msgstr "日"
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Physical Inventories"
-msgstr "実在庫"
+msgstr "実地棚卸"
 
 #. module: stock
 #: selection:stock.location.product,type:0
@@ -403,7 +403,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "No invoicing"
-msgstr "未請求"
+msgstr "請求なし"
 
 #. module: stock
 #: view:stock.move:0
@@ -414,7 +414,7 @@ msgstr "処理された在庫移動"
 #: field:stock.inventory.line.split,use_exist:0
 #: field:stock.move.split,use_exist:0
 msgid "Existing Serial Numbers"
-msgstr ""
+msgstr "既存のシリアル番号"
 
 #. module: stock
 #: model:res.groups,name:stock.group_inventory_valuation
@@ -439,7 +439,7 @@ msgstr "この梱包のための移動"
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Incoming Shipments Available"
-msgstr "内部出荷可能"
+msgstr "入荷可能"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -487,7 +487,7 @@ msgstr ""
 #: report:stock.picking.list:0
 #: selection:stock.picking.out,state:0
 msgid "Waiting Availability"
-msgstr "利用可能待ち"
+msgstr "入荷待ち"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -497,7 +497,7 @@ msgstr "利用可能待ち"
 #: view:stock.production.lot:0
 #: field:stock.production.lot,stock_available:0
 msgid "Available"
-msgstr "利用可能"
+msgstr "出荷可能"
 
 #. module: stock
 #: view:stock.picking:0
@@ -576,7 +576,7 @@ msgstr "場所のタイプ"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form_draft
 msgid "Draft Physical Inventories"
-msgstr "実在庫のドラフト"
+msgstr "仮棚卸"
 
 #. module: stock
 #: code:addons/stock/stock.py:1777
@@ -1013,7 +1013,7 @@ msgstr "将来の損益計算書"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 #: view:stock.picking.in:0
 msgid "Incoming Shipments"
-msgstr "内部出荷"
+msgstr "入荷"
 
 #. module: stock
 #: help:stock.picking,date:0
@@ -1036,7 +1036,7 @@ msgstr "在庫場所"
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "この品目にシリアル番号をアサインしてください。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2255
@@ -1502,7 +1502,7 @@ msgstr "棚卸の統合"
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "To be refunded/invoiced"
-msgstr "返金 / 請求"
+msgstr "返金／請求あり"
 
 #. module: stock
 #: code:addons/stock/stock.py:2448
@@ -1561,7 +1561,7 @@ msgstr "開始"
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Incoming Shipments already processed"
-msgstr "内部出荷は処理済です。"
+msgstr "入荷は処理済です。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:102
@@ -1826,7 +1826,7 @@ msgstr "バックオーダー"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Incoming Shipment :"
-msgstr ""
+msgstr "入荷："
 
 #. module: stock
 #: field:stock.location,valuation_out_account_id:0
@@ -2117,7 +2117,7 @@ msgstr "集荷の戻し"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking_in
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking_out
 msgid "Return Shipment"
-msgstr ""
+msgstr "顧客返品"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -2134,7 +2134,7 @@ msgstr "全在庫"
 #. module: stock
 #: view:stock.return.picking:0
 msgid "Provide the quantities of the returned products."
-msgstr "返品製品の数量を与えます。"
+msgstr "返品数量を指定してください。"
 
 #. module: stock
 #: view:product.product:0
@@ -2807,7 +2807,7 @@ msgstr "7月"
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Consumable"
-msgstr "売り切り品"
+msgstr "消耗品"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
@@ -3391,7 +3391,7 @@ msgstr "戻り"
 #. module: stock
 #: field:stock.return.picking,invoice_state:0
 msgid "Invoicing"
-msgstr "請求中"
+msgstr "請求方針"
 
 #. module: stock
 #: view:stock.picking:0

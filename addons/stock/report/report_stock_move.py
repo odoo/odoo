@@ -61,66 +61,49 @@ class report_stock_move(osv.osv):
         cr.execute("""
             CREATE OR REPLACE view report_stock_move AS (
                 SELECT
-                        min(sm_id) as id,
-                        date_trunc('day',al.dp) as date,
-                        al.curr_year as year,
-                        al.curr_month as month,
-                        al.curr_day as day,
-                        al.curr_day_diff as day_diff,
-                        al.curr_day_diff1 as day_diff1,
-                        al.curr_day_diff2 as day_diff2,
-                        al.location_id as location_id,
-                        al.picking_id as picking_id,
-                        al.company_id as company_id,
-                        al.location_dest_id as location_dest_id,
-                        al.product_qty,
-                        al.out_qty as product_qty_out,
-                        al.in_qty as product_qty_in,
-                        al.partner_id as partner_id,
-                        al.product_id as product_id,
-                        al.state as state ,
-                        al.product_uom as product_uom,
-                        al.categ_id as categ_id,
-                        coalesce(al.type, 'other') as type,
-                        al.stock_journal as stock_journal,
-                        sum(al.in_value - al.out_value) as value
-                    FROM (SELECT
-                        CASE WHEN sp.type in ('out') THEN
-                            sum(sm.product_qty * pu.factor / pu2.factor)
-                            ELSE 0.0
-                            END AS out_qty,
-                        CASE WHEN sp.type in ('in') THEN
-                            sum(sm.product_qty * pu.factor / pu2.factor)
-                            ELSE 0.0
-                            END AS in_qty,
-                        CASE WHEN sp.type in ('out') THEN
-                            sum(sm.product_qty * pu.factor / pu2.factor) * pt.standard_price
-                            ELSE 0.0
-                            END AS out_value,
-                        CASE WHEN sp.type in ('in') THEN
-                            sum(sm.product_qty * pu.factor / pu2.factor) * pt.standard_price
-                            ELSE 0.0
-                            END AS in_value,
-                        min(sm.id) as sm_id,
-                        sm.date as dp,
-                        to_char(date_trunc('day',sm.date), 'YYYY') as curr_year,
-                        to_char(date_trunc('day',sm.date), 'MM') as curr_month,
-                        to_char(date_trunc('day',sm.date), 'YYYY-MM-DD') as curr_day,
-                        avg(date(sm.date)-date(sm.create_date)) as curr_day_diff,
-                        avg(date(sm.date_expected)-date(sm.create_date)) as curr_day_diff1,
-                        avg(date(sm.date)-date(sm.date_expected)) as curr_day_diff2,
+                        min(sm.id) as id, 
+                        date_trunc('day', sm.date) as date,
+                        to_char(date_trunc('day',sm.date), 'YYYY') as year,
+                        to_char(date_trunc('day',sm.date), 'MM') as month,
+                        to_char(date_trunc('day',sm.date), 'YYYY-MM-DD') as day,
+                        avg(date(sm.date)-date(sm.create_date)) as day_diff,
+                        avg(date(sm.date_expected)-date(sm.create_date)) as day_diff1,
+                        avg(date(sm.date)-date(sm.date_expected)) as day_diff2,
                         sm.location_id as location_id,
+                        sm.picking_id as picking_id,
+                        sm.company_id as company_id,
                         sm.location_dest_id as location_dest_id,
                         sum(sm.product_qty) as product_qty,
-                        pt.categ_id as categ_id ,
+                        sum(
+                            (CASE WHEN sp.type in ('out') THEN
+                                     (sm.product_qty * pu.factor / pu2.factor)
+                                  ELSE 0.0 
+                            END)
+                        ) as product_qty_out,
+                        sum(
+                            (CASE WHEN sp.type in ('in') THEN
+                                     (sm.product_qty * pu.factor / pu2.factor)
+                                  ELSE 0.0 
+                            END)
+                        ) as product_qty_in,
                         sm.partner_id as partner_id,
                         sm.product_id as product_id,
-                        sm.picking_id as picking_id,
-                            sm.company_id as company_id,
-                            sm.state as state,
-                            sm.product_uom as product_uom,
-                            sp.type as type,
-                            sp.stock_journal_id AS stock_journal
+                        sm.state as state,
+                        sm.product_uom as product_uom,
+                        pt.categ_id as categ_id ,
+                        coalesce(sp.type, 'other') as type,
+                        sp.stock_journal_id AS stock_journal,
+                        sum(
+                            (CASE WHEN sp.type in ('in') THEN
+                                     (sm.product_qty * pu.factor / pu2.factor) * pt.standard_price
+                                  ELSE 0.0 
+                            END)
+                            -
+                            (CASE WHEN sp.type in ('out') THEN
+                                     (sm.product_qty * pu.factor / pu2.factor) * pt.standard_price
+                                  ELSE 0.0 
+                            END)
+                        ) as value
                     FROM
                         stock_move sm
                         LEFT JOIN stock_picking sp ON (sm.picking_id=sp.id)
@@ -129,16 +112,11 @@ class report_stock_move(osv.osv):
                           LEFT JOIN product_uom pu2 ON (sm.product_uom=pu2.id)
                         LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
                     GROUP BY
-                        sm.id,sp.type, sm.date,sm.partner_id,
-                        sm.product_id,sm.state,sm.product_uom,sm.date_expected,
-                        sm.product_id,pt.standard_price, sm.picking_id, sm.product_qty,
-                        sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id, sp.stock_journal_id)
-                    AS al
-                    GROUP BY
-                        al.out_qty,al.in_qty,al.curr_year,al.curr_month,
-                        al.curr_day,al.curr_day_diff,al.curr_day_diff1,al.curr_day_diff2,al.dp,al.location_id,al.location_dest_id,
-                        al.partner_id,al.product_id,al.state,al.product_uom,
-                        al.picking_id,al.company_id,al.type,al.product_qty, al.categ_id, al.stock_journal
+                        coalesce(sp.type, 'other'), date_trunc('day', sm.date), sm.partner_id,
+                        sm.state, sm.product_uom, sm.date_expected,
+                        sm.product_id, pt.standard_price, sm.picking_id,
+                        sm.company_id, sm.location_id, sm.location_dest_id, pu.factor, pt.categ_id, sp.stock_journal_id,
+                        year, month, day
                )
         """)
 
