@@ -61,7 +61,27 @@ class stock_location(osv.osv):
     _parent_order = 'name'
     _order = 'parent_left'
 
-    # TODO: implement name_search() in a way that matches the results of name_get!
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        if context is None:
+            context={}
+        
+        if name:
+            ids = self.search(cr, uid, [('complete_name', operator, name)] + args, limit=limit, context=context)
+            if not ids:                
+                dom = []
+                for name2 in name.split('/'):
+                    name = name2.strip()
+                    ids = self.search(cr, uid, dom + [('name', 'ilike', name)] + args, limit=limit, context=context)                    
+                    if not ids:                         
+                        break
+                    dom = [('location_id','in',ids)]
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context=context)        
+        
+    
     def name_get(self, cr, uid, ids, context=None):
         res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
         return res.items() 
