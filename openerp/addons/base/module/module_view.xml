@@ -111,9 +111,9 @@
                                 <field name="application"/>
                                 <field name="state"/>
                             </group>
-                            <label for="views_by_module" string="Created Views"/>
+                            <group name="views_by_module" string="Created Views"/>
                             <field name="views_by_module"/>
-                            <label for="dependencies_id"/>
+                            <group name="dependencies_id" string="Dependencies"/>
                             <field name="dependencies_id">
                                 <tree string="Dependencies">
                                     <field name="name"/>
@@ -122,9 +122,9 @@
                             </field>
                         </page>
                         <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
-                            <label for="menus_by_module" string="Created Menus"/>
+                            <group name="menus_by_module" string="Created Menus"/>
                             <field name="menus_by_module"/>
-                            <label for="reports_by_module" string="Defined Reports"/>
+                            <group name="reports_by_module" string="Defined Reports"/>
                             <field name="reports_by_module"/>
                         </page>
                     </notebook>
