@@ -36,46 +36,47 @@ class ir_ui_menu(osv.osv):
     _name = 'ir.ui.menu'
 
     def __init__(self, *args, **kwargs):
-        self.cache_lock = threading.RLock()
-        self._cache = {}
+        cls = type(self)
+        cls._menu_cache_lock = threading.RLock()
+        cls._menu_cache = {}
         super(ir_ui_menu, self).__init__(*args, **kwargs)
         self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
 
     def clear_cache(self):
-        with self.cache_lock:
+        with self._menu_cache_lock:
             # radical but this doesn't frequently happen
-            if self._cache:
+            if self._menu_cache:
                 # Normally this is done by openerp.tools.ormcache
                 # but since we do not use it, set it by ourself.
                 self.pool._any_cache_cleared = True
-            self._cache = {}
+            self._menu_cache.clear()
 
     def _filter_visible_menus(self, cr, uid, ids, context=None):
         """Filters the give menu ids to only keep the menu items that should be
            visible in the menu hierarchy of the current user.
            Uses a cache for speeding up the computation.
         """
-        with self.cache_lock:
+        with self._menu_cache_lock:
             modelaccess = self.pool.get('ir.model.access')
             user_groups = set(self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['groups_id'])['groups_id'])
             result = []
             for menu in self.browse(cr, uid, ids, context=context):
                 # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
                 key = (cr.dbname, menu.id, tuple(user_groups))
-                if key in self._cache:
-                    if self._cache[key]:
+                if key in self._menu_cache:
+                    if self._menu_cache[key]:
                         result.append(menu.id)
                     #elif not menu.groups_id and not menu.action:
                     #    result.append(menu.id)
                     continue
 
-                self._cache[key] = False
+                self._menu_cache[key] = False
                 if menu.groups_id:
                     restrict_to_groups = [g.id for g in menu.groups_id]
                     if not user_groups.intersection(restrict_to_groups):
                         continue
                     #result.append(menu.id)
-                    #self._cache[key] = True
+                    #self._menu_cache[key] = True
                     #continue
 
                 if menu.action:
@@ -99,7 +100,7 @@ class ir_ui_menu(osv.osv):
                         continue
 
                 result.append(menu.id)
-                self._cache[key] = True
+                self._menu_cache[key] = True
             return result
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
