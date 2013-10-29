@@ -395,7 +395,7 @@
             <field name="arch" type="xml">
                 <form string="Survey Question" version="7.0">
                     <sheet class="oe_survey">
-<!--                     <field name="in_visible_rating_weight" invisible="1"/>
+<!--                <field name="in_visible_rating_weight" invisible="1"/>
                     <field name="in_visible_menu_choice" invisible="1"/>
                     <field name="in_visible_answer_type" invisible="1"/>
  -->                    <group colspan="4" col="1">
@@ -409,7 +409,7 @@
                             <field name="question" nolabel="1" colspan="2"/>
                             <field name="description" nolabel="1" colspan="2"/>
                         </group>
-                        <group string="Answer" attrs="{'invisible':[('type','not in',['multiple_textboxes_diff_type', 'multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time', 'table'])]}">
+                        <group string="Answer" attrs="{'invisible':[('type','not in',['matrix', 'multiple_textboxes_diff_type', 'multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time', 'table'])]}">
                            <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
                                <field name="suggested_answers_ids" nolabel="1" colspan="4" /> <!-- context="{'in_visible_answer_type': in_visible_answer_type}"/> -->
                            </group>
@@ -421,6 +421,9 @@
                                 </group>
  -->
                            </group>
+                        </group>
+                        <group string="Children questions" attrs="{'invisible':[('type','not in',['matrix', 'vector'])]}">
+                            <field name='children_ids' nolabel='1' colspan='4' />
                         </group>
                         <!--  <group string="Comment Field" attrs="{'invisible':[('type','not in',['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_choices_only_one_ans', 'rating_scale'])]}">
                             <group colspan="4">
@@ -461,7 +464,7 @@
                             </group>
                         </group>
  -->
-                        <group string="Validation" attrs="{'invisible':[('type','not in',['single_textbox', 'multiple_textboxes'])]}">
+                        <group string="Validation" attrs="{'invisible':[('type','in',['matrix', 'vector'])]}">
                             <group colspan="4">
                                 <field name="validation_required"/>
                             </group>

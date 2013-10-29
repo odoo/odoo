@@ -351,7 +351,7 @@ class survey_question(osv.osv):
         'survey_id': fields.related('page_id', 'survey_id', type='many2one',
             relation='survey.survey', string='Survey', store=True),
         'parent_id': fields.many2one('survey.question', 'Parent question'),
-        'children_ids': fields.one2many('survey.question_id', 'parent_id',
+        'children_ids': fields.one2many('survey.question', 'parent_id',
             'Children questions'),
         'sequence': fields.integer('Sequence'),
 
@@ -598,6 +598,8 @@ class survey_suggestion(osv.osv):
     _rec_name = 'value'
 
     _columns = {
+        #'survey_id': fields.related('page_id', 'survey_id', type='many2one',
+        #    relation='survey.survey', string='Survey', store=True),
         'question_id': fields.many2one('survey.question', 'Question',
             required=True, ondelete='cascade'),
         'value': fields.char("Suggested value", length=128, translate=True,
