@@ -60,7 +60,7 @@
 -
   I set the account as property_account_income on the product and I set no tax on the product (so default tax from the account will be used)
 -
-  !record {model: product.product, id: product.product_product_consultant}:
+  !record {model: product.product, id: product.product_product_consultant, view: False}:
     property_account_income: account_income_i000
     uom_id: product.product_uom_hour
     taxes_id: []
