@@ -124,6 +124,35 @@ table.editorbar-panel
     background: rgb(255, 255, 182)
 // }}}
 
+// -------- MENU -------- {{{
+body.dragging, body.dragging *
+    cursor: move !important
+
+.dragged
+    position: absolute
+    top: 0
+    opacity: .5
+    z-index: 2000
+
+ul#top_menu
+    li.placeholder
+        position: relative
+        margin: 0
+        padding: 0
+        border: none
+        &:before
+            position: absolute
+            content: ""
+            width: 0
+            height: 0
+            margin-top: -5px
+            left: -5px
+            top: -4px
+            border: 5px solid transparent
+            border-left-color: #990000
+            border-right: none
+// }}}
+
 /* ---- RTE ---- */
 
 // bootstrap makes .btn elements unselectable -> RTE double-click can't know
