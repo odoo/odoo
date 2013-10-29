@@ -23,7 +23,7 @@
 ##############################################################################
 
 import unittest2
-from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html
+from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html, mute_logger
 
 HTML_SOURCE = """
 <font size="2" style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; ">test1</font>
@@ -178,6 +178,7 @@ class TestSanitizer(unittest2.TestCase):
             html = html_sanitize(content)
             self.assertEqual(html, expected, 'html_sanitize is broken')
 
+    @mute_logger('openerp.tools.mail')
     def test_evil_malicious_code(self):
         # taken from https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Tests
         cases = [
