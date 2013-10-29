@@ -371,6 +371,7 @@ class website_menu(osv.osv):
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'url': fields.char('Url', required=True, translate=True),
+        'new_window': fields.boolean('New Window'),
         'sequence': fields.integer('Sequence'),
         # TODO: support multiwebsite once done for ir.ui.views
         'website_id': fields.many2one('website', 'Website'),
@@ -387,7 +388,7 @@ class website_menu(osv.osv):
     # TODO: ormcache
     def get_tree(self, cr, uid, website_id, fields=None, context=None):
         if not fields:
-            fields = ['id', 'name', 'url', 'sequence', 'parent_id']
+            fields = ['id', 'name', 'url', 'new_window', 'sequence', 'parent_id']
         root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
         root_menu_id = self.search(cr, uid, root_domain, limit=1, context=context)[0]
         menu_ids = self.search(cr, uid, [('id', 'child_of', root_menu_id)], 0, False, False, context)
