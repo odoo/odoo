@@ -1879,6 +1879,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
+                
                 <xpath expr="//group[@name='general']" position="after" >
                    <newline/>
                    <group string="Supply Chain Information">
@@ -1893,37 +1894,28 @@
                     <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
                 </xpath>
                 
-                <group name="procurement_uom" position="before">
-                    <group name="delay" string="Delays">
-                        <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
-                        <div attrs="{'invisible':[('type','=','service')]}">
-                            <field name="produce_delay" class="oe_inline"/> days
-                        </div>
-                        <field name="active"/>
-                    </group>
-                </group>
                 <xpath expr="//group[@string='Sale Conditions']" position="inside">
                     <label for="sale_delay"/>
                         <div>
                             <field name="sale_delay" class="oe_inline"/> days
                         </div>
-                </xpath>
-                
-                
-                <group name="status" position="after" version="7.0">
+                </xpath>                
+
+                <xpath expr="//group[@name='status']" position="after" version="7.0">
                     <group name="store" string="Storage Location" attrs="{'invisible':[('type','=','service')]}">
                         <field name="loc_rack"/>
                         <field name="loc_row"/>
                         <field name="loc_case"/>
                     </group>
-                </group>
-                <group name="Weights" position="before">
-                     <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
-                         <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
-                         <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
-                         <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
-                     </group>
-                </group>
+                </xpath>
+                
+                <xpath expr="//group[@name='Weights']" position="before">
+                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
+                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
+                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
+                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+                    </group>
+                </xpath>
 
             </field>
         </record>

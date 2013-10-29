@@ -316,7 +316,7 @@ class sale_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
-            context = {}
+            context = {}        
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
         context.update({'mail_create_nolog': True})
