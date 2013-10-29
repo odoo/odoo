@@ -21,7 +21,6 @@
 
 from urllib import urlencode
 from urlparse import urljoin
-from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import uuid
@@ -359,7 +358,8 @@ class survey_question(osv.osv):
         # Question
         'question': fields.char('Question', required=1, translate=True),
         'description': fields.text('Description', help="Use this field to add \
-            additional explanations about your question", translate=True),
+            additional explanations about your question", translate=True,
+            oldname='descriptive_text'),
         'display': fields.selection(
             [('horizontal', 'Horizontal'),
             ('vertical', 'Vertical')],
@@ -378,8 +378,8 @@ class survey_question(osv.osv):
                 ('matrix', 'Container of containers of questions')
             ], 'Question Type', required=1),
 
-        'suggested_answers': fields.one2many('survey.suggestion',
-            'question_id', 'Suggested answers'),
+        'suggested_answers_ids': fields.one2many('survey.suggestion',
+            'question_id', 'Suggested answers', oldname='answer_choice_ids'),
 
         # Comments
         'comments_allowed': fields.boolean('Allow comments',
@@ -406,7 +406,7 @@ class survey_question(osv.osv):
         'validation_min_date': fields.date('Start date range'),
         'validation_max_date': fields.date('End date range'),
         'validation_error_msg': fields.char("Error message if validation \
-            fails"),
+            fails", oldname='validation_valid_err_msg'),
 
         'numeric_required_sum': fields.integer('Sum of all choices'),
         'numeric_required_sum_err_msg': fields.text('Error message',
@@ -427,19 +427,21 @@ class survey_question(osv.osv):
             ('at most', 'At Most'),
             ('exactly', 'Exactly'),
             ('a range', 'A Range')],
-            'Constraint on answers number'),
-        #'constr_req_ans': fields.integer('Number of required answers'),
-        'constr_maximum_req_ans': fields.integer('Maximum Required Answer'),
-        'constr_minimum_req_ans': fields.integer('Minimum Required Answer'),
-        'constr_error_msg': fields.char("Error message if constraints fails"),
+            'Constraint on answers number', oldname='required_type'),
+        'constr_maximum_req_ans': fields.integer('Maximum Required Answer',
+            oldname='maximum_req_ans'),
+        'constr_minimum_req_ans': fields.integer('Minimum Required Answer',
+            oldname='minimum_req_ans'),
+        'constr_error_msg': fields.char("Error message if constraints fails",
+            oldname='req_error_msg'),
     }
     _defaults = {
         'sequence': 1,
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
         'type': lambda s, cr, uid, c: _('multiple_choice'),
         #'req_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
-        #'required_type': 'at least',
-        #'req_ans': 1,
+        'constr_type': 'at least',
+        'constr_minimum_req_ans': 1,
         #'comment_field_type': 'char',
         #'comment_label': lambda s, cr, uid, c: _('Other (please specify)'),
         #'comment_valid_type': 'do_not_validate',
@@ -626,7 +628,7 @@ class survey_user_input(osv.osv):
             readonly=True),
 
         # Optional Identification data
-        'token': fields.char("Indentification token", readonly=1),
+        'token': fields.char("Indentification token", readonly=1, size=36),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
         'email': fields.char("E-mail", size=64, readonly=1),
 
@@ -635,10 +637,10 @@ class survey_user_input(osv.osv):
             'user_input_id', 'Answers'),
     }
     _defaults = {
-        'date_create': datetime.now(),
+        'date_create': fields.datetime.now,
         'type': 'manually',
         'state': 'new',
-        'token': lambda s, cr, uid, c: uuid.uuid4(),
+        'token': lambda s, cr, uid, c: uuid.uuid4().__str__(),
     }
 
     def action_survey_resent(self, cr, uid, ids, context=None):
@@ -743,6 +745,7 @@ class survey_user_input_line(osv.osv):
     }
     _defaults = {
         'skipped': False,
+        'date_create': fields.datetime.now
     }
 
 # vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:
