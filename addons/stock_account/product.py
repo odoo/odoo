@@ -175,6 +175,7 @@ class product_product(osv.osv):
                 'cost': vals.get('standard_price', 0.0),
                 'reason': 'standard_price is set',
             }, context=context)
+        return product_id
 
     def write(self, cr, uid, ids, values, context=None):
         if 'standard_price' in values:
