@@ -198,6 +198,7 @@ class crm_case_section(osv.osv):
         'monthly_planned_revenue': fields.function(_get_opportunities_data,
             type="string", readonly=True, multi='_get_opportunities_data',
             string='Planned Revenue per Month'),
+        'create_uid': fields.many2one('res.users', 'Create User'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_symbol': fields.function(_get_currency_symbol, string="Current User's Currency Symbol", method=True, type='char'),
     }
@@ -253,6 +254,13 @@ class crm_case_section(osv.osv):
         res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
+
+    def onchange_user(self, cr, uid, ids, user_id, context=None):
+        if user_id:
+            currency_id = self.pool.get('res.users').browse(cr, uid, user_id, context=context).company_id.currency_id.id
+        else:
+            currency_id = self.browse(cr, uid, ids[0], context=context).create_uid.company_id.currency_id.id
+        return {'value': {'currency_id': currency_id}}
 
 class crm_case_categ(osv.osv):
     """ Category of Case """

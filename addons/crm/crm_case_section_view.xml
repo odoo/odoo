@@ -219,7 +219,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}" on_change="onchange_user(user_id)"/>
                                 <field name="code"/>
                                 <field name="parent_id"/>
                                 <field name="change_responsible"/>
