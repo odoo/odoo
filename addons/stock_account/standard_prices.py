@@ -1,18 +1,13 @@
-"""
-Keep track of the ``product.product`` standard prices as they are changed.
-
-The ``standard.prices`` model records each ``standard`` or ``average``
-``cost_method`` change. For the ``real`` ``cost_method`` it records every
-wuants creation.
-
-"""
 
 from openerp import tools
 from openerp.osv import fields, osv
 
-class price_history(osv.osv):
+class prices_history(osv.osv):
+    """
+    Keep track of the ``product.product`` standard prices as they are changed.
+    """
 
-    _name = 'price.history'
+    _name = 'prices.history'
     _rec_name = 'datetime'
 
     _columns = {
@@ -52,6 +47,7 @@ class stock_history(osv.osv):
         'quantity': fields.integer('Quantity'),
         'date': fields.datetime('Date'),
         'cost': fields.float('Value'),
+        'cost_method': fields.char('Cost Method'),
     }
 
     def init(self, cr):
@@ -65,9 +61,10 @@ class stock_history(osv.osv):
                     stock_move.product_id AS product_id,
                     stock_move.product_qty AS quantity,
                     stock_move.date AS date,
+                    ir_property.value_text AS cost_method,
                     CASE
                       WHEN ir_property.value_text <> 'real'
-                        THEN (SELECT price_history.cost FROM price_history WHERE price_history.datetime <= stock_move.date AND price_history.product_id = stock_move.product_id ORDER BY price_history.datetime ASC limit 1)
+                        THEN (SELECT prices_history.cost FROM prices_history WHERE prices_history.datetime <= stock_move.date AND prices_history.product_id = stock_move.product_id ORDER BY prices_history.datetime ASC limit 1)
                       ELSE stock_move.price_unit
                     END AS cost
                 FROM

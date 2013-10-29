@@ -166,27 +166,35 @@ class product_product(osv.osv):
 
         return move_ids
 
+    def create(self, cr, uid, vals, context=None):
+        product_id = super(product_product, self).create(cr, uid, vals, context=context)
+        price_history_obj = self.pool['prices.history']
+        if vals.get('cost_method') in ('standard', 'average'):
+            price_history_obj.create(cr, uid, {
+                'product_id': product_id,
+                'cost': vals.get('standard_price', 0.0),
+                'reason': 'standard_price is set',
+            }, context=context)
+
     def write(self, cr, uid, ids, values, context=None):
         if 'standard_price' in values:
-            standard_prices = self.pool['standard.prices']
+            price_history_obj = self.pool['prices.history']
             for product in self.browse(cr, uid, ids, context=context):
-                data = {
-                    'product_id': product.id,
-                    'cost': values['standard_price'],
-                    'reason': 'standard_price is changed.',
-                    # Provided by self._defaults:
-                    # 'company_id':
-                    # 'quant_id':
-                    # 'datetime':
-                }
                 if product.cost_method in ('standard', 'average'):
-                    standard_prices.create(cr, uid, data, context=context)
+                    price_history_obj.create(cr, uid, {
+                        'product_id': product.id,
+                        'cost': values['standard_price'],
+                        'reason': 'standard_price is changed.',
+                        # Provided by self._defaults:
+                        # 'company_id':
+                        # 'quant_id':
+                        # 'datetime':
+                    }, context=context)
                 elif product.cost_method in ('real',):
                     # For a 'real' cost_method, entries in standard_prices are
-                    # created when quants are created.
+                    # created when quants are created. #TODO not true
                     pass
-        return super(product_product, self).write(cr, uid, ids, values,
-            context=context)
+        return super(product_product, self).write(cr, uid, ids, values, context=context)
 
     _columns = {
         'valuation':fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
