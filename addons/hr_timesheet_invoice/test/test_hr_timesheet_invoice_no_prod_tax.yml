@@ -78,7 +78,14 @@
   I click on "Create Invoice" button of "Invoice analytic Line" wizard to create invoice.
 -
   !python {model: hr.timesheet.invoice.create}: |
-    self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_0")], {"active_ids": [ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1")]})
+    action_result = self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_0")], {
+        "active_ids": [ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1")]
+    })
+    invoice_pool = self.pool.get('account.invoice')
+    invoice_domain = action_result['domain']
+    invoice_ids = invoice_pool.search(cr, uid, invoice_domain)
+    invoice_pool.write(cr, uid, invoice_ids, {'origin': 'test-hrtsic0_id_'+str( ref("hr_timesheet_invoice_create_0"))\
+        + '_aaldyfhrm1_id_'+str( ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1") ) })
 -
   I check that Invoice is created for this timesheet.
 -
@@ -89,7 +96,10 @@
     partner = aline.account_id.partner_id.id
 
     invoice_obj = self.pool.get('account.invoice')
-    invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner)])
+    invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner),
+       ('origin', '=', 'test-hrtsic0_id_'+str( ref("hr_timesheet_invoice_create_0")) + '_aaldyfhrm1_id_'+str( ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1") ))
+    ])
+    
     invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
 
     for invoice in invoice_id.invoice_line:
