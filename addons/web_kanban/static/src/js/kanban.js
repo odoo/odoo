@@ -236,7 +236,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
             var grouping_fields = self.group_by ? [self.group_by].concat(_.keys(self.aggregates)) : undefined;
-            var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(grouping_fields);
+            if (!_.isEmpty(grouping_fields)) {
+                // ensure group_by fields are read.
+                self.fields_keys = _.unique(self.fields_keys.concat(grouping_fields));
+            }
+            var grouping = new instance.web.Model(self.dataset.model, context, domain).query(self.fields_keys).group_by(grouping_fields);
             return self.alive($.when(grouping)).done(function(groups) {
                 if (groups) {
                     self.do_process_groups(groups);

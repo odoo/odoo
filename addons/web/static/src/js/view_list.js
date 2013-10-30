@@ -1345,22 +1345,29 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             if (group.grouped_on) {
                 var row_data = {};
                 row_data[group.grouped_on] = group;
+                var group_label = _t("Undefined");
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
-                if (! group_column) {
-                    throw new Error(_.str.sprintf(
-                        _t("Grouping on field '%s' is not possible because that field does not appear in the list view."),
-                        group.grouped_on));
+                if (group_column) {
+                    try {
+                        group_label = group_column.format(row_data, {
+                            value_if_empty: _t("Undefined"),
+                            process_modifiers: false
+                        });
+                    } catch (e) {
+                        group_label = _.str.escapeHTML(row_data[group_column.id].value);
+                    }
+                } else {
+                    group_label = group.value;
+                    if (group_label instanceof Array) {
+                        group_label = group_label[1];
+                    }
+                    if (group_label === false) {
+                        group_label = _t('Undefined');
+                    }
+                    group_label = _.str.escapeHTML(group_label);
                 }
-                var group_label;
-                try {
-                    group_label = group_column.format(row_data, {
-                        value_if_empty: _t("Undefined"),
-                        process_modifiers: false
-                    });
-                } catch (e) {
-                    group_label = _.str.escapeHTML(row_data[group_column.id].value);
-                }
+                    
                 // group_label is html-clean (through format or explicit
                 // escaping if format failed), can inject straight into HTML
                 $group_column.html(_.str.sprintf(_t("%s (%d)"),
@@ -1631,6 +1638,10 @@ var DataGroup =  instance.web.Class.extend({
    },
    list: function (fields, ifGroups, ifRecords) {
        var self = this;
+       if (!_.isEmpty(this.group_by)) {
+           // ensure group_by fields are read.
+           fields = _.unique((fields || []).concat(this.group_by));
+       }
        var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
        $.when(query).done(function (querygroups) {
            // leaf node
