@@ -844,6 +844,23 @@ def session_path():
             raise
     return path
 
+class ModelConverter(routing.BaseConverter):
+
+    def __init__(self, url_map, model=False):
+        super(ModelConverter, self).__init__(url_map)
+        self.model = model
+        # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
+        self.regex = '([0-9]+)'
+
+    def to_python(self, value):
+        # TODO:
+        # - raise routing.ValidationError() if no browse record can be createdm
+        # - support slug 
+        return request.registry[self.model].browse(request.cr, request.uid, int(value), context=request.context)
+
+    def to_url(self, value):
+        return value.id
+
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
@@ -965,7 +982,7 @@ class Root(object):
 
     def _build_router(self, db):
         _logger.info("Generating routing configuration for database %s" % db)
-        routing_map = routing.Map(strict_slashes=False)
+        routing_map = routing.Map(strict_slashes=False, converters={'model': ModelConverter})
 
         def gen(modules, nodb_only):
             for module in modules:
@@ -1028,14 +1045,16 @@ class Root(object):
         """
         path = request.httprequest.path
         urls = self.get_db_router(request.db).bind("")
-        func, arguments = urls.match(path)
-        arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
+        # TODO ugly hack please fix it niv
+        func, _ = urls.match(path)
 
         @service_model.check
         def checked_call(dbname, *a, **kw):
             return func(*a, **kw)
 
         def nfunc(*args, **kwargs):
+            _, arguments = urls.match(path)
+            arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
             kwargs.update(arguments)
             if getattr(func, '_first_arg_is_req', False):
                 args = (request,) + args
