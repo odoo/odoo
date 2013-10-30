@@ -511,6 +511,7 @@ class FieldConverter(osv.AbstractModel):
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
         """ Converts a single value to its HTML version/output
         """
+        if not value: return ''
         return werkzeug.utils.escape(value)
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
@@ -606,6 +607,7 @@ class DateConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        if not value: return ''
         lang = self.user_lang(cr, uid, context=context)
 
         parse_format = openerp.tools.DEFAULT_SERVER_DATE_FORMAT
@@ -621,6 +623,7 @@ class DateTimeConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        if not value: return ''
         lang = self.user_lang(cr, uid, context=context)
 
         parse_format = openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT
@@ -642,6 +645,7 @@ class TextConverter(osv.AbstractModel):
         """
         Escapes the value and converts newlines to br. This is bullshit.
         """
+        if not value: return ''
         return werkzeug.utils.escape(value).replace('\n', '<br>\n')
 
 class SelectionConverter(osv.AbstractModel):
@@ -649,6 +653,7 @@ class SelectionConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        if not value: return ''
         value = record[field_name]
         selection = dict(fields.selection.reify(
             cr, uid, record._model, column))
@@ -671,7 +676,7 @@ class HTMLConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
-        return value
+        return value or ''
 
 class ImageConverter(osv.AbstractModel):
     """ ``image`` widget rendering, inserts a data:uri-using image tag in the
