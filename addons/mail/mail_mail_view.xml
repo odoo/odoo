@@ -10,6 +10,7 @@
                         <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
                         <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
                         <button name="cancel" string="Cancel" type="object" states='outgoing'/>
+                        <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
                     </header>
                     <sheet>
                         <label for="subject" class="oe_edit_only"/>
@@ -36,7 +37,6 @@
                                         <group string="Status">
                                             <field name="auto_delete"/>
                                             <field name="type"/>
-                                            <field name="state"/>
                                             <field name="mail_server_id"/>
                                             <field name="model"/>
                                             <field name="res_id"/>
