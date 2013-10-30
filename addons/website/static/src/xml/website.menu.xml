@@ -23,7 +23,7 @@
 </t>
 <t t-name="website.menu.dialog.footer-button">
     <button type="button" class="btn pull-left js_add_menu btn-success">
-        <i class="icon-plus-sign"/> Add Menu Item
+        <i class="icon-plus-sign"/> Add Menu Entry
     </button>
 </t>
 <t t-name="website.menu.dialog.edit">
@@ -40,8 +40,19 @@
     <t t-jquery="t[t-set='title']" t-operation="inner">
         Add Menu Entry
     </t>
-    <t t-jquery="label[for='link-text']" t-operation="replace">
-        Menu Label
+    <t t-jquery="form > div.form-horizontal" t-operation="replace"/>
+    <t t-jquery="ul.list-group" t-operation="before">
+        <div class="list-group">
+            <div class="form-group list-group-item">
+                <h3 class="list-group-item-heading">
+                    <label for="link-new" class="control-label">
+                        Menu Label
+                    </label>
+                </h3>
+                <input type="text" class="form-control"
+                       id="link-text" autofocus="autofocus"/>
+            </div>
+        </div>
     </t>
 </t>
 </templates>

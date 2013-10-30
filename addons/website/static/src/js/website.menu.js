@@ -48,7 +48,7 @@
         },
         add_menu: function () {
             var self = this;
-            var dialog = new website.menu.AddMenuDialog();
+            var dialog = new website.menu.MenuEntryDialog();
             dialog.on('add-menu', this, function (link) {
                 var new_menu = {
                     id: _.uniqueId('new-'),
@@ -107,10 +107,11 @@
         },
     });
 
-    website.menu.AddMenuDialog = website.editor.LinkDialog.extend({
+    website.menu.MenuEntryDialog = website.editor.LinkDialog.extend({
         template: 'website.menu.dialog.add',
         make_link: function (url, new_window, label) {
-            this.trigger('add-menu', [url, new_window, label]);
+            var menu_label = this.$('input#link-text').val() || label;
+            this.trigger('add-menu', [url, new_window, menu_label]);
         },
     });
 
