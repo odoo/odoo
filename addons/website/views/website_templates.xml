@@ -401,10 +401,22 @@ User-agent: *
 Sitemap: <t t-esc="url_root"/>sitemap.xml
         </template>
 
-        <template id="sitemap">
+        <template id="sitemap" name="Site Map" page="True">
+            <t t-call="website.layout">
+                <ul>
+                    <li t-foreach="pages" t-as="page">
+                        <a t-att-href="page['url']"><t t-esc="page['name']"/></a>
+                    </li>
+                </ul>
+            </t>
+        </template>
+
+        <template id="sitemap_xml">
             <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
                 <t t-foreach="pages" t-as="page">
-                    <url t-esc="page['url']"/>
+                    <url>
+                        <loc><t t-esc="page['url']"/></loc>
+                    </url>
                 </t>
             </urlset>
         </template>
