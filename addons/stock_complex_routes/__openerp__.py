@@ -36,9 +36,10 @@ This adds a route on the sales order and sales order line (mini module)
     'images': [],
     'depends': ['purchase', 'sale_stock'],
     'init_xml': [],
-    'update_xml': ['stock_complex_routes.xml'],
+    'data': ['stock_complex_routes.xml'],
     'demo_xml': [],
     'test': [
+        'test/cancellation_propagated.yml',
         'test/crossdock.yml',
         'test/dropship.yml',
         'test/procurementexception.yml',

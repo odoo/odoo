@@ -1,5 +1,5 @@
 -
-  In order to test the sale_mrp module in OpenERP,I start by creating a new product 'Slider Mobile'
+  In order to test the sale_mrp module in OpenERP, I start by creating a new product 'Slider Mobile'
 -
   I define product category Mobile Products Sellable.
 -
@@ -107,7 +107,9 @@
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
     proc_ids = self.search(cr, uid, [('origin','like',so.name), ('state','=','running')])
-    assert len(proc_ids) == 2, 'Not both procurements are in the running state!'
+    # Check that all procurement are running 
+    for procu in self.browse(cr,uid,proc_ids,context=context):        
+        assert procu.state == u'running', 'Procurement with id %d should be with a state "running" but is with a state : %s!' %(procu.id,procu.state)
 -
   I verify that a manufacturing order has been generated, and that its name and reference are correct
 -

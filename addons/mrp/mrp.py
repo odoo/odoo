@@ -439,7 +439,7 @@ class mrp_production(osv.osv):
         try:
             location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
             self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-        except (orm.except_orm, ValueError):
+        except (orm.except_orm, ValueError):            
             location_id = False
         return location_id
 
