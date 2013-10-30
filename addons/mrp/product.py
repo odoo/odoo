@@ -27,6 +27,11 @@ class product_product(osv.osv):
     _inherit = "product.product"    
     _columns = {
         "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials', domain=[('bom_id','=',False)]),
+        "produce_delay": fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added."),
+    }
+    
+    _defaults = {
+        "produce_delay": 1,
     }
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:

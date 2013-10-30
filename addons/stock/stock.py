@@ -60,11 +60,7 @@ class stock_location(osv.osv):
     _parent_store = True
     _parent_order = 'name'
     _order = 'parent_left'
-
-    # TODO: implement name_search() in a way that matches the results of name_get!
-    def name_get(self, cr, uid, ids, context=None):
-        res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
-        return res.items() 
+    _rec_name = 'complete_name'
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         """ Forms complete name of location from parent location to child location.
@@ -693,11 +689,14 @@ class stock_picking(osv.osv):
             default['name'] = '/'
         if not default.get('backorder_id'):
             default['backorder_id'] = False
+                    
         return super(stock_picking, self).copy(cr, uid, id, default, context)
+        
 
     def action_confirm(self, cr, uid, ids, context=None):
         todo = []
         todo_force_assign = []
+        
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.picking_type_id.auto_force_assign:
                 todo_force_assign.append(picking.id)
@@ -709,6 +708,7 @@ class stock_picking(osv.osv):
 
         if todo_force_assign:
             self.force_assign(cr, uid, todo_force_assign, context=context)
+        
         return True
 
     def action_assign(self, cr, uid, ids, *args):
@@ -799,6 +799,7 @@ class stock_picking(osv.osv):
             self.message_post(cr, uid, picking.id, body=_("Back order <em>%s</em> <b>created</b>.") % (back_order_name), context=context)
             move_obj = self.pool.get("stock.move")
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
+            
             self.pool.get("stock.picking").action_confirm(cr, uid, [picking.id], context=context)
             self.action_confirm(cr, uid, [backorder_id], context=context)
             return backorder_id
@@ -3048,7 +3049,7 @@ class stock_pack_operation(osv.osv):
     _name = "stock.pack.operation"
     _description = "Packing Operation"
 
-    def _get_remaining_qty(self, cr, uid, ids, context=None):
+    def _get_remaining_qty(self, cr, uid, ids, name, args, context=None):
         res = {}
         for ops in self.browse(cr, uid, ids, context=context):
             qty = ops.product_qty
