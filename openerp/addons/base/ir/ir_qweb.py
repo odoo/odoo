@@ -653,8 +653,8 @@ class SelectionConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
-        if not value: return ''
         value = record[field_name]
+        if not value: return ''
         selection = dict(fields.selection.reify(
             cr, uid, record._model, column))
         return self.value_to_html(
