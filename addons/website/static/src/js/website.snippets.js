@@ -1037,6 +1037,11 @@
             this.$target.attr("id", "myCarousel" + id);
             this.$target.find(".carousel-control").attr("href", "#myCarousel" + id);
             this.$target.find("[data-target='#myCarousel']").attr("data-target", "#myCarousel" + id);
+
+            this.$target.attr('contentEditable', 'false')
+                .find('.content, .carousel-image img')
+                    .attr('contentEditable', 'true');
+
             this.rebind_event();
         },
         onFocus: function () {
@@ -1053,6 +1058,9 @@
             if(!this.$target.find(".item.active").length) {
                 this.$target.find(".item:first").addClass("active");
             }
+            this.$target.removeAttr('contentEditable')
+                .find('.content, .carousel-image img')
+                    .removeAttr('contentEditable');
         },
         start : function () {
             this._super();
@@ -1223,7 +1231,6 @@
                 size = 'oe_small';
             else if ($el.hasClass('oe_medium'))
                 size = 'oe_medium';
-
             var $ul = this.$editor.find('ul[name="parallax-size"]');
             var $li = $ul.find("li");
 

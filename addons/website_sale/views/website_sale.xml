@@ -77,7 +77,10 @@
               <div class="container oe_website_sale">
                 <div class="row">
                     <div class="col-sm-6 pagination" style="padding-left: 15px;">
-                        <a t-if="editable" t-href="/shop/add_product/" class="btn btn-primary btn-default" t-keep-query="category,search,facettes">New Product</a>
+                        <form t-if="editable" t-keep-query="category,search,facettes"
+                              method="POST" t-action="/shop/add_product">
+                            <button class="btn btn-primary">New Product</button>
+                        </form>
                     </div>
                     <div class="col-sm-6">
                         <t t-call="website.pager">
@@ -249,7 +252,7 @@
                       <form t-action="/shop/" method="get" class="pull-right" t-keep-query="category,facettes">
                           <div class="input-group">
                               <t t-if="search">
-                              <t foreach="search.items()" t-as="key">
+                              <t t-foreach="search.items()" t-as="key">
                                   <input t-att-name="key[0]" t-att-value="key[1]"/>
                               </t>
                               </t>
