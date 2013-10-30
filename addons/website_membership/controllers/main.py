@@ -84,7 +84,7 @@ class WebsiteMembership(http.Controller):
     def partners_ref(self, partner_id=0, **post):
         partner_obj = request.registry['res.partner']
         if request.context['is_public_user']:
-            partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_pushished', '=', True), ('id', '=', partner_id)], context=request.context)
+            partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', partner_id)], context=request.context)
         else:
             partner_ids = partner_obj.search(request.cr, request.uid, [('id', '=', partner_id)], context=request.context)
         if not partner_ids:
