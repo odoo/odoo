@@ -11,7 +11,7 @@ $(document).ready(function () {
             $.post('/blog/nav', {'domain': $(this).data("domain")}, function (result) {
                 var blog_id = +window.location.pathname.split("/").pop();
                 $(JSON.parse(result)).each(function () {
-                    var $a = $('<a href="/blog/' + this.category_id + '/' + this.id + '"/>').text(this.name);
+                    var $a = $('<a href="/blog/' + this.id + '"/>').text(this.name);
                     var $li = $("<li/>").append($a);
                     if (blog_id == this.id)
                         $li.addClass("active");
