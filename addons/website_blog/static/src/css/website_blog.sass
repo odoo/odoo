@@ -1,3 +1,5 @@
+@charset "utf-8"
+
 @import "compass/css3"
 
 .css_website_mail
@@ -24,7 +26,4 @@ p.post-meta
       opacity: 0.6
     section:hover
       opacity: 1
-      -moz-transition: all 0.2s ease-out
-      -webkit-transition: all 0.2s ease-out
-      transition: all 0.2s ease-out
-
+      @include transition(all 0.2s ease-out)
