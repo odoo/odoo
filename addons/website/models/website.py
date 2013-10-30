@@ -419,11 +419,17 @@ class website_menu(osv.osv):
                     menu['id'] = new_id
                 if menu['parent_id'] == old_id:
                     menu['parent_id'] = new_id
+        to_delete = []
         for menu in data:
-            old_id = menu['id']
-            if isinstance(old_id, str):
+            mid = menu['id']
+            if 'to_delete' in menu:
+                to_delete.append(mid)
+                data.remove(menu)
+            elif isinstance(mid, str):
                 new_id = self.create(cr, uid, {'name': menu['name']}, context=context)
-                replace_id(old_id, new_id)
+                replace_id(mid, new_id)
+        if to_delete:
+            self.unlink(cr, uid, to_delete)
         for menu in data:
             self.write(cr, uid, [menu['id']], menu, context=context)
         return True

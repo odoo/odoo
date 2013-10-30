@@ -9,6 +9,7 @@
         template: 'website.menu.dialog.edit',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
             'click button.add-menu': 'add_menu',
+            'click button.delete-menu': 'delete_menu',
         }),
         init: function (menu) {
             this.menu = menu;
@@ -63,6 +64,19 @@
                         'website.menu.dialog.submenu', { submenu: new_menu }));
             });
             dialog.appendTo(document.body);
+        },
+        delete_menu: function (ev) {
+            var self = this;
+            var $menu = $(ev.currentTarget).parents('[data-menu-id]').first();
+            $menu.find('[data-menu-id]').add($menu).each(function() {
+                var mid = $(this).attr('data-menu-id');
+                if (~mid.indexOf('new-')) {
+                    delete(self.flat[mid]);
+                } else {
+                    self.flat[mid].to_delete = true;
+                }
+            });
+            $menu.hide();
         },
         save: function () {
             var self = this;
