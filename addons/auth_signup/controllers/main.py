@@ -21,10 +21,10 @@
 import logging
 
 import openerp
+from openerp import http
+from openerp.http import request
 from openerp.modules.registry import RegistryManager
 from ..res_users import SignupError
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
 
 _logger = logging.getLogger(__name__)
 

@@ -130,7 +130,7 @@
                     <separator/>
                     <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" help="To Review"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
-                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" />
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" /> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
