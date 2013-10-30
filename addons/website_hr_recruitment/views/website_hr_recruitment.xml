@@ -9,10 +9,10 @@
 
         <template id="job_footer_custom" inherit_id="website.layout" name="Custom Footer Job">
             <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
-                    <li><a href="/jobs">Jobs</a></li>
+                    <li><a t-href="/jobs">Jobs</a></li>
             </xpath>
             <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a href="/jobs">Jobs</a></li>
+            <li><a t-href="/jobs">Jobs</a></li>
             </xpath>
         </template>
 
@@ -36,7 +36,7 @@
                                             <t t-if="job.no_of_recruitment">
                                             <span class="label label-default pull-right label-info"><t t-esc="vals[job.id]['count']"/> Vacancies.</span>
                                             </t>
-                                            <h4 class="media-heading"><a t-attf-href="/job/detail/#{ job.id }/"><span t-field="job.name"> </span></a></h4>
+                                            <h4 class="media-heading"><a t-href="/job/detail/#{ job.id }/"><span t-field="job.name"> </span></a></h4>
                                             <div t-if="companies[0].country_id">
                                                 <i class="icon-map-marker"/> <span t-field="companies[0].city"> </span>  <span t-if="companies[0].state_id" t-field="companies[0].state_id.name"> </span>, <span t-field="companies[0].country_id.name"> </span>
                                             </div>
@@ -83,7 +83,7 @@
                     <h5 class="text-center text-muted">
                                     <i class="icon-time"/> <span><t t-esc="vals_date"/></span>
                     </h5>
-                </div>            
+                </div>
                 <div class="container oe_structure">
                     <div class="row">
                         <div t-if="job.website_description">
@@ -92,11 +92,11 @@
                                 <div class="container">
                                     <div class="row">
                                     <div class="col-md-12 text-center mt16 mb16">
-                                        <a t-attf-href="/apply/#{ job.id }/" class="btn btn-primary btn-lg">Apply</a>
+                                        <a t-href="/apply/#{ job.id }/" class="btn btn-primary btn-lg">Apply</a>
                                     </div>
                                       </div>
                                 </div>
-                            </section> 
+                            </section>
                         </div>
                     </div>
                 </div>
@@ -112,6 +112,7 @@
                         <h1 class="text-center">Apply for <span t-field="job.name"/></h1>
                         <div class="row">
                             <section id="forms">
+                                <!-- TODO Multilingual form action support ? -->
                                 <form class="form-horizontal mt32" action="/job/success" method="post" enctype="multipart/form-data">
                                     <input type="hidden" t-att-value="job.department_id.id" name="department_id"/>
                                     <input type="hidden" t-att-value="job.id" name="job_id"/>
@@ -170,10 +171,10 @@
         <xpath expr="//div[@id='jobs_grid']" position="before">
             <div class="col-md-3">
                 <ul class="nav nav-pills nav-stacked mt16">
-                    <li t-att-class=" '' if active else 'active' "><a href="/jobs">All Departments</a></li>
+                    <li t-att-class=" '' if active else 'active' "><a t-href="/jobs">All Departments</a></li>
                     <t t-foreach="departments" t-as="department">
                         <li t-att-class="department.id == active and 'active' or ''">
-                        <a t-attf-href="/department/#{ department.id }/" ><span t-field="department.name"/></a>
+                        <a t-href="/department/#{ department.id }/" ><span t-field="department.name"/></a>
                         </li>
                     </t>
                 </ul>
