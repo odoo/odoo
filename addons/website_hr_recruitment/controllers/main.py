@@ -47,12 +47,11 @@ class website_hr_recruitment(http.Controller):
         }
         return request.website.render("website_hr_recruitment.index", values)
 
-    @website.route(['/job/detail/<id>'], type='http', auth="public", multilang=True)
-    def detail(self, id=0, **kwargs):
-        id = id and int(id) or 0
+    @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
+    def detail(self, job=None):
         values = {
-            'job': request.registry['hr.job'].browse(request.cr, request.uid, id),
-            'vals_date': request.registry['hr.job'].browse(request.cr, request.uid, id).write_date.split(' ')[0]
+            'job': job,
+            'vals_date': job.write_date.split(' ')[0],
         }
         return request.website.render("website_hr_recruitment.detail", values)
 
