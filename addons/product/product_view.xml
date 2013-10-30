@@ -66,7 +66,9 @@
                                 <label for="name" string="Product Name"/>
                             </div>
                             <h1>
-                                <field name="name"/>
+                                <field name="name" class="oe_inline"/>
+                                <span attrs="{'invisible':[('variants','=',False)]}"> - </span>
+                                <field name="variants" class="oe_inline" readonly="1"/>
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>

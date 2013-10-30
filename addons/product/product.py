@@ -653,7 +653,8 @@ class product_product(osv.osv):
         res = super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
         # delete templates after calling super, as deleting template could lead to deleting
         # products due to ondelete='cascade'
-        self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
+        #Deprecated code : As per new scenario no need to delete the 'product-template' while delete the product.
+        #self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
         return res
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
