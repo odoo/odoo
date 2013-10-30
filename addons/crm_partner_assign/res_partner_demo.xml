@@ -68,5 +68,9 @@
             <field name="grade_id" ref="res_partner_grade_platinium"/>
             <field name="partner_weight">10</field>
         </record>
+
+        <record model="res.partner" id="base.res_partner_24">
+            <field name="assigned_partner_id" eval="ref('base.res_partner_21')"/>
+        </record>
     </data>
 </openerp>
