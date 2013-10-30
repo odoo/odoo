@@ -27,6 +27,7 @@ import re
 
 from openerp import tools
 from openerp.osv import fields,osv
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -142,9 +143,10 @@ class ir_attachment(osv.osv):
             if attach.store_fname:
                 self._file_delete(cr, uid, location, attach.store_fname)
             fname = self._file_write(cr, uid, location, value)
-            super(ir_attachment, self).write(cr, uid, [id], {'store_fname': fname, 'file_size': file_size}, context=context)
+            # SUPERUSER_ID as probably don't have write access, trigger during create
+            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'store_fname': fname, 'file_size': file_size}, context=context)
         else:
-            super(ir_attachment, self).write(cr, uid, [id], {'db_datas': value, 'file_size': file_size}, context=context)
+            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'db_datas': value, 'file_size': file_size}, context=context)
         return True
 
     _name = 'ir.attachment'
@@ -186,8 +188,6 @@ class ir_attachment(osv.osv):
         In the 'document' module, it is overriden to relax this hard rule, since
         more complex ones apply there.
         """
-        if not ids:
-            return
         res_ids = {}
         if ids:
             if isinstance(ids, (int, long)):
@@ -290,7 +290,7 @@ class ir_attachment(osv.osv):
         return super(ir_attachment, self).unlink(cr, uid, ids, context)
 
     def create(self, cr, uid, values, context=None):
-        self.check(cr, uid, [], mode='create', context=context, values=values)
+        self.check(cr, uid, [], mode='write', context=context, values=values)
         if 'file_size' in values:
             del values['file_size']
         return super(ir_attachment, self).create(cr, uid, values, context)
