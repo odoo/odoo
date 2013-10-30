@@ -242,6 +242,14 @@ class mail_mail(osv.Model):
             :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
+        mail_connection = ir_mail_server.search(cr, uid, [], order='sequence', limit=1)
+        smtp_server = ir_mail_server.browse(cr, uid, mail_connection, context=context)[0]
+        try:
+            connection = ir_mail_server.connect(smtp_server.smtp_host, smtp_server.smtp_port, user=smtp_server.smtp_user,
+                                password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
+                                smtp_debug=smtp_server.smtp_debug)
+        except:
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Cannot send email: no outgoing email server configured.\nYou can configure it under %(menu:base.menu_mail_servers)s."), context)
         for mail in self.browse(cr, SUPERUSER_ID, ids, context=context):
             try:
                 # handle attachments
