@@ -1223,7 +1223,6 @@
                 size = 'oe_small';
             else if ($el.hasClass('oe_medium'))
                 size = 'oe_medium';
-
             var $ul = this.$editor.find('ul[name="parallax-size"]');
             var $li = $ul.find("li");
 

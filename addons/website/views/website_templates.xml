@@ -460,31 +460,42 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
         <template id="aboutus" name="About us" page="True">
             <t t-call="website.layout">
-              <div id="wrap">
-                  <div class="oe_structure"/>
-                  <div class="container mb32">
-                      <div class="row col-wrap" id="aboutus">
-                          <div class="col-sm-12 text-center">
-                              <h1>About us</h1>
-                              <h3 class="text-muted">A passion for great products</h3>
-                          </div>
-                          <div class="col-sm-8 mt16">
-                              <p>
-                                  We are a team of passionated people whose goal is to improve everyone's
-                                  life through disruptive products. We build great products to solve your
-                                  business problems.
-                              </p>
-                              <p>
-                                  Our products are designed for small to medium companies willing to optimize
-                                  their performance.
-                              </p>
-                          </div><div class="col-sm-3 col-sm-offset-1">
-                              <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Out Team"/>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="oe_structure"/>
-              </div>
+                <div id="wrap">
+                    <div data-snippet-id="parallax">
+                        <div style="background-image: url('/website/static/src/img/parallax/parallax_bg.jpg')" data-stellar-background-ratio="0.3" class="parallax oe_structure mt32 mb32 oe_small">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12 mt32 mb32" data-snippet-id="colmd">
+                                        <div class="text-center">
+                                            <img src="/web/static/src/img/logo.png" class="img shadow logo-img"/>
+                                        </div>
+                                        <h3 class="text-center text-muted" t-field="res_company.rml_header1"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                    <div class="container mb32">
+                        <div class="row col-wrap" id="aboutus">
+                            <div class="col-sm-8 mt16">
+                                <p>
+                                      We are a team of passionated people whose goal is to improve everyone's
+                                      life through disruptive products. We build great products to solve your
+                                      business problems.
+                                </p>
+                                <p>
+                                      Our products are designed for small to medium companies willing to optimize
+                                      their performance.
+                                </p>
+                            </div>
+                            <div class="col-sm-3 col-sm-offset-1">
+                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Out Team"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
             </t>
         </template>
 
