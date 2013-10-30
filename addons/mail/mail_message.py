@@ -179,7 +179,7 @@ class mail_message(osv.Model):
             string='Notifications', auto_join=True,
             help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
         'subject': fields.char('Subject'),
-        'date': fields.datetime('Date'),
+        'date': fields.datetime('Date', readonly=1),
         'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
         'to_read': fields.function(_get_to_read, fnct_search=_search_to_read,
