@@ -2774,7 +2774,7 @@ class BaseModel(object):
         self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
 
 
-    def set_default_value_on_column(self, cr, column_name, context=None):
+    def _set_default_value_on_column(self, cr, column_name, context=None):
         # ideally should use add_default_value but fails
         # due to ir.values not being ready
 
@@ -2946,7 +2946,7 @@ class BaseModel(object):
 
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
-                                self.set_default_value_on_column(cr, k, context=context)
+                                self._set_default_value_on_column(cr, k, context=context)
                                 # add the NOT NULL constraint
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
@@ -3000,7 +3000,7 @@ class BaseModel(object):
 
                             # initialize it
                             if not create:
-                                self.set_default_value_on_column(cr, k, context=context)
+                                self._set_default_value_on_column(cr, k, context=context)
 
                             # remember the functions to call for the stored fields
                             if isinstance(f, fields.function):
