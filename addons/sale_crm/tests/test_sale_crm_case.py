@@ -39,8 +39,10 @@ class TestSaleCrm(TestMail):
         usd_id = ir_model_obj.get_object_reference(cr, uid, 'base', 'USD')[1]
         your_company_id = ir_model_obj.get_object_reference(cr, uid, 'base', 'main_company')[1]
 
-        # Call _get_opportunities_data method before creating new opportunity in another currency.
+        # Call relevant methods before changing manager of sales team.
         opportunities_before = crm_case_section_obj._get_opportunities_data(cr, uid, [direct_sales_id], field_name=False, arg=False, context=False)
+        sale_order_before = crm_case_section_obj._get_sale_orders_data(cr, uid, [direct_sales_id], field_name=False, arg=False, context=False)
+        invoice_before = crm_case_section_obj._get_invoices_data(cr, uid, [direct_sales_id], field_name=False, arg=False, context=False)
 
         # Create new company with USD currency.
         res_company_id = res_company_obj.create(cr, uid,{
@@ -49,7 +51,7 @@ class TestSaleCrm(TestMail):
             'parent_id': your_company_id
           })
 
-        # Create sales manager of new company.
+        # Create new user with sales manager access rights for new company.
         group_sale_manager_id = ir_model_obj.get_object_reference(cr, uid, 'base', 'group_sale_manager')[1]
         res_users_id = res_users_obj.create(cr, uid,{
             'name': 'User',
@@ -60,44 +62,22 @@ class TestSaleCrm(TestMail):
             'groups_id': [(6, 0, [group_sale_manager_id])]
           })
 
-        # Create Opportunitie by new created user.
-        opportunities_id = crm_lead_obj.create(cr, res_users_id,{
-            'name': 'Opportunities',
-            'type': 'opportunity',
-            'planned_revenue': 10000,
+        # Change manager of sales team with USD currency.
+        crm_case_section_obj.write(cr, uid, [direct_sales_id], {
             'user_id' : res_users_id,
-            'section_id': direct_sales_id
+            'currency_id': usd_id,
           })
 
-        user_rate = res_company_obj.browse(cr, uid, [res_company_id])[0].currency_id.rate_silent
-
-        # Call _get_opportunities_data method and check Currency Conversion of amount for new created opportunity which was in another currency.
+        # Call relevant methods and get converted data in another currency.
         opportunities_after = crm_case_section_obj._get_opportunities_data(cr, uid, [direct_sales_id], field_name=False, arg=False, context=False)
-        self.assertTrue(round(opportunities_after[1]['monthly_planned_revenue'][4]['value']) == round(opportunities_before[1]['monthly_planned_revenue'][4]['value'] + (10000 / user_rate)), "Not Proper Currency Conversion for Opportunities")
-
-        # Call _get_sale_orders_data method before changing currency of user.
-        sale_order_before = crm_case_section_obj._get_sale_orders_data(cr, uid, [direct_sales_id], field_name=False, arg=False, context=False)
-
-        # Call _get_invoices_data method before changing currency of user.
-        invoice_before = crm_case_section_obj._get_invoices_data(cr, uid, [direct_sales_id], field_name=False, arg=False, context=False)
-
-        # Change currency of company to INR.
-        company_id = res_users_obj._get_company(cr, uid, context=False, uid2=False)
-        inr_id = ir_model_obj.get_object_reference(cr, uid, 'base', 'INR')[1]
-        res_company_obj.write(cr, uid, [company_id], {
-            'currency_id': inr_id,
-          })
-
-        # Call _get_sale_orders_data method after changing currency of user.
         sale_order_after = crm_case_section_obj._get_sale_orders_data(cr, uid, [direct_sales_id], field_name=False, arg=False, context=False)
-
-        # Call _get_invoices_data method after changing currency of user.
         invoice_after = crm_case_section_obj._get_invoices_data(cr, uid, [direct_sales_id], field_name=False, arg=False, context=False)
 
-        new_rate = res_company_obj.browse(cr, uid, [company_id])[0].currency_id.rate_silent
+        team_currency_rate = crm_case_section_obj.browse(cr, uid, direct_sales_id).currency_id.rate_silent
 
         # Check currency conversion for Quotations,Sale orders and Invoices in to the current users currency
         for month in range(0,5):
-            self.assertTrue(round(sale_order_before[1]['monthly_quoted'][month]['value'] * new_rate) == round(sale_order_after[1]['monthly_quoted'][month]['value']), "Currency conversion for quotations is wrong")
-            self.assertTrue(round(sale_order_before[1]['monthly_confirmed'][month]['value'] * new_rate) == round(sale_order_after[1]['monthly_confirmed'][month]['value']), "Currency conversion for sale orders is wrong")
-            self.assertTrue(round(invoice_before[1][month]['value'] * new_rate) == round(invoice_after[1][month]['value']), "Currency conversion for invoices is wrong")
+            self.assertTrue(round(opportunities_before[1]['monthly_planned_revenue'][month]['value']) == round(opportunities_after[1]['monthly_planned_revenue'][month]['value'] / team_currency_rate), "Not Proper Currency Conversion for Opportunities")
+            self.assertTrue(round(sale_order_before[1]['monthly_quoted'][month]['value']) == round(sale_order_after[1]['monthly_quoted'][month]['value'] / team_currency_rate), "Currency conversion for quotations is wrong")
+            self.assertTrue(round(sale_order_before[1]['monthly_confirmed'][month]['value']) == round(sale_order_after[1]['monthly_confirmed'][month]['value'] / team_currency_rate), "Currency conversion for sale orders is wrong")
+            self.assertTrue(round(invoice_before[1][month]['value']) == round(invoice_after[1][month]['value'] / team_currency_rate), "Currency conversion for invoices is wrong")
