@@ -352,10 +352,14 @@ class crm_lead(format_address, osv.osv):
         """
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
+        if context is None:
+            context = {}
+        # check whether we should try to add a condition on type
+        avoid_add_type_term = any([term for term in domain if len(term) == 3 if term[0] == 'type'])
         # collect all section_ids
         section_ids = set()
         types = ['both']
-        if not cases:
+        if not cases and context.get('default_type'):
             ctx_type = context.get('default_type')
             types += [ctx_type]
         if section_id:
@@ -373,7 +377,8 @@ class crm_lead(format_address, osv.osv):
                 search_domain.append(('section_ids', '=', section_id))
         search_domain.append(('case_default', '=', True))
         # AND with cases types
-        search_domain.append(('type', 'in', types))
+        if not avoid_add_type_term:
+            search_domain.append(('type', 'in', types))
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
@@ -607,10 +612,12 @@ class crm_lead(format_address, osv.osv):
 
         opportunities = self.browse(cr, uid, ids, context=context)
         sequenced_opps = []
+        # Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
+        # The confidence level increases with the stage sequence, except when the stage probability is 0.0 (Lost cases)
+        # An Opportunity always has higher confidence level than a lead, unless its stage probability is 0.0
         for opportunity in opportunities:
             sequence = -1
-            # TDE: was "if opportunity.stage_id and opportunity.stage_id.state != 'cancel':"
-            if opportunity.probability == 0 and opportunity.stage_id and opportunity.stage_id.sequence != 1 and opportunity.stage_id.fold:
+            if opportunity.stage_id and (opportunity.stage_id.probability != 0 or opportunity.stage_id.sequence == 1):
                 sequence = opportunity.stage_id.sequence
             sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
 

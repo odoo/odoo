@@ -407,6 +407,16 @@ class project_issue(osv.Model):
         task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
         return {'value': {'user_id': task.user_id.id, }}
 
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        """ This function returns value of partner email address based on partner
+            :param part: Partner's id
+        """
+        result = {}
+        if partner_id:
+            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context)
+            result['email_from'] = partner.email
+        return {'value': result}
+
     def get_empty_list_help(self, cr, uid, help, context=None):
         context['empty_list_help_model'] = 'project.project'
         context['empty_list_help_id'] = context.get('default_project_id')

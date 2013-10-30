@@ -6,8 +6,8 @@ import openerp
 import time
 import random
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 
 _logger = logging.getLogger(__name__)
