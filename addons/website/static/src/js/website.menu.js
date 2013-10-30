@@ -8,13 +8,14 @@
     website.menu.EditMenuDialog = website.editor.Dialog.extend({
         template: 'website.menu.dialog.edit',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'click button.add-menu': 'add_menu',
-            'click button.delete-menu': 'delete_menu',
+            'click button.js_add_menu': 'add_menu',
+            'click button.js_delete_menu': 'delete_menu',
         }),
         init: function (menu) {
             this.menu = menu;
             this.root_menu_id = menu.id;
             this.flat = this.flatenize(menu);
+            this.to_delete = [];
             this._super();
         },
         start: function () {
@@ -68,15 +69,11 @@
         delete_menu: function (ev) {
             var self = this;
             var $menu = $(ev.currentTarget).parents('[data-menu-id]').first();
-            $menu.find('[data-menu-id]').add($menu).each(function() {
-                var mid = $(this).attr('data-menu-id');
-                if (~mid.indexOf('new-')) {
-                    delete(self.flat[mid]);
-                } else {
-                    self.flat[mid].to_delete = true;
-                }
-            });
-            $menu.hide();
+            var mid = $menu.data('menu-id')|0;
+            if (mid) {
+                this.to_delete.push(mid);
+            }
+            $menu.remove();
         },
         save: function () {
             var self = this;
@@ -99,7 +96,7 @@
             openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website.menu',
                 method: 'save',
-                args: [[context.website_id], data],
+                args: [[context.website_id], { data: data, to_delete: self.to_delete }],
                 kwargs: {
                     context: context
                 },

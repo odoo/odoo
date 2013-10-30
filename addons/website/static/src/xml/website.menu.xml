@@ -2,13 +2,16 @@
 <t t-name="website.menu.dialog.submenu">
     <li t-att-data-menu-id="submenu.id">
         <div>
+            <i class="icon-reorder"/>
             <t t-esc="submenu.name"/>
-            <button type="button" class="btn-xs pull-right delete-menu btn-danger">
-                <i class="icon-trash"/>
-            </button>
-            <button type="button" class="btn-xs pull-right edit-menu btn-primary">
-                <i class="icon-edit"/>
-            </button>
+            <div class="btn-group btn-group-xs pull-right oe_menu_buttons">
+                <button type="button" class="btn js_edit_menu">
+                    <i class="icon-edit"/>
+                </button>
+                <button type="button" class="btn js_delete_menu">
+                    <i class="icon-trash"/>
+                </button>
+            </div>
         </div>
         <t t-set="children" t-value="submenu.children"/>
         <ul t-if="children">
@@ -19,7 +22,7 @@
     </li>
 </t>
 <t t-name="website.menu.dialog.footer-button">
-    <button type="button" class="btn pull-left add-menu btn-success">
+    <button type="button" class="btn pull-left js_add_menu btn-success">
         <i class="icon-plus-sign"/> Add Menu Item
     </button>
 </t>

@@ -375,7 +375,7 @@ class website_menu(osv.osv):
         'sequence': fields.integer('Sequence'),
         # TODO: support multiwebsite once done for ir.ui.views
         'website_id': fields.many2one('website', 'Website'),
-        'parent_id': fields.many2one('website.menu', 'Parent Menu', select=True, ondelete="restrict"),
+        'parent_id': fields.many2one('website.menu', 'Parent Menu', select=True, ondelete="cascade"),
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
     }
@@ -412,25 +412,22 @@ class website_menu(osv.osv):
 
         return menu_items[0]
 
-    def save(self, cr, uid, website_id, data=[], context=None):
+    def save(self, cr, uid, website_id, data, context=None):
         def replace_id(old_id, new_id):
-            for menu in data:
+            for menu in data['data']:
                 if menu['id'] == old_id:
                     menu['id'] = new_id
                 if menu['parent_id'] == old_id:
                     menu['parent_id'] = new_id
-        to_delete = []
-        for menu in data:
+        to_delete = data['to_delete']
+        if to_delete:
+            self.unlink(cr, uid, to_delete, context=context)
+        for menu in data['data']:
             mid = menu['id']
-            if 'to_delete' in menu:
-                to_delete.append(mid)
-                data.remove(menu)
-            elif isinstance(mid, str):
+            if isinstance(mid, str):
                 new_id = self.create(cr, uid, {'name': menu['name']}, context=context)
                 replace_id(mid, new_id)
-        if to_delete:
-            self.unlink(cr, uid, to_delete)
-        for menu in data:
+        for menu in data['data']:
             self.write(cr, uid, [menu['id']], menu, context=context)
         return True
 
