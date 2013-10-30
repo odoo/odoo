@@ -36,7 +36,13 @@ class TestStockMulticompany(common.TransactionCase):
         self.stock_fill_inventory = self.registry('stock.fill.inventory')
         self.stock_warehouse = self.registry('stock.warehouse')
 
-        model, self.multicompany_user_id = self.ir_model_data.get_object_reference(cr, uid, 'stock', 'multicompany_user')
+        model, group_user_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
+        model, group_stock_manager_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'stock', 'group_stock_manager')
+        model, company_2_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'stock', 'res_company_2')
+        self.multicompany_user_id = self.res_users.create(cr, uid,
+            {'name': 'multicomp', 'login': 'multicomp',
+             'groups_id': [(6, 0, [group_user_id, group_stock_manager_id])],
+             'company_id': company_2_id, 'company_ids': [(6,0,[company_2_id])]})
 
     def test_00_multicompany_default_stock_move(self):
         """check no error on getting default stock.move values in multicompany setting"""

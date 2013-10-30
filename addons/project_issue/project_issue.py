@@ -297,7 +297,7 @@ class project_issue(osv.Model):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'kanban_state': 'normal',
-        'date_last_stage_update': fields.datetime.now(),
+        'date_last_stage_update': fields.datetime.now,
         'user_id': lambda obj, cr, uid, context: uid,
     }
 
@@ -406,6 +406,16 @@ class project_issue(osv.Model):
             return {'value': {}}
         task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
         return {'value': {'user_id': task.user_id.id, }}
+
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        """ This function returns value of partner email address based on partner
+            :param part: Partner's id
+        """
+        result = {}
+        if partner_id:
+            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context)
+            result['email_from'] = partner.email
+        return {'value': result}
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         context['empty_list_help_model'] = 'project.project'

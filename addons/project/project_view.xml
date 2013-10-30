@@ -37,8 +37,8 @@
                         <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Last Stage Update" icon="terp-go-month" domain="[]" context="{'group_by':'date_last_stage_update'}"/>
                         <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
-                        <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}" groups="base.group_no_one"/>
+                        <filter string="Start Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="End Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}" groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
@@ -93,15 +93,14 @@
                         </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
-                        <button name="%(act_project_project_2_project_task_all)d" string="Tasks"
-                            type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
+                        <field name="tasks" widget="x2many_counter" string="Tasks" attrs="{'invisible':[('use_tasks','=', False)]}" options='{"views": [[false, "kanban"], [false, "tree"], [false, "form"], [false, "calendar"], [false, "gantt"], [false, "graph"]]}'/>
                         <button name="attachment_tree_view" string="Documents" type="object"/>
                     </div>
                     <group>
                         <group>
                             <field name="user_id" string="Project Manager" 
                                     attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
-                                    context="{'default_groups_ref': ['base.group_user', 'project.group_project_manager']}"/>
+                                    context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                             <span></span>
                             <p attrs="{'invisible': [('analytic_account_id','=',False)]}">
@@ -127,8 +126,8 @@
                     </group>
                     <notebook>
                         <page string="Team" name="team">
-                            <field colspan="4" name="members" widget="many2many_kanban">
-                                <kanban quick_create="false" create="true">
+                            <field colspan="4" name="members" widget="many2many_kanban" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'group_project_user']}">
+                                <kanban quick_create="false" create="true" delete="true">
                                     <field name="name"/>
                                     <templates>
                                         <t t-name="kanban-box">
@@ -340,7 +339,7 @@
                         <field colspan="4" name="name"/>
                         <field name="hours" widget="float_time"/>
                         <field name="date"/>
-                        <field name="user_id" options='{"no_open": True}'/>
+                        <field name="user_id" options='{"no_open": True}' context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_partner_manager', 'project.group_project_user']}"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </form>
@@ -355,7 +354,7 @@
                     <field name="date"/>
                     <field name="name"/>
                     <field name="hours" widget="float_time"/>
-                    <field name="user_id"/>
+                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
                 </tree>
             </field>
         </record>
@@ -384,7 +383,7 @@
                             <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
                             <field name="user_id"
                                 options='{"no_open": True}'
-                                context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
+                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
@@ -404,7 +403,7 @@
                                     <field name="name"/>
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
                                     <field name="date"/>
-                                    <field name="user_id"/>
+                                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                                 </tree>
                             </field>
                             <group>

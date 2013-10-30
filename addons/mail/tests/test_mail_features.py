@@ -21,12 +21,12 @@
 
 from openerp.addons.mail.mail_mail import mail_mail
 from openerp.addons.mail.mail_thread import mail_thread
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 from openerp.tools import mute_logger, email_split
 from openerp.tools.mail import html_sanitize
 
 
-class test_mail(TestMailBase):
+class test_mail(TestMail):
 
     def test_000_alias_setup(self):
         """ Test basic mail.alias setup works, before trying to use them for routing """
@@ -231,6 +231,8 @@ class test_mail(TestMailBase):
     def test_11_notification_url(self):
         """ Tests designed to test the URL added in notification emails. """
         cr, uid, group_pigs = self.cr, self.uid, self.group_pigs
+        # Test URL formatting
+        base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
 
         # Partner data
         partner_raoul = self.res_partner.browse(cr, uid, self.partner_raoul_id)
@@ -243,19 +245,59 @@ class test_mail(TestMailBase):
         # Test: link for nobody -> None
         url = mail_mail._get_partner_access_link(self.mail_mail, cr, uid, mail)
         self.assertEqual(url, None,
-                        'notification email: mails not send to a specific partner should not have any URL')
+                         'notification email: mails not send to a specific partner should not have any URL')
 
         # Test: link for partner -> None
         url = mail_mail._get_partner_access_link(self.mail_mail, cr, uid, mail, partner=partner_bert)
         self.assertEqual(url, None,
-                        'notification email: mails send to a not-user partner should not have any URL')
+                         'notification email: mails send to a not-user partner should not have any URL')
 
         # Test: link for user -> signin
         url = mail_mail._get_partner_access_link(self.mail_mail, cr, uid, mail, partner=partner_raoul)
+        self.assertIn(base_url, url,
+                      'notification email: link should contain web.base.url')
+        self.assertIn('db=%s' % cr.dbname, url,
+                      'notification email: link should contain database name')
         self.assertIn('action=mail.action_mail_redirect', url,
-                        'notification email: link should contain the redirect action')
+                      'notification email: link should contain the redirect action')
         self.assertIn('login=%s' % partner_raoul.user_ids[0].login, url,
-                        'notification email: link should contain the user login')
+                      'notification email: link should contain the user login')
+
+        # Test: link for user -> with model and res_id
+        mail_mail_id = self.mail_mail.create(cr, uid, {'model': 'mail.group', 'res_id': group_pigs.id})
+        mail = self.mail_mail.browse(cr, uid, mail_mail_id)
+        url = mail_mail._get_partner_access_link(self.mail_mail, cr, uid, mail, partner=partner_raoul)
+        self.assertIn(base_url, url,
+                      'notification email: link should contain web.base.url')
+        self.assertIn('db=%s' % cr.dbname, url,
+                      'notification email: link should contain database name')
+        self.assertIn('action=mail.action_mail_redirect', url,
+                      'notification email: link should contain the redirect action')
+        self.assertIn('login=%s' % partner_raoul.user_ids[0].login, url,
+                      'notification email: link should contain the user login')
+        self.assertIn('model=mail.group', url,
+                      'notification email: link should contain the model when having not notification email on a record')
+        self.assertIn('res_id=%s' % group_pigs.id, url,
+                      'notification email: link should contain the res_id when having not notification email on a record')
+
+        # Test: link for user -> with model and res_id
+        mail_mail_id = self.mail_mail.create(cr, uid, {'notification': True, 'model': 'mail.group', 'res_id': group_pigs.id})
+        mail = self.mail_mail.browse(cr, uid, mail_mail_id)
+        url = mail_mail._get_partner_access_link(self.mail_mail, cr, uid, mail, partner=partner_raoul)
+        self.assertIn(base_url, url,
+                      'notification email: link should contain web.base.url')
+        self.assertIn('db=%s' % cr.dbname, url,
+                      'notification email: link should contain database name')
+        self.assertIn('action=mail.action_mail_redirect', url,
+                      'notification email: link should contain the redirect action')
+        self.assertIn('login=%s' % partner_raoul.user_ids[0].login, url,
+                      'notification email: link should contain the user login')
+        self.assertIn('message_id=%s' % mail.mail_message_id.id, url,
+                      'notification email: link based on message should contain the mail_message id')
+        self.assertNotIn('model', url,
+                         'notification email: link based on message should not contain model')
+        self.assertNotIn('res_id', url,
+                         'notification email: link based on message should not contain res_id')
 
     @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_12_inbox_redirection(self):
@@ -267,24 +309,54 @@ class test_mail(TestMailBase):
 
         # No specific parameters -> should redirect to Inbox
         action = mail_thread.message_redirect_action(self.mail_thread, cr, self.user_raoul_id, {'params': {}})
-        self.assertEqual(action.get('type'), 'ir.actions.client',
-                        'URL redirection: action without parameters should redirect to client action Inbox')
-        self.assertEqual(action.get('id'), act_id,
-                        'URL redirection: action without parameters should redirect to client action Inbox')
+        self.assertEqual(
+            action.get('type'), 'ir.actions.client',
+            'URL redirection: action without parameters should redirect to client action Inbox'
+        )
+        self.assertEqual(
+            action.get('id'), act_id,
+            'URL redirection: action without parameters should redirect to client action Inbox'
+        )
 
-        # Bert has read access to Pigs -> should redirect to form view of Pigs
+        # Raoul has read access to Pigs -> should redirect to form view of Pigs
         action = mail_thread.message_redirect_action(self.mail_thread, cr, self.user_raoul_id, {'params': {'message_id': msg_id}})
-        self.assertEqual(action.get('type'), 'ir.actions.act_window',
-                        'URL redirection: action with message_id for read-accredited user should redirect to Pigs')
-        self.assertEqual(action.get('res_id'), group_pigs.id,
-                        'URL redirection: action with message_id for read-accredited user should redirect to Pigs')
+        self.assertEqual(
+            action.get('type'), 'ir.actions.act_window',
+            'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
+        )
+        self.assertEqual(
+            action.get('res_id'), group_pigs.id,
+            'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
+        )
+        action = mail_thread.message_redirect_action(self.mail_thread, cr, self.user_raoul_id, {'params': {'model': 'mail.group', 'res_id': group_pigs.id}})
+        self.assertEqual(
+            action.get('type'), 'ir.actions.act_window',
+            'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
+        )
+        self.assertEqual(
+            action.get('res_id'), group_pigs.id,
+            'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
+        )
 
         # Bert has no read access to Pigs -> should redirect to Inbox
         action = mail_thread.message_redirect_action(self.mail_thread, cr, self.user_bert_id, {'params': {'message_id': msg_id}})
-        self.assertEqual(action.get('type'), 'ir.actions.client',
-                        'URL redirection: action without parameters should redirect to client action Inbox')
-        self.assertEqual(action.get('id'), act_id,
-                        'URL redirection: action without parameters should redirect to client action Inbox')
+        self.assertEqual(
+            action.get('type'), 'ir.actions.client',
+            'URL redirection: action without parameters should redirect to client action Inbox'
+        )
+        self.assertEqual(
+            action.get('id'), act_id,
+            'URL redirection: action without parameters should redirect to client action Inbox'
+        )
+        action = mail_thread.message_redirect_action(self.mail_thread, cr, self.user_bert_id, {'params': {'model': 'mail.group', 'res_id': group_pigs.id}})
+        self.assertEqual(
+            action.get('type'), 'ir.actions.client',
+            'URL redirection: action without parameters should redirect to client action Inbox'
+        )
+        self.assertEqual(
+            action.get('id'), act_id,
+            'URL redirection: action without parameters should redirect to client action Inbox'
+        )
 
     def test_20_message_post(self):
         """ Tests designed for message_post. """
@@ -631,6 +703,7 @@ class test_mail(TestMailBase):
             {
                 'subject': _subject,
                 'body': '${object.description}',
+                'post': True,
                 'partner_ids': [(4, p_c_id), (4, p_d_id)],
             }, context={
                 'default_composition_mode': 'mass_mail',
@@ -684,6 +757,7 @@ class test_mail(TestMailBase):
             {
                 'subject': _subject,
                 'body': '${object.description}',
+                'post': True,
                 'partner_ids': [(4, p_c_id), (4, p_d_id)],
             }, context={
                 'default_composition_mode': 'mass_mail',
