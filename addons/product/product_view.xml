@@ -37,7 +37,7 @@
                 <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
-                    <field name="variants" groups="product.group_product_variant"/>
+                    <field name="variants"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
@@ -66,7 +66,9 @@
                                 <label for="name" string="Product Name"/>
                             </div>
                             <h1>
-                                <field name="name"/>
+                                <field name="name" class="oe_inline"/>
+                                <span attrs="{'invisible':[('variants','=',False)]}"> - </span>
+                                <field name="variants" class="oe_inline" readonly="1"/>
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>
@@ -747,7 +749,7 @@
                                 </group>
                                 <group colspan="4" string="Product Variants">
                                     <field colspan="4" name="product_variant_ids" nolabel="1">
-                                        <tree string="Product Variants" editable="bottom" delete="false">
+                                        <tree string="Product Variants" editable="bottom">
                                             <field name="variants" required="1"/>
                                             <field name="price_margin" string="Variant Price Margin(%%)"/>
                                             <field name="price_extra"/>
