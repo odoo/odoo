@@ -808,7 +808,6 @@
         start: function () {
             return $.when(
                 this.fetch_pages().done(this.proxy('fill_pages')),
-                this.fetch_menus().done(this.proxy('fill_menus')),
                 this._super()
             ).done(this.proxy('bind_data'));
         },
@@ -833,23 +832,6 @@
                         '/pagenew/%s?noredirect', encodeURI(val)))
                     .then(function (response) {
                         self.make_link(response, false, val);
-                        var parent_id = self.$('.add-to-menu').val();
-                        if (parent_id) {
-                            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                                model: 'website.menu',
-                                method: 'create',
-                                args: [{
-                                    'name': val,
-                                    'url': response,
-                                    'sequence': 0, // TODO: better tree widget
-                                    'website_id': website.id,
-                                    'parent_id': parent_id|0,
-                                }],
-                                kwargs: {
-                                    context: website.get_context()
-                                },
-                            });
-                        }
                     });
             } else {
                 this.make_link(val, this.$('input.window-new').prop('checked'));
@@ -910,29 +892,6 @@
                 pages.options[pages.options.length] =
                         new Option(result.name, result.url);
             });
-        },
-        fetch_menus: function () {
-            var context = website.get_context();
-            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                model: 'website.menu',
-                method: 'get_tree',
-                args: [[context.website_id]],
-                kwargs: {
-                    context: context
-                },
-            });
-        },
-        fill_menus: function (tree) {
-            var self = this;
-            var menus = this.$('select.add-to-menu')[0];
-            var process_tree = function(node) {
-                var name = (new Array(node.level + 1).join('|-')) + ' ' + node.name;
-                menus.options[menus.options.length] = new Option(name, node.id);
-                node.children.forEach(function (child) {
-                    process_tree(child);
-                });
-            };
-            process_tree(tree);
         },
     });
     website.editor.RTELinkDialog = website.editor.LinkDialog.extend({
