@@ -33,10 +33,9 @@ import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
 from openerp.tools import config
+from openerp import http
 
-from .. import http
-
-from openerp.addons.web.http import request
+from openerp.http import request
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -535,12 +534,14 @@ class Home(http.Controller):
     def web_client(self, s_action=None, db=None, debug=False, **kw):
         debug = debug != False
 
-        lst = http.db_list(True)
+        try:
+            lst = http.db_list()
+        except openerp.exceptions.AccessDenied:
+            lst = []
+
         if db not in lst:
             db = None
         guessed_db = http.db_monodb(request.httprequest)
-        if guessed_db is None and len(lst) > 0:
-            guessed_db = lst[0]
 
         def redirect(db):
             query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
@@ -548,8 +549,11 @@ class Home(http.Controller):
             redirect = request.httprequest.path + '?' + urllib.urlencode(query)
             return redirect_with_hash(redirect)
 
-        if db is None and guessed_db is not None:
-            return redirect(guessed_db)
+        if guessed_db is None and db is None and lst:
+            return redirect(lst[0])
+
+        if guessed_db is None and lst:
+            guessed_db = lst[0]
 
         if db is not None and db != guessed_db:
             request.session.logout()
