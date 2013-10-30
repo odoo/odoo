@@ -58,9 +58,6 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
         return res
 
-    #
-    # TODO: Needs to be rechecked 
-    #
     def _get_domain_locations(self, cr, uid, ids, context=None):
         '''
         Parses the context and returns a list of location_ids based on it.
@@ -77,7 +74,7 @@ class product_product(osv.osv):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
             elif type(context['location']) in (type(''), type(u'')):
-                domain = [('name','ilike',context['location'])]
+                domain = [('complete_name','ilike',context['location'])]
                 if context.get('force_company', False):
                     domain += [('company_id', '=', context['force_company'])]
                 location_ids = location_obj.search(cr, uid, domain, context=context)
@@ -85,10 +82,9 @@ class product_product(osv.osv):
                 location_ids = context['location']
         else:
             if context.get('warehouse', False):
-                wh = warehouse_obj.browse(cr, uid, [context['warehouse']], context=context)
+                wids = [context['warehouse']]
             else:
                 wids = warehouse_obj.search(cr, uid, [], context=context)
-                wh = warehouse_obj.browse(cr, uid, wids, context=context)
 
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
                 location_ids.append(w.lot_stock_id.id)
