@@ -182,7 +182,10 @@ class website_event(http.Controller):
 
         _values = None
         for key, value in post.items():
-            quantity = int(value)
+            try:
+                quantity = int(value)
+            except:
+                quantity = None
             ticket_id = key.split("-")[0] == 'ticket' and int(key.split("-")[1]) or None
             if not ticket_id or not quantity:
                 continue
