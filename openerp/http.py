@@ -1033,7 +1033,7 @@ class Root(object):
         Tries to discover the controller handling the request for the path specified in the request.
         """
         path = request.httprequest.path
-        urls = self.get_db_router(request.db).bind("")
+        urls = self.get_db_router(request.db).bind_to_environ(request.httprequest.environ)
         func, arguments = urls.match(path)
         arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
 
