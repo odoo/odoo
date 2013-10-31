@@ -8,15 +8,14 @@ $(document).ready(function () {
         e.preventDefault();
         var $ul = $(this).next("ul");
         if (!$ul.find('li').length) {
+            // TODO: Why POST? A GET would be more appropriate...
+            // This should be done server side anyway...
             $.post('/blog/nav', {'domain': $(this).data("domain")}, function (result) {
                 var blog_id = +window.location.pathname.split("/").pop();
                 $(JSON.parse(result)).each(function () {
-                    var $a = $('<a href="/blog/' + this.id + '"/>').text(this.name);
-                    var $li = $("<li/>").append($a);
-                    if (blog_id == this.id)
-                        $li.addClass("active");
-                    if (!this.website_published)
-                        $a.css("color", "red");
+                    var $li = $($.parseHTML(this.fragment));
+                    if (blog_id == this.id) $li.addClass("active");
+                    if (!this.website_published) $li.find('a').css("color", "red");
                     $ul.append($li);
                 });
 

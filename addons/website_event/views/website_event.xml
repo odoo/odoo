@@ -9,7 +9,7 @@
         </xpath>
     </template>
 
-    <!-- Page --> 
+    <!-- Page -->
     <template id="index" name="Events" page="True">
         <t t-call="website.layout">
           <div id="wrap">
@@ -121,7 +121,7 @@
 
                 <h1 class="text-center" t-field="event_id.name"></h1>
                 <h4 class="text-center text-muted">
-                    <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to 
+                    <i class="icon-time"></i> <span t-field="event_id.date_begin"/> to
                     <span t-field="event_id.date_end"/>
                 </h4>
                 <h4 t-if="event_id.city and event_id.country_id" class="text-center text-muted">
@@ -259,12 +259,12 @@
 
                         <ul class="list-unstyled">
                             <li t-if="event_id.type">
-                                <a t-att-href="'/event?type='+str(event_id.type.id)"><strong><span class="icon-double-angle-right"/> Other <t t-esc="event_id.type.name"/></strong></a>
+                                <a t-href="/event?type=#{event_id.type.id}"><strong><span class="icon-double-angle-right"/> Other <t t-esc="event_id.type.name"/></strong></a>
                             </li>
                             <li t-if="event_id.country_id">
-                                <a t-att-href="'/event?country='+str(event_id.country_id.id)"><strong><span class="icon-double-angle-right"/> Other Events in <span t-esc="event_id.country_id.name"/></strong></a>
+                                <a t-href="/event?country=#{event_id.country_id.id}"><strong><span class="icon-double-angle-right"/> Other Events in <span t-esc="event_id.country_id.name"/></strong></a>
                             </li>
-                            <li><a href="/event"><strong><span class="icon-double-angle-right"/> All Events</strong></a></li>
+                            <li><a t-href="/event"><strong><span class="icon-double-angle-right"/> All Events</strong></a></li>
                         </ul>
                     </div>
                 </div>
