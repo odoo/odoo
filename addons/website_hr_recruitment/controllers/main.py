@@ -7,7 +7,7 @@ import base64
 
 class website_hr_recruitment(http.Controller):
 
-    @website.route(['/jobs', '/jobs/page/<int:page>/', '/department/<id>/', '/department/<id>/page/<int:page>/'], type='http', auth="public")
+    @website.route(['/jobs', '/jobs/page/<int:page>/', '/department/<id>/', '/department/<id>/page/<int:page>/'], type='http', auth="public", multilang=True)
     def jobs(self, id=0, page=1, **post):
         id = id and int(id) or 0
         hr_job_obj = request.registry['hr.job']
@@ -36,7 +36,7 @@ class website_hr_recruitment(http.Controller):
         step = 10
         pager = request.website.pager(url="/jobs/", total=len(jobpost_ids), page=page, step=step, scope=5)
         jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'])
-        
+
         values = {
             'active': active,
             'companies': companies,
@@ -47,16 +47,15 @@ class website_hr_recruitment(http.Controller):
         }
         return request.website.render("website_hr_recruitment.index", values)
 
-    @website.route(['/job/detail/<id>'], type='http', auth="public")
-    def detail(self, id=0):
-        id = id and int(id) or 0
+    @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
+    def detail(self, job=None):
         values = {
-            'job': request.registry['hr.job'].browse(request.cr, request.uid, id),
-            'vals_date': request.registry['hr.job'].browse(request.cr, request.uid, id).write_date.split(' ')[0]
+            'job': job,
+            'vals_date': job.write_date.split(' ')[0],
         }
         return request.website.render("website_hr_recruitment.detail", values)
 
-    @website.route(['/job/success'], type='http', auth="admin")
+    @website.route(['/job/success'], type='http', auth="admin", multilang=True)
     def success(self, **post):
         id = request.registry['hr.applicant'].create(request.cr, request.uid, post)
         if post['ufile']:
@@ -74,9 +73,9 @@ class website_hr_recruitment(http.Controller):
                 'jobid': post['job_id']
            }
         return request.website.render("website_hr_recruitment.thankyou", values)
-   
-    @website.route(['/apply/<int:id>'], type='http', auth="public")
-    def applyjobpost(self, id=0):
+
+    @website.route(['/apply/<int:id>'], type='http', auth="public", multilang=True)
+    def applyjobpost(self, id=0, **kwargs):
         id = id and int(id) or 0
         job = request.registry['hr.job'].browse(request.cr, request.uid, id)
         values = {
@@ -84,7 +83,7 @@ class website_hr_recruitment(http.Controller):
         }
         return request.website.render("website_hr_recruitment.applyjobpost", values)
 
-    @website.route('/recruitment/published', type='json', auth="admin")
+    @website.route('/recruitment/published', type='json', auth="admin", multilang=True)
     def published (self, id, **post):
         hr_job = request.registry['hr.job']
         id = int(id)
