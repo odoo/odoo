@@ -159,7 +159,8 @@ class WebsiteBlog(http.Controller):
 
         return request.website.render("website_blog.index", values)
 
-    @website.route(['/blog/nav'], type='http', auth="public")
+    # TODO: Refactor (used in website_blog.js for archive links)
+    @website.route(['/blog/nav'], type='http', auth="public", multilang=True)
     def nav(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         blog_post_ids = request.registry['blog.post'].search(
@@ -171,9 +172,10 @@ class WebsiteBlog(http.Controller):
         blog_post_data = [
             {
                 'id': blog_post.id,
-                'name': blog_post.name,
                 'website_published': blog_post.website_published,
-                'category_id': blog_post.category_id and blog_post.category_id.id or False,
+                'fragment': request.website.render("website_blog.blog_archive_link", {
+                    'blog_post': blog_post
+                }),
             }
             for blog_post in request.registry['blog.post'].browse(cr, uid, blog_post_ids, context=context)
         ]
