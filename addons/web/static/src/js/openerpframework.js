@@ -1264,7 +1264,10 @@ openerp.str_to_datetime = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid datetime");
     }
-    var tmp = new Date(0);
+    var tmp = new Date(2000,0,1);
+    tmp.setUTCMonth(1970);
+    tmp.setUTCMonth(0);
+    tmp.setUTCDate(1);
     tmp.setUTCFullYear(parseFloat(res[1]));
     tmp.setUTCMonth(parseFloat(res[2]) - 1);
     tmp.setUTCDate(parseFloat(res[3]));
@@ -1296,7 +1299,7 @@ openerp.str_to_date = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid date");
     }
-    var tmp = new Date(0);
+    var tmp = new Date(2000,0,1);
     tmp.setFullYear(parseFloat(res[1]));
     tmp.setMonth(parseFloat(res[2]) - 1);
     tmp.setDate(parseFloat(res[3]));
