@@ -864,7 +864,7 @@ class ModelConverter(routing.BaseConverter):
 class ModelsConverter(routing.BaseConverter):
 
     def __init__(self, url_map, model=False):
-        super(ModelConverter, self).__init__(url_map)
+        super(ModelsConverter, self).__init__(url_map)
         self.model = model
         # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
         self.regex = '([0-9,]+)'
