@@ -501,7 +501,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      *
      * @returns {$.Deferred} promise to content reloading
      */
-    reload_content: function () {
+    reload_content: synchronized(function () {
         var self = this;
         self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
@@ -525,7 +525,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             limit: this._limit
         });
         return reloaded.promise();
-    },
+    }),
     reload: function () {
         return this.reload_content();
     },
@@ -1367,6 +1367,9 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                                 .removeClass('ui-icon-triangle-1-s')
                                 .addClass('ui-icon-triangle-1-e');
                         child.close();
+                        // force recompute the selection as closing group reset properties
+                        var selection = self.get_selection();
+                        $(self).trigger('selected', [selection.ids, this.records]);
                     }
                 });
             }
@@ -1377,22 +1380,29 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             if (group.grouped_on) {
                 var row_data = {};
                 row_data[group.grouped_on] = group;
+                var group_label = _t("Undefined");
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
-                if (! group_column) {
-                    throw new Error(_.str.sprintf(
-                        _t("Grouping on field '%s' is not possible because that field does not appear in the list view."),
-                        group.grouped_on));
+                if (group_column) {
+                    try {
+                        group_label = group_column.format(row_data, {
+                            value_if_empty: _t("Undefined"),
+                            process_modifiers: false
+                        });
+                    } catch (e) {
+                        group_label = _.str.escapeHTML(row_data[group_column.id].value);
+                    }
+                } else {
+                    group_label = group.value;
+                    if (group_label instanceof Array) {
+                        group_label = group_label[1];
+                    }
+                    if (group_label === false) {
+                        group_label = _t('Undefined');
+                    }
+                    group_label = _.str.escapeHTML(group_label);
                 }
-                var group_label;
-                try {
-                    group_label = group_column.format(row_data, {
-                        value_if_empty: _t("Undefined"),
-                        process_modifiers: false
-                    });
-                } catch (e) {
-                    group_label = _.str.escapeHTML(row_data[group_column.id].value);
-                }
+                    
                 // group_label is html-clean (through format or explicit
                 // escaping if format failed), can inject straight into HTML
                 $group_column.html(_.str.sprintf(_t("%s (%d)"),
@@ -1637,6 +1647,22 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     }
 });
 
+/**
+ * Serializes concurrent calls to this asynchronous method. The method must
+ * return a deferred or promise.
+ *
+ * Current-implementation is class-serialized (the mutex is common to all
+ * instances of the list view). Can be switched to instance-serialized if
+ * having concurrent list views becomes possible and common.
+ */
+function synchronized(fn) {
+    var fn_mutex = new $.Mutex();
+    return function () {
+        var args = _.toArray(arguments);
+        args.unshift(this);
+        return fn_mutex.exec(fn.bind.apply(fn, args));
+    };
+}
 var DataGroup =  instance.web.Class.extend({
    init: function(parent, model, domain, context, group_by, level) {
        this.model = new instance.web.Model(model, context, domain);
@@ -1648,6 +1674,10 @@ var DataGroup =  instance.web.Class.extend({
    },
    list: function (fields, ifGroups, ifRecords) {
        var self = this;
+       if (!_.isEmpty(this.group_by)) {
+           // ensure group_by fields are read.
+           fields = _.unique((fields || []).concat(this.group_by));
+       }
        var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
        $.when(query).done(function (querygroups) {
            // leaf node
