@@ -141,33 +141,9 @@
             var self = this;
             return $.when(this._super.apply(this, arguments)).then(function () {
                 if (self.data) {
-                    self.manual_fill(self.data);
+                    self.bind_data(self.data.name, self.data.url, self.data.new_window);
                 }
             });
-        },
-        manual_fill: function (data) {
-            if (data.name) {
-                this.$('#link-text').val(this.data.name)[0].focus();
-            }
-            if (data.url) {
-                var target;
-                var target = this.$('#link-existing');
-                target.val(data.url);
-                if (!target.val()) {
-                    var mailto = data.url.match(/^mailto:(.*)/);
-                    if (mailto) {
-                        target = this.$('#link-email');
-                        target.val(mailto[1]);
-                    } else {
-                        target = this.$('#link-external');
-                        target.val(data.url);
-                        if (data.new_window !== undefined) {
-                            this.$('input.window-new').prop('checked', data.new_window);
-                        }
-                    }
-                }
-                this.changed(target);
-            }
         },
         make_link: function (url, new_window, label) {
             var menu_label = this.$('input#link-text').val() || label;

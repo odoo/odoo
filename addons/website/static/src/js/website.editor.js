@@ -806,10 +806,13 @@
             this.text = null;
         },
         start: function () {
+            var self = this;
             return $.when(
                 this.fetch_pages().done(this.proxy('fill_pages')),
                 this._super()
-            ).done(this.proxy('bind_data'));
+            ).done(function () {
+                self.bind_data();
+            });
         },
         save: function () {
             var self = this, _super = this._super.bind(this);
@@ -840,17 +843,24 @@
         },
         make_link: function (url, new_window, label) {
         },
-        bind_data: function () {
-            var href = this.element && (this.element.data( 'cke-saved-href')
+        bind_data: function (text, href, new_window) {
+            href = href || this.element && (this.element.data( 'cke-saved-href')
                                     ||  this.element.getAttribute('href'));
             if (!href) { return; }
 
+            if (new_window === undefined) {
+                new_window = this.element.getAttribute('target') === '_blank';
+            }
+            if (text === undefined) {
+                text = this.element.getText();
+            }
+
             var match, $control;
-            if (match = /mailto:(.+)/.exec(href)) {
+            if ((match = /mailto:(.+)/.exec(href))) {
                 $control = this.$('input.email-address').val(match[1]);
             } else if (href in this.pages) {
                 $control = this.$('select.existing').val(href);
-            } else if (match = /\/page\/(.+)/.exec(href)) {
+            } else if ((match = /\/page\/(.+)/.exec(href))) {
                 var actual_href = '/page/website.' + match[1];
                 if (actual_href in this.pages) {
                     $control = this.$('select.existing').val(actual_href);
@@ -862,9 +872,8 @@
 
             this.changed($control);
 
-            this.$('input#link-text').val(this.element.getText());
-            this.$('input.window-new').prop(
-                'checked', this.element.getAttribute('target') === '_blank');
+            this.$('input#link-text').val(text);
+            this.$('input.window-new').prop('checked', new_window);
         },
         changed: function ($e) {
             this.$('.url-source').not($e).val('');
