@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-10-28 15:50+0000\n"
+"PO-Revision-Date: 2013-10-30 08:42+0000\n"
 "Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-29 05:14+0000\n"
-"X-Generator: Launchpad (build 16818)\n"
+"X-Launchpad-Export-Date: 2013-10-31 05:47+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -108,7 +108,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
 #, python-format
 msgid "Reconcile"
-msgstr "消し込み"
+msgstr "消込"
 
 #. module: account
 #: field:account.bank.statement,name:0
@@ -320,7 +320,7 @@ msgstr "あなたの国に基づき、あなたの会社の会計ニーズに可
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "消し込みなしアカウント"
+msgstr ""
 
 #. module: account
 #: field:account.config.settings,module_account_budget:0
@@ -582,7 +582,7 @@ msgstr ""
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
 msgid "Not reconciled transactions"
-msgstr "未消し込み取引"
+msgstr "未消込トランザクション"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -909,7 +909,7 @@ msgstr "仕入先請求書と返金"
 #: code:addons/account/account_move_line.py:851
 #, python-format
 msgid "Entry is already reconciled."
-msgstr ""
+msgstr "エントリは既に消込済みです。"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
@@ -921,7 +921,7 @@ msgstr "未消し込み"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "アカウント分析仕訳帳"
+msgstr "勘定分析仕訳帳"
 
 #. module: account
 #: view:account.invoice:0
@@ -1029,7 +1029,7 @@ msgstr "期日"
 #. module: account
 #: field:account.config.settings,purchase_journal_id:0
 msgid "Purchase journal"
-msgstr ""
+msgstr "仕入仕訳帳"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -1245,7 +1245,7 @@ msgstr "キャッシュレジスタ"
 #. module: account
 #: field:account.config.settings,sale_refund_journal_id:0
 msgid "Sale refund journal"
-msgstr "販売返金ジャーナル"
+msgstr "売上返金仕訳帳"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -1518,7 +1518,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "仕訳帳項目分析"
+msgstr "仕訳項目分析"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -1749,7 +1749,7 @@ msgstr "銀行明細の検索"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr "未転記仕訳帳項目"
+msgstr "未転記仕訳項目"
 
 #. module: account
 #: view:account.chart.template:0
@@ -2194,7 +2194,7 @@ msgstr "売上 / 仕入仕訳帳"
 #: view:account.analytic.account:0
 #: field:account.invoice.tax,account_analytic_id:0
 msgid "Analytic account"
-msgstr ""
+msgstr "分析勘定"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:406
@@ -2247,7 +2247,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:14
 #, python-format
 msgid "Journal :"
-msgstr ""
+msgstr "仕訳帳："
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -2328,7 +2328,7 @@ msgstr "アクティブ項目にFalseが設定されている場合、それを�
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a sale journal."
-msgstr "売上仕訳帳に関連した分析仕訳帳項目"
+msgstr "売上仕訳帳に紐づく分析仕訳項目"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -2837,7 +2837,7 @@ msgstr "税"
 #: field:account.move.line,analytic_account_id:0
 #: field:account.move.line.reconcile.writeoff,analytic_id:0
 msgid "Analytic Account"
-msgstr "分析アカウント"
+msgstr "分析勘定"
 
 #. module: account
 #: field:account.config.settings,default_purchase_tax:0
@@ -3443,7 +3443,7 @@ msgstr "電子ファイル"
 #. module: account
 #: field:account.move.line,reconcile:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "消込参照"
 
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
@@ -3951,7 +3951,7 @@ msgstr "税コード金額"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr "未消し込み仕訳帳項目"
+msgstr "未消込仕訳項目"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -4474,7 +4474,7 @@ msgstr "アクティブ項目がFalseに設定されている場合、それを�
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr "記帳済仕訳帳項目"
+msgstr "記帳済仕訳項目"
 
 #. module: account
 #: field:account.move.line,blocked:0
@@ -5866,7 +5866,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_form
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr "分析アカウント"
+msgstr "分析勘定"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -6029,7 +6029,7 @@ msgstr "アカウント自動消し込み"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Journal Item"
-msgstr "仕訳帳項目"
+msgstr "仕訳項目"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
@@ -6786,7 +6786,7 @@ msgstr "流動性"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "分析仕訳帳項目"
+msgstr "分析仕訳項目"
 
 #. module: account
 #: field:account.config.settings,has_default_company:0
@@ -7590,7 +7590,7 @@ msgstr "この顧客はあなたに合計金額の支払義務があります。
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr "不均衡状態の仕訳帳項目"
+msgstr "不均衡な仕訳項目"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
@@ -7701,7 +7701,7 @@ msgstr "警告"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_analytic_open
 msgid "Contracts/Analytic Accounts"
-msgstr "契約 / 分析アカウント"
+msgstr "契約/分析勘定"
 
 #. module: account
 #: view:account.journal:0
@@ -8934,7 +8934,7 @@ msgstr "売上税 (%)"
 #: model:ir.actions.act_window,name:account.action_account_analytic_chart
 #: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
 msgid "Chart of Analytic Accounts"
-msgstr "分析アカウントチャート"
+msgstr "分析勘定表"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -9696,7 +9696,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
 msgid "Periodic Processing"
-msgstr ""
+msgstr "定期処理"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -9925,7 +9925,7 @@ msgstr "原価元帳（数量のみ）"
 #: model:process.transition,name:account.process_transition_analyticinvoice0
 #: model:process.transition,name:account.process_transition_supplieranalyticcost0
 msgid "From analytic accounts"
-msgstr "分析アカウントから"
+msgstr "分析勘定より"
 
 #. module: account
 #: view:account.installer:0
@@ -9965,7 +9965,7 @@ msgstr "コード / 日付"
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 msgid "Journal Items"
-msgstr "仕訳帳項目"
+msgstr "仕訳項目"
 
 #. module: account
 #: view:accounting.report:0
@@ -10609,7 +10609,7 @@ msgstr "範囲"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a purchase journal."
-msgstr "仕入仕訳帳に関連した分析仕訳帳項目"
+msgstr "仕入仕訳帳に紐づく分析仕訳項目"
 
 #. module: account
 #: help:account.account,type:0
@@ -10989,7 +10989,7 @@ msgstr "将来"
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "仕訳帳項目検索"
+msgstr "仕訳項目検索"
 
 #. module: account
 #: help:account.tax,base_sign:0
