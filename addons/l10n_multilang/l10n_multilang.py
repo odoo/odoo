@@ -45,8 +45,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         :param in_ids: List of ids of source object
         :param out_obj: Destination object for which translation is to be copied
         :param out_ids: List of ids of destination object
-        :param force_write: boolean that depicts if we need to create a translation OR simply replace the actual value
-            with the translation in the uid's language by doing a write (in case it's TRUE)
+        :param force_write: Deprecated as of 7.0, do not use
         :param context: usual context information. May contain the key 'lang', which is the language of the user running
             the wizard, that will be used if force_write is True
 
@@ -124,7 +123,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         acc_root_id = obj_acc.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]
         in_ids = obj_acc_template.search(cr, uid, [('id', 'child_of', [acc_template_root_id])], order='id')[1:]
         out_ids = obj_acc.search(cr, uid, [('id', 'child_of', [acc_root_id])], order='id')[1:]
-        return self.process_translations(cr, uid, langs, obj_acc_template, field, in_ids, obj_acc, out_ids, force_write=True, context=context)
+        return self.process_translations(cr, uid, langs, obj_acc_template, field, in_ids, obj_acc, out_ids, context=context)
 
     def _process_tax_codes_translations(self, cr, uid, obj_multi, company_id, langs, field, context=None):
         obj_tax_code_template = self.pool.get('account.tax.code.template')
@@ -133,21 +132,21 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_code_root_id = obj_tax_code.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]
         in_ids = obj_tax_code_template.search(cr, uid, [('id', 'child_of', [tax_code_template_root_id])], order='id')[1:]
         out_ids = obj_tax_code.search(cr, uid, [('id', 'child_of', [tax_code_root_id])], order='id')[1:]
-        return self.process_translations(cr, uid, langs, obj_tax_code_template, field, in_ids, obj_tax_code, out_ids, force_write=False, context=context)
+        return self.process_translations(cr, uid, langs, obj_tax_code_template, field, in_ids, obj_tax_code, out_ids, context=context)
 
     def _process_taxes_translations(self, cr, uid, obj_multi, company_id, langs, field, context=None):
         obj_tax_template = self.pool.get('account.tax.template')
         obj_tax = self.pool.get('account.tax')
         in_ids = sorted([x.id for x in obj_multi.chart_template_id.tax_template_ids])
         out_ids = obj_tax.search(cr, uid, [('company_id', '=', company_id)], order='id')
-        return self.process_translations(cr, uid, langs, obj_tax_template, field, in_ids, obj_tax, out_ids, force_write=False, context=context)
+        return self.process_translations(cr, uid, langs, obj_tax_template, field, in_ids, obj_tax, out_ids, context=context)
 
     def _process_fiscal_pos_translations(self, cr, uid, obj_multi, company_id, langs, field, context=None):
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
         in_ids = obj_fiscal_position_template.search(cr, uid, [('chart_template_id', '=', obj_multi.chart_template_id.id)], order='id')
         out_ids = obj_fiscal_position.search(cr, uid, [('company_id', '=', company_id)], order='id')
-        return self.process_translations(cr, uid, langs, obj_fiscal_position_template, field, in_ids, obj_fiscal_position, out_ids, force_write=False, context=context)
+        return self.process_translations(cr, uid, langs, obj_fiscal_position_template, field, in_ids, obj_fiscal_position, out_ids, context=context)
 
 wizard_multi_charts_accounts()
 
