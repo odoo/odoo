@@ -3445,6 +3445,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
         accounting properties... accordingly for the chosen company.
         '''
+        if not context:
+            context = {}
+        # remove the lang to get the untranslated value
+        ctx = dict(context, lang=None)
         obj_data = self.pool.get('ir.model.data')
         ir_values_obj = self.pool.get('ir.values')
         obj_wizard = self.browse(cr, uid, ids[0])
@@ -3465,10 +3469,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     pass
 
         # If the floats for sale/purchase rates have been filled, create templates from them
-        self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
+        self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=ctx)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(cr, uid, obj_wizard.chart_template_id.id, company_id, code_digits=obj_wizard.code_digits, obj_wizard=obj_wizard, context=context)
+        acc_template_ref, taxes_ref, tax_code_ref = self._install_template(cr, uid, obj_wizard.chart_template_id.id, company_id, code_digits=obj_wizard.code_digits, obj_wizard=obj_wizard, context=ctx)
 
         # write values of default taxes for product as super user
         if obj_wizard.sale_tax and taxes_ref:
@@ -3477,7 +3481,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
-        self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
+        self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=ctx)
         return {}
 
     def _prepare_bank_journal(self, cr, uid, line, current_num, default_account_id, company_id, context=None):
