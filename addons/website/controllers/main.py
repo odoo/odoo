@@ -271,9 +271,20 @@ class Website(openerp.addons.web.controllers.main.Home):
     def robots(self):
         return request.website.render('website.robots', {'url_root': request.httprequest.url_root})
 
-    @website.route(['/sitemap.xml'], type='http', auth="public")
-    def sitemap(self):
+    @website.route('/sitemap', type='http', auth='public', multilang=True)
+    def sitemap(self, **kwargs):
         return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
+
+    @website.route('/sitemap.xml', type='http', auth="public")
+    def sitemap_xml(self):
+        body = request.website.render('website.sitemap_xml', {
+            'pages': request.website.list_pages()
+        })
+
+        return request.make_response(body, [
+            ('Content-Type', 'application/xml;charset=utf-8')
+        ])
+
 
 class Images(http.Controller):
     def placeholder(self, response):
