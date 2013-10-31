@@ -55,7 +55,7 @@ def url_for(path, lang=None, keep_query=None):
     if request:
         path = urljoin(request.httprequest.path, path)
         langs = request.context.get('langs')
-        if path[0] == '/' and len(langs) > 1:
+        if path[0] == '/' and (len(langs) > 1 or lang):
             ps = path.split('/')
             lang = lang or request.context.get('lang')
             if ps[1] in langs:

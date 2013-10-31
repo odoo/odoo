@@ -41,7 +41,7 @@ class WebsiteBlog(http.Controller):
         '/blog/cat/<int:category_id>/page/<int:page>/',
         '/blog/tag/',
         '/blog/tag/<int:tag_id>/',
-    ], type='http', auth="public")
+    ], type='http', auth="public", multilang=True)
     def blog(self, category_id=None, blog_post_id=None, tag_id=None, page=1, **post):
         """ Prepare all values to display the blog.
 

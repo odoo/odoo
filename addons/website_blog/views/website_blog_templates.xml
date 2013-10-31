@@ -4,10 +4,10 @@
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout">
         <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
-            <li><a t-attf-href="/blog/cat/%(website_blog.blog_category_1)d/">News</a></li>
+            <li><a t-href="/blog/cat/%(website_blog.blog_category_1)d/">News</a></li>
         </xpath>
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-attf-href="/blog/cat/%(website_blog.blog_category_1)d/">News</a></li>
+            <li><a t-href="/blog/cat/%(website_blog.blog_category_1)d/">News</a></li>
         </xpath>
     </template>
 
@@ -24,17 +24,17 @@
                 <t t-call="website.publish_management">
                     <t t-set="object" t-value="blog_post"/>
                     <t t-set="publish_edit" t-value="True"/>
-                    <t t-set="publish_duplicate" t-value="'/blog/%s/duplicate' % (blog_post.id)"/>
+                    <t t-set="publish_duplicate" t-value="'/blog/#{blog_post.id}/duplicate'"/>
                 </t>
             </div>
             <h2 class="text-center">
-                <a t-attf-href="/blog/#{blog_post.id}" t-field="blog_post.name"></a>
+                <a t-href="/blog/#{blog_post.id}" t-field="blog_post.name"></a>
             </h2>
             <p class="post-meta text-muted text-center" name='blog_post_data'>
                 <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
                 <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
                 <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment">
-                    <a t-attf-href="/blog/#{blog_post.id}/#comment">
+                    <a t-href="/blog/#{blog_post.id}/#comment">
                         <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
                         <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
                     </a>
@@ -69,7 +69,7 @@
             <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                 <span class="icon-tags"/>
                 <t t-foreach="blog_post.tag_ids" t-as="tag">
-                    <a t-attf-href="/blog/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
+                    <a t-href="/blog/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
                 </t>
             </p>
         </xpath>
@@ -90,7 +90,7 @@
         <p class="post-meta text-muted text-center" name="blog_post_data">
             <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
             <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
-            <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment"> With 
+            <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment"> With
                 <a t-attf-href="#comments">
                     <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
                     <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
@@ -169,13 +169,13 @@
             <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                 <span class="icon-tags"/>
                 <t t-foreach="blog_post.tag_ids" t-as="tag">
-                    <a t-attf-href="/blog/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
+                    <a t-href="/blog/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
                 </t>
             </p>
         </xpath>
     </template>
 
-    <!-- Page --> 
+    <!-- Page -->
     <template id="index" name="Blog" page="True">
         <t t-call="website.layout">
             <t t-set="head">
@@ -188,7 +188,7 @@
                         <div class="col-lg-12 col-sm-12" t-if="not blog_post" id="blog_post">
                             <t t-if="category and editable">
                                 <div class="row">
-                                    <a t-attf-href="/blog/#{category.id}/new" class="btn btn-primary pull-right">New Blog Post</a>
+                                    <a t-href="/blog/#{category.id}/new" class="btn btn-primary pull-right">New Blog Post</a>
                                 </div>
                             </t>
                             <t t-foreach="blog_posts" t-as="blog_post" data-publish="">
@@ -301,7 +301,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="categories" t-as="nav_category">
                     <li>
-                        <a t-attf-href="/blog/#{nav_category.id}">
+                        <a t-href="/blog/#{nav_category.id}">
                             <span t-field="nav_category.name"/>
                         </a>
                     </li>

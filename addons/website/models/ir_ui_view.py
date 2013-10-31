@@ -131,7 +131,9 @@ class view(osv.osv):
         arch_section = html.fromstring(
             value, parser=html.HTMLParser(encoding='utf-8'))
 
-        self._normalize_urls(arch_section)
+        # TODO fme: Temporary desactivated because this breaks most of the snippets
+        # Need to find another way to normalize multilang urls (postprocessing) ?
+        # self._normalize_urls(arch_section)
 
         if xpath is None:
             # value is an embedded field on its own, not a view section

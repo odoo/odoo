@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
+import random
+import uuid
+import urllib
+import simplejson
+
+import werkzeug.exceptions
 
 from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
-import random
-import uuid
-import urllib
-import simplejson
 
 def get_order(order_id=None):
     order_obj = request.registry.get('sale.order')
@@ -358,9 +360,16 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="public", multilang=True)
     def add_product(self, cat_id=0, **post):
-        product_id = request.registry.get('product.product').create(request.cr, request.uid,
-            {'name': 'New Product', 'public_categ_id': cat_id}, request.context)
-        return request.redirect("/shop/product/%s/?enable_editor=1" % product_id)
+        if request.httprequest.method != 'POST':
+            return werkzeug.exceptions.MethodNotAllowed(valid_methods=['POST'])
+
+        Product = request.registry.get('product.product')
+        product_id = Product.create(request.cr, request.uid, {
+            'name': 'New Product', 'public_categ_id': cat_id
+        }, context=request.context)
+        product = Product.browse(request.cr, request.uid, product_id, context=request.context)
+
+        return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
 
     def get_pricelist(self):
         if not request.httprequest.session.get('ecommerce_pricelist'):
