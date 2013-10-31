@@ -311,5 +311,11 @@
         </xpath>
     </template>
 
+    <template id="blog_archive_link">
+        <li>
+            <a t-href="/blog/#{blog_post.id}"><t t-esc="blog_post.name"/></a>
+        </li>
+    </template>
+
 </data>
 </openerp>
