@@ -360,10 +360,6 @@ class survey_question(osv.osv):
         'description': fields.text('Description', help="Use this field to add \
             additional explanations about your question", translate=True,
             oldname='descriptive_text'),
-        'display': fields.selection(
-            [('horizontal', 'Horizontal'),
-            ('vertical', 'Vertical')],
-            'Display'),
 
         # Answer
         'type': fields.selection([('free_text', 'Free Text'),
@@ -374,7 +370,8 @@ class survey_question(osv.osv):
                 ('simple_choice_scale', 'One choice on a scale'),
                 ('simple_choice_dropdown', 'One choice in a menu'),
                 ('multiple_choice', 'Some choices in checkboxes'),
-                ('vector', 'Multi-questions'),
+                ('vector',
+                 'Multi-questions'),
                 ('matrix', 'Matrix')
             ], 'Question Type', required=1),
 
@@ -393,12 +390,12 @@ class survey_question(osv.osv):
         'validation_required': fields.boolean('Validate entry',
             oldname='is_validation_require'),
         'validation_type': fields.selection([
-            ('has_length', 'Must Be Specific Length'),
-            ('is_integer', 'Must Be A Whole Number'),
-            ('is_decimal', 'Must Be A Decimal Number'),
-            ('is_date', 'Must Be A Date'),
-            ('is_email', 'Must Be An Email Address')
-            ], 'Text Validation'),
+            ('has_length', 'Must have a specific length'),
+            ('is_integer', 'Must be an integer'),
+            ('is_decimal', 'Must be a decimal number'),
+            ('is_date', 'Must be a date'),
+            ('is_email', 'Must be an email address')
+            ], 'Validation type'),
         'validation_length': fields.integer('Specific length'),
         'validation_min_float_value': fields.float('Minimum value'),
         'validation_max_float_value': fields.float('Maximum value'),
@@ -409,25 +406,14 @@ class survey_question(osv.osv):
         'validation_error_msg': fields.char("Error message if validation \
             fails", oldname='validation_valid_err_msg'),
 
-        'numeric_required_sum': fields.integer('Sum of all choices'),
-        'numeric_required_sum_err_msg': fields.text('Error message',
-            translate=True),
-
-        # 'in_visible_rating_weight': fields.boolean('Is Rating Scale nvisible?'),
-        # 'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
-        # 'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
-        # 'comment_column': fields.boolean('Add comment column in matrix'),
-        # 'column_name': fields.char('Column Name', translate=True),
-        # 'no_of_rows': fields.integer('No of Rows'),
-
         # Constraints on number of answers
         'constr_mandatory': fields.boolean('Mandatory question',
             oldname="is_require_answer"),
-        'constr_type': fields.selection([('all', 'All'),
-            ('at least', 'At Least'),
-            ('at most', 'At Most'),
-            ('exactly', 'Exactly'),
-            ('a range', 'A Range')],
+        'constr_type': fields.selection([('all', 'all'),
+            ('at least', 'at least'),
+            ('at most', 'at most'),
+            ('exactly', 'exactly'),
+            ('a range', 'a range')],
             'Constraint on answers number', oldname='required_type'),
         'constr_maximum_req_ans': fields.integer('Maximum Required Answer',
             oldname='maximum_req_ans'),
@@ -439,48 +425,17 @@ class survey_question(osv.osv):
     _defaults = {
         'sequence': 1,
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
-        'type': lambda s, cr, uid, c: _('multiple_choice'),
-        #'req_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
+        'type': 'free_text',
+
+        'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
         'constr_type': 'at least',
         'constr_minimum_req_ans': 1,
-        #'comment_field_type': 'char',
-        #'comment_label': lambda s, cr, uid, c: _('Other (please specify)'),
-        #'comment_valid_type': 'do_not_validate',
-        #'comment_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
+        'constr_error_msg': lambda s, cr, uid, c:
+                _('This question requires an answer.'),
         'validation_required': 'False',
-        #'validation_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
         #'numeric_required_sum_err_msg': lambda s, cr, uid, c: _('The choices need to add up to [enter sum here].'),
         #'make_comment_field_err_msg': lambda s, cr, uid, c: _('Please enter a comment.'),
-        #'in_visible_answer_type': 1
     }
-
-    def on_change_type(self, cr, uid, ids, type, context=None):
-        ''' Updates the editing view in relation with the question type '''
-        val = {}
-        val['is_require_answer'] = False
-        val['is_comment_require'] = False
-        val['is_validation_require'] = False
-        val['comment_column'] = False
-
-        if type in ['multiple_textboxes_diff_type']:
-            val['in_visible_answer_type'] = False
-            return {'value': val}
-
-        if type in ['rating_scale']:
-            val.update({'in_visible_rating_weight': False,
-                        'in_visible_menu_choice': True})
-            return {'value': val}
-
-        elif type in ['single_textbox']:
-            val.update({'in_visible_rating_weight': True,
-                        'in_visible_menu_choice': True})
-            return {'value': val}
-
-        else:
-            val.update({'in_visible_rating_weight': True,
-                        'in_visible_menu_choice': True,
-                        'in_visible_answer_type': True})
-            return {'value': val}
 
     def on_change_page_id(self, cr, uid, ids, page_id, context=None):
         if page_id:
