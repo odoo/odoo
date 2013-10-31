@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-TODAY OpenERP S.A. <http: //www.openerp.com>
+#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and / or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http: //www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -374,7 +374,6 @@ class survey_question(osv.osv):
                  'Multi-questions'),
                 ('matrix', 'Matrix')
             ], 'Question Type', required=1),
-
         'suggested_answers_ids': fields.one2many('survey.suggestion',
             'question_id', 'Suggested answers', oldname='answer_choice_ids'),
 
@@ -433,8 +432,6 @@ class survey_question(osv.osv):
         'constr_error_msg': lambda s, cr, uid, c:
                 _('This question requires an answer.'),
         'validation_required': 'False',
-        #'numeric_required_sum_err_msg': lambda s, cr, uid, c: _('The choices need to add up to [enter sum here].'),
-        #'make_comment_field_err_msg': lambda s, cr, uid, c: _('Please enter a comment.'),
     }
 
     def on_change_page_id(self, cr, uid, ids, page_id, context=None):
@@ -444,93 +441,93 @@ class survey_question(osv.osv):
             return {'survey_id': page.survey_id and page.survey_id.id}
         return {'value': {}}
 
-    def write(self, cr, uid, ids, vals, context=None):
-        questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type',
-            'required_type', 'req_ans', 'minimum_req_ans', 'maximum_req_ans',
-            'column_heading_ids', 'page_id', 'question'])
-        for question in questions:
-            col_len = len(question['column_heading_ids'])
-            for col in vals.get('column_heading_ids', []):
-                if type(col[2]) == type({}):
-                    col_len += 1
-                else:
-                    col_len -= 1
+    # def write(self, cr, uid, ids, vals, context=None):
+    #     questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type',
+    #         'required_type', 'req_ans', 'minimum_req_ans', 'maximum_req_ans',
+    #         'column_heading_ids', 'page_id', 'question'])
+    #     for question in questions:
+    #         col_len = len(question['column_heading_ids'])
+    #         for col in vals.get('column_heading_ids', []):
+    #             if type(col[2]) == type({}):
+    #                 col_len += 1
+    #             else:
+    #                 col_len -= 1
 
-            que_type = vals.get('type', question['type'])
+    #         que_type = vals.get('type', question['type'])
 
-            if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
-                if not col_len:
-                    raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
-            ans_len = len(question['answer_choice_ids'])
+    #         if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
+    #             if not col_len:
+    #                 raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
+    #         ans_len = len(question['answer_choice_ids'])
 
-            for ans in vals.get('answer_choice_ids', []):
-                if type(ans[2]) == type({}):
-                    ans_len += 1
-                else:
-                    ans_len -= 1
+    #         for ans in vals.get('answer_choice_ids', []):
+    #             if type(ans[2]) == type({}):
+    #                 ans_len += 1
+    #             else:
+    #                 ans_len -= 1
 
-            if que_type not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
-                if not ans_len:
-                    raise osv.except_osv(_('Warning!'), _('You must enter one or more Answers for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
+    #         if que_type not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
+    #             if not ans_len:
+    #                 raise osv.except_osv(_('Warning!'), _('You must enter one or more Answers for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
 
-            req_type = vals.get('required_type', question['required_type'])
+    #         req_type = vals.get('required_type', question['required_type'])
 
-            if que_type in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
-                        'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', \
-                        'numerical_textboxes', 'date', 'date_and_time']:
-                if req_type in ['at least', 'at most', 'exactly']:
-                    if 'req_ans' in vals:
-                        if not vals['req_ans'] or vals['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning!'), _("#Required Answer you entered \
-                                    is greater than the number of answer. \
-                                    Please use a number that is smaller than %d.") % (ans_len + 1))
-                    else:
-                        if not question['req_ans'] or question['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning!'), _("#Required Answer you entered is \
-                                    greater than the number of answer.\
-                                    Please use a number that is smaller than %d.") % (ans_len + 1))
+    #         if que_type in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
+    #                     'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', \
+    #                     'numerical_textboxes', 'date', 'date_and_time']:
+    #             if req_type in ['at least', 'at most', 'exactly']:
+    #                 if 'req_ans' in vals:
+    #                     if not vals['req_ans'] or vals['req_ans'] > ans_len:
+    #                         raise osv.except_osv(_('Warning!'), _("#Required Answer you entered \
+    #                                 is greater than the number of answer. \
+    #                                 Please use a number that is smaller than %d.") % (ans_len + 1))
+    #                 else:
+    #                     if not question['req_ans'] or question['req_ans'] > ans_len:
+    #                         raise osv.except_osv(_('Warning!'), _("#Required Answer you entered is \
+    #                                 greater than the number of answer.\
+    #                                 Please use a number that is smaller than %d.") % (ans_len + 1))
 
-                if req_type == 'a range':
-                    minimum_ans = 0
-                    maximum_ans = 0
-                    minimum_ans = 'minimum_req_ans' in vals and vals['minimum_req_ans'] or question['minimum_req_ans']
-                    maximum_ans = 'maximum_req_ans' in vals and vals['maximum_req_ans'] or question['maximum_req_ans']
+    #             if req_type == 'a range':
+    #                 minimum_ans = 0
+    #                 maximum_ans = 0
+    #                 minimum_ans = 'minimum_req_ans' in vals and vals['minimum_req_ans'] or question['minimum_req_ans']
+    #                 maximum_ans = 'maximum_req_ans' in vals and vals['maximum_req_ans'] or question['maximum_req_ans']
 
-                    if not minimum_ans or minimum_ans > ans_len or not maximum_ans or maximum_ans > ans_len:
-                        raise osv.except_osv(_('Warning!'), _("Minimum Required Answer you\
-                                 entered is greater than the number of answer. \
-                                 Please use a number that is smaller than %d.") % (ans_len + 1))
-                    if maximum_ans <= minimum_ans:
-                        raise osv.except_osv(_('Warning!'), _("Maximum Required Answer is greater \
-                                    than Minimum Required Answer"))
+    #                 if not minimum_ans or minimum_ans > ans_len or not maximum_ans or maximum_ans > ans_len:
+    #                     raise osv.except_osv(_('Warning!'), _("Minimum Required Answer you\
+    #                              entered is greater than the number of answer. \
+    #                              Please use a number that is smaller than %d.") % (ans_len + 1))
+    #                 if maximum_ans <= minimum_ans:
+    #                     raise osv.except_osv(_('Warning!'), _("Maximum Required Answer is greater \
+    #                                 than Minimum Required Answer"))
 
-        return super(survey_question, self).write(cr, uid, ids, vals, context=context)
+    #     return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
-    def create(self, cr, uid, vals, context=None):
-        page = self.pool.get('survey.page').browse(cr, uid, 'page_id' in vals and vals['page_id'] or context['page_id'], context=context)
-        if 'answer_choice_ids' in vals and not len(vals.get('answer_choice_ids', [])) and \
-            vals.get('type') not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
-            raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page.title))
+    # def create(self, cr, uid, vals, context=None):
+    #     page = self.pool.get('survey.page').browse(cr, uid, 'page_id' in vals and vals['page_id'] or context['page_id'], context=context)
+    #     if 'answer_choice_ids' in vals and not len(vals.get('answer_choice_ids', [])) and \
+    #         vals.get('type') not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
+    #         raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page.title))
 
-        if 'column_heading_ids' in vals and not len(vals.get('column_heading_ids', [])) and \
-            vals.get('type') in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
-            raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (vals['question'], page.title))
+    #     if 'column_heading_ids' in vals and not len(vals.get('column_heading_ids', [])) and \
+    #         vals.get('type') in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
+    #         raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (vals['question'], page.title))
 
-        if 'is_require_answer' in vals and vals.get('type') in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
-            'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time']:
-            if vals.get('required_type') in ['at least', 'at most', 'exactly']:
-                if 'answer_choice_ids' in vals and 'answer_choice_ids' in vals and vals.get('req_ans') > len(vals.get('answer_choice_ids', [])):
-                    raise osv.except_osv(_('Warning!'), _("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
-            if vals.get('required_type') == 'a range':
-                if 'answer_choice_ids' in vals:
-                    if not vals.get('minimum_req_ans') or vals['minimum_req_ans'] > len(vals['answer_choice_ids']):
-                        raise osv.except_osv(_('Warning!'), _("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
-                    if not vals.get('maximum_req_ans') or vals['maximum_req_ans'] > len(vals['answer_choice_ids']):
-                        raise osv.except_osv(_('Warning!'), _("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
-                if vals.get('maximum_req_ans', 0) <= vals.get('minimum_req_ans', 0):
-                    raise osv.except_osv(_('Warning!'), _("Maximum Required Answer is greater than Minimum Required Answer."))
+    #     if 'is_require_answer' in vals and vals.get('type') in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
+    #         'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time']:
+    #         if vals.get('required_type') in ['at least', 'at most', 'exactly']:
+    #             if 'answer_choice_ids' in vals and 'answer_choice_ids' in vals and vals.get('req_ans') > len(vals.get('answer_choice_ids', [])):
+    #                 raise osv.except_osv(_('Warning!'), _("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
+    #         if vals.get('required_type') == 'a range':
+    #             if 'answer_choice_ids' in vals:
+    #                 if not vals.get('minimum_req_ans') or vals['minimum_req_ans'] > len(vals['answer_choice_ids']):
+    #                     raise osv.except_osv(_('Warning!'), _("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
+    #                 if not vals.get('maximum_req_ans') or vals['maximum_req_ans'] > len(vals['answer_choice_ids']):
+    #                     raise osv.except_osv(_('Warning!'), _("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
+    #             if vals.get('maximum_req_ans', 0) <= vals.get('minimum_req_ans', 0):
+    #                 raise osv.except_osv(_('Warning!'), _("Maximum Required Answer is greater than Minimum Required Answer."))
 
-        return super(survey_question, self).create(cr, uid, vals, context)
+    #     return super(survey_question, self).create(cr, uid, vals, context)
 
     def survey_save(self, cr, uid, ids, context=None):
         if context is None:

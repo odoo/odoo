@@ -394,7 +394,7 @@
 
                             <!-- The question -->
                             <group colspan="2">
-                                <field name="type" on_change="on_change_type(type)"/>
+                                <field name="type"/>
                                 <field name="question" />
                                 <field name="description" />
                             </group>
@@ -449,72 +449,19 @@
                                 </group>
                             </group>
 
-                           <!-- Question validation -->
-
-        'type': fields.selection([('free_text', 'Free Text'),
-                ('textbox', 'Text box'),
-                ('numerical_box', 'Numerical box'),
-                ('datetime', 'Date and Time'),
-                ('checkbox', 'Checkbox'),
-                ('simple_choice_scale', 'One choice on a scale'),
-                ('simple_choice_dropdown', 'One choice in a menu'),
-                ('multiple_choice', 'Some choices in checkboxes'),
-                ('vector', 'Multi-questions'),
-                ('matrix', 'Matrix')
-            ], 'Question Type', required=1),
-
-
-
-        'constr_mandatory': fields.boolean('Mandatory question',
-            oldname="is_require_answer"),
-        'constr_type': fields.selection([('all', 'all'),
-            ('at least', 'at least'),
-            ('at most', 'at most'),
-            ('exactly', 'exactly'),
-            ('a range', 'a range')],
-            'Constraint on answers number', oldname='required_type'),
-        'constr_maximum_req_ans': fields.integer('Maximum Required Answer',
-            oldname='maximum_req_ans'),
-        'constr_minimum_req_ans': fields.integer('Minimum Required Answer',
-            oldname='minimum_req_ans'),
-        'constr_error_msg': fields.char("Error message if constraints fails",
-            oldname='req_error_msg'),
-
-
-
-
-
+                            <!-- Question validation -->
                             <group colspan="1" string="Question required">
                                 <field name="constr_mandatory" string="Is this question mandatory?"/>
                                 <group colspan="2" attrs="{'invisible':[('constr_mandatory','=',False)]}">
                                     <field name="constr_type" string="Users must answer..."/>
-
-
-
-
-                                <group attrs="{'invisible':[('type','not in', ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time', 'multiple_textboxes_diff_type'])]}">
-
-                                    <group  attrs="{'invisible':[('constr_type','!=','a range')]}">
-                                        <field name="constr_minimum_req_ans"/>
-                                        <field name="constr_maximum_req_ans"/>
+                                    <group colspan="2" attrs="{'invisible':[('constr_type','not in',['at least','a range'])]}">
+                                        <field name="constr_minimum_req_ans" nolabel="1" />
                                     </group>
-                                </group>
-                                <group attrs="{'invisible':[('constr_type','!=','all'),('constr_type','!=','at least'),('constr_type','!=','at most'),('constr_type','!=','exactly'),('constr_type','!=','a range'),('constr_mandatory','!=',True)]}">
-                                    <label string="When the question is not answered, display this error message:"/>
-                                    <field name="constr_error_msg"  nolabel="1"/>
-                                </group>
-                                <group attrs="{'invisible':[('type','not in',['numerical_textboxes'])]}">
-                                    <group  >
-                                        <field name="numeric_required_sum"/>
+                                    <group colspan="2" attrs="{'invisible':[('constr_type','not in',['at most','a range', 'exactly'])]}">
+                                        <field name="constr_maximum_req_ans" nolabel="1" />
                                     </group>
-                                    <newline/>
-                                    <label string="When the choices do not add up correctly, display this error message"/>
-                                    <field name="numeric_required_sum_err_msg"  nolabel="1"/>
+                                    <field name="constr_error_msg" string="Error message"/>
                                 </group>
-                                </group>
-
-
-
                             </group>
 
                         </group>
