@@ -427,11 +427,48 @@ ropenerp.testing.section('server-formats', {
              date3.getUTCHours(), date3.getUTCMinutes(), date3.getUTCSeconds(), date3.getUTCMilliseconds()],
             [2009, 5 - 1, 4, 12, 34, 23, 845]);
     });
+    test('Parse server datetime on 31', function() {
+        var wDate = window.Date;
+        var s = openerp.testing.Stack();
+        return s.push(function() {
+            window.Date = function() {
+                return wDate('2013-10-31 12:34:56');
+            };
+        }, function() {
+            window.Date = wDate;
+        }).execute(function() {
+            return openerp.str_to_datetime('2013-11-11 02:45:21');
+        }).then(function(date) {
+            deepEqual(
+                [date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+                 date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()],
+                [2013, 11 - 1, 11, 2, 45, 21]);
+        });
+
+    });
     test('Parse server date', function () {
         var date = openerp.str_to_date("2009-05-04");
         deepEqual(
             [date.getFullYear(), date.getMonth(), date.getDate()],
             [2009, 5 - 1, 4]);
+    });
+    test('Parse server date on 31', function() {
+        var wDate = window.Date;
+        var s = openerp.testing.Stack();
+        return s.push(function() {
+            window.Date = function() {
+                return wDate('2013-10-31 12:34:56');
+            };
+        }, function() {
+            window.Date = wDate;
+        }).execute(function() {
+            return openerp.str_to_date('2013-11-11');
+        }).then(function(date) {
+            deepEqual(
+                [date.getFullYear(), date.getMonth(), date.getDate()],
+                [2013, 11 - 1, 11]);
+        });
+
     });
     test('Parse server time', function () {
         var date = openerp.str_to_time("12:34:23");
