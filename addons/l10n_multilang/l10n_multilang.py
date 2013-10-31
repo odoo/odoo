@@ -79,7 +79,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return True
 
     def execute(self, cr, uid, ids, context=None):
-        res = super(wizard_multi_charts_accounts, self).execute(cr, uid, ids, context=context)
+        if not context:
+            context = {}
+        # remove the lang to get the untranslated value
+        ctx = dict(context, lang=None)
+        res = super(wizard_multi_charts_accounts, self).execute(cr, uid, ids, context=ctx)
 
         obj_multi = self.browse(cr, uid, ids[0], context=context)
         company_id = obj_multi.company_id.id
