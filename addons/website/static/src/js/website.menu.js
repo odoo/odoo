@@ -9,6 +9,7 @@
         template: 'website.menu.dialog.edit',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
             'click button.js_add_menu': 'add_menu',
+            'click button.js_edit_menu': 'edit_menu',
             'click button.js_delete_menu': 'delete_menu',
         }),
         init: function (menu) {
@@ -66,9 +67,31 @@
             });
             dialog.appendTo(document.body);
         },
+        edit_menu: function (ev) {
+            var self = this;
+            var menu_id = $(ev.currentTarget).closest('[data-menu-id]').data('menu-id');
+            var menu = self.flat[menu_id];
+            if (menu) {
+                var dialog = new website.menu.MenuEntryDialog(undefined, menu);
+                dialog.on('update-menu', this, function (link) {
+                    var id = link.shift();
+                    var menu_obj = self.flat[id];
+                    _.extend(menu_obj, {
+                        name: link[2],
+                        url: link[0],
+                        new_window: link[1],
+                    });
+                    var $menu = self.$('[data-menu-id="' + id + '"]');
+                    $menu.find('> div > span').text(menu_obj.name);
+                });
+                dialog.appendTo(document.body);
+            } else {
+                alert("Could not find menu entry");
+            }
+        },
         delete_menu: function (ev) {
             var self = this;
-            var $menu = $(ev.currentTarget).parents('[data-menu-id]').first();
+            var $menu = $(ev.currentTarget).closest('[data-menu-id]');
             var mid = $menu.data('menu-id')|0;
             if (mid) {
                 this.to_delete.push(mid);
@@ -109,9 +132,50 @@
 
     website.menu.MenuEntryDialog = website.editor.LinkDialog.extend({
         template: 'website.menu.dialog.add',
+        init: function (editor, data) {
+            this.data = data;
+            this.update_mode = !!this.data;
+            return this._super.apply(this, arguments);
+        },
+        start: function () {
+            var self = this;
+            return $.when(this._super.apply(this, arguments)).then(function () {
+                if (self.data) {
+                    self.manual_fill(self.data);
+                }
+            });
+        },
+        manual_fill: function (data) {
+            if (data.name) {
+                this.$('#link-text').val(this.data.name)[0].focus();
+            }
+            if (data.url) {
+                var target;
+                var target = this.$('#link-existing');
+                target.val(data.url);
+                if (!target.val()) {
+                    var mailto = data.url.match(/^mailto:(.*)/);
+                    if (mailto) {
+                        target = this.$('#link-email');
+                        target.val(mailto[1]);
+                    } else {
+                        target = this.$('#link-external');
+                        target.val(data.url);
+                        if (data.new_window !== undefined) {
+                            this.$('input.window-new').prop('checked', data.new_window);
+                        }
+                    }
+                }
+                this.changed(target);
+            }
+        },
         make_link: function (url, new_window, label) {
             var menu_label = this.$('input#link-text').val() || label;
-            this.trigger('add-menu', [url, new_window, menu_label]);
+            if (this.data) {
+                this.trigger('update-menu', [this.data.id, url, new_window, menu_label]);
+            } else {
+                this.trigger('add-menu', [url, new_window, menu_label]);
+            }
         },
     });
 
