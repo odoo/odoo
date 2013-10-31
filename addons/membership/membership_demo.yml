@@ -6,13 +6,10 @@
     invoice_pool = self.pool.get('account.invoice')
     invoice_pool.signal_invoice_open(cr, uid, invoice_ids)
 
-    i = 0
-    for id in invoice_ids:
-        if i > 6:
-            pay = invoice_pool.pay_and_reconcile(cr, uid, [id],
-                9050.0, ref('account.cash'), ref('account.period_10'),
-                ref('account.bank_journal'), ref('account.cash'),
-                ref('account.period_10'), ref('account.bank_journal'),
-                name='Payment for test customer invoice')
-            assert (pay == True), "Incorrect Payment"
-        i = i + 1
+    for id in invoice_ids[-4:]:
+        pay = invoice_pool.pay_and_reconcile(cr, uid, [id],
+            9050.0, ref('account.cash'), ref('account.period_10'),
+            ref('account.bank_journal'), ref('account.cash'),
+            ref('account.period_10'), ref('account.bank_journal'),
+            name='Payment for test customer invoice')
+        assert (pay == True), "Incorrect Payment"
