@@ -117,8 +117,7 @@ class _column(object):
         self.groups = False  # CSV list of ext IDs of groups that can access this field
         self.deprecated = False # Optional deprecation warning
         for a in args:
-            if args[a]:
-                setattr(self, a, args[a])
+            setattr(self, a, args[a])
  
     def restart(self):
         pass
