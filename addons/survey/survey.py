@@ -366,16 +366,16 @@ class survey_question(osv.osv):
             'Display'),
 
         # Answer
-        'type': fields.selection([('textbox', 'Text box'),
+        'type': fields.selection([('free_text', 'Free Text'),
+                ('textbox', 'Text box'),
                 ('numerical_box', 'Numerical box'),
-                ('free_text', 'Free Text'),
                 ('datetime', 'Date and Time'),
                 ('checkbox', 'Checkbox'),
                 ('simple_choice_scale', 'One choice on a scale'),
                 ('simple_choice_dropdown', 'One choice in a menu'),
                 ('multiple_choice', 'Some choices in checkboxes'),
-                ('vector', 'Container of questions'),
-                ('matrix', 'Container of containers of questions')
+                ('vector', 'Multi-questions'),
+                ('matrix', 'Matrix')
             ], 'Question Type', required=1),
 
         'suggested_answers_ids': fields.one2many('survey.suggestion',
@@ -393,7 +393,6 @@ class survey_question(osv.osv):
         'validation_required': fields.boolean('Validate entry',
             oldname='is_validation_require'),
         'validation_type': fields.selection([
-            ('none', '''Don't validate'''),
             ('has_length', 'Must Be Specific Length'),
             ('is_integer', 'Must Be A Whole Number'),
             ('is_decimal', 'Must Be A Decimal Number'),
@@ -401,8 +400,10 @@ class survey_question(osv.osv):
             ('is_email', 'Must Be An Email Address')
             ], 'Text Validation'),
         'validation_length': fields.integer('Specific length'),
-        'validation_min_value': fields.float('Minimum value'),
-        'validation_max_value': fields.float('Maximum value'),
+        'validation_min_float_value': fields.float('Minimum value'),
+        'validation_max_float_value': fields.float('Maximum value'),
+        'validation_min_int_value': fields.integer('Minimum value'),
+        'validation_max_int_value': fields.integer('Maximum value'),
         'validation_min_date': fields.date('Start date range'),
         'validation_max_date': fields.date('End date range'),
         'validation_error_msg': fields.char("Error message if validation \
@@ -446,7 +447,7 @@ class survey_question(osv.osv):
         #'comment_label': lambda s, cr, uid, c: _('Other (please specify)'),
         #'comment_valid_type': 'do_not_validate',
         #'comment_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
-        'validation_type': 'do_not_validate',
+        'validation_required': 'False',
         #'validation_valid_err_msg': lambda s, cr, uid, c: _('The comment you entered is in an invalid format.'),
         #'numeric_required_sum_err_msg': lambda s, cr, uid, c: _('The choices need to add up to [enter sum here].'),
         #'make_comment_field_err_msg': lambda s, cr, uid, c: _('Please enter a comment.'),
