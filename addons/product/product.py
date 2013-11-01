@@ -396,6 +396,17 @@ class product_template(osv.osv):
                     raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        template = self.read(cr, uid, id, ['name', 'product_variant_ids'], context=context)
+        default = default.copy()
+        default.update(name=_("%s (copy)") % (template['name']))
+        id = super(product_template, self).copy(cr, uid, id, default=default, context=context)
+        if template['product_variant_ids']:
+            self.write(cr, uid, id, default, context)
+        return id
+
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
         'list_price': 1,
@@ -788,10 +799,9 @@ class product_product(osv.osv):
         # will do the other languages).
         context_wo_lang = context.copy()
         context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name'], context=context_wo_lang)
+        product = self.read(cr, uid, id, ['name', 'list_price', 'standard_price', 'categ_id'], context=context_wo_lang)
         default = default.copy()
-        default.update(name=_("%s (copy)") % (product['name']))
-
+        default.update(name=_("%s (copy)") % (product['name']), list_price=product['list_price'], standard_price=product['standard_price'], categ_id=product['categ_id'][0], product_tmpl_id=None)
         if context.get('variant',False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
                     'price_margin', 'price_extra']
