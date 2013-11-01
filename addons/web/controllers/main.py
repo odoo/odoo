@@ -33,10 +33,9 @@ import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
 from openerp.tools import config
+from openerp import http
 
-from .. import http
-
-from openerp.addons.web.http import request
+from openerp.http import request
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -91,13 +90,16 @@ db_list = http.db_list
 db_monodb = http.db_monodb
 
 def redirect_with_hash(url, code=303):
+    redirect_code = "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
     if request.httprequest.user_agent.browser == 'msie':
         try:
             version = float(request.httprequest.user_agent.version)
             if version < 10:
-                return "<html><head><script>window.location = '%s#' + location.hash;</script></head></html>" % url
+                return redirect_code
         except Exception:
             pass
+    elif request.httprequest.user_agent.browser == 'safari':
+        return redirect_code
     return werkzeug.utils.redirect(url, code)
 
 def module_topological_sort(modules):

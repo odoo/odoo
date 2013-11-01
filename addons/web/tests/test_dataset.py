@@ -2,7 +2,7 @@
 from . import common
 
 import openerp.addons.web.controllers.main
-from openerp.addons.web.http import request as req
+from openerp.http import request as req
 
 class TestDataSetController(common.MockRequestCase):
     def setUp(self):

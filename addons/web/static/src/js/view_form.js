@@ -566,6 +566,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_processed_onchange: function(result, processed) {
         try {
+        var fields = this.fields;
+        _(result.domain).each(function (domain, fieldname) {
+            var field = fields[fieldname];
+            if (!field) { return; }
+            field.node.attrs.domain = domain;
+        });
+            
         if (result.value) {
             this._internal_set_values(result.value, processed);
         }
@@ -578,13 +585,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 ]
             });
         }
-
-        var fields = this.fields;
-        _(result.domain).each(function (domain, fieldname) {
-            var field = fields[fieldname];
-            if (!field) { return; }
-            field.node.attrs.domain = domain;
-        });
 
         return $.Deferred().resolve();
         } catch(e) {
@@ -2803,10 +2803,39 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     init: function(field_manager, node) {
         var self = this;
         this._super(field_manager, node);
-        this.values = _(this.field.selection).chain()
-            .reject(function (v) { return v[0] === false && v[1] === ''; })
-            .unshift([false, ''])
-            .value();
+        this.set("value", false);
+        this.set("values", []);
+        this.records_orderer = new instance.web.DropMisordered();
+        this.field_manager.on("view_content_has_changed", this, function() {
+            var domain = new openerp.web.CompoundDomain(this.build_domain()).eval();
+            if (! _.isEqual(domain, this.get("domain"))) {
+                this.set("domain", domain);
+            }
+        });
+    },
+    initialize_field: function() {
+        instance.web.form.ReinitializeFieldMixin.initialize_field.call(this);
+        this.on("change:domain", this, this.query_values);
+        this.set("domain", new openerp.web.CompoundDomain(this.build_domain()).eval());
+        this.on("change:values", this, this.render_value);
+    },
+    query_values: function() {
+        var self = this;
+        var def;
+        if (this.field.type === "many2one") {
+            var model = new openerp.Model(openerp.session, this.field.relation);
+            def = model.call("search", [this.get("domain")], {"context": this.build_context()}).then(function(record_ids) {
+                return model.call("name_get", [record_ids] , {"context": self.build_context()});
+            });
+        } else {
+            var values = _.reject(this.field.selection, function (v) { return v[0] === false && v[1] === ''; });
+            def = $.when(values);
+        }
+        this.records_orderer.add(def).then(function(values) {
+            if (! _.isEqual(values, self.get("values"))) {
+                self.set("values", values);
+            }
+        });
     },
     initialize_content: function() {
         // Flag indicating whether we're in an event chain containing a change
@@ -2837,8 +2866,8 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     },
     store_dom_value: function () {
         if (!this.get('effective_readonly') && this.$('select').length) {
-            this.internal_set_value(
-                this.values[this.$('select')[0].selectedIndex][0]);
+            var val = JSON.parse(this.$('select').val());
+            this.internal_set_value(val);
         }
     },
     set_value: function(value_) {
@@ -2847,17 +2876,18 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         this._super(value_);
     },
     render_value: function() {
-        if (!this.get("effective_readonly")) {
-            var index = 0;
-            for (var i = 0, ii = this.values.length; i < ii; i++) {
-                if (this.values[i][0] === this.get('value')) index = i;
-            }
-            this.$el.find('select')[0].selectedIndex = index;
+        var values = this.get("values");
+        values =  [[false, this.node.attrs.placeholder || '']].concat(values);
+        var found = _.find(values, function(el) { return el[0] === this.get("value"); }, this);
+        if (! found) {
+            found = [this.get("value"), _t('Unknown')];
+            values = [found].concat(values);
+        }
+        if (! this.get("effective_readonly")) {
+            this.$().html(QWeb.render("FieldSelectionSelect", {widget: this, values: values}));
+            this.$("select").val(JSON.stringify(found[0]));
         } else {
-            var self = this;
-            var option = _(this.values)
-                .detect(function (record) { return record[0] === self.get('value'); });
-            this.$el.text(option ? option[1] : this.values[0][1]);
+            this.$el.text(found[1]);
         }
     },
     focus: function() {
@@ -5667,7 +5697,7 @@ instance.web.form.FieldMany2ManyCheckBoxes = instance.web.form.AbstractField.ext
         this.records_orderer = new instance.web.DropMisordered();
     },
     initialize_field: function() {
-        instance.web.form.ReinitializeFieldMixin.initialize_field.call(this)
+        instance.web.form.ReinitializeFieldMixin.initialize_field.call(this);
         this.on("change:domain", this, this.query_records);
         this.set("domain", new openerp.web.CompoundDomain(this.build_domain()).eval());
         this.on("change:records", this, this.render_value);
