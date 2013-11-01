@@ -151,6 +151,11 @@
                                             <a name="%(action_report_crm_opportunity_salesteam)d" type="action"><field name="monthly_planned_revenue" widget="sparkline_bar" options="{'height': '20px', 'barWidth': '4', 'barSpacing': '1', 'delayIn': '3000', 'tooltip_suffix_field': 'currency_symbol'}">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field></a>
                                         </div>
                                     </div>
+                                    <div class="oe_kanban_salesteams_avatars">
+                                        <t t-foreach="record.member_ids.raw_value.slice(0,10)" t-as="member">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                        </t>
+                                    </div>
                                 </div>
                             </div>
                         </t>
