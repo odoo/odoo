@@ -68,9 +68,6 @@ class mail_mail(osv.Model):
         'state': 'outgoing',
     }
 
-    def name_get(self, cr, uid, ids, context=None):
-        return [(mail["id"], "%s" % (mail['subject'] or "New Mail")) for mail in self.read(cr, uid, ids, ['subject'], context=context)]
-
     def default_get(self, cr, uid, fields, context=None):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         # To remove when automatic context propagation is removed in web client
