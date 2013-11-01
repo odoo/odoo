@@ -418,9 +418,11 @@ property or property parameter."),
                         vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
                                                     'datas_fname': 'invitation.ics',
                                                     'datas': str(ics_file).encode('base64')})]
-                    mail_id.append(mail_pool.create(cr, uid, vals, context=context))
-        mail_pool.send(cr, uid, mail_id, context=context)
-        return True
+                    if not attendee.partner_id.opt_out:
+                        mail_id.append(mail_pool.create(cr, uid, vals, context=context))
+        if mail_id:
+            return mail_pool.send(cr, uid, mail_id, context=context)
+        return False
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         """
