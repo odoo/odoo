@@ -205,11 +205,11 @@ class QWeb(orm.AbstractModel):
     def eval(self, expr, v):
         try:
             return v.safe_eval(expr)
-        except (osv.except_osv, orm.except_orm), err:
-            raise orm.except_orm("QWeb Error", "Invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), err[1]))
-        except Exception:
-            raise QWebException("QWeb: invalid expression %r while rendering template '%s'." % (expr, v.get('__template__')),
-                template=v.get('__template__'))
+        except Exception, e:
+            # add qweb metdata on exception
+            setattr(e, 'qweb_eval', expr)
+            setattr(e, 'qweb_template', v.get('__template__'))
+            raise
 
     def eval_object(self, expr, v):
         return self.eval(expr, v)
@@ -308,14 +308,13 @@ class QWeb(orm.AbstractModel):
             for n in e.childNodes:
                 try:
                     g_inner.append(self.render_node(n, v))
-                except (osv.except_osv, orm.except_orm), err:
-                    raise err
-                except QWebException, err:
-                    if not err.node:
-                        err.node = e
-                    raise err
-                except Exception, err:
-                    raise QWebException("%s" % err, template=v.get('__template__'), node=e)
+                except Exception, ex:
+                    # add qweb metdata on exception
+                    if not getattr(ex, 'qweb_template', None):
+                        setattr(e, 'qweb_template', v.get('__template__'))
+                    if not getattr(ex, 'qweb_node', None):
+                        setattr(ex, 'qweb_node', e)
+                    raise
         name = str(e.nodeName)
         inner = "".join(g_inner)
         trim = t_att.get("trim", 0)
