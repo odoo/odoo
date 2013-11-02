@@ -237,7 +237,7 @@ class test_mail(TestMailBase):
         self.res_users.write(cr, uid, [uid], {'email': 'a@a', 'notification_email_send': 'comment'})
         self.res_users.write(cr, uid, [self.user_raoul_id], {'email': 'r@r'})
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
-        p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
+        p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b', 'notification_email_send': 'comment'})
         # 2 - Carine Poilvache, with email, should receive emails for emails
         p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
