@@ -60,6 +60,7 @@ class survey_send_invitation(osv.osv_memory):
         survey_obj = self.pool.get('survey')
         msg = ""
         name = ""
+        survey_id = 0
         for sur in survey_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             name += "\n --> " + sur.title + "\n"
             if sur.state != 'open':
@@ -67,6 +68,7 @@ class survey_send_invitation(osv.osv_memory):
             data['mail_subject'] = _("Invitation for %s") % (sur.title)
             data['mail_subject_existing'] = _("Invitation for %s") % (sur.title)
             data['mail_from'] = sur.responsible_id.email
+            survey_id = sur.id
         if msg:
             raise osv.except_osv(_('Warning!'), _('The following surveys are not in open state: %s') % msg)
         data['mail'] = _('''
@@ -82,7 +84,7 @@ Thanks,''') % (
             self.pool.get('ir.config_parameter').get_param(
                 cr, uid, 'web.base.url', default='http://localhost:8069',
                 context=context)
-                + '#id=%d&view_type=form&model=survey' % sur.id)
+                + '#id=%d&view_type=form&model=survey' % survey_id)
         return data
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False):
