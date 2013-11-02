@@ -269,7 +269,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
-        return request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+        body = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+        return request.make_response(body, headers=[('Content-Type', 'text/plain')])
 
     @website.route('/sitemap', type='http', auth='public', multilang=True)
     def sitemap(self, **kwargs):
