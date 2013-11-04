@@ -136,11 +136,8 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {
             'path': path,
         }
-        try:
-            html = request.website.render(path, values)
-        except ValueError:
-            html = request.website.render('website.404', values)
-        return html
+
+        return request.website.render(path, values)
 
     @website.route('/website/customize_template_toggle', type='json', auth='user')
     def customize_template_set(self, view_id):
@@ -281,7 +278,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
-        return request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+        body = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+        return request.make_response(body, headers=[('Content-Type', 'text/plain')])
 
     @website.route('/sitemap', type='http', auth='public', multilang=True)
     def sitemap(self, **kwargs):

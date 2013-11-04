@@ -391,8 +391,8 @@
                         <h1 class="container mt32">500: Internal Server Error!</h1>
                     </div>
                     <t t-if="editable">
-                        <h3>An exception appear in the template: <span id="exception_template" t-esc="template"/></h3>
-                        <b id="exception_message" t-esc="message"/>
+                        <h3>Exception in template: <span id="exception_template" t-esc="template"/></h3>
+                        <h4 t-if="expr">Expression: <t t-esc="expr"/></h4>
                         <pre id="exception_node" t-esc="node"/>
                         <pre id="exception_traceback" t-esc="traceback"/>
                     </t>
