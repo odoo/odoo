@@ -2242,8 +2242,9 @@ class stock_warehouse(osv.osv):
 
     def onchange_filter_default_resupply_wh_id(self, cr, uid, ids, default_resupply_wh_id, resupply_wh_ids, context=None):
         resupply_wh_ids = set([x['id'] for x in (self.resolve_2many_commands(cr, uid, 'resupply_wh_ids', resupply_wh_ids, ['id']))])
-        resupply_wh_ids.add(default_resupply_wh_id)
-        resupply_wh_ids = list(resupply_wh_ids)
+        if default_resupply_wh_id: #If we are removing the default resupply, we don't have default_resupply_wh_id 
+            resupply_wh_ids.add(default_resupply_wh_id)
+        resupply_wh_ids = list(resupply_wh_ids)        
         return {'value': {'resupply_wh_ids': resupply_wh_ids}}
 
     def _get_inter_wh_location(self, cr, uid, warehouse, context=None):
@@ -3399,7 +3400,7 @@ class stock_picking_type(osv.osv):
         'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in source location.'),
         'color': fields.integer('Color Index'),
         'delivery': fields.boolean('Print delivery'),
-        'sequence_id': fields.many2one('ir.sequence', 'Sequence', required=True),
+        'sequence_id': fields.many2one('ir.sequence', 'Reference Sequence', required=True),
         'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
         #TODO: change field name to "code" as it's not a many2one anymore
