@@ -123,7 +123,7 @@ class survey_survey(osv.osv):
         'public_url': fields.function(_get_public_url,
             string="Public link", type="char", store=True),
         'token': fields.char('Public token', size=36, required=True,
-            readonly=True,),
+            readonly=True),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
     }
