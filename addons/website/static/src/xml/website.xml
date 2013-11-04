@@ -61,4 +61,27 @@
         </div>
     </t>
 
+    <t t-name="website.error_dialog">
+        <div class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                        <div class="h2"><t t-esc="title"/></div>
+                    </div>
+                    <div class="modal-body">
+                        <section>
+                            <t t-esc="message"/>
+                        </section>
+                        <section class="mt32">
+                            You have encountered an error. You can edit in the <a t-att-href="backend_url">backend</a> this data.
+                        </section>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" href="#" class="close btn btn-default">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 </templates>

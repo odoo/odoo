@@ -53,10 +53,6 @@
 
         <template id="detail">
             <t t-call="website.layout">
-            <t t-set="head">
-                <script type="text/javascript" src="/website_hr_recruitment/static/src/js/recruitment.js"></script>
-                <t t-raw="head or ''"/>
-            </t>
             <t t-set="additional_title">Job Detail</t>
             <div id="wrap">
                 <div class="container oe_website_hr_recruitment">
@@ -70,6 +66,7 @@
                         <t t-call="website.publish_management">
                             <t t-set="object" t-value="job"/>
                             <t t-set="publish_edit" t-value="True"/>
+                            <t t-set="publish_controller">/job/publish</t>
                         </t>
                     </div>
                 </div>

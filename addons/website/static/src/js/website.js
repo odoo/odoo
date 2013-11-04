@@ -117,6 +117,16 @@
         return all_ready;
     };
 
+    website.error = function(data, url) {
+        var $error = $(openerp.qweb.render('website.error_dialog', {
+            'title': data.data ? data.data.arguments[0] : data.statusText,
+            'message': data.data ? data.data.arguments[1] : "",
+            'backend_url': url
+        }));
+        $error.appendTo("body");
+        $error.modal('show');
+    };
+
     dom_ready.then(function () {
 
         /* ----- PUBLISHING STUFF ---- */
@@ -135,11 +145,13 @@
 
         $(document).on('click', '.js_publish', function (e) {
             e.preventDefault();
-            var $data = $(":first", this).parents("[data-publish]");
-            $data.attr("data-publish", $data.first().attr("data-publish") == 'off' ? 'on' : 'off');
-            openerp.jsonRpc('/website/publish', 'call', {'id': $(this).data('id'), 'object': $(this).data('object')})
+            var $a = $(this);
+            var $data = $a.find(":first").parents("[data-publish]");
+            openerp.jsonRpc($a.data('controller') || '/website/publish', 'call', {'id': +$a.data('id'), 'object': $a.data('object')})
                 .then(function (result) {
                     $data.attr("data-publish", +result ? 'on' : 'off');
+                }).fail(function (err, data) {
+                    website.error(data, '/web#model='+$a.data('object')+'&id='+$a.data('id'));
                 });
         });
 
@@ -151,11 +163,13 @@
             $data.toggleClass("css_unpublish css_publish");
             $btn.removeClass("btn-default btn-success");
 
-            openerp.jsonRpc('/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
+            openerp.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
                 .then(function (result) {
                     $btn.toggleClass("btn-default", !result).toggleClass("btn-success", result);
                     $data.toggleClass("css_unpublish", !result).toggleClass("css_publish", result);
                     $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
+                }).fail(function (err, data) {
+                    website.error(data, '/web#model='+$data.data('object')+'&id='+$data.data('id'));
                 });
         });
 
