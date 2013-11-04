@@ -219,7 +219,7 @@ def route(route, type="http", auth="user"):
         configuration indicating the current database nor the current user.
     """
     assert type in ["http", "json"]
-    assert auth in auth_methods.keys()
+    assert auth in auth_methods
     def decorator(f):
         if isinstance(route, list):
             f.routes = route
@@ -1025,7 +1025,7 @@ class Root(object):
                                         url = url[: -1]
                                 routing_map.add(routing.Rule(url, endpoint=mv))
 
-        modules_set = set(controllers_per_module.keys()) - set(['', 'web'])
+        modules_set = set(controllers_per_module) - set(['', 'web'])
         # building all none methods
         gen(['', "web"] + sorted(modules_set), True)
         if not db:
