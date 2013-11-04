@@ -119,15 +119,12 @@ class purchase_requisition(osv.osv):
             context = {}
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'purchase_requisition', 'purchase_line_tree', context=context)
         res['context'] = context
-        po_ids_browse = self.browse(cr, uid, ids, context=context)[0].po_line_ids
-        po_ids = []
-        for po in po_ids_browse:
-            po_ids.append(po.id)
-        res['context'].update({
+        po_lines = self.browse(cr, uid, ids, context=context)[0].po_line_ids
+        res['context'] = {
             'search_default_groupby_product': True,
             'search_default_hide_cancelled': True,
-        })
-        res['domain'] = [('id', 'in', po_ids)]
+        }
+        res['domain'] = [('id', 'in', [line.id for line in po_lines])]
         return res
 
     def open_rfq(self, cr, uid, ids, context=None):
