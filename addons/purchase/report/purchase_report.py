@@ -96,16 +96,14 @@ class purchase_report(osv.osv):
                     count(*) as nbr,
                     (l.price_unit*l.product_qty)::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(t.standard_price*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
-
                     sum(t.standard_price*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
                     (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average
-                from purchase_order s
-                    left join purchase_order_line l on (s.id=l.order_id)
+                from purchase_order_line l
+                    join purchase_order s on (l.order_id=s.id)
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
-                where l.product_id is not null
                 group by
                     s.company_id,
                     s.create_uid,
