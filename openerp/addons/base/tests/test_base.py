@@ -320,30 +320,30 @@ class test_translation(common.TransactionCase):
         cr, uid = self.cr, self.uid
         
         no_context_cat = self.res_category.browse(cr, uid, self.cat_id)
-        self.assertTrue(no_context_cat.name == 'Customers', "Error in basic name_get")
+        self.assertEqual(no_context_cat.name, 'Customers', "Error in basic name_get")
 
         fr_context_cat = self.res_category.browse(cr, uid, self.cat_id, context={'lang':'fr_BE'})
-        self.assertTrue(fr_context_cat.name == 'Clients', "Translation not found")
+        self.assertEqual(fr_context_cat.name, 'Clients', "Translation not found")
 
     def test_102_duplicate_record(self):
         cr, uid = self.cr, self.uid
         self.new_cat_id = self.res_category.copy(cr, uid, self.cat_id, context={'lang':'fr_BE'})
 
         no_context_cat = self.res_category.browse(cr, uid, self.new_cat_id)
-        self.assertTrue(no_context_cat.name == 'Customers', "Duplication did not set untranslated value")
+        self.assertEqual(no_context_cat.name, 'Customers', "Duplication did not set untranslated value")
 
         fr_context_cat = self.res_category.browse(cr, uid, self.new_cat_id, context={'lang':'fr_BE'})
-        self.assertTrue(fr_context_cat.name == 'Clients', "Did not found translation for initial value")
+        self.assertEqual(fr_context_cat.name, 'Clients', "Did not found translation for initial value")
 
     def test_103_duplicate_record_fr(self):
         cr, uid = self.cr, self.uid
         self.new_fr_cat_id = self.res_category.copy(cr, uid, self.cat_id, default={'name': 'Clients (copie)'}, context={'lang':'fr_BE'})
 
         no_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id)
-        self.assertTrue(no_context_cat.name == 'Clients (copie)', "Duplication with default value not applied")
+        self.assertEqual(no_context_cat.name, 'Clients (copie)', "Duplication with default value not applied")
 
         fr_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id, context={'lang':'fr_BE'})
-        self.assertTrue(fr_context_cat.name == 'Clients', "Did not found translation for initial value")
+        self.assertEqual(fr_context_cat.name, 'Clients', "Did not found translation for initial value")
 
 
 if __name__ == '__main__':
