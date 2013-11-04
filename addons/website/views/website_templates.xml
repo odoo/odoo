@@ -122,8 +122,21 @@
                                                     <t t-call="website.submenu"/>
                                                 </t>
 
-                                                <li t-if="user_id.id == website.public_user.id"><a href="/web">Sign in</a></li>
-                                                <li t-if="user_id.id != website.public_user.id"><a href="/web"><span t-field="user_id.name"/></a></li>
+                                                <li class="active" t-if="user_id.id == website.public_user.id">
+                                                    <a t-attf-href="/web#redirect=#{ url_for('') }">
+                                                        Sign in
+                                                    </a>
+                                                </li>
+                                                <li class="active dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                        <span t-esc="user_id.name"/>
+                                                        <span class="caret"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu js_usermenu" role="menu">
+                                                        <li><a href="/web" role="menuitem">Go to backend</a></li>
+                                                        <li><a t-attf-href="/web/session/logout?redirect=#{ url_for('') }" role="menuitem">Logout</a></li>
+                                                    </ul>
+                                                </li>
                                                 <li t-if="request.multilang and
                                                             (len(website.language_ids) &gt; 1 or editable)" class="dropdown">
                                                     <!-- TODO: use flags for language selection -->
