@@ -79,8 +79,8 @@ class crm_case_stage(osv.osv):
     }
 
     _defaults = {
-        'sequence': lambda *args: 1,
-        'probability': lambda *args: 0.0,
+        'sequence': 1,
+        'probability': 0.0,
         'on_change': True,
         'fold': False,
         'type': 'both',

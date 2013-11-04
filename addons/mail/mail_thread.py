@@ -577,7 +577,8 @@ class mail_thread(osv.AbstractModel):
             return action
         if msg_id and not (model and res_id):
             msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
-            model, res_id = msg.model, msg.res_id
+            if msg.exists():
+                model, res_id = msg.model, msg.res_id
 
         # if model + res_id found: try to redirect to the document or fallback on the Inbox
         if model and res_id:
