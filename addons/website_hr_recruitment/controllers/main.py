@@ -74,14 +74,9 @@ class website_hr_recruitment(http.Controller):
            }
         return request.website.render("website_hr_recruitment.thankyou", values)
 
-    @website.route(['/apply/<int:id>'], type='http', auth="public", multilang=True)
-    def applyjobpost(self, id=0, **kwargs):
-        id = id and int(id) or 0
-        job = request.registry['hr.job'].browse(request.cr, request.uid, id)
-        values = {
-            'job': job
-        }
-        return request.website.render("website_hr_recruitment.applyjobpost", values)
+    @website.route(['/apply/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
+    def applyjobpost(self, job=None, **kwargs):
+        return request.website.render("website_hr_recruitment.applyjobpost", { 'job': job })
 
     @website.route('/recruitment/published', type='json', auth="admin", multilang=True)
     def published (self, id, **post):
