@@ -5527,15 +5527,15 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                     .read_slice(_.union(_.keys(self.distant_fields), ['id']), {}).then(function (records) {
                         var ids = _.pluck(records, 'id');
                         return self.dataset.name_get(ids).then(function (records_name) {
-                                _.each(records, function (record) {
-                                    var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
-                                    if (record.fold && record.id != self.get('value')) {
-                                        selection_folded.push([record.id, name]);
-                                    } else {
-                                        selection_unfolded.push([record.id, name]);
-                                    }
-                                });
+                            _.each(records, function (record) {
+                                var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
+                                if (record.fold && record.id != self.get('value')) {
+                                    selection_folded.push([record.id, name]);
+                                } else {
+                                    selection_unfolded.push([record.id, name]);
+                                }
                             });
+                        });
                     });
             } else {
                 // For field type selection filter values according to
@@ -5566,7 +5566,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         if (this.distant_fields) {
             return $.when(this.distant_fields);
         }
-        return new instance.web.Model(self.field.relation).call("fields_get", [["bar_fold", "bar_color"]]).then(function(fields) {
+        return new instance.web.Model(self.field.relation).call("fields_get", [["fold"]]).then(function(fields) {
             self.distant_fields = fields;
             return fields;
         });
