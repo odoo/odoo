@@ -4985,7 +4985,6 @@ class BaseModel(object):
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fields = self.fields_get(cr, uid, context=context)
 
-        translation_records = []
         for field_name, field_def in fields.items():
             # we must recursively copy the translations for o2o and o2m
             if field_def['type'] == 'one2many':
@@ -4999,22 +4998,30 @@ class BaseModel(object):
                     target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
             # and for translatable fields we keep them for copy
             elif field_def.get('translate'):
-                trans_name = ''
+
                 if field_name in self._columns:
                     trans_name = self._name + "," + field_name
+                    res_id = new_id
+                
                 elif field_name in self._inherit_fields:
                     trans_name = self._inherit_fields[field_name][0] + "," + field_name
-                if trans_name:
-                    trans_ids = trans_obj.search(cr, uid, [
-                            ('name', '=', trans_name),
-                            ('res_id', '=', old_id)
-                    ])
-                    translation_records.extend(trans_obj.read(cr, uid, trans_ids, context=context))
+                    # get the id of the inherit record
+                    inherit_field_name = self._inherit_fields[field_name][1]
+                    res_id = self.read(cr, uid, [new_id], [inherit_field_name], context=context)[0][inherit_field_name][0]
 
-        for record in translation_records:
-            del record['id']
-            record['res_id'] = new_id
-            trans_obj.create(cr, uid, record, context=context)
+                else:
+                    continue
+
+                trans_ids = trans_obj.search(cr, uid, [
+                        ('name', '=', trans_name),
+                        ('res_id', '=', old_id)
+                ])
+                records = trans_obj.read(cr, uid, trans_ids, context=context)
+                for record in records:
+                    del record['id']
+                    del record['source']
+                    record.update({'res_id': res_id})
+                    trans_obj.create(cr, uid, record, context=context)
 
 
     def copy(self, cr, uid, id, default=None, context=None):
