@@ -91,13 +91,16 @@ db_list = http.db_list
 db_monodb = http.db_monodb
 
 def redirect_with_hash(url, code=303):
+    redirect_code = "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
     if request.httprequest.user_agent.browser == 'msie':
         try:
             version = float(request.httprequest.user_agent.version)
             if version < 10:
-                return "<html><head><script>window.location = '%s#' + location.hash;</script></head></html>" % url
+                return redirect_code
         except Exception:
             pass
+    elif request.httprequest.user_agent.browser == 'safari':
+        return redirect_code
     return werkzeug.utils.redirect(url, code)
 
 def module_topological_sort(modules):
@@ -529,14 +532,12 @@ class Home(http.Controller):
     def index(self, s_action=None, db=None, debug=False, **kw):
         debug = debug != False
 
-        try:
-            lst = http.db_list()
-        except openerp.exceptions.AccessDenied:
-            lst = []
-
+        lst = http.db_list(True)
         if db not in lst:
             db = None
         guessed_db = http.db_monodb(request.httprequest)
+        if guessed_db is None and len(lst) > 0:
+            guessed_db = lst[0]
 
         def redirect(db):
             query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
@@ -544,11 +545,8 @@ class Home(http.Controller):
             redirect = request.httprequest.path + '?' + urllib.urlencode(query)
             return redirect_with_hash(redirect)
 
-        if guessed_db is None and db is None and lst:
-            return redirect(lst[0])
-
-        if guessed_db is None and lst:
-            guessed_db = lst[0]
+        if db is None and guessed_db is not None:
+            return redirect(guessed_db)
 
         if db is not None and db != guessed_db:
             request.session.logout()
