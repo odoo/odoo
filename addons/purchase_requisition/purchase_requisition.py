@@ -212,6 +212,28 @@ class purchase_requisition(osv.osv):
                 return False
         return True
 
+    def _prepare_po_from_tender(self, cr, uid, tender, context=None):
+        """ Prepare the values to write in the purchase order
+        created for a tender.
+
+        :param tender: the source tender from which we generate a purchase order
+        """
+        return {'order_line': [],
+                'requisition_id': tender.id,
+                'origin': tender.name}
+
+    def _prepare_po_line_from_tender(self, cr, uid, tender, line,
+                                     purchase_id, context=None):
+        """ Prepare the values to write in the purchase order line
+        created for a  line of the tender.
+
+        :param tender: the source tender from which we generate a purchase order
+        :param line: the source tender's line from which we generate a line
+        :param purchase_id: the id of the new purchase
+        """
+        return {'product_qty': line.quantity_bid,
+                'order_id': purchase_id}
+
     def generate_po(self, cr, uid, ids, context=None):
         """
         Generate all purchase order based on selected lines, should only be called on one tender at a time
@@ -255,10 +277,15 @@ class purchase_requisition(osv.osv):
             for supplier, product_line in id_per_supplier.items():
                 #copy a quotation for this supplier and change order_line then validate it
                 quotation_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)[0]
-                new_po = po.copy(cr, uid, quotation_id, default={'order_line': [], 'requisition_id': tender.id, 'origin': tender.name}, context=ctx)
+                vals = self._prepare_po_from_tender(cr, uid, tender, context=context)
+                new_po = po.copy(cr, uid, quotation_id,
+                                 default=vals, context=ctx)
                 #duplicate po_line and change product_qty if needed and associate them to newly created PO
                 for line in product_line:
-                    poline.copy(cr, uid, line.id, default={'product_qty': line.quantity_bid, 'order_id': new_po}, context=context)
+                    vals = self._prepare_po_line_from_tender(cr, uid, tender,
+                                                             line, new_po,
+                                                             context=context)
+                    poline.copy(cr, uid, line.id, default=vals, context=context)
                 #use workflow to set new PO state to confirm
                 po.signal_purchase_confirm(cr, uid, [new_po])
 
