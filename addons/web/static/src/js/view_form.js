@@ -5527,22 +5527,15 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                     .read_slice(_.union(_.keys(self.distant_fields), ['id']), {}).then(function (records) {
                         var ids = _.pluck(records, 'id');
                         return self.dataset.name_get(ids).then(function (records_name) {
-                            _.each(records, function (record) {
-                                var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
-                                var widget_item = {
-                                    'id': record.id,
-                                    'name': name,
-                                    /* :deprecated: should probably be removed */
-                                    'bar_color': record.bar_color || 0,
-                                    'bar_fold': record.bar_fold || false,
-                                }
-                                if (record.bar_fold && record.id != self.get('value')) {
-                                    selection_folded.push(widget_item);
-                                } else {
-                                    selection_unfolded.push(widget_item);
-                                }
+                                _.each(records, function (record) {
+                                    var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
+                                    if (record.fold && record.id != self.get('value')) {
+                                        selection_folded.push([record.id, name]);
+                                    } else {
+                                        selection_unfolded.push([record.id, name]);
+                                    }
+                                });
                             });
-                        });
                     });
             } else {
                 // For field type selection filter values according to
