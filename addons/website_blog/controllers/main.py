@@ -181,24 +181,25 @@ class WebsiteBlog(http.Controller):
         ]
         return simplejson.dumps(blog_post_data)
 
-    @website.route(['/blog/<int:blog_post_id>/post'], type='http', auth="public")
+    @website.route(['/blog/<int:blog_post_id>/comment'], type='http', auth="public")
     def blog_post_comment(self, blog_post_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        url = request.httprequest.host_url
-        request.session.body = post.get('body')
-        if request.context['is_public_user']:  # purpose of this ?
+
+        # This should only happen if the user has logged off in one tab
+        # but posts a comment from another tab (kept open)
+        # Normally, the comment form is hidden (in the template) in public mode
+        if request.context['is_public_user']:
+            url = request.httprequest.host_url
             return '%s/web#action=redirect&url=%s/blog/%s/post' % (url, url, blog_post_id)
 
-        if request.session.get('body') and blog_post_id:
-            request.registry['blog.post'].message_post(
-                cr, uid, blog_post_id,
-                body=request.session.body,
-                type='comment',
-                subtype='mt_comment',
-                context=dict(context, mail_create_nosubcribe=True))
-            request.session.body = False
+        request.registry['blog.post'].message_post(
+            cr, uid, blog_post_id,
+            body=post.get('comment'),
+            type='comment',
+            subtype='mt_comment',
+            context=dict(context, mail_create_nosubcribe=True))
 
-        return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % (blog_post_id))
+        return werkzeug.utils.redirect("/blog/%s/" % (blog_post_id))
 
     @website.route(['/blog/<int:category_id>/new'], type='http', auth="public")
     def blog_post_create(self, category_id=None, **post):
