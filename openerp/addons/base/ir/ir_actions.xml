@@ -537,7 +537,8 @@
                     <field name="model_id"/>
                     <field name="state"/>
                     <group expand="0" string="Group By" colspan="4" col="4">
-                        <filter string="Action Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Action Type" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                 </search>
             </field>
