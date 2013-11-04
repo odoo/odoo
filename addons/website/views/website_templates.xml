@@ -432,7 +432,7 @@ User-agent: *
 Sitemap: <t t-esc="url_root"/>sitemap.xml
         </template>
 
-        <template id="sitemap" name="Site Map" page="True">
+        <template id="sitemap" name="Site Map">
             <t t-call="website.layout">
                 <ul>
                     <li t-foreach="pages" t-as="page">
