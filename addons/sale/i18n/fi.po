@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-10-30 22:31+0000\n"
+"PO-Revision-Date: 2013-11-01 04:56+0000\n"
 "Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-31 05:47+0000\n"
+"X-Launchpad-Export-Date: 2013-11-02 06:23+0000\n"
 "X-Generator: Launchpad (build 16820)\n"
 
 #. module: sale
@@ -25,7 +25,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "UoS"
-msgstr ""
+msgstr "Myyntiyksikkö"
 
 #. module: sale
 #: report:sale.order:0
@@ -920,7 +920,7 @@ msgstr "Ei löytynyt voimassaolevaa hinnaston riviä! :"
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr ""
+msgstr "Näytetään myyntitilausten marginaali"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -967,6 +967,8 @@ msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"Tähän tuotteeseen ja määrään ei löydy vastaavaa riviä hinnastosta.\n"
+"Muuta joko tuote, määrä tai hinnasto."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
@@ -1006,7 +1008,7 @@ msgstr "Hinta"
 #. module: sale
 #: view:sale.order:0
 msgid "Quotation Number"
-msgstr ""
+msgstr "Tarjousnumero"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1041,33 +1043,33 @@ msgstr "Toimitusosoite:"
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Draft state of sales order"
-msgstr "Myyntitilauksen luonnostila"
+msgstr "Tilauksen tila on myyntiehdotus"
 
 #. module: sale
 #: help:sale.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: sale
 #: view:sale.order:0
 msgid "New Copy of Quotation"
-msgstr ""
+msgstr "Uusi tarjouksen kopio"
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "Myyntitilauksen numero"
 
 #. module: sale
 #: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
+msgstr "Tilassa '%s' olevaa myyntitilauksen riviä ei voi poistaa.."
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr ""
+msgstr "Rivien ominaisuudet."
 
 #. module: sale
 #: code:addons/sale/sale.py:865
@@ -1076,6 +1078,8 @@ msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
 msgstr ""
+"Ennen tuotteen valintaa,\n"
+" valitse myyntilomakkeelle asiakas."
 
 #. module: sale
 #: view:sale.order:0
@@ -1086,7 +1090,7 @@ msgstr "Verollinen Summa"
 #: code:addons/sale/wizard/sale_make_invoice.py:42
 #, python-format
 msgid "You cannot create invoice when sales order is not confirmed."
-msgstr ""
+msgstr "Et voi luoda laskua ennen kuin myyntitilaus on vahvistettu."
 
 #. module: sale
 #: view:sale.report:0
@@ -1102,7 +1106,7 @@ msgstr "Vahvista tarjous"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Order Lines to Invoice"
-msgstr ""
+msgstr "Tilausrivit laskulle"
 
 #. module: sale
 #: view:sale.order:0
@@ -1114,7 +1118,7 @@ msgstr "Ryhmittely.."
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Product Features"
-msgstr ""
+msgstr "Tuotteen ominaisuudet"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1126,7 +1130,7 @@ msgstr "Odottaa aikataulua"
 #: view:sale.order.line:0
 #: field:sale.report,product_uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mittayksikkö"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1137,17 +1141,17 @@ msgstr "Hankintatapa"
 #: view:sale.order:0
 #: field:sale.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Lukemattomat viestit"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Tarjous vahvistettu"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "Tarjousehdotus"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -1180,7 +1184,7 @@ msgstr "Päivä jolloin myyntitilaus on luotu"
 #. module: sale
 #: view:sale.order:0
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Sopimusehdot"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1194,7 +1198,7 @@ msgstr "Luo laskuja"
 #: code:addons/sale/sale.py:983
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Virheellinen toiminto!"
 
 #. module: sale
 #: report:sale.order:0
@@ -1223,6 +1227,8 @@ msgid ""
 "invoice).                                              You have to choose  "
 "if you want your invoice based on ordered "
 msgstr ""
+"Myyntitilaus luo automaattisesti laskuehdotuksen. Valitse haluatko laskun "
+"perustuvan tilaukseen "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1233,7 +1239,7 @@ msgstr "Luo Laskuja"
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr ""
+msgstr "Salli analyyttisen tilin määrittelyn myyntitilaukselle."
 
 #. module: sale
 #: view:sale.order:0
@@ -1244,7 +1250,7 @@ msgstr "Laskutettavaa"
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered Year of the sales order"
-msgstr "Tilausvuosi myyntitilauksella"
+msgstr "Myyntitilauksen tilausvuosi"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1261,7 +1267,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "Tilauksen peruutus"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1272,12 +1278,12 @@ msgstr "Poikkeus toimituksessa"
 #. module: sale
 #: field:sale.make.invoice,grouped:0
 msgid "Group the invoices"
-msgstr "Yhdistä laskut"
+msgstr "Ryhmittele laskut"
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contracts Management"
-msgstr ""
+msgstr "Sopimustenhallinta"
 
 #. module: sale
 #: view:sale.report:0
@@ -1293,7 +1299,7 @@ msgstr "Kirjanpitäjän tarkistettavaksi"
 #. module: sale
 #: view:sale.order:0
 msgid "My Sales Orders"
-msgstr ""
+msgstr "Myyntitilaukseni"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1344,30 +1350,31 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr ""
+msgstr "Sallii alennuksen asettamisen myyntitilauksen riveille"
 
 #. module: sale
 #: field:sale.order,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "PayPal URL"
 
 #. module: sale
 #: field:sale.config.settings,group_sale_pricelist:0
 msgid "Use pricelists to adapt your price per customers"
-msgstr ""
+msgstr "Käytä hinnastoja valitaksesi asiakaskohtaisen hinnan"
 
 #. module: sale
 #: code:addons/sale/sale.py:185
 #, python-format
 msgid "There is no default shop for the current user's company!"
 msgstr ""
+"Valitun käyttäjän yrityksellä ei ole oletusarvoista liikettä/toimipistettä."
 
 #. module: sale
 #: code:addons/sale/sale.py:277
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
-msgstr ""
+msgstr "Ennen vahvistetun myyntitilauksen poistamista, se pitää peruuttaa!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.open_board_sales
@@ -1425,17 +1432,17 @@ msgstr "Tehtävää"
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Laskuta myyntitilaus"
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr "Määrä ilman veroa."
+msgstr "Veroton arvo"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "Myynnin ennakkomaksulasku"
+msgstr "Myynnin ennakkolasku"
 
 #. module: sale
 #: model:email.template,body_html:sale.email_template_edi_sale
@@ -1585,7 +1592,7 @@ msgstr "Tilaa"
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Vahvista myynti"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
@@ -1609,7 +1616,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Some order lines"
-msgstr ""
+msgstr "Eräitä tilausrivejä"
 
 #. module: sale
 #: view:res.partner:0
@@ -1619,12 +1626,12 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Alennus riveillä"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Reference"
-msgstr "Asiakkaan Viite"
+msgstr "Asiakkaan viite"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -1648,7 +1655,7 @@ msgstr "Myynnin työpöytä"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines that are in 'done' state"
-msgstr ""
+msgstr "Myyntitilausten 'valmis' tilassa olevat rivit"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -1679,7 +1686,7 @@ msgstr "Päivä jolloin myyntitilaus on vahvistettu"
 #: code:addons/sale/sale.py:565
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
+msgstr "Peruuta ensin kaikki tähän myyntitilaukseen kytketyt laskut."
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -1715,32 +1722,32 @@ msgstr "Asiakasta ei ole määritetty!"
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Toimitusosoite"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale to Invoice"
-msgstr ""
+msgstr "Myynnin laskutus"
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Warehouse Features"
-msgstr ""
+msgstr "Varaston ominaisuudet"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Cancel Line"
-msgstr ""
+msgstr "Peruuta rivi"
 
 #. module: sale
 #: field:sale.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Viestit"
 
 #. module: sale
 #: field:sale.config.settings,module_project:0
 msgid "Project"
-msgstr ""
+msgstr "Projekti"
 
 #. module: sale
 #: code:addons/sale/sale.py:185
@@ -1751,7 +1758,7 @@ msgstr ""
 #: code:addons/sale/sale.py:780
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Virhe!"
 
 #. module: sale
 #: report:sale.order:0
@@ -1781,12 +1788,12 @@ msgstr "Etsi laskuttamattomia rivejä"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Tarjous lähetetty"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Sähköpostin automaattinen koostaminen"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
@@ -1805,12 +1812,12 @@ msgstr "Vahvistus Päivämäärä"
 #: code:addons/sale/sale.py:364
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Määritä myynnin päiväkirja tälle yritykselle: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Contract Features"
-msgstr ""
+msgstr "Sopimuksen ominaisuudet"
 
 #. module: sale
 #: code:addons/sale/sale.py:287
@@ -1839,7 +1846,7 @@ msgstr "Vahvistettu"
 #. module: sale
 #: field:sale.order,note:0
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Toimitusehdot"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
@@ -1850,12 +1857,12 @@ msgstr "Vahvista"
 #: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr ""
+msgstr "Laskutettua myyntitilausriviä ei voi peruuttaa!"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
@@ -1872,17 +1879,17 @@ msgstr "Myyntitilauksen rivit"
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Oletusarvojen vaihtoehdot"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Analyyttinen myyntitili"
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 msgid "Invoiced Ratio"
-msgstr ""
+msgstr "Laskutettujen suhde"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
@@ -1903,7 +1910,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales order lines done"
-msgstr ""
+msgstr "Myyntitilauksen rivit tehty"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:107
@@ -1937,7 +1944,7 @@ msgstr "Joulukuu"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Tälle tuotteelle ei ole määritelty myyntitiliä: \"%s\" (id:%d)."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1952,12 +1959,12 @@ msgstr "Vanhat Tarjoukset"
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Veroton määrä"
+msgstr "Veroton arvo"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Analyyttinen myyntitili"
 
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
@@ -1973,12 +1980,12 @@ msgstr "Kesäkuu"
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "You shouldn't manually invoice the following sale order %s"
-msgstr ""
+msgstr "Sinun ei pitäisi laskuttaa manuaalisesti myyntitilausta %s"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Draft"
-msgstr "Luonnos"
+msgstr "Ehdotus"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -2003,6 +2010,8 @@ msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"Myyntitilauksen rivit,  jotka on vahvistettu, tehty tai ovat "
+"poikkeustilassa, mutta joita ei ole vielä laskutettu"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2048,12 +2057,12 @@ msgstr "Sitoutumisen viive"
 #. module: sale
 #: field:sale.report,state:0
 msgid "Order Status"
-msgstr ""
+msgstr "Tilauksen tila"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Show Lines to Invoice"
-msgstr ""
+msgstr "Näytä rivit laskulla"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -2068,7 +2077,7 @@ msgstr "Laskutettavat vahvistetut myyntitilaukset."
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Myyntitilaus vahvistettu"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -2084,12 +2093,12 @@ msgstr "Ei hinnastoa ! : "
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order "
-msgstr ""
+msgstr "Myyntitilaus "
 
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "Käytä sopimushallintaa"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -2115,7 +2124,7 @@ msgstr "Oletko varma, että haluat muodostaa laskun?"
 #. module: sale
 #: view:sale.order:0
 msgid "Order Number"
-msgstr ""
+msgstr "Tilausnumero"
 
 #. module: sale
 #: view:sale.order:0
@@ -2157,17 +2166,17 @@ msgstr "Hae myyntitilausta"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "Mitä haluat laskuttaa?"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "Vahvistetut myyntitilausrivit, joita ei ole vielä toimitettu"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Sequence"
-msgstr "Sarja"
+msgstr "Järjestys"
 
 #. module: sale
 #: report:sale.order:0
@@ -2178,7 +2187,7 @@ msgstr "Maksuehto"
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "Tämä mahdollistaa sale_analytic_plans moduulin asennuksen."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2193,7 +2202,7 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation N°"
-msgstr "Tarjous no."
+msgstr "Tarjousnro"
 
 #. module: sale
 #: view:sale.report:0

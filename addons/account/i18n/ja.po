@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-10-30 08:42+0000\n"
+"PO-Revision-Date: 2013-11-03 23:54+0000\n"
 "Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-31 05:47+0000\n"
+"X-Launchpad-Export-Date: 2013-11-04 06:02+0000\n"
 "X-Generator: Launchpad (build 16820)\n"
 
 #. module: account
@@ -50,7 +50,7 @@ msgstr "仕訳帳エントリーの消し込み"
 #: view:account.bank.statement:0
 #: view:account.move.line:0
 msgid "Account Statistics"
-msgstr "アカウントの統計情報"
+msgstr "勘定統計"
 
 #. module: account
 #: view:account.invoice:0
@@ -171,7 +171,7 @@ msgstr ""
 #: field:account.fiscal.position.account,account_src_id:0
 #: field:account.fiscal.position.account.template,account_src_id:0
 msgid "Account Source"
-msgstr "元アカウント"
+msgstr "元勘定"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period
@@ -549,7 +549,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr "この仕訳帳で使用されるアカウント"
+msgstr "この仕訳帳で使用される勘定"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -698,7 +698,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
 msgid "Report of the Sales by Account Type"
-msgstr "アカウントタイプ別売上レポート"
+msgstr "勘定タイプ別売上レポート"
 
 #. module: account
 #: code:addons/account/account.py:3201
@@ -728,7 +728,7 @@ msgstr "期間を閉じる"
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr "アカウント共有パートナレポート"
+msgstr "勘定共通取引先レポート"
 
 #. module: account
 #: field:account.fiscalyear.close,period_id:0
@@ -799,7 +799,7 @@ msgstr "総勘定元帳レポート"
 #. module: account
 #: view:account.invoice:0
 msgid "Re-Open"
-msgstr "再度開く"
+msgstr "再開"
 
 #. module: account
 #: view:account.use.model:0
@@ -898,7 +898,7 @@ msgstr "アカウントサブスクリプション行"
 #. module: account
 #: help:account.invoice,reference:0
 msgid "The partner reference of this invoice."
-msgstr "請求書のパートナ参照"
+msgstr "この請求書の取引先参照"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1157,7 +1157,7 @@ msgstr "分析仕訳帳がありません。"
 #: model:ir.actions.report.xml,name:account.account_3rdparty_account_balance
 #: model:ir.ui.menu,name:account.menu_account_partner_balance_report
 msgid "Partner Balance"
-msgstr "パートナ残高"
+msgstr "取引先残高"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
@@ -1315,7 +1315,7 @@ msgstr "税コードテンプレート"
 #. module: account
 #: view:account.invoice.cancel:0
 msgid "Cancel Invoices"
-msgstr "請求書のキャンセル"
+msgstr "請求書取消"
 
 #. module: account
 #: help:account.journal,code:0
@@ -1523,7 +1523,7 @@ msgstr "仕訳項目分析"
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
 msgid "Partners"
-msgstr "パートナ"
+msgstr "取引先"
 
 #. module: account
 #: help:account.bank.statement,state:0
@@ -1966,7 +1966,7 @@ msgstr "アカウント共通の仕訳帳レポート"
 #. module: account
 #: selection:account.partner.balance,display_partner:0
 msgid "All Partners"
-msgstr "全パートナ"
+msgstr "全取引先"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -2686,7 +2686,7 @@ msgstr "ドラフト返金を作成"
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr "パートナ消し込み"
+msgstr "取引先消込"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3012,7 +3012,7 @@ msgstr "親税勘定"
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 msgid "Aged Partner Balance"
-msgstr "パートナ残高年齢表"
+msgstr "取引先残高年齢表"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_entriesreconcile0
@@ -3271,7 +3271,7 @@ msgstr ""
 #. module: account
 #: field:account.partner.ledger,page_split:0
 msgid "One Partner Per Page"
-msgstr "ページ毎に１パートナ"
+msgstr "ページ毎に1取引先"
 
 #. module: account
 #: field:account.account,child_parent_ids:0
@@ -3370,7 +3370,7 @@ msgstr "アカウントコードのために使用される数字の桁数"
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "仕入先支払条件"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -3458,7 +3458,7 @@ msgstr "税コードテンプレート"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_ledger
 msgid "Account Partner Ledger"
-msgstr "アカウントパートナ元帳"
+msgstr "勘定取引先元帳"
 
 #. module: account
 #: model:email.template,body_html:account.email_template_edi_invoice
@@ -3642,7 +3642,7 @@ msgstr "仕訳帳"
 #. module: account
 #: field:account.partner.reconcile.process,to_reconcile:0
 msgid "Remaining Partners"
-msgstr "存続パートナ"
+msgstr "存続取引先"
 
 #. module: account
 #: view:account.subscription:0
@@ -3703,7 +3703,7 @@ msgstr "期首残高"
 #: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "No Partner Defined !"
-msgstr "パートナが定義されていません。"
+msgstr "取引先の定義がありません。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_period_close
@@ -3993,7 +3993,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr "パートナ毎のパートナ消し込みプロセス"
+msgstr "取引先毎の消込プロセス"
 
 #. module: account
 #: view:account.chart:0
@@ -4211,7 +4211,7 @@ msgstr ""
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Full Reconciliation Date"
-msgstr ""
+msgstr "前回完全消込日"
 
 #. module: account
 #: field:account.account,name:0
@@ -4376,7 +4376,7 @@ msgstr "定期的行"
 #. module: account
 #: field:account.partner.balance,display_partner:0
 msgid "Display Partners"
-msgstr "パートナの表示"
+msgstr "取引先表示"
 
 #. module: account
 #: view:account.invoice:0
@@ -4519,7 +4519,7 @@ msgstr "ショートカット"
 #: field:report.account.receivable,type:0
 #: field:report.account_type.sales,user_type:0
 msgid "Account Type"
-msgstr "アカウントタイプ"
+msgstr "勘定科目タイプ"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_tree
@@ -4620,7 +4620,7 @@ msgstr "PayPalアカウント"
 #. module: account
 #: view:account.entries.report:0
 msgid "Acc.Type"
-msgstr "アカウントタイプ"
+msgstr "勘定科目タイプ"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -4868,7 +4868,7 @@ msgstr "モデルからエントリーを作成"
 #: field:account.account,reconcile:0
 #: field:account.account.template,reconcile:0
 msgid "Allow Reconciliation"
-msgstr "消し込みの許可"
+msgstr "消込許可"
 
 #. module: account
 #: constraint:account.account:0
@@ -5154,7 +5154,7 @@ msgstr "請求書が支払われる先の銀行口座番号。顧客請求書や
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr "本日パートナ消し込み済"
+msgstr "本日消込の取引先"
 
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
@@ -5238,7 +5238,7 @@ msgstr ""
 #: field:account.payment.term,active:0
 #: field:account.tax,active:0
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5504,7 +5504,7 @@ msgstr "月"
 #: view:account.move.line:0
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
-msgstr "調整の次のパートナー"
+msgstr "次に消込する取引先"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -5644,7 +5644,7 @@ msgstr "親の係数"
 #. module: account
 #: report:account.partner.balance:0
 msgid "(Account/Partner) Name"
-msgstr "アカウント / パートナ名"
+msgstr "(勘定/取引先)名称"
 
 #. module: account
 #: field:account.partner.reconcile.process,progress:0
@@ -5723,7 +5723,7 @@ msgstr "期首日"
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
 msgid "Asset View"
-msgstr ""
+msgstr "資産ビュー"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -5741,7 +5741,7 @@ msgstr "アカウント共通アカウントレポート"
 #: selection:account.period,state:0
 #: selection:report.invoice.created,state:0
 msgid "Open"
-msgstr "開く"
+msgstr "オープン"
 
 #. module: account
 #: view:account.config.settings:0
@@ -6222,7 +6222,7 @@ msgstr "行数"
 #. module: account
 #: view:account.invoice:0
 msgid "(update)"
-msgstr ""
+msgstr "(更新)"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -6668,7 +6668,7 @@ msgstr ""
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr "仕訳帳とパートナ"
+msgstr "仕訳帳・取引先"
 
 #. module: account
 #: field:account.automatic.reconcile,power:0
@@ -6712,7 +6712,7 @@ msgstr "次回税金の計算のために基本金額に税額が含まれるべ
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr "消し込み：次のパートナへ"
+msgstr "消込：次の取引先へ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
@@ -7028,7 +7028,7 @@ msgstr "借方合計"
 #. module: account
 #: view:account.move.line:0
 msgid "Next Partner Entries to reconcile"
-msgstr "消し込みする次のパートナエントリー"
+msgstr "次に消込する取引先エントリ"
 
 #. module: account
 #: report:account.invoice:0
@@ -7440,7 +7440,7 @@ msgstr ""
 #: field:account.invoice.line,origin:0
 #: field:report.invoice.created,origin:0
 msgid "Source Document"
-msgstr "基となるドキュメント"
+msgstr "参照元"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:90
@@ -7451,7 +7451,7 @@ msgstr ""
 #. module: account
 #: view:account.account.template:0
 msgid "Internal notes..."
-msgstr ""
+msgstr "内部注記..."
 
 #. module: account
 #: constraint:account.account:0
@@ -7521,7 +7521,7 @@ msgstr "この請求書を本当に開きますか？"
 #. module: account
 #: field:account.chart.template,property_account_expense_opening:0
 msgid "Opening Entries Expense Account"
-msgstr "費用勘定の開始エントリー"
+msgstr "期初エントリ費用勘定"
 
 #. module: account
 #: view:account.invoice:0
@@ -8204,7 +8204,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
 msgid "Partner Ledger"
-msgstr "パートナ元帳"
+msgstr "取引先元帳"
 
 #. module: account
 #: selection:account.tax.template,type:0
@@ -8275,7 +8275,7 @@ msgstr "未消し込みを開く"
 #: model:ir.model,name:account.model_res_partner
 #: field:report.invoice.created,partner_id:0
 msgid "Partner"
-msgstr "パートナ"
+msgstr "取引先"
 
 #. module: account
 #: help:account.change.currency,currency_id:0
@@ -8340,7 +8340,7 @@ msgstr "このアカウントが仕訳帳項目の消し込みを許す場合は
 #. module: account
 #: selection:account.model.line,date_maturity:0
 msgid "Partner Payment Term"
-msgstr "パートナ支払条件"
+msgstr "取引先支払条件"
 
 #. module: account
 #: help:account.move.reconcile,opening_reconciliation:0
@@ -8357,13 +8357,13 @@ msgstr "分析エントリー"
 #. module: account
 #: view:account.analytic.account:0
 msgid "Associated Partner"
-msgstr "関連パートナ"
+msgstr "関連取引先"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "You must first select a partner !"
-msgstr "最初にパートナを選択して下さい。"
+msgstr "始めに取引先を選択してください。"
 
 #. module: account
 #: field:account.invoice,comment:0
@@ -8406,7 +8406,7 @@ msgstr "請求書の状態は開いています。"
 #: field:account.subscription,state:0
 #: field:report.invoice.created,state:0
 msgid "Status"
-msgstr ""
+msgstr "状態"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -8625,7 +8625,7 @@ msgstr "相手勘定を集約"
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
-msgstr "関連するパートナとの訴訟としてこの仕訳帳項目をマークするためには、このボックスをチェックします。"
+msgstr "仕訳項目が関連取引先と係争状態にあることを示すには、このボックスをチェックします。"
 
 #. module: account
 #: field:account.move.line,reconcile_partial_id:0
@@ -8674,7 +8674,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_type_form
 #: model:ir.ui.menu,name:account.menu_action_account_type_form
 msgid "Account Types"
-msgstr "アカウントタイプ"
+msgstr "勘定科目タイプ"
 
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
@@ -8783,7 +8783,7 @@ msgstr "会社分析"
 #. module: account
 #: help:account.invoice,account_id:0
 msgid "The partner account used for this invoice."
-msgstr "パートナアカウントはこの請求書に使用されています。"
+msgstr "この請求書に使われる取引先勘定"
 
 #. module: account
 #: code:addons/account/account.py:3391
@@ -8842,7 +8842,7 @@ msgstr "仕入先"
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Type Allowed (empty for no control)"
-msgstr "許可アカウントタイプ（制御なしは空）"
+msgstr "許可勘定科目タイプ（制御なしは空）"
 
 #. module: account
 #: view:account.payment.term:0
@@ -9106,7 +9106,7 @@ msgstr "強制期間"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
-msgstr "パートナ残高アカウントの印刷"
+msgstr "取引先別勘定残高を印刷"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1121
@@ -9375,7 +9375,7 @@ msgstr "財務レポート"
 #. module: account
 #: model:account.account.type,name:account.account_type_liability_view1
 msgid "Liability View"
-msgstr ""
+msgstr "負債ビュー"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9418,7 +9418,7 @@ msgstr "分析指示"
 #. module: account
 #: field:res.partner,ref_companies:0
 msgid "Companies that refers to partner"
-msgstr "パートナに当てはまる会社"
+msgstr "取引先を参照する会社"
 
 #. module: account
 #: view:account.invoice:0
@@ -9765,7 +9765,7 @@ msgstr "期末日"
 #. module: account
 #: model:account.account.type,name:account.account_type_expense_view1
 msgid "Expense View"
-msgstr ""
+msgstr "費用ビュー"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -10047,7 +10047,7 @@ msgstr "貸方"
 #. module: account
 #: view:account.invoice:0
 msgid "Draft Invoice "
-msgstr ""
+msgstr "ドラフト請求書 "
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_general_journal
@@ -10506,7 +10506,7 @@ msgstr ""
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Go to Next Partner"
-msgstr "次のパートナへ"
+msgstr "次の取引先へ"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -10913,7 +10913,7 @@ msgstr "パートナ"
 #. module: account
 #: field:account.account,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "内部注記"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear
@@ -11016,7 +11016,7 @@ msgstr "製品テンプレート上の経費勘定"
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr ""
+msgstr "顧客支払条件"
 
 #. module: account
 #: help:accounting.report,label_filter:0

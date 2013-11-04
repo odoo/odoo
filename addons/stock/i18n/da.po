@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-10-14 16:27+0000\n"
-"Last-Translator: Morten Schou <ms@msteknik.dk>\n"
+"PO-Revision-Date: 2013-11-02 14:37+0000\n"
+"Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-15 05:18+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-11-03 05:43+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -51,6 +51,12 @@ msgid ""
 "value for all products in this category. It can also directly be set on each "
 "product"
 msgstr ""
+"Ved realtids lagerpostering, vil alle modposter til indkommende varer lande "
+"på denne konto, med mindre der er defineret en specifik konto på kilde-"
+"lageret. Dette er standard værdien for alle varer i denne kategori. Du kan "
+"også opsætte konteringen direkte på hver vare, dog ikke ved produktion, hvor "
+"du skal udfylde \"Modpost-lokations egenskaber\" under \"Lager\" faneblad på "
+"varen."
 
 #. module: stock
 #: view:stock.picking.out:0
@@ -842,7 +848,7 @@ msgstr ""
 #. module: stock
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
-msgstr ""
+msgstr "Indkøbs lokation"
 
 #. module: stock
 #: view:stock.picking:0
@@ -879,6 +885,8 @@ msgid ""
 "Please define stock output account for this product or its category: \"%s\" "
 "(id: %d)"
 msgstr ""
+"Angiv lager afgangskonto for denne vare eller dens varekategori: \"%s\" (id: "
+"%d)"
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -1034,7 +1042,7 @@ msgstr ""
 #. module: stock
 #: field:product.template,property_stock_inventory:0
 msgid "Inventory Location"
-msgstr ""
+msgstr "Lager lokation"
 
 #. module: stock
 #: constraint:stock.move:0
@@ -1208,7 +1216,7 @@ msgstr ""
 #. module: stock
 #: field:product.template,property_stock_production:0
 msgid "Production Location"
-msgstr ""
+msgstr "Produktions lokation"
 
 #. module: stock
 #: code:addons/stock/product.py:121
@@ -1718,7 +1726,7 @@ msgstr ""
 #: code:addons/stock/product.py:168
 #, python-format
 msgid "Please define stock output account for this product: \"%s\" (id: %d)."
-msgstr ""
+msgstr "Angiv lager afgangskonto for denne vare: \"%s\" (id: %d)."
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1906,7 +1914,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Counter-Part Locations Properties"
-msgstr ""
+msgstr "Modpost-lokations egenskaber"
 
 #. module: stock
 #: view:stock.location:0
@@ -1939,6 +1947,10 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"Ved realtids lagerpostering, vil alle modposter til indkommende varer lande "
+"på denne konto, med mindre der er defineret en specifik konto på kilde-"
+"lageret. Hvis der ikke er sat konti på varen, bruges konti fra produkt "
+"kategorien."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2342,7 +2354,7 @@ msgstr "Pris"
 #: field:product.template,property_stock_account_input:0
 #: field:stock.change.standard.price,stock_account_input:0
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Lager tilgangskonto"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -4141,7 +4153,7 @@ msgstr ""
 #: code:addons/stock/product.py:142
 #, python-format
 msgid "Please define stock input account for this product: \"%s\" (id: %d)."
-msgstr ""
+msgstr "Angiv lagertilgangskonto for denne vare: \"%s\" (id: %d)."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_reception_picking_move
@@ -4605,7 +4617,7 @@ msgstr ""
 #: field:product.template,property_stock_account_output:0
 #: field:stock.change.standard.price,stock_account_output:0
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Lager afgangskonto"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0
