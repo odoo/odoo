@@ -2,7 +2,7 @@
     'use strict';
 
     var website = openerp.website;
-    website.templates.push('/website/static/src/xml/website.snippets.xml');
+    website.add_template_file('/website/static/src/xml/website.snippets.xml');
 
     website.EditorBar.include({
         start: function () {

@@ -142,6 +142,84 @@ table.editorbar-panel td.selected {
   background: #ffffb6;
 }
 
+div.oe_menu_buttons {
+  top: -8px;
+  right: -8px;
+}
+
+ul.oe_menu_editor > li:first-child > div > i:before {
+  content: "\f015";
+}
+ul.oe_menu_editor, ul.oe_menu_editor ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ul.oe_menu_editor ul {
+  padding-left: 30px;
+}
+ul.oe_menu_editor button {
+  margin-left: 4px;
+}
+ul.oe_menu_editor li {
+  margin: 5px 0 0 0;
+  padding: 0;
+}
+ul.oe_menu_editor .oe_menu_placeholder {
+  outline: 1px dashed #4183c4;
+}
+ul.oe_menu_editor .mjs-nestedSortable-error {
+  background: #fbe3e4;
+  border-color: transparent;
+}
+ul.oe_menu_editor li div {
+  border: 1px solid #d4d4d4;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border-color: #d4d4d4 #d4d4d4 #bcbcbc;
+  padding: 6px;
+  margin: 0;
+  cursor: move;
+  background: #f6f6f6;
+  background: -moz-linear-gradient(top, white 0%, #f6f6f6 47%, #ededed 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(47%, #f6f6f6), color-stop(100%, #ededed));
+  background: -webkit-linear-gradient(top, white 0%, #f6f6f6 47%, #ededed 100%);
+  background: -o-linear-gradient(top, white 0%, #f6f6f6 47%, #ededed 100%);
+  background: -ms-linear-gradient(top, white 0%, #f6f6f6 47%, #ededed 100%);
+  background: linear-gradient(to bottom, #ffffff 0%, #f6f6f6 47%, #ededed 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
+}
+ul.oe_menu_editor li.mjs-nestedSortable-branch div {
+  background: -moz-linear-gradient(top, white 0%, #f6f6f6 47%, #f0ece9 100%);
+  background: -webkit-linear-gradient(top, white 0%, #f6f6f6 47%, #f0ece9 100%);
+}
+ul.oe_menu_editor li.mjs-nestedSortable-leaf div {
+  background: -moz-linear-gradient(top, white 0%, #f6f6f6 47%, #bcccbc 100%);
+  background: -webkit-linear-gradient(top, white 0%, #f6f6f6 47%, #bcccbc 100%);
+}
+ul.oe_menu_editor li.mjs-nestedSortable-collapsed.mjs-nestedSortable-hovering div {
+  border-color: #999999;
+  background: #fafafa;
+}
+ul.oe_menu_editor .disclose {
+  cursor: pointer;
+  width: 10px;
+  display: none;
+}
+ul.oe_menu_editor li.mjs-nestedSortable-collapsed > ul {
+  display: none;
+}
+ul.oe_menu_editor li.mjs-nestedSortable-branch > div > .disclose {
+  display: inline-block;
+}
+ul.oe_menu_editor li.mjs-nestedSortable-collapsed > div > .disclose > span:before {
+  content: "+ ";
+}
+ul.oe_menu_editor li.mjs-nestedSortable-expanded > div > .disclose > span:before {
+  content: "- ";
+}
+
 /* ---- RTE ---- */
 .oe_editable .btn {
   -webkit-user-select: auto;

@@ -1,0 +1,59 @@
+<templates id="template" xml:space="preserve">
+<t t-name="website.menu.dialog.submenu">
+    <li t-att-data-menu-id="submenu.id">
+        <div>
+            <i class="icon-reorder"/>
+            <span><t t-esc="submenu.name"/></span>
+            <div class="btn-group btn-group-xs pull-right oe_menu_buttons">
+                <button type="button" class="btn js_edit_menu">
+                    <i class="icon-edit"/>
+                </button>
+                <button type="button" class="btn js_delete_menu">
+                    <i class="icon-trash"/>
+                </button>
+            </div>
+        </div>
+        <t t-set="children" t-value="submenu.children"/>
+        <ul t-if="children">
+            <t t-foreach="children" t-as="submenu">
+                <t t-call="website.menu.dialog.submenu"/>
+            </t>
+        </ul>
+    </li>
+</t>
+<t t-name="website.menu.dialog.footer-button">
+    <button type="button" class="btn pull-left js_add_menu btn-success">
+        <i class="icon-plus-sign"/> Add Menu Entry
+    </button>
+</t>
+<t t-name="website.menu.dialog.edit">
+    <t t-call="website.editor.dialog">
+        <t t-set="title">Edit Menu</t>
+        <ul class="oe_menu_editor">
+            <t t-foreach="widget.menu.children" t-as="submenu">
+                <t t-call="website.menu.dialog.submenu"/>
+            </t>
+        </ul>
+    </t>
+</t>
+<t t-name="website.menu.dialog.add" t-extend="website.editor.dialog.link">
+    <t t-jquery="t[t-set='title']" t-operation="inner">
+        <t t-if="!widget.update_mode">Add Menu Entry</t>
+        <t t-if="widget.update_mode">Edit Menu Entry</t>
+    </t>
+    <t t-jquery="form > div.form-horizontal" t-operation="replace"/>
+    <t t-jquery="ul.list-group" t-operation="before">
+        <div class="list-group">
+            <div class="form-group list-group-item active">
+                <h3 class="list-group-item-heading">
+                    <label for="link-new" class="control-label">
+                        Menu Label
+                    </label>
+                </h3>
+                <input type="text" class="form-control"
+                       id="link-text" required="required"/>
+            </div>
+        </div>
+    </t>
+</t>
+</templates>

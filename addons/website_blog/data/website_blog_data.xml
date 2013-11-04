@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <!-- <data noupdate="1"> -->
+    <data noupdate="1">
+        <record id="menu_blog" model="website.menu">
+            <field name="name">News</field>
+            <field name="url">/blog</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+    </data>
+
     <data>
 
         <!-- jump to blog at install -->

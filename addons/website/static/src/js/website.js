@@ -5,35 +5,30 @@
     // The following line can be removed in 2017
     openerp.website = website;
 
-    var templates = website.templates = [
-        '/website/static/src/xml/website.xml'
-    ];
-
     website.get_context = function (dict) {
         var html = document.documentElement;
         return _.extend({
-            lang: html.getAttribute('lang').replace('-', '_')
+            lang: html.getAttribute('lang').replace('-', '_'),
+            website_id: html.getAttribute('data-website-id')|0
         }, dict);
     };
 
     /* ----- TEMPLATE LOADING ---- */
-    website.add_template = function(template) {
-        templates.push(template);
-    };
-    website.load_templates = function(templates) {
-        var dones = _(templates).map(function (t) {
-            return new $.Deferred(function (d) {
-                openerp.qweb.add_template(t, function(err) {
-                    if (err) {
-                        d.reject(err);
-                    } else {
-                        d.resolve();
-                    }
-                });
+    var templates_def = $.Deferred().resolve();
+    website.add_template_file = function(template) {
+        templates_def = templates_def.then(function() {
+            var def = $.Deferred();
+            openerp.qweb.add_template(template, function(err) {
+                if (err) {
+                    def.reject(err);
+                } else {
+                    def.resolve();
+                }
             });
+            return def;
         });
-        return $.when.apply(null, dones);
     };
+    website.add_template_file('/website/static/src/xml/website.xml');
     website.reload = function () {
         location.hash = "scrollTop=" + window.document.body.scrollTop;
         if (location.search.indexOf("enable_editor") > -1) {
@@ -110,14 +105,14 @@
      */
     website.ready = function() {
         if (!all_ready) {
-            var tpl = website.load_templates(templates);
-            all_ready = dom_ready.then(function () {
+            all_ready = $.when(dom_ready, templates_def).then(function () {
                 if ($('html').data('editable')) {
+                    website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
                     var modules = ['website'];
                     return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);
                 }
-            }).then(tpl).promise();
+            }).promise();
         }
         return all_ready;
     };

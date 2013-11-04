@@ -2,7 +2,7 @@
     'use strict';
 
     var website = openerp.website;
-    website.templates.push('/website/static/src/xml/website.translator.xml');
+    website.add_template_file('/website/static/src/xml/website.translator.xml');
     var nodialog = 'website_translator_nodialog';
 
     website.EditorBar.include({
