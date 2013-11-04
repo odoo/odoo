@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 import fnmatch
 import functools
+import logging
+import math
 import simplejson
-
-import openerp
-from openerp.osv import osv, fields
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+import traceback
 import urllib
 from urlparse import urljoin
-import math
-import traceback
-from openerp.tools.safe_eval import safe_eval
-from openerp.exceptions import AccessError, AccessDenied
-import werkzeug
-from openerp.addons.base.ir.ir_qweb import QWebException
 
-import logging
+import werkzeug
+import werkzeug.exceptions
+import werkzeug.wrappers
+
+import openerp
+from openerp.exceptions import AccessError, AccessDenied
+from openerp.osv import osv, fields
+from openerp.tools.safe_eval import safe_eval
+from openerp.addons.web import http
+from openerp.addons.web.http import request
+
 logger = logging.getLogger(__name__)
 
 def route(routes, *route_args, **route_kwargs):
@@ -179,8 +181,7 @@ class website(osv.osv):
             try:
                 view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
             except ValueError:
-                logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
-                return self.render(cr, uid, ids, 'website.404', qweb_context)
+                return self.error(cr, uid, 404, qweb_context, context=context)
 
         if 'main_object' not in qweb_context:
             try:
@@ -197,15 +198,23 @@ class website(osv.osv):
             logger.error(err)
             qweb_context['error'] = err[1]
             logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.render(cr, uid, ids, 'website.401', qweb_context)
+            return self.error(cr, uid, 401, qweb_context, context=context)
         except Exception, e:
             qweb_context['template'] = getattr(e, 'qweb_template', '')
             node = getattr(e, 'qweb_node', None)
             qweb_context['node'] = node and node.toxml()
             qweb_context['expr'] = getattr(e, 'qweb_eval', '')
             qweb_context['traceback'] = traceback.format_exc()
-            logger.error("Website Rendering Error.\n%(template)s\n%(expr)s\n%(node)s\n\n%(traceback)s" % qweb_context)
-            return view.render(cr, uid, 'website.500' if qweb_context['editable'] else 'website.404', qweb_context, context=context)
+            logger.exception("Website Rendering Error.\n%(template)s\n%(expr)s\n%(node)s" % qweb_context)
+            return self.error(cr, uid, 500 if qweb_context['editable'] else 404,
+                              qweb_context, context=context)
+
+    def error(self, cr, uid, code, qweb_context, context=None):
+        View = request.registry['ir.ui.view']
+        return werkzeug.wrappers.Response(
+            View.render(cr, uid, 'website.%d' % code, qweb_context),
+            status=code,
+            content_type='text/html;charset=utf-8')
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None):
         # Compute Pager
