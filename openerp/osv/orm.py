@@ -5005,7 +5005,7 @@ class BaseModel(object):
                 
                 elif field_name in self._inherit_fields:
                     trans_name = self._inherit_fields[field_name][0] + "," + field_name
-                    # get the id of the inherit record
+                    # get the id of the parent record to set the translation
                     inherit_field_name = self._inherit_fields[field_name][1]
                     res_id = self.read(cr, uid, [new_id], [inherit_field_name], context=context)[0][inherit_field_name][0]
 
@@ -5019,6 +5019,7 @@ class BaseModel(object):
                 records = trans_obj.read(cr, uid, trans_ids, context=context)
                 for record in records:
                     del record['id']
+                    # remove source to avoid triggering _set_src
                     del record['source']
                     record.update({'res_id': res_id})
                     trans_obj.create(cr, uid, record, context=context)
