@@ -129,6 +129,9 @@
 
     dom_ready.then(function () {
 
+        /* ----- BOOTSTRAP  STUFF ---- */
+        $('.js_tooltip').bstooltip();
+
         /* ----- PUBLISHING STUFF ---- */
         $('[data-publish]:has(.js_publish)').each(function () {
             var $pub = $("[data-publish]", this);
