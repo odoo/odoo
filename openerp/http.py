@@ -418,7 +418,7 @@ class HttpRequest(WebRequest):
                 'message': "OpenERP Server Error",
                 'data': se
             }
-            r = werkzeug.exceptions.InternalServerError(cgi.escape(simplejson.dumps(error)))
+            r = werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
         else:
             if not r:
                 r = werkzeug.wrappers.Response(status=204)  # no content
