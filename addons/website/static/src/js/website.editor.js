@@ -821,6 +821,7 @@
             if (!val || !$e[0].checkValidity()) {
                 // FIXME: error message
                 $e.closest('.form-group').addClass('has-error');
+                $e.focus();
                 return;
             }
 

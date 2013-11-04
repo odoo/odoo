@@ -143,7 +143,23 @@
                 if (self.data) {
                     self.bind_data(self.data.name, self.data.url, self.data.new_window);
                 }
+                var $link_text = self.$('#link-text').focus();
+                self.$('#link-existing').change(function () {
+                    if (!$link_text.val()) {
+                        $link_text.val($(this).find('option:selected').text());
+                        $link_text.focus();
+                    }
+                });
             });
+        },
+        save: function () {
+            var $e = this.$('#link-text');
+            if (!$e.val() || !$e[0].checkValidity()) {
+                $e.closest('.form-group').addClass('has-error');
+                $e.focus();
+                return;
+            }
+            return this._super.apply(this, arguments);
         },
         make_link: function (url, new_window, label) {
             var menu_label = this.$('input#link-text').val() || label;
