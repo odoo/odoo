@@ -468,8 +468,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
                 <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
             </address>
-             <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
-                <img class="thumbnail img-responsive" t-att-src="res_company.partner_id.google_map_img()" />
+             <a t-att-href="res_company.google_map_link()" target="_BLANK">
+                <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
             </a>
         </template>
 

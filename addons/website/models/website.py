@@ -471,6 +471,15 @@ class res_partner(osv.osv):
         }
         return urlplus('https://maps.google.be/maps' , params)
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
+        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).parent_id
+        return partner and partner.google_map_img(zoom, width, height, context=context) or None
+    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
+        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).parent_id
+        return partner and partner.google_map_link(zoom, context=context) or None
+
 class base_language_install(osv.osv):
     _inherit = "base.language.install"
     _columns = {
