@@ -929,6 +929,11 @@ class Session(http.Controller):
     def destroy(self):
         request.session.logout()
 
+    @http.route('/web/session/logout', type='http', auth="user")
+    def destroy(self, redirect='/'):
+        request.session.logout()
+        return werkzeug.utils.redirect(redirect, 303)
+
 class Menu(http.Controller):
 
     @http.route('/web/menu/get_user_roots', type='json', auth="user")

@@ -1377,7 +1377,11 @@ instance.web.WebClient = instance.web.Client.extend({
 
         this.action_manager.do_action(action);
         this.action_manager.inner_widget.on('login_successful', this, function() {
-            this.show_application();        // will load the state we just pushed
+            if ('redirect' in state) {
+                openerp.web.redirect(state.redirect);
+            } else {
+                this.show_application();        // will load the state we just pushed
+            }
         });
     },
     show_application: function() {
