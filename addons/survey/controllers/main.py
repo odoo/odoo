@@ -22,11 +22,11 @@
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
-from openerp.tools.translate import _
-from openerp.tools.safe_eval import safe_eval
+# from openerp.tools.translate import _
+# from openerp.tools.safe_eval import safe_eval
 
-import simplejson
-import werkzeug
+# import simplejson
+# import werkzeug
 
 
 class WebsiteSurvey(http.Controller):
@@ -41,12 +41,16 @@ class WebsiteSurvey(http.Controller):
         survey_ids = survey_obj.search(cr, uid, [('state', '=', 'open')],
             context=context)
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
-        values = {'surveys': surveys}
-        return request.website.render('survey.list', values)
+        return request.website.render('survey.list', {'surveys': surveys})
 
-    @website.route(["/survey/fill/id/<int:survey_id>/"],
+    @website.route(["/survey/fill/id/<int:survey_id>/",
+        "/survey/fill/id/<int:survey_id>/page/<int:page_id>"],
         type='http', auth='public', multilang=True)
     def fill_survey(self, survey_id=None, page_id=None, **post):
-        '''All the public surveys'''
-        # do nothing
-        return request.website.render('survey.survey')
+        '''Display a survey'''
+        cr, uid, context = request.cr, request.uid, request.context
+        survey_obj = request.registry['survey.survey']
+
+        survey = survey_obj.browse(cr, uid, survey_id, context=context)
+        return request.website.render('survey.survey',
+            {'survey': survey})

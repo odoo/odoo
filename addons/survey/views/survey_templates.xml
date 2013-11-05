@@ -30,13 +30,142 @@
             <t t-call="website.layout">
                 <div class="wrap">
                     <div class="container">
-                        <div class='jumbotron'>
-                        <h1><t t-esc='title'/></h1>
-                        <p><t t-esc='description'/></p>
+                        <div class="row">
+                            <div class="col-md-1"> </div>
+                            <div class="col-md-1"> </div>
+                            <div class="col-md-8">
+                                <div class='jumbotron'>
+                                    <h1>
+                                        <t t-esc='survey.title'/>
+                                        <t t-if="survey.description is not False">
+                                            <br/>
+                                            <small><t t-esc='survey.description'/></small>
+                                        </t>
+                                    </h1>
+                                </div>
+
+                                <t t-foreach="survey.page_ids" t-as="page">
+                                    <t t-call='survey.page' />
+                                </t>
+                            </div>
+                            <div class="col-md-1"> </div>
+                            <div class="col-md-1"> </div>
+
                         </div>
                     </div>
                 </div>
             </t>
         </template>
-    </data>
+
+        <!-- A page -->
+        <template id="page" name="Page">
+            <div>
+                <h2><t t-esc='page.title' /></h2>
+                <p><t t-esc='page.description'/></p>
+            </div>
+            <form role="form">
+                <t t-foreach='page.question_ids' t-as='question'>
+                    <t t-call='survey.question'/>
+                </t>
+                <button type="button" class="btn btn-primary">Next page</button>
+            </form>
+
+            <div>
+                <p class="text-info">Questions marked with <span class="glyphicon glyphicon-exclamation-sign"></span> are mandatory.</p>
+            </div>
+        </template>
+
+        <!-- A question -->
+        <template id='question' name='Question'>
+
+            <div class="form-group">
+                <h3>
+
+                    <t t-if="question.constr_mandatory"><span class="glyphicon glyphicon-exclamation-sign"></span></t>
+                    <t t-esc='question.sequence'/>. <t t-esc='question.question'/><br/>
+
+                    <small><t t-esc='question.description'/> -- [ <t t-esc='question.type'/> ]</small></h3>
+
+                    <!-- instanciating different types of questions -->
+                    <t t-if="question.type in ['free_text']">
+                        <textarea class="form-control" rows="3"></textarea>
+                    </t>
+
+                    <t t-if="question.type in ['textbox']">
+                        <input type="text" class="form-control" placeholder="Your answer" />
+                    </t>
+
+                    <t t-if="question.type in ['numerical_box']">
+                        <input type="number" class="form-control"/>
+                    </t>
+
+                    <t t-if="question.type in ['datetime']">
+                        <input type="datetime-local" class="form-control" />
+                        /!\ Datetime ne fonctionne pas sur tous les navigateurs... patch en JS ?
+                    </t>
+
+                    <t t-if="question.type in ['checkbox']">
+                        Ici il faudrait afficher qqch ?
+                        <input type="checkbox" class="form-control" />
+                    </t>
+
+                    <t t-if="question.type in ['simple_choice_scale']">
+                        <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" t-att-name="suggestion.question_id" t-att-value='suggestion.value' />
+                                    <t t-esc='suggestion.value'/>
+                                </label>
+                            </div>
+                        </t>
+                    </t>
+
+                    <t t-if="question.type in ['simple_choice_dropdown']">
+                        <select class="form-control">
+                            <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
+                                <option><t t-esc='suggestion.value'/></option>
+                            </t>
+                        </select>
+                    </t>
+
+                    <t t-if="question.type in ['multiple_choice']">
+                        <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" t-att-name="suggestion.question_id" t-att-value='suggestion.value' />
+                                    <t t-esc='suggestion.value'/>
+                                </label>
+                            </div>
+                        </t>
+                    </t>
+
+                <t t-if="question.type in ['vector']">
+                    TODO afficher les vector correctement
+                    <t t-foreach='question.children_ids' t-as='question'>
+                        <t t-call='survey.question' />
+                    </t>
+                </t>
+
+                <t t-if="question.type in ['matrix']">
+                    TODO afficher les matrix correctement
+                    <t t-foreach='question.children_ids' t-as='question'>
+                        <t t-call='survey.question' />
+                    </t>
+                </t>
+
+
+            <!-- Comments -->
+
+            <t t-if="question.comments_allowed">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Any comments ?</div>
+                    <div class="panel-body">
+                    TODO afficher la boîte à commentaires
+                    </div>
+                </div>
+            </t>
+
+        </div>
+    </template>
+</data>
 </openerp>

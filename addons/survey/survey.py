@@ -283,9 +283,6 @@ class survey_page(osv.osv):
             help="An introductory text to your page", translate=True,
             oldname="note"),
     }
-    _defaults = {
-        'sequence': 1
-    }
 
     # Public methods #
 
@@ -341,7 +338,7 @@ class survey_question(osv.osv):
         'parent_id': fields.many2one('survey.question', 'Parent question'),
         'children_ids': fields.one2many('survey.question', 'parent_id',
             'Children questions'),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer(string='Sequence'),
 
         # Question
         'question': fields.char('Question', required=1, translate=True),
@@ -410,7 +407,6 @@ class survey_question(osv.osv):
             oldname='req_error_msg'),
     }
     _defaults = {
-        'sequence': 1,
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
         'type': 'free_text',
 
