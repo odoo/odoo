@@ -235,10 +235,12 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/filter/'], type='http', auth="public", multilang=True)
     def filter(self, add_filter="", **post):
+        index = []
         filter = []
         if add_filter:
             filter = simplejson.loads(add_filter)
-        index = []
+            for filt in filter:
+                index.append(filt[0])
         for key, val in post.items():
             cat = key.split("-")
             if len(cat) < 3 or cat[2] in ('max','minmem','maxmem'):
@@ -256,7 +258,9 @@ class Ecommerce(http.Controller):
                 filter.append([ cat_id, int(cat[2]) ])
                 index.append(cat_id)
             else:
-                filter[index.index(cat_id)].append( int(cat[2]) )
+                cat[2] = int(cat[2])
+                if cat[2] not in filter[index.index(cat_id)][1:]:
+                    filter[index.index(cat_id)].append( cat[2] )
             post.pop(key)
 
         return request.redirect("/shop/?filter=%s%s%s" % (
