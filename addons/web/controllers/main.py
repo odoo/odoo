@@ -348,7 +348,7 @@ def make_conditional(response, last_modified=None, etag=None):
         response.set_etag(etag)
     return response.make_conditional(request.httprequest)
 
-def login_and_redirect(db, login, key, redirect_url='/'):
+def login_and_redirect(db, login, key, redirect_url='/web'):
     request.session.authenticate(db, login, key)
     return set_cookie_and_redirect(redirect_url)
 
@@ -569,7 +569,7 @@ class Home(http.Controller):
         }
         return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
 
-    @http.route('/login', type='http', auth="user")
+    @http.route('/login', type='http', auth="none")
     def login(self, db, login, key):
         return login_and_redirect(db, login, key)
 
@@ -930,7 +930,7 @@ class Session(http.Controller):
         request.session.logout()
 
     @http.route('/web/session/logout', type='http', auth="user")
-    def destroy(self, redirect='/'):
+    def logout(self, redirect='/'):
         request.session.logout()
         return werkzeug.utils.redirect(redirect, 303)
 
