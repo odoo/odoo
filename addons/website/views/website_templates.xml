@@ -68,6 +68,11 @@
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
                         <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
+                        <script type="text/javascript">
+                            // Bootstrap and jQuery UI conflicts
+                            $.fn.bstooltip = $.fn.tooltip;
+                            $.fn.bsbutton = $.fn.button;
+                        </script>
 
                         <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
                         <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
@@ -81,11 +86,6 @@
                             <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
                             <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
-                            <script type="text/javascript">
-                                // Bootstrap and jQuery UI conflicts
-                                $.fn.bstooltip = $.fn.tooltip;
-                                $.fn.bsbutton = $.fn.button;
-                            </script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
                             <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
                             <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
