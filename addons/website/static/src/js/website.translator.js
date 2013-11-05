@@ -16,9 +16,7 @@
                 self.$('button[data-action=edit]')
                     .text("Translate")
                     .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
-                self.$('[data-action=snippet]').hide();
-                self.$('[data-action=edit-structure]').hide();
-                self.$('#customize-menu-button').hide();
+                self.$('.js_hide_on_translate').hide();
             });
         },
         edit: function () {

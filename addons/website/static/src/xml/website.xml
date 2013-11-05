@@ -21,9 +21,15 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
                         <li class="divider-vertical"></li>
-                        <li><a data-action="edit-structure" href="#"><span title="Edit website structure">Structure</span></a></li>
+                        <li class="dropdown js_hide_on_translate">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Structure <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a data-action="edit-structure" href="#"><span title="Edit Top Menu">Top Menu</span></a></li>
+                                <!-- <a data-action="edit-footer" href="#"><span title="Edit Footer">Footer</span></a></li> -->
+                            </ul>
+                        </li>
                         <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
-                        <li class="dropdown">
+                        <li class="dropdown js_hide_on_translate">
                             <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" id="customize-menu">
                                 <!-- filled in JS -->

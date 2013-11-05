@@ -11,18 +11,17 @@
         </template>
 
         <template id="website.submenu" name="Submenu">
-            <t t-set="children" t-value="submenu['children']"/>
-            <li t-if="not children">
-                <a t-att-href="url_for(submenu['url'])">
-                    <t t-esc="submenu['name']"/>
+            <li t-if="not submenu.child_id">
+                <a t-att-href="url_for(submenu.url)">
+                    <span t-field="submenu.name"/>
                 </a>
             </li>
-            <li t-if="children" class="dropdown">
+            <li t-if="submenu.child_id" class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <t t-esc="submenu['name']"/> <span class="caret"></span>
+                    <span t-field="submenu.name"/> <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <t t-foreach="children" t-as="submenu">
+                    <t t-foreach="submenu.child_id" t-as="submenu">
                         <t t-call="website.submenu"/>
                     </t>
                 </ul>
@@ -123,7 +122,7 @@
                                         </div>
                                         <div class="collapse navbar-collapse navbar-top-collapse">
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                                <t t-foreach="website.get_menu_tree()['children']" t-as="submenu">
+                                                <t t-foreach="website.get_menu().child_id" t-as="submenu">
                                                     <t t-call="website.submenu"/>
                                                 </t>
 
