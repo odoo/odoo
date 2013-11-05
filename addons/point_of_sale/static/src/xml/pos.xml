@@ -5,30 +5,30 @@
 
     <t t-name="PosWidget">
         <div class="point-of-sale">
-            <div id="topheader">
-                <div id="branding">
+            <div class="pos-topheader">
+                <div class="pos-branding">
                     <img src="/point_of_sale/static/src/img/logo.png" />
                     <span class="placeholder-UsernameWidget"></span>
                 </div>
-                <div id="rightheader">
-                    <div id="order-selector">
+                <div class="pos-rightheader">
+                    <div class="order-selector">
                         <button class="neworder-button square"><img src='/point_of_sale/static/src/img/plus.png' /></button>
                         <button class="deleteorder-button square"><img src='/point_of_sale/static/src/img/minus.png' /></button>
-                        <ol id="orders"></ol>
+                        <ol class="orders"></ol>
                     </div>
                     <!-- here goes header buttons -->
                 </div>
             </div>
-            <div id="content">
+            <div class="pos-content">
 
-                <div id="leftpane">
-                    <div id="placeholder-OrderWidget"></div>
+                <div class="pos-leftpane">
+                    <div class="placeholder-OrderWidget"></div>
                     <footer>
-                        <div id="placeholder-PaypadWidget"></div>
-                        <div id="placeholder-NumpadWidget"></div>
+                        <div class="placeholder-PaypadWidget"></div>
+                        <div class="placeholder-NumpadWidget"></div>
                     </footer>
                 </div>
-                <div id="rightpane">
+                <div class="pos-rightpane">
                 </div>
             </div>
             <div class="loader">
@@ -73,12 +73,12 @@
     </t>
 
     <t t-name="PaypadWidget">
-        <div id="paypad">
+        <div class="paypad">
         </div>
     </t>
 
     <t t-name="NumpadWidget">
-        <div id="numpad">
+        <div class="numpad">
             <button class="input-button number-char">1</button>
             <button class="input-button number-char">2</button>
             <button class="input-button number-char">3</button>
@@ -144,11 +144,9 @@
             </div>
         </header>
         <t t-if="widget.subcategories.length > 0">
-            <div id="categories">
-                <div class="white-gradient"></div>
+            <div class="categories">
                 <ol class="category-list">
                 </ol>
-                <div class="shadow-top"></div>
             </div>
         </t>
     </t>
@@ -156,16 +154,15 @@
     <t t-name="ProductListWidget">
         <div class='product-list-container'>
             <div class="product-list-scroller">
-                <ol id="products-screen-ol" class="product-list">
+                <ol class="product-list">
                 </ol>
             </div>
-            <div class="shadow-top"></div>
             <span class="placeholder-ScrollbarWidget" />
         </div>
     </t>
 
     <t t-name="ProductScreenWidget">
-        <div id="products-screen" class="screen">
+        <div class="product-screen screen">
             <table class="layout-table">
 
                 <tr class="header-row">
@@ -213,7 +210,7 @@
     </t>
 
     <t t-name="PaymentScreenWidget">
-        <div id="payment-screen" class="screen">
+        <div class="payment-screen screen">
             <header><h2>Payment</h2></header>
             <div class="pos-step-container">
                 <div class="pos-payment-container">
@@ -222,28 +219,28 @@
                         <span class="left-block">
                             Total:
                         </span>
-                        <span class='right-block' id="payment-due-total"></span>
+                        <span class="right-block payment-due-total"></span>
                     </div>
-                    <table id="paymentlines">
+                    <table class="paymentlines">
                     </table>
                     <div class="footer">
                         <div class="infoline">
                             <span class='left-block'>
                                 Paid:
                             </span>
-                            <span class='right-block' id="payment-paid-total"></span>
+                            <span class="right-block payment-paid-total"></span>
                         </div>
                         <div class="infoline">
                             <span class='left-block'>
                                 Remaining:
                             </span>
-                            <span class='right-block' id="payment-remaining"></span>
+                            <span class="right-block payment-remaining"></span>
                         </div>
                         <div class="infoline" >
                             <span class='left-block'>
                                 Change:
                             </span>
-                            <span class='right-block' id="payment-change"></span>
+                            <span class="right-block payment-change"></span>
                         </div>
                     </div>
                 </div>
@@ -252,7 +249,7 @@
     </t> <!-- pos-payment-screen -->
 
     <t t-name="ReceiptScreenWidget">
-        <div id="receipt-screen" class="screen" >
+        <div class="receipt-screen screen" >
             <header><h2>Receipt</h2></header>
             <div class="pos-step-container">
                 <div class="pos-receipt-container">
@@ -297,13 +294,6 @@
         <div class="scale-invite-screen screen">
             <header><h2>Please put your product on the scale</h2></header>
             <img src="/point_of_sale/static/src/img/scale.png" />
-        </div>
-    </t>
-
-    <t t-name="ScaleProductSelectionScreenWidget">
-        <div class="scale-product-selection-screen">
-            <span class="placeholder-ProductCategoriesWidget" />
-            <span class="placeholder-ProductListWidget" />
         </div>
     </t>
 

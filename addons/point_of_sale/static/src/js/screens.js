@@ -998,7 +998,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             l.on('delete_payment_line', self, function(r) {
                 self.deleteLine(r);
             });
-            l.appendTo(this.$('#paymentlines'));
+            l.appendTo(this.$('.paymentlines'));
             this.paymentlinewidgets.push(l);
             if(this.numpadState){
                 this.numpadState.resetValue();
@@ -1007,7 +1007,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         renderElement: function() {
             this._super();
-            this.$('#paymentlines').empty();
+            this.$('.paymentlines').empty();
             for(var i = 0, len = this.paymentlinewidgets.length; i < len; i++){
                 this.paymentlinewidgets[i].destroy();
             }
@@ -1029,10 +1029,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var remaining = dueTotal > paidTotal ? dueTotal - paidTotal : 0;
             var change = paidTotal > dueTotal ? paidTotal - dueTotal : 0;
 
-            this.$('#payment-due-total').html(this.format_currency(dueTotal));
-            this.$('#payment-paid-total').html(this.format_currency(paidTotal));
-            this.$('#payment-remaining').html(this.format_currency(remaining));
-            this.$('#payment-change').html(this.format_currency(change));
+            this.$('.payment-due-total').html(this.format_currency(dueTotal));
+            this.$('.payment-paid-total').html(this.format_currency(paidTotal));
+            this.$('.payment-remaining').html(this.format_currency(remaining));
+            this.$('.payment-change').html(this.format_currency(change));
             if(currentOrder.selected_orderline === undefined){
                 remaining = 1;  // What is this ? 
             }

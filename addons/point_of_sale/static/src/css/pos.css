@@ -110,7 +110,7 @@
 /*  ********* The black header bar ********* */
 
 
-.point-of-sale #topheader {
+.point-of-sale .pos-topheader {
     position:absolute;
     left:0;
     top:0;
@@ -124,7 +124,7 @@
 
 /*  a) The left part of the top-bar */
 
-.point-of-sale #branding{
+.point-of-sale .pos-branding{
     position: absolute;
     display: table-cell;
     left:0;
@@ -138,13 +138,13 @@
     line-height:100%;
     vertical-align: middle;
 }
-.point-of-sale #branding img {
+.point-of-sale .pos-branding img {
     height: 32px;
     width: 116px;
     margin-left:5px;
     vertical-align:middle;
 } 
-.point-of-sale #branding .username{
+.point-of-sale .pos-branding .username{
     float:right;
     color:#DDD;
     font-size:16px;
@@ -155,7 +155,7 @@
 
 /*  b) The right part of the top-bar */
 
-.point-of-sale #rightheader {
+.point-of-sale .pos-rightheader {
     position: absolute;
     left:440px;
     right:0;
@@ -163,7 +163,7 @@
     height:100%;
 }
 
-.point-of-sale #rightheader button {
+.point-of-sale .pos-rightheader button {
     color: #273072;
     height:27px;
     margin:3px;
@@ -172,22 +172,22 @@
     background: #7f82ac;
 }
 
-.point-of-sale #rightheader button.square{
+.point-of-sale .pos-rightheader button.square{
     width: 32px;
     margin-left:4px;
 }
 
-.point-of-sale div#order-selector {
+.point-of-sale .order-selector {
     display: inline;
 }
-.point-of-sale ol#orders {
+.point-of-sale .orders {
     display: inline;
     margin-left: 8px;
 }
-.point-of-sale li.order-selector-button {
+.point-of-sale .order-selector-button {
     display: inline;
 }
-.point-of-sale li.selected-order button {
+.point-of-sale .selected-order button {
     font-weight: 900;
     background: #7174A8 !important;
     color: rgb(236, 237, 255) !important;
@@ -195,7 +195,7 @@
 
 /*  c) The session buttons */
 
-.point-of-sale #rightheader .header-button{
+.point-of-sale .pos-rightheader .header-button{
     float:right;
     height:32px;
     padding-left:10px;
@@ -211,10 +211,10 @@
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
 }
-.point-of-sale #rightheader .header-button:last-child{
+.point-of-sale .pos-rightheader .header-button:last-child{
     border-left:  1px solid #3a3a3a;
 }
-.point-of-sale #rightheader .header-button:active{
+.point-of-sale .pos-rightheader .header-button:active{
     background: rgba(0,0,0,0.2);
     color:#EEE;
 }
@@ -249,7 +249,7 @@
 
 /*  ********* Contains everything below the  bar ********* */
 
-.point-of-sale #content {
+.point-of-sale .pos-content {
     width: 100%;
     position: absolute;
     top: 34px;
@@ -259,7 +259,7 @@
 
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
-.point-of-sale #leftpane {
+.point-of-sale .pos-leftpane {
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
         -ms-box-sizing: border-box;
@@ -273,7 +273,7 @@
     border-right: solid 1px #CECBCB;
     background-color: white;
 }
-.point-of-sale #leftpane footer {
+.point-of-sale .pos-leftpane footer {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -284,7 +284,7 @@
 
 /*  ********* The paypad contains the payment buttons ********* */
 
-.point-of-sale #paypad {
+.point-of-sale .paypad {
     padding: 8px 4px 8px 8px;
     display: inline-block;
     text-align: center;
@@ -294,7 +294,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
-.point-of-sale #paypad button {
+.point-of-sale .paypad button {
     height: 50px;
     display: block;
     width: 100%;
@@ -304,9 +304,9 @@
     color: #555555;
     font-size: 14px;
 }
-.point-of-sale #paypad button:active, 
-.point-of-sale #numpad button:active, 
-.point-of-sale #numpad .selected-mode, 
+.point-of-sale .paypad button:active, 
+.point-of-sale .numpad button:active, 
+.point-of-sale .numpad .selected-mode, 
 .point-of-sale .popup  button:active{
     border: none;
     color: white;
@@ -315,12 +315,12 @@
 
 /*  ********* The Numpad ********* */
 
-.point-of-sale #numpad {
+.point-of-sale .numpad {
     padding: 8px 8px 8px 4px;
     display: inline-block;
     text-align: center;
 }
-.point-of-sale #numpad button {
+.point-of-sale .numpad button {
     height: 50px;
     width: 50px;
     margin: 0px 0px 4px 0px;
@@ -331,13 +331,13 @@
 .point-of-sale .input-button {
     font-size: 24px;
 }
-.point-of-sale .mode-button, .point-of-sale #numpad-delete, .point-of-sale #numpad-minus {
+.point-of-sale .mode-button {
     font-size: 14px;
 }
 
 /*  ********* The right pane contains the screens and headers ********* */
 
-.point-of-sale #rightpane {
+.point-of-sale .pos-rightpane {
     position: absolute;
     top: 0;
     /*bottom: 105px;*/
@@ -347,7 +347,7 @@
     vertical-align: top;
 }
 
-.point-of-sale #rightpane header {
+.point-of-sale .pos-rightpane header {
     padding: 0;
     height: 32px;
     border-bottom: 1px solid #c7c7c7;
@@ -432,19 +432,11 @@
 
 /*  c) the categories list */
 
-.point-of-sale #categories {
-    /*background:#f0f0f0;*/
+.point-of-sale .categories {
     position: relative;
     border-bottom: 1px solid #cecece;
 }
-.point-of-sale #categories .white-gradient{
-    position: absolute;
-    top:50%;
-    left:0;
-    right:0;
-    bottom:0;
-}
-.point-of-sale #categories h4 {
+.point-of-sale .categories h4 {
     display: inline-block;
     margin: 9px 5px;
 }
@@ -754,20 +746,20 @@
 }
 
 @media print {
-    .point-of-sale #topheader, .point-of-sale #leftpane {
+    .point-of-sale .pos-topheader, .point-of-sale .pos-leftpane {
         display: none !important;
     }
-    .point-of-sale #content {
+    .point-of-sale .pos-content {
         top: 0px !important;
     }
-    .point-of-sale #rightpane {
+    .point-of-sale .pos-rightpane {
         left: 0px !important;
         background-color: white;
     }
-    #receipt-screen header {
+    .point-of-sale .receipt-screen header {
         display: none !important;
     }
-    #receipt-screen {
+    .point-of-sale .receipt-screen {
         text-align: left;
     }
     .pos-actionbar {

@@ -842,7 +842,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                         order: new_order,
                         pos: self.pos
                     });
-                    new_order_button.appendTo($('#orders'));
+                    new_order_button.appendTo(this.$('.orders'));
                     new_order_button.selectOrder();
                 }, self);
 
@@ -889,25 +889,25 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             // --------  Screens ---------
 
             this.product_screen = new module.ProductScreenWidget(this,{});
-            this.product_screen.appendTo($('#rightpane'));
+            this.product_screen.appendTo(this.$('.pos-rightpane'));
 
             this.receipt_screen = new module.ReceiptScreenWidget(this, {});
-            this.receipt_screen.appendTo($('#rightpane'));
+            this.receipt_screen.appendTo(this.$('.pos-rightpane'));
 
             this.payment_screen = new module.PaymentScreenWidget(this, {});
-            this.payment_screen.appendTo($('#rightpane'));
+            this.payment_screen.appendTo(this.$('.pos-rightpane'));
 
             this.welcome_screen = new module.WelcomeScreenWidget(this,{});
-            this.welcome_screen.appendTo($('#rightpane'));
+            this.welcome_screen.appendTo(this.$('.pos-rightpane'));
 
             this.client_payment_screen = new module.ClientPaymentScreenWidget(this, {});
-            this.client_payment_screen.appendTo($('#rightpane'));
+            this.client_payment_screen.appendTo(this.$('.pos-rightpane'));
 
             this.scale_invite_screen = new module.ScaleInviteScreenWidget(this, {});
-            this.scale_invite_screen.appendTo($('#rightpane'));
+            this.scale_invite_screen.appendTo(this.$('.pos-rightpane'));
 
             this.scale_screen = new module.ScaleScreenWidget(this,{});
-            this.scale_screen.appendTo($('#rightpane'));
+            this.scale_screen.appendTo(this.$('.pos-rightpane'));
 
             // --------  Popups ---------
 
@@ -938,42 +938,42 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             // --------  Misc ---------
 
             this.notification = new module.SynchNotificationWidget(this,{});
-            this.notification.appendTo(this.$('#rightheader'));
+            this.notification.appendTo(this.$('.pos-rightheader'));
 
             this.username   = new module.UsernameWidget(this,{});
             this.username.replace(this.$('.placeholder-UsernameWidget'));
 
             this.action_bar = new module.ActionBarWidget(this);
-            this.action_bar.appendTo($(".point-of-sale #rightpane"));
+            this.action_bar.appendTo(this.$(".pos-rightpane"));
 
             this.left_action_bar = new module.ActionBarWidget(this);
-            this.left_action_bar.appendTo($(".point-of-sale #leftpane"));
+            this.left_action_bar.appendTo(this.$(".pos-leftpane"));
 
             this.paypad = new module.PaypadWidget(this, {});
-            this.paypad.replace($('#placeholder-PaypadWidget'));
+            this.paypad.replace(this.$('.placeholder-PaypadWidget'));
 
             this.numpad = new module.NumpadWidget(this);
-            this.numpad.replace($('#placeholder-NumpadWidget'));
+            this.numpad.replace(this.$('.placeholder-NumpadWidget'));
 
             this.order_widget = new module.OrderWidget(this, {});
-            this.order_widget.replace($('#placeholder-OrderWidget'));
+            this.order_widget.replace(this.$('.placeholder-OrderWidget'));
 
             this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
                 'keyboard_model': 'simple'
             });
-            this.onscreen_keyboard.appendTo($(".point-of-sale #content")); 
+            this.onscreen_keyboard.appendTo(this.$(".pos-content")); 
 
             this.close_button = new module.HeaderButtonWidget(this,{
                 label: _t('Close'),
                 action: function(){ self.close(); },
             });
-            this.close_button.appendTo(this.$('#rightheader'));
+            this.close_button.appendTo(this.$('.pos-rightheader'));
 
             this.client_button = new module.HeaderButtonWidget(this,{
                 label: _t('Self-Checkout'),
                 action: function(){ self.screen_selector.set_user_mode('client'); },
             });
-            this.client_button.appendTo(this.$('#rightheader'));
+            this.client_button.appendTo(this.$('.pos-rightheader'));
 
             
             // --------  Screen Selector ---------
@@ -1006,7 +1006,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             if(this.pos.debug){
                 this.debug_widget = new module.DebugWidget(this);
-                this.debug_widget.appendTo(this.$('#content'));
+                this.debug_widget.appendTo(this.$('.pos-content'));
             }
         },
 
@@ -1053,12 +1053,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(visible !== this.leftpane_visible){
                 this.leftpane_visible = visible;
                 if(visible){
-                    $('#leftpane').removeClass('oe_hidden').animate({'width':this.leftpane_width},500,'swing');
-                    $('#rightpane').animate({'left':this.leftpane_width},500,'swing');
+                    this.$('.pos-leftpane').removeClass('oe_hidden').animate({'width':this.leftpane_width},500,'swing');
+                    this.$('.pos-rightpane').animate({'left':this.leftpane_width},500,'swing');
                 }else{
-                    var leftpane = $('#leftpane');
-                    $('#leftpane').animate({'width':'0px'},500,'swing', function(){ leftpane.addClass('oe_hidden'); });
-                    $('#rightpane').animate({'left':'0px'},500,'swing');
+                    var leftpane = this.$('.pos-leftpane');
+                    leftpane.animate({'width':'0px'},500,'swing', function(){ leftpane.addClass('oe_hidden'); });
+                    this.$('.pos-rightpane').animate({'left':'0px'},500,'swing');
                 }
             }
         },
@@ -1067,11 +1067,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             if(visible !== this.cashier_controls_visible){
                 this.cashier_controls_visible = visible;
                 if(visible){
-                    $('#loggedas').removeClass('oe_hidden');
-                    $('#rightheader').removeClass('oe_hidden');
+                    this.$('.pos-rightheader').removeClass('oe_hidden');
                 }else{
-                    $('#loggedas').addClass('oe_hidden');
-                    $('#rightheader').addClass('oe_hidden');
+                    this.$('.pos-rightheader').addClass('oe_hidden');
                 }
             }
         },
