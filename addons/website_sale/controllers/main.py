@@ -451,8 +451,7 @@ class Ecommerce(http.Controller):
         else:
             order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=request.context)
             order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
-
-        return [quantity, order.get_total_quantity()]
+        return quantity
 
     @website.route(['/shop/mycart/'], type='http', auth="public", multilang=True)
     def mycart(self, **post):
@@ -492,7 +491,11 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
-        return self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+        quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+        order = get_current_order()
+        return [quantity, order.get_total_quantity(), order.amount_total, request.website.render("website_sale.total", {
+                'website_sale_order': order
+            }).strip()]
 
     @website.route(['/shop/set_cart_json/'], type='json', auth="public")
     def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):

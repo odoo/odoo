@@ -420,14 +420,14 @@
                                     <td>
                                         <div class="input-group">
                                             <span class="input-group-addon">
-                                                <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 js_add_cart_json">
+                                                <a t-href="./add_cart/?remove=True&amp;order_line_id=#{ line.id }" class="mb8 js_add_cart_json">  
                                                     <span class="icon-minus"/>
                                                 </a>
                                             </span>
                                             <input type="text" class="js_quantity form-control"
                                                 t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
                                             <span class="input-group-addon">
-                                                <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 float_left js_add_cart_json">
+                                                <a t-href="./add_cart/?order_line_id=#{ line.id }" class="mb8 float_left js_add_cart_json">
                                                     <span class="icon-plus"/>
                                                 </a>
                                             </span>
@@ -445,11 +445,8 @@
                             <thead>
                                 <tr style="border-top: 1px solid #000">
                                     <th><h3>Total:</h3></th>
-                                    <th class="text-right"><h3>
-                                        <span t-field="website_sale_order.amount_total" t-field-options='{
-                                            "widget": "monetary",
-                                            "display_currency": "website.pricelist_id.currency_id"
-                                        }'/></h3>
+                                    <th class="text-right">
+                                      <h3><t t-call="website_sale.total"/></h3>
                                     </th>
                                 </tr>
                                 <tr class="text-muted">
@@ -877,6 +874,13 @@
             </div>
 
         </t>
+    </template>
+
+    <template id="total">
+      <span t-field="website_sale_order.amount_total" t-field-options='{
+          "widget": "monetary",
+          "display_currency": "website.pricelist_id.currency_id"
+        }'/>
     </template>
  </data>
 </openerp>
