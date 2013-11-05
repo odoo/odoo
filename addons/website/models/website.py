@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import fnmatch
 import functools
-import operator
 import logging
 import math
 import simplejson
@@ -362,8 +361,8 @@ class website(osv.osv):
             html += request.website.render(template, {'object_id': object_id})
         return html
 
-    def get_menu_tree(self, cr, uid, ids, context=None):
-        return self.pool['website.menu'].get_tree(cr, uid, ids[0], context=context)
+    def get_menu(self, cr, uid, ids, context=None):
+        return self.pool['website.menu'].get_menu(cr, uid, ids[0], context=context)
 
 class website_menu(osv.osv):
     _name = "website.menu"
@@ -376,6 +375,7 @@ class website_menu(osv.osv):
         # TODO: support multiwebsite once done for ir.ui.views
         'website_id': fields.many2one('website', 'Website'),
         'parent_id': fields.many2one('website.menu', 'Parent Menu', select=True, ondelete="cascade"),
+        'child_id': fields.one2many('website.menu', 'parent_id', string='Child Menus'),
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
     }
@@ -383,34 +383,32 @@ class website_menu(osv.osv):
         'url': '',
         'sequence': 0,
     }
+    _parent_store = True
+    _parent_order = 'sequence, name'
     _order = "parent_left"
 
-    # TODO: ormcache
-    def get_tree(self, cr, uid, website_id, fields=None, context=None):
-        if not fields:
-            fields = ['id', 'name', 'url', 'new_window', 'sequence', 'parent_id']
+    def get_menu(self, cr, uid, website_id, context=None):
         root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
-        root_menu_id = self.search(cr, uid, root_domain, limit=1, context=context)[0]
-        menu_ids = self.search(cr, uid, [('id', 'child_of', root_menu_id)], 0, False, False, context)
-        menu_items = self.read(cr, uid, menu_ids, fields, context=context)
-        menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
-        for menu_item in menu_items:
-            if menu_item['parent_id']:
-                parent = menu_item['parent_id'][0]
-            else:
-                parent = False
-            if parent in menu_items_map:
-                parent_obj = menu_items_map[parent]
-                parent_obj.setdefault('level', 0)
-                parent_obj.setdefault('children', []).append(menu_item)
-                menu_item['level'] = parent_obj['level'] + 1
+        menu_ids = self.search(cr, uid, root_domain, context=context)
+        menu = self.browse(cr, uid, menu_ids, context=context)
+        return menu[0]
 
-        # sort by sequence a tree using parent_id
-        for menu_item in menu_items:
-            menu_item.setdefault('children', []).sort(
-                key=operator.itemgetter('sequence'))
-
-        return menu_items[0]
+    def get_tree(self, cr, uid, website_id, context=None):
+        def make_tree(node):
+            menu_node = dict(
+                id=node.id,
+                name=node.name,
+                url=node.url,
+                new_window=node.new_window,
+                sequence=node.sequence,
+                parent_id=node.parent_id.id,
+                children=[],
+            )
+            for child in node.child_id:
+                menu_node['children'].append(make_tree(child))
+            return menu_node
+        menu = self.get_menu(cr, uid, website_id, context=context)
+        return make_tree(menu)
 
     def save(self, cr, uid, website_id, data, context=None):
         def replace_id(old_id, new_id):

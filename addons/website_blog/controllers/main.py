@@ -160,6 +160,7 @@ class WebsiteBlog(http.Controller):
         return request.website.render("website_blog.index", values)
 
     # TODO: Refactor (used in website_blog.js for archive links)
+    # => the archive links should be generated server side
     @website.route(['/blog/nav'], type='http', auth="public", multilang=True)
     def nav(self, **post):
         cr, uid, context = request.cr, request.uid, request.context

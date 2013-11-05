@@ -67,6 +67,8 @@
     <template id="products" name="Products" page="True">
         <t t-call="website.layout">
             <t t-set="head">
+                <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+                <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
@@ -420,14 +422,14 @@
                                     <td>
                                         <div class="input-group">
                                             <span class="input-group-addon">
-                                                <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 js_add_cart_json">
+                                                <a t-href="./add_cart/?remove=True&amp;order_line_id=#{ line.id }" class="mb8 js_add_cart_json">  
                                                     <span class="icon-minus"/>
                                                 </a>
                                             </span>
                                             <input type="text" class="js_quantity form-control"
                                                 t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
                                             <span class="input-group-addon">
-                                                <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 float_left js_add_cart_json">
+                                                <a t-href="./add_cart/?order_line_id=#{ line.id }" class="mb8 float_left js_add_cart_json">
                                                     <span class="icon-plus"/>
                                                 </a>
                                             </span>
@@ -445,11 +447,8 @@
                             <thead>
                                 <tr style="border-top: 1px solid #000">
                                     <th><h3>Total:</h3></th>
-                                    <th class="text-right"><h3>
-                                        <span t-field="website_sale_order.amount_total" t-field-options='{
-                                            "widget": "monetary",
-                                            "display_currency": "website.pricelist_id.currency_id"
-                                        }'/></h3>
+                                    <th class="text-right">
+                                      <h3><t t-call="website_sale.total"/></h3>
                                     </th>
                                 </tr>
                                 <tr class="text-muted">
@@ -495,20 +494,21 @@
         </xpath>
     </template>
 
-    <template id="products_attributes" inherit_option_id="website_sale.products_categories" name="Product Attributes">
+    <template id="products_attributes" inherit_option_id="website_sale.products_categories" name="Product Filters and Attributes">
         <xpath expr="//div[@id='categories']" position="inside">
-            <form t-action="/shop/attributes/" method="post" t-keep-query="category,search">
+            <form t-action="/shop/filter/" method="post" t-keep-query="category,search,add_filter">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
                     <t t-foreach="attribute_ids" t-as="attribute_id">
+                      <t t-if="attribute_id.visible">
                         <li t-if="attribute_id.value_ids and attribute_id.type == 'distinct'">
                             <div t-field="attribute_id.name"/>
                             <ul class="nav nav-pills nav-stacked">
                                 <t t-foreach="attribute_id.value_ids" t-as="value_id">
-                                    <li t-att-class="Ecommerce.has_search_attributes(attribute_id.id, value_id.id) and 'active' or ''">
+                                    <li t-att-class="Ecommerce.has_search_filter(attribute_id.id, value_id.id) and 'active' or ''">
                                         <label style="margin: 0 20px;">
                                             <input type="checkbox" t-att-name="'att-%s-%s' % (attribute_id.id, value_id.id)"
-                                                t-att-checked="Ecommerce.has_search_attributes(attribute_id.id, value_id.id) and 'checked' or ''"/>
+                                                t-att-checked="Ecommerce.has_search_filter(attribute_id.id, value_id.id) and 'checked' or ''"/>
                                             <span style="font-weight: normal" t-field="value_id.name"/>
                                         </label>
                                     </li>
@@ -517,7 +517,7 @@
                         </li>
                         <li t-if="attribute_id.type == 'float' and attribute_id.float_min != attribute_id.float_max">
                             <div t-field="attribute_id.name"/>
-                            <t t-set="attribute" t-value="Ecommerce.has_search_attributes(attribute_id.id)"/>
+                            <t t-set="attribute" t-value="Ecommerce.has_search_filter(attribute_id.id)"/>
                             <div style="margin: 0 20px;" class="js_slider"
                               t-att-data-id="attribute_id.id"
                               t-att-data-value-min="attribute and attribute[1][0] or attribute_id.float_min"
@@ -525,6 +525,7 @@
                               t-att-data-min="attribute_id.float_min"
                               t-att-data-max="attribute_id.float_max"></div>
                         </li>
+                      </t>
                     </t>
                 </ul>
                 <button class="btn btn-xs btn-primary mt16">Apply filter</button>
@@ -877,6 +878,13 @@
             </div>
 
         </t>
+    </template>
+
+    <template id="total">
+      <span t-field="website_sale_order.amount_total" t-field-options='{
+          "widget": "monetary",
+          "display_currency": "website.pricelist_id.currency_id"
+        }'/>
     </template>
  </data>
 </openerp>

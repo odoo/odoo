@@ -43,13 +43,21 @@ $(document).ready(function () {
         var $link = $(ev.currentTarget);
         var product = $link.attr("href").match(/product_id=([0-9]+)/);
         var product_id = product ? +product[1] : 0;
-        openerp.jsonRpc("/shop/add_cart_json/", 'call', {'product_id': product_id, 'order_line_id': $link.data('id'), 'remove': $link.is('[href*="/remove_cart/"]')})
+        if (!product) {
+            var line = $link.attr("href").match(/order_line_id=([0-9]+)/);
+            order_line_id = line ? +line[1] : 0;
+        }
+        openerp.jsonRpc("/shop/add_cart_json/", 'call', {
+                'product_id': product_id,
+                'order_line_id': order_line_id,
+                'remove': $link.is('[href*="remove"]')})
             .then(function (data) {
                 if (!data[0]) {
                     location.reload();
                 }
                 set_my_cart_quantity(data[1]);
                 $link.parents(".input-group:first").find(".js_quantity").val(data[0]);
+                $('[data-oe-model="sale.order"][data-oe-field="amount_total"]').replaceWith(data[3]);
             });
         return false;
     });
