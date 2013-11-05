@@ -223,19 +223,21 @@ class Ecommerce(http.Controller):
         product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
         return product_obj.browse(request.cr, request.uid, product_ids, context=request.context)
 
-    def has_search_attributes(self, attribute_id, value_id=None):
-        if request.httprequest.args.get('attributes'):
-            attributes = simplejson.loads(request.httprequest.args['attributes'])
+    def has_search_filter(self, attribute_id, value_id=None):
+        if request.httprequest.args.get('filter'):
+            filter = simplejson.loads(request.httprequest.args['filter'])
         else:
-            attributes = []
-        for key_val in attributes:
+            filter = []
+        for key_val in filter:
             if key_val[0] == attribute_id and (not value_id or value_id in key_val[1:]):
                 return key_val
         return False
 
-    @website.route(['/shop/attributes/'], type='http', auth="public", multilang=True)
-    def attributes(self, **post):
-        attributes = []
+    @website.route(['/shop/filter/'], type='http', auth="public", multilang=True)
+    def filter(self, add_filter="", **post):
+        filter = []
+        if add_filter:
+            filter = simplejson.loads(add_filter)
         index = []
         for key, val in post.items():
             cat = key.split("-")
@@ -248,16 +250,20 @@ class Ecommerce(http.Controller):
                 _max = int(post.pop("att-%s-max" % cat[1]))
                 _min = int(val)
                 if (minmem != _min or maxmem != _max) and cat_id not in index:
-                    attributes.append([cat_id , [_min, _max] ])
+                    filter.append([cat_id , [_min, _max] ])
                     index.append(cat_id)
             elif cat_id not in index:
-                attributes.append([ cat_id, int(cat[2]) ])
+                filter.append([ cat_id, int(cat[2]) ])
                 index.append(cat_id)
             else:
-                attributes[index.index(cat_id)].append( int(cat[2]) )
+                filter[index.index(cat_id)].append( int(cat[2]) )
             post.pop(key)
 
-        return request.redirect("/shop/?attributes=%s&%s" % (simplejson.dumps(attributes).replace(" ", ""), urllib.urlencode(post)))
+        return request.redirect("/shop/?filter=%s%s%s" % (
+                simplejson.dumps(filter).replace(" ", ""),
+                add_filter and "&add_filter=%s" % add_filter or "",
+                post and "&%s" % urllib.urlencode(post) or ""
+            ))
 
     def attributes_to_ids(self, attributes):
         obj = request.registry.get('product.attribute.product')
@@ -273,7 +279,7 @@ class Ecommerce(http.Controller):
         return [r["product_id"][0] for r in att]
 
     @website.route(['/shop/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
-    def category(self, category=0, attributes="", page=0, **post):
+    def category(self, category=0, filter="", page=0, **post):
         # TDE-NOTE: shouldn't we do somethign about product_template without variants ???
         # TDE-NOTE: is there a reason to call a method category when the route is
         # basically a shop without category_id speceified ?
@@ -295,10 +301,10 @@ class Ecommerce(http.Controller):
             cat_id = int(category)
             domain = [('product_variant_ids.public_categ_id.id', 'child_of', cat_id)] + domain
 
-        if attributes:
-            attributes = simplejson.loads(attributes)
-            if attributes:
-                ids = self.attributes_to_ids(attributes)
+        if filter:
+            filter = simplejson.loads(filter)
+            if filter:
+                ids = self.attributes_to_ids(filter)
                 domain = [('id', 'in', ids or [0] )] + domain
 
         step = 20

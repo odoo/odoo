@@ -48,9 +48,11 @@ class attributes(osv.Model):
         'float_min': fields.function(_get_float_min, type='float', string="Min", store={
                 'product.attribute.product': (_get_min_max, ['value','attribute_id'], 20),
             }),
+        'visible': fields.boolean('Visible'),
     }
     _defaults = {
-        'type': 'distinct'
+        'type': 'distinct',
+        'visible': True,
     }
 
 class attributes_value(osv.Model):
