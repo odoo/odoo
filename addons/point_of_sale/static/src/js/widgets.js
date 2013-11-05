@@ -912,28 +912,28 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             // --------  Popups ---------
 
             this.help_popup = new module.HelpPopupWidget(this, {});
-            this.help_popup.appendTo($('.point-of-sale'));
+            this.help_popup.appendTo(this.$el);
 
             this.error_popup = new module.ErrorPopupWidget(this, {});
-            this.error_popup.appendTo($('.point-of-sale'));
+            this.error_popup.appendTo(this.$el);
 
             this.error_product_popup = new module.ProductErrorPopupWidget(this, {});
-            this.error_product_popup.appendTo($('.point-of-sale'));
+            this.error_product_popup.appendTo(this.$el);
 
             this.error_session_popup = new module.ErrorSessionPopupWidget(this, {});
-            this.error_session_popup.appendTo($('.point-of-sale'));
+            this.error_session_popup.appendTo(this.$el);
 
             this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
-            this.choose_receipt_popup.appendTo($('.point-of-sale'));
+            this.choose_receipt_popup.appendTo(this.$el);
 
             this.error_negative_price_popup = new module.ErrorNegativePricePopupWidget(this, {});
-            this.error_negative_price_popup.appendTo($('.point-of-sale'));
+            this.error_negative_price_popup.appendTo(this.$el);
 
             this.error_no_client_popup = new module.ErrorNoClientPopupWidget(this, {});
-            this.error_no_client_popup.appendTo($('.point-of-sale'));
+            this.error_no_client_popup.appendTo(this.$el);
 
             this.error_invoice_transfer_popup = new module.ErrorInvoiceTransferPopupWidget(this, {});
-            this.error_invoice_transfer_popup.appendTo($('.point-of-sale'));
+            this.error_invoice_transfer_popup.appendTo(this.$el);
 
             // --------  Misc ---------
 
