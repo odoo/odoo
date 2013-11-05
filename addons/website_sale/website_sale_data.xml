@@ -2,6 +2,11 @@
 <openerp>
     <data noupdate="1">
 
+        <record id="menu_shop" model="website.menu">
+            <field name="name">Shop</field>
+            <field name="url">/shop</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Shop</field>
             <field name="target">self</field>

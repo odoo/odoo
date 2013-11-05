@@ -214,7 +214,6 @@ class Ecommerce(http.Controller):
                 col += 1
             line += 1
 
-        print bin_packing_list
         return bin_packing_list
 
     def get_products(self, product_ids):

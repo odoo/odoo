@@ -4,9 +4,6 @@
 
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout">
-        <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
-            <li><a t-href="/event">Events</a></li>
-        </xpath>
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
             <li><a t-href="/event">Events</a></li>
         </xpath>
@@ -48,7 +45,10 @@
                         </div>
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
-                                <t t-call="website.publish_management"><t t-set="object" t-value="event"/></t>
+                                <t t-call="website.publish_management">
+                                    <t t-set="object" t-value="event"/>
+                                    <t t-set="publish_controller">/event/publish</t>
+                                </t>
                                 <div class="media-body">
                                     <span t-if="not event.event_ticket_ids" class="label label-danger pull-right">Registration Closed</span>
                                     <t t-if="event.event_ticket_ids">
@@ -177,7 +177,11 @@
                         <ul class="media-list" id="comment">
                             <li t-foreach="event_id.website_message_ids" t-as="comment" class="media">
                                 <div class="media-body">
-                                    <t t-call="website.publish_management"><t t-set="object" t-value="comment"/></t>
+                                    <t t-call="website.publish_management">
+                                        <t t-set="object" t-value="comment"/>
+                                        <t t-set="publish_edit" t-value="True"/>
+                                        <t t-set="publish_controller">/event/publish</t>
+                                    </t>
                                     <t t-raw="comment.body"/>
                                     <small class="pull-right muted text-right">
                                         <div t-field="comment.author_id"/>
@@ -192,7 +196,11 @@
 
                         <div class="panel panel-default" t-if="event_id.address_id">
                             <div class="panel-heading">
-                                <t t-call="website.publish_management"><t t-set="object" t-value="event_id"/></t>
+                                <t t-call="website.publish_management">
+                                    <t t-set="object" t-value="event_id"/>
+                                    <t t-set="publish_edit" t-value="True"/>
+                                    <t t-set="publish_controller">/event/publish</t>
+                                </t>
                                 <h4>Where</h4>
                             </div>
                             <div class="panel-body">

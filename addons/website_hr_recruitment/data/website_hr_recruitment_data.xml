@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-
+        <record id="menu_jobs" model="website.menu">
+            <field name="name">Jobs</field>
+            <field name="url">/jobs</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Recruitment Form</field>
             <field name="target">self</field>

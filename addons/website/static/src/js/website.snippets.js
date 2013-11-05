@@ -2,7 +2,7 @@
     'use strict';
 
     var website = openerp.website;
-    website.templates.push('/website/static/src/xml/website.snippets.xml');
+    website.add_template_file('/website/static/src/xml/website.snippets.xml');
 
     website.EditorBar.include({
         start: function () {
@@ -589,7 +589,8 @@
         *       Displayed into the overlay options on focus
         */
         _readXMLData: function() {
-            this.$el = this.parent.$snippets.siblings("[data-snippet-id='"+this.snippet_id+"']").clone();
+            var self = this;
+            this.$el = this.parent.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
             this.$editor = this.$el.find(".oe_snippet_options");
             var $options = this.$overlay.find(".oe_overlay_options");
             this.$editor.prependTo($options.find(".oe_options ul"));

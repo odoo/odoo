@@ -108,7 +108,7 @@ table.editorbar-panel
 // ---- TRANSLATIONS ---- {{{
 .oe_translate_or
     color: white
-    padding: 0 0.2em
+    padding: 0 0 0 1em
 .oe_translate_examples li
     margin: 10px
     padding: 4px
@@ -122,6 +122,84 @@ table.editorbar-panel
     padding: 0 10px
 .oe_translatable_todo
     background: rgb(255, 255, 182)
+// }}}
+
+// -------- MENU -------- {{{
+div.oe_menu_buttons
+    top: -8px
+    right: -8px
+ul.oe_menu_editor
+    > li:first-child > div > i:before
+        content: "\f015"
+    &, & ul
+        list-style-type: none
+        margin: 0
+        padding: 0
+    & ul
+        padding-left: 30px
+
+    button
+        margin-left: 4px
+
+    li
+        margin: 5px 0 0 0
+        padding: 0
+
+    .oe_menu_placeholder
+        outline: 1px dashed #4183C4
+
+    .mjs-nestedSortable-error
+        background: #fbe3e4
+        border-color: transparent
+
+
+    // TODO: use compass mixins
+    li div
+        border: 1px solid #d4d4d4
+        -webkit-border-radius: 3px
+        -moz-border-radius: 3px
+        border-radius: 3px
+        border-color: #D4D4D4 #D4D4D4 #BCBCBC
+        padding: 6px
+        margin: 0
+        cursor: move
+        background: #f6f6f6
+        background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #ededed 100%)
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed))
+        background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%)
+        background: -o-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%)
+        background: -ms-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%)
+        background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 47%,#ededed 100%)
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 )
+
+    li.mjs-nestedSortable-branch div
+        background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #f0ece9 100%)
+        background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#f0ece9 100%)
+
+    li.mjs-nestedSortable-leaf div
+        background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #bcccbc 100%)
+        background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#bcccbc 100%)
+
+    li.mjs-nestedSortable-collapsed.mjs-nestedSortable-hovering div
+        border-color: #999
+        background: #fafafa
+
+    .disclose
+        cursor: pointer
+        width: 10px
+        display: none
+
+    li.mjs-nestedSortable-collapsed > ul
+        display: none
+
+    li.mjs-nestedSortable-branch > div > .disclose
+        display: inline-block
+
+    li.mjs-nestedSortable-collapsed > div > .disclose > span:before
+        content: '+ '
+
+    li.mjs-nestedSortable-expanded > div > .disclose > span:before
+        content: '- '
 // }}}
 
 /* ---- RTE ---- */

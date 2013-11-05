@@ -10,9 +10,28 @@
             <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
         </template>
 
-        <template id="layout" name="Main layout">
-                &lt;!DOCTYPE html&gt;
+        <template id="website.submenu" name="Submenu">
+            <t t-set="children" t-value="submenu['children']"/>
+            <li t-if="not children">
+                <a t-att-href="url_for(submenu['url'])">
+                    <t t-esc="submenu['name']"/>
+                </a>
+            </li>
+            <li t-if="children" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <t t-esc="submenu['name']"/> <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <t t-foreach="children" t-as="submenu">
+                        <t t-call="website.submenu"/>
+                    </t>
+                </ul>
+            </li>
+        </template>
+
+        <template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang.replace('_', '-')"
+                      t-att-data-website-id="website.id if editable else None"
                       t-att-data-editable="'1' if editable else None"
                       t-att-data-translatable="'1' if translatable else None"
                       t-att-data-view-xmlid="xmlid if editable else None"
@@ -49,6 +68,11 @@
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
                         <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
+                        <script type="text/javascript">
+                            // Bootstrap and jQuery UI conflicts
+                            $.fn.bstooltip = $.fn.tooltip;
+                            $.fn.bsbutton = $.fn.button;
+                        </script>
 
                         <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
                         <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
@@ -65,11 +89,13 @@
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
                             <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
                             <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
+                            <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
                             <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
                             <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
                             <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
 
                             <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
@@ -93,38 +119,28 @@
                                                 <span class="icon-bar"></span>
                                                 <span class="icon-bar"></span>
                                             </button>
-                                            <a class="navbar-brand" t-href="/page/website.homepage"><em>Your</em><b>Company</b></a>
+                                            <a class="navbar-brand" t-href="/"><em>Your</em><b>Company</b></a>
                                         </div>
                                         <div class="collapse navbar-collapse navbar-top-collapse">
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                                <li name="contactus"><a t-href="/page/website.contactus">Contact us</a></li>
-                                                <li t-if="user_id.id == website.public_user.id"><a href="/web">Sign in</a></li>
-                                                <li t-if="user_id.id != website.public_user.id"><a href="/web"><span t-field="user_id.name"/></a></li>
-                                                <li t-if="request.multilang and
-                                                            (len(website.language_ids) &gt; 1 or editable)" class="dropdown">
-                                                    <!-- TODO: use flags for language selection -->
-                                                    <a class="dropdown-toggle js_language_selected" data-toggle="dropdown" href="#">
-                                                        <t t-esc="lang_selected[0]['name'].split('/').pop()"/> <span class="caret"></span>
+                                                <t t-foreach="website.get_menu_tree()['children']" t-as="submenu">
+                                                    <t t-call="website.submenu"/>
+                                                </t>
+
+                                                <li class="active" t-if="user_id.id == website.public_user.id">
+                                                    <a t-attf-href="/web#redirect=#{ url_for('') }">
+                                                        Sign in
                                                     </a>
-                                                    <ul class="dropdown-menu js_language_selector" role="menu">
-                                                        <li t-foreach="website.language_ids" t-as="lg">
-                                                            <a t-att-href="url_for('', lang=lg.code)" role="menuitem"
-                                                               t-att-data-default-lang="editable and 'true' if lg.code == website.default_lang_id.code else None">
-                                                                <strong t-att-class="'icon-circle' if lg.code == lang
-                                                                    else 'icon-circle-blank'"></strong>
-                                                                <t t-esc="lg.name.split('/').pop()"/>
-                                                            </a>
-                                                        </li>
-                                                        <li t-if="editable" class="divider"/>
-                                                        <li t-if="editable">
-                                                            <t t-set="url_return" t-value="request.multilang and url_for(request.httprequest.path, '[lang]') or request.httprequest.path"/>
-                                                            <t t-if="request.httprequest.query_string">
-                                                                <t t-set="url_return" t-value="url_return + '?' + request.httprequest.query_string"/>
-                                                            </t>
-                                                            <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
-                                                                Add a language...
-                                                            </a>
-                                                        </li>
+                                                </li>
+                                                <li class="active dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                        <span t-esc="user_id.name"/>
+                                                        <span class="caret"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu js_usermenu" role="menu">
+                                                        <li><a href="/web" role="menuitem">Administration</a></li>
+                                                        <li class="divider"/>
+                                                        <li><a t-attf-href="/web/session/logout?redirect=#{ url_for('') }" role="menuitem">Logout</a></li>
                                                     </ul>
                                                 </li>
                                             </ul>
@@ -174,6 +190,22 @@
                                                 Our products are designed for small to medium companies willing to optimize
                                                 their performance.
                                             </p>
+                                            <ul class="nav nav-pills js_language_selector" t-if="request.multilang and
+                                                    (len(website.language_ids) &gt; 1 or editable)">
+                                                <li t-foreach="website.language_ids" t-as="lg">
+                                                    <a t-att-href="url_for('', lang=lg.code)"
+                                                       t-att-data-default-lang="editable and 'true' if lg.code == website.default_lang_id.code else None">
+                                                        <t t-esc="lg.name.split('/').pop()"/>
+                                                    </a>
+                                                </li>
+                                                <li t-if="editable">
+                                                    <t t-set="url_return" t-value="request.multilang and url_for(request.httprequest.path, '[lang]') or request.httprequest.path"/>
+                                                    <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                                                        <i class="icon-plus-sign"/>
+                                                        Add a language...
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
@@ -227,7 +259,7 @@
         <template id="publish_management">
             <t t-if="editable" t-ignore="true">
             <div class="pull-right">
-                <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name">
+                <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
                     <a t-attf-class="btn btn-sm btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                         <t t-raw="0"/>
@@ -439,8 +471,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
                 <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
             </address>
-             <a t-att-href="res_company.partner_id.google_map_link()" target="_BLANK">
-                <img class="thumbnail img-responsive" t-att-src="res_company.partner_id.google_map_img()" />
+             <a t-att-href="res_company.google_map_link()" target="_BLANK">
+                <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
             </a>
         </template>
 

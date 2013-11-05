@@ -8,6 +8,22 @@
             <field name="default_lang_id" ref="base.lang_en"/>
         </record>
 
+        <record id="main_menu" model="website.menu">
+            <field name="name">Main Menu</field>
+        </record>
+
+        <record id="menu_homepage" model="website.menu">
+            <field name="name">Homepage</field>
+            <field name="url">/</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+
+        <record id="menu_contactus" model="website.menu">
+            <field name="name">Contact us</field>
+            <field name="url">/page/website.contactus</field>
+            <field name="parent_id" ref="website.main_menu"/>
+        </record>
+
         <record id="public_user" model="res.users">
             <field name="name">public</field>
             <field name="login">public</field>

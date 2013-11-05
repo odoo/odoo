@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record model="ir.ui.view" id="view_event_form">
+        <field name="name">event.event.website.form</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event_sale.view_event_form"/>
+        <field name="arch" type="xml">
+            <field name="organizer_id" position="after">
+                <field name="website_published"/>
+            </field>
+        </field>
+    </record>
+
+ </data>
+</openerp>

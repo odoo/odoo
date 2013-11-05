@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 import fnmatch
 import functools
+import operator
+import logging
+import math
 import simplejson
-
-import openerp
-from openerp.osv import osv, fields
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+import traceback
 import urllib
 from urlparse import urljoin
-import math
-import traceback
-from openerp.tools.safe_eval import safe_eval
-from openerp.exceptions import AccessError, AccessDenied
-import werkzeug
-from openerp.addons.base.ir.ir_qweb import QWebException
 
-import logging
+import werkzeug
+import werkzeug.exceptions
+import werkzeug.wrappers
+
+import openerp
+from openerp.exceptions import AccessError, AccessDenied
+from openerp.osv import osv, fields
+from openerp.tools.safe_eval import safe_eval
+from openerp.addons.web import http
+from openerp.addons.web.http import request
+
 logger = logging.getLogger(__name__)
 
 def route(routes, *route_args, **route_kwargs):
@@ -179,8 +182,7 @@ class website(osv.osv):
             try:
                 view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
             except ValueError:
-                logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
-                return self.render(cr, uid, ids, 'website.404', qweb_context)
+                return self.error(cr, uid, 404, qweb_context, context=context)
 
         if 'main_object' not in qweb_context:
             try:
@@ -197,15 +199,23 @@ class website(osv.osv):
             logger.error(err)
             qweb_context['error'] = err[1]
             logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.render(cr, uid, ids, 'website.401', qweb_context)
+            return self.error(cr, uid, 401, qweb_context, context=context)
         except Exception, e:
             qweb_context['template'] = getattr(e, 'qweb_template', '')
             node = getattr(e, 'qweb_node', None)
             qweb_context['node'] = node and node.toxml()
             qweb_context['expr'] = getattr(e, 'qweb_eval', '')
             qweb_context['traceback'] = traceback.format_exc()
-            logger.error("Website Rendering Error.\n%(template)s\n%(expr)s\n%(node)s\n\n%(traceback)s" % qweb_context)
-            return view.render(cr, uid, 'website.500' if qweb_context['editable'] else 'website.404', qweb_context, context=context)
+            logger.exception("Website Rendering Error.\n%(template)s\n%(expr)s\n%(node)s" % qweb_context)
+            return self.error(cr, uid, 500 if qweb_context['editable'] else 404,
+                              qweb_context, context=context)
+
+    def error(self, cr, uid, code, qweb_context, context=None):
+        View = request.registry['ir.ui.view']
+        return werkzeug.wrappers.Response(
+            View.render(cr, uid, 'website.%d' % code, qweb_context),
+            status=code,
+            content_type='text/html;charset=utf-8')
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None):
         # Compute Pager
@@ -352,6 +362,75 @@ class website(osv.osv):
             html += request.website.render(template, {'object_id': object_id})
         return html
 
+    def get_menu_tree(self, cr, uid, ids, context=None):
+        return self.pool['website.menu'].get_tree(cr, uid, ids[0], context=context)
+
+class website_menu(osv.osv):
+    _name = "website.menu"
+    _description = "Website Menu"
+    _columns = {
+        'name': fields.char('Menu', size=64, required=True, translate=True),
+        'url': fields.char('Url', required=True, translate=True),
+        'new_window': fields.boolean('New Window'),
+        'sequence': fields.integer('Sequence'),
+        # TODO: support multiwebsite once done for ir.ui.views
+        'website_id': fields.many2one('website', 'Website'),
+        'parent_id': fields.many2one('website.menu', 'Parent Menu', select=True, ondelete="cascade"),
+        'parent_left': fields.integer('Parent Left', select=True),
+        'parent_right': fields.integer('Parent Right', select=True),
+    }
+    _defaults = {
+        'url': '',
+        'sequence': 0,
+    }
+    _order = "parent_left"
+
+    # TODO: ormcache
+    def get_tree(self, cr, uid, website_id, fields=None, context=None):
+        if not fields:
+            fields = ['id', 'name', 'url', 'new_window', 'sequence', 'parent_id']
+        root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
+        root_menu_id = self.search(cr, uid, root_domain, limit=1, context=context)[0]
+        menu_ids = self.search(cr, uid, [('id', 'child_of', root_menu_id)], 0, False, False, context)
+        menu_items = self.read(cr, uid, menu_ids, fields, context=context)
+        menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
+        for menu_item in menu_items:
+            if menu_item['parent_id']:
+                parent = menu_item['parent_id'][0]
+            else:
+                parent = False
+            if parent in menu_items_map:
+                parent_obj = menu_items_map[parent]
+                parent_obj.setdefault('level', 0)
+                parent_obj.setdefault('children', []).append(menu_item)
+                menu_item['level'] = parent_obj['level'] + 1
+
+        # sort by sequence a tree using parent_id
+        for menu_item in menu_items:
+            menu_item.setdefault('children', []).sort(
+                key=operator.itemgetter('sequence'))
+
+        return menu_items[0]
+
+    def save(self, cr, uid, website_id, data, context=None):
+        def replace_id(old_id, new_id):
+            for menu in data['data']:
+                if menu['id'] == old_id:
+                    menu['id'] = new_id
+                if menu['parent_id'] == old_id:
+                    menu['parent_id'] = new_id
+        to_delete = data['to_delete']
+        if to_delete:
+            self.unlink(cr, uid, to_delete, context=context)
+        for menu in data['data']:
+            mid = menu['id']
+            if isinstance(mid, str):
+                new_id = self.create(cr, uid, {'name': menu['name']}, context=context)
+                replace_id(mid, new_id)
+        for menu in data['data']:
+            self.write(cr, uid, [menu['id']], menu, context=context)
+        return True
+
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
@@ -391,6 +470,15 @@ class res_partner(osv.osv):
             'q': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
         }
         return urlplus('https://maps.google.be/maps' , params)
+
+class res_company(osv.osv):
+    _inherit = "res.company"
+    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
+        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).parent_id
+        return partner and partner.google_map_img(zoom, width, height, context=context) or None
+    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
+        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).parent_id
+        return partner and partner.google_map_link(zoom, context=context) or None
 
 class base_language_install(osv.osv):
     _inherit = "base.language.install"
