@@ -187,17 +187,19 @@ class crm_lead(osv.osv):
             return True
         # Don't pass context to browse()! We need country name in english below
         for lead in self.browse(cr, uid, ids):
-            result = None
+            if lead.partner_latitude and lead.partner_longitude:
+                continue
             if lead.country_id:
                 result = geo_find(geo_query_address(street=lead.street,
                                                     zip=lead.zip,
                                                     city=lead.city,
                                                     state=lead.state_id.name,
                                                     country=lead.country_id.name))
-            self.write(cr, uid, [lead.id], {
-                'partner_latitude': result and result[0] or False,
-                'partner_longitude': result and result[1] or False
-            }, context=context)
+                if result:
+                    self.write(cr, uid, [lead.id], {
+                        'partner_latitude': result[0],
+                        'partner_longitude': result[1]
+                    }, context=context)
         return True
 
     def search_geo_partner(self, cr, uid, ids, context=None):
