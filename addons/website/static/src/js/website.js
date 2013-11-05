@@ -156,6 +156,7 @@
                 }).fail(function (err, data) {
                     website.error(data, '/web#model='+$a.data('object')+'&id='+$a.data('id'));
                 });
+            return false;
         });
 
         $(document).on('click', '.js_publish_management .js_publish_btn', function () {
