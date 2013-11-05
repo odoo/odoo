@@ -422,7 +422,7 @@
                                     <td>
                                         <div class="input-group">
                                             <span class="input-group-addon">
-                                                <a t-href="./add_cart/?remove=True&amp;order_line_id=#{ line.id }" class="mb8 js_add_cart_json">  
+                                                <a t-href="./add_cart/?remove=True&amp;order_line_id=#{ line.id }" class="mb8 js_add_cart_json">
                                                     <span class="icon-minus"/>
                                                 </a>
                                             </span>
@@ -622,7 +622,7 @@
                 <div class="col-md-8 oe_mycart">
                     <h3 class="page-header mt16">Billing Information
                         <small t-if="user_id.id == website.public_user.id"> or
-                            <a t-if="not partner" t-attf-href="/web#action=redirect&amp;url=#{ request.httprequest.host_url }/shop/checkout/">sign in</a>
+                            <a t-if="not partner" t-attf-href="/web#action=redirect&amp;url=#{ request.httprequest.url }">sign in</a>
                         </small>
                     </h3>
                         <div class="row">
@@ -639,7 +639,7 @@
                                 <input type="email" name="email" class="form-control" t-att-value="checkout.get('email')"/>
                             </div>
                             <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="phone">Telephone</label>
+                                <label class="control-label" for="phone">Phone</label>
                                 <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone')"/>
                             </div>
 
@@ -695,7 +695,7 @@
                                 <input type="text" name="shipping_name" class="form-control" t-att-value="checkout.get('shipping_name', '')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_phone') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="contact_name">Telephone</label>
+                                <label class="control-label" for="contact_name">Phone</label>
                                 <input type="tel" name="shipping_phone" class="form-control" t-att-value="checkout.get('shipping_phone', '')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_street') and 'has-error' or ''} col-lg-6">
