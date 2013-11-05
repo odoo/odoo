@@ -744,14 +744,15 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="origin"/>
+                    <field name="location_dest_id"/>
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="backorder_id"/>
+                    <field name="group_id"/>
                     <field name="state"/>
                     <field name="priority"/>
                     <field name="picking_type_id" invisible="1"/>
-                    <field name="group_id" invisible="1"/>
+                    <field name="origin" invisible="1"/>
                 </tree>
             </field>
         </record>
