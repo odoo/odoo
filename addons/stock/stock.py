@@ -2294,8 +2294,8 @@ class stock_warehouse(osv.osv):
                     output_loc = wh.lot_stock_id
                 inter_wh_route_vals = self._get_inter_wh_route(cr, uid, warehouse, wh, context=context)
                 inter_wh_route_id = route_obj.create(cr, uid, vals=inter_wh_route_vals, context=context)
-                values = [(output_loc, inter_wh_location, wh.out_type_id.id), (inter_wh_location, input_loc, warehouse.in_type_id.id)]
-                dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, True, values, inter_wh_route_id, force_mto=True, context=context)
+                values = [(output_loc, inter_wh_location, wh.out_type_id.id, wh), (inter_wh_location, input_loc, warehouse.in_type_id.id, warehouse)]
+                pull_rules_list = self._get_supply_pull_rules(cr, uid, warehouse, values, inter_wh_route_id, context=context)
                 for pull_rule in pull_rules_list:
                     pull_obj.create(cr, uid, vals=pull_rule, context=context)
                 #if the warehouse is also set as default resupply method, assign this route automatically to all product
@@ -2368,7 +2368,22 @@ class stock_warehouse(osv.osv):
             'sequence': 10,
         }
 
-    def _get_push_pull_rules(self, cr, uid, warehouse, active, values, new_route_id, force_mto=False, context=None):
+    def _get_supply_pull_rules(self, cr, uid, supplied_warehouse, values, new_route_id, context=None):
+        pull_rules_list = []
+        for from_loc, dest_loc, pick_type_id, warehouse in values:
+            pull_rules_list.append({
+                'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context),
+                'location_src_id': from_loc.id,
+                'location_id': dest_loc.id,
+                'route_id': new_route_id,
+                'action': 'move',
+                'picking_type_id': pick_type_id,
+                'procure_method': 'make_to_order',
+                'warehouse_id': supplied_warehouse.id,
+            })
+        return pull_rules_list
+
+    def _get_push_pull_rules(self, cr, uid, warehouse, active, values, new_route_id, context=None):
         first_rule = True
         push_rules_list = []
         pull_rules_list = []
@@ -2390,7 +2405,7 @@ class stock_warehouse(osv.osv):
                 'route_id': new_route_id,
                 'action': 'move',
                 'picking_type_id': pick_type_id,
-                'procure_method': force_mto and 'make_to_order' or (first_rule is True and 'make_to_stock' or 'make_to_order'),
+                'procure_method': first_rule is True and 'make_to_stock' or 'make_to_order',
                 'active': active,
                 'warehouse_id': warehouse.id,
             })
