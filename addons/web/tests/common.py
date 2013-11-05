@@ -3,7 +3,7 @@ import unittest2
 
 import mock
 
-from openerp.addons.web import http
+from openerp import http
 
 class MockRequestCase(unittest2.TestCase):
     def setUp(self):

@@ -33,10 +33,9 @@ import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
 from openerp.tools import config
+from openerp import http
 
-from .. import http
-
-from openerp.addons.web.http import request
+from openerp.http import request
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -91,13 +90,16 @@ db_list = http.db_list
 db_monodb = http.db_monodb
 
 def redirect_with_hash(url, code=303):
+    redirect_code = "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
     if request.httprequest.user_agent.browser == 'msie':
         try:
             version = float(request.httprequest.user_agent.version)
             if version < 10:
-                return "<html><head><script>window.location = '%s#' + location.hash;</script></head></html>" % url
+                return redirect_code
         except Exception:
             pass
+    elif request.httprequest.user_agent.browser == 'safari':
+        return redirect_code
     return werkzeug.utils.redirect(url, code)
 
 def module_topological_sort(modules):
@@ -927,6 +929,11 @@ class Session(http.Controller):
     def destroy(self):
         request.session.logout()
 
+    @http.route('/web/session/logout', type='http', auth="user")
+    def destroy(self, redirect='/'):
+        request.session.logout()
+        return werkzeug.utils.redirect(redirect, 303)
+
 class Menu(http.Controller):
 
     @http.route('/web/menu/get_user_roots', type='json', auth="user")
@@ -1685,8 +1692,6 @@ class Reports(http.Controller):
             if 'ids' in action['datas']:
                 report_ids = action['datas'].pop('ids')
             report_data.update(action['datas'])
-        if not report_ids:
-            raise ValueError("action['datas']['ids'] and context['active_ids'] are undefined")
 
         report_id = report_srv.report(
             request.session.db, request.session.uid, request.session.password,

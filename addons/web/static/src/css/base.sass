@@ -606,10 +606,8 @@ $sheet-padding: 16px
     .oe_dropdown_menu
         display: none
         position: absolute
-        top: 26px
         z-index: 3
         margin: 0
-        padding: 0
         border: 1px solid $tag-border
         background: white
         padding: 4px 0
@@ -914,7 +912,7 @@ $sheet-padding: 16px
             border-color: #999
             border-color: rgba(0, 0, 0, 0.2)
             border-style: solid
-            border-width: 0 1px 1px
+            border-width: 0 2px 1px
             @include radius(0 0 6px 6px)
             @include background-clip()
             li
@@ -1171,7 +1169,7 @@ $sheet-padding: 16px
         .oe_view_manager_body
             display: table-row
             height: inherit
-        .oe_view_manager_view_kanban
+        .oe_view_manager_view_kanban:not(:empty)
             height: inherit
 
         table.oe_view_manager_header
@@ -2174,28 +2172,18 @@ $sheet-padding: 16px
                     @include skew-gradient(#fcfcfc, #dedede)
                     @include radius(3px)
                     @include transform(rotate(45deg))
-        .oe_folded
-            .label
-                padding-bottom: 8px
-            ul
-                position: absolute
-                z-index: 1000
-                border-top: 1px solid #cacaca
-                float: none
-                top: 30px
-                right: 0
-                display: none
-                li
-                    margin: 0
-                    border-left: 1px solid #cacaca
-                    display: block
-                li.label
-                    border: 0
-                    padding-left: 24px
-                li:last-child
-                    border-bottom: 1px solid #cacaca
-            &:hover ul
+        ul.oe_dropdown_menu
+            display: none
+            padding: 0
+            min-width: 0
+            &.oe_opened
                 display: block
+            li
+                margin: 0
+                width: 100%
+                span.label
+                    padding-left: 14px
+
         li.oe_active
             @include vertical-gradient(#729fcf, #3465a4)
             > .arrow span

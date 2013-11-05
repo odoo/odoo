@@ -1247,6 +1247,7 @@ instance.web.Client = instance.web.Widget.extend({
         this.$el.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();
             var $toggle = $(this);
+            var doc_width = $(document).width();
             var $menu = $toggle.siblings('.oe_dropdown_menu');
             $menu = $menu.size() >= 1 ? $menu : $toggle.find('.oe_dropdown_menu');
             var state = $menu.is('.oe_opened');
@@ -1255,7 +1256,6 @@ instance.web.Client = instance.web.Widget.extend({
                 $toggle.add($menu).toggleClass('oe_opened', !state);
                 if (!state) {
                     // Move $menu if outside window's edge
-                    var doc_width = $(document).width();
                     var offset = $menu.offset();
                     var menu_width = $menu.width();
                     var x = doc_width - offset.left - menu_width - 2;
@@ -1377,7 +1377,11 @@ instance.web.WebClient = instance.web.Client.extend({
 
         this.action_manager.do_action(action);
         this.action_manager.inner_widget.on('login_successful', this, function() {
-            this.show_application();        // will load the state we just pushed
+            if ('redirect' in state) {
+                openerp.web.redirect(state.redirect);
+            } else {
+                this.show_application();        // will load the state we just pushed
+            }
         });
     },
     show_application: function() {

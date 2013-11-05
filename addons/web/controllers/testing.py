@@ -9,11 +9,10 @@ import os
 
 from mako.template import Template
 from openerp.modules import module
+from openerp import http
+from openerp.http import request
 
 from .main import module_topological_sort
-from .. import http
-
-from ..http import request
 
 NOMODULE_TEMPLATE = Template(u"""<!DOCTYPE html>
 <html>
