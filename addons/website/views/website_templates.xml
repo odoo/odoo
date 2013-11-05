@@ -266,9 +266,6 @@
                             <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
                             <a href="#" class="js_publish_btn css_publish">Publish</a>
                         </li>
-                        <li t-if="publish_duplicate">
-                            <a t-att-href="publish_duplicate">Duplicate</a>
-                        </li>
                         <li t-if="publish_edit">
                             <a t-att-href="'/web#model=%s&amp;id=%s' % (object._name, object.id)"
                             title='Edit in backend'>Edit</a>
