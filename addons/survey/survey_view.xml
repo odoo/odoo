@@ -244,6 +244,10 @@
                                     <table class="oe_kanban_survey_list" t-if="widget.view.is_action_enabled('edit')">
                                         <tr>
                                             <td>
+                                                <t t-if="record.state.raw_value === 'open'"><a name="action_survey_fill2" type="object">Take survey</a></t>
+                                                <t t-if="record.state.raw_value !== 'open'"><span class="oe_inactive" title="You can only take open surveys">Take survey</span></t>
+                                            </td>
+                                            <td>
                                                 <t t-if="record.state.raw_value === 'open'"><a name="action_send_survey" type="object">Invite people</a></t>
                                                 <t t-if="record.state.raw_value !== 'open'"><span class="oe_inactive" title="You can only collect answers for the open survey">Invite people</span></t>
                                             </td>
@@ -662,9 +666,6 @@
             res_model="survey.suggestion"
             src_model="survey.question"/>
 
-
-
-
         <!--
 
         MENU ELEMENTS
@@ -701,5 +702,13 @@
         <menuitem name="Survey Suggestions" id="menu_survey_suggestion_form1"
             action="action_survey_suggestion_form" parent="menu_surveys_configuration"
             sequence="3"/>
-    </data>
+
+        <!-- web -->
+        <record id="action_survey_fill2" model="ir.actions.client">
+            <field name="res_model">survey.survey</field>
+            <field name="tag">survey.fill2</field>
+        </record>
+        <menuitem id="menu_survey_fill2" name="Survey Fill" parent="menu_surveys"
+            action="action_survey_fill2"/>
+        </data>
 </openerp>

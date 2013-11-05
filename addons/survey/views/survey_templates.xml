@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- List of all the surveys -->
+        <template id="list" name="Survey List">
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="container">
+                        <h1>Open surveys</h1>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <tr><th>Title</th><th>Category</th><th>Description</th><th>Public URL</th></tr>
+                                <t t-foreach="surveys" t-as="survey">
+                                    <tr>
+                                        <td><t t-esc="survey.title" /></td>
+                                        <td><t t-esc="survey.category"/></td>
+                                        <td><t t-if="survey.description is not False"><t t-esc="survey.description"/></t></td>
+                                        <td><a t-att-href="survey.public_url"><t t-esc="survey.id" /></a></td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- A survey -->
+        <template id="survey" name="Survey">
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="container">
+                        <div class='jumbotron'>
+                        <h1><t t-esc='title'/></h1>
+                        <p><t t-esc='description'/></p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</openerp>

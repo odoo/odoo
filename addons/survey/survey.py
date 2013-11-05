@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from urllib import urlencode
 from urlparse import urljoin
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -78,16 +77,8 @@ class survey_survey(osv.osv):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
         for survey_browse in self.browse(cr, uid, ids, context=context):
-            query = {
-                'db': cr.dbname
-            }
-            fragment = {
-                #'survey_id': survey_browse.id,
-                'action': 'survey.action_filling',
-                'survey_token': survey_browse.token,
-            }
-            res[survey_browse.id] = urljoin(base_url, "?%s#%s"
-                                    % (urlencode(query), urlencode(fragment)))
+            res[survey_browse.id] = urljoin(base_url, "survey/fill/id/%s"
+                                            % survey_browse.id)
         return res
 
     # Model fields #
@@ -121,9 +112,7 @@ class survey_survey(osv.osv):
         'user_input_ids': fields.one2many('survey.user_input', 'survey_id',
             'User responses', readonly=1,),
         'public_url': fields.function(_get_public_url,
-            string="Public link", type="char", store=True),
-        'token': fields.char('Public token', size=36, required=True,
-            readonly=True),
+            string="Public link", searchable=True, type="char"),  # store=True),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
     }
@@ -133,7 +122,6 @@ class survey_survey(osv.osv):
         'state': 'draft',
         'visible_to_user': True,
         'auth_required': True,
-        'token': lambda s, cr, uid, c: uuid.uuid4().__str__(),
     }
 
     # Public methods #

@@ -28,10 +28,10 @@ This module is used for surveying.
 ==================================
 
 It depends on the answers or reviews of some questions by different users. A
-survey may have multiple pages. Each page may contain multiple questions and each
-question may have multiple answers. Different users may give different answers of
-question and according to that survey is done. Partners are also sent mails with
-user name and password for the invitation of the survey.
+survey may have multiple pages. Each page may contain multiple questions and
+each question may have multiple answers. Different users may give different
+answers of question and according to that survey is done. Partners are also
+sent mails with user name and password for the invitation of the survey.
     """,
     'summary': 'Create surveys, collect answers and print statistics',
     'author': 'OpenERP SA',
@@ -41,6 +41,7 @@ user name and password for the invitation of the survey.
         'security/survey_security.xml',
         'security/ir.model.access.csv',
         'survey_view.xml',
+        'views/survey_templates.xml',
         #'wizard/survey_answer.xml',
         #'wizard/survey_print_statistics.xml',
         #'wizard/survey_print_answer.xml',
