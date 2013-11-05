@@ -3,7 +3,7 @@
     src: url(../fonts/Inconsolata.otf);
 }
 
-.point-of-sale {
+.pos {
     padding: 0;
     margin: 0;
     background-color: #f0eeee;
@@ -21,24 +21,24 @@
     text-shadow: none;
 }
 
-.point-of-sale * {
+.pos * {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.point-of-sale button{
+.pos button{
     box-shadow: none;
     outline: none;
     border: none;
 }
-.point-of-sale button:hover{
+.pos button:hover{
     background: default;
 }
 
-.point-of-sale .oe_hidden{
+.pos .oe_hidden{
     display: none !important;
 }
 
-.point-of-sale ul, .point-of-sale li  {
+.pos ul, .pos li  {
     margin: 0;
     padding: 0;
     list-style-type: none;
@@ -46,7 +46,7 @@
 
 /*  ********* The black loading screen ********* */
 
-.point-of-sale .loader{
+.pos .loader{
     background-color: #222;
     position:absolute;
     left:0px;
@@ -57,13 +57,108 @@
     text-align: center;
 }
 
+/*  ********* Generic Layout Constructs  ********* */
+
+.pos .window{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: table;
+    border: none;
+}
+.pos .window .subwindow{
+    display: table-row;
+    width: 100%;
+    height: 100%;
+}
+.pos .window .subwindow.collapsed{
+    height: 0px;
+}
+.pos .subwindow .subwindow-container{
+    display: table-cell;
+    position: relative;
+}
+
+/* ---- Scrollers ----- */
+
+.pos .scroller-container{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+.pos .scroller{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.pos .scroller.horizontal{
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+.pos .scroller-content{
+    -webkit-transform: translate3d(0,0,0);
+}
+.pos .scroller-container ::-webkit-scrollbar{
+    width:  10px;
+    height: 10px;
+}
+.pos .scroller-container ::-webkit-scrollbar-track{
+    background: rgb(224,224,224);
+    border-left: solid 1px rgb(200,200,200);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.pos .scroller-container ::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 30px;
+}
+
+/* ---- Panes ----- */
+
+/*
+.pos .headerpane{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    height: 40px;
+    background: rgb(100,100,100)
+}
+.pos .mainpane{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 40px;
+    bottom: 0px;
+}
+.pos .leftpane{
+    position: absolute;
+    left: 0px;
+    width: 400px;
+    top: 0px;
+    bottom: 0px;
+}
+.pos .rightpane{
+    position: absolute;
+    left: 400px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+}*/
+
 /*  ********* Generic element styling  ********* */
 
-.point-of-sale a {
+.pos a {
     text-decoration: none;
     color: #555555;
 }
-.point-of-sale button, .point-of-sale a.button {
+.pos button, .pos a.button {
     display: inline-block;
     cursor: pointer;
     padding: 4px 10px;
@@ -71,21 +166,21 @@
     border: 1px solid #cacaca;
     background: #e2e2e2;
 }
-.point-of-sale ul, .point-of-sale ol {
+.pos ul, .pos ol {
     padding: 0;
     margin: 0;
 }
-.point-of-sale li {
+.pos li {
     list-style-type: none;
 }
-.point-of-sale .pos-right-align {
+.pos .pos-right-align {
     text-align: right;
 }
-.point-of-sale .pos-right-align input {
+.pos .pos-right-align input {
     text-align: right;
     border: 1px solid #cecbcb;
 }
-.point-of-sale .pos-disc-font {
+.pos .pos-disc-font {
     font-size: 12px;
     font-style:italic;
     color: #808080;
@@ -94,7 +189,7 @@
 /*  ********* The black header bar ********* */
 
 
-.point-of-sale .pos-topheader {
+.pos .pos-topheader {
     position:absolute;
     left:0;
     top:0;
@@ -108,7 +203,7 @@
 
 /*  a) The left part of the top-bar */
 
-.point-of-sale .pos-branding{
+.pos .pos-branding{
     position: absolute;
     display: table-cell;
     left:0;
@@ -122,13 +217,13 @@
     line-height:100%;
     vertical-align: middle;
 }
-.point-of-sale .pos-branding img {
+.pos .pos-branding img {
     height: 32px;
     width: 116px;
     margin-left:5px;
     vertical-align:middle;
 } 
-.point-of-sale .pos-branding .username{
+.pos .pos-branding .username{
     float:right;
     color:#DDD;
     font-size:16px;
@@ -139,7 +234,7 @@
 
 /*  b) The right part of the top-bar */
 
-.point-of-sale .pos-rightheader {
+.pos .pos-rightheader {
     position: absolute;
     left:440px;
     right:0;
@@ -147,7 +242,7 @@
     height:100%;
 }
 
-.point-of-sale .pos-rightheader button {
+.pos .pos-rightheader button {
     color: #273072;
     height:27px;
     margin:3px;
@@ -156,22 +251,22 @@
     background: #7f82ac;
 }
 
-.point-of-sale .pos-rightheader button.square{
+.pos .pos-rightheader button.square{
     width: 32px;
     margin-left:4px;
 }
 
-.point-of-sale .order-selector {
+.pos .order-selector {
     display: inline;
 }
-.point-of-sale .orders {
+.pos .orders {
     display: inline;
     margin-left: 8px;
 }
-.point-of-sale .order-selector-button {
+.pos .order-selector-button {
     display: inline;
 }
-.point-of-sale .selected-order button {
+.pos .selected-order button {
     font-weight: 900;
     background: #7174A8 !important;
     color: rgb(236, 237, 255) !important;
@@ -179,7 +274,7 @@
 
 /*  c) The session buttons */
 
-.point-of-sale .pos-rightheader .header-button{
+.pos .pos-rightheader .header-button{
     float:right;
     height:32px;
     padding-left:10px;
@@ -195,17 +290,17 @@
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
 }
-.point-of-sale .pos-rightheader .header-button:last-child{
+.pos .pos-rightheader .header-button:last-child{
     border-left:  1px solid #3a3a3a;
 }
-.point-of-sale .pos-rightheader .header-button:active{
+.pos .pos-rightheader .header-button:active{
     background: rgba(0,0,0,0.2);
     color:#EEE;
 }
 
 /*  c) The notifications indicator */
 
-.point-of-sale .oe_pos_synch-notification{
+.pos .oe_pos_synch-notification{
     float:right; 
     color: rgba(255,255,255,0.4);
     padding: 8px;
@@ -215,17 +310,17 @@
     font-style: italic;
     cursor:pointer;
 }
-.point-of-sale .oe_pos_synch-notification.oe_inactive{
+.pos .oe_pos_synch-notification.oe_inactive{
     cursor: default;
 }
-.point-of-sale .oe_pos_synch-notification .oe_status_red{
+.pos .oe_pos_synch-notification .oe_status_red{
     display:inline-block;
     cursor:pointer;
     width:16px; height:16px;
     background: url("../img/gtk-no.png") no-repeat ;
 }
 
-.point-of-sale .oe_pos_synch-notification .oe_status_green{
+.pos .oe_pos_synch-notification .oe_status_green{
     display:inline-block;
     width:16px; height:16px;
     background: url("../img/gtk-yes.png") no-repeat;
@@ -233,7 +328,7 @@
 
 /*  ********* Contains everything below the  bar ********* */
 
-.point-of-sale .pos-content {
+.pos .pos-content {
     width: 100%;
     position: absolute;
     top: 34px;
@@ -243,7 +338,7 @@
 
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
-.point-of-sale .pos-leftpane {
+.pos .pos-leftpane {
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
         -ms-box-sizing: border-box;
@@ -257,7 +352,7 @@
     border-right: solid 1px #CECBCB;
     background-color: white;
 }
-.point-of-sale .pos-leftpane footer {
+.pos .pos-leftpane footer {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -268,7 +363,7 @@
 
 /*  ********* The paypad contains the payment buttons ********* */
 
-.point-of-sale .paypad {
+.pos .paypad {
     padding: 8px 4px 8px 8px;
     display: inline-block;
     text-align: center;
@@ -278,7 +373,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
-.point-of-sale .paypad button {
+.pos .paypad button {
     height: 50px;
     display: block;
     width: 100%;
@@ -288,10 +383,10 @@
     color: #555555;
     font-size: 14px;
 }
-.point-of-sale .paypad button:active, 
-.point-of-sale .numpad button:active, 
-.point-of-sale .numpad .selected-mode, 
-.point-of-sale .popup  button:active{
+.pos .paypad button:active, 
+.pos .numpad button:active, 
+.pos .numpad .selected-mode, 
+.pos .popup  button:active{
     border: none;
     color: white;
     background: #7f82ac;
@@ -299,12 +394,12 @@
 
 /*  ********* The Numpad ********* */
 
-.point-of-sale .numpad {
+.pos .numpad {
     padding: 8px 8px 8px 4px;
     display: inline-block;
     text-align: center;
 }
-.point-of-sale .numpad button {
+.pos .numpad button {
     height: 50px;
     width: 50px;
     margin: 0px 0px 4px 0px;
@@ -312,16 +407,16 @@
     vertical-align: middle;
     color: #555555;
 }
-.point-of-sale .input-button {
+.pos .input-button {
     font-size: 24px;
 }
-.point-of-sale .mode-button {
+.pos .mode-button {
     font-size: 14px;
 }
 
 /*  ********* The right pane contains the screens and headers ********* */
 
-.point-of-sale .pos-rightpane {
+.pos .pos-rightpane {
     position: absolute;
     top: 0;
     /*bottom: 105px;*/
@@ -331,7 +426,7 @@
     vertical-align: top;
 }
 
-.point-of-sale .pos-rightpane header {
+.pos .pos-rightpane header {
     padding: 0;
     height: 32px;
     border-bottom: 1px solid #c7c7c7;
@@ -340,12 +435,12 @@
 
 /*  ********* The product list  ********* */
 
-.point-of-sale .product-list {
+.pos .product-list {
     padding:10px !important;
     -webkit-transform: translate3d(0,0,0);
 }
 
-.point-of-sale .product-list-scroller{
+.pos .product-list-scroller{
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
         -ms-box-sizing: border-box;
@@ -357,7 +452,7 @@
     -webkit-overflow-scrolling: touch;
 
 }
-.point-of-sale .product-list-container {
+.pos .product-list-container {
     position:absolute;
     top:0px;
     bottom:0px;
@@ -367,26 +462,26 @@
 
 /*  a) the product list navigation bar */
 
-.point-of-sale .breadcrumb li {
+.pos .breadcrumb li {
     float: left;
     line-height: 32px;
     height: 32px;
 }
-.point-of-sale .breadcrumb li:last-child {
+.pos .breadcrumb li:last-child {
     padding-right: 3px;
     border-right: 1px solid #c5c5c5;
 }
-.point-of-sale .breadcrumb a {
+.pos .breadcrumb a {
     display: inline-block;
     padding: 0 9px;
     vertical-align: top;
     color: #555555;
     font-weight: bold;
 }
-.point-of-sale .bc-arrow {
+.pos .bc-arrow {
     height: 33px;
 }
-.point-of-sale .homeimg {
+.pos .homeimg {
     width: 19px;
     height: 19px;
     margin: 6px 0;
@@ -394,11 +489,11 @@
 
 /*  b) the search box */
 
-.point-of-sale .searchbox {
+.pos .searchbox {
     position: absolute;
     right: 2px;
 }
-.point-of-sale .searchbox input {
+.pos .searchbox input {
     width: 130px;
     border: 1px solid #cecbcb;
     padding: 3px 19px;
@@ -406,7 +501,7 @@
     background: url("../img/search.png") no-repeat 5px;
     background-color: white;
 }
-.point-of-sale .search-clear {
+.pos .search-clear {
     position: absolute;
     top: 11px;
     right: 11px;
@@ -416,21 +511,21 @@
 
 /*  c) the categories list */
 
-.point-of-sale .categories {
+.pos .categories {
     position: relative;
     border-bottom: 1px solid #cecece;
 }
-.point-of-sale .categories h4 {
+.pos .categories h4 {
     display: inline-block;
     margin: 9px 5px;
 }
 
-.point-of-sale .category-list{
+.pos .category-list{
     padding:10px !important;
 }
 /*  d) the category button */
 
-.point-of-sale .category-button {
+.pos .category-button {
     position: relative;
     vertical-align: top;
     display: inline-block;
@@ -445,7 +540,7 @@
     cursor: pointer;
 }
 
-.point-of-sale .category-simple-button{
+.pos .category-simple-button{
     position: relative;
     display: inline-block;
     font-size: 14px;
@@ -457,7 +552,7 @@
 
     background: #e2e2e2;
 }
-.point-of-sale .category-simple-button:active{
+.pos .category-simple-button:active{
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
@@ -469,7 +564,7 @@
 
 
 
-.point-of-sale .category-button .category-img {
+.pos .category-button .category-img {
     position: relative;
     width: 120px;
     height: 100px;
@@ -477,12 +572,12 @@
     cursor: pointer;
 }
 
-.point-of-sale .category-button .category-img img {
+.pos .category-button .category-img img {
     max-height: 100px;
     max-width:  120px;
 }
 
-.point-of-sale .category-button .category-name {
+.pos .category-button .category-name {
     position: absolute;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -503,7 +598,7 @@
 
 /*  e) the product */
 
-.point-of-sale .product {
+.pos .product {
     position:relative;
     vertical-align: top;
     display: inline-block;
@@ -519,7 +614,7 @@
     overflow: hidden;
 }
 
-.point-of-sale .product .product-img {
+.pos .product .product-img {
     position: relative;
     width: 120px;
     height: 100px;
@@ -527,12 +622,12 @@
     text-align: center;
 }
 
-.point-of-sale .product .product-img img {
+.pos .product .product-img img {
     max-height: 100px;
     max-width:  120px;
 }
 
-.point-of-sale .product .price-tag {
+.pos .product .price-tag {
     position: absolute;
     top: 2px;
     right: 2px;
@@ -543,7 +638,7 @@
     padding: 2px 5px;
 }
 
-.point-of-sale .product .product-name {
+.pos .product .product-name {
     position: absolute;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -569,21 +664,21 @@
 
 /*  ********* The Screens  ********* */
 
-.point-of-sale .screen {
+.pos .screen {
     position:absolute;
     text-align: center;
     top:0px;
     bottom:0px;
     width:100%;
 }
-.point-of-sale .screen header h2 {
+.pos .screen header h2 {
     margin-top: 0px;
     padding-top: 7px;
 }
-.point-of-sale .screen p{
+.pos .screen p{
     font-size: 18px;
 }
-.point-of-sale .dialog{
+.pos .dialog{
     width: 500px;
     margin-left: auto;
     margin-right: auto;
@@ -592,7 +687,7 @@
     background-color: #f8f8f8;
     text-align: center;
 }
-.point-of-sale .dialog p{
+.pos .dialog p{
     font-size: 25px;
     margin-top: 10px;
     color: #5a5a5a;
@@ -600,45 +695,45 @@
 
 /* a) Layout for the Product Screen */
 
-.point-of-sale .screen .layout-table {
+.pos .screen .layout-table {
     border:none;
     width:100%;
     height:100%;
 }
 
-.point-of-sale .screen .header-row {
+.pos .screen .header-row {
     border:none;
     width:100%;
     height:0px;
 }
 
-.point-of-sale .screen .header-cell{
+.pos .screen .header-cell{
     border:none;
     width:100%;
     height:0px;
 }
-.point-of-sale .screen .content-row {
+.pos .screen .content-row {
     width:100%;
     height:100%;
 }
-.point-of-sale .screen .content-cell{
+.pos .screen .content-cell{
     width:100%;
 }
-.point-of-sale .screen .content-cell .content-container{
+.pos .screen .content-cell .content-container{
     height:100%;
     position:relative;
 }
 
 /* b) The payment screen */
 
-.point-of-sale .pos-step-container {
+.pos .pos-step-container {
     display: inline-block;
     font-size: 1.5em;
 }
-.point-of-sale .greyed-out{
+.pos .greyed-out{
     color: #AAA;
 }
-.point-of-sale .pos-step-container input{
+.pos .pos-step-container input{
     font-size: 1em;
     outline: none;
     border: none;
@@ -650,12 +745,12 @@
     -webkit-animation: all 250ms linear;
 }
 
-.point-of-sale .pos-step-container input:focus{
+.pos .pos-step-container input:focus{
     color: #5d7ad6;
     -webkit-animation: all 250ms linear;
 }
 
-.point-of-sale .pos-payment-container {
+.pos .pos-payment-container {
     text-align: left;
     min-width: 500px;
     margin-top: 50px;
@@ -663,37 +758,37 @@
     background-color: #f8f8f8;
     border: solid 1px rgb(220,220,220);
 }
-.point-of-sale .pos-payment-container .left-block{
+.pos .pos-payment-container .left-block{
     display: inline-block;
     width:49%;
     margin:0;
     padding:0;
     text-align:left;
 }
-.point-of-sale .pos-payment-container .header{
+.pos .pos-payment-container .header{
     margin-top: 0px;
     margin-bottom:20px;
     font-weight: bold;
 }
-.point-of-sale .pos-payment-container .infoline{
+.pos .pos-payment-container .infoline{
     margin-top:5px;
     margin-bottom:5px;
 }
-.point-of-sale .pos-payment-container .right-block{
+.pos .pos-payment-container .right-block{
     display: inline-block;
     width:49%;
     margin:0;
     padding:0;
     text-align:right;
 }
-.point-of-sale .pos-payment-container table {
+.pos .pos-payment-container table {
     width: 100%;
     margin-bottom: 20px;
 }
-.point-of-sale .pos-payment-container td {
+.pos .pos-payment-container td {
     vertical-align: middle;
 }
-.point-of-sale .pos-payment-container .paymentline-type {
+.pos .pos-payment-container .paymentline-type {
     font-size: 1em;
     font-weight: bold;
     margin-right:10px;
@@ -701,11 +796,11 @@
 
 /* c) The receipt screen */
 
-.point-of-sale .pos-receipt-container {
+.pos .pos-receipt-container {
     font-size: 0.75em;
 }
 
-.point-of-sale .pos-sale-ticket {
+.pos .pos-sale-ticket {
     text-align: left;
     width: 300px;
     background-color: white;
@@ -715,35 +810,35 @@
     display: inline-block;
     font-family: "Inconsolata";
 }
-.point-of-sale .pos-sale-ticket .emph{
+.pos .pos-sale-ticket .emph{
     font-size: 20px;
     margin:5px;
 }
-.point-of-sale .pos-sale-ticket table {
+.pos .pos-sale-ticket table {
     width: 100%;
     border: 0;
     table-layout: fixed;
 }
-.point-of-sale .pos-sale-ticket table td {
+.pos .pos-sale-ticket table td {
     border: 0;
     word-wrap: break-word;
 }
 
 @media print {
-    .point-of-sale .pos-topheader, .point-of-sale .pos-leftpane {
+    .pos .pos-topheader, .pos .pos-leftpane {
         display: none !important;
     }
-    .point-of-sale .pos-content {
+    .pos .pos-content {
         top: 0px !important;
     }
-    .point-of-sale .pos-rightpane {
+    .pos .pos-rightpane {
         left: 0px !important;
         background-color: white;
     }
-    .point-of-sale .receipt-screen header {
+    .pos .receipt-screen header {
         display: none !important;
     }
-    .point-of-sale .receipt-screen {
+    .pos .receipt-screen {
         text-align: left;
     }
     .pos-actionbar {
@@ -755,12 +850,12 @@
     .debug-widget{
         display: none !important;
     }
-    .point-of-sale *{
+    .pos *{
         text-shadow: none !important;
         box-shadow: none !important;
         background: transparent !important;
     }
-    .point-of-sale .pos-sale-ticket{
+    .pos .pos-sale-ticket{
         margin-left: auto !important;
         margin-right: auto !important;
         border: solid 1px black !important;
@@ -769,7 +864,7 @@
 
 /* d) The Scale screen */
 
-.point-of-sale .scale-screen .display{
+.pos .scale-screen .display{
     position:relative;
     width:600px;
     height:190px;
@@ -781,7 +876,7 @@
     border-top: 1px solid #efefef;
 }
 
-.point-of-sale .scale-screen .product-picture {
+.pos .scale-screen .product-picture {
     position: relative;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -799,14 +894,14 @@
     border: 1px solid #fff;
 }
 
-.point-of-sale .scale-screen .product-picture img{
+.pos .scale-screen .product-picture img{
     max-width: 178px;
     max-height:178px;
     vertical-align: middle;
     cursor:pointer;
 }
 
-.point-of-sale .scale-screen .product-picture .product-price{
+.pos .scale-screen .product-picture .product-price{
     position: absolute;
     top:8px;
     right:8px;
@@ -819,7 +914,7 @@
     cursor:pointer;
 }
 
-.point-of-sale .scale-screen .product-name {
+.pos .scale-screen .product-name {
     position: absolute;
     left:40px;
     top:50px;
@@ -832,7 +927,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.point-of-sale .scale-screen .weight{
+.pos .scale-screen .weight{
     position: absolute;
     left: 40px;
     height: 90px;
@@ -844,7 +939,7 @@
     background: white;
 
 }
-.point-of-sale .scale-screen .weight p{
+.pos .scale-screen .weight p{
     display: inline-block;
     text-align:right;
     line-height: 90px;
@@ -858,7 +953,7 @@
 }
 
 /* e) The Welcome Screen */
-.point-of-sale .goodbye-message{
+.pos .goodbye-message{
     position: absolute;
     left:50%;
     top:40%;
@@ -878,7 +973,7 @@
 
 /*  ********* The OrderWidget  ********* */
 
-.point-of-sale .order-container{
+.pos .order-container{
     position: absolute;
     top: 0px;
     bottom: 232px;
@@ -886,7 +981,7 @@
     background: #F0EEEE;
 }
 
-.point-of-sale .order-scroller{
+.pos .order-scroller{
     width:100%;
     height:100%;
     overflow:hidden;
@@ -894,7 +989,7 @@
     -webkit-overflow-scrolling: touch;
 }
 
-.point-of-sale .order{
+.pos .order{
     background: white;
     padding-bottom:15px;
     padding-top:15px;
@@ -908,7 +1003,7 @@
     -webkit-transform: translate3d(0,0,0);
 }
 
-.point-of-sale .order .empty{
+.pos .order .empty{
     text-align:center;
     margin-top: 15px;
     margin-bottom: 5px;
@@ -916,14 +1011,14 @@
     font-weight: normal;
 }
 
-.point-of-sale .order .summary{
+.pos .order .summary{
     width:100%;
     text-align:right;
     font-weight: bold;
     margin-top:20px;
     margin-bottom:10px;
 }
-.point-of-sale .order .summary .line{
+.pos .order .summary .line{
     float: right;
     margin-right:15px;
     margin-left: 15px;
@@ -931,12 +1026,12 @@
     border-top: solid 2px;
     border-color:#777;
 }
-.point-of-sale .order .summary .line .subentry{
+.pos .order .summary .line .subentry{
     font-size: 10px;
     font-weight: normal;
     text-align: center;
 }
-.point-of-sale .order .summary .line.empty{
+.pos .order .summary .line.empty{
     text-align: right;
     border-color:#BBB;
     color:#999;
@@ -944,7 +1039,7 @@
 
 /*  ********* The OrderLineWidget  ********* */
 
-.point-of-sale .order .orderline{
+.pos .order .orderline{
     width:100%;
     margin:0px;
     padding-top:3px;
@@ -960,25 +1055,25 @@
        -moz-transition: background 250ms ease-in-out;
             transition: background 250ms ease-in-out;
 }
-.point-of-sale .order .orderline:active{
+.pos .order .orderline:active{
     background: rgba(140,143,183,0.05);
     -webkit-transition: background 50ms ease-in-out;
        -moz-transition: background 50ms ease-in-out;
             transition: background 50ms ease-in-out;
 }
-.point-of-sale .order .orderline.empty:active{
+.pos .order .orderline.empty:active{
     background: transparent;
     cursor: default;
 }
 
-.point-of-sale .order .orderline.selected{
+.pos .order .orderline.selected{
     background: rgba(140,143,183,0.2);
     -webkit-transition: background 250ms ease-in-out;
        -moz-transition: background 250ms ease-in-out;
             transition: background 250ms ease-in-out;
     cursor: default;
 }
-.point-of-sale .order .orderline .product-name{
+.pos .order .orderline .product-name{
     padding:0;
     display:inline-block;
     font-weight: bold;
@@ -986,16 +1081,16 @@
     overflow:hidden;
     text-overflow: ellipsis;
 }
-.point-of-sale .order .orderline .price{
+.pos .order .orderline .price{
     padding:0;
     font-weight: bold;
     float:right;
 }
-.point-of-sale .order .orderline .info-list{
+.pos .order .orderline .info-list{
     color: #888;
     margin-left:10px;
 }
-.point-of-sale .order .orderline .info-list em{
+.pos .order .orderline .info-list em{
     color: #777;
     font-weight: bold;
     font-style:normal;
@@ -1003,7 +1098,7 @@
 
 /*  ********* The ActionBarWidget  ********* */
 
-.point-of-sale .pos-actionbar{
+.pos .pos-actionbar{
     position:absolute;
     left:    0;
     bottom:  0px;
@@ -1015,11 +1110,11 @@
     z-index:900;
 }
 
-.point-of-sale .pos-actionbar ul{
+.pos .pos-actionbar ul{
     list-style:  none;
 }
 
-.point-of-sale .pos-actionbar-left-pane{
+.pos .pos-actionbar-left-pane{
     height: 100%;
     width:  434px;
     margin: 0px;
@@ -1029,7 +1124,7 @@
     float:  left;
 }
 
-.point-of-sale .pos-actionbar-button-list{
+.pos .pos-actionbar-button-list{
     height: 100%;
     margin: 0px;
     padding-left:3px;
@@ -1037,7 +1132,7 @@
     overflow:hidden;
 }
 
-.point-of-sale .pos-actionbar .button{
+.pos .pos-actionbar .button{
     width: 90px;
     height: 90px;
     text-align:center;
@@ -1054,13 +1149,13 @@
 
     background: #e2e2e2;
 }
-.point-of-sale .pos-actionbar .button .label{
+.pos .pos-actionbar .button .label{
     margin-top: 37px;
 }
-.point-of-sale .pos-actionbar .button .icon{
+.pos .pos-actionbar .button .icon{
     margin-top: 10px;
 }
-.point-of-sale .pos-actionbar .button:active{
+.pos .pos-actionbar .button:active{
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
@@ -1070,7 +1165,7 @@
     -webkit-transition-timing-function: ease-out;
 }
 
-.point-of-sale .pos-actionbar .button.disabled:active{
+.pos .pos-actionbar .button.disabled:active{
     border: 1px solid #cacaca;
     color: #555;
     cursor: default;
@@ -1078,12 +1173,12 @@
     background: #e2e2e2;
 }
 
-.point-of-sale .pos-actionbar .button.rightalign{
+.pos .pos-actionbar .button.rightalign{
     float:right;
 }
 /*  ********* The Debug Widget  ********* */
 
-.point-of-sale .debug-widget{
+.pos .debug-widget{
     z-index:100000;
     position: absolute;
     right: 10px;
@@ -1096,7 +1191,7 @@
     padding-bottom: 10px;
     cursor:move;
 }
-.point-of-sale .debug-widget .toggle{
+.pos .debug-widget .toggle{
     position: absolute;
     font-size: 16px;
     cursor:pointer;
@@ -1105,17 +1200,17 @@
     padding:10px;
     padding-right:15px;
 }
-.point-of-sale .debug-widget .content{
+.pos .debug-widget .content{
     overflow: hidden;
 }
-.point-of-sale .debug-widget h1{
+.pos .debug-widget h1{
     background:black;
     padding-top: 10px;
     padding-left: 10px;
     margin-top:0;
     margin-bottom:0;
 }
-.point-of-sale .debug-widget .category{
+.pos .debug-widget .category{
     background: black;
     padding-left: 10px;
     margin: 0px;
@@ -1123,29 +1218,29 @@
     padding-top:3px;
     padding-bottom:3px;
 }
-.point-of-sale .debug-widget .button{
+.pos .debug-widget .button{
     padding: 5px;
     padding-left: 15px;
     display: block;
     cursor:pointer;
 }
-.point-of-sale .debug-widget .button:active{
+.pos .debug-widget .button:active{
     background: rgba(96,21,177,0.45);
 }
-.point-of-sale .debug-widget input{
+.pos .debug-widget input{
     margin-left:10px;
     margin-top:7px;
 }
-.point-of-sale .debug-widget .status{
+.pos .debug-widget .status{
     padding: 5px;
     padding-left: 15px;
     display: block;
     cursor:default;
 }
-.point-of-sale .debug-widget .status.on{
+.pos .debug-widget .status.on{
     background-color: #6cd11d;
 }
-.point-of-sale .debug-widget .event{
+.pos .debug-widget .event{
     padding: 5px;
     padding-left: 15px;
     display: block;
@@ -1155,7 +1250,7 @@
 
 /*  ********* The PopupWidgets  ********* */
 
-.point-of-sale .modal-dialog{
+.pos .modal-dialog{
     position: absolute;
     left: 0;
     top: 0;
@@ -1164,7 +1259,7 @@
     background-color: rgba(0,0,0,0.5);
     z-index:1000;
 }
-.point-of-sale .modal-dialog .popup{
+.pos .modal-dialog .popup{
     position: absolute;
     left:50%;
     top:50%;
@@ -1180,7 +1275,7 @@
     background-color: #F0EEEE;
     z-index:1200;
 }
-.point-of-sale .popup .footer{
+.pos .popup .footer{
     position:absolute;
     bottom:0;
     left:0;
@@ -1188,7 +1283,7 @@
     height:60px;
     border-top: 1px solid #E0DDDD;
 }
-.point-of-sale .popup .button{
+.pos .popup .button{
     float:right;
     width: 110px;
     height: 40px;
@@ -1207,7 +1302,7 @@
 
     background: #e2e2e2;
 }
-.point-of-sale .popup .button:active{
+.pos .popup .button:active{
     color: white;
     background: #7f82ac;
     border: 1px solid #7f82ac;
@@ -1217,7 +1312,7 @@
     -webkit-transition-timing-function: ease-out;
 }
 
-.point-of-sale .popup .button.big-left{
+.pos .popup .button.big-left{
     position:absolute;
     top: 120px;
     left:40px;
@@ -1226,7 +1321,7 @@
     line-height:180px;
 }
 
-.point-of-sale .popup .button.big-right{
+.pos .popup .button.big-right{
     position:absolute;
     top: 120px;
     right:40px;
@@ -1237,81 +1332,28 @@
 
 /*  ********* The Webkit Scrollbar  ********* */
 
-.point-of-sale *::-webkit-scrollbar{
+.pos *::-webkit-scrollbar{
     width:  10px;
     height: 10px;
 }
-.point-of-sale *::-webkit-scrollbar-track{
+.pos *::-webkit-scrollbar-track{
     background: rgb(224,224,224);
     border-left: solid 1px rgb(200,200,200);
 }
-.point-of-sale *::-webkit-scrollbar-thumb{
+.pos *::-webkit-scrollbar-thumb{
     background: rgb(168,168,168);
     min-height: 30px;
 }
 
-/*  ********* The ScrollBarWidget  ********* */
-
-.point-of-sale .scrollbar{  
-    position:absolute;
-    top:7px;
-    right:7px;
-    width:48px;
-    bottom:7px;
-    background: rgba(0,0,0,0.1);
-
-}
-.point-of-sale .scrollbar .button{
-    width:100%;
-    height: 48px;
-    line-height: 38px;
-    text-align: center;
-    font-size:48px;
-    cursor: pointer;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
-    transition: all 250ms ease-in-out;
-}
-.point-of-sale .scrollbar .button{
-    color:white;
-    background: rgba(0,0,0,0.6);
-}
-.point-of-sale .scrollbar .button:active{
-}
-.point-of-sale .scrollbar .button.disabled{
-    background: rgba(0,0,0,0.3);
-    color:rgba(255,255,255,0.5);
-    -webkit-transition: all 250ms ease-in-out;
-       -moz-transition: all 250ms ease-in-out;
-            transition: all 250ms ease-in-out;
-}
-.point-of-sale .scrollbar .down-button{
-    position:absolute;
-    bottom:0px;
-}
-.point-of-sale .scrollbar .up-button{
-    position:absolute;
-    top:0px;
-}
-.point-of-sale .scrollbar .scroller{
-    position:absolute;
-    top:33%;
-    bottom:50%;
-    width:100%;
-    background: rgba(0,0,0,0.1);
-}
-
 /*  ********* Unsupported Browser Page ********* */
 
-.point-of-sale .not-supported-browser{
+.pos .not-supported-browser{
     position: absolute;
     z-index: 100000;
     top: 0; bottom: 0; left: 0; right: 0;
     background: #2C2C2C;
 }
-.point-of-sale .not-supported-browser .message{
+.pos .not-supported-browser .message{
     width:600px;
     margin-top: 100px;
     margin-left: auto;
@@ -1320,6 +1362,6 @@
     color: #d3d3d3;
     font-size: 14px;
 }
-.point-of-sale .not-supported-browser img{
+.pos .not-supported-browser img{
     border-collapse: separate;
 }

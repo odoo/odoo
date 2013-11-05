@@ -230,9 +230,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.orderlinewidgets = [];
 
             if(this.display_mode === 'maximized'){
-                $('.point-of-sale .order-container').css({'bottom':'0px'});
+                $('.pos .order-container').css({'bottom':'0px'});
             }else if(this.display_mode === 'actionbar'){
-                $('.point-of-sale .order-container').css({'bottom':'105px'});
+                $('.pos .order-container').css({'bottom':'105px'});
             }else if(this.display_mode !== 'numpad'){
                 console.error('ERROR: OrderWidget renderElement(): wrong display_mode:',this.display_mode);
             }
