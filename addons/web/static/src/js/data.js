@@ -743,7 +743,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
         });
     },
     get_domain: function (other_domain) {
-        this._model.domain(other_domain);
+        return this._model.domain(other_domain);
     },
     alter_ids: function (ids) {
         this._super(ids);
