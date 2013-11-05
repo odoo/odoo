@@ -3205,6 +3205,8 @@ class stock_warehouse_orderpoint(osv.osv):
         if context is None:
             context = {}
         result = {}
+        if not isinstance(ids, list):
+            ids = [ids]
         procurement_obj = self.pool.get('procurement.order')
         for orderpoint in self.browse(cr, uid, ids, context=context):
             procurement_ids = procurement_obj.search(cr, uid, [('state', '=', 'draft'), ('product_id', '=', orderpoint.product_id.id), ('location_id', '=', orderpoint.location_id.id)],context=context)            
