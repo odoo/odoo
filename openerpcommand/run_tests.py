@@ -2,9 +2,9 @@
 Execute the unittest2 tests available in OpenERP addons.
 """
 
-import os
 import sys
 import types
+import argparse
 
 import common
 
@@ -56,14 +56,14 @@ def get_test_modules(module, submodule, explode):
                 print ' ', x
         sys.exit(1)
 
+    fast_suite = getattr(m, 'fast_suite', [])
+    checks = getattr(m, 'checks', [])
     if submodule is None:
         # Use auto-discovered sub-modules.
         ms = submodules
     elif submodule == '__fast_suite__':
-        # Obtain the explicit test sub-modules list.
-        ms = getattr(sys.modules[module], 'fast_suite', None)
         # `suite` was used before the 6.1 release instead of `fast_suite`.
-        ms = ms if ms else getattr(sys.modules[module], 'suite', None)
+        ms = fast_suite if fast_suite else getattr(m, 'suite', None)
         if ms is None:
             if explode:
                 print 'The module `%s` has no defined test suite.' % (module,)
@@ -71,16 +71,18 @@ def get_test_modules(module, submodule, explode):
             else:
                 ms = []
     elif submodule == '__sanity_checks__':
-        ms = getattr(sys.modules[module], 'checks', None)
+        ms = checks
         if ms is None:
             if explode:
                 print 'The module `%s` has no defined sanity checks.' % (module,)
                 show_submodules_and_exit()
             else:
                 ms = []
+    elif submodule == '__slow_suite__':
+        ms = list(set(submodules).difference(fast_suite, checks))
     else:
         # Pick the command-line-specified test sub-module.
-        m = getattr(sys.modules[module], submodule, None)
+        m = getattr(m, submodule, None)
         ms = [m]
 
         if m is None:
@@ -109,10 +111,6 @@ def run(args):
         args.addons = args.addons.split(':')
     else:
         args.addons = []
-    if args.sanity_checks and args.fast_suite:
-        print 'Only at most one of `--sanity-checks` and `--fast-suite` ' \
-            'can be specified.'
-        sys.exit(1)
 
     import logging
     openerp.netsvc.init_alternative_logger()
@@ -121,43 +119,19 @@ def run(args):
     # Install the import hook, to import openerp.addons.<module>.
     openerp.modules.module.initialize_sys_path()
 
-    # Extract module, submodule from the command-line args.
-    if args.module is None:
-        module, submodule = None, None
-    else:
-        splitted = args.module.split('.')
-        if len(splitted) == 1:
-            module, submodule = splitted[0], None
-        elif len(splitted) == 2:
-            module, submodule = splitted
-        else:
-            print 'The `module` argument must have the form ' \
-                '`module[.submodule]`.'
-            sys.exit(1)
+    module = args.module
+    submodule = args.submodule
 
     # Import the necessary modules and get the corresponding suite.
     if module is None:
         # TODO
         modules = common.get_addons_from_paths(args.addons, []) # TODO openerp.addons.base is not included ?
-	test_modules = []
+        test_modules = []
         for module in ['openerp'] + modules:
-            if args.fast_suite:
-                submodule = '__fast_suite__'
-            if args.sanity_checks:
-                submodule = '__sanity_checks__'
-            test_modules.extend(get_test_modules(module,
-                submodule, explode=False))
+            test_modules.extend(
+                get_test_modules(module, submodule, explode=False))
     else:
-        if submodule and args.fast_suite:
-            print "Submodule name `%s` given, ignoring `--fast-suite`." % (submodule,)
-        if submodule and args.sanity_checks:
-            print "Submodule name `%s` given, ignoring `--sanity-checks`." % (submodule,)
-        if not submodule and args.fast_suite:
-            submodule = '__fast_suite__'
-        if not submodule and args.sanity_checks:
-            submodule = '__sanity_checks__'
-        test_modules = get_test_modules(module,
-            submodule, explode=True)
+        test_modules = get_test_modules(module, submodule, explode=True)
 
     # Run the test suite.
     if not args.dry_run:
@@ -181,21 +155,55 @@ def add_parser(subparsers):
     parser.add_argument('-p', '--port', metavar='PORT',
         help='the port used for WML-RPC tests')
     common.add_addons_argument(parser)
-    parser.add_argument('-m', '--module', metavar='MODULE',
-        default=None,
-        help='the module to test in `module[.submodule]` notation. '
-        'Use `openerp` for the core OpenERP tests. '
-        'Leave empty to run every declared tests. '
-        'Give a module but no submodule to run all the module\'s declared '
-        'tests. If both the module and the submodule are given, '
-        'the sub-module can be run even if it is not declared in the module.')
-    parser.add_argument('--fast-suite', action='store_true',
-        help='run only the tests explicitely declared in the fast suite (this '
+
+    parser.add_argument(
+        '-m', '--module', metavar='MODULE', action=ModuleAction, default=None,
+        help="the module to test in `module[.submodule]` notation. "
+             "Use `openerp` for the core OpenERP tests. "
+             "Leave empty to run every declared tests. "
+             "Give a module but no submodule to run all the module's declared "
+             "tests. If both the module and the submodule are given, "
+             "the sub-module can be run even if it is not declared in the module.")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        '--fast-suite',
+        dest='submodule', action=GuardAction, nargs=0, const='__fast_suite__',
+        help='run only the tests explicitly declared in the fast suite (this '
         'makes sense only with the bare `module` notation or no module at '
         'all).')
-    parser.add_argument('--sanity-checks', action='store_true',
+    group.add_argument(
+        '--sanity-checks',
+        dest='submodule', action=GuardAction, nargs=0, const='__sanity_checks__',
         help='run only the sanity check tests')
+    group.add_argument(
+        '--slow-suite',
+        dest='submodule', action=GuardAction, nargs=0, const='__slow_suite__',
+        help="Only run slow tests (tests which are neither in the fast nor in"
+             " the sanity suite)")
     parser.add_argument('--dry-run', action='store_true',
         help='do not run the tests')
 
-    parser.set_defaults(run=run)
+    parser.set_defaults(run=run, submodule=None)
+
+class ModuleAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        split = values.split('.')
+        if len(split) == 1:
+            module, submodule = values, None
+        elif len(split) == 2:
+            module, submodule = split
+        else:
+            raise argparse.ArgumentError(
+                option_string,
+                "must have the form 'module[.submodule]', got '%s'" % values)
+
+        setattr(namespace, self.dest, module)
+        if submodule is not None:
+            setattr(namespace, 'submodule', submodule)
+
+class GuardAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        if getattr(namespace, self.dest, None):
+            print "%s value provided, ignoring '%s'" % (self.dest, option_string)
+            return
+        setattr(namespace, self.dest, self.const)
