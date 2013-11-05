@@ -51,13 +51,11 @@
                         </group>
                         <newline/>
                         <group>
-                            <field name="rule_id"/>
                             <field name="date_planned"/>
                             <field name="priority"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
-                        <group>
-                            <field name="group_id"/>
+                        <group>                            
                             <field name="origin" class="oe_inline" placeholder="e.g. SO005"/>
                         </group>
                     </group>
@@ -65,8 +63,12 @@
                         <page string="Extra Information">
                             <label for="name" class="oe_edit_only"/>
                             <field name="name" placeholder="External note..."/>
-                            <label for="message" class="oe_edit_only"/>
-                            <field name="message"/>
+                            <!--<label for="message" class="oe_edit_only"/>
+                            <field name="message"/> -->
+                        </page>
+                        <page string="Advanced Information" name="adv_info">
+                            <field name="group_id"/>
+                            <field name="rule_id"/>
                         </page>
                     </notebook>
                     </sheet>
@@ -136,18 +138,20 @@
             <field name="context">{'search_default_current':1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a procurement order. 
-              </p><p>
-                A procurement order is used to record a need for a specific
-                product at a specific location.  Procurement orders are usually
-                created automatically from sales orders, pull logistic rules or
-                minimum stock rules.
-              </p><p>
+                 Click to create a procurement order.  
+              </p>
+              <p>
+                A <b>procurement order</b> is used to record a need for a specific
+                product at a specific location. Procurement orders are usually
+                created automatically from <i>sales orders, pull logistic rules or
+                minimum stock rules.</i>
+              </p>
+              <p>
                 When the procurement order is confirmed, it automatically
                 creates the necessary operations to fullfil the need: purchase
                 order proposition, manufacturing order, etc.
               </p>
-            </field>
+            </field>            
         </record>
         
         <record id="procurement_exceptions" model="ir.actions.act_window">
@@ -159,9 +163,19 @@
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="help" type="html">
-                <p>
-                Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sales Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message).
-                </p>
+              <p class="oe_view_nocontent_create">
+                 Click to create a Procurement.  
+              </p>
+              <p>
+                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.
+              </p>
+              <p> 
+                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). 
+                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...
+              </p>
+              <p>  
+                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).
+              </p>
             </field>
         </record>
 

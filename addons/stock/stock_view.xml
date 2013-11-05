@@ -11,7 +11,7 @@
         <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="1"/>
         <menuitem id="menu_stock_product" name="Products" parent="menu_stock_root" sequence="6"/>
         <menuitem name="Products by Category" id="menu_product_by_category_stock_form" action="product.product_category_action"
-            parent="stock.menu_stock_product" sequence="0"/>
+            parent="stock.menu_stock_product" sequence="0" groups="base.group_no_one"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
         <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="40" groups="base.group_no_one"/>
@@ -122,7 +122,6 @@
                         </group>
                         <div class="oe_grey" colspan="4">Specify filters to focus your inventory a on particular product, lot, pack and product's owner.</div>
                         <group>
-                            <label for="filter"/>
                             <div colspan="4">
                                 <field name="filter" widget='radio'/>
                             </div>
@@ -136,7 +135,7 @@
                     </group>
                     <notebook attrs="{'invisible':[('state','=','draft')]}">
                         <page string="Inventory Details" >
-                            <button name="set_checked_qty" states="confirm" string="⇒ Set Checked Quantity to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
+                            <button name="set_checked_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                             <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}">
                                 <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != th_qty">
                                     <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('type','=','product')]"/>
@@ -146,7 +145,7 @@
                                     <field name="package_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_lot"/>
                                     <field name="partner_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_owner"/>
                                     <field name="th_qty" readonly="1"/>
-                                    <field name="product_qty" string="Checked Quantity"/>
+                                    <field name="product_qty" string="Real Quantity"/>
                                     <field name="state" invisible="True"/>
                                 </tree>
                             </field>
@@ -661,6 +660,7 @@
                             <group>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="partner_id"/>
+                                <field name="color" string="Color in Kanban view" class="oe_edit_only"/>
                             </group>
                             <notebook colspan="4" groups="stock.group_adv_location">
                                 <page string="Warehouse Configuration" colspan="4">
@@ -687,7 +687,7 @@
                                             <field name="out_type_id" readonly="1"/>
                                         </group>
                                     </group>
-                                </page>
+                                </page>                                
                             </notebook>
                         </group>
                     </sheet>
@@ -771,7 +771,7 @@
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="action_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
                     <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|',('quant_reserved_exist', '=', False), ('state','!=','assigned')]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
                     <h1>
@@ -779,8 +779,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id"/>
-                            <field name="group_id"/>
+                            <field name="partner_id"/>                            
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
@@ -798,11 +797,17 @@
                     <notebook>
                         <page string="Products">
                             <separator string="Expected Quantities" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
-                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id}"/>
-                            <separator string="In Process Quantities" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
-                            <field name="pack_operation_exist" invisible="1"/>
-                            <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"/>
-                            <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}"/>
+                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"/>
+                            <group>
+                                <group col="3"> 
+                                    <separator string="Quantities Done" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
+                                </group>
+                                <group col="1">
+                                    <field name="pack_operation_exist" invisible="1"/>
+                                    <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}" class="oe_link oe_right oe_inline"/>
+                                    <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}" class="oe_link oe_right oe_inline"/>
+                                </group>
+                            </group>                            
                             <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}" context="{'default_owner_id': owner_id}">
                                 <tree editable="top">   
                                     <field name="product_id"/>
@@ -827,6 +832,7 @@
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                     <field name="date_done" groups="base.group_no_one"/>
+                                    <field name="group_id"/>
                                 </group>
                             </group>
                         </page>
@@ -1070,7 +1076,7 @@
                 </header>
                 <sheet>
                     <group>
-                        <group name="main_grp" string="Details" colspan="4">
+                        <group name="main_grp" colspan="4">
                             <group name="main_grp_col1">
                                 <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                                 <label for="product_uom_qty"/>
@@ -1093,10 +1099,12 @@
                                     <field name="product_uos" class="oe_inline"/>
                                 </div>
                             </group>
-                            <group name="main_grp_col1">
+                            <group name="main_grp_col2">
                                 <field name="picking_type_id"/>
                                 <field name="picking_priority"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                                <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             </group>
                         </group>
                         <group name="origin_grp" string="Origin">
@@ -1107,12 +1115,9 @@
                             <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="base.group_no_one"/>
                             <field name="group_id"/>
                         </group>
-                        <group name="destination_grp" string="Destination">
-                            <field name="location_dest_id" groups="stock.group_locations"/>
-                            <field name="partner_id" context="{'contact_display':'partner'}"
-                                groups="stock.group_locations"/>
-                            <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
-                            <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                        <group name="destination_grp" string="Destination" groups="stock.group_locations">
+                            <field name="location_dest_id" />
+                            <field name="partner_id" context="{'contact_display':'partner'}" />                            
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
                             <field name="reserved_quant_ids"/>
@@ -1126,53 +1131,16 @@
         <record id="view_move_picking_form" model="ir.ui.view">
             <field name="name">stock.move.form</field>
             <field name="model">stock.move</field>
-            <field eval="2" name="priority"/>
+            <field name="inherit_id" ref="view_move_form" />
+            <field eval="20" name="priority"/>
             <field name="arch" type="xml">
-            <form string="Stock Moves" version="7.0">
-                <header>
-                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_user"/>
-                        <button name="action_confirm" states="draft" string="Confirm" type="object" groups="base.group_user"/>
-                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" groups="base.group_user"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
-                </header>
-                <group>
-                    <group>
-                        <field name="name" invisible="1"/>
-                        <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
-                        <field name="picking_type_id" invisible="1"/>
-                        <field name="procure_method"/>
-                        <label for="product_uom_qty"/>
-                        <div>
-                            <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)" class="oe_inline"/>
-                            <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
-                            <button name="%(stock.move_scrap)d"
-                                string="Scrap" type="action"
-                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                                states="draft,waiting,confirmed,assigned"
-                                groups="base.group_user"/>
-                        </div>
-                            <label for="product_uos_qty" groups="product.group_uos"/>
-                            <div groups="product.group_uos">
-                                <field name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" class="oe_inline"/>
-                                <field name="product_uos" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)" class="oe_inline"/>
-                            </div>
-                            <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
-                            <field name="partner_id"/>
-                            </group>
-                            <group>
-                                <field name="create_date" invisible="1"/>
-                                <field name="date"/>
-                                <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-                            </group>
-
-                            <group string="Locations" groups="stock.group_locations">
-                                <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
-                            </group>
-                            <field name="reserved_quant_ids"/>
-
-                    </group>
-                </form>
+                <field name="picking_id" position="replace">
+                    <field name="picking_id" invisible="1"/>
+                </field>
+                <!-- domain on picking_id has been removed -->                
+                <field name="picking_type_id" position="replace" />
+                <field name="picking_priority" position="replace"/>
+                <field name="group_id" position="replace"/>
             </field>
         </record>
 
@@ -1600,8 +1568,11 @@
             <field name="arch" type="xml">
                 <form string="Reordering Rules" version="7.0">
                     <sheet>
+                        <div class="oe_right oe_button_box">
+                            <button name="action_view_po_to_process" type="object" string="Procurement Orders to Process" icon="gtk-execute" />                            
+                        </div>
                         <group>
-                            <group>
+                            <group>                                
                                 <field name="name" />
                                 <field name="product_id" on_change="onchange_product_id(product_id)"/>
                             </group>
@@ -1622,10 +1593,7 @@
                                 <field name="procurement_id" readonly="1"/>
                                 <field name="active" />
                             </group>
-                        </group>
-                        <group string="Procurement Orders to Process">
-                            <field name="procurement_draft_ids" nolabel="1"/>
-                        </group>
+                        </group>                        
                     </sheet>
                 </form>
             </field>
@@ -2130,7 +2098,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button name="action_view_routes" string="View Logistic Flows" type="object"  />
+                    <button name="action_view_routes" string="Routes" type="object"  />
                 </xpath>
             </field>
         </record>

@@ -12,7 +12,7 @@
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                    <separator/>
-                   <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>                   
                    <field name="categ_id"/>
                    <group expand="0" string="Context...">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
@@ -384,11 +384,20 @@
             <field name="view_mode">tree,form,kanban</field>
             <field name="context">{'categ_id':active_id, 'search_default_categ_id':active_id}</field>
         </record>
+        
+        <record id="product_category_action_tree" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="context">{'categ_id':active_id, 'search_default_categ_id':active_id}</field>
+        </record>
         <record id="ir_product_category_open" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
             <field eval="'product.category'" name="model"/>
             <field name="name">Products by Categories</field>
-            <field eval="'ir.actions.act_window,%d'%product_normal_action_tree" name="value"/>
+            <field eval="'ir.actions.act_window,%d'%product_category_action_tree" name="value"/>
         </record>
 
 

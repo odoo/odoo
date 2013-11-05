@@ -141,7 +141,15 @@ class stock_return_picking(osv.osv_memory):
          @return: A dictionary which of fields with values.
         """
         new_picking_id, pick_type_id = self._create_returns(cr, uid, ids, context=context)
-        ctx = {'default_picking_type_id': pick_type_id}
+        ctx = {
+               'default_picking_type_id': pick_type_id,
+               # Probably a more beautiful way to do that ??? QDP ? (feedback please)
+               'search_default_draft': 0,
+               'search_default_assigned': 0,
+               'search_default_confirmed': 0,
+               'search_default_ready': 0,
+               'search_default_late': 0,
+               }
         return {
             'domain': "[('id', 'in', [" + str(new_picking_id) + "])]",
             'name': _('Returned Picking'),

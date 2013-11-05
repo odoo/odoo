@@ -443,5 +443,5 @@ class stock_move(osv.osv):
 class stock_location_route(osv.osv):
     _inherit = "stock.location.route"
     _columns = {
-        'sale_selectable':fields.boolean("Selectable on Sales Order Line")
+        'sale_selectable':fields.boolean("Applicable on Sales Order Line")
         }
