@@ -5,6 +5,25 @@
     website.menu = {};
     website.add_template_file('/website/static/src/xml/website.menu.xml');
 
+    website.EditorBar.include({
+        events: _.extend({}, website.EditorBar.prototype.events, {
+            'click a[data-action="edit-structure"]': 'editStructure',
+        }),
+        editStructure: function () {
+            var context = website.get_context();
+            openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'website.menu',
+                method: 'get_tree',
+                args: [[context.website_id]],
+                kwargs: {
+                    context: context
+                },
+            }).then(function (menu) {
+                return new website.menu.EditMenuDialog(menu).appendTo(document.body);
+            });
+        },
+    });
+
     website.menu.EditMenuDialog = website.editor.Dialog.extend({
         template: 'website.menu.dialog.edit',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
@@ -169,22 +188,6 @@
                 this.trigger('add-menu', [url, new_window, menu_label]);
             }
         },
-    });
-
-    website.dom_ready.then(function () {
-        $('.js_edit_menu').on('click', function () {
-            var context = website.get_context();
-            openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                model: 'website.menu',
-                method: 'get_tree',
-                args: [[context.website_id]],
-                kwargs: {
-                    context: context
-                },
-            }).then(function (menu) {
-                return new website.menu.EditMenuDialog(menu).appendTo(document.body);
-            });
-        });
     });
 
 })();
