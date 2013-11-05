@@ -263,10 +263,11 @@ class Ecommerce(http.Controller):
                     filter[index.index(cat_id)].append( cat[2] )
             post.pop(key)
 
-        return request.redirect("/shop/?filter=%s%s%s" % (
+        return request.redirect("/shop/?filter=%s%s%s%s" % (
                 simplejson.dumps(filter).replace(" ", ""),
                 add_filter and "&add_filter=%s" % add_filter or "",
-                post and "&%s" % urllib.urlencode(post) or ""
+                post.get("search") and "&search=%s" % post.get("search") or "",
+                post.get("category") and "&category=%s" % post.get("category") or ""
             ))
 
     def attributes_to_ids(self, attributes):
