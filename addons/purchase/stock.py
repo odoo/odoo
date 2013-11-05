@@ -148,6 +148,13 @@ class stock_warehouse(osv.osv):
                         break
         return res
 
+    def _handle_renaming(self, cr, uid, warehouse, name, context=None):
+        res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, context=context)
+        pull_obj = self.pool.get('procurement.rule')
+        #change the buy pull rule name
+        pull_obj.write(cr, uid, warehouse.buy_pull_id.id, {'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
+        return res
+
     def change_route(self, cr, uid, ids, warehouse, new_reception_step=False, new_delivery_step=False, context=None):
         res = super(stock_warehouse, self).change_route(cr, uid, ids, warehouse, new_reception_step=new_reception_step, new_delivery_step=new_delivery_step, context=context)
         if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
