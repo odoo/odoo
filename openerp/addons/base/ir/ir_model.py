@@ -834,12 +834,11 @@ class ir_model_data(osv.osv):
 
     def __init__(self, pool, cr):
         osv.osv.__init__(self, pool, cr)
-        self.doinit = True
         # also stored in pool to avoid being discarded along with this osv instance
         if getattr(pool, 'model_data_reference_ids', None) is None:
             self.pool.model_data_reference_ids = {}
-
-        self.loads = self.pool.model_data_reference_ids
+        # put loads on the class, in order to share it among all instances
+        type(self).loads = self.pool.model_data_reference_ids
 
     def _auto_init(self, cr, context=None):
         super(ir_model_data, self)._auto_init(cr, context)
@@ -919,8 +918,6 @@ class ir_model_data(osv.osv):
         if xml_id and ('.' in xml_id):
             assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % xml_id
             module, xml_id = xml_id.split('.')
-        if (not xml_id) and (not self.doinit):
-            return False
         action_id = False
         if xml_id:
             cr.execute('''SELECT imd.id, imd.res_id, md.id, imd.model
