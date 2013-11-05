@@ -67,7 +67,7 @@ class CrawlSuite(unittest2.TestSuite):
         # FIXME: host, port, db?
         auth = self.opener.open(
             'http://localhost:8069/login?' + urllib.urlencode(
-                {'db': 'website', 'login': user, 'key': password, }))
+                {'db': tools.config['db_name'], 'login': user, 'key': password, }))
         assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
     def _wrapped_run(self, result, debug=False):
@@ -106,6 +106,6 @@ class CrawlSuite(unittest2.TestSuite):
 def load_tests(loader, base, _):
     base.addTest(CrawlSuite())
     # blog duplicate (&al?) are on links
-    #base.addTest(CrawlSuite('admin', 'admin'))
+    #base.addTest(CrawlSuite('admin', tools.config['admin_passwd']))
     #base.addTest(CrawlSuite('demo', 'demo'))
     return base
