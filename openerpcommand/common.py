@@ -58,11 +58,11 @@ def required_or_default(name, h):
     a mandatory argument.
     """
     if os.environ.get('OPENERP_' + name.upper()):
-	d = {'default': os.environ['OPENERP_' + name.upper()]}
+        d = {'default': os.environ['OPENERP_' + name.upper()]}
     else:
-	d = {'required': True}
+        d = {'required': True}
     d['help'] = h + '. The environment variable OPENERP_' + \
-	name.upper() + ' can be used instead.'
+                name.upper() + ' can be used instead.'
     return d
 
 class Command(object):
@@ -78,7 +78,7 @@ class Command(object):
             self.parser = parser = subparsers.add_parser(self.command_name,
 	        description=self.__class__.__doc__)
         else:
-	    self.parser = parser = argparse.ArgumentParser(
+            self.parser = parser = argparse.ArgumentParser(
                 description=self.__class__.__doc__)
 
         parser.add_argument('-d', '--database', metavar='DATABASE',
