@@ -18,7 +18,7 @@
             </li>
             <li t-if="submenu.child_id" class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <span t-field="submenu.name"/> <span class="caret"></span>
+                    <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <t t-foreach="submenu.child_id" t-as="submenu">
@@ -209,7 +209,7 @@
                                     </div>
                                 </div>
                                 <div class="container mt16">
-                                    <div class="pull-right" t-ignore="1">
+                                    <div class="pull-right" t-ignore="true">
                                         Create a <a href="http://openerp.com/apps/website">free website</a> with
                                         <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                     </div>
