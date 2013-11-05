@@ -352,8 +352,8 @@ class Ecommerce(http.Controller):
         category_list = sorted(category_list, key=lambda category: category[1])
 
         category = None
-        if post.get('category_id') and int(post.get('category_id')):
-            category = category_obj.browse(request.cr, request.uid, int(post.get('category_id')), context=request.context)
+        if post.get('category') and int(post.get('category')):
+            category = category_obj.browse(request.cr, request.uid, int(post.get('category')), context=request.context)
 
         request.context['pricelist'] = self.get_pricelist()
         product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)

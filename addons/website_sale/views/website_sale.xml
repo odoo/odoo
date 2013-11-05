@@ -235,7 +235,7 @@
                   <div class="col-sm-5">
                       <ol class="breadcrumb">
                           <li><a t-href="/shop">Products</a></li>
-                          <li t-if="search.get('category')"><a t-att-href="'/shop/" t-keep-query="category,search,facettes"><span t-field="category.name"/></a></li>
+                          <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,facettes"><span t-field="category.name"/></a></li>
                           <li class="active"><span t-field="product.name"></span></li>
                       </ol>
                   </div><div class="col-sm-3">
