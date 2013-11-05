@@ -565,7 +565,7 @@ class BaseModel(object):
         cr.commit()
 
     @classmethod
-    def _set_field_descriptor(cls, name, field):
+    def _add_field(cls, name, field):
         """ Add the given `field` under the given `name` in the class """
         field.set_model_name(cls._name, name)
 
@@ -585,7 +585,7 @@ class BaseModel(object):
             cls._columns.pop(name, None)
 
     @classmethod
-    def _set_magic_fields(cls):
+    def _add_magic_fields(cls):
         """ Introduce magic fields on the current class
 
         * id is a "normal" field (with a specific getter)
@@ -605,31 +605,30 @@ class BaseModel(object):
               '2013-06-18 08:31:32.821177'
         """
         # this field 'id' must override any other column or field
-        cls._set_field_descriptor('id', fields2.Id())
+        cls._add_field('id', fields2.Id())
 
         # create display_name if not present yet
         if 'display_name' not in cls._columns and 'display_name' not in cls._fields:
-            cls._set_field_descriptor('display_name',
+            cls._add_field('display_name',
                 fields2.Char(string='Name', store=False,
                     compute='_compute_display_name',
                     inverse='_inverse_display_name',
                     search='_search_display_name'))
 
-        log_access = getattr(cls, '_log_access', getattr(cls, '_auto', True))
-        compute_concurrency_field = "compute_concurrency_field"
-
-        if log_access:
+        if cls._log_access:
             # FIXME: what if these fields are already defined on the class?
-            cls._set_field_descriptor('create_uid', fields2.Many2one('res.users'))
-            cls._set_field_descriptor('create_date', fields2.Datetime())
+            cls._add_field('create_uid', fields2.Many2one('res.users'))
+            cls._add_field('create_date', fields2.Datetime())
 
-            cls._set_field_descriptor('write_uid', fields2.Many2one('res.users'))
-            cls._set_field_descriptor('write_date', fields2.Datetime())
+            cls._add_field('write_uid', fields2.Many2one('res.users'))
+            cls._add_field('write_date', fields2.Datetime())
 
             compute_concurrency_field = 'compute_concurrency_field_with_access'
 
-        cls._set_field_descriptor(
-            cls.CONCURRENCY_CHECK_FIELD,
+        else:
+            compute_concurrency_field = "compute_concurrency_field"
+
+        cls._add_field(cls.CONCURRENCY_CHECK_FIELD,
             fields2.Datetime(compute=compute_concurrency_field, store=False))
 
     @api.one
@@ -649,7 +648,7 @@ class BaseModel(object):
     #       put objects in the pool var
     #
     @classmethod
-    def create_instance(cls, pool, cr):
+    def _build_model(cls, pool, cr):
         """ Instanciate a given model.
 
         This class method instanciates the class of some model (i.e. a class
@@ -665,81 +664,106 @@ class BaseModel(object):
         # we cannot use that "registry class" for combining model classes by
         # inheritance, since it confuses the metadata inference process.
 
-        parent_names = getattr(cls, '_inherit', None)
-        if parent_names:
-            parent_names = parent_names if isinstance(parent_names, list) else [parent_names]
-            name = cls._name or (len(parent_names) == 1 and parent_names[0]) or cls.__name__
+        # Keep links to non-inherited constraints in cls; this is useful for
+        # instance when exporting translations
+        cls._local_constraints = cls.__dict__.get('_constraints', [])
+        cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
 
-            for parent_name in parent_names:
-                if parent_name not in pool:
-                    raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
-                        'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
-                parent_model = pool[parent_name]
-                if not getattr(cls, '_original_module', None) and name == parent_model._name:
-                    cls._original_module = parent_model._original_module
+        # determine inherited models
+        parents = getattr(cls, '_inherit', [])
+        parents = [parents] if isinstance(parents, basestring) else (parents or [])
 
-                # do no use the class of parent_model, since that class contains
-                # inferred metadata; use its ancestor instead
-                parent_class = type(parent_model).__bases__[0]
+        # determine the model's name
+        name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
 
-                # don't inherit custom fields, and duplicate inherited fields
-                # because some have a per-registry cache (like float)
-                columns = dict(
-                    (key, copy.copy(val))
-                    for key, val in getattr(parent_class, '_columns', {}).iteritems()
-                    if not val.manual)
-                columns.update(getattr(cls, '_columns', {}))
+        # determine the module that introduced the model
+        original_module = pool[name]._original_module if name in parents else cls._module
 
-                defaults = dict(getattr(parent_class, '_defaults', {}))
-                defaults.update(getattr(cls, '_defaults', {}))
+        # build the class hierarchy for the model
+        for parent in parents:
+            if parent not in pool:
+                raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
+                    'You may need to add a dependency on the parent class\' module.' % (name, parent))
+            parent_model = pool[parent]
 
-                inherits = dict(getattr(parent_class, '_inherits', {}))
-                inherits.update(getattr(cls, '_inherits', {}))
+            # do no use the class of parent_model, since that class contains
+            # inferred metadata; use its ancestor instead
+            parent_class = type(parent_model).__base__
 
-                old_constraints = getattr(parent_class, '_constraints', [])
-                new_constraints = getattr(cls, '_constraints', [])
-                # filter out from old_constraints the ones overridden by a
-                # constraint with the same function name in new_constraints
-                constraints = new_constraints + [oldc
-                    for oldc in old_constraints
-                    if not any(newc[2] == oldc[2] and same_name(newc[0], oldc[0])
-                               for newc in new_constraints)
-                ]
+            # don't inherit custom fields, and duplicate inherited fields
+            # because some have a per-registry cache (like float)
+            columns = dict(
+                (key, copy.copy(val))
+                for key, val in parent_class._columns.iteritems()
+                if not val.manual)
+            columns.update(cls._columns)
 
-                sql_constraints = getattr(cls, '_sql_constraints', []) + \
-                    getattr(parent_class, '_sql_constraints', [])
+            defaults = dict(parent_class._defaults)
+            defaults.update(cls._defaults)
 
-                attrs = {
-                    '_name': name,
-                    '_register': False,
-                    '_columns': columns,
-                    '_defaults': defaults,
-                    '_inherits': inherits,
-                    '_constraints': constraints,
-                    '_sql_constraints': sql_constraints,
-                    # Keep links to non-inherited constraints; this is useful
-                    # for instance when exporting translations
-                    '_local_constraints': cls.__dict__.get('_constraints', []),
-                    '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
-                }
-                cls = type(name, (cls, parent_class), attrs)
-        else:
-            if not cls._name:
-                cls._name = cls.__name__
-            cls._local_constraints = cls.__dict__.get('_constraints', [])
-            cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
+            inherits = dict(parent_class._inherits)
+            inherits.update(cls._inherits)
+
+            old_constraints = parent_class._constraints
+            new_constraints = cls._constraints
+            # filter out from old_constraints the ones overridden by a
+            # constraint with the same function name in new_constraints
+            constraints = new_constraints + [oldc
+                for oldc in old_constraints
+                if not any(newc[2] == oldc[2] and same_name(newc[0], oldc[0])
+                           for newc in new_constraints)
+            ]
+
+            sql_constraints = cls._sql_constraints + \
+                              parent_class._sql_constraints
+
+            attrs = {
+                '_name': name,
+                '_register': False,
+                '_columns': columns,
+                '_defaults': defaults,
+                '_inherits': inherits,
+                '_constraints': constraints,
+                '_sql_constraints': sql_constraints,
+            }
+            cls = type(name, (cls, parent_class), attrs)
 
         # introduce the "registry class" of the model;
         # duplicate some attributes so that the ORM can modify them
         attrs = {
+            '_name': name,
             '_register': False,
             '_columns': dict(cls._columns),
             '_defaults': dict(cls._defaults),
             '_inherits': dict(cls._inherits),
             '_constraints': list(cls._constraints),
             '_sql_constraints': list(cls._sql_constraints),
+            '_original_module': original_module,
         }
         cls = type(cls._name, (cls,), attrs)
+
+        # link the class to the registry
+        cls.pool = pool
+
+        # determine description, table, sequence and log_access
+        if not cls._description:
+            cls._description = cls._name
+        if not cls._table:
+            cls._table = cls._name.replace('.', '_')
+        if not cls._sequence:
+            cls._sequence = cls._table + '_id_seq'
+        if not hasattr(cls, '_log_access'):
+            # If _log_access is not specified, it is the same value as _auto.
+            cls._log_access = cls._auto
+
+        # Transience
+        if cls.is_transient():
+            cls._transient_check_count = 0
+            cls._transient_max_count = config.get('osv_memory_count_limit')
+            cls._transient_max_hours = config.get('osv_memory_age_limit')
+            assert cls._log_access, \
+                "TransientModels must have log_access turned on, " \
+                "in order to implement their access rights policy"
 
         # retrieve new-style fields and duplicate them (to avoid clashes with
         # inheritance between different models)
@@ -747,53 +771,49 @@ class BaseModel(object):
         for attr in dir(cls):
             field = getattr(cls, attr)
             if isinstance(field, Field) and not field.interface_for:
-                cls._set_field_descriptor(attr, field.copy())
+                cls._add_field(attr, field.copy())
 
         # introduce magic fields
-        cls._set_magic_fields()
+        cls._add_magic_fields()
 
-        if not getattr(cls, '_original_module', None):
-            cls._original_module = cls._module
+        # register stuff about low-level function fields and custom fields
+        cls._init_function_fields(pool, cr)
+        cls._init_manual_fields(pool, cr)
 
+        cls._init_constraints()
+
+        # process _inherits
+        cls._inherits_check()
+        cls._inherits_reload()
+
+        # check defaults
+        for k in cls._defaults:
+            assert k in cls._fields, \
+                "Model %s has a default for nonexiting field %s" % (cls._name, k)
+
+        # restart columns
+        for column in cls._columns.itervalues():
+            column.restart()
+
+        # validate rec_name
+        if cls._rec_name:
+            assert cls._rec_name in cls._fields, \
+                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
+        elif 'name' in cls._fields:
+            cls._rec_name = 'name'
+
+        # prepare ormcache, which must be shared by all instances of the model
+        cls._ormcache = {}
+
+        # insert an instance of the model in the pool
         instance = cls.browse()
+        pool.add(name, instance)
         instance.__init__(pool, cr)
         return instance
 
-    def __new__(cls):
-        # In the past, this method was registering the model class in the server.
-        # This job is now done entirely by the metaclass MetaModel.
-        #
-        # Do not create an instance here.  Model instances are created by method
-        # create_instance().
-        return None
-
-    def __init__(self, pool, cr):
-        """ Initialize a model and make it part of the given registry.
-
-        - copy the stored fields' functions in the osv_pool,
-        - update the _columns with the fields found in ir_model_fields,
-        - ensure there is a many2one for each _inherits'd parent,
-        - update the children's _columns,
-        - give a chance to each field to initialize itself.
-
-        """
-        # all the important stuff is stored directly on the model's class
-        cls = type(self)
-
-        # insert self in the pool
-        pool.add(cls._name, self)
-        cls.pool = pool
-
-        # determine description, table and log_access
-        if not cls._description:
-            cls._description = cls.__doc__ or cls._name
-        if not cls._table:
-            cls._table = cls._name.replace('.', '_')
-        if not hasattr(cls, '_log_access'):
-            # If _log_access is not specified, it is the same value as _auto.
-            cls._log_access = getattr(cls, "_auto", True)
-
-        # reinitialize the list of non-stored function fields for this model
+    @classmethod
+    def _init_function_fields(cls, pool, cr):
+        # initialize the list of non-stored function fields for this model
         pool._pure_function_fields[cls._name] = []
 
         # process store of low-level function fields
@@ -830,26 +850,15 @@ class BaseModel(object):
                     (cls._name, fname, fnct, tuple(fields2) if fields2 else None, order, length))
                 pool._store_function[model].sort(key=lambda x: x[4])
 
-        # store sql constraint error messages
-        for (key, _, msg) in cls._sql_constraints:
-            pool._sql_error[cls._table + '_' + key] = msg
-
-        # collect constraint methods
-        cls._constraint_methods = []
-        for attr in dir(cls):
-            value = getattr(cls, attr)
-            if callable(value) and hasattr(value, '_constrains'):
-                cls._constraint_methods.append(value)
-
-        # Load manual fields
-
-        # Check the query is already done for all modules of if we need to
-        # do it ourselves.
+    @classmethod
+    def _init_manual_fields(cls, pool, cr):
+        # Check whether the query is already done
         if pool.fields_by_model is not None:
             manual_fields = pool.fields_by_model.get(cls._name, [])
         else:
             cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (cls._name, 'manual'))
             manual_fields = cr.dictfetchall()
+
         for field in manual_fields:
             if field['name'] in cls._columns:
                 continue
@@ -887,36 +896,30 @@ class BaseModel(object):
             else:
                 cls._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
 
-        self._inherits_check()
-        self._inherits_reload()
+    @classmethod
+    def _init_constraints(cls):
+        # store sql constraint error messages
+        for (key, _, msg) in cls._sql_constraints:
+            cls.pool._sql_error[cls._table + '_' + key] = msg
 
-        if not cls._sequence:
-            cls._sequence = cls._table + '_id_seq'
-        for k in cls._defaults:
-            assert (k in cls._columns) or (k in cls._inherit_fields), \
-                'Default function defined in %s but field %s does not exist !' % (cls._name, k,)
+        # collect constraint methods
+        cls._constraint_methods = []
+        for attr in dir(cls):
+            value = getattr(cls, attr)
+            if callable(value) and hasattr(value, '_constrains'):
+                cls._constraint_methods.append(value)
 
-        # restart columns
-        for column in cls._columns.itervalues():
-            column.restart()
+    def __new__(cls):
+        # In the past, this method was registering the model class in the server.
+        # This job is now done entirely by the metaclass MetaModel.
+        #
+        # Do not create an instance here.  Model instances are created by method
+        # _build_model().
+        return None
 
-        # Transience
-        if self.is_transient():
-            cls._transient_check_count = 0
-            cls._transient_max_count = config.get('osv_memory_count_limit')
-            cls._transient_max_hours = config.get('osv_memory_age_limit')
-            assert cls._log_access, "TransientModels must have log_access turned on, "\
-                                     "in order to implement their access rights policy"
-
-        # Validate rec_name
-        if cls._rec_name:
-            assert cls._rec_name in cls._fields, \
-                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
-        elif 'name' in cls._fields:
-            cls._rec_name = 'name'
-
-        # prepare ormcache, which must be shared by all instances of the model
-        cls._ormcache = {}
+    def __init__(self, pool, cr):
+        # this method no longer does anything; kept for backward compatibility
+        pass
 
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
@@ -3268,7 +3271,7 @@ class BaseModel(object):
         # interface columns with new-style fields
         for attr, column in cls._columns.iteritems():
             if attr not in cls._fields:
-                cls._set_field_descriptor(attr, column.to_field())
+                cls._add_field(attr, column.to_field())
 
         # interface inherited fields with new-style fields (note that the
         # reverse order is for being consistent with _all_columns above)
@@ -3277,7 +3280,7 @@ class BaseModel(object):
                 if attr not in cls._fields:
                     new_field = field.copy(related=(parent_field, attr),
                                            store=False, interface_for=field)
-                    cls._set_field_descriptor(attr, new_field)
+                    cls._add_field(attr, new_field)
 
         cls._inherits_reload_src()
 
@@ -5141,13 +5144,14 @@ class BaseModel(object):
         return report.create(cr, uid, ids, data, context)
 
     # Transience
-    def is_transient(self):
+    @classmethod
+    def is_transient(cls):
         """ Return whether the model is transient.
 
         See :class:`TransientModel`.
 
         """
-        return self._transient
+        return cls._transient
 
     def _transient_clean_rows_older_than(self, cr, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name

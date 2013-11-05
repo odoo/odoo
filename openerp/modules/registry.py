@@ -133,7 +133,7 @@ class Registry(Mapping):
             # or via explicit constructor call), and add them to the pool.
             for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
                 # models register themselves in self.models
-                model = cls.create_instance(self, cr)
+                model = cls._build_model(self, cr)
                 if model._name not in models_to_load:
                     # avoid double-loading models whose declaration is split
                     models_to_load.append(model._name)
