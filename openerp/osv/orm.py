@@ -5642,20 +5642,6 @@ class BaseModel(object):
         # important: one must call the field's setter
         return self._fields[key].__set__(self, value)
 
-    def __getattr__(self, name):
-        if name.startswith('signal_'):
-            # self.signal_XXX() sends signal XXX to the record's workflow
-            signal_name = name[len('signal_'):]
-            assert signal_name
-            return (lambda *args, **kwargs:
-                    self.signal_workflow(*args, signal=signal_name, **kwargs))
-
-        get = getattr(super(BaseModel, self), '__getattr__', None)
-        if get is not None:
-            return get(name)
-        else:
-            raise AttributeError("%r object has no attribute %r" % (type(self).__name__, name))
-
     #
     # Cache and recomputation management
     #
