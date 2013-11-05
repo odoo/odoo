@@ -947,7 +947,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.action_bar.appendTo(this.$(".pos-rightpane"));
 
             this.left_action_bar = new module.ActionBarWidget(this);
-            this.left_action_bar.appendTo(this.$(".pos-leftpane"));
+            this.left_action_bar.replace(this.$('.placeholder-LeftActionBar'));
 
             this.paypad = new module.PaypadWidget(this, {});
             this.paypad.replace(this.$('.placeholder-PaypadWidget'));
@@ -961,7 +961,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.onscreen_keyboard = new module.OnscreenKeyboardWidget(this, {
                 'keyboard_model': 'simple'
             });
-            this.onscreen_keyboard.appendTo(this.$(".pos-content")); 
+            this.onscreen_keyboard.replace(this.$('.placeholder-OnscreenKeyboardWidget'));
 
             this.close_button = new module.HeaderButtonWidget(this,{
                 label: _t('Close'),
