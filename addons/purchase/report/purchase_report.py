@@ -94,7 +94,7 @@ class purchase_report(osv.osv):
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
-                    (l.price_unit*l.product_qty)::decimal(16,2) as price_total,
+                    sum(l.price_unit*l.product_qty)::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit*l.product_qty) / NULLIF(t.standard_price*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
                     sum(t.standard_price*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
                     (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average
@@ -108,7 +108,6 @@ class purchase_report(osv.osv):
                     s.company_id,
                     s.create_uid,
                     s.partner_id,
-                    l.product_qty,
                     u.factor,
                     s.location_id,
                     l.price_unit,
