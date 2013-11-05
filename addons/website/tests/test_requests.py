@@ -55,7 +55,6 @@ class CrawlSuite(unittest2.TestSuite):
         self.user = user
 
     def _request(self, path):
-        # FIXME: host, db?
         return self.opener.open(urlparse.urlunsplit([
             'http', 'localhost:%s' % tools.config['xmlrpc_port'],
             path, '', ''
@@ -64,10 +63,15 @@ class CrawlSuite(unittest2.TestSuite):
     def _authenticate(self, user, password):
         if user is None: return
 
-        # FIXME: host, port, db?
-        auth = self.opener.open(
-            'http://localhost:8069/login?' + urllib.urlencode(
-                {'db': tools.config['db_name'], 'login': user, 'key': password, }))
+        url = 'http://localhost:{port}/login?{query}'.format(
+            port=tools.config['xmlrpc_port'],
+            query=urllib.urlencode({
+                'db': tools.config['db_name'],
+                'login': user,
+                'key': password,
+            })
+        )
+        auth = self.opener.open(url)
         assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
     def _wrapped_run(self, result, debug=False):
