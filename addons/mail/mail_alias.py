@@ -137,8 +137,10 @@ class mail_alias(osv.Model):
         for record in self.browse(cr, uid, ids, context=context):
             if record.alias_name and record.alias_domain:
                 res.append((record['id'], "%s@%s" % (record.alias_name, record.alias_domain)))
+            elif record.alias_name:
+                res.append((record['id'], "%s" % (record.alias_name)))
             else:
-                res.append((record['id'], False))
+                res.append((record['id'], "New Alias"))
         return res
 
     def _find_unique(self, cr, uid, name, context=None):
