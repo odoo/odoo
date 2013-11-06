@@ -129,9 +129,9 @@ class mail_alias(osv.Model):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        """Return the mail alias display alias_name, inclusing the implicit
-           mail catchall domain from config.
-           e.g. `jobs@openerp.my.openerp.com` or `sales@openerp.my.openerp.com`
+        """Return the mail alias display alias_name, including the implicit
+           mail catchall domain if exists from config otherwise "New Alias".
+           e.g. `jobs@openerp.my.openerp.com` or `jobs` or 'New Alias'
         """
         res = []
         for record in self.browse(cr, uid, ids, context=context):
