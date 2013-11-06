@@ -61,18 +61,23 @@ class CrawlSuite(unittest2.TestSuite):
         ]))
 
     def _authenticate(self, user, password):
-        if user is None: return
-
-        url = 'http://localhost:{port}/login?{query}'.format(
+        # force tools.config['db_name'] in user session so opening `/` doesn't
+        # blow up in multidb situations
+        self.opener.open('http://localhost:{port}/web/?db={db}'.format(
             port=tools.config['xmlrpc_port'],
-            query=urllib.urlencode({
-                'db': tools.config['db_name'],
-                'login': user,
-                'key': password,
-            })
-        )
-        auth = self.opener.open(url)
-        assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
+            db=urllib.quote_plus(tools.config['db_name']),
+        ))
+        if user is not None:
+            url = 'http://localhost:{port}/login?{query}'.format(
+                port=tools.config['xmlrpc_port'],
+                query=urllib.urlencode({
+                    'db': tools.config['db_name'],
+                    'login': user,
+                    'key': password,
+                })
+            )
+            auth = self.opener.open(url)
+            assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
     def _wrapped_run(self, result, debug=False):
         paths = collections.deque(['/'])
