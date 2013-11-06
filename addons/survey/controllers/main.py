@@ -34,7 +34,7 @@ class WebsiteSurvey(http.Controller):
     @website.route(['/survey/',
         '/survey/list/'],
         type='http', auth='public', multilang=True)
-    def list_surveys(self, survey_id=None, page_id=None, **post):
+    def list_surveys(self, **post):
         '''All the public surveys'''
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
@@ -43,18 +43,29 @@ class WebsiteSurvey(http.Controller):
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
         return request.website.render('survey.list', {'surveys': surveys})
 
-    @website.route(["/survey/fill/id-<int:survey_id>/",
-        "/survey/fill/id-<int:survey_id>/page-<int:page_id>"],
+    @website.route(["/survey/fill/<int:survey_id>/",
+        "/survey/fill/<int:survey_id>/page/",
+        "/survey/fill/<int:survey_id>/page/<int:page_index>/"],
         type='http', auth='public', multilang=True)
-    def fill_survey(self, survey_id=None, page_id=None, **post):
+    def fill_survey(self, survey_id=None, page_index=None, **post):
         '''Display a survey'''
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
         survey = survey_obj.browse(cr, uid, survey_id, context=context)
 
-        pagination = {'current': -1, 'next': -1}
-        # if not page_id:
-        #     pagination['next'] =
+        pagination = {'current': -1,
+                    'next': 0}
+        if page_index is not None:
+            if page_index not in range(0, len(survey.page_ids)):
+                raise Exception("This page does not exist")
+            pagination['current'] = page_index
+            if page_index == len(survey.page_ids) - 1:
+                pagination['next'] = -1
+            else:
+                pagination['next'] = page_index + 1
 
-        return request.website.render('survey.survey', {'survey': survey,
-                                                        'pagination': pagination})
+        return request.website.render('survey.survey',
+                                    {'survey': survey,
+                                    'pagination': pagination,
+                                    'debug': False,
+                                    'validation_error': None})

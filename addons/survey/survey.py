@@ -77,7 +77,7 @@ class survey_survey(osv.osv):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
         for survey_browse in self.browse(cr, uid, ids, context=context):
-            res[survey_browse.id] = urljoin(base_url, "survey/fill/id-%s"
+            res[survey_browse.id] = urljoin(base_url, "survey/fill/%s/"
                                             % survey_browse.id)
         return res
 
@@ -314,14 +314,7 @@ class survey_question(osv.osv):
     ''' Questions that will be asked in a survey.
 
     Each question can have one of more suggested answers (eg. in case of
-    dropdown choices, multi-answer checkboxes, radio buttons...)
-
-    Changes
-    -------
-
-    This version of the model has been simplified in relation to the previous
-    one: some fields were simply a n-time repetition of a simpler field. It is
-    now allowed to have children question that allows to group subquestions.'''
+    dropdown choices, multi-answer checkboxes, radio buttons...).'''
     _name = 'survey.question'
     _description = 'Question'
     _rec_name = 'question'
@@ -351,12 +344,10 @@ class survey_question(osv.osv):
                 ('textbox', 'Text box'),
                 ('numerical_box', 'Numerical box'),
                 ('datetime', 'Date and Time'),
-                ('checkbox', 'Checkbox'),
                 ('simple_choice_scale', 'One choice on a scale'),
                 ('simple_choice_dropdown', 'One choice in a menu'),
                 ('multiple_choice', 'Some choices in checkboxes'),
-                ('vector',
-                 'Multi-questions'),
+                ('vector', 'Multi-questions'),
                 ('matrix', 'Matrix')
             ], 'Question Type', required=1),
         'suggested_answers_ids': fields.one2many('survey.suggestion',
