@@ -237,6 +237,7 @@
             }
             if (this.$active_snipped_id) {
                 this.snippet_blur(this.$active_snipped_id);
+                this.$active_snipped_id = false;
             }
             if ($snipped_id) {
                 if(_.indexOf(this.snippets, $snipped_id.get(0)) === -1) {
@@ -245,8 +246,6 @@
                 this.$active_snipped_id = $snipped_id;
                 this.create_overlay(this.$active_snipped_id);
                 this.snippet_focus($snipped_id);
-            } else {
-                self.$active_snipped_id = false;
             }
         },
         create_overlay: function ($snipped_id) {
@@ -750,6 +749,7 @@
                 var index = _.indexOf(self.parent.snippets, self.$target.get(0));
                 delete self.parent.snippets[index];
                 self.$target.remove();
+                self.$overlay.remove();
                 return false;
             });
             this._drag_and_drop();
@@ -768,7 +768,7 @@
         *  This method is called when the user click inside the snippet in the dom
         */
         onFocus : function () {
-            this.$overlay.addClass('oe_active');
+            this.$overlay.addClass('oe_active').effect('bounce', {distance: 18, times: 5}, 250);
         },
 
         /* onFocus
