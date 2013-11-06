@@ -44,17 +44,33 @@
                                     </h1>
                                 </div>
 
-                                <t t-foreach="survey.page_ids" t-as="page">
-                                    <t t-call='survey.page' />
+<!--                                 <t t-if="pagination['current'] != -1">
+                                    <t t-call="pagination['current']" />
                                 </t>
+ -->
+                                <t t-foreach="survey.page_ids" t-as="page">
+                                    <t t-call="survey.page"/>
+                                </t>
+                            <t t-call='survey.navsub' />
+
                             </div>
                             <div class="col-md-1"> </div>
                             <div class="col-md-1"> </div>
-
                         </div>
                     </div>
                 </div>
             </t>
+        </template>
+
+
+        <!-- Navigation & Submission -->
+
+        <template id="navsub" name="Footer for navigation and submission">
+            <div class="text-center">
+                <t t-if="pagination['current'] == -1"><button type="button" class="btn btn-primary">Take survey</button>
+                <t t-if="pagination['current'] != -1 and pagination['next'] != -1"><button type="button" class="btn btn-primary">Next page</button>
+                <t t-if="pagination['next'] == -1"><button type="button" class="btn btn-success">Submit survey</button></t></t></t>
+            </div>
         </template>
 
         <!-- A page -->
@@ -67,7 +83,6 @@
                 <t t-foreach='page.question_ids' t-as='question'>
                     <t t-call='survey.question'/>
                 </t>
-                <button type="button" class="btn btn-primary">Next page</button>
             </form>
 
             <div>
@@ -139,33 +154,33 @@
                         </t>
                     </t>
 
-                <t t-if="question.type in ['vector']">
-                    TODO afficher les vector correctement
-                    <t t-foreach='question.children_ids' t-as='question'>
-                        <t t-call='survey.question' />
+                    <t t-if="question.type in ['vector']">
+                        TODO afficher les vector correctement
+                        <t t-foreach='question.children_ids' t-as='question'>
+                            <t t-call='survey.question' />
+                        </t>
                     </t>
-                </t>
 
-                <t t-if="question.type in ['matrix']">
-                    TODO afficher les matrix correctement
-                    <t t-foreach='question.children_ids' t-as='question'>
-                        <t t-call='survey.question' />
+                    <t t-if="question.type in ['matrix']">
+                        TODO afficher les matrix correctement
+                        <t t-foreach='question.children_ids' t-as='question'>
+                            <t t-call='survey.question' />
+                        </t>
                     </t>
-                </t>
 
 
-            <!-- Comments -->
+                    <!-- Comments -->
 
-            <t t-if="question.comments_allowed">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Any comments ?</div>
-                    <div class="panel-body">
-                    TODO afficher la boîte à commentaires
-                    </div>
+                    <t t-if="question.comments_allowed">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Any comments ?</div>
+                            <div class="panel-body">
+                                TODO afficher la boîte à commentaires
+                            </div>
+                        </div>
+                    </t>
+
                 </div>
-            </t>
-
-        </div>
-    </template>
-</data>
-</openerp>
+            </template>
+        </data>
+    </openerp>

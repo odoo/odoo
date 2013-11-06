@@ -43,14 +43,18 @@ class WebsiteSurvey(http.Controller):
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
         return request.website.render('survey.list', {'surveys': surveys})
 
-    @website.route(["/survey/fill/id/<int:survey_id>/",
-        "/survey/fill/id/<int:survey_id>/page/<int:page_id>"],
+    @website.route(["/survey/fill/id-<int:survey_id>/",
+        "/survey/fill/id-<int:survey_id>/page-<int:page_id>"],
         type='http', auth='public', multilang=True)
     def fill_survey(self, survey_id=None, page_id=None, **post):
         '''Display a survey'''
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
-
         survey = survey_obj.browse(cr, uid, survey_id, context=context)
-        return request.website.render('survey.survey',
-            {'survey': survey})
+
+        pagination = {'current': -1, 'next': -1}
+        # if not page_id:
+        #     pagination['next'] =
+
+        return request.website.render('survey.survey', {'survey': survey,
+                                                        'pagination': pagination})

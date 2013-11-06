@@ -77,7 +77,7 @@ class survey_survey(osv.osv):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
         for survey_browse in self.browse(cr, uid, ids, context=context):
-            res[survey_browse.id] = urljoin(base_url, "survey/fill/id/%s"
+            res[survey_browse.id] = urljoin(base_url, "survey/fill/id-%s"
                                             % survey_browse.id)
         return res
 
