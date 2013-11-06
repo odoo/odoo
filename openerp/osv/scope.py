@@ -26,33 +26,34 @@
 
 from werkzeug.local import Local, release_local
 
-# werkzeug "context" variable to store the stack of scopes
-_local = Local()
-
 
 class ScopeProxy(object):
     """ This a proxy object to the current scope. """
+    def __init__(self):
+        self._local = Local()
+
+    def release(self):
+        """ release the werkzeug local variable """
+        release_local(self._local)
+
+    @property
+    def stack(self):
+        """ return the stack of scopes (as a list) """
+        try:
+            return self._local.stack
+        except AttributeError:
+            self._local.stack = stack = []
+            return stack
+
     @property
     def root(self):
-        stack = getattr(_local, 'scope_stack', None)
+        stack = self.stack
         return stack[0] if stack else None
 
     @property
     def current(self):
-        stack = getattr(_local, 'scope_stack', None)
+        stack = self.stack
         return stack[-1] if stack else None
-
-    def push(self, value):
-        stack = getattr(_local, 'scope_stack', None)
-        if stack is None:
-            _local.scope_stack = stack = []
-        stack.append(value)
-
-    def pop(self):
-        res = _local.scope_stack.pop()
-        if not _local.scope_stack:
-            release_local(_local)
-        return res
 
     def __getitem__(self, name):
         return self.current[name]
@@ -64,29 +65,39 @@ class ScopeProxy(object):
         # apply current scope or instantiate one
         return (self.current or Scope)(*args, **kwargs)
 
+    @property
+    def all_scopes(self):
+        """ return the list of known scopes """
+        try:
+            return self._local.scopes
+        except AttributeError:
+            self._local.scopes = scopes = []
+            return scopes
+
     def invalidate(self, model, field, ids=None):
         """ Invalidate a field for the given record ids in the caches. """
-        for scope in getattr(_local, 'scope_list', ()):
+        for scope in self.all_scopes:
             scope.cache.invalidate(model, field, ids)
 
     def invalidate_all(self):
         """ Invalidate the record caches in all scopes. """
-        for scope in getattr(_local, 'scope_list', ()):
+        for scope in self.all_scopes:
             scope.cache.invalidate_all()
 
     def check_cache(self):
         """ Check the record caches in all scopes. """
-        for scope in getattr(_local, 'scope_list', ()):
+        for scope in self.all_scopes:
             with scope:
                 scope.cache.check()
 
     @property
     def recomputation(self):
         """ Return the recomputation manager object. """
-        manager = getattr(_local, 'recomputation', None)
-        if manager is None:
-            manager = _local.recomputation = Recomputation()
-        return manager
+        try:
+            return self._local.recomputation
+        except AttributeError:
+            self._local.recomputation = recomputation = Recomputation()
+            return recomputation
 
 proxy = ScopeProxy()
 
@@ -116,12 +127,8 @@ class Scope(object):
             context = {}
         args = (cr, uid, context)
 
-        # get the list of all scopes in the current context
-        scope_list = getattr(_local, 'scope_list', None)
-        if scope_list is None:
-            _local.scope_list = scope_list = []
-
         # if scope already exists, return it
+        scope_list = proxy.all_scopes
         for scope in scope_list:
             if scope.args == args:
                 return scope
@@ -143,11 +150,14 @@ class Scope(object):
         return not self == other
 
     def __enter__(self):
-        proxy.push(self)
+        proxy.stack.append(self)
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        proxy.pop()
+        stack = proxy.stack
+        stack.pop()
+        if not stack:
+            proxy.release()
 
     def __getitem__(self, model_name):
         """ return a given model """
@@ -166,7 +176,7 @@ class Scope(object):
             cr = self.cr
 
         if user is None:
-            uid = self.user
+            uid = self.uid
         elif isinstance(user, BaseModel):
             assert user._name == 'res.users'
             uid = user.id
