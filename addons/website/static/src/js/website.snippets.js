@@ -1083,10 +1083,6 @@
                 self.$target.carousel();
             });
 
-            this.$target.attr('contentEditable', 'false')
-                .find('.content, .carousel-image img')
-                    .attr('contentEditable', 'true');
-
             this.rebind_event();
         },
         // rebind event to active carousel on edit mode
@@ -1096,6 +1092,10 @@
                 self.$target.carousel($(this).data('slide')); });
             this.$target.off('click').on('click', '.carousel-indicators [data-target]', function () {
                 self.$target.carousel(+$(this).data('slide-to')); });
+
+            this.$target.attr('contentEditable', 'false')
+                .find('.content, .carousel-image img')
+                    .attr('contentEditable', 'true');
         },
         on_add: function (e) {
             e.preventDefault();
