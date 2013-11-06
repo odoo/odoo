@@ -141,6 +141,12 @@ class module(osv.osv):
     _rec_name = "shortdesc"
     _description = "Module"
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(module, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if view_type == 'form':
+            res['toolbar'] = {'action': []}
+        return res
+
     @classmethod
     def get_module_info(cls, name):
         info = {}
