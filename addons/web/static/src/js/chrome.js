@@ -724,7 +724,7 @@ instance.web.Login =  instance.web.Widget.extend({
         params.db = db;
         this.$('.oe_login_dbpane').empty().text(_t('Loading...'));
         this.$('[name=login], [name=password]').prop('readonly', true);
-        instance.web.redirect('/?' + $.param(params));
+        instance.web.redirect('/web?' + $.param(params));
     },
     on_db_loaded: function (result) {
         var self = this;
