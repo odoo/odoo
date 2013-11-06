@@ -248,6 +248,22 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(scope.current, scope0)
 
     @mute_logger('openerp.osv.orm')
+    def test_55_draft(self):
+        """ Test draft mode nesting. """
+        self.assertFalse(scope.draft)
+        with scope.draft():
+            self.assertTrue(scope.draft)
+            with scope.draft():
+                self.assertTrue(scope.draft)
+                with scope.draft():
+                    self.assertTrue(scope.draft)
+                self.assertTrue(scope.draft)
+            self.assertTrue(scope.draft)
+        self.assertFalse(scope.draft)
+
+        self.assertIs(scope.draft, scope.current.draft)
+
+    @mute_logger('openerp.osv.orm')
     @mute_logger('openerp.addons.base.ir.ir_model')
     def test_55_scope(self):
         """ Test scope on records. """

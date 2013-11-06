@@ -75,7 +75,7 @@ class Slot(object):
         """ generic setter: write value and store it into the cache """
         record = cache.record
         field = record._fields[name]
-        if not cache.id or scope_proxy.is_draft:
+        if not cache.id or record._scope.draft:
             field.modified_draft(record)
         elif field.store or field.inverse:
             record.write({name: field.convert_to_write(value)})

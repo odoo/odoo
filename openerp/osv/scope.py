@@ -100,6 +100,15 @@ class ScopeProxy(object):
             self._local.recomputation = recomputation = Recomputation()
             return recomputation
 
+    @property
+    def draft(self):
+        """ Return the draft switch. """
+        try:
+            return self._local.draft
+        except AttributeError:
+            self._local.draft = draft = DraftSwitch()
+            return draft
+
 proxy = ScopeProxy()
 
 
@@ -140,7 +149,7 @@ class Scope(object):
         scope.cr, scope.uid, scope.context = scope.args = args
         scope.registry = RegistryManager.get(cr.dbname)
         scope.cache = Cache()
-        scope.is_draft = False
+        scope.draft = proxy.draft
         scope_list.append(scope)
         return scope
 
@@ -212,13 +221,41 @@ class Scope(object):
         """ return the current language code """
         return self.context.get('lang') or 'en_US'
 
+
+#
+# DraftSwitch - manages the mode switching between draft and non-draft
+#
+
+class DraftSwitch(object):
+    """ An object that manages the draft mode associated to all the scopes of a
+        werkzeug session::
+
+            # calling returns a context manager that switches to draft mode
+            with scope.draft():
+                # here we are in draft mode
+
+                # testing returns the state
+                assert scope.draft
+
+                # nesting has no effect
+                with scope.draft():
+                    assert scope.draft
+
+            # testing returns the state
+            assert not scope.draft
+    """
+    def __init__(self):
+        self._state = False
+
+    def __nonzero__(self):
+        return self._state
+
     @contextmanager
-    def draft(self):
-        """ introduce a context where the scope is in draft mode """
-        old = self.is_draft
-        self.is_draft = True
+    def __call__(self):
+        old = self._state
+        self._state = True
         yield
-        self.is_draft = old
+        self._state = old
 
 
 #
