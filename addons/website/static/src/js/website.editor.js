@@ -1030,6 +1030,7 @@
         }),
 
         start: function () {
+            this.$('.modal-footer [disabled]').text("Uploading…");
             var $options = this.$('.image-style').children();
             this.image_styles = $options.map(function () { return this.value; }).get();
 
@@ -1065,6 +1066,7 @@
         },
 
         file_selection: function () {
+            this.$el.addClass('nosave');
             this.$('button.filepicker').removeClass('btn-danger btn-success');
 
             var self = this;
@@ -1087,6 +1089,7 @@
             this.set_image(url);
         },
         preview_image: function () {
+            this.$el.removeClass('nosave');
             var image = this.$('input.url').val();
             if (!image) { return; }
 
