@@ -224,5 +224,37 @@
             </t>
 
         </template>
+
+
+        <!-- Printable view of a survey (all pages) -->
+        <template id="survey_print" name="Survey">
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-1"> </div>
+                            <div class="col-md-1"> </div>
+                            <div class="col-md-8">
+                                <div class='jumbotron'>
+                                    <h1>
+                                        <t t-esc='survey.title'/>
+                                        <t t-if="survey.description is not False">
+                                            <br/>
+                                            <small><t t-esc='survey.description'/></small>
+                                        </t>
+                                    </h1>
+                                </div>
+                                <t t-foreach="survey.page_ids" t-as="page">
+                                    <t t-call="survey.page" />
+                                    <hr/>
+                                </t>
+                            </div>
+                            <div class="col-md-1"> </div>
+                            <div class="col-md-1"> </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
     </data>
 </openerp>

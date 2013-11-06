@@ -69,3 +69,14 @@ class WebsiteSurvey(http.Controller):
                                     'pagination': pagination,
                                     'debug': False,
                                     'validation_error': None})
+
+    @website.route(["/survey/print/<int:survey_id>/"],
+        type='http', auth='public', multilang=True)
+    def print_empty_survey(self, survey_id=None, **post):
+        '''Display a survey'''
+        cr, uid, context = request.cr, request.uid, request.context
+        survey_obj = request.registry['survey.survey']
+        survey = survey_obj.browse(cr, uid, survey_id, context=context)
+
+        return request.website.render('survey.survey_print',
+                                    {'survey': survey})
