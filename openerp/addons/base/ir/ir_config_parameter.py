@@ -52,6 +52,9 @@ class ir_config_parameter(osv.osv):
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
+    def name_get(self, cr, uid, ids, context=None):
+        return [(sys_para["id"], "%s" % (sys_para['key'])) for sys_para in self.read(cr, uid, ids, ['key'], context=context)]
+
     def init(self, cr, force=False):
         """
         Initializes the parameters listed in _default_parameters.
