@@ -154,7 +154,7 @@ class mail_message(osv.Model):
             help="Message type: email for email message, notification for system "\
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',
-            help="Email address of the sender. This field is set when no matching partner is found for incoming emails.", required=True),
+            help="Email address of the sender. This field is set when no matching partner is found for incoming emails."),
         'reply_to': fields.char('Reply-To',
             help='Reply email address. Setting the reply_to bypasses the automatic thread creation.'),
         'author_id': fields.many2one('res.partner', 'Author', select=1,
