@@ -227,13 +227,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // with add_action_button()
         show_action_bar: function(){
             this.pos_widget.action_bar.show();
-            this.$el.css({'bottom':'105px'});
         },
 
         // hides the action bar. The actionbar is automatically hidden when it is empty
         hide_action_bar: function(){
             this.pos_widget.action_bar.hide();
-            this.$el.css({'bottom':'0px'});
         },
 
         // adds a new button to the action bar. The button definition takes three parameters, all optional :

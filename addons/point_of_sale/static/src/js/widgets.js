@@ -229,14 +229,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }
             this.orderlinewidgets = [];
 
-            if(this.display_mode === 'maximized'){
-                $('.pos .order-container').css({'bottom':'0px'});
-            }else if(this.display_mode === 'actionbar'){
-                $('.pos .order-container').css({'bottom':'105px'});
-            }else if(this.display_mode !== 'numpad'){
-                console.error('ERROR: OrderWidget renderElement(): wrong display_mode:',this.display_mode);
-            }
-
             var $content = this.$('.orderlines');
             this.currentOrderLines.each(_.bind( function(orderLine) {
                 var line = new module.OrderlineWidget(this, {
@@ -889,25 +881,25 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             // --------  Screens ---------
 
             this.product_screen = new module.ProductScreenWidget(this,{});
-            this.product_screen.appendTo(this.$('.pos-rightpane'));
+            this.product_screen.appendTo(this.$('.screens'));
 
             this.receipt_screen = new module.ReceiptScreenWidget(this, {});
-            this.receipt_screen.appendTo(this.$('.pos-rightpane'));
+            this.receipt_screen.appendTo(this.$('.screens'));
 
             this.payment_screen = new module.PaymentScreenWidget(this, {});
-            this.payment_screen.appendTo(this.$('.pos-rightpane'));
+            this.payment_screen.appendTo(this.$('.screens'));
 
             this.welcome_screen = new module.WelcomeScreenWidget(this,{});
-            this.welcome_screen.appendTo(this.$('.pos-rightpane'));
+            this.welcome_screen.appendTo(this.$('.screens'));
 
             this.client_payment_screen = new module.ClientPaymentScreenWidget(this, {});
-            this.client_payment_screen.appendTo(this.$('.pos-rightpane'));
+            this.client_payment_screen.appendTo(this.$('.screens'));
 
             this.scale_invite_screen = new module.ScaleInviteScreenWidget(this, {});
-            this.scale_invite_screen.appendTo(this.$('.pos-rightpane'));
+            this.scale_invite_screen.appendTo(this.$('.screens'));
 
             this.scale_screen = new module.ScaleScreenWidget(this,{});
-            this.scale_screen.appendTo(this.$('.pos-rightpane'));
+            this.scale_screen.appendTo(this.$('.screens'));
 
             // --------  Popups ---------
 
@@ -944,7 +936,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.username.replace(this.$('.placeholder-UsernameWidget'));
 
             this.action_bar = new module.ActionBarWidget(this);
-            this.action_bar.appendTo(this.$(".pos-rightpane"));
+            this.action_bar.replace(this.$(".placeholder-RightActionBar"));
 
             this.left_action_bar = new module.ActionBarWidget(this);
             this.left_action_bar.replace(this.$('.placeholder-LeftActionBar'));

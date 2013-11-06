@@ -19,6 +19,7 @@
        -moz-user-select: none;
             user-select: none;
     text-shadow: none;
+    overflow: hidden;
 }
 
 .pos * {
@@ -118,39 +119,6 @@
     background: rgb(168,168,168);
     min-height: 30px;
 }
-
-/* ---- Panes ----- */
-
-/*
-.pos .headerpane{
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    height: 40px;
-    background: rgb(100,100,100)
-}
-.pos .mainpane{
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    top: 40px;
-    bottom: 0px;
-}
-.pos .leftpane{
-    position: absolute;
-    left: 0px;
-    width: 400px;
-    top: 0px;
-    bottom: 0px;
-}
-.pos .rightpane{
-    position: absolute;
-    left: 400px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-}*/
 
 /*  ********* Generic element styling  ********* */
 
@@ -347,16 +315,10 @@
     left:0;
     width:440px;
     top:0px;
-    /*bottom:105px;*/
     bottom:0;
     border-right: solid 1px #CECBCB;
-    background-color: white;
 }
-.pos .pos-leftpane footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+.pos .pos-leftpane .pads {
     background: #F0EEEE;
     white-space: nowrap;
 }
@@ -670,6 +632,7 @@
     top:0px;
     bottom:0px;
     width:100%;
+    overflow: auto;
 }
 .pos .screen header h2 {
     margin-top: 0px;
@@ -742,21 +705,20 @@
     margin-left: 16px;
     background: white;
     color: #4c4c4c; 
+    box-shadow: 0px 2px rgba(143, 143, 143, 0.3) inset;
     -webkit-animation: all 250ms linear;
 }
 
 .pos .pos-step-container input:focus{
-    color: #5d7ad6;
+    color: rgb(130, 124, 255);
+    box-shadow: 0px 2px rgba(130, 124, 255, 0.3) inset;
     -webkit-animation: all 250ms linear;
 }
 
 .pos .pos-payment-container {
     text-align: left;
-    min-width: 500px;
-    margin-top: 50px;
-    padding: 40px;
-    background-color: #f8f8f8;
-    border: solid 1px rgb(220,220,220);
+    min-width: 320px;
+    margin-top: 40px;
 }
 .pos .pos-payment-container .left-block{
     display: inline-block;
@@ -976,8 +938,8 @@
 .pos .order-container{
     position: absolute;
     top: 0px;
-    bottom: 232px;
     width:100%;
+    height: 100%;
     background: #F0EEEE;
 }
 
@@ -1099,29 +1061,14 @@
 /*  ********* The ActionBarWidget  ********* */
 
 .pos .pos-actionbar{
-    position:absolute;
-    left:    0;
-    bottom:  0px;
     height: 105px;
-    width:  100%;
-    margin: 0;
     background: #f5f5f5;    /*#ebebeb;*/
-    border-top: solid 1px #afafb6;
+    border-top: solid 1px #cecece;
     z-index:900;
 }
 
 .pos .pos-actionbar ul{
     list-style:  none;
-}
-
-.pos .pos-actionbar-left-pane{
-    height: 100%;
-    width:  434px;
-    margin: 0px;
-    padding-left:3px;
-    padding-right:3px;
-    border-right: solid 1px #dfdfdf;
-    float:  left;
 }
 
 .pos .pos-actionbar-button-list{
