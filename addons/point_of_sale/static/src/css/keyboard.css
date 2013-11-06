@@ -28,7 +28,6 @@
     background-color: #DDD;
     font-size: 12px;
     line-height:40px;
-    border: 1px solid #CCC;
 	-webkit-border-radius: 5px;
     position:absolute;
     top:0;
@@ -41,13 +40,14 @@
 	background-color: #fff;
 	border: 1px solid #f0f0f0;
     top:0;
+    cursor: pointer;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
     -webkit-transition-property: top, background-color;
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: linear;
 }
-.pos .keyboard li:hover {
+.pos .keyboard li:active{
 	position: relative;
 	top: 2px;
 	left: 0px;

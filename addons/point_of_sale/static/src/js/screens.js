@@ -495,6 +495,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.set_weight(0);
             this.renderElement();
 
+            this.hotkey_handler = function(event){
+                if(event.which === 13){
+                    self.order_product();
+                    self.pos_widget.screen_selector.set_current_screen(self.next_screen);
+                }else if(event.which === 27){
+                    self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
+                }
+            };
+
+            $('body').on('keyup',this.hotkey_handler);
+
             this.add_action_button({
                     label: _t('Back'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
@@ -560,6 +571,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         close: function(){
             var self = this;
             this._super();
+            $('body').off('keyup',this.hotkey_handler);
 
             this.pos.proxy_queue.clear();
             this.pos.proxy_queue.schedule(function(){
@@ -662,6 +674,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
                        self.queue.schedule(self.cancel);
+                       self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
                     }
                 });
         },
@@ -681,6 +694,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         show_numpad:     false,
         show_leftpane:   false,
+        start: function(){
+            this._super();
+            $('.goodbye-message').click(function(){
+                $(this).addClass('oe_hidden');
+            });
+        },
+
         barcode_product_action: function(code){
             this.pos.proxy.transaction_start();
             this._super(code);
@@ -871,6 +891,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
+            this.hotkey_handler = function(event){
+                if(event.which === 13){
+                    self.validateCurrentOrder();
+                }else if(event.which === 27){
+                    self.back();
+                }
+            };
+
+            $('body').on('keyup',this.hotkey_handler);
+
+
             if(this.pos.iface_cashdrawer){
                 this.pos.proxy.open_cashbox();
             }
@@ -881,12 +912,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     label: _t('Back'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
-                        _.each(self.paymentlinewidgets, function(widget){
-                            if( widget.payment_line.get_amount() === 0 ){
-                                widget.payment_line.destroy();
-                            }
-                        });
-                        self.pos_widget.screen_selector.set_current_screen(self.back_screen);
+                        self.back();
                     },
                 });
 
@@ -917,9 +943,15 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             this.pos_widget.order_widget.set_numpad_state(null);
             this.pos_widget.payment_screen.set_numpad_state(null);
+            $('body').off('keyup',this.hotkey_handler);
         },
         back: function() {
-            this.pos_widget.screen_selector.set_current_screen(self.back_screen);
+            _.each(this.paymentlinewidgets, function(widget){
+                if( widget.payment_line.get_amount() === 0 ){
+                    widget.payment_line.destroy();
+                }
+            });
+            this.pos_widget.screen_selector.set_current_screen(this.back_screen);
         },
         validateCurrentOrder: function(options) {
             var self = this;
@@ -927,6 +959,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             var currentOrder = this.pos.get('selectedOrder');
 
+            if(currentOrder.getPaidTotal() + 0.000001 < currentOrder.getTotalTaxIncluded()){
+                return;
+            }
 
             if(options.invoice){
                 // deactivate the validation button while we try to send the order

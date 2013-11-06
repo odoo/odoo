@@ -152,7 +152,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         ['name','journal_ids','warehouse_id','journal_id','pricelist_id',
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
                          'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
-                         'iface_print_via_proxy','iface_cashdrawer','iface_invoicing','state','sequence_id','session_ids'],
+                         'iface_print_via_proxy','iface_cashdrawer','iface_invoicing','iface_big_scrollbars',
+                         'state','sequence_id','session_ids'],
                         [['id','=', self.get('pos_session').config_id[0]]]
                     );
                 }).then(function(configs){
@@ -164,6 +165,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.iface_self_checkout       =  !!pos_config.iface_self_checkout;
                     self.iface_cashdrawer          =  !!pos_config.iface_cashdrawer;
                     self.iface_invoicing           =  !!pos_config.iface_invoicing;
+                    self.iface_big_scrollbars      =  !!pos_config.iface_big_scrollbars;
 
                     return self.fetch('stock.warehouse',[],[['id','=',pos_config.warehouse_id[0]]]);
                 }).then(function(shops){

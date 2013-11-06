@@ -70,21 +70,24 @@ function openerp_pos_keyboard(instance, module){ //module is instance.point_of_s
         // Clears the content of the input zone.
         deleteAllCharacters: function(){
             var $input = this.$target;
-            $input[0].value = "";
-            $input.keydown();
-            $input.keyup();
+            if($input[0].value){
+                $input[0].value = "";
+                $input.keydown();
+                $input.keyup();
+            }
         },
 
         // Makes the keyboard show and slide from the bottom of the screen.
         show:  function(){
-            $('.keyboard_frame').show().animate({'height':'235px'}, 500, 'swing');
+            $('.keyboard_frame').show().css({'height':'235px'});
         },
         
         // Makes the keyboard hide by sliding to the bottom of the screen.
         hide:  function(){
-            var self = this;
-            var frame = $('.keyboard_frame');
-            frame.animate({'height':'0'}, 500, 'swing', function(){ frame.hide(); self.reset(); });
+            $('.keyboard_frame')
+                .css({'height':'0'})
+                .hide();
+            this.reset();
         },
         
         //What happens when the shift key is pressed : toggle case, remove capslock

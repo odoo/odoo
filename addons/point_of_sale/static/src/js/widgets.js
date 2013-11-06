@@ -546,7 +546,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             // filter the products according to the search string
             this.$('.searchbox input').keyup(function(event){
-                console.log('event',event);
                 query = $(this).val().toLowerCase();
                 if(query){
                     if(event.which === 13){
@@ -841,6 +840,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 self.pos.add_new_order();
 
                 self.build_widgets();
+
+                if(self.pos.iface_big_scrollbars){
+                    self.$el.addClass('big-scrollbars');
+                }
 
                 self.screen_selector.set_default_screen();
 
