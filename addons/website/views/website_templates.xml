@@ -176,19 +176,21 @@
                                             </h2>
                                         </div>
                                         <div class="col-md-5 col-lg-offset-1" name="about_us">
-                                            <h4>
-                                                <span t-field="res_company.name">Your Company</span>
-                                                <small> - <a href="/page/website.aboutus">About us</a></small>
-                                            </h4>
-                                            <p>
-                                                We are a team of passionated people whose goal is to improve everyone's
-                                                life through disruptive products. We build great products to solve your
-                                                business problems.
-                                            </p>
-                                            <p>
-                                                Our products are designed for small to medium companies willing to optimize
-                                                their performance.
-                                            </p>
+                                            <div>
+                                                <h4>
+                                                    <span t-field="res_company.name">Your Company</span>
+                                                    <small> - <a href="/page/website.aboutus">About us</a></small>
+                                                </h4>
+                                                <p>
+                                                    We are a team of passionated people whose goal is to improve everyone's
+                                                    life through disruptive products. We build great products to solve your
+                                                    business problems.
+                                                </p>
+                                                <p>
+                                                    Our products are designed for small to medium companies willing to optimize
+                                                    their performance.
+                                                </p>
+                                            </div>
                                             <ul class="nav nav-pills js_language_selector" t-if="request.multilang and
                                                     (len(website.language_ids) &gt; 1 or editable)">
                                                 <li t-foreach="website.language_ids" t-as="lg">
@@ -209,7 +211,7 @@
                                     </div>
                                 </div>
                                 <div class="container mt16">
-                                    <div class="pull-right" t-ignore="true">
+                                    <div class="pull-right" t-ignore="true" t-if="not editable">
                                         Create a <a href="http://openerp.com/apps/website">free website</a> with
                                         <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                     </div>

@@ -11,6 +11,15 @@
         if (!is_smartphone) {
             website.ready().then(website.init_editor);
         }
+
+        $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
+            // Prevent dropdown closing when a contenteditable children is focused
+            if (ev.originalEvent
+                    && $(ev.target).has(ev.originalEvent.target).length
+                    && $(ev.originalEvent.target).is('[contenteditable]')) {
+                ev.preventDefault();
+            }
+        });
     });
 
     function link_dialog(editor) {
@@ -361,7 +370,7 @@
                         });
                         // Adding Static Menus
                         menu.append('<li class="divider"></li><li class="js_change_theme"><a href="/page/website.themes">Change Theme</a></li>');
-                        menu.append('<li class="divider"></li><li><a data-action="ace" href="#">Advanced view editor</a></li>');
+                        menu.append('<li class="divider"></li><li><a data-action="ace" href="#">HTML Editor</a></li>');
                         self.trigger('rte:customize_menu_ready');
                     }
                 );

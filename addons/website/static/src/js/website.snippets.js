@@ -361,7 +361,7 @@
                             }
 
                             self.create_overlay($target);
-                            $target.data("snippet-editor").build_snippet($target);
+                            $target.data("snippet-editor").drop_and_build_snippet($target);
 
                         } else {
                             $target = $(this).data('target');
@@ -369,7 +369,7 @@
                             self.create_overlay($target);
                             if (website.snippet.editorRegistry[snipped_id]) {
                                 var snippet = new website.snippet.editorRegistry[snipped_id](self, $target);
-                                snippet.build_snippet($target);
+                                snippet.drop_and_build_snippet($target);
                             }
                         }
                         setTimeout(function () {self.make_active($target);},0);
@@ -711,7 +711,7 @@
 
             if (website.snippet.editorRegistry[snipped_id]) {
                 var snippet = new website.snippet.editorRegistry[snipped_id](this, this.$target);
-                snippet.build_snippet(this.$target);
+                snippet.drop_and_build_snippet(this.$target);
             }
             var _class = "oe_snippet_" + snipped_id + " " + ($li.data("class") || "");
             if (active) {
@@ -757,11 +757,11 @@
         },
 
         /*
-        *  build_snippet
+        *  drop_and_build_snippet
         *  This method is called just after that a thumbnail is drag and dropped into a drop zone
         *  (after the insertion of this.$body, if this.$body exists)
         */
-        build_snippet: function ($target) {
+        drop_and_build_snippet: function ($target) {
         },
 
         /* onFocus
@@ -1027,7 +1027,7 @@
         },
     });
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
-        build_snippet: function() {
+        drop_and_build_snippet: function() {
             var id = 0;
             $("body .carousel").each(function () {
                 var _id = +$(this).attr("id").replace(/^myCarousel/, '');
@@ -1038,10 +1038,6 @@
             this.$target.attr("id", "myCarousel" + id);
             this.$target.find(".carousel-control").attr("href", "#myCarousel" + id);
             this.$target.find("[data-target='#myCarousel']").attr("data-target", "#myCarousel" + id);
-
-            this.$target.attr('contentEditable', 'false')
-                .find('.content, .carousel-image img')
-                    .attr('contentEditable', 'true');
 
             this.rebind_event();
         },
@@ -1096,6 +1092,10 @@
                 self.$target.carousel($(this).data('slide')); });
             this.$target.off('click').on('click', '.carousel-indicators [data-target]', function () {
                 self.$target.carousel(+$(this).data('slide-to')); });
+
+            this.$target.attr('contentEditable', 'false')
+                .find('.content, .carousel-image img')
+                    .attr('contentEditable', 'true');
         },
         on_add: function (e) {
             e.preventDefault();
