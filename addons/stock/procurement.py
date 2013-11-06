@@ -209,11 +209,23 @@ class procurement_order(osv.osv):
 
     def _check(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'move':
+            done_test_list = []
+            done_cancel_test_list = []
             for move in procurement.move_ids:
-                if not move.state in ('done', 'cancel'):
-                    return False
-            else:
+                done_test_list.append(move.state == 'done')
+                done_cancel_test_list.append(move.state in ('done', 'cancel'))
+            at_least_one_done = any(done_test_list)
+            all_done_or_cancel = all(done_cancel_test_list)
+            if not all_done_or_cancel:
+                return False
+            elif at_least_one_done and all_done_or_cancel:
                 return True
+            else:
+                #all move are cancelled
+                self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+                self.message_post(cr, uid, [procurement.id], body=_('All stock moves have been cancelled for this procurement.'), context=context)
+                return False
+            
         return super(procurement_order, self)._check(cr, uid, procurement, context)
 
 
