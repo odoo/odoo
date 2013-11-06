@@ -11,6 +11,15 @@
         if (!is_smartphone) {
             website.ready().then(website.init_editor);
         }
+
+        $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
+            // Prevent dropdown closing when a contenteditable children is focused
+            if (ev.originalEvent
+                    && $(ev.target).has(ev.originalEvent.target).length
+                    && $(ev.originalEvent.target).is('[contenteditable]')) {
+                ev.preventDefault();
+            }
+        });
     });
 
     function link_dialog(editor) {
