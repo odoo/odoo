@@ -6,7 +6,7 @@ import math
 import simplejson
 import traceback
 import urllib
-from urlparse import urljoin
+import urlparse
 
 import werkzeug
 import werkzeug.exceptions
@@ -53,29 +53,33 @@ def auth_method_public():
         request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
 
-def url_for(path, lang=None, keep_query=None):
-    if request:
-        path = urljoin(request.httprequest.path, path)
+def url_for(path_or_uri, lang=None, keep_query=None):
+    location = path_or_uri.strip()
+    url = urlparse.urlparse(location)
+    if request and not url.netloc and not url.scheme:
+        location = urlparse.urljoin(request.httprequest.path, location)
         langs = request.context.get('langs')
-        if path[0] == '/' and (len(langs) > 1 or lang):
-            ps = path.split('/')
+        if location[0] == '/' and (len(langs) > 1 or lang):
+            ps = location.split('/')
             lang = lang or request.context.get('lang')
             if ps[1] in langs:
                 ps[1] = lang
             else:
                 ps.insert(1, lang)
-            path = '/'.join(ps)
+            location = '/'.join(ps)
         if keep_query:
-            keep = []
-            params = werkzeug.url_decode(request.httprequest.query_string)
-            params_keys = tuple(params.keys())
+            url = urlparse.urlparse(location)
+            location = url.path
+            params = werkzeug.url_decode(url.query)
+            query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
             for kq in keep_query:
-                keep += fnmatch.filter(params_keys, kq)
-            if keep:
-                params = dict([(k, params[k]) for k in keep])
-                path += u'?%s' % werkzeug.urls.url_encode(params)
+                for param in fnmatch.filter(query_params, kq):
+                    params[param] = request.params[param]
+            params = werkzeug.urls.url_encode(params)
+            if params:
+                location += '?%s' % params
 
-    return path
+    return location
 
 def urlplus(url, params):
     if not params:
