@@ -336,7 +336,6 @@ class TestNewFields(common.TransactionCase):
         # create a new partner
         partner = self.Partner.new()
         self.assertFalse(partner.id)
-        self.assertTrue(partner.draft)
 
         # assign some fields; should have no side effect
         partner.name = "Foo"

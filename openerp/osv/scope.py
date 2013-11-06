@@ -24,6 +24,7 @@
     objects. The object :obj:`proxy` is a proxy object to the current scope.
 """
 
+from contextlib import contextmanager
 from werkzeug.local import Local, release_local
 
 
@@ -120,7 +121,8 @@ class Scope(object):
         The scope provides extra attributes:
 
          - :attr:`registry`, the model registry of the current database,
-         - :attr:`cache`, a records cache (see :class:`openerp.osv.cache.Cache`).
+         - :attr:`cache`, a records cache (see :class:`openerp.osv.cache.Cache`),
+         - :attr:`draft`, a boolean indicating whether the scope is in draft mode.
     """
     def __new__(cls, cr, uid, context):
         if context is None:
@@ -138,6 +140,7 @@ class Scope(object):
         scope.cr, scope.uid, scope.context = scope.args = args
         scope.registry = RegistryManager.get(cr.dbname)
         scope.cache = Cache()
+        scope.is_draft = False
         scope_list.append(scope)
         return scope
 
@@ -208,6 +211,14 @@ class Scope(object):
     def lang(self):
         """ return the current language code """
         return self.context.get('lang') or 'en_US'
+
+    @contextmanager
+    def draft(self):
+        """ introduce a context where the scope is in draft mode """
+        old = self.is_draft
+        self.is_draft = True
+        yield
+        self.is_draft = old
 
 
 #

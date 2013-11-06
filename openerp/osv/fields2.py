@@ -330,7 +330,8 @@ class Field(object):
         else:
             # compute self for the records without value for self in their cache
             recs = record.browse(record._model_cache.without_field(self.name))
-            self.compute_value(recs, check_exists=True)
+            with recs._scope.draft():
+                self.compute_value(recs, check_exists=True)
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
@@ -482,17 +483,13 @@ class Field(object):
             else:
                 scope.invalidate(field.model_name, field.name, None)
 
-    def modified_draft(self, record):
-        """ Same as :meth:`modified`, but in the case where `record` is a draft
-            instance.
-        """
-        assert record.draft and len(record) == 1
-        # invalidate cache for self
-        cache = record._record_cache
-        cache.pop(self.name, None)
-        # invalidate dependent fields on record only
-        for field, _path in self._triggers:
-            if field.model_name == record._name:
+    def modified_draft(self, records):
+        """ Same as :meth:`modified`, but in draft mode. """
+        # invalidate self and dependent fields on records only
+        model_name = self.model_name
+        fields = [self] + [f for f, _ in self._triggers if f.model_name == model_name]
+        for cache in records._caches:
+            for field in fields:
                 cache.pop(field.name, None)
 
 
@@ -831,7 +828,6 @@ class _RelationalMulti(_Relational):
                         result += self.comodel.new(command[2])
                     elif command[0] == 1:
                         record = self.comodel.browse(command[1])
-                        record.draft = True
                         record.update(command[2])
                         result += record
                     elif command[0] == 2:
@@ -859,10 +855,10 @@ class _RelationalMulti(_Relational):
     def convert_to_write(self, value):
         result = [(5,)]
         for record in value:
-            if record.draft:
-                values = record._convert_to_write(record.get_draft_values())
-                command = (1, record.id, values) if record.id else (0, 0, values)
-                result.append(command)
+            # TODO: modified record (1, id, values)
+            if not record.id:
+                values = record._convert_to_write(record._read_cache())
+                result.append((0, 0, values))
             else:
                 result.append((4, record.id))
         return result

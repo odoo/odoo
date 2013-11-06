@@ -1361,7 +1361,7 @@ class BaseModel(object):
             record[name]                # force evaluation of defaults
 
         # retrieve defaults from record's values
-        return self._convert_to_write(record.get_draft_values())
+        return self._convert_to_write(record._read_cache())
 
     def add_default_value(self, name):
         """ Set the default value of field `name` to the new record `self`.
@@ -2791,7 +2791,7 @@ class BaseModel(object):
             record = self.new()
             field = self._fields[column_name]
             field.determine_default(record)
-            defaults = record.get_draft_values()
+            defaults = record._read_cache()
             if column_name in defaults:
                 default = field.convert_to_write(defaults[column_name])
 
@@ -3476,11 +3476,9 @@ class BaseModel(object):
         result = select._read_flat(old_fields, load=load)
 
         # update record caches with old-style fields
-        select._prepare_cache(old_fields)
         for values in result:
             record = self.browse(values['id'])
-            for name in old_fields:
-                record[name] = values[name]
+            record._update_cache(dict((name, values[name]) for name in old_fields))
 
         # read new-style fields on records
         for values in result:
@@ -5441,52 +5439,29 @@ class BaseModel(object):
         )
 
     #
-    # Record/cache updates
+    # Record cache read/update
     #
+
+    def _read_cache(self):
+        """ Return the cache of `self` as a dictionary mapping field names to
+            values.
+        """
+        return dict(item
+            for item in self._record_cache.iteritems()
+            if item[0] not in MAGIC_COLUMNS
+        )
 
     def _update_cache(self, values):
         """ Update the cache of record `self[0]` with `values`. Only the cache
-            is be updated, no side effect happens.
+            is updated, no side effect happens.
         """
-        for name, value in values.iteritems():
-            self._record_cache.set_busy(name)
-            self[name] = value
-
-    def _prepare_cache(self, names):
-        """ Prepare records in `self` to update field `names` in cache only. """
-        for cache in self._caches:
-            for name in names:
-                cache.set_busy(name)
+        with self._scope.draft():
+            self.update(values)
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
         for name, value in values.iteritems():
             self[name] = value
-
-    #
-    # Draft records - records on which the field setters only affect the cache
-    #
-
-    @property
-    def draft(self):
-        """ Return whether ``self[0]`` is a draft record. """
-        return self and self._record_cache.draft
-
-    @draft.setter
-    def draft(self, value):
-        """ Set whether ``self[0]`` is a draft record. """
-        self._record_cache.draft = bool(value)
-
-    def get_draft_values(self):
-        """ Return the draft values of `self` as a dictionary mapping field
-            names to values.
-        """
-        if self._id:
-            _logger.warning("%s.get_draft_values() non optimal", self[0])
-        return dict(item
-            for item in self._record_cache.iteritems()
-            if item[0] not in MAGIC_COLUMNS
-        )
 
     #
     # New records - represent records that do not exist in the database yet;
@@ -5496,14 +5471,13 @@ class BaseModel(object):
     def new(self, values={}):
         """ Return a new record instance attached to the current scope, and
             initialized with the `values` dictionary. Such a record does not
-            exist in the database. The returned instance is marked as draft.
+            exist in the database.
         """
         assert 'id' not in values, "New records do not have an 'id'."
         scope = scope_proxy.current
         record_cache = scope.cache[self._name][False]
         record = self._instance(scope, (record_cache,))
         record._update_cache(values)
-        record.draft = True
         return record
 
     #
