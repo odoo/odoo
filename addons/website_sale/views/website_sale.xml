@@ -33,6 +33,13 @@
 
     <!-- Product list -->
 
+    <template id="search_hidden_fields" name="Search hidden fields">
+        <t t-if="search">
+            <input type="hidden" name="category" t-att-value="search.get('category') or ''"/>
+            <input type="hidden" name="filter" t-att-value="search.get('filter') or ''"/>
+        </t>
+    </template>
+
     <template id="products_cart" name="Shopping cart">
       <div class="ribbon-wrapper">
         <div class="ribbon">Promo</div>
@@ -89,9 +96,8 @@
                             <t t-set="classname">pull-right</t>
                         </t>
                         <form t-action="/shop/" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;" t-keep-query="category,search,facettes">
-                            <div class="form-group">
-                                <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
-                            </div>
+                            <t t-call="website_sale.search_hidden_fields" />
+                            <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
                         </form>
                     </div>
                 </div>
@@ -251,17 +257,10 @@
                         </li>
                       </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
-                      <form t-action="/shop/" method="get" class="pull-right" t-keep-query="category,facettes">
-                          <div class="input-group">
-                              <t t-if="search">
-                              <t t-foreach="search.items()" t-as="key">
-                                  <input t-att-name="key[0]" t-att-value="key[1]"/>
-                              </t>
-                              </t>
-                              <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
-                              <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or ''"/>
-                          </div>
-                      </form>
+                        <form t-action="/shop/" method="get" class="pull-right" t-keep-query="category,facettes">
+                            <t t-call="website_sale.search_hidden_fields" />
+                            <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
+                        </form>
                   </div>
                 </div>
               </section>
