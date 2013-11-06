@@ -112,6 +112,8 @@ def run(args):
     else:
         args.addons = []
 
+    # ensure no duplication in addons paths
+    args.addons = list(set(args.addons))
     config['addons_path'] = ','.join(args.addons)
 
     import logging
@@ -139,6 +141,7 @@ def run(args):
     for test_module in test_modules:
         print '    ', test_module.__name__
     print
+    sys.stdout.flush()
 
     if not args.dry_run:
         suite = unittest2.TestSuite()
