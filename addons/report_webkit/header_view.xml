@@ -5,12 +5,12 @@
             <field name="model">ir.header_img</field>
             <field name="arch" type="xml">
                 <form string="Header Image" version="7.0">
+                    <field name="img" widget="image" class="oe_left"/>
                     <group>
                         <field name="name"/>
                         <field name="type"/>
-                        <field name='company_id' />
+                        <field name="company_id"/>
                     </group>
-                    <field name="img" widget="image" class="oe_right"/>
                 </form>
             </field>
         </record>
