@@ -546,14 +546,15 @@ class Home(http.Controller):
 
         def redirect(db):
             query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-            query.update({'db': db})
+            query['db'] = db
             redirect = request.httprequest.path + '?' + urllib.urlencode(query)
             return redirect_with_hash(redirect)
 
         if db is None and guessed_db is not None:
             return redirect(guessed_db)
 
-        if db is not None and db != guessed_db:
+        if db is not None and db != request.session.db:
+            # temp hack until fixed in trunk
             request.session.logout()
             request.session.db = db
             guessed_db = db
