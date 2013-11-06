@@ -30,6 +30,7 @@
                         <button name="run" states="confirmed,exception" string="Run Procurement" class="oe_highlight" type="object"/>
                         <button name="check" states="running" string="Check Procurement" class="oe_highlight" type="object"/>
                         <button name="cancel" states="exception,confirmed,running" string="Cancel Procurement" type="object"/>
+                        <button name="reset_to_confirmed" states="cancel" string="Reconfirm Procurement" type="object"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,running,done" />
                     </header>
                     <sheet>
@@ -83,7 +84,7 @@
             <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-			<field name="domain">[('group_id','=',active_id)]</field>			
+            <field name="domain">[('group_id','=',active_id)]</field>            
         </record>
         
         <record id="procurement_group_form_view" model="ir.ui.view">
@@ -92,9 +93,9 @@
             <field name="arch" type="xml">
                 <form string="Procurement group" version="7.0">
                     <sheet>
-						<div class="oe_right oe_button_box">
-							<button name="%(do_view_procurements)d" string="View related procurements" type="action" />
-            			</div>
+                        <div class="oe_right oe_button_box">
+                            <button name="%(do_view_procurements)d" string="View related procurements" type="action" />
+                        </div>
                         <group>
                             <field name="name"/>
                             <field name="move_type"/>

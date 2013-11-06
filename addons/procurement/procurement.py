@@ -164,8 +164,10 @@ class procurement_order(osv.osv):
         return {}
 
     def cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+
+    def reset_to_confirmed(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
 
     def run(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
