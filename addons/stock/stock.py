@@ -2380,6 +2380,7 @@ class stock_warehouse(osv.osv):
                 'picking_type_id': pick_type_id,
                 'procure_method': 'make_to_order',
                 'warehouse_id': supplied_warehouse.id,
+                'propagate_warehouse_id': warehouse.id,
             })
         return pull_rules_list
 
