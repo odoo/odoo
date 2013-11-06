@@ -21,7 +21,14 @@
                 <t t-call="website.publish_management">
                     <t t-set="object" t-value="blog_post"/>
                     <t t-set="publish_edit" t-value="True"/>
-                    <t t-set="publish_duplicate" t-value="'/blog/#{blog_post.id}/duplicate'"/>
+                    <li>
+                        <a href="#" t-attf-data-href="/blog/#{blog_post.id}/duplicate">Duplicate</a>
+                        <script>
+                            var $a=$("[data-href$='/duplicate']");
+                            $a.attr("href", $a.data('href')).removeAttr('data-href');
+                            $a.next("script").remove();
+                        </script>
+                    </li>
                 </t>
             </div>
             <h2 class="text-center">
@@ -78,7 +85,14 @@
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>
-                <t t-set="publish_duplicate" t-value="'/blog/%s/duplicate' % (blog_post.id)"/>
+                <li>
+                    <a href="#" t-attf-data-href="/blog/#{blog_post.id}/duplicate">Duplicate</a>
+                    <script>
+                        var $a=$("[data-href$='/duplicate']");
+                        $a.attr("href", $a.data('href')).removeAttr('data-href');
+                        $a.next("script").remove();
+                    </script>
+                </li>
             </t>
         </div>
         <div class="clearfix"/>
@@ -175,7 +189,7 @@
     </template>
 
     <!-- Page -->
-    <template id="index" name="Blog" page="True">
+    <template id="index" name="Blog">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"></script>

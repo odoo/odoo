@@ -263,10 +263,11 @@ class Ecommerce(http.Controller):
                     filter[index.index(cat_id)].append( cat[2] )
             post.pop(key)
 
-        return request.redirect("/shop/?filter=%s%s%s" % (
+        return request.redirect("/shop/?filter=%s%s%s%s" % (
                 simplejson.dumps(filter).replace(" ", ""),
                 add_filter and "&add_filter=%s" % add_filter or "",
-                post and "&%s" % urllib.urlencode(post) or ""
+                post.get("search") and "&search=%s" % post.get("search") or "",
+                post.get("category") and "&category=%s" % post.get("category") or ""
             ))
 
     def attributes_to_ids(self, attributes):
@@ -351,8 +352,8 @@ class Ecommerce(http.Controller):
         category_list = sorted(category_list, key=lambda category: category[1])
 
         category = None
-        if post.get('category_id') and int(post.get('category_id')):
-            category = category_obj.browse(request.cr, request.uid, int(post.get('category_id')), context=request.context)
+        if post.get('category') and int(post.get('category')):
+            category = category_obj.browse(request.cr, request.uid, int(post.get('category')), context=request.context)
 
         request.context['pricelist'] = self.get_pricelist()
         product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)
