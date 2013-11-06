@@ -1,4 +1,3 @@
-@charset "utf-8";
 /* ---- CKEditor Minimal Reset ---- */
 .navbar.navbar-inverse .cke_chrome {
   border: none;
@@ -237,6 +236,14 @@ ul.oe_menu_editor li.mjs-nestedSortable-expanded > div > .disclose > span:before
 
 .modal .image-preview {
   margin-bottom: 0.5em;
+}
+
+.modal.nosave .modal-footer button.save {
+  display: none;
+}
+.modal.nosave .modal-footer button.wait {
+  display: inline-block !important;
+  visibility: visible !important;
 }
 
 .cke_widget_wrapper {
