@@ -63,8 +63,8 @@ def get_test_modules(module, submodule, explode):
         ms = submodules
     elif submodule == '__fast_suite__':
         # `suite` was used before the 6.1 release instead of `fast_suite`.
-        ms = fast_suite if fast_suite else getattr(m, 'suite', None)
-        if ms is None:
+        ms = fast_suite if hasattr(m, 'fast_suite') else getattr(m, 'suite', None)
+        if not ms:
             if explode:
                 print 'The module `%s` has no defined test suite.' % (module,)
                 show_submodules_and_exit()
@@ -72,7 +72,7 @@ def get_test_modules(module, submodule, explode):
                 ms = []
     elif submodule == '__sanity_checks__':
         ms = checks
-        if ms is None:
+        if not ms:
             if explode:
                 print 'The module `%s` has no defined sanity checks.' % (module,)
                 show_submodules_and_exit()
@@ -135,7 +135,11 @@ def run(args):
     else:
         test_modules = get_test_modules(module, submodule, explode=True)
 
-    # Run the test suite.
+    print 'Test modules:'
+    for test_module in test_modules:
+        print '    ', test_module.__name__
+    print
+
     if not args.dry_run:
         suite = unittest2.TestSuite()
         for test_module in test_modules:
@@ -143,10 +147,6 @@ def run(args):
         r = unittest2.TextTestRunner(verbosity=2).run(suite)
         if r.errors or r.failures:
             sys.exit(1)
-    else:
-        print 'Test modules:'
-        for test_module in test_modules:
-            print ' ', test_module.__name__
 
 def add_parser(subparsers):
     parser = subparsers.add_parser('run-tests',
