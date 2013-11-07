@@ -745,7 +745,7 @@ class mrp_production(osv.osv):
 
         if not production.move_lines and production.state == 'ready':
             # trigger workflow if not products to consume (eg: services)
-            self.signal_button_produce(cr, uid, [production_id])
+            production.signal_workflow('button_produce')
 
         produced_qty = 0
         for produced_product in production.move_created_ids2:
@@ -824,7 +824,7 @@ class mrp_production(osv.osv):
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
-        self.signal_button_produce_done(cr, uid, [production_id])
+        self.signal_workflow(cr, uid, [product_id], 'button_produce_done')
         return True
 
     def _costs_generate(self, cr, uid, production):
@@ -920,7 +920,7 @@ class mrp_production(osv.osv):
                     'move_id': shipment_move_id,
                     'company_id': production.company_id.id,
                 })
-        procurement_order.signal_button_confirm(cr, uid, [procurement_id])
+        procurement_order.signal_workflow(cr, uid, [procurement_id], 'button_confirm')
         return procurement_id
 
     def _make_production_internal_shipment_line(self, cr, uid, production_line, shipment_id, parent_move_id, destination_location_id=False, context=None):
@@ -1052,7 +1052,7 @@ class mrp_production(osv.osv):
                     self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
 
             if shipment_id:
-                self.pool.get('stock.picking').signal_button_confirm(cr, uid, [shipment_id])
+                self.pool.get('stock.picking').signal_workflow(cr, uid, [shipment_id], 'button_confirm')
             production.write({'state':'confirmed'})
         return shipment_id
 

@@ -19,7 +19,7 @@
 -
   !python {model: hr.holidays}: |
      self.holidays_reset(cr, uid, [ref('hr_holidays_employee1_cl')])
-     self.signal_confirm(cr, uid, [ref('hr_holidays_employee1_cl')])
+     self.signal_workflow(cr, uid, [ref('hr_holidays_employee1_cl')], 'confirm')
 -
   I validate the holiday request by clicking on "To Approve" button.
 -

@@ -766,7 +766,7 @@ class stock_picking(osv.osv):
         """
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state == 'draft':
-                pick.signal_button_confirm()
+                pick.signal_workflow('button_confirm')
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
                 raise osv.except_osv(_('Warning!'),_('Not enough stock, unable to reserve the products.'))
@@ -791,7 +791,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             if not pick.move_lines:
                 raise osv.except_osv(_('Error!'),_('You cannot process picking without stock moves.'))
-            pick.signal_button_confirm()
+            pick.signal_workflow('button_confirm')
         return True
 
     def draft_validate(self, cr, uid, ids, context=None):
@@ -1347,18 +1347,18 @@ class stock_picking(osv.osv):
 
             # At first we confirm the new picking (if necessary)
             if new_picking:
-                self.signal_button_confirm(cr, uid, [new_picking])
+                self.signal_workflow(cr, uid, [new_picking], 'button_confirm')
                 # Then we finish the good picking
                 self.write(cr, uid, [pick.id], {'backorder_id': new_picking})
                 self.action_move(cr, uid, [new_picking], context=context)
-                self.signal_button_done(cr, uid, [new_picking])
+                self.signal_workflow(cr, uid, [new_picking], 'button_done')
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
                 self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
             else:
                 self.action_move(cr, uid, [pick.id], context=context)
-                self.signal_button_done(cr, uid, [pick.id])
+                self.signal_workflow(cr, uid, [pick.id], 'button_done')
                 delivered_pack_id = pick.id
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
@@ -2094,7 +2094,7 @@ class stock_move(osv.osv):
                 })
                 new_moves.append(self.browse(cr, uid, [new_id])[0])
             if pickid:
-                self.signal_button_confirm(cr, uid, [pickid])
+                self.signal_workflow(cr, uid, [pickid], 'button_confirm')
         if new_moves:
             new_moves += self.create_chained_picking(cr, uid, new_moves, context)
         return new_moves
@@ -2761,7 +2761,7 @@ class stock_move(osv.osv):
                 res = cr.fetchall()
                 if len(res) == len(move.picking_id.move_lines):
                     picking_obj.action_move(cr, uid, [move.picking_id.id])
-                    picking_obj.signal_button_done(cr, uid, [move.picking_id.id])
+                    move.picking_id.signal_workflow('button_done')
 
         return [move.id for move in complete]
 

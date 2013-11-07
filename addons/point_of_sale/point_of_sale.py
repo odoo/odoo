@@ -469,7 +469,7 @@ class pos_session(osv.osv):
                         _('Error!'),
                         _("You cannot confirm all orders of this session, because they have not the 'paid' status"))
                 else:
-                    pos_order_obj.signal_done(cr, uid, [order.id])
+                    order.signal_workflow('done')
 
         return True
 
@@ -539,12 +539,12 @@ class pos_order(osv.osv):
                     'journal': cash_journal.id,
                 }, context=context)
             order_ids.append(order_id)
-            self.signal_paid(cr, uid, [order_id])
+            self.signal_workflow(cr, uid, [order_id], 'paid')
 
             if to_invoice:
                 self.action_invoice(cr, uid, [order_id], context)
                 order_obj = self.browse(cr, uid, order_id, context)
-                self.pool['account.invoice'].signal_invoice_open(cr, uid, [order_obj.invoice_id.id])
+                self.pool['account.invoice'].signal_workflow(cr, uid, [order_obj.invoice_id.id], 'invoice_open')
 
         return order_ids
 
@@ -738,7 +738,7 @@ class pos_order(osv.osv):
                 if line.qty < 0:
                     location_id, output_id = output_id, location_id
             
-            picking_obj.signal_button_confirm(cr, uid, [picking_id])
+            picking_obj.signal_workflow(cr, uid, [picking_id], 'button_confirm')
             picking_obj.force_assign(cr, uid, [picking_id], context)
         return True
 
@@ -749,7 +749,7 @@ class pos_order(osv.osv):
         stock_picking_obj = self.pool.get('stock.picking')
         wf_service = netsvc.LocalService("workflow")
         for order in self.browse(cr, uid, ids, context=context):
-            stock_picking_obj.signal_button_cancel(cr, uid, [order.picking_id.id])
+            order.picking_id.signal_workflow('button_cancel')
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
                 raise osv.except_osv(_('Error!'), _('Unable to cancel the picking.'))
         self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
@@ -906,8 +906,8 @@ class pos_order(osv.osv):
                 inv_line['invoice_line_tax_id'] = [(6, 0, [x.id for x in line.product_id.taxes_id] )]
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
-            self.signal_invoice(cr, uid, [order.id])
-            inv_ref.signal_validate(cr, uid, [inv_id])
+            order.workfow_signal('invoice')
+            inv_ref_signal_workflow(cr, uid, [inv_id], 'validate')
 
         if not inv_ids: return {}
 

@@ -161,7 +161,7 @@
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 SUPPL USD/EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
-    self.signal_proforma_voucher(cr, uid, voucher)
+    self.signal_workflow(cr, uid, voucher, 'proforma_voucher')
 -
   I check that the move of my voucher is valid
 -
@@ -263,7 +263,7 @@
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR'), ('partner_id', '=', ref('base.res_partner_19'))])
-    self.signal_proforma_voucher(cr, uid, voucher)
+    self.signal_workflow(cr, uid, voucher, 'proforma_voucher')
 -
   I check that my voucher state is posted
 -

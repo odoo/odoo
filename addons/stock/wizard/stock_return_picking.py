@@ -210,7 +210,7 @@ class stock_return_picking(osv.osv_memory):
 
         if set_invoice_state_to_none:
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'}, context=context)
-        pick_obj.signal_button_confirm(cr, uid, [new_picking])
+        pick_obj.signal_workflow(cr, uid, [new_picking], 'button_confirm')
         pick_obj.force_assign(cr, uid, [new_picking], context)
         # Update view id in context, lp:702939
         model_list = {

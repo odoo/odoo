@@ -155,7 +155,7 @@ class pos_return(osv.osv_memory):
                                                 'amount': -amount,
                                                 })
                 order_obj.write(cr,uid, [active_id,new_order], {'state': 'done'})
-                picking_obj.signal_button_confirm(cr, uid, [new_picking])
+                picking_obj.signal_workflow(cr, uid, [new_picking], 'button_confirm')
                 picking_obj.force_assign(cr, uid, [new_picking], context)
             act = {
                 'domain': "[('id', 'in', ["+str(new_order)+"])]",
@@ -228,7 +228,7 @@ class add_product(osv.osv_memory):
                                 'date':date_cur
                             })
 
-                picking_obj.signal_button_confirm(cr, uid, [new_picking])
+                picking_obj.signal_workflow(cr, uid, [new_picking], 'button_confirm')
                 picking_obj.force_assign(cr, uid, [new_picking], context)
                 order_obj.write(cr,uid,active_id,{'picking_id':new_picking})
 
@@ -301,7 +301,7 @@ class add_product(osv.osv_memory):
                         'name':'%s (return)' % order_id.name,
                         'date':date_cur,
                     })
-            picking_obj.signal_button_confirm(cr, uid, [new_picking])
+            picking_obj.signal_workflow(cr, uid, [new_picking], 'button_confirm')
             picking_obj.force_assign(cr, uid, [new_picking], context)
         obj=order_obj.browse(cr,uid, active_ids[0])
         context.update({'return':'return'})

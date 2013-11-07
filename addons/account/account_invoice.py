@@ -86,7 +86,7 @@ class account_invoice(osv.osv):
         for inv in self.browse(cr, uid, ids, context=context):
             res[inv.id] = self.test_paid(cr, uid, [inv.id])
             if not res[inv.id] and inv.state == 'paid':
-                self.signal_open_test(cr, uid, [inv.id])
+                inv.signal_workflow('open_test')
         return res
 
     def _get_reference_type(self, cr, uid, context=None):

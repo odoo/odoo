@@ -270,7 +270,7 @@ class purchase_order(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a purchase order, you must cancel it first.'))
 
         # automatically sending subflow.delete upon deletion
-        self.signal_purchase_cancel(cr, uid, unlink_ids)
+        self.signal_workflow(cr, uid, unlink_ids, 'purchase_cancel')
 
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
@@ -448,7 +448,7 @@ class purchase_order(osv.osv):
         This function prints the request for quotation and mark it as sent, so that we can see more easily the next step of the workflow
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        self.signal_send_rfq(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'send_rfq')
         datas = {
                  'model': 'purchase.order',
                  'ids': ids,
@@ -586,18 +586,16 @@ class purchase_order(osv.osv):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
                         _('First cancel all receptions related to this purchase order.'))
-            self.pool.get('stock.picking') \
-                .signal_button_cancel(cr, uid, map(attrgetter('id'), purchase.picking_ids))
+            self.pool.get('stock.picking').signal_workflow(cr, uid, map(attrgetter('id'), purchase.picking_ids), 'button_cancel')
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel','draft'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
                         _('You must first cancel all receptions related to this purchase order.'))
-            self.pool.get('account.invoice') \
-                .signal_invoice_cancel(cr, uid, map(attrgetter('id'), purchase.invoice_ids))
+                inv.signal_workflow('invoice_cancel')
         self.write(cr,uid,ids,{'state':'cancel'})
 
-        self.signal_purchase_cancel(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'purchase_cancel')
         return True
 
     def date_to_datetime(self, cr, uid, userdate, context=None):
@@ -694,7 +692,7 @@ class purchase_order(osv.osv):
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
         stock_move.force_assign(cr, uid, todo_moves)
-        stock_picking.signal_button_confirm(cr, uid, [picking_id])
+        stock_picking.signal_workflow(cr, uid, [picking_id], 'button_confirm')
         return [picking_id]
 
     def action_picking_create(self, cr, uid, ids, context=None):
@@ -838,7 +836,7 @@ class purchase_order(osv.osv):
             # make triggers pointing to the old orders point to the new order
             for old_id in old_ids:
                 self.redirect_workflow(cr, uid, [(old_id, neworder_id)])
-                self.signal_purchase_cancel(cr, uid, [old_id]) # TODO Is it necessary to interleave the calls?
+                self.signal_workflow(cr, uid, [old_id], 'purchase_cancel') # TODO Is it necessary to interleave the calls?
         return orders_info
 
 
@@ -1208,7 +1206,7 @@ class mail_mail(osv.Model):
 
     def _postprocess_sent_message(self, cr, uid, mail, context=None):
         if mail.model == 'purchase.order':
-            self.pool.get('purchase.order').signal_send_rfq(cr, uid, [mail.res_id])
+            self.pool.get('purchase.order').signal_workflow(cr, uid, [mail.res_id], 'send_rfq')
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
 
@@ -1230,7 +1228,7 @@ class mail_compose_message(osv.Model):
         context = context or {}
         if context.get('default_model') == 'purchase.order' and context.get('default_res_id'):
             context = dict(context, mail_post_autofollow=True)
-            self.pool.get('purchase.order').signal_send_rfq(cr, uid, [context['default_res_id']])
+            self.pool.get('purchase.order').signal_workflow(cr, uid, [context['default_res_id']], 'send_rfq')
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 

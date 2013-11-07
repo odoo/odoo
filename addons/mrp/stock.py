@@ -87,7 +87,7 @@ class StockMove(osv.osv):
                         'procure_method': prodobj.procure_method,
                         'move_id': mid,
                     })
-                    procurement_obj.signal_button_confirm(cr, uid, [proc_id])
+                    procurement_obj.signal_workflow(cr, uid, [proc_id], 'confirm')
                     
                 move_obj.write(cr, uid, [move.id], {
                     'location_dest_id': move.location_id.id, # dummy move for the kit
@@ -96,8 +96,8 @@ class StockMove(osv.osv):
                     'state': 'confirmed'
                 })
                 procurement_ids = procurement_obj.search(cr, uid, [('move_id','=',move.id)], context=context)
-                procurement_obj.signal_button_confirm(cr, uid, procurement_ids)
-                procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
+                procurement_obj.signal_workflow(cr, uid, procurement_ids, 'confirm')
+                procurement_obj.signal_workflow(cr, uid, procurement_ids, 'button_wait_done')
         return processed_ids
     
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None):
@@ -115,7 +115,7 @@ class StockMove(osv.osv):
             for prod in production_obj.browse(cr, uid, production_ids, context=context):
                 if prod.state == 'confirmed':
                     production_obj.force_production(cr, uid, [prod.id])
-            production_obj.signal_button_produce(cr, uid, production_ids)                
+            production_obj.signal_workflow(cr, uid, production_ids, 'button_produce')                
             for new_move in new_moves:
                 if new_move == move.id:
                     #This move is already there in move lines of production order
@@ -138,7 +138,7 @@ class StockMove(osv.osv):
             #self.write(cr, uid, [move.id], {'prodlot_id': False, 'tracking_id': False})
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
-                production_obj.signal_button_produce(cr, uid, [prod_id])
+                production_obj.signal_workflow(cr, uid, [prod_id], 'button_produce')
             for new_move in new_moves:
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)

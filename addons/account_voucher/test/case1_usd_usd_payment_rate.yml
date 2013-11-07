@@ -191,7 +191,7 @@
 -
   !python {model: account.voucher}: |
     voucher = ref('account_voucher_1_case1_payment_rate') 
-    self.signal_proforma_voucher(cr, uid, [voucher])
+    self.signal_workflow(cr, uid, [voucher], 'proforma_voucher')
 -
   I check that the move of my first voucher is valid
 -

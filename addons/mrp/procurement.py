@@ -116,10 +116,9 @@ class procurement_order(osv.osv):
             self.write(cr, uid, [procurement.id], {'state': 'running', 'production_id': produce_id})   
             bom_result = production_obj.action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
-            production_obj.signal_button_confirm(cr, uid, [produce_id])
+            production_obj.signal_workflow(cr, uid, [produce_id], 'button_confirm')
             if res_id:
-                move_obj.write(cr, uid, [res_id],
-                        {'location_id': procurement.location_id.id})
+                move_obj.write(cr, uid, [res_id], {'location_id': procurement.location_id.id})
         self.production_order_create_note(cr, uid, ids, context=context)
         return res
 

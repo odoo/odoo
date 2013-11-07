@@ -195,8 +195,8 @@ class hr_payslip_run(osv.osv):
             slip_ids = []
             for slip_id in run.slip_ids:
                 # TODO is it necessary to interleave the calls ?
-                payslip_pool.signal_hr_verify_sheet(cr, uid, [slip_id.id])
-                payslip_pool.signal_process_sheet(cr, uid, [slip_id.id])
+                payslip_pool.signal_workflow(cr, uid, [slip_id.id], 'hr_verify_sheet')
+                payslip_pool.signal_workflow(cr, uid, [slip_id.id], 'process_sheet')
                 slip_ids.append(slip_id.id)
 
             for slip in payslip_pool.browse(cr, uid, slip_ids, context=context):

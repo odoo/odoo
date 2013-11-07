@@ -472,7 +472,7 @@ class StockPicking(osv.osv):
         for picking in self.browse(cr, uid, ids):
             for move in picking.move_lines:
                 if move.state == 'done' and move.procurements:
-                    self.pool.get('procurement.order').signal_button_check(cr, uid, map(attrgetter('id'), move.procurements))
+                    self.pool.get('procurement.order').signal_workflow(cr, uid, map(attrgetter('id'), move.procurements), 'button_check')
         return res
 
 class stock_warehouse_orderpoint(osv.osv):

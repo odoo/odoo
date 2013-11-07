@@ -545,7 +545,7 @@ class mrp_repair(osv.osv):
                     'tracking_id': False,
                     'state': 'assigned',
                 })
-                pick_obj.signal_button_confirm(cr, uid, [picking])
+                pick_obj.signal_workflow(cr, uid, [picking], 'button_confirm')
                 self.write(cr, uid, [repair.id], {'state': 'done', 'picking_id': picking})
                 res[repair.id] = picking
             else:

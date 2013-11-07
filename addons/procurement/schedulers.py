@@ -65,7 +65,7 @@ class procurement_order(osv.osv):
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order="date_planned")
-            self.signal_button_restart(cr, uid, ids)
+            self.signal_workflow(cr, uid, ids, 'button_restart')
             if use_new_cursor:
                 cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
@@ -80,7 +80,7 @@ class procurement_order(osv.osv):
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], offset=offset, limit=500, order='priority, date_planned', context=context)
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if maxdate >= proc.date_planned:
-                        self.signal_button_check(cr, uid, [proc.id])
+                        proc.signal_workflow('button_check')
                     else:
                         offset += 1
                         report_later += 1
@@ -102,7 +102,7 @@ class procurement_order(osv.osv):
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
                 for proc in procurement_obj.browse(cr, uid, ids):
                     if maxdate >= proc.date_planned:
-                        self.signal_button_check(cr, uid, [proc.id])
+                        proc.signal_workflow('button_check')
                         report_ids.append(proc.id)
                     else:
                         report_later += 1
@@ -179,8 +179,8 @@ class procurement_order(osv.osv):
                 proc_id = proc_obj.create(cr, uid,
                             self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
                             context=context)
-                self.signal_button_confirm(cr, uid, [proc_id])
-                self.signal_button_check(cr, uid, [proc_id])
+                self.signal_workflow(cr, uid, [proc_id], 'button_confirm')
+                self.signal_workflow(cr, uid, [proc_id], 'button_check')
         return True
 
     def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
@@ -254,7 +254,7 @@ class procurement_order(osv.osv):
                             to_generate = qty
                             for proc_data in procure_datas:
                                 if to_generate >= proc_data['product_qty']:
-                                    self.signal_button_confirm(cr, uid, [proc_data['id']])
+                                    self.signal_workflow(cr, uid, [proc_data['id']], 'button_confirm')
                                     procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
                                     to_generate -= proc_data['product_qty']
                                 if not to_generate:
@@ -265,10 +265,9 @@ class procurement_order(osv.osv):
                         proc_id = procurement_obj.create(cr, uid,
                                                          self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
                                                          context=context)
-                        self.signal_button_confirm(cr, uid, [proc_id])
-                        self.signal_button_check(cr, uid, [proc_id])
-                        orderpoint_obj.write(cr, uid, [op.id],
-                                {'procurement_id': proc_id}, context=context)
+                        self.signal_workflow(cr, uid, [proc_id], 'button_confirm')
+                        self.signal_workflow(cr, uid, [proc_id], 'button_check')
+                        op.write({'procurement_id': proc_id})
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()

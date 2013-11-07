@@ -400,11 +400,11 @@ class sale_order(osv.osv):
         This function prints the sales order and mark it as sent, so that we can see more easily the next step of the workflow
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        self.signal_quotation_sent(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'quotation_sent')
         datas = {
-                 'model': 'sale.order',
-                 'ids': ids,
-                 'form': self.read(cr, uid, ids[0], context=context),
+             'model': 'sale.order',
+             'ids': ids,
+             'form': self.read(cr, uid, ids[0], context=context),
         }
         return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
 
@@ -416,7 +416,7 @@ class sale_order(osv.osv):
         
         # create invoices through the sales orders' workflow
         inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
-        self.signal_manual_invoice(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'manual_invoice')
         inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
         # determine newly created invoices
         new_inv_ids = list(inv_ids1 - inv_ids0)
@@ -549,8 +549,7 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Cannot cancel this sales order!'),
                         _('First cancel all invoices attached to this sales order.'))
-            for r in self.read(cr, uid, ids, ['invoice_ids']):
-                account_invoice_obj.signal_invoice_cancel(cr, uid, r['invoice_ids'])
+                inv.signal_workflow('invoice_cancel')
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
         self.write(cr, uid, ids, {'state': 'cancel'})
@@ -558,7 +557,7 @@ class sale_order(osv.osv):
 
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
-        self.signal_order_confirm(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'order_confirm')
 
         # redisplay the record as a sales order
         view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
@@ -981,7 +980,7 @@ class mail_compose_message(osv.Model):
         context = context or {}
         if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
-            self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
+            self.pool.get('sale.order').signal_workflow(cr, uid, [context['default_res_id']], 'quotation_sent')
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 

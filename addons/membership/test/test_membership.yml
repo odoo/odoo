@@ -40,7 +40,7 @@
         membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
         assert membership_lines, 'Membership is not registrated.'
         membership_line = membership_lines[0]
-        invoice_pool.signal_invoice_open(cr, uid, [membership_line.account_invoice_id.id])
+        membership_line.account_invoice_id.signal_workflow('invoice_open')
 
 - |
   I'm checking "Current membership state" of "Seagate". It is an "Invoiced Member" or not.

@@ -107,8 +107,8 @@ class procurement_order(osv.osv):
                 'procure_method': line.procure_method,
                 'move_id': move_id,
             })
-            self.pool.get('stock.picking').signal_button_confirm(cr, uid, [picking_id])
-            self.signal_button_confirm(cr, uid, [proc_id])
+            self.pool.get('stock.picking').signal_workflow(cr, uid, [picking_id], 'button_confirm')
+            self.signal_workflow(cr, uid, [proc_id], 'button_confirm')
             if proc.move_id:
                 move_obj.write(cr, uid, [proc.move_id.id],
                     {'location_id':proc.location_id.id})
@@ -116,7 +116,7 @@ class procurement_order(osv.osv):
             self.write(cr, uid, [proc.id], {'state':'running', 'message': msg})
             self.message_post(cr, uid, [proc.id], body=msg, context=context)
             # trigger direct processing (the new procurement shares the same planned date as the original one, which is already being processed)
-            self.signal_button_check(cr, uid, [proc_id]) # TODO is it necessary to interleave the calls?
+            self.signal_workflow(cr, uid, [proc_id], 'button_check') # TODO is it necessary to interleave the calls?
         return False
 
 

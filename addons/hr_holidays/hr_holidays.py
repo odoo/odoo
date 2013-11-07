@@ -387,9 +387,8 @@ class hr_holidays(osv.osv):
                     leave_ids.append(self.create(cr, uid, vals, context=None))
                 for leave_id in leave_ids:
                     # TODO is it necessary to interleave the calls?
-                    self.signal_confirm(cr, uid, [leave_id])
-                    self.signal_validate(cr, uid, [leave_id])
-                    self.signal_second_validate(cr, uid, [leave_id])
+                    for sig in ('confirm', 'validate', 'second_validate'):
+                        self.signal_workflow(cr, uid, [leave_id], sig)
         return True
 
     def holidays_confirm(self, cr, uid, ids, context=None):
@@ -416,10 +415,10 @@ class hr_holidays(osv.osv):
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
             if record.meeting_id:
-                meeting_obj.unlink(cr, uid, [record.meeting_id.id])
+                record.meeting_id.unlink()
 
             # If a category that created several holidays, cancel all related
-            self.signal_refuse(cr, uid, map(attrgetter('id'), record.linked_request_ids or []))
+            self.signal_workflow(cr, uid, map(attrgetter('id'), record.linked_request_ids or []), 'refuse')
 
         self._remove_resource_leave(cr, uid, ids, context=context)
         return True
@@ -493,9 +492,8 @@ class hr_employee(osv.osv):
             leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
         else:
             return False
-        holiday_obj.signal_confirm(cr, uid, [leave_id])
-        holiday_obj.signal_validate(cr, uid, [leave_id])
-        holiday_obj.signal_second_validate(cr, uid, [leave_id])
+        for sig in ('confirm', 'validate', 'second_validate'):
+            holiday_obj.signal_workflow(cr, uid, [leave_id], sig)
         return True
 
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):

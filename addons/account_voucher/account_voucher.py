@@ -917,7 +917,7 @@ class account_voucher(osv.osv):
         return vals
 
     def button_proforma_voucher(self, cr, uid, ids, context=None):
-        self.signal_proforma_voucher(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'proforma_voucher')
         return {'type': 'ir.actions.act_window_close'}
 
     def proforma_voucher(self, cr, uid, ids, context=None):
@@ -1608,7 +1608,7 @@ class account_bank_statement(osv.osv):
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
             if st_line.voucher_id.state == 'cancel':
                 voucher_obj.action_cancel_draft(cr, uid, [st_line.voucher_id.id], context=context)
-            voucher_obj.signal_proforma_voucher(cr, uid, [st_line.voucher_id.id])
+            st_line.voucher_id.signal_workflow('proforma_voucher')
 
             v = voucher_obj.browse(cr, uid, st_line.voucher_id.id, context=context)
             bank_st_line_obj.write(cr, uid, [st_line_id], {
@@ -1623,7 +1623,7 @@ class account_bank_statement(osv.osv):
         # Because the voucher keeps in memory the journal it was created with.
         for bk_st in self.browse(cr, uid, ids, context=context):
             if vals.get('journal_id') and bk_st.line_ids:
-                if any([x.voucher_id and True or False for x in bk_st.line_ids]):
+                if any(x.voucher_id for x in bk_st.line_ids):
                     raise osv.except_osv(_('Unable to Change Journal!'), _('You can not change the journal as you already reconciled some statement lines!'))
         return super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
 
@@ -1644,12 +1644,10 @@ class account_bank_statement_line(osv.osv):
     def _amount_reconciled(self, cursor, user, ids, name, args, context=None):
         if not ids:
             return {}
-        res = {}
+        res = dict.fromkeys(0.0)
         for line in self.browse(cursor, user, ids, context=context):
             if line.voucher_id:
                 res[line.id] = line.voucher_id.amount#
-            else:
-                res[line.id] = 0.0
         return res
 
     def _check_amount(self, cr, uid, ids, context=None):

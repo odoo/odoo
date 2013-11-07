@@ -44,7 +44,7 @@
     so = self.browse(cr, uid, ref("sale_order_2"))
     account_invoice_obj = self.pool.get('account.invoice')
     for invoice in so.invoice_ids:
-      account_invoice_obj.signal_invoice_open(cr, uid, [invoice.id])
+      invoice.signal_workflow('invoice_open')
 -
   I pay the invoice.
 -
