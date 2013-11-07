@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <template id="paypal_acquirer_button">
+            <form t-if="acquirer.paypal_email_id" t-att-action="acquirer.paypal_tx_url" method="post" target="_self">
+                <input type="hidden" name="cmd" value="tx_values['cmd']"/>
+                <input type="hidden" name="business" t-att-value="tx_values['business']"/>
+                <input type="hidden" name="item_name" t-attf-value="tx_values['item_name']"/>
+                <input type="hidden" name="item_number" t-att-value="tx_values['item_number']"/>
+                <input type="hidden" name="amount" t-att-value="tx_values['amount']"/>
+                <input type="hidden" name="currency_code" t-att-value="tx_values['currency_code']"/>
+                <!-- partner / address data -->
+                <input type="hidden" name="address1" t-att-value="tx_values['address1']"/>
+                <input type="hidden" name="city" t-att-value="tx_values['city']"/>
+                <input type="hidden" name="country" t-att-value="tx_values['country']"/>
+                <input type="hidden" name="email" t-att-value="tx_values['email']"/>
+                <input type="hidden" name="first_name" t-att-value="tx_values['first_name']"/>
+                <input type="hidden" name="last_name" t-att-value="tx_values['last_name']"/>
+                <input type="hidden" name="zip" t-att-value="tx_values['zip']"/>
+                <!-- URLs -->
+                <input t-if="acquirer.paypal_use_dpn" type='hidden' name='return'
+                    t-att-value="tx_values['return']"/>
+                <input t-if="acquirer.paypal_use_ipn" type='hidden' name='notify_url'
+                    t-att-value="tx_values['notify_url']"/>
+                <input t-if="tx_values['cancel_return']" type="hidden" name="cancel_return"
+                    t-att-value="tx_values['cancel_return']"/>
+                <!-- button -->
+                <input type="image" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
+            </form>
+        </template>
+
+    </data>
+</openerp>
