@@ -258,8 +258,7 @@
         </template>
 
         <template id="publish_management">
-            <t t-if="editable" t-ignore="true">
-            <div class="pull-right">
+            <div t-if="editable" t-ignore="true" class="pull-right" t-att-style="style or ''">
                 <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
                     <a t-attf-class="btn btn-sm btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
@@ -275,7 +274,6 @@
                     </ul>
                 </div>
             </div>
-            </t>
         </template>
 
         <template id="publish_short">
