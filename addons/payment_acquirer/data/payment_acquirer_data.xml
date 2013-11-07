@@ -3,7 +3,7 @@
     <data noupdate="0">
 
         <!-- Paypal -->
-
+<!-- 
         <template id="paypal_acquirer_view">
             <form t-if="object.company_id.paypal_account" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_self">
                 <input type="hidden" name="cmd" value="_xclick"/>
@@ -16,17 +16,36 @@
                 <input t-if="cancel_url" type="hidden" name="cancel_url" t-att-value="cancel_url"/>
                 <input type="image" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
             </form>
-        </template>
+        </template> -->
 
-        <record id="paypal_acquirer" model="payment.acquirer">
+<!-- <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="alfred@gmail.com">
+<input type="hidden" name="lc" value="US">
+<input type="hidden" name="item_name" value="object_name">
+<input type="hidden" name="item_number" value="object_id">
+<input type="hidden" name="amount" value="23.00">
+<input type="hidden" name="currency_code" value="USD">
+<input type="hidden" name="button_subtype" value="services">
+<input type="hidden" name="no_note" value="0">
+<input type="hidden" name="tax_rate" value="21.000">
+<input type="hidden" name="shipping" value="2.00">
+<input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynowCC_LG.gif:NonHostedGuest">
+<input type="image" src="https://www.paypalobjects.com/fr_XC/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - la solution de paiement en ligne la plus simple et la plus sécurisée !">
+<img alt="" border="0" src="https://www.paypalobjects.com/fr_XC/i/scr/pixel.gif" width="1" height="1">
+</form> -->
+
+
+
+<!--         <record id="paypal_acquirer" model="payment.acquirer">
             <field name="acquirer">paypal</field>
             <field name="form_template_id" ref="paypal_acquirer_view"/>
             <field name="type_id" ref="paypal"/>
-        </record>
+        </record> -->
 
         <!-- Virement -->
 
-        <template id="virement_acquirer_view">
+<!--         <template id="virement_acquirer_view">
             <div>
                 <table>
                     <tr><td>Numero de compte: </td><td></td></tr>
@@ -40,6 +59,6 @@
             <field name="acquirer">virement</field>
             <field name="form_template_id" ref="virement_acquirer_view"/>
             <field name="type_id" ref="virement"/>
-        </record>
+        </record> -->
     </data>
 </openerp>

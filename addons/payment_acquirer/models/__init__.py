@@ -20,3 +20,5 @@
 ##############################################################################
 
 import payment_acquirer
+import paypal
+import ogone

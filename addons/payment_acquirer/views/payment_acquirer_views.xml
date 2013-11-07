@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <menuitem
+            name='Payments'
+            id='root_payment_menu'
+            parent='base.menu_administration'/>
+
+        <record id="acquirer_form" model="ir.ui.view">
+            <field name="model">payment.acquirer</field>
+            <field name="arch" type="xml">
+                <form string="Payment Acquirer" version="7.0">
+                    <group col="1">
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/><h1><field name="name"/></h1>
+                            <div class="oe_edit_only"><field name="portal_published"/><label for="portal_published"/></div>
+                            <field name="env"/>
+                        </div>
+                        <group string="Form Template">
+                            <div>
+                                <p>
+                                This is an HTML form template to submit a payment through this acquirer.
+                                The template will be rendered with qWeb, so it may use qWeb expressions.
+                                The qWeb evaluation context provides:
+                                <ul>
+                                    <li>reference: the reference number of the document to pay</li>
+                                    <li>currency: the currency record in which the document is issued (e.g. currency.name could be EUR)</li>
+                                    <li>amount: the total amount to pay, as a float</li>
+                                    <li>amount_str: the total amount to pay, as a string with the account precision</li>
+                                    <li>object: the browse record on which the payment form is rendered (usually an invoice or sales order record)</li>
+                                    <li>user_id: the current user browse record</li>
+                                    <li>context: the current context dictionary</li>
+                                </ul>
+                                If the template renders to an empty result in a certain context it will be ignored, as if it was inactive.
+                                </p>
+                            </div>
+                            <field name="view_template_id" nolabel="1" colspan="2"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="acquirer_list" model="ir.ui.view">
+            <field name="model">payment.acquirer</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Acquirers">
+                    <field name="name"/>
+                    <field name="portal_published"/>
+                    <field name="env"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="acquirer_search" model="ir.ui.view">
+            <field name="model">payment.acquirer</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_payment_acquirer">
+            <field name="name">Payment Acquirers</field>
+            <field name="res_model">payment.acquirer</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+
+        <menuitem
+            action='action_payment_acquirer'
+            id='payment_acquirer_menu'
+            parent='root_payment_menu'
+            sequence='10' />
+
+        <record model="ir.ui.view" id="transaction_form">
+            <field name="model">payment.transaction</field>
+            <field name="arch" type="xml">
+                <form string="Payment Transactions" version="7.0">
+                    <group>
+                        <field name="date_create"/>
+                        <field name="date_validate"/>
+                        <field name="acquirer_id"/>
+                        <field name="state"/>
+                        <field name="state_message"/>
+                        <field name="amount"/>
+                        <field name="currency_id"/>
+                        <field name="reference"/>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="partner_name"/>
+                        <field name="partner_email"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="transaction_list">
+            <field name="model">payment.transaction</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Transactions">
+                    <field name="partner_id"/>
+                    <field name="partner_name"/>
+                    <field name="state"/>
+                    <field name="reference"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="transaction">
+            <field name="model">payment.transaction</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="partner_id"/>
+                    <field name="partner_name"/>
+                    <field name="reference"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_payment_transaction">
+            <field name="name">Payment Transactions</field>
+            <field name="res_model">payment.transaction</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+
+        <menuitem
+            action='action_payment_transaction'
+            id='payment_transaction_menu'
+            parent='root_payment_menu'
+            sequence='20' />
+    </data>
+</openerp>
