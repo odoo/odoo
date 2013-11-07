@@ -3,6 +3,11 @@
 .openerp
     .oe_view_manager_view_calendar
         position: relative
+        
+.openerp
+    .oe_searchview.oe_searchview_open_drawer
+        .oe_searchview_drawer
+            z-index: 10
 
 .openerp
     .oe_fullcalendar_widget
@@ -24,7 +29,7 @@
                     background-color: rgba(180, 0, 0, 1)
                     box-shadow: 0px 0px 2px rgba(0, 0, 0, .5)
                     visibility: hidden
-                    z-index: 100
+                    z-index: 9
             .fc-event:hover
                 .close-btn
                     visibility: visible
