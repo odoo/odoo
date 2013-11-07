@@ -1186,67 +1186,69 @@ class procurement_order(osv.osv):
         seller_delay = int(procurement.product_id.seller_delay)
         return schedule_date - relativedelta(days=seller_delay)
 
+    def _get_product_supplier(self, cr, uid, procurement, context=None):
+        ''' returns the main supplier of the procurement's product given as argument'''
+        return procurement.product_id.seller_id
+
+    def _get_po_line_values_from_proc(self, cr, uid, procurement, partner, company, schedule_date, context=None):
+        if context is None:
+            context = {}
+        uom_obj = self.pool.get('product.uom')
+        pricelist_obj = self.pool.get('product.pricelist')
+        prod_obj = self.pool.get('product.product')
+        acc_pos_obj = self.pool.get('account.fiscal.position')
+
+        seller_qty = procurement.product_id.seller_qty
+        pricelist_id = partner.property_product_pricelist_purchase.id
+        uom_id = procurement.product_id.uom_po_id.id
+        qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
+        if seller_qty:
+            qty = max(qty, seller_qty)
+        price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner.id, {'uom': uom_id})[pricelist_id]
+
+        #Passing partner_id to context for purchase order line integrity of Line name
+        new_context = context.copy()
+        new_context.update({'lang': partner.lang, 'partner_id': partner.id})
+        product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
+        taxes_ids = procurement.product_id.supplier_taxes_id
+        taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
+        name = product.partner_ref
+        if product.description_purchase:
+            name += '\n' + product.description_purchase
+
+        return {
+            'name': name,
+            'product_qty': qty,
+            'product_id': procurement.product_id.id,
+            'product_uom': uom_id,
+            'price_unit': price or 0.0,
+            'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
+            'taxes_id': [(6, 0, taxes)],
+        }
+
     def make_po(self, cr, uid, ids, context=None):
         """ Make purchase order from procurement
         @return: New created Purchase Orders procurement wise
         """
         res = {}
-        if context is None:
-            context = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-        partner_obj = self.pool.get('res.partner')
         po_obj = self.pool.get('purchase.order')
         po_line_obj = self.pool.get('purchase.order.line')
-        uom_obj = self.pool.get('product.uom')
-        pricelist_obj = self.pool.get('product.pricelist')
-        prod_obj = self.pool.get('product.product')
-        acc_pos_obj = self.pool.get('account.fiscal.position')
         seq_obj = self.pool.get('ir.sequence')
         pass_ids = []
         linked_po_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
-            res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
-            partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
+            partner = self._get_product_supplier(cr, uid, procurement, context=context)
             if not partner:
                 self.message_post(cr, uid, [procurement.id], _('There is no supplier associated to product %s') % (procurement.product_id.name))
                 res[procurement.id] = False
             else:
-                seller_qty = procurement.product_id.seller_qty
-                partner_id = partner.id
-                address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
-                pricelist_id = partner.property_product_pricelist_purchase.id
-                uom_id = procurement.product_id.uom_po_id.id
-                qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
-                if seller_qty:
-                    qty = max(qty, seller_qty)
-
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
-
                 schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
-                purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
-
-                #Passing partner_id to context for purchase order line integrity of Line name
-                new_context = context.copy()
-                new_context.update({'lang': partner.lang, 'partner_id': partner_id})
-                product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
-                taxes_ids = procurement.product_id.supplier_taxes_id
-                taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
-                name = product.partner_ref
-                if product.description_purchase:
-                    name += '\n' + product.description_purchase
-                line_vals = {
-                    'name': name,
-                    'product_qty': qty,
-                    'product_id': procurement.product_id.id,
-                    'product_uom': uom_id,
-                    'price_unit': price or 0.0,
-                    'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-                    'move_dest_id': res_id,
-                    'taxes_id': [(6, 0, taxes)],
-                }
+                line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
                 available_draft_po_ids = po_obj.search(cr, uid, [
-                    ('partner_id', '=', partner_id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
+                    ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
                     ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id)], context=context)
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
@@ -1254,20 +1256,21 @@ class procurement_order(osv.osv):
                     po_line_id = po_line_obj.create(cr, uid, line_vals, context=context)
                     linked_po_ids.append(procurement.id)
                 else:
+                    purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
                     name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
                     po_vals = {
                         'name': name,
                         'origin': procurement.origin,
-                        'partner_id': partner_id,
+                        'partner_id': partner.id,
                         'location_id': procurement.location_id.id,
                         'picking_type_id': procurement.rule_id.picking_type_id.id,
-                        'pricelist_id': pricelist_id,
+                        'pricelist_id': partner.property_product_pricelist_purchase.id,
                         'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                         'company_id': procurement.company_id.id,
                         'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
                         'payment_term_id': partner.property_supplier_payment_term.id or False,
                     }
-                    po_id = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=new_context)
+                    po_id = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
                     po_line_id = po_obj.browse(cr, uid, po_id, context=context).order_line[0].id
                     pass_ids.append(procurement.id)
                 res[procurement.id] = po_line_id

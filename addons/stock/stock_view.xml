@@ -1540,7 +1540,7 @@
             </field>
         </record>
         
-		<record id="action_picking_type_list" model="ir.actions.act_window">
+        <record id="action_picking_type_list" model="ir.actions.act_window">
             <field name="name">All Operations</field>
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
@@ -1554,10 +1554,10 @@
             parent="menu_stock_warehouse_mgmt" sequence="1"/>
 
         <menuitem 
-        	id="menu_pickingtype" 
-        	name="Types of Operation" 
-        	parent="stock.menu_stock_configuration" 
-        	action="action_picking_type_list" />
+            id="menu_pickingtype" 
+            name="Types of Operation" 
+            parent="stock.menu_stock_configuration" 
+            action="action_picking_type_list" />
         
 
         <!-- Order Point -->
@@ -1669,12 +1669,15 @@
             <field name="model">procurement.order</field>
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='origin']" position="after">
-                    <field name="warehouse_id" on_change="change_warehouse_id(warehouse_id, context)"/>
-                    <field name="location_id" domain="[('usage', '=', 'internal')]"/>
+                <xpath expr="//group[@name='scheduling']" position="before">
+                    <group>
+                        <field name="warehouse_id" on_change="change_warehouse_id(warehouse_id, context)"/>
+                        <field name="location_id" domain="[('usage', '=', 'internal')]"/>
+                        <field name="route_ids" widget="many2many_tags"/>
+                    </group>
                 </xpath>
-                <xpath expr="//field[@name='rule_id']" position="after">
-                    <field name="route_ids" widget="many2many_tags"/>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="do_view_pickings" string="Group's Pickings" type="object"/>
                 </xpath>
             </field>
         </record>
@@ -1688,73 +1691,51 @@
                 </xpath>
             </field>
         </record>
-        
-        
-        
-        
-        <record model="ir.ui.view" id="view_procurement_rule_tree">
-            <field name="name">stock.procurement.tree</field>
+        <record id="view_procurement_rule_tree_stock_inherit" model="ir.ui.view">
+            <field name="name">procurement.rule.tree.stock.inherit</field>
             <field name="model">procurement.rule</field>
-            <field eval="10" name="priority"/>
-            
+            <field name="inherit_id" ref="procurement.view_procurement_rule_tree"/>
             <field name="arch" type="xml">
-                <tree string="Procurement Rules">
-                    <field name="location_src_id"/>
+                <xpath expr="//field[@name='action']" position="after">
+                    <field name="picking_type_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_procurement_rule_form_stock_inherit" model="ir.ui.view">
+            <field name="name">procurement.rule.form.stock.inherit</field>
+            <field name="model">procurement.rule</field>
+            <field name="inherit_id" ref="procurement.view_procurement_rule_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='action']" position="before">
                     <field name="location_id"/>
-                    <field name="action"/>
+                    <field name="warehouse_id" groups="base.group_no_one"/>
+                    <field name="route_id" groups="base.group_no_one"/>
+                </xpath>
+                <xpath expr="//field[@name='action']" position="after">
                     <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
-                </tree>
+                </xpath>
+                <xpath expr="//field[@name='group_id']" position="after">
+                    <field name="propagate"/>
+                    <field name="propagate_warehouse_id"/>
+                </xpath>
+                <xpath expr="//group[@name='propagation_group']" position="before">
+                    <group attrs="{'invisible': [('action', '!=', 'move')]}" string="Moving Options">
+                        <field name="procure_method"/>
+                        <field name="location_src_id" attrs="{'required': [('action', '=', 'move')]}"/>
+                        <field name="partner_address_id" groups="stock.group_adv_location" context="{'show_address': 1}" options="{'always_reload': 1}"/>
+                        <label for="delay" string="Delay"  groups="stock.group_adv_location"/>
+                        <div>
+                           <field name="delay" class="oe_inline" groups="stock.group_adv_location"/>days
+                        </div>
+                    </group>
+                </xpath>
             </field>
         </record>
-
-
-        <record model="ir.ui.view" id="view_procurement_rule_form">
-            <field name="name">stock.procurement.form</field>
-            <field name="model">procurement.rule</field>
-            <field eval="10" name="priority"/>
-            
-            <field name="arch" type="xml">
-                <form string="Procurement Rules" version="7.0">
-                    <sheet>
-                        <separator string="Pull Rule"/>
-                        <group>
-                            <group>
-                                <field name="name"/>
-                            </group>
-                            <group>
-                                <field name="action"/>
-                            </group>
-                        </group>
-                        <separator string="Informations"/>
-                        <group>
-                            <group>
-                                <field name="procure_method" attrs="{'invisible': [('action', '!=', 'move')]}"/>
-                                <field name="location_src_id" attrs="{'invisible': [('action', '!=', 'move')]}"/>
-                                <field name="location_id"/>
-                                <field name="partner_address_id" groups="stock.group_adv_location"/>
-                                
-                            </group>
-                            <group>
-                                <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
-                                <field name="route_id"/>
-                                <field name="group_id" groups="base.group_no_one"/>
-                                <field name="propagate" groups="stock.group_adv_location"/>
-                                <label for="delay" string="Delay"  groups="stock.group_adv_location"/>
-                                <div>
-                                   <field name="delay" class="oe_inline" groups="stock.group_adv_location"/>days
-                                </div>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        
-        
         
         <record model="ir.actions.act_window" id="procrules">
             <field name="context">{}</field>
-            <field name="name">Global procurement rules</field>
+            <field name="name">Pull Rules</field>
             <field name="res_model">procurement.rule</field>
         </record>
         
@@ -1971,8 +1952,8 @@
                         <group>
                             <group>
                             <field name="packaging_id"/>
-                       	    <field name='company_id' groups="base.group_multi_company"/>
-                       	    <field name='owner_id' groups="stock.group_tracking_owner"/>
+                               <field name='company_id' groups="base.group_multi_company"/>
+                               <field name='owner_id' groups="stock.group_tracking_owner"/>
                             </group>
                             <group>
                             <field name="location_id"/>
@@ -2141,16 +2122,16 @@
             <field name="res_model">stock.picking</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-	    <field name="domain">[('group_id','=',active_id)]</field>			
+        <field name="domain">[('group_id','=',active_id)]</field>            
         </record>
         <record id="procurement_group_form_view_herited" model="ir.ui.view">
             <field name="name">procurement.group.form.herited</field>
             <field name="model">procurement.group</field>
             <field name="inherit_id" ref="procurement.procurement_group_form_view"/>
             <field name="arch" type="xml">
-		        <xpath expr="/form/sheet/div/button" position="after">
-		        	<button name="%(do_view_pickings)d" string="View related pickings" type="action" />
-		        </xpath>        
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(do_view_pickings)d" string="Pickings" type="action"/>
+                </xpath>        
             </field>
         </record>
         

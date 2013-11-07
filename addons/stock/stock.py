@@ -1322,7 +1322,7 @@ class stock_move(osv.osv):
                                                   'stock.quant': (_get_move, ['reservation_id'], 10)}),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
-        'rule_id': fields.many2one('procurement.rule', 'Procurement Rule'),
+        'rule_id': fields.many2one('procurement.rule', 'Procurement Rule', help='The pull rule that created this stock move'),
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
         'inventory_id': fields.many2one('stock.inventory', 'Inventory'),
@@ -1384,8 +1384,14 @@ class stock_move(osv.osv):
     }
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
-        origin = (move.group_id and (move.group_id.name+":") or "") +  (move.rule_id and move.rule_id.name or "/")
-        return  {
+        origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or "/")
+        group_id = move.group_id and move.group_id.id or False
+        if move.rule_id:
+            if move.rule_id.group_propagation_option == 'fixed' and move.rule_id.group_id:
+                group_id = move.rule_id.group_id.id
+            elif move.rule_id.group_propagation_option == 'none':
+                group_id = False
+        return {
             'name': move.rule_id and move.rule_id.name or "/",
             'origin': origin,
             'company_id': move.company_id and move.company_id.id or False,
@@ -1397,8 +1403,8 @@ class stock_move(osv.osv):
             'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
             'location_id': move.location_id.id,
             'move_dest_id': move.id,
-            'group_id': move.group_id and move.group_id.id or False,
-            'route_ids' : [(4, x.id) for x in move.route_ids],
+            'group_id': group_id,
+            'route_ids': [(4, x.id) for x in move.route_ids],
             'warehouse_id': move.warehouse_id and move.warehouse_id.id or False,
         }
 
@@ -2690,7 +2696,7 @@ class stock_warehouse(osv.osv):
         return new_id
 
     def _format_rulename(self, cr, uid, obj, from_loc, dest_loc, context=None):
-        return obj.name + ': ' + from_loc.name + ' -> ' + dest_loc.name
+        return obj.code + ': ' + from_loc.name + ' -> ' + dest_loc.name
 
     def _format_routename(self, cr, uid, obj, name, context=None):
         return obj.name + ': ' + name

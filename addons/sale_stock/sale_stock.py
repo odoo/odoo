@@ -63,26 +63,21 @@ class sale_order(osv.osv):
             if move.procurement_id and move.procurement_id.sale_line_id:
                 res.add(move.procurement_id.sale_line_id.order_id.id)
         return list(res)
-    
+
     def _get_orders_procurements(self, cr, uid, ids, context=None):
         res = set()
         for proc in self.pool.get('procurement.order').browse(cr, uid, ids, context=context):
             if proc.sale_line_id:
                 res.add(proc.sale_line_id.order_id.id)
         return list(res)
-    
+
     def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
         for sale in self.browse(cr, uid, ids, context=context):
             if not sale.procurement_group_id:
                 res[sale.id] = []
                 continue
-            picking_ids = set()
-            for procurement in sale.procurement_group_id.procurement_ids:
-                for move in procurement.move_ids:
-                    if move.picking_id:
-                        picking_ids.add(move.picking_id.id)
-            res[sale.id] = list(picking_ids)
+            res[sale.id] = self.pool.get('stock.picking').search(cr, uid, [('group_id', '=', sale.procurement_group_id.id)], context=context)
         return res
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):

@@ -72,7 +72,6 @@ class procurement_rule(osv.osv):
                 'stock.location.route': (_get_rules, ['sequence'], 10),
                 'procurement.rule': (lambda self, cr, uid, ids, c={}: ids, ['route_id'], 10),
         }),
-        'sequence': fields.integer('Sequence'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type',
             help="Picking Type determines the way the picking should be shown in the view, reports, ..."),
         'active': fields.related('route_id', 'active', type='boolean', string='Active', store={
@@ -88,10 +87,9 @@ class procurement_rule(osv.osv):
 
     _defaults = {
         'procure_method': 'make_to_stock',
-        'sequence': 20,
-        'active': True, 
-        'propagate': True, 
-        'delay': 0, 
+        'active': True,
+        'propagate': True,
+        'delay': 0,
     }
 
 class procurement_order(osv.osv):
@@ -100,7 +98,7 @@ class procurement_order(osv.osv):
         'location_id': fields.many2one('stock.location', 'Procurement Location'),  # not required because task may create procurements that aren't linked to a location with project_mrp
         'move_ids': fields.one2many('stock.move', 'procurement_id', 'Moves', help="Moves created by the procurement"),
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement"),
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_procurement', 'procurement_id', 'route_id', 'Followed Route', help="Preferred route to be followed by the procurement order"),
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_procurement', 'procurement_id', 'route_id', 'Preferred Routes', help="Preferred route to be followed by the procurement order. Usually copied from the generating document (SO) but could be set up manually."),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', help="Warehouse to consider for the route selection"),
     }
 
@@ -161,7 +159,19 @@ class procurement_order(osv.osv):
         return rule_id
 
     def _run_move_create(self, cr, uid, procurement, context=None):
-        vals =  {
+        ''' Returns a dictionary of values that will be sued to create a stock move from a procurement.
+        This function assumes that the given procurement has a rule (action == 'move') set on it.
+
+        :param procurement: browse record
+        :rtype: dictionary
+        '''
+        newdate = (datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
+        group_id = False
+        if procurement.rule_id.group_propagation_option == 'propagate':
+            group_id = procurement.group_id and procurement.group_id.id or False
+        elif procurement.rule_id.group_propagation_option == 'fixed':
+            group_id = procurement.rule_id.group_id and procurement.rule_id.group_id.id or False
+        vals = {
             'name': procurement.name,
             'company_id': procurement.company_id.id,
             'product_id': procurement.product_id.id,
@@ -170,12 +180,9 @@ class procurement_order(osv.osv):
             'product_qty': procurement.product_qty,
             'product_uom': procurement.product_uom.id,
             'product_uom_qty': procurement.product_qty,
-            'product_uos_qty': (procurement.product_uos and procurement.product_uos_qty)\
-                    or procurement.product_qty,
-            'product_uos': (procurement.product_uos and procurement.product_uos.id)\
-                    or procurement.product_uom.id,
-            'partner_id': procurement.group_id and procurement.group_id.partner_id and \
-                    procurement.group_id.partner_id.id or False,
+            'product_uos_qty': (procurement.product_uos and procurement.product_uos_qty) or procurement.product_qty,
+            'product_uos': (procurement.product_uos and procurement.product_uos.id) or procurement.product_uom.id,
+            'partner_id': procurement.group_id and procurement.group_id.partner_id and procurement.group_id.partner_id.id or False,
             'location_id': procurement.rule_id.location_src_id.id,
             'location_dest_id': procurement.rule_id.location_id.id,
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
@@ -184,16 +191,12 @@ class procurement_order(osv.osv):
             'procure_method': procurement.rule_id.procure_method,
             'origin': procurement.origin,
             'picking_type_id': procurement.rule_id.picking_type_id.id,
-            'group_id': procurement.group_id and procurement.group_id.id or False,
+            'group_id': group_id,
             'route_ids': [(4, x.id) for x in procurement.route_ids],
             'warehouse_id': procurement.rule_id.propagate_warehouse_id and procurement.rule_id.propagate_warehouse_id.id or procurement.rule_id.warehouse_id.id,
-        }        
-        if procurement.rule_id:
-            newdate = (datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
-            vals.update({
-                'date': newdate,
-                'propagate': procurement.rule_id.propagate,
-            })
+            'date': newdate,
+            'propagate': procurement.rule_id.propagate,
+        }
         return vals
 
     def _run(self, cr, uid, procurement, context=None):
@@ -229,7 +232,19 @@ class procurement_order(osv.osv):
             
         return super(procurement_order, self)._check(cr, uid, procurement, context)
 
-
+    def do_view_pickings(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display the pickings of the procurements belonging
+        to the same procurement group of given ids.
+        '''
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        result = mod_obj.get_object_reference(cr, uid, 'stock', 'do_view_pickings')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        group_ids = set([proc.group_id.id for proc in self.browse(cr, uid, ids, context=context) if proc.group_id])
+        result['domain'] = "[('group_id','in',[" + ','.join(map(str, list(group_ids))) + "])]"
+        return result
 
     #
     # Scheduler
