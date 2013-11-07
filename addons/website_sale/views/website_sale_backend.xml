@@ -64,7 +64,7 @@
                     <field name="website_published"/>
             </xpath>
             <xpath expr="//page[@string='Information']" position="inside">
-                <group colspan="4" string="Products On Ecommerce">
+                <group colspan="4" string="Website Options">
                     <field name="suggested_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>
                     <field colspan="4" name="website_attribute_ids" nolabel="1">
@@ -81,8 +81,21 @@
                 </group>
             </xpath>
 
-
         </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_product_attribute_form">
+      <field name="name">product.attribute.form</field>
+      <field name="model">product.attribute</field>
+      <field name="arch" type="xml">
+        <form string="Product Attributes" version="7.0">
+          <group>
+            <field name="name"/>
+            <field name="type"/>
+            <field name="visible"/>
+          </group>
+        </form>
+      </field>
     </record>
 
  </data>

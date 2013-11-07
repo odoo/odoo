@@ -38,7 +38,7 @@ class attributes(osv.Model):
 
     _columns = {
         'name': fields.char('Name', size=64, translate=True, required=True),
-        'type': fields.selection([('distinct', 'Distinct'), ('float', 'Float')], "Type", required=True),
+        'type': fields.selection([('distinct', 'Textual Value'), ('float', 'Numeric Value')], "Type", required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values'),
         'product_ids': fields.one2many('product.attribute.product', 'attribute_id', 'Products'),
 
@@ -48,7 +48,7 @@ class attributes(osv.Model):
         'float_min': fields.function(_get_float_min, type='float', string="Min", store={
                 'product.attribute.product': (_get_min_max, ['value','attribute_id'], 20),
             }),
-        'visible': fields.boolean('Visible'),
+        'visible': fields.boolean('Display Filter on Website'),
     }
     _defaults = {
         'type': 'distinct',
@@ -65,9 +65,10 @@ class attributes_value(osv.Model):
 
 class attributes_product(osv.Model):
     _name = "product.attribute.product"
+    _order = 'attribute_id, value_id, value'
     _columns = {
-        'value': fields.float('Value'),
-        'value_id': fields.many2one('product.attribute.value', 'Distinct Value'),
+        'value': fields.float('Numeric Value'),
+        'value_id': fields.many2one('product.attribute.value', 'Textual Value'),
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True),
         'product_id': fields.many2one('product.template', 'Product', required=True),
 

@@ -272,7 +272,7 @@
               <section class="container oe_website_sale mb16" id="product_detail">
                 <div class="row">
                   <div class="col-sm-7 col-md-7 col-lg-7">
-                      <span t-field="product.image" style="max-height: 500px" t-field-options='{"widget": "image"}'/>
+                      <span t-field="product.image" style="max-height: 500px" t-field-options='{"widget": "image", "class": "img img-responsive"}'/>
                   </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                       <h1 t-field="product.name">Product Name</h1>
 
@@ -345,6 +345,26 @@
         </xpath>
     </template>
 
+    <template id="product_attributes" inherit_option_id="website_sale.product" name="Product Attributes">
+      <xpath expr="//div[@id='product_full_description']" position="after">
+        <div class="container">
+          <h3>Datasheet</h3>
+          <table>
+            <t t-foreach="product.website_attribute_ids" t-as="attribute">
+              <tr t-if="attribute.attribute_id.type == 'distinct'">
+                  <th><span t-field="attribute.attribute_id"/></th>
+                  <td><span t-field="attribute.value_id"/></td>
+              </tr>
+              <tr t-if="attribute.attribute_id.type == 'float'">
+                  <th><span t-field="attribute.attribute_id"/></th>
+                  <td><span t-field="attribute.value"/></td>
+              </tr>
+            </t>
+          </table>
+        </div>
+      </xpath>
+    </template>
+
     <!-- Page Shop my cart -->
 
     <template id="mycart" name="Your Cart">
@@ -365,18 +385,6 @@
                 </ul>
                 <h1 class="mb32">Shopping Cart</h1>
                 <div class="row">
-                    <div class="col-md-3 text-muted" id="right_column">
-                        <h4>Policies</h4>
-                        <ul class="list-unstyled mb32">
-                            <li>&#9745; 30-days money-back guarantee</li>
-                            <li>&#9745; Invoice sent by e-Mail</li>
-                        </ul>
-                        <h4>Secure Payment</h4>
-                        <ul class="list-unstyled mb32">
-                            <li>&#9745; 256 bit encryption</li>
-                            <li>&#9745; Processed by Ogone</li>
-                        </ul>
-                    </div>
                     <div class="col-md-8 col-md-offset-1 oe_mycart">
                         <div t-if="not website_sale_order or not website_sale_order.order_line" class="well well-lg">
                             Your cart is empty!
@@ -469,6 +477,18 @@
                         <a t-href="/shop" class="btn btn-default mb32"><span class="icon-long-arrow-left"/> Continue Shopping</a>
                         <a t-if="website_sale_order and website_sale_order.order_line" t-href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
                         <div class="oe_structure"/>
+                    </div>
+                    <div class="col-md-3 text-muted" id="right_column">
+                        <h4>Policies</h4>
+                        <ul class="list-unstyled mb32">
+                            <li>&#9745; 30-days money-back guarantee</li>
+                            <li>&#9745; Invoice sent by e-Mail</li>
+                        </ul>
+                        <h4>Secure Payment</h4>
+                        <ul class="list-unstyled mb32">
+                            <li>&#9745; 256 bit encryption</li>
+                            <li>&#9745; Processed by Ogone</li>
+                        </ul>
                     </div>
                 </div>
 
