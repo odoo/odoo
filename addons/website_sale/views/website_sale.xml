@@ -346,22 +346,12 @@
     </template>
 
     <template id="product_attributes" inherit_option_id="website_sale.product" name="Product Attributes">
-      <xpath expr="//div[@id='product_full_description']" position="after">
-        <div class="container">
-          <h3>Datasheet</h3>
-          <table>
-            <t t-foreach="product.website_attribute_ids" t-as="attribute">
-              <tr t-if="attribute.attribute_id.type == 'distinct'">
-                  <th><span t-field="attribute.attribute_id"/></th>
-                  <td><span t-field="attribute.value_id"/></td>
-              </tr>
-              <tr t-if="attribute.attribute_id.type == 'float'">
-                  <th><span t-field="attribute.attribute_id"/></th>
-                  <td><span t-field="attribute.value"/></td>
-              </tr>
-            </t>
-          </table>
-        </div>
+      <xpath expr="//p[@t-field='product.description_sale']" position="after">
+        <hr t-if="product.website_attribute_ids"/>
+        <p class="text-muted">
+          <t t-set="attr" t-value="None"/>
+          <t t-foreach="product.website_attribute_ids" t-as="attribute"><br t-if="attr and attribute.attribute_id.id != attr"/><t t-if="attribute.attribute_id.id != attr"><span t-field="attribute.attribute_id"/>: </t><t t-if="attribute.attribute_id.id == attr">, </t><t t-if="attribute.attribute_id.type == 'distinct'"><span t-field="attribute.value_id"/></t><t t-if="attribute.attribute_id.type == 'float'"><span t-field="attribute.value"/></t><t t-set="attr" t-value="attribute.attribute_id.id"/></t>
+        </p>
       </xpath>
     </template>
 
