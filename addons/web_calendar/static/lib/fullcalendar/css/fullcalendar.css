@@ -1,5 +1,5 @@
 /*!
- * FullCalendar v1.6.1 Stylesheet
+ * FullCalendar v1.6.4 Stylesheet
  * Docs & License: http://arshaw.com/fullcalendar/
  * (c) 2013 Adam Shaw
  */
@@ -102,10 +102,11 @@ html .fc,
 	
 .fc-content {
 	clear: both;
+	zoom: 1; /* for IE7, gives accurate coordinates for [un]freezeContentHeight */
 	}
 	
 .fc-view {
-	width: 100%; /* needed for view switching (when view is absolute) */
+	width: 100%;
 	overflow: hidden;
 	}
 	
@@ -250,10 +251,19 @@ html .fc,
 
 /* Global Event Styles
 ------------------------------------------------------------------------*/
+
+.fc-event-container > * {
+	z-index: 8;
+	}
+
+.fc-event-container > .ui-draggable-dragging,
+.fc-event-container > .ui-resizable-resizing {
+	z-index: 9;
+	}
 	 
 .fc-event {
 	border: 1px solid #3a87ad; /* default BORDER color */
-	background-color: #3a87ad; /* default BACKGROUND color */
+	background-color: #3a87ad; /* default BACKGROUND color */	
 	color: #fff;               /* default TEXT color */
 	font-size: .85em;
 	cursor: default;
@@ -577,3 +587,22 @@ table.fc-border-separate {
 	}
 	
 	
+@media print {
+	 /* Events
+	-----------------------------------------------------*/
+	 
+	.fc-event {
+		background: #fff !important;
+		color: #000 !important;
+		}
+		
+	/* for vertical events */
+		
+	.fc-event-bg {
+		display: none !important;
+		}
+		
+	.fc-event .ui-resizable-handle {
+		display: none !important;
+		}
+}		

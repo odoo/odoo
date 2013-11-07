@@ -10,7 +10,7 @@ OpenERP Web Calendar view.
     'depends': ['web'],
     'js': [
         'static/lib/fullcalendar/js/fullcalendar.js',
-        'static/lib/fullcalendar/js/gcal.js',
+        #'static/lib/fullcalendar/js/gcal.js',
         'static/src/js/*.js'
     ],
     'css': [

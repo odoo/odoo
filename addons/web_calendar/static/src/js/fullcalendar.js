@@ -403,6 +403,8 @@ openerp.web_calendar = function(instance) {
                     color_key = color_key[0];
                 }
                 r.color = this.get_color(color_key);
+                r.backgroundColor = this.get_color(color_key);
+                console.log(r.backgroundColor)
             }
             return r;
         },
