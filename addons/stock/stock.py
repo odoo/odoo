@@ -672,7 +672,7 @@ class stock_picking(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
     }
     _defaults = {
-        'name': lambda self, cr, uid, context: '/',
+        'name': '/',
         'state': 'draft',
         'move_type': 'direct',
         'type': 'internal',
@@ -744,54 +744,54 @@ class stock_picking(osv.osv):
         """ Confirms picking.
         @return: True
         """
-        pickings = self.browse(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'confirmed'})
-        todo = []
-        for picking in pickings:
-            for r in picking.move_lines:
-                if r.state == 'draft':
-                    todo.append(r.id)
-        todo = self.action_explode(cr, uid, todo, context)
-        if len(todo):
-            self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
+        line_ids_to_explode = [
+            line.id
+            for picking in self.browse(cr, uid, ids, context=context)
+            for line in picking.move_lines 
+            if line.state == 'draft'
+        ]
+        move_ids = self.action_explode(cr, uid, line_ids_to_explode, context)
+        if move_ids:
+            self.pool.get('stock.move').action_confirm(cr, uid, move_ids, context=context)
         return True
 
     def test_auto_picking(self, cr, uid, ids):
         # TODO: Check locations to see if in the same location ?
         return True
 
-    def action_assign(self, cr, uid, ids, *args):
+    def action_assign(self, cr, uid, ids, context=None):
         """ Changes state of picking to available if all moves are confirmed.
         @return: True
         """
-        for pick in self.browse(cr, uid, ids):
+        for pick in self.browse(cr, uid, ids, context=context):
             if pick.state == 'draft':
-                self.signal_button_confirm(cr, uid, [pick.id])
+                pick.signal_button_confirm()
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
                 raise osv.except_osv(_('Warning!'),_('Not enough stock, unable to reserve the products.'))
-            self.pool.get('stock.move').action_assign(cr, uid, move_ids)
+            self.pool.get('stock.move').action_assign(cr, uid, move_ids, context=context)
         return True
 
-    def force_assign(self, cr, uid, ids, *args):
+    def force_assign(self, cr, uid, ids, context=None):
         """ Changes state of picking to available if moves are confirmed or waiting.
         @return: True
         """
         wf_service = netsvc.LocalService("workflow")
-        for pick in self.browse(cr, uid, ids):
+        for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed','waiting']]
-            self.pool.get('stock.move').force_assign(cr, uid, move_ids)
+            self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
-    def draft_force_assign(self, cr, uid, ids, *args):
+    def draft_force_assign(self, cr, uid, ids, context=None):
         """ Confirms picking directly from draft state.
         @return: True
         """
-        for pick in self.browse(cr, uid, ids):
+        for pick in self.browse(cr, uid, ids, context=context):
             if not pick.move_lines:
                 raise osv.except_osv(_('Error!'),_('You cannot process picking without stock moves.'))
-            self.signal_button_confirm(cr, uid, [pick.id])
+            pick.signal_button_confirm()
         return True
 
     def draft_validate(self, cr, uid, ids, context=None):
@@ -799,21 +799,21 @@ class stock_picking(osv.osv):
         @return: True
         """
         wf_service = netsvc.LocalService("workflow")
-        self.draft_force_assign(cr, uid, ids)
+        self.draft_force_assign(cr, uid, ids, context=context)
         for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines]
-            self.pool.get('stock.move').force_assign(cr, uid, move_ids)
+            self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
-        return self.action_process(
-            cr, uid, ids, context=context)
-    def cancel_assign(self, cr, uid, ids, *args):
+        return self.action_process(cr, uid, ids, context=context)
+
+    def cancel_assign(self, cr, uid, ids, context=None):
         """ Cancels picking and moves.
         @return: True
         """
         wf_service = netsvc.LocalService("workflow")
-        for pick in self.browse(cr, uid, ids):
+        for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines]
-            self.pool.get('stock.move').cancel_assign(cr, uid, move_ids)
+            self.pool.get('stock.move').cancel_assign(cr, uid, move_ids, context=context)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
@@ -2108,15 +2108,15 @@ class stock_move(osv.osv):
         self.create_chained_picking(cr, uid, moves, context)
         return []
 
-    def action_assign(self, cr, uid, ids, *args):
+    def action_assign(self, cr, uid, ids, context=None):
         """ Changes state to confirmed or waiting.
         @return: List of values
         """
         todo = []
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('confirmed', 'waiting'):
                 todo.append(move.id)
-        res = self.check_assign(cr, uid, todo)
+        res = self.check_assign(cr, uid, todo, context=context)
         return res
 
     def force_assign(self, cr, uid, ids, context=None):
@@ -2366,10 +2366,12 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
 
-        todo = []
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.state=="draft":
-                todo.append(move.id)
+        todo = [
+            move.id
+            for move in self.browse(cr, uid, ids, context=context)
+            if move.state == 'draft'
+        ]
+
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
             todo = []
