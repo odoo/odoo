@@ -20,42 +20,51 @@
   I need to check the availability of the product so I make my picking order for processing later.
 -
   !python {model: stock.picking}: |
-    self.draft_force_assign(cr, uid, [ref("stock_picking_out0")], {"lang": "en_US", "search_default_available":
-      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
-      "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
-      })
+    record_id = ref('stock.menu_action_picking_tree')
+
+    copy_context = dict(context or {})
+    copy_context.update(active_ids=[record_id], active_id=record_id)
+
+    self.draft_force_assign(cr, uid, [ref("stock_picking_out0")], context=copy_context)
 -
   I check the product availability. Product is available in the stock and ready to be sent.
 -
   !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("stock_picking_out0")], {"lang": "en_US", "search_default_available":
-      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
-      "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
-      })
+    record_id = ref('stock.menu_action_picking_tree')
+    copy_context = dict(context or {})
+    copy_context.update(active_ids=[record_id], active_id=record_id)
+
+    self.action_assign(cr, uid, [ref("stock_picking_out0")], context=copy_context)
 -
   I process the delivery
 -
   !python {model: stock.partial.picking}: |
-    partial_id = self.create(cr, uid, {}, context={'active_model':'stock.picking',
-                                                   'active_ids':[ref('stock_picking_out0')]})
-    self.do_partial(cr, uid, [partial_id])
+    copy_context = dict(context or {})
+    copy_context.update(active_model='stock.picking', active_ids=[ref('stock_picking_out0')])
+    partial_id = self.create(cr, uid, {}, context=copy_context)
+    self.do_partial(cr, uid, [partial_id], context=copy_context)
 
 -
   As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
 -
   !python {model: stock.invoice.onshipping}: |
-    wiz_id = self.create(cr, uid, {'invoice_date': '2010-08-04', 'journal_id': ref('account.sales_journal')},
-      {'active_ids': [ref("stock_picking_out0")], "active_model": "stock.picking"})
-    self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US",
-      "search_default_available": 1, "tz": False, "active_model": "stock.picking",
-      "contact_display": "partner", "active_ids": [ref("stock_picking_out0")], "active_id": ref("stock_picking_out0")})
+    record_id = ref('stock_picking_out0')
+
+    copy_context = dict(context or {})
+    copy_context.update(active_ids=[record_id], active_id=record_id, active_model='stock.picking')
+    values = {
+      'invoice_date': '2010-08-04',
+      'journal_id': str(ref('account.sales_journal')),
+    }
+    wiz_id = self.create(cr, uid, values, context=copy_context)
+    self.create_invoice(cr, uid, [wiz_id], context=copy_context)
 -
   I check that the customer invoice is created successfully.
 -
   !python {model: account.invoice}: |
     picking_obj = self.pool.get('stock.picking')
-    picking = picking_obj.browse(cr, uid, [ref('stock_picking_out0')])
+    picking = picking_obj.browse(cr, uid, [ref('stock_picking_out0')], context=context)
     partner = picking[0].partner_id.id
-    inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)])
+    inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)], context=context)
     assert inv_ids, 'No Invoice is generated!'
 
