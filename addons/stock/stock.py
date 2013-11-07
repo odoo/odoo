@@ -241,6 +241,9 @@ class stock_location(osv.osv):
         if location.chained_location_type == 'customer':
             if partner:
                 result = partner.property_stock_customer
+            else:
+                loc_id = self.pool['res.partner'].default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
+                result = self.pool['stock.location'].browse(cr, uid, loc_id, context=context)
         elif location.chained_location_type == 'fixed':
             result = location.chained_location_id
         if result:
