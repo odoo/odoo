@@ -12,7 +12,7 @@
 
         <template id="website.submenu" name="Submenu">
             <li t-if="not submenu.child_id">
-                <a t-att-href="url_for(submenu.url)">
+                <a t-att-href="url_for(submenu.url)" t-ignore="true">
                     <span t-field="submenu.name"/>
                 </a>
             </li>
