@@ -102,7 +102,9 @@
                 </div>
 
                 <div class='style_default row'>
-                  <div class="col-md-12" id="products_grid" t-if="product_ids">
+                  <div class="hidden" id="products_grid_before"></div>
+                  <div class="col-md-12" id="products_grid">
+                    <t t-if="product_ids">
                     <table width="100%">
                       <tbody>
                         <t t-set="table_products" t-value="Ecommerce.get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
@@ -176,9 +178,10 @@
                         </tr>
                       </tbody>
                     </table>
-                  </div>
-                  <div class="col-md-12" id="products_grid_empty" t-if="not product_ids">
-                    <h3 class="text-center text-muted">No product found for this search</h3>
+                    </t>
+                    <t t-if="not product_ids">
+                      <h3 class="text-center text-muted">No product found for this search</h3>
+                    </t>
                   </div>
                 </div>
                 <div class="products_pager">
@@ -478,24 +481,25 @@
     <!-- Page Shop -->
 
     <template id="products_categories" inherit_option_id="website_sale.products" name="Product Categories">
-        <xpath expr="//div[@id='products_grid']" position="before">
-            <div id="categories" class="col-md-3">
-                <ul class="nav nav-pills nav-stacked mt16">
-                    <li t-att-class=" '' if search.get('category') else 'active' "><a t-href="/shop/">All Products</a></li>
-                    <t t-set="categ" t-value="Ecommerce.get_categories()"/>
-                    <t t-foreach="categ[0]" t-as="category">
-                        <t t-call="website_sale.categories_recursive"/>
-                    </t>
-                </ul>
-            </div>
+        <xpath expr="//div[@id='products_grid_before']" position="inside">
+            <ul class="nav nav-pills nav-stacked mt16">
+                <li t-att-class=" '' if search.get('category') else 'active' "><a t-href="/shop/">All Products</a></li>
+                <t t-set="categ" t-value="Ecommerce.get_categories()"/>
+                <t t-foreach="categ[0]" t-as="category">
+                    <t t-call="website_sale.categories_recursive"/>
+                </t>
+            </ul>
+        </xpath>
+        <xpath expr="//div[@id='products_grid_before']" position="attributes">
+            <attribute name="class">col-md-3</attribute>
         </xpath>
         <xpath expr="//div[@id='products_grid']" position="attributes">
             <attribute name="class">col-md-9</attribute>
         </xpath>
     </template>
 
-    <template id="products_attributes" inherit_option_id="website_sale.products_categories" name="Product Filters and Attributes">
-        <xpath expr="//div[@id='categories']" position="inside">
+    <template id="products_attributes" inherit_option_id="website_sale.products" name="Product Filters and Attributes">
+        <xpath expr="//div[@id='products_grid_before']" position="inside">
             <form t-action="/shop/filter/" method="post" t-keep-query="category,search,add_filter">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
@@ -530,6 +534,12 @@
                 </ul>
                 <button class="btn btn-xs btn-primary mt16">Apply filter</button>
             </form>
+        </xpath>
+        <xpath expr="//div[@id='products_grid_before']" position="attributes">
+            <attribute name="class">col-md-3</attribute>
+        </xpath>
+        <xpath expr="//div[@id='products_grid']" position="attributes">
+            <attribute name="class">col-md-9</attribute>
         </xpath>
     </template>
 
