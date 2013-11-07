@@ -2,15 +2,9 @@
 <openerp>
 <data>
     <!-- Layout add nav and footer -->
-    <template id="header_footer_custom" inherit_id="website.layout">
+    <template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
             <li><a t-href="/blog/cat/%(website_blog.blog_category_1)d/">News</a></li>
-        </xpath>
-    </template>
-
-    <template id="footer_custom" inherit_option_id="website.layout" name="Job Announces">
-        <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/blog/%(website_blog.blog_category_2)d/">Jobs</a></li>
         </xpath>
     </template>
 

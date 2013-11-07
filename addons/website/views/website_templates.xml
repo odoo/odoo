@@ -227,30 +227,32 @@
 
         <template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
             <xpath expr="//div[@id='footer_container']" position="before">
-                <section data-snippet-id='three-columns' class="mt16 mb16">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h4 class="mt16">Subtitle</h4>
-                                <p>
-                                    <a t-href="/">Homepage</a>
-                                </p>
-                            </div>
-                            <div class="col-md-4">
-                                <h4 class="mt16">Subtitle 2</h4>
-                                <p>
-                                    ...
-                                </p>
-                            </div>
-                            <div class="col-md-4">
-                                <h4 class="mt16">Subtitle 3</h4>
-                                <p>
-                                    ...
-                                </p>
+                <div class="oe_structure">
+                    <section data-snippet-id='three-columns' class="mt16 mb16">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h4 class="mt16">Subtitle</h4>
+                                    <p>
+                                        <a href="/">Homepage</a>
+                                    </p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4 class="mt16">Subtitle 2</h4>
+                                    <p>
+                                        ...
+                                    </p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4 class="mt16">Subtitle 3</h4>
+                                    <p>
+                                        ...
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </xpath>
             <xpath expr="//div[@id='footer_container']" position="attributes">
                 <attribute name="style">display: none</attribute>
