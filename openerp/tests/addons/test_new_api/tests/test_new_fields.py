@@ -101,6 +101,7 @@ class TestNewFields(common.TransactionCase):
 
     def test_12_recursive(self):
         """ test recursively dependent fields """
+        raise NotImplementedError()
         abel = self.Partner.create({'name': 'Abel'})
         beth = self.Partner.create({'name': 'Bethany'})
         cath = self.Partner.create({'name': 'Catherine'})

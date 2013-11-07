@@ -24,7 +24,9 @@
     objects. The object :obj:`proxy` is a proxy object to the current scope.
 """
 
+from collections import defaultdict
 from contextlib import contextmanager
+from pprint import pformat
 from werkzeug.local import Local, release_local
 
 
@@ -78,18 +80,17 @@ class ScopeProxy(object):
     def invalidate(self, model, field, ids=None):
         """ Invalidate a field for the given record ids in the caches. """
         for scope in self.all_scopes:
-            scope.cache.invalidate(model, field, ids)
+            scope.invalidate(model, field, ids)
 
     def invalidate_all(self):
         """ Invalidate the record caches in all scopes. """
         for scope in self.all_scopes:
-            scope.cache.invalidate_all()
+            scope.invalidate_all()
 
     def check_cache(self):
         """ Check the record caches in all scopes. """
         for scope in self.all_scopes:
-            with scope:
-                scope.cache.check()
+            scope.check_cache()
 
     @property
     def recomputation(self):
@@ -117,7 +118,8 @@ class Scope(object):
 
          - :attr:`cr`, the current database cursor;
          - :attr:`uid`, the current user id;
-         - :attr:`context`, the current context dictionary.
+         - :attr:`context`, the current context dictionary;
+         - :attr:`args`, a tuple containing the three values above.
 
         An execution environment is created by a statement ``with``::
 
@@ -130,8 +132,12 @@ class Scope(object):
         The scope provides extra attributes:
 
          - :attr:`registry`, the model registry of the current database,
-         - :attr:`cache`, a records cache (see :class:`openerp.osv.cache.Cache`),
-         - :attr:`draft`, a boolean indicating whether the scope is in draft mode.
+         - :attr:`cache`, the records cache for this scope,
+         - :attr:`draft`, an object to manage the draft mode
+            (see :class:`DraftSwitch`).
+
+        The records cache is a set of nested dictionaries, indexed by model
+        name, record id, and field name (in that order).
     """
     def __new__(cls, cr, uid, context):
         if context is None:
@@ -148,7 +154,8 @@ class Scope(object):
         scope = object.__new__(cls)
         scope.cr, scope.uid, scope.context = scope.args = args
         scope.registry = RegistryManager.get(cr.dbname)
-        scope.cache = Cache()
+        # cache[model_name][record_id][field_name]
+        scope.cache = defaultdict(lambda: defaultdict(dict))
         scope.draft = proxy.draft
         scope_list.append(scope)
         return scope
@@ -221,6 +228,49 @@ class Scope(object):
         """ return the current language code """
         return self.context.get('lang') or 'en_US'
 
+    def invalidate(self, model_name, field_name, ids=None):
+        """ Invalidate a field for the given record ids in the cache. """
+        model_cache = self.cache[model_name]
+        if ids is None:
+            ids = model_cache.keys()
+        for id in ids:
+            model_cache[id].pop(field_name, None)
+
+    def invalidate_all(self):
+        """ Invalidate the cache. """
+        # Record caches cannot be dropped, since they are memoized in instances.
+        for model_cache in self.cache.itervalues():
+            for record_cache in model_cache.itervalues():
+                record_id = record_cache.get('id')
+                record_cache.clear()
+                if record_id:
+                    record_cache['id'] = record_id
+
+    def check_cache(self):
+        """ Check the cache consistency. """
+        with self:
+            # make a full copy of the cache, and invalidate it
+            cache_dump = dict(
+                (model_name, dict(
+                    (id, dict(record_cache))
+                    for id, record_cache in model_cache.iteritems()
+                ))
+                for model_name, model_cache in self.cache.iteritems()
+            )
+            self.invalidate_all()
+
+            # re-fetch the records, and compare with their former cache
+            invalids = []
+            for model_name, model_dump in cache_dump.iteritems():
+                records = self[model_name].browse(model_dump)
+                for record, record_dump in zip(records, model_dump.itervalues()):
+                    for field, value in record_dump.iteritems():
+                        if record[field] != value:
+                            info = {'cached': value, 'fetched': record[field]}
+                            invalids.append((record, field, info))
+
+            if invalids:
+                raise Warning('Invalid cache for records\n' + pformat(invalids))
 
 #
 # DraftSwitch - manages the mode switching between draft and non-draft
@@ -228,16 +278,18 @@ class Scope(object):
 
 class DraftSwitch(object):
     """ An object that manages the draft mode associated to all the scopes of a
-        werkzeug session::
+        werkzeug session. In draft mode, field assignments only affect the
+        cache, and have thus no effect on the database::
 
             # calling returns a context manager that switches to draft mode
             with scope.draft():
-                # here we are in draft mode
+                # here we are in draft mode, this only affects the cache
+                record.name = 'Foo'
 
                 # testing returns the state
                 assert scope.draft
 
-                # nesting has no effect
+                # nesting is possible, and is idempotent
                 with scope.draft():
                     assert scope.draft
 
@@ -310,6 +362,6 @@ class Recomputation(object):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.osv.cache import Cache
+from openerp.exceptions import Warning
 from openerp.osv.orm import BaseModel
 from openerp.modules.registry import RegistryManager

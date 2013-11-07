@@ -234,27 +234,48 @@ class Field(object):
     # Getter/setter methods
     #
 
-    def __get__(self, instance, owner):
-        """ read the value of field `self` for the record `instance` """
-        if instance is None:
-            return self         # the field is accessed through the class owner
-        assert instance._name == self.model_name
+    def __get__(self, record, owner):
+        """ return the value of field `self` on `record` """
+        if record is None:
+            return self         # the field is accessed through the owner class
 
-        with instance._scope:
-            if instance:
-                # non-null records: get value through their cache
-                return instance._record_cache[self.name]
+        try:
+            return record._record_cache[self.name]
+        except (KeyError, IndexError):
+            pass
+
+        # cache miss, retrieve value
+        with record._scope:
+            if record._id:
+                # normal record -> read or compute value for this field
+                self.determine_value(record)
+            elif record:
+                # new record -> compute default value for this field
+                record.add_default_value(self.name)
             else:
-                # null records: return null value
+                # null record -> return the null value for this field
                 return self.null()
 
-    def __set__(self, instance, value):
-        """ set the value of field `self` for the record `instance` """
-        assert instance._name == self.model_name
-        with instance._scope:
-            # adapt value to the cache level, and set it through the cache
+        # the result should be in cache now
+        return record._record_cache[self.name]
+
+    def __set__(self, record, value):
+        """ set the value of field `self` on `record` """
+        if not record:
+            raise Warning("Null record %s may not be assigned" % record)
+
+        with record._scope as _scope:
+            # adapt value to the cache level
             value = self.convert_to_cache(value)
-            instance._record_cache[self.name] = value
+
+            # notify the change, which may cause cache invalidation
+            if _scope.draft or not record._id:
+                self.modified_draft(record)
+            else:
+                record.write({self.name: self.convert_to_write(value)})
+
+            # store the value in cache
+            record._record_cache[self.name] = value
 
     #
     # Management of the computation of field values.
@@ -264,11 +285,6 @@ class Field(object):
         """ Invoke the compute method on `records`. If `check` is ``True``, the
             method filters out non-existing records before computing them.
         """
-        batch = len(records) > 1
-        recompute = bool(records & scope.recomputation.todo(self))
-        for cache in records._caches:
-            cache.set_busy(self.name, batch=batch, recompute=recompute)
-
         # if required, keep new and existing records only
         if check_exists:
             new_records = [rec for rec in records if not rec.id]
@@ -285,9 +301,11 @@ class Field(object):
         """ Read the value of `self` for `records` from the database. """
         name = self.name
         column = records._columns[name]
+        model_cache = records._model_cache
 
         # fetch the records of this model without name in their cache
-        fetch_recs = records.browse(records._model_cache.without_field(name))
+        fetch_ids = [id for id, cache in model_cache.iteritems() if name not in cache]
+        fetch_recs = records.browse(fetch_ids)
 
         # prefetch all classic and many2one fields if column is one of them
         # Note: do not prefetch fields when records.pool._init is True, because
@@ -314,8 +332,7 @@ class Field(object):
         # method read is supposed to fetch the cache with the results
         if any(name not in record._record_cache for record in records):
             for data in result:
-                record = records.browse(data['id'])
-                record._update_cache({name: data[name]})
+                model_cache[data['id']][name] = self.convert_to_cache(data[name])
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
@@ -323,19 +340,26 @@ class Field(object):
             # recompute field on record if required
             recs_todo = scope.recomputation.todo(self)
             if record in recs_todo:
+                # execute the compute method in NON-draft mode, so that assigned
+                # fields are written to the database
                 self.compute_value(recs_todo, check_exists=True)
                 scope.recomputation.done(self, recs_todo)
             else:
                 self.read_value(record)
         else:
             # compute self for the records without value for self in their cache
-            recs = record.browse(record._model_cache.without_field(self.name))
+            name = self.name
+            model_cache = record._model_cache
+            ids = [id for id, cache in model_cache.iteritems() if name not in cache]
+            recs = record.browse(ids)
             with recs._scope.draft():
+                # execute the compute method in draft mode, so that assigned
+                # fields are not written to the database
                 self.compute_value(recs, check_exists=True)
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        record._record_cache.set_null(self.name)
+        record._record_cache[self.name] = self.null()
         if self.compute:
             self.compute_value(record)
 

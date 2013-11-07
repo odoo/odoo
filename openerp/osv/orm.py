@@ -1360,8 +1360,16 @@ class BaseModel(object):
         for name in fields_list:
             record[name]                # force evaluation of defaults
 
-        # retrieve defaults from record's values
-        return self._convert_to_write(record._read_cache())
+        # retrieve defaults from record's cache
+        values = self._convert_to_write(record._read_cache())
+
+        # HACK: remove False from values, as this is a sign of "no default
+        # value". In some models from base, keeping False causes some issues,
+        # possibly because a NULL overrides an SQL default value in a column.
+        for name, value in values.items():
+            if value is False:
+                values.pop(name)
+        return values
 
     def add_default_value(self, name):
         """ Set the default value of field `name` to the new record `self`.
@@ -5365,7 +5373,12 @@ class BaseModel(object):
             ids = ()
         scope = scope_proxy.current
         model_cache = scope.cache[cls._name]
-        return cls._instance(scope, tuple(model_cache[id] for id in ids))
+        caches = []
+        for id in ids:
+            cache = model_cache[id]
+            cache['id'] = id
+            caches.append(cache)
+        return cls._instance(scope, tuple(caches))
 
     #
     # Internal properties, for manipulating the instance's implementation
@@ -5374,12 +5387,12 @@ class BaseModel(object):
     @property
     def _id(self):
         """ Return the 'id' of record `self` or ``False``. """
-        return bool(self._caches) and self._caches[0].id
+        return bool(self._caches) and self._caches[0].get('id')
 
     @property
     def _ids(self):
         """ Return the 'id' of all records in `self`. """
-        return (cache.id for cache in self._caches)
+        return (cache.get('id') for cache in self._caches)
 
     @property
     def _refs(self):
@@ -5387,7 +5400,7 @@ class BaseModel(object):
             comparing instances. The result is similar to `_ids`, but uses other
             values for identifying new records, since they do not have an 'id'.
         """
-        return set(cache.id or (id(cache),) for cache in self._caches)
+        return set(cache.get('id') or (id(cache),) for cache in self._caches)
 
     @tools.lazy_property
     def _model_cache(self):
@@ -5455,8 +5468,11 @@ class BaseModel(object):
         """ Update the cache of record `self[0]` with `values`. Only the cache
             is updated, no side effect happens.
         """
-        with self._scope.draft():
-            self.update(values)
+        with self._scope:
+            cache = self._record_cache
+            for name, value in values.iteritems():
+                field = self._fields[name]
+                cache[name] = field.convert_to_cache(value)
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
@@ -5475,7 +5491,7 @@ class BaseModel(object):
         """
         assert 'id' not in values, "New records do not have an 'id'."
         scope = scope_proxy.current
-        record_cache = scope.cache[self._name][False]
+        record_cache = {}
         record = self._instance(scope, (record_cache,))
         record._update_cache(values)
         return record
@@ -5694,7 +5710,7 @@ class BaseModel(object):
     def onchange(self, field_name, values):
         # create a new record with the values, except field_name
         record = self.new(values)
-        record_values = record._record_cache.dump()
+        record_values = dict(record._record_cache)
         record._record_cache.pop(field_name)
 
         # check for a field-specific onchange method
