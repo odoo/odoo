@@ -17,9 +17,15 @@
             return this._super();
         },
         edit: function () {
+            var self = this;
             $("body").off('click');
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
+
+            this.rte.on('rte:ready', this, function () {
+                self.snippets.$button.removeClass("hidden");
+            });
+
             return this._super.apply(this, arguments);
         },
         save: function () {
@@ -118,10 +124,11 @@
         start: function() {
             var self = this;
 
-            var $ul = this.parent.$("#website-top-edit ul");
+            this.$button = $(openerp.qweb.render('website.snippets_button'))
+                .prependTo(this.parent.$("#website-top-edit ul"))
+                .find("button");
 
-            var $button = $(openerp.qweb.render('website.snippets_button')).prependTo($ul);
-            $button.find('button').click(function () {
+            this.$button.click(function () {
                 self.make_active(false);
                 self.$el.toggleClass("hidden");
             });
