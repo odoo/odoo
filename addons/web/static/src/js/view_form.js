@@ -5520,23 +5520,23 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
 
         var calculation = _.bind(function() {
             if (this.field.type == "many2one") {
-                return self.get_distant_fields().then(function(fields) {
-                    return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
-                        .read_slice(fields.fold ? ['fold'] : ['id'], {}).then(function (records) {
-
-                            var ids = _.map(records, function (val) {return val.id;});
-                            return self.dataset.name_get(ids).then(function (records_name) {
-                                _.each(records, function (record) {
-                                    var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
-                                    if (record.fold && record.id != self.get('value')) {
-                                        selection_folded.push([record.id, name]);
-                                    } else {
-                                        selection_unfolded.push([record.id, name]);
-                                    }
-                                });
+                /* :deprecated: fold feature will probably be removed */
+                // return self.get_distant_fields().then(function(fields) {
+                self.distant_fields = {};
+                return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
+                    .read_slice(_.union(_.keys(self.distant_fields), ['id']), {}).then(function (records) {
+                        var ids = _.pluck(records, 'id');
+                        return self.dataset.name_get(ids).then(function (records_name) {
+                            _.each(records, function (record) {
+                                var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
+                                if (record.fold && record.id != self.get('value')) {
+                                    selection_folded.push([record.id, name]);
+                                } else {
+                                    selection_unfolded.push([record.id, name]);
+                                }
                             });
                         });
-                });
+                    });
             } else {
                 // For field type selection filter values according to
                 // statusbar_visible attribute of the field. For example:
@@ -5558,6 +5558,9 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             }
         });
     },
+    /*
+     * :deprecated: this feature will probably be removed with OpenERP v8
+     */
     get_distant_fields: function() {
         var self = this;
         if (this.distant_fields) {
