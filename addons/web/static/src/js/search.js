@@ -1535,6 +1535,9 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         this.model = new instance.web.Model(this.attrs.relation);
     },
     complete: function (needle) {
+        if (this.attrs.operator || this.attrs.filter_domain) {
+            return this._super(needle);
+        }
         var self = this;
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
         var context = instance.web.pyeval.eval(
