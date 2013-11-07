@@ -95,7 +95,7 @@ class StockMove(osv.osv):
                     'picking_id': False,
                     'state': 'confirmed'
                 })
-                procurement_ids = procurement_obj.search(cr, uid, [('move_id','=',move.id)], context)
+                procurement_ids = procurement_obj.search(cr, uid, [('move_id','=',move.id)], context=context)
                 procurement_obj.signal_button_confirm(cr, uid, procurement_ids)
                 procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
         return processed_ids
@@ -157,7 +157,7 @@ class StockPicking(osv.osv):
         """Explodes moves by expanding kit components"""
         move_obj = self.pool.get('stock.move')
         todo = move_ids[:]
-        for move in move_obj.browse(cr, uid, move_ids):
+        for move in move_obj.browse(cr, uid, move_ids, context=context):
             todo.extend(move_obj._action_explode(cr, uid, move, context=context))
         return list(set(todo))
 
