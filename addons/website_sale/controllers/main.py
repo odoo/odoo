@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
 import uuid
-import urllib
 import simplejson
 
 import werkzeug.exceptions
@@ -54,11 +53,11 @@ def get_current_order():
 
 class Website(osv.osv):
     _inherit = "website"
-    def preprocess_request(self, cr, uid, ids, *args, **kwargs):
+    def preprocess_request(self, cr, uid, ids, request, context=None):
         request.context.update({
             'website_sale_order': get_current_order(),
         })
-        return super(Website, self).preprocess_request(cr, uid, ids, *args, **kwargs)
+        return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
 class Ecommerce(http.Controller):
 
@@ -214,7 +213,6 @@ class Ecommerce(http.Controller):
                 col += 1
             line += 1
 
-        print bin_packing_list
         return bin_packing_list
 
     def get_products(self, product_ids):
@@ -224,20 +222,24 @@ class Ecommerce(http.Controller):
         product_ids = [id for id in product_ids if id in product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)]
         return product_obj.browse(request.cr, request.uid, product_ids, context=request.context)
 
-    def has_search_attributes(self, attribute_id, value_id=None):
-        if request.httprequest.args.get('attributes'):
-            attributes = simplejson.loads(request.httprequest.args['attributes'])
+    def has_search_filter(self, attribute_id, value_id=None):
+        if request.httprequest.args.get('filter'):
+            filter = simplejson.loads(request.httprequest.args['filter'])
         else:
-            attributes = []
-        for key_val in attributes:
+            filter = []
+        for key_val in filter:
             if key_val[0] == attribute_id and (not value_id or value_id in key_val[1:]):
                 return key_val
         return False
 
-    @website.route(['/shop/attributes/'], type='http', auth="public", multilang=True)
-    def attributes(self, **post):
-        attributes = []
+    @website.route(['/shop/filter/'], type='http', auth="public", multilang=True)
+    def filter(self, add_filter="", **post):
         index = []
+        filter = []
+        if add_filter:
+            filter = simplejson.loads(add_filter)
+            for filt in filter:
+                index.append(filt[0])
         for key, val in post.items():
             cat = key.split("-")
             if len(cat) < 3 or cat[2] in ('max','minmem','maxmem'):
@@ -249,16 +251,23 @@ class Ecommerce(http.Controller):
                 _max = int(post.pop("att-%s-max" % cat[1]))
                 _min = int(val)
                 if (minmem != _min or maxmem != _max) and cat_id not in index:
-                    attributes.append([cat_id , [_min, _max] ])
+                    filter.append([cat_id , [_min, _max] ])
                     index.append(cat_id)
             elif cat_id not in index:
-                attributes.append([ cat_id, int(cat[2]) ])
+                filter.append([ cat_id, int(cat[2]) ])
                 index.append(cat_id)
             else:
-                attributes[index.index(cat_id)].append( int(cat[2]) )
+                cat[2] = int(cat[2])
+                if cat[2] not in filter[index.index(cat_id)][1:]:
+                    filter[index.index(cat_id)].append( cat[2] )
             post.pop(key)
 
-        return request.redirect("/shop/?attributes=%s&%s" % (simplejson.dumps(attributes).replace(" ", ""), urllib.urlencode(post)))
+        return request.redirect("/shop/?filter=%s%s%s%s" % (
+                simplejson.dumps(filter),
+                add_filter and "&add_filter=%s" % add_filter or "",
+                post.get("search") and "&search=%s" % post.get("search") or "",
+                post.get("category") and "&category=%s" % post.get("category") or ""
+            ))
 
     def attributes_to_ids(self, attributes):
         obj = request.registry.get('product.attribute.product')
@@ -274,7 +283,7 @@ class Ecommerce(http.Controller):
         return [r["product_id"][0] for r in att]
 
     @website.route(['/shop/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
-    def category(self, category=0, attributes="", page=0, **post):
+    def category(self, category=0, filter="", page=0, **post):
         # TDE-NOTE: shouldn't we do somethign about product_template without variants ???
         # TDE-NOTE: is there a reason to call a method category when the route is
         # basically a shop without category_id speceified ?
@@ -296,10 +305,10 @@ class Ecommerce(http.Controller):
             cat_id = int(category)
             domain = [('product_variant_ids.public_categ_id.id', 'child_of', cat_id)] + domain
 
-        if attributes:
-            attributes = simplejson.loads(attributes)
-            if attributes:
-                ids = self.attributes_to_ids(attributes)
+        if filter:
+            filter = simplejson.loads(filter)
+            if filter:
+                ids = self.attributes_to_ids(filter)
                 domain = [('id', 'in', ids or [0] )] + domain
 
         step = 20
@@ -321,7 +330,11 @@ class Ecommerce(http.Controller):
             'Ecommerce': self,
             'product_ids': product_ids,
             'product_ids_for_holes': fill_hole,
-            'search': post or dict(),
+            'search': {
+                'search': post.get('search') or '',
+                'category': category,
+                'filter': filter or '',
+            },
             'pager': pager,
             'styles': styles,
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
@@ -342,8 +355,8 @@ class Ecommerce(http.Controller):
         category_list = sorted(category_list, key=lambda category: category[1])
 
         category = None
-        if post.get('category_id') and int(post.get('category_id')):
-            category = category_obj.browse(request.cr, request.uid, int(post.get('category_id')), context=request.context)
+        if post.get('category') and int(post.get('category')):
+            category = category_obj.browse(request.cr, request.uid, int(post.get('category')), context=request.context)
 
         request.context['pricelist'] = self.get_pricelist()
         product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)
@@ -354,7 +367,11 @@ class Ecommerce(http.Controller):
             'category_list': category_list,
             'main_object': product,
             'product': product,
-            'search': post or dict(),
+            'search': {
+                'search': post.get('search') or '',
+                'category': post.get('category') or '',
+                'filter': post.get('filter') or '',
+            }
         }
         return request.website.render("website_sale.product", values)
 
@@ -452,8 +469,7 @@ class Ecommerce(http.Controller):
         else:
             order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=request.context)
             order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
-
-        return [quantity, order.get_total_quantity()]
+        return quantity
 
     @website.route(['/shop/mycart/'], type='http', auth="public", multilang=True)
     def mycart(self, **post):
@@ -493,7 +509,11 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
-        return self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+        quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
+        order = get_current_order()
+        return [quantity, order.get_total_quantity(), order.amount_total, request.website.render("website_sale.total", {
+                'website_sale_order': order
+            }).strip()]
 
     @website.route(['/shop/set_cart_json/'], type='json', auth="public")
     def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):

@@ -4,9 +4,8 @@
 
     <!-- Layout add nav and footer -->
 
-    <template id="header" inherit_id="website.layout" name="Custom Header">
+    <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
-            <li><a t-href="/shop/">Shop</a></li>
             <li t-att-class="(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''">
                 <a t-href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
@@ -20,7 +19,7 @@
     <!-- List of categories -->
 
     <template id="categories_recursive" name="Category list">
-        <li t-att-class="category.id == search.get('category') and 'active' or ''">
+        <li t-att-class="str(category.id) == search.get('category') and 'active' or ''">
             <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/?category=#{ category.id }" t-field="category.name" t-keep-query="search,facettes"></a>
             <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                 <t t-foreach="category.child_id" t-as="category">
@@ -33,6 +32,12 @@
     </template>
 
     <!-- Product list -->
+
+    <template id="search" name="Search hidden fields">
+        <input type="hidden" name="category" t-att-value="search.get('category') or ''"/>
+        <input type="hidden" name="filter" t-att-value="search.get('filter') or ''"/>
+        <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
+    </template>
 
     <template id="products_cart" name="Shopping cart">
       <div class="ribbon-wrapper">
@@ -65,9 +70,11 @@
       </div>
     </template>
 
-    <template id="products" name="Products" page="True">
+    <template id="products" name="Products">
         <t t-call="website.layout">
             <t t-set="head">
+                <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+                <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
@@ -77,26 +84,27 @@
               <div class="oe_structure"/>
               <div class="container oe_website_sale">
                 <div class="row">
-                    <div class="col-sm-6 pagination" style="padding-left: 15px;">
+                    <div class="col-sm-6 pagination hidden-xs" style="padding-left: 15px;">
                         <form t-if="editable" t-keep-query="category,search,facettes"
                               method="POST" t-action="/shop/add_product">
                             <button class="btn btn-primary">New Product</button>
                         </form>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 products_pager">
                         <t t-call="website.pager">
                             <t t-set="classname">pull-right</t>
+                            <t t-set="style">padding-left: 5px;</t>
                         </t>
-                        <form t-action="/shop/" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;" t-keep-query="category,search,facettes">
-                            <div class="form-group">
-                                <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
-                            </div>
+                        <form t-action="/shop/" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;">
+                            <t t-call="website_sale.search" />
                         </form>
                     </div>
                 </div>
 
                 <div class='style_default row'>
+                  <div class="hidden" id="products_grid_before"></div>
                   <div class="col-md-12" id="products_grid">
+                    <t t-if="product_ids">
                     <table width="100%">
                       <tbody>
                         <t t-set="table_products" t-value="Ecommerce.get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
@@ -170,9 +178,13 @@
                         </tr>
                       </tbody>
                     </table>
+                    </t>
+                    <t t-if="not product_ids">
+                      <h3 class="text-center text-muted">No product found for this search</h3>
+                    </t>
                   </div>
                 </div>
-                <div>
+                <div class="products_pager">
                     <t t-call="website.pager">
                         <t t-set="classname">pull-right</t>
                     </t>
@@ -250,17 +262,9 @@
                         </li>
                       </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
-                      <form t-action="/shop/" method="get" class="pull-right" t-keep-query="category,facettes">
-                          <div class="input-group">
-                              <t t-if="search">
-                              <t t-foreach="search.items()" t-as="key">
-                                  <input t-att-name="key[0]" t-att-value="key[1]"/>
-                              </t>
-                              </t>
-                              <span class="input-group-addon"><span class="glyphicon glyphicon-search"/></span>
-                              <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search or ''"/>
-                          </div>
-                      </form>
+                        <form t-action="/shop/" method="get" class="pull-right">
+                            <t t-call="website_sale.search" />
+                        </form>
                   </div>
                 </div>
               </section>
@@ -268,7 +272,7 @@
               <section class="container oe_website_sale mb16" id="product_detail">
                 <div class="row">
                   <div class="col-sm-7 col-md-7 col-lg-7">
-                      <span t-field="product.image" style="max-height: 500px" t-field-options='{"widget": "image"}'/>
+                      <span t-field="product.image" style="max-height: 500px" t-field-options='{"widget": "image", "class": "img img-responsive"}'/>
                   </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                       <h1 t-field="product.name">Product Name</h1>
 
@@ -349,9 +353,19 @@
         </xpath>
     </template>
 
+    <template id="product_attributes" inherit_option_id="website_sale.product" name="Product Attributes">
+      <xpath expr="//p[@t-field='product.description_sale']" position="after">
+        <hr t-if="product.website_attribute_ids"/>
+        <p class="text-muted">
+          <t t-set="attr" t-value="None"/>
+          <t t-foreach="product.website_attribute_ids" t-as="attribute"><br t-if="attr and attribute.attribute_id.id != attr"/><t t-if="attribute.attribute_id.id != attr"><span t-field="attribute.attribute_id"/>: </t><t t-if="attribute.attribute_id.id == attr">, </t><t t-if="attribute.attribute_id.type == 'distinct'"><span t-field="attribute.value_id"/></t><t t-if="attribute.attribute_id.type == 'float'"><span t-field="attribute.value"/></t><t t-set="attr" t-value="attribute.attribute_id.id"/></t>
+        </p>
+      </xpath>
+    </template>
+
     <!-- Page Shop my cart -->
 
-    <template id="mycart" name="Your Cart" page="True">
+    <template id="mycart" name="Your Cart">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
@@ -369,18 +383,6 @@
                 </ul>
                 <h1 class="mb32">Shopping Cart</h1>
                 <div class="row">
-                    <div class="col-md-3 text-muted" id="right_column">
-                        <h4>Policies</h4>
-                        <ul class="list-unstyled mb32">
-                            <li>&#9745; 30-days money-back guarantee</li>
-                            <li>&#9745; Invoice sent by e-Mail</li>
-                        </ul>
-                        <h4>Secure Payment</h4>
-                        <ul class="list-unstyled mb32">
-                            <li>&#9745; 256 bit encryption</li>
-                            <li>&#9745; Processed by Ogone</li>
-                        </ul>
-                    </div>
                     <div class="col-md-8 col-md-offset-1 oe_mycart">
                         <div t-if="not website_sale_order or not website_sale_order.order_line" class="well well-lg">
                             Your cart is empty!
@@ -429,14 +431,14 @@
                                     <td>
                                         <div class="input-group">
                                             <span class="input-group-addon">
-                                                <a t-href="./remove_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 js_add_cart_json">
+                                                <a t-href="./add_cart/?remove=True&amp;order_line_id=#{ line.id }" class="mb8 js_add_cart_json">
                                                     <span class="icon-minus"/>
                                                 </a>
                                             </span>
                                             <input type="text" class="js_quantity form-control"
                                                 t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
                                             <span class="input-group-addon">
-                                                <a t-href="./add_cart/?order_line_id=#{ line.id }" t-att-data-id="line.id" class="mb8 float_left js_add_cart_json">
+                                                <a t-href="./add_cart/?order_line_id=#{ line.id }" class="mb8 float_left js_add_cart_json">
                                                     <span class="icon-plus"/>
                                                 </a>
                                             </span>
@@ -446,7 +448,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <table class='pull-right mb16' id="mycart_total">
+                        <table class='pull-right mb16' id="mycart_total" t-if="website_sale_order">
                             <colgroup>
                                 <col width="100"/>
                                 <col width="120"/>
@@ -454,11 +456,8 @@
                             <thead>
                                 <tr style="border-top: 1px solid #000">
                                     <th><h3>Total:</h3></th>
-                                    <th class="text-right"><h3>
-                                        <span t-field="website_sale_order.amount_total" t-field-options='{
-                                            "widget": "monetary",
-                                            "display_currency": "website.pricelist_id.currency_id"
-                                        }'/></h3>
+                                    <th class="text-right">
+                                      <h3><t t-call="website_sale.total"/></h3>
                                     </th>
                                 </tr>
                                 <tr class="text-muted">
@@ -477,6 +476,18 @@
                         <a t-if="website_sale_order and website_sale_order.order_line" t-href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
                         <div class="oe_structure"/>
                     </div>
+                    <div class="col-md-3 text-muted" id="right_column">
+                        <h4>Policies</h4>
+                        <ul class="list-unstyled mb32">
+                            <li>&#9745; 30-days money-back guarantee</li>
+                            <li>&#9745; Invoice sent by e-Mail</li>
+                        </ul>
+                        <h4>Secure Payment</h4>
+                        <ul class="list-unstyled mb32">
+                            <li>&#9745; 256 bit encryption</li>
+                            <li>&#9745; Processed by Ogone</li>
+                        </ul>
+                    </div>
                 </div>
 
               </div>
@@ -488,36 +499,38 @@
     <!-- Page Shop -->
 
     <template id="products_categories" inherit_option_id="website_sale.products" name="Product Categories">
-        <xpath expr="//div[@id='products_grid']" position="before">
-            <div id="categories" class="col-md-3">
-                <ul class="nav nav-pills nav-stacked mt16">
-                    <li t-att-class=" '' if search.get('category') else 'active' "><a t-href="/shop/">All Products</a></li>
-                    <t t-set="categ" t-value="Ecommerce.get_categories()"/>
-                    <t t-foreach="categ[0]" t-as="category">
-                        <t t-call="website_sale.categories_recursive"/>
-                    </t>
-                </ul>
-            </div>
+        <xpath expr="//div[@id='products_grid_before']" position="inside">
+            <ul class="nav nav-pills nav-stacked mt16">
+                <li t-att-class=" '' if search.get('category') else 'active' "><a t-href="/shop/">All Products</a></li>
+                <t t-set="categ" t-value="Ecommerce.get_categories()"/>
+                <t t-foreach="categ[0]" t-as="category">
+                    <t t-call="website_sale.categories_recursive"/>
+                </t>
+            </ul>
+        </xpath>
+        <xpath expr="//div[@id='products_grid_before']" position="attributes">
+            <attribute name="class">col-md-3</attribute>
         </xpath>
         <xpath expr="//div[@id='products_grid']" position="attributes">
             <attribute name="class">col-md-9</attribute>
         </xpath>
     </template>
 
-    <template id="products_attributes" inherit_option_id="website_sale.products_categories" name="Product Attributes">
-        <xpath expr="//div[@id='categories']" position="inside">
-            <form t-action="/shop/attributes/" method="post" t-keep-query="category,search">
+    <template id="products_attributes" inherit_option_id="website_sale.products" name="Product Filters and Attributes">
+        <xpath expr="//div[@id='products_grid_before']" position="inside">
+            <form t-action="/shop/filter/" method="post" t-keep-query="category,search,add_filter">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
                     <t t-foreach="attribute_ids" t-as="attribute_id">
+                      <t t-if="attribute_id.visible">
                         <li t-if="attribute_id.value_ids and attribute_id.type == 'distinct'">
                             <div t-field="attribute_id.name"/>
                             <ul class="nav nav-pills nav-stacked">
                                 <t t-foreach="attribute_id.value_ids" t-as="value_id">
-                                    <li t-att-class="Ecommerce.has_search_attributes(attribute_id.id, value_id.id) and 'active' or ''">
+                                    <li t-att-class="Ecommerce.has_search_filter(attribute_id.id, value_id.id) and 'active' or ''">
                                         <label style="margin: 0 20px;">
                                             <input type="checkbox" t-att-name="'att-%s-%s' % (attribute_id.id, value_id.id)"
-                                                t-att-checked="Ecommerce.has_search_attributes(attribute_id.id, value_id.id) and 'checked' or ''"/>
+                                                t-att-checked="Ecommerce.has_search_filter(attribute_id.id, value_id.id) and 'checked' or ''"/>
                                             <span style="font-weight: normal" t-field="value_id.name"/>
                                         </label>
                                     </li>
@@ -526,7 +539,7 @@
                         </li>
                         <li t-if="attribute_id.type == 'float' and attribute_id.float_min != attribute_id.float_max">
                             <div t-field="attribute_id.name"/>
-                            <t t-set="attribute" t-value="Ecommerce.has_search_attributes(attribute_id.id)"/>
+                            <t t-set="attribute" t-value="Ecommerce.has_search_filter(attribute_id.id)"/>
                             <div style="margin: 0 20px;" class="js_slider"
                               t-att-data-id="attribute_id.id"
                               t-att-data-value-min="attribute and attribute[1][0] or attribute_id.float_min"
@@ -534,14 +547,22 @@
                               t-att-data-min="attribute_id.float_min"
                               t-att-data-max="attribute_id.float_max"></div>
                         </li>
+                      </t>
                     </t>
                 </ul>
                 <button class="btn btn-xs btn-primary mt16">Apply filter</button>
+                <a t-href="/shop/" t-keep-query="category,search,add_filter" class="btn btn-xs btn-default mt16">Cancel filter</a>
             </form>
+        </xpath>
+        <xpath expr="//div[@id='products_grid_before']" position="attributes">
+            <attribute name="class">col-md-3</attribute>
+        </xpath>
+        <xpath expr="//div[@id='products_grid']" position="attributes">
+            <attribute name="class">col-md-9</attribute>
         </xpath>
     </template>
 
-    <template id="suggested_products_list" inherit_id="website_sale.mycart" inherit_option_id="website_sale.mycart" name="Suggested Products in list view">
+    <template id="suggested_products_list" inherit_id="website_sale.mycart" inherit_option_id="website_sale.mycart" name="Suggested Products in my cart">
         <xpath expr="//table[@id='mycart_products']" position="after">
             <table t-if="suggested_products" class='table table-striped table-condensed'>
                 <colgroup>
@@ -630,7 +651,7 @@
                 <div class="col-md-8 oe_mycart">
                     <h3 class="page-header mt16">Billing Information
                         <small t-if="user_id.id == website.public_user.id"> or
-                            <a t-if="not partner" t-attf-href="/web#action=redirect&amp;url=#{ request.httprequest.host_url }/shop/checkout/">sign in</a>
+                            <a t-if="not partner" t-attf-href="/web#action=redirect&amp;url=#{ request.httprequest.url }">sign in</a>
                         </small>
                     </h3>
                         <div class="row">
@@ -647,7 +668,7 @@
                                 <input type="email" name="email" class="form-control" t-att-value="checkout.get('email')"/>
                             </div>
                             <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="phone">Telephone</label>
+                                <label class="control-label" for="phone">Phone</label>
                                 <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone')"/>
                             </div>
 
@@ -703,7 +724,7 @@
                                 <input type="text" name="shipping_name" class="form-control" t-att-value="checkout.get('shipping_name', '')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_phone') and 'has-error' or ''} col-lg-6">
-                                <label class="control-label" for="contact_name">Telephone</label>
+                                <label class="control-label" for="contact_name">Phone</label>
                                 <input type="tel" name="shipping_phone" class="form-control" t-att-value="checkout.get('shipping_phone', '')"/>
                             </div>
                             <div t-attf-class="form-group #{error.get('shipping_street') and 'has-error' or ''} col-lg-6">
@@ -992,6 +1013,13 @@
             </div>
 
         </t>
+    </template>
+
+    <template id="total">
+      <span t-field="website_sale_order.amount_total" t-field-options='{
+          "widget": "monetary",
+          "display_currency": "website.pricelist_id.currency_id"
+        }'/>
     </template>
  </data>
 </openerp>

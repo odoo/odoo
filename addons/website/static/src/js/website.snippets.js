@@ -2,7 +2,7 @@
     'use strict';
 
     var website = openerp.website;
-    website.templates.push('/website/static/src/xml/website.snippets.xml');
+    website.add_template_file('/website/static/src/xml/website.snippets.xml');
 
     website.EditorBar.include({
         start: function () {
@@ -17,9 +17,15 @@
             return this._super();
         },
         edit: function () {
+            var self = this;
             $("body").off('click');
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
+
+            this.rte.on('rte:ready', this, function () {
+                self.snippets.$button.removeClass("hidden");
+            });
+
             return this._super.apply(this, arguments);
         },
         save: function () {
@@ -118,10 +124,11 @@
         start: function() {
             var self = this;
 
-            var $ul = this.parent.$("#website-top-edit ul");
+            this.$button = $(openerp.qweb.render('website.snippets_button'))
+                .prependTo(this.parent.$("#website-top-edit ul"))
+                .find("button");
 
-            var $button = $(openerp.qweb.render('website.snippets_button')).prependTo($ul);
-            $button.find('button').click(function () {
+            this.$button.click(function () {
                 self.make_active(false);
                 self.$el.toggleClass("hidden");
             });
@@ -237,6 +244,7 @@
             }
             if (this.$active_snipped_id) {
                 this.snippet_blur(this.$active_snipped_id);
+                this.$active_snipped_id = false;
             }
             if ($snipped_id) {
                 if(_.indexOf(this.snippets, $snipped_id.get(0)) === -1) {
@@ -245,8 +253,6 @@
                 this.$active_snipped_id = $snipped_id;
                 this.create_overlay(this.$active_snipped_id);
                 this.snippet_focus($snipped_id);
-            } else {
-                self.$active_snipped_id = false;
             }
         },
         create_overlay: function ($snipped_id) {
@@ -361,7 +367,7 @@
                             }
 
                             self.create_overlay($target);
-                            $target.data("snippet-editor").build_snippet($target);
+                            $target.data("snippet-editor").drop_and_build_snippet($target);
 
                         } else {
                             $target = $(this).data('target');
@@ -369,7 +375,7 @@
                             self.create_overlay($target);
                             if (website.snippet.editorRegistry[snipped_id]) {
                                 var snippet = new website.snippet.editorRegistry[snipped_id](self, $target);
-                                snippet.build_snippet($target);
+                                snippet.drop_and_build_snippet($target);
                             }
                         }
                         setTimeout(function () {self.make_active($target);},0);
@@ -589,7 +595,8 @@
         *       Displayed into the overlay options on focus
         */
         _readXMLData: function() {
-            this.$el = this.parent.$snippets.siblings("[data-snippet-id='"+this.snippet_id+"']").clone();
+            var self = this;
+            this.$el = this.parent.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
             this.$editor = this.$el.find(".oe_snippet_options");
             var $options = this.$overlay.find(".oe_overlay_options");
             this.$editor.prependTo($options.find(".oe_options ul"));
@@ -710,7 +717,7 @@
 
             if (website.snippet.editorRegistry[snipped_id]) {
                 var snippet = new website.snippet.editorRegistry[snipped_id](this, this.$target);
-                snippet.build_snippet(this.$target);
+                snippet.drop_and_build_snippet(this.$target);
             }
             var _class = "oe_snippet_" + snipped_id + " " + ($li.data("class") || "");
             if (active) {
@@ -749,6 +756,7 @@
                 var index = _.indexOf(self.parent.snippets, self.$target.get(0));
                 delete self.parent.snippets[index];
                 self.$target.remove();
+                self.$overlay.remove();
                 return false;
             });
             this._drag_and_drop();
@@ -756,18 +764,18 @@
         },
 
         /*
-        *  build_snippet
+        *  drop_and_build_snippet
         *  This method is called just after that a thumbnail is drag and dropped into a drop zone
         *  (after the insertion of this.$body, if this.$body exists)
         */
-        build_snippet: function ($target) {
+        drop_and_build_snippet: function ($target) {
         },
 
         /* onFocus
         *  This method is called when the user click inside the snippet in the dom
         */
         onFocus : function () {
-            this.$overlay.addClass('oe_active');
+            this.$overlay.addClass('oe_active').effect('bounce', {distance: 18, times: 5}, 250);
         },
 
         /* onFocus
@@ -1026,7 +1034,7 @@
         },
     });
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
-        build_snippet: function() {
+        drop_and_build_snippet: function() {
             var id = 0;
             $("body .carousel").each(function () {
                 var _id = +$(this).attr("id").replace(/^myCarousel/, '');
@@ -1037,10 +1045,6 @@
             this.$target.attr("id", "myCarousel" + id);
             this.$target.find(".carousel-control").attr("href", "#myCarousel" + id);
             this.$target.find("[data-target='#myCarousel']").attr("data-target", "#myCarousel" + id);
-
-            this.$target.attr('contentEditable', 'false')
-                .find('.content, .carousel-image img')
-                    .attr('contentEditable', 'true');
 
             this.rebind_event();
         },
@@ -1095,6 +1099,10 @@
                 self.$target.carousel($(this).data('slide')); });
             this.$target.off('click').on('click', '.carousel-indicators [data-target]', function () {
                 self.$target.carousel(+$(this).data('slide-to')); });
+
+            this.$target.attr('contentEditable', 'false')
+                .find('.content, .carousel-image img')
+                    .attr('contentEditable', 'true');
         },
         on_add: function (e) {
             e.preventDefault();

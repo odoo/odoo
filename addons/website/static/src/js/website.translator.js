@@ -2,7 +2,7 @@
     'use strict';
 
     var website = openerp.website;
-    website.templates.push('/website/static/src/xml/website.translator.xml');
+    website.add_template_file('/website/static/src/xml/website.translator.xml');
     var nodialog = 'website_translator_nodialog';
 
     website.EditorBar.include({
@@ -16,8 +16,7 @@
                 self.$('button[data-action=edit]')
                     .text("Translate")
                     .after(openerp.qweb.render('website.TranslatorAdditionalButtons'));
-                self.$('[data-action=snippet]').hide();
-                self.$('#customize-menu-button').hide();
+                self.$('.js_hide_on_translate').hide();
             });
         },
         edit: function () {

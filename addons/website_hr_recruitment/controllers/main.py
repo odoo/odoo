@@ -2,6 +2,9 @@
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
+from openerp.addons.website.controllers.main import Website as controllers
+controllers = controllers()
+
 import base64
 
 
@@ -48,7 +51,7 @@ class website_hr_recruitment(http.Controller):
         return request.website.render("website_hr_recruitment.index", values)
 
     @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
-    def detail(self, job=None):
+    def detail(self, job=None, **kwargs):
         values = {
             'job': job,
             'vals_date': job.write_date.split(' ')[0],
@@ -68,28 +71,23 @@ class website_hr_recruitment(http.Controller):
                 'res_id': id
                 }
             request.registry['ir.attachment'].create(request.cr, request.uid, attachment_values)
-        website = request.registry['website']
         values = {
                 'jobid': post['job_id']
            }
         return request.website.render("website_hr_recruitment.thankyou", values)
 
-    @website.route(['/apply/<int:id>'], type='http', auth="public", multilang=True)
-    def applyjobpost(self, id=0, **kwargs):
-        id = id and int(id) or 0
-        job = request.registry['hr.job'].browse(request.cr, request.uid, id)
-        values = {
-            'job': job
-        }
-        return request.website.render("website_hr_recruitment.applyjobpost", values)
+    @website.route(['/apply/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
+    def applyjobpost(self, job=None, **kwargs):
+        return request.website.render("website_hr_recruitment.applyjobpost", { 'job': job })
 
-    @website.route('/recruitment/published', type='json', auth="admin", multilang=True)
-    def published (self, id, **post):
-        hr_job = request.registry['hr.job']
+    @website.route('/job/publish', type='json', auth="admin", multilang=True)
+    def publish (self, id, object):
+        res = controllers.publish(id, object)
+
+        hr_job = request.registry[object]
         id = int(id)
         rec = hr_job.browse(request.cr, request.uid, id)
         vals = {}
-
         if rec.website_published:
             vals['state'] = 'recruit'
             if not rec.no_of_recruitment:
@@ -98,6 +96,5 @@ class website_hr_recruitment(http.Controller):
             vals['state'] = 'open'
         hr_job.write(request.cr, request.uid, [rec.id], vals, context=request.context)
 
-        obj = hr_job.browse(request.cr, request.uid, id, context=request.context)
-        return { 'count': obj.no_of_recruitment, 'state': obj.state, 'published': obj.website_published }
+        return res
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
