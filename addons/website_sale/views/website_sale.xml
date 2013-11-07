@@ -103,7 +103,7 @@
                 </div>
 
                 <div class='style_default row'>
-                  <div class="col-md-12" id="products_grid">
+                  <div class="col-md-12" id="products_grid" t-if="product_ids">
                     <table width="100%">
                       <tbody>
                         <t t-set="table_products" t-value="Ecommerce.get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
@@ -177,6 +177,9 @@
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                  <div class="col-md-12" id="products_grid_empty" t-if="not product_ids">
+                    <h3 class="text-center text-muted">No product found for this search</h3>
                   </div>
                 </div>
                 <div>
