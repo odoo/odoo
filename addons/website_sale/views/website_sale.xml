@@ -19,7 +19,7 @@
     <!-- List of categories -->
 
     <template id="categories_recursive" name="Category list">
-        <li t-att-class="category.id == search.get('category') and 'active' or ''">
+        <li t-att-class="str(category.id) == search.get('category') and 'active' or ''">
             <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/?category=#{ category.id }" t-field="category.name" t-keep-query="search,facettes"></a>
             <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                 <t t-foreach="category.child_id" t-as="category">
@@ -533,6 +533,7 @@
                     </t>
                 </ul>
                 <button class="btn btn-xs btn-primary mt16">Apply filter</button>
+                <a t-href="/shop/" t-keep-query="category,search,add_filter" class="btn btn-xs btn-default mt16">Cancel filter</a>
             </form>
         </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="attributes">
