@@ -28,10 +28,9 @@ from openerp.tools.translate import _
 import pytz
 import re
 import time
-
+import hashlib
 from openerp import tools, SUPERUSER_ID
 import openerp.service.report
-
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \
     5: "May", 6: "June", 7: "July", 8: "August", 9: "September", \
@@ -143,95 +142,6 @@ def real_id2base_calendar_id(real_id, recurrent_date):
         return '%d-%s' % (real_id, recurrent_date)
     return real_id
 
-html_invitation = """
-<html>
-<head>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-<title>%(name)s</title>
-</head>
-<body>
-<table border="0" cellspacing="10" cellpadding="0" width="100%%"
-    style="font-family: Arial, Sans-serif; font-size: 14">
-    <tr>
-        <td width="100%%">Hello,</td>
-    </tr>
-    <tr>
-        <td width="100%%">You are invited for <i>%(company)s</i> Event.</td>
-    </tr>
-    <tr>
-        <td width="100%%">Below are the details of event. Hours and dates expressed in %(timezone)s time.</td>
-    </tr>
-</table>
-
-<table cellspacing="0" cellpadding="5" border="0" summary=""
-    style="width: 90%%; font-family: Arial, Sans-serif; border: 1px Solid #ccc; background-color: #f6f6f6">
-    <tr valign="center" align="center">
-        <td bgcolor="DFDFDF">
-        <h3>%(name)s</h3>
-        </td>
-    </tr>
-    <tr>
-        <td>
-        <table cellpadding="8" cellspacing="0" border="0"
-            style="font-size: 14" summary="Eventdetails" bgcolor="f6f6f6"
-            width="90%%">
-            <tr>
-                <td width="21%%">
-                <div><b>Start Date</b></div>
-                </td>
-                <td><b>:</b></td>
-                <td>%(start_date)s</td>
-                <td width="15%%">
-                <div><b>End Date</b></div>
-                </td>
-                <td><b>:</b></td>
-                <td width="25%%">%(end_date)s</td>
-            </tr>
-            <tr valign="top">
-                <td><b>Description</b></td>
-                <td><b>:</b></td>
-                <td colspan="3">%(description)s</td>
-            </tr>
-            <tr valign="top">
-                <td>
-                <div><b>Location</b></div>
-                </td>
-                <td><b>:</b></td>
-                <td colspan="3">%(location)s</td>
-            </tr>
-            <tr valign="top">
-                <td>
-                <div><b>Event Attendees</b></div>
-                </td>
-                <td><b>:</b></td>
-                <td colspan="3">
-                <div>
-                <div>%(attendees)s</div>
-                </div>
-                </td>
-            </tr>
-        </table>
-        </td>
-    </tr>
-</table>
-<table border="0" cellspacing="10" cellpadding="0" width="100%%"
-    style="font-family: Arial, Sans-serif; font-size: 14">
-    <tr>
-        <td width="100%%">From:</td>
-    </tr>
-    <tr>
-        <td width="100%%">%(user)s</td>
-    </tr>
-    <tr valign="top">
-        <td width="100%%">-<font color="a7a7a7">-------------------------</font></td>
-    </tr>
-    <tr>
-        <td width="100%%"> <font color="a7a7a7">%(sign)s</font></td>
-    </tr>
-</table>
-</body>
-</html>
-"""
 
 class calendar_attendee(osv.osv):
     """
@@ -390,6 +300,8 @@ property or property parameter."),
                             multi='event_end_date'),
         'ref': fields.reference('Event Ref', selection=openerp.addons.base.res.res_request.referencable_models, size=128),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
+        'access_token':fields.char('Invitation Token', size=256),
+        
     }
     _defaults = {
         'state': 'needs-action',
@@ -503,53 +415,43 @@ property or property parameter."),
         @param email_from: email address for user sending the mail
         @return: True
         """
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
-        for att in self.browse(cr, uid, ids, context=context):
-            sign = att.sent_by_uid and att.sent_by_uid.signature or ''
-            sign = '<br>'.join(sign and sign.split('\n') or [])
-            res_obj = att.ref
+        mail_id = []
+        data_pool = self.pool.get('ir.model.data')
+        mail_pool = self.pool.get('mail.mail')
+        template_pool = self.pool.get('email.template')
+        local_context = context.copy()
+        color = {
+                 'needs-action' : 'grey',
+                 'accepted' :'green',
+                 'tentative' :'#FFFF00',
+                 'declined':'red',
+                 'delegated':'grey'
+        }
+        for attendee in self.browse(cr, uid, ids, context=context):
+            res_obj = attendee.ref
             if res_obj:
-                att_infos = []
-                sub = res_obj.name
-                other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
-
-                for att2 in self.browse(cr, uid, other_invitation_ids):
-                    att_infos.append(((att2.user_id and att2.user_id.name) or \
-                                 (att2.partner_id and att2.partner_id.name) or \
-                                    att2.email) + ' - Status: ' + att2.state.title())
-                #dates and times are gonna be expressed in `tz` time (local timezone of the `uid`)
-                tz = context.get('tz', pytz.timezone('UTC'))
-                #res_obj.date and res_obj.date_deadline are in UTC in database so we use context_timestamp() to transform them in the `tz` timezone
-                date_start = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-                date_stop = False
-                if res_obj.date_deadline:
-                    date_stop = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-                body_vals = {'name': res_obj.name,
-                            'start_date': date_start,
-                            'end_date': date_stop,
-                            'timezone': tz,
-                            'description': res_obj.description or '-',
-                            'location': res_obj.location or '-',
-                            'attendees': '<br>'.join(att_infos),
-                            'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
-                            'sign': sign,
-                            'company': company
-                }
-                body = html_invitation % body_vals
-                if mail_to and email_from:
+                model,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "crm_email_template_meeting_invitation")
+                model,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")
+                action_id = self.pool.get('ir.actions.act_window').search(cr, uid, [('view_id','=',act_id)], context=context)
+                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
+                body = template_pool.browse(cr, uid, template_id, context=context).body_html
+                if attendee.email and email_from:
                     ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
-                    vals = {'email_from': email_from,
-                            'email_to': mail_to,
-                            'state': 'outgoing',
-                            'subject': sub,
-                            'body_html': body,
-                            'auto_delete': True}
+                    local_context['att_obj'] = attendee
+                    local_context['color'] = color
+                    local_context['action_id'] = action_id[0]
+                    local_context['dbname'] = cr.dbname
+                    local_context['base_url'] = base_url
+                    vals = template_pool.generate_email(cr, uid, template_id, res_obj.id, context=local_context)
                     if ics_file:
                         vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
-                                                        'datas_fname': 'invitation.ics',
-                                                        'datas': str(ics_file).encode('base64')})]
-                    self.pool.get('mail.mail').create(cr, uid, vals, context=context)
-            return True
+                                                    'datas_fname': 'invitation.ics',
+                                                    'datas': str(ics_file).encode('base64')})]
+                    if not attendee.partner_id.opt_out:
+                        mail_id.append(mail_pool.create(cr, uid, vals, context=context))
+        if mail_id:
+            return mail_pool.send(cr, uid, mail_id, context=context)
+        return False
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         """
@@ -590,8 +492,14 @@ property or property parameter."),
         """
         if context is None:
             context = {}
-
-        return self.write(cr, uid, ids, {'state': 'accepted'}, context)
+        meeting_obj =  self.pool.get('crm.meeting')
+        res = self.write(cr, uid, ids, {'state': 'accepted'}, context)
+        for attandee in self.browse(cr, uid, ids, context=context):
+            meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attandee.id)], context=context)
+            if meeting_ids:
+                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has accepted invitation") % (attandee.cn)), context=context)
+        return res
+        
 
     def do_decline(self, cr, uid, ids, context=None, *args):
         """
@@ -605,7 +513,13 @@ property or property parameter."),
         """
         if context is None:
             context = {}
-        return self.write(cr, uid, ids, {'state': 'declined'}, context)
+        meeting_obj = self.pool.get('crm.meeting')
+        res = self.write(cr, uid, ids, {'state': 'declined'}, context)
+        for attandee in self.browse(cr, uid, ids, context=context):
+            meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attandee.id)], context=context)
+            if meeting_ids:
+                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has declined invitation") % (attandee.cn)), context=context)
+        return res
 
     def create(self, cr, uid, vals, context=None):
         """
@@ -824,6 +738,23 @@ class calendar_alarm(osv.osv):
             vals['trigger_date'] = trigger_date
         res = super(calendar_alarm, self).create(cr, uid, vals, context=context)
         return res
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    
+    def get_attendee_detail(self, cr, uid, ids, meeting_id, context=None):
+        datas = []
+        meeting = False
+        if meeting_id:
+            meeting = self.pool.get('crm.meeting').browse(cr, uid, get_real_ids(meeting_id),context)
+        for partner in self.browse(cr, uid, ids, context=context):
+            data = self.name_get(cr, uid, [partner.id], context)[0]
+            if meeting:
+                for attendee in meeting.attendee_ids:
+                    if attendee.partner_id.id == partner.id:
+                        data = (data[0], data[1], attendee.state)
+            datas.append(data)
+        return datas
 
     def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):
@@ -1083,7 +1014,7 @@ class calendar_event(osv.osv):
             ('tentative', 'Uncertain'),
             ('cancelled', 'Cancelled'),
             ('confirmed', 'Confirmed'),
-            ], 'Status', readonly=True),
+            ],'Status', readonly=True),
         'exdate': fields.text('Exception Date/Times', help="This property \
 defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \
@@ -1149,6 +1080,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'partner_ids': fields.many2many('res.partner', string='Attendees', states={'done': [('readonly', True)]}),
     }
 
+    def new_invitation_token(self, cr, uid, record, partner_id):
+        db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+        invitation_token = hashlib.sha256('%s-%s-%s-%s-%s' % (time.time(), db_uuid, record._name, record.id, partner_id)).hexdigest()
+        return invitation_token
+        
     def create_attendees(self, cr, uid, ids, context):
         att_obj = self.pool.get('calendar.attendee')
         user_obj = self.pool.get('res.users')
@@ -1162,24 +1098,25 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             for partner in event.partner_ids:
                 if partner.id in attendees:
                     continue
-                local_context = context.copy()
-                local_context.pop('default_state', None)
+                access_token = self.new_invitation_token(cr, uid, event, partner.id)
                 att_id = self.pool.get('calendar.attendee').create(cr, uid, {
                     'partner_id': partner.id,
                     'user_id': partner.user_ids and partner.user_ids[0].id or False,
                     'ref': self._name+','+str(event.id),
-                    'email': partner.email
-                }, context=local_context)
+                    'access_token': access_token,
+                    'email': partner.email,
+                }, context=context)
                 if partner.email:
                     mail_to = mail_to + " " + partner.email
                 self.write(cr, uid, [event.id], {
                     'attendee_ids': [(4, att_id)]
                 }, context=context)
                 new_attendees.append(att_id)
-
             if mail_to and current_user.email:
-                att_obj._send_mail(cr, uid, new_attendees, mail_to,
+                is_sent_mail = att_obj._send_mail(cr, uid, new_attendees, mail_to,
                     email_from = current_user.email, context=context)
+                if is_sent_mail:
+                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), context=context)
         return True
 
     def default_organizer(self, cr, uid, context=None):

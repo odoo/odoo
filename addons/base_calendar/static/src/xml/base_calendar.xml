@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="many2manyattendee">
+        <t t-set="i" t-value="0"/>
+        <t t-foreach="elements" t-as="el">
+            <span class="oe_tag" t-att-data-index="i">
+                <a t-attf-class="oe_invitation #{el[2]}"/>
+                <t t-esc="el[1]"/>
+            </span>
+        <t t-set="i" t-value="i + 1"/>
+        </t>
+    </t>
+    <t t-name="invitation_view">
+        <div class="oe_right"><b><t t-esc="invitation['current_attendee'].cn"/> (<t t-esc="invitation['current_attendee'].email"/>)</b></div>
+        <div class="oe_left"><img class="cal_inline cal_image" t-attf-src="data:image/png;base64,#{invitation['logo']}"/><p class="cal_tag cal_inline">Calendar</p></div>
+        <div class="invitation_block">
+            <t t-if="invitation['current_attendee'].state != 'needs-action'">
+                <div class="event_status"><a t-attf-class="attendee_#{invitation['current_attendee'].state}"><b t-if="invitation['current_attendee'].state == 'accepted'">Yes I'm going.</b><b t-if="invitation['current_attendee'].state == 'declined'">No I'm not going.</b></a></div>
+            </t>
+            <div class="cal_meeting"><t t-esc="invitation['meeting'].event"/></div>
+            <table calss="invitation_block">
+                <tr>
+                    <td class="cal_lable">When</td>
+                    <td>: <t t-esc="invitation['meeting'].when"/></td>
+                </tr>
+                <tr>
+                    <td class="cal_lable">Where</td>
+                    <td>: <t t-esc="invitation['meeting'].where or '-'"/></td>
+                </tr>
+                <tr>
+                    <td class="cal_lable">Who</td>
+                    <td>
+                        <span>: <t t-esc="invitation['meeting'].organizer"/> - <a class="cal_lable">Organizer</a></span>
+                        <t t-foreach="invitation['attendee']" t-as="att">
+                            <br/>
+                            <span class="cal_status"><a t-attf-class="oe_invitation #{att.status}"/><t t-esc="att.name"/></span>
+                        </t>
+                    </td>
+                </tr>
+            </table>
+        </div>
+     </t>
+</template>

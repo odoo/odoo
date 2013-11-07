@@ -47,11 +47,18 @@ If you need to manage your meetings, you should install the CRM module.
         'base_calendar_data.xml',
         'crm_meeting_data.xml',
     ],
+    'js': [
+        'static/src/js/*.js'
+    ],
+    'qweb': ['static/src/xml/*.xml'],
+    'css': [
+        'static/src/css/base_calender.css'
+    ],
     'test' : ['test/base_calendar_test.yml'],
     'installable': True,
     'application': True,
     'auto_install': False,
-    'images': ['images/base_calendar1.jpeg','images/base_calendar2.jpeg','images/base_calendar3.jpeg','images/base_calendar4.jpeg',],
+    'images': ['images/base_calendar1.jpeg','images/base_calendar2.jpeg','images/base_calendar3.jpeg','images/base_calendar4.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
