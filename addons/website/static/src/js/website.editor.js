@@ -63,6 +63,39 @@
                     link_dialog(editor);
                 }, null, null, 500);
 
+                var previousSelection;
+                editor.on('selectionChange', function (evt) {
+                    var selected = evt.data.path.lastElement;
+                    if (previousSelection) {
+                        // cleanup previous selection
+                        $(previousSelection).next().remove();
+                        previousSelection = null;
+                    }
+                    if (!selected.is('img')
+                            || selected.data('cke-realelement')
+                            || selected.isReadOnly()
+                            || selected.data('oe-model') === 'ir.ui.view') {
+                        return;
+                    }
+
+                    // display button
+                    var $el = $(previousSelection = selected.$);
+                    var $btn = $('<button type="button" class="btn btn-primary" contenteditable="false">Edit</button>')
+                        .insertAfter($el)
+                        .click(function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            image_dialog(editor);
+                        });
+
+                    var position = $el.position();
+                    $btn.css({
+                        position: 'absolute',
+                        top: $el.height() / 2 + position.top - $btn.outerHeight() / 2,
+                        left: $el.width() / 2 + position.left - $btn.outerWidth() / 2,
+                    });
+                });
+
                 //noinspection JSValidateTypes
                 editor.addCommand('link', {
                     exec: function (editor) {
