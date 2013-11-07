@@ -68,8 +68,9 @@ class crm_case_stage(osv.osv):
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'case_default': fields.boolean('Default to New Sales Team',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
-        'fold': fields.boolean('Fold by Default',
-                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'fold': fields.boolean('Folded in Kanban View',
+                               help='This stage is folded in the kanban view when'
+                               'there are no records in that stage to display.'),
         'type': fields.selection([('lead', 'Lead'),
                                     ('opportunity', 'Opportunity'),
                                     ('both', 'Both')],
