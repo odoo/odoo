@@ -5,7 +5,7 @@
         <!-- Layout add nav and footer -->
         <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
             <xpath expr="//footer//ul[@name='products']" position="inside">
-                <li t-foreach="website_project_ids" t-as="project"><a t-href="/project/#{ project.id }/"><t t-esc="project.name"/></a></li>
+                <li t-foreach="website_project_ids" t-as="project"><a t-href="/project/#{ project.id }/" t-field="project.name"/></li>
             </xpath>
         </template>
 
