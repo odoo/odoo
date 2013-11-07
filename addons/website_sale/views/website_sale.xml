@@ -33,11 +33,10 @@
 
     <!-- Product list -->
 
-    <template id="search_hidden_fields" name="Search hidden fields">
-        <t t-if="search">
-            <input type="hidden" name="category" t-att-value="search.get('category') or ''"/>
-            <input type="hidden" name="filter" t-att-value="search.get('filter') or ''"/>
-        </t>
+    <template id="search" name="Search hidden fields">
+        <input type="hidden" name="category" t-att-value="search.get('category') or ''"/>
+        <input type="hidden" name="filter" t-att-value="search.get('filter') or ''"/>
+        <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
     </template>
 
     <template id="products_cart" name="Shopping cart">
@@ -96,9 +95,8 @@
                             <t t-set="classname">pull-right</t>
                             <t t-set="style">padding-left: 5px;</t>
                         </t>
-                        <form t-action="/shop/" method="get" class="pull-right pagination form-inline" t-keep-query="category,search,facettes">
-                            <t t-call="website_sale.search_hidden_fields" />
-                            <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
+                        <form t-action="/shop/" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;">
+                            <t t-call="website_sale.search" />
                         </form>
                     </div>
                 </div>
@@ -261,9 +259,8 @@
                         </li>
                       </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
-                        <form t-action="/shop/" method="get" class="pull-right" t-keep-query="category,facettes">
-                            <t t-call="website_sale.search_hidden_fields" />
-                            <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
+                        <form t-action="/shop/" method="get" class="pull-right">
+                            <t t-call="website_sale.search" />
                         </form>
                   </div>
                 </div>
