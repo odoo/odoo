@@ -4,7 +4,7 @@
 
     <!-- Layout add nav and footer -->
 
-    <template id="header" inherit_id="website.layout" name="Custom Header">
+    <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <li t-att-class="(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''">
                 <a t-href="/shop/mycart/">
