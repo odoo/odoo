@@ -1,42 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
+
     <!-- Layout add nav and footer -->
-    <template id="header_footer_custom" inherit_id="website.layout">
-        <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
-            <li><a t-attf-href="/payment/paypal/test">Test (Paypal)</a></li>
-        </xpath>
-        <xpath expr="//header//ul[@id='top_menu']/li[@name='contactus']" position="before">
-            <li><a t-attf-href="/payment/ogone/test">Test (Ogone)</a></li>
-        </xpath>
-    </template>
+    <data noupdate="0">
+        <record id="menu_paypal_test" model="website.menu">
+            <field name="name">Paypal (Test)</field>
+            <field name="url">/payment/paypal/test</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">50</field>
+        </record>
+    </data>
+    <data noupdate="0">
+        <record id="menu_paypal_ogone" model="website.menu">
+            <field name="name">Ogone (Test)</field>
+            <field name="url">/payment/ogone/test</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">50</field>
+        </record>
+    </data>
 
     <!-- Page --> 
-    <template id="index_paypal" name="Paypal (Test)" page="True">
-        <t t-call="website.layout">
-            <div id="wrap">
-                <div class="container mt16 js_website_blog">
-                    <div class="row">
-                        Paypal payment
-                        <t t-raw="acquirer_form"/>
+    <data>
+        <template id="index_paypal" name="Paypal (Test)" page="True">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="container mt16 js_website_blog">
+                        <div class="row">
+                            Paypal payment
+                            <t t-raw="acquirer_form"/>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </t>
-    </template>
+            </t>
+        </template>
 
-    <template id="index_ogone" name="Ogone (Test)" page="True">
-        <t t-call="website.layout">
-            <div id="wrap">
-                <div class="container mt16 js_website_blog">
-                    <div class="row">
-                        Ogone payment
-                        <t t-raw="acquirer_form"/>
+        <template id="index_ogone" name="Ogone (Test)" page="True">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="container mt16 js_website_blog">
+                        <div class="row">
+                            Ogone payment
+                            <t t-raw="acquirer_form"/>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </t>
-    </template>
+            </t>
+        </template>
+    </data>
 
-</data>
 </openerp>

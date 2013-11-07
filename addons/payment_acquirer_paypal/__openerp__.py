@@ -20,16 +20,16 @@
 ##############################################################################
 
 {
-    'name': 'Payment (test mainly)',
-    'category': 'Website',
-    'summary': 'Payment Acquirer (TMP / WIP)',
-    'version': '1.0',
-    'description': """
-        """,
+    'name': 'Paypal Payment Acquirer',
+    'category': 'Hidden',
+    'summary': 'Paypal Payment Acquirer',
+    'version': '0.1',
+    'description': """Paypal Payment Acquirer""",
     'author': 'OpenERP SA',
-    'depends': ['website', 'payment_acquirer', 'payment_acquirer_ogone', 'payment_acquirer_paypal'],
+    'depends': ['payment_acquirer'],
     'data': [
-        'views/website_payment_templates.xml',
+        'views/paypal.xml',
+        'data/paypal.xml',
     ],
     'installable': True,
 }

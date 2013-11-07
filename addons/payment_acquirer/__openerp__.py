@@ -29,11 +29,7 @@
     'depends': ['decimal_precision', 'mail'],
     'data': [
         'views/payment_acquirer_views.xml',
-        'views/ogone.xml',
-        'views/paypal.xml',
         'data/payment_acquirer_data.xml',
-        'data/ogone.xml',
-        'data/paypal.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,

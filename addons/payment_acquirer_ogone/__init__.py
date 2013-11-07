@@ -19,17 +19,5 @@
 #
 ##############################################################################
 
-{
-    'name': 'Payment (test mainly)',
-    'category': 'Website',
-    'summary': 'Payment Acquirer (TMP / WIP)',
-    'version': '1.0',
-    'description': """
-        """,
-    'author': 'OpenERP SA',
-    'depends': ['website', 'payment_acquirer', 'payment_acquirer_ogone', 'payment_acquirer_paypal'],
-    'data': [
-        'views/website_payment_templates.xml',
-    ],
-    'installable': True,
-}
+import models
+import controllers

@@ -19,10 +19,4 @@
 #
 ##############################################################################
 
-from . import test_payment_acquirer
-
-checks = [
-    test_payment_acquirer,
-]
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import common

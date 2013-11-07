@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,17 +19,10 @@
 #
 ##############################################################################
 
-{
-    'name': 'Payment (test mainly)',
-    'category': 'Website',
-    'summary': 'Payment Acquirer (TMP / WIP)',
-    'version': '1.0',
-    'description': """
-        """,
-    'author': 'OpenERP SA',
-    'depends': ['website', 'payment_acquirer', 'payment_acquirer_ogone', 'payment_acquirer_paypal'],
-    'data': [
-        'views/website_payment_templates.xml',
-    ],
-    'installable': True,
-}
+from . import test_ogone
+
+checks = [
+    test_ogone,
+]
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

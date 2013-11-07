@@ -22,10 +22,10 @@
 from openerp.tests import common
 
 
-class TestPaymentAcquirer(common.TransactionCase):
+class PaymentAcquirerCommon(common.TransactionCase):
 
     def setUp(self):
-        super(TestPaymentAcquirer, self).setUp()
+        super(PaymentAcquirerCommon, self).setUp()
         self.payment_acquirer = self.registry('payment.acquirer')
         self.payment_transaction = self.registry('payment.transaction')
 

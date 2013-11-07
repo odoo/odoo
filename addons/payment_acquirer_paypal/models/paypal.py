@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp.addons.payment_acquirer.controllers.main import PaypalController
 from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
+from openerp.addons.payment_acquirer_paypal.controllers.main import PaypalController
 from openerp.osv import osv, fields
 
 import logging

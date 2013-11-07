@@ -30,8 +30,8 @@ import urllib2
 # import urlparse
 
 from openerp.addons.payment_acquirer.data import ogone
-from openerp.addons.payment_acquirer.controllers.main import OgoneController
 from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
+from openerp.addons.payment_acquirer_ogone.controllers.main import OgoneController
 from openerp.osv import osv, fields
 from openerp.tools import float_round
 
