@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
 import uuid
-import urllib
 import simplejson
 
 import werkzeug.exceptions
@@ -54,11 +53,11 @@ def get_current_order():
 
 class Website(osv.osv):
     _inherit = "website"
-    def preprocess_request(self, cr, uid, ids, *args, **kwargs):
+    def preprocess_request(self, cr, uid, ids, request, context=None):
         request.context.update({
             'website_sale_order': get_current_order(),
         })
-        return super(Website, self).preprocess_request(cr, uid, ids, *args, **kwargs)
+        return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
 class Ecommerce(http.Controller):
 

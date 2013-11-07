@@ -35,23 +35,18 @@ def route(routes, *route_args, **route_kwargs):
             request.route_lang = kwargs.get('lang_code', None)
             if not hasattr(request, 'website'):
                 request.multilang = f.multilang
-                request.website = request.registry['website'].get_current()
+                # TODO: Select website, currently hard coded
+                request.website = request.registry['website'].browse(
+                    request.cr, request.uid, 1, context=request.context)
+
                 if request.route_lang:
                     lang_ok = [lg.code for lg in request.website.language_ids if lg.code == request.route_lang]
                     if not lang_ok:
                         return request.not_found()
-                request.website.preprocess_request(*args, **kwargs)
+                request.website.preprocess_request(request)
             return f(*args, **kwargs)
         return wrap
     return decorator
-
-def auth_method_public():
-    registry = openerp.modules.registry.RegistryManager.get(request.db)
-    if not request.session.uid:
-        request.uid = registry['website'].get_public_user().id
-    else:
-        request.uid = request.session.uid
-http.auth_methods['public'] = auth_method_public
 
 def url_for(path_or_uri, lang=None, keep_query=None):
     location = path_or_uri.strip()
@@ -109,32 +104,28 @@ class website(osv.osv):
 
     public_user = None
 
-    def get_public_user(self):
+    def get_public_user(self, cr, uid, context=None):
         if not self.public_user:
-            ref = request.registry['ir.model.data'].get_object_reference(request.cr, openerp.SUPERUSER_ID, 'website', 'public_user')
-            self.public_user = request.registry[ref[0]].browse(request.cr, openerp.SUPERUSER_ID, ref[1])
+            uid = openerp.SUPERUSER_ID
+            ref = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
+            self.public_user = self.pool[ref[0]].browse(cr, uid, ref[1])
         return self.public_user
 
-    def get_lang(self):
-        website = request.registry['website'].get_current()
-
-        if hasattr(request, 'route_lang'):
-            lang = request.route_lang
-        else:
-            lang = request.params.get('lang', None) or request.httprequest.cookies.get('lang', None)
-
-        if lang not in [lg.code for lg in website.language_ids]:
-            lang = website.default_lang_id.code
-
-        return lang
-
-    def preprocess_request(self, cr, uid, ids, *args, **kwargs):
+    def preprocess_request(self, cr, uid, ids, request, context=None):
         def redirect(url):
             return werkzeug.utils.redirect(url_for(url))
         request.redirect = redirect
 
-        is_public_user = request.uid == self.get_public_user().id
-        lang = self.get_lang()
+        is_public_user = request.uid == self.get_public_user(cr, uid, context).id
+
+        # Select current language
+        if hasattr(request, 'route_lang'):
+            lang = request.route_lang
+        else:
+            lang = request.params.get('lang', None) or request.httprequest.cookies.get('lang', None)
+        if lang not in [lg.code for lg in request.website.language_ids]:
+            lang = request.website.default_lang_id.code
+
         is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
             'lang': lang,
@@ -147,16 +138,15 @@ class website(osv.osv):
             'translatable': not is_public_user and not is_master_lang and request.multilang,
         })
 
-    def get_current(self):
-        # WIP, currently hard coded
-        return self.browse(request.cr, request.uid, 1)
+    def render(self, cr, uid, ids, template, values=None, context=None):
+        view = self.pool.get("ir.ui.view")
+        IMD = self.pool.get("ir.model.data")
+        user = self.pool.get("res.users")
 
-    def render(self, cr, uid, ids, template, values=None):
-        view = request.registry.get("ir.ui.view")
-        IMD = request.registry.get("ir.model.data")
-        user = request.registry.get("res.users")
+        if not context:
+            context = {}
 
-        qweb_context = request.context.copy()
+        qweb_context = context.copy()
 
         if values:
             qweb_context.update(values)
@@ -170,7 +160,6 @@ class website(osv.osv):
             user_id=user.browse(cr, uid, uid),
         )
 
-        context = request.context.copy()
         context.update(
             inherit_branding=qweb_context.setdefault('editable', False),
         )
@@ -189,7 +178,7 @@ class website(osv.osv):
 
         if 'main_object' not in qweb_context:
             try:
-                main_object = request.registry[view_ref[0]].browse(cr, uid, view_ref[1])
+                main_object = self.pool[view_ref[0]].browse(cr, uid, view_ref[1])
                 qweb_context['main_object'] = main_object
             except Exception:
                 pass
@@ -220,7 +209,7 @@ class website(osv.osv):
             status=code,
             content_type='text/html;charset=utf-8')
 
-    def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None):
+    def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
         page_count = int(math.ceil(float(total) / step))
 
@@ -291,15 +280,15 @@ class website(osv.osv):
             if xids[view['id']]
         ]
 
-    def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None):
+    def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
         step = step and int(step) or 10
         scope = scope and int(scope) or 5
         orderby = orderby or "name"
 
         get_args = dict(request.httprequest.args or {})
-        model_obj = request.registry[model]
+        model_obj = self.pool[model]
         relation = model_obj._columns.get(column)._obj
-        relation_obj = request.registry[relation]
+        relation_obj = self.pool[relation]
 
         get_args.setdefault('kanban', "")
         kanban = get_args.pop('kanban')
@@ -353,9 +342,9 @@ class website(osv.osv):
         }
         return request.website.render("website.kanban_contain", values)
 
-    def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby):
+    def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby, context=None):
         html = ""
-        model_obj = request.registry[model]
+        model_obj = self.pool[model]
         domain = safe_eval(domain)
         step = int(step)
         offset = (int(page)-1) * step

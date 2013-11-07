@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 def auth_method_public():
     registry = openerp.modules.registry.RegistryManager.get(request.db)
     if not request.session.uid:
-        request.uid = registry['website'].get_public_user().id
+        request.uid = registry['website'].get_public_user(request.cr, openerp.SUPERUSER_ID, request.context).id
     else:
         request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
