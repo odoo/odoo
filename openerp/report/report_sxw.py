@@ -367,7 +367,7 @@ class report_sxw(report_rml, preprocess.report):
             finally:
                 report_file.close()
         if report_xml.header:
-            report_xml.header = self.header
+            setattr(report_xml, 'use_global_header', self.header)
         report_type = report_xml.report_type
         if report_type in ['sxw','odt']:
             fnct = self.create_source_odt
@@ -464,7 +464,7 @@ class report_sxw(report_rml, preprocess.report):
         objs = self.getObjects(cr, uid, ids, context)
         rml_parser.set_context(objs, data, ids, report_xml.report_type)
         processed_rml = etree.XML(rml)
-        if report_xml.header:
+        if report_xml.use_global_header:
             rml_parser._add_header(processed_rml, self.header)
         processed_rml = self.preprocess_rml(processed_rml,report_xml.report_type)
         if rml_parser.logo:
@@ -559,7 +559,7 @@ class report_sxw(report_rml, preprocess.report):
                              encoding='utf-8', xml_declaration=True)
         sxw_contents = {'content.xml':odt, 'meta.xml':meta}
 
-        if report_xml.header:
+        if report_xml.use_global_header:
             #Add corporate header/footer
             rml_file = tools.file_open(os.path.join('base', 'report', 'corporate_%s_header.xml' % report_type))
             try:
@@ -572,7 +572,7 @@ class report_sxw(report_rml, preprocess.report):
                 rml_dom = self.preprocess_rml(etree.XML(rml),report_type)
                 create_doc = self.generators[report_type]
                 odt = create_doc(rml_dom,rml_parser.localcontext)
-                if report_xml.header:
+                if report_xml.use_global_header:
                     rml_parser._add_header(odt)
                 odt = etree.tostring(odt, encoding='utf-8',
                                      xml_declaration=True)
