@@ -85,17 +85,18 @@
               <div class="oe_structure"/>
               <div class="container oe_website_sale">
                 <div class="row">
-                    <div class="col-sm-6 pagination" style="padding-left: 15px;">
+                    <div class="col-sm-6 pagination hidden-xs" style="padding-left: 15px;">
                         <form t-if="editable" t-keep-query="category,search,facettes"
                               method="POST" t-action="/shop/add_product">
                             <button class="btn btn-primary">New Product</button>
                         </form>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 products_pager">
                         <t t-call="website.pager">
                             <t t-set="classname">pull-right</t>
+                            <t t-set="style">padding-left: 5px;</t>
                         </t>
-                        <form t-action="/shop/" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;" t-keep-query="category,search,facettes">
+                        <form t-action="/shop/" method="get" class="pull-right pagination form-inline" t-keep-query="category,search,facettes">
                             <t t-call="website_sale.search_hidden_fields" />
                             <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
                         </form>
@@ -182,7 +183,7 @@
                     <h3 class="text-center text-muted">No product found for this search</h3>
                   </div>
                 </div>
-                <div>
+                <div class="products_pager">
                     <t t-call="website.pager">
                         <t t-set="classname">pull-right</t>
                     </t>

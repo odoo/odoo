@@ -258,7 +258,7 @@
         </template>
 
         <template id="publish_management">
-            <div t-if="editable" t-ignore="true" class="pull-right" t-att-style="style or ''">
+            <div t-if="editable" t-ignore="true" class="pull-right hidden-xs" t-att-style="style or ''">
                 <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
                     <a t-attf-class="btn btn-sm btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
@@ -290,7 +290,7 @@
         </template>
 
         <template id="pager" name="Pager">
-            <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination">
+            <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or ''">
                 <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
                     <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
                 </li>

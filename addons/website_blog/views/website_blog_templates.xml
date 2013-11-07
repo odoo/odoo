@@ -200,7 +200,7 @@
                     <div class="row">
                         <div class="col-lg-12 col-sm-12" t-if="not blog_post" id="blog_post">
                             <t t-if="category and editable">
-                                <div class="row">
+                                <div class="row hidden-xs">
                                     <a t-href="/blog/#{category.id}/new" class="btn btn-primary pull-right">New Blog Post</a>
                                 </div>
                             </t>
