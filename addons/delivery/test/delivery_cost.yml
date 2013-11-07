@@ -22,11 +22,16 @@
 -
   !python {model: stock.invoice.onshipping}: |
     sale = self.pool.get('sale.order')
-    sale_order = sale.browse(cr, uid, ref("sale.sale_order_6"))
+    sale_order = sale.browse(cr, uid, ref("sale.sale_order_6"), context=context)
     ship_ids = [x.id for x in sale_order.picking_ids]
-    wiz_id = self.create(cr, uid, {'journal_id': ref('account.sales_journal')},
-      {'active_ids': ship_ids, 'active_model': 'stock.picking'})
-    self.create_invoice(cr, uid, [wiz_id], {"active_ids": ship_ids, "active_id": ship_ids[0]})
+    copy_context = dict(context or {})
+    copy_context.update({'active_ids': ship_ids,
+      'active_model': 'stock.picking',
+      'active_id': ship_ids[0]}
+    )
+    values = {'journal_id': str(ref('account.sales_journal'))}
+    wiz_id = self.create(cr, uid, values, context=copy_context)
+    self.create_invoice(cr, uid, [wiz_id], context=copy_context)
 -
   I print a Delivery Order report.
 -

@@ -237,7 +237,7 @@
   As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
 -
   !python {model: stock.invoice.onshipping}: |
-    wiz_id = self.create(cr, uid, {'invoice_date': '2013-03-04', 'journal_id': ref('account.sales_journal')},
+    wiz_id = self.create(cr, uid, {'invoice_date': '2013-03-04', 'journal_id': str(ref('account.sales_journal'))},
       {'active_ids': [ref("stock_picking_out001_fifo")], "active_model": "stock.picking"})
     self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US",
       "search_default_available": 1, "tz": False, "active_model": "stock.picking",
