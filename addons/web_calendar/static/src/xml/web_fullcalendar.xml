@@ -1,0 +1,33 @@
+<template>
+  <t t-name="FullCalendarView">
+    <div class="oe_calendar_view">
+      <div class="oe_calendar_buttons"/>
+      <div class="oe_fullcalendar_widget" />
+      <div class="oe_calendar_qc_placeholder"/>
+    </div>
+  </t>
+
+  <div t-name="CalendarView.buttons" class="oe_calendar_buttons">
+    <t t-if="widget.options.action_buttons !== false">
+      <t t-if="widget.is_action_enabled('create') &amp;&amp;
+               ((widget.field_widget &amp;&amp;
+                   (widget.field_widget.open_popup_add)) ||
+                (!widget.field_widget))">
+        <button type="button" class="oe_calendar_button_new oe_highlight">
+          <t t-esc="widget.options.create_text || _t('Create')"/>
+        </button>
+      </t>
+    </t>
+  </div>
+
+  <div t-name="CalendarView.quick_create" class="oe_calendar_quick_create">
+    <input/>
+    <t t-if="widget._buttons">
+      <div class="oe_calendar_quick_create_buttons">
+        <button class="oe_button oe_highlight oe_calendar_quick_create_add ">Add</button>
+        or <a href="#" class="oe_calendar_quick_create_close">Cancel</a>
+      </div>
+    </t>
+  </div>
+
+</template>
