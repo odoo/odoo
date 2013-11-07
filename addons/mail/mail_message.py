@@ -812,7 +812,7 @@ class mail_message(osv.Model):
             document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
                 # sanitize document name
-                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
+                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1] or '')
                 # generate reply to
                 email_reply_to = _('"Followers of %s" <%s>') % (sanitized_doc_name, email_reply_to)
 
