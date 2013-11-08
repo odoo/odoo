@@ -130,7 +130,7 @@ class mrp_production_workcenter_line(osv.osv):
             else:
                 raise osv.except_osv(_('Error!'),_('Manufacturing order cannot be started in state "%s"!') % (prod_obj.state,))
         else:
-            oper_count = self.search_count(cr,uid,[('production_id','=',prod_obj.id), ('state', '!=', 'done')], context=context)
+            oper_count = self.search_count(cr,uid,[('production_id','=',prod_obj.id), ('state', '!=', 'done')])
             flag = not bool(open_count)
 
             if flag:
