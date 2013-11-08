@@ -6,7 +6,8 @@
         <menuitem id="base.menu_calendar_configuration" name="Calendar"
             parent="base.menu_base_config" sequence="50" groups="base.group_no_one"/>
 
-        <!-- Alarm form view -->
+        <!-- 
+        Alarm form view 
         <record id="res_alarm_form_view" model="ir.ui.view">
             <field name="name">res.alarm.form</field>
             <field name="model">res.alarm</field>
@@ -24,8 +25,10 @@
                 </form>
             </field>
         </record>
+        -->
 
-        <!-- Alarm list view -->
+        <!-- Alarm list view 
+        
         <record id="res_alarm_tree_view" model="ir.ui.view">
             <field name="name">res.alarm.tree</field>
             <field name="model">res.alarm</field>
@@ -53,13 +56,15 @@
                 assigned to calendar events or meetings.
               </p>
             </field>
-        </record>
+        </record>        
+         -->
 
-        <!-- Alarms menu -->
+        <!-- Alarms menu
          <menuitem id="menu_crm_meeting_avail_alarm"
             groups="base.group_no_one"
             action="base_calendar.action_res_alarm_view"
             parent="base.menu_calendar_configuration" sequence="5"/>
+         -->
 
         <!-- Event form view -->
         <record model="ir.ui.view" id="event_form_view">
@@ -76,7 +81,7 @@
                 </header>
                 <sheet>
                     <group col="6">
-                        <field name="name" string="Summary"
+                        <field name="name" string="Summary USEDDDDDDDDDDDDDDDDDDDDD"
                             colspan="4" required="1"/>
                         <field name="allday" colspan="2" on_change="onchange_dates(date,False,False,allday)"/>
                         <newline/>
@@ -87,8 +92,7 @@
                         <field name="date_deadline" string="End Date" required="1"
                             on_change="onchange_dates(date,False,date_deadline)"/>
                         <field name="location"/>
-                        <field name="alarm_id" string="Reminder"
-                            widget="selection"/>
+                        <field name="alarm_ids" string="Reminder" />
                         <group colspan="2" col="4" attrs="{'readonly': [('state','=','done')]}">
                            <field name="recurrency"/>
                         </group>
@@ -97,7 +101,6 @@
                     <page string="Event">
                         <group col="6" colspan="4">
                              <separator colspan="6" string="Visibility"/>
-                             <field name="user_id" string="Responsible User"/>
                              <field name="show_as" string="Show Time as"/>
                              <field name="class" string="Privacy"/>
                              <field name="recurrent_id_date" invisible="1"/>
@@ -110,10 +113,7 @@
                         <field name="attendee_ids" colspan="4"
                             nolabel="1" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top">
-                                <field name="sent_by_uid" string="From"/>
-                                <field name="user_id" string="To"/>
                                 <field name="email"/>
-                                <field name="role" width="200"/>
                                 <field name="state"/>
                                 <button name="do_tentative"
                                     states="needs-action,declined,accepted"
@@ -132,8 +132,7 @@
                                         <group col="4">
                                             <field name="email"/>
                                             <field name="rsvp"/>
-                                            <field name="cutype"/>
-                                            <field name="role"/>
+                                            <field name="cutype"/>                                            
                                         </group>
                                         <group col="4">
                                             <field name="state"/>

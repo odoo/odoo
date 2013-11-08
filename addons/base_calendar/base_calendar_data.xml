@@ -7,15 +7,6 @@
             <field name="object">calendar.event</field>
         </record>
 
-        <record model="res.alarm" id="alarm1">
-            <field name="name">1 minute before</field>
-            <field name="active" eval="1" />
-            <field name="trigger_duration" eval="1" />
-            <field name="trigger_interval">minutes</field>
-            <field name="trigger_occurs">before</field>
-            <field name="trigger_related">start</field>
-        </record>
-
         <record model="res.alarm" id="alarm2">
             <field name="name">5 minutes before</field>
             <field name="active" eval="1" />
@@ -100,20 +91,10 @@
         </record>
 
         <record model="res.alarm" id="alarm11">
-            <field name="name">5 hours before</field>
+            <field name="name">24 hours before</field>
 
             <field name="active" eval="1" />
-            <field name="trigger_duration" eval="5" />
-            <field name="trigger_interval">hours</field>
-            <field name="trigger_occurs">before</field>
-            <field name="trigger_related">start</field>
-        </record>
-
-        <record model="res.alarm" id="alarm12">
-            <field name="name">18 hours before</field>
-
-            <field name="active" eval="1" />
-            <field name="trigger_duration" eval="18" />
+            <field name="trigger_duration" eval="24" />
             <field name="trigger_interval">hours</field>
             <field name="trigger_occurs">before</field>
             <field name="trigger_related">start</field>

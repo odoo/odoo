@@ -57,136 +57,115 @@
                         </h2>
                     </div>
                     <notebook>
-                    <page string="Meeting Details">
-                        <group>
+                        <page string="Meeting Details">
                             <group>
-                                <field name="date" string="Starting at"
-                                    on_change="onchange_dates(date, duration, False, allday)"/>
-                                <label for="duration"/>
-                                <div>
-                                    <field name="duration" widget="float_time"
-                                        on_change="onchange_dates(date,duration,False,allday)"
-                                        class="oe_inline" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <label string="hours" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
-                                    <label for="allday" string="All Day?"/>)
-                                </div>
-                                <field name="date_deadline" groups="base.group_no_one"
-                                    attrs="{'invisible': ['|', ('allday','=',True), ('duration','&lt;', 24)]}"
-                                    on_change="onchange_dates(date,False,date_deadline)"/>
-                            </group>
-                            <group>
-                                <field name="user_id" groups="base.group_no_one" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
-                                <field name="categ_ids" widget="many2many_tags"/>
-                                <field name="location"/>
-                                <field name="organizer" groups="base.group_no_one"/>
-                            </group>
-
-                        </group>
-                        <label for="description"/>
-                        <field name="description"/>
-                    </page>
-                    <page string="Options">
-                        <group>
-                            <group col="1">
                                 <group>
-                                    <field name="recurrency"/>
-                                </group>
-                                <group attrs="{'invisible': [('recurrency','=',False)]}">
-                                    <label for="interval"/>
+                                    <field name="date" string="Starting at" on_change="onchange_dates(date, duration, False, allday)"/>
+                                    <label for="duration"/>
                                     <div>
-                                        <field name="interval" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                        <field name="rrule_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                        <field name="duration" widget="float_time"
+                                            on_change="onchange_dates(date,duration,False,allday)"
+                                            class="oe_inline" attrs="{'invisible': [('allday','=',True)]}"/>
+                                        <label string="hours" attrs="{'invisible': [('allday','=',True)]}"/>
+                                        (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
+                                        <label for="allday" string="All Day?"/>)
                                     </div>
-                                    <label string="Until" for="end_type"/>
-                                    <div>
-                                        <field name="end_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                        <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                        <field name="end_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
-                                    </div>
-                                    <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
-                                    <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
-                                        <field name="mo"/>
-                                        <field name="tu"/>
-                                        <field name="we"/>
-                                        <field name="th"/>
-                                        <field name="fr"/>
-                                        <field name="sa"/>
-                                        <field name="su"/>
-                                    </group>
-
-                                    <label string="Day of Month"
-                                        attrs="{'invisible': [('rrule_type','!=','monthly')]}"/>
-
-                                    <div attrs="{'invisible': [('rrule_type','!=','monthly')]}">
-                                        <field name="select1"/>
-                                        <field name="day"
-                                            attrs="{'required': [('select1','=','date'), ('rrule_type','=','monthly')],
-                                                'invisible': [('select1','=','day')]}"/>
-                                        <field name="byday" string="The"
-                                            attrs="{'required': [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible': [('select1','=','date')]}"/>
-                                        <field name="week_list" nolabel="1"
-                                            attrs="{'required': [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible': [('select1','=','date')]}"/>
-                                    </div>
-
+                                    <field name="date_deadline" groups="base.group_no_one"
+                                        attrs="{'invisible': ['|', ('allday','=',True), ('duration','&lt;', 24)]}"
+                                        on_change="onchange_dates(date,False,date_deadline)"/>
                                 </group>
+                                <group>
+                                    <field name="categ_ids" widget="many2many_tags"/>
+                                    <field name="location"/>                                    
+                                </group>
+    
                             </group>
+                            <label for="description"/>
+                            <field name="description"/>
+                        </page>
+                        <page string="Options">
                             <group>
-                                <field name="alarm_id" widget="selection" groups="base.group_no_one"/>
-                                <field name="class"/>
-                                <field name="show_as"/>
-                                <field name="rrule" invisible="1" readonly="1"/>
-                                <field name="recurrent_id_date" invisible="1"/>
-                                <field name="recurrent_id" invisible="1"/>
+                                <group col="1">
+                                    <group>
+                                        <field name="recurrency"/>
+                                    </group>
+                                    <group attrs="{'invisible': [('recurrency','=',False)]}">
+                                        <label for="interval"/>
+                                        <div>
+                                            <field name="interval" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                            <field name="rrule_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                        </div>
+                                        <label string="Until" for="end_type"/>
+                                        <div>
+                                            <field name="end_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                            <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                            <field name="end_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
+                                        </div>
+                                        <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
+                                        <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
+                                            <field name="mo"/>
+                                            <field name="tu"/>
+                                            <field name="we"/>
+                                            <field name="th"/>
+                                            <field name="fr"/>
+                                            <field name="sa"/>
+                                            <field name="su"/>
+                                        </group>
+    
+                                        <label string="Day of Month"
+                                            attrs="{'invisible': [('rrule_type','!=','monthly')]}"/>
+    
+                                        <div attrs="{'invisible': [('rrule_type','!=','monthly')]}">
+                                            <field name="select1"/>
+                                            <field name="day"
+                                                attrs="{'required': [('select1','=','date'), ('rrule_type','=','monthly')],
+                                                    'invisible': [('select1','=','day')]}"/>
+                                            <field name="byday" string="The"
+                                                attrs="{'required': [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible': [('select1','=','date')]}"/>
+                                            <field name="week_list" nolabel="1"
+                                                attrs="{'required': [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible': [('select1','=','date')]}"/>
+                                        </div>
+                                    </group>
+                                </group>
+                                <group>                                    
+                                    <field name="class"/>
+                                    <field name="show_as"/>
+                                    <field name="rrule" invisible="1" readonly="0" />
+                                    <field name="recurrent_id_date" invisible="1" />
+                                    <field name="recurrent_id" invisible="1" />
+                                </group>
                             </group>
-                        </group>
-                    </page>
-                    <page string="Invitations" groups="base.group_no_one">
-                        <field name="attendee_ids" widget="one2many" mode="tree">
-                            <tree string="Invitation details" editable="top" >
-                                <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                                <field name="email" string="Mail To"/>
-                                <field name="state"/>
-                                <button name="do_tentative"
-                                    states="needs-action,declined,accepted"
-                                    string="Uncertain" type="object"
-                                    icon="terp-crm" />
-                                <button name="do_accept" string="Accept"
-                                    states="needs-action,tentative,declined"
-                                    type="object" icon="gtk-apply"/>
-                                <button name="do_decline" string="Decline"
-                                    states="needs-action,tentative,accepted"
-                                    type="object" icon="gtk-cancel"/>
-                            </tree>
-                            <form string="Invitation details" version="7.0">
-                                <header>
-                                    <button name="do_tentative" type="object"
+                        </page>
+                        <page string="Reminders" groups="base.group_no_one">
+                              <field name="alarm_ids" />
+                        </page>
+                        <page string="Invitations" groups="base.group_no_one">
+                            <field name="attendee_ids" widget="one2many" >
+                                <tree string="Invitation details" editable="top" >
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                                    <field name="email" string="Mail To"/>
+                                    <field name="state"/>
+                                    <field name="email"/>
+                                    <field name="rsvp"/>
+                                    <field name="cutype"/> 
+                                    <button name="do_tentative"
                                         states="needs-action,declined,accepted"
-                                        string="Uncertain"/>
-                                    <button name="do_accept" type="object"
+                                        string="Uncertain" type="object"
+                                        icon="terp-crm" />
+                                    <button name="do_accept" string="Accept"
                                         states="needs-action,tentative,declined"
-                                        string="Accept"/>
-                                    <button name="do_decline" type="object"
+                                        type="object" icon="gtk-apply"/>
+                                    <button name="do_decline" string="Decline"
                                         states="needs-action,tentative,accepted"
-                                        string="Decline"/>
-                                    <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
-                                </header>
-                                <group>
-                                    <group>
-                                        <field name="email"/>
-                                        <field name="rsvp"/>
-                                        <field name="cutype"/>
-                                        <field name="role"/>
-                                    </group>
-                                    <group>
-                                        <field name="partner_id"/>
-                                        <field name="user_id"/>
-                                    </group>
-                                </group>
-                            </form>
-                        </field>
-                    </page>
-
+                                        type="object" icon="gtk-cancel"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="DEBUG" groups="base.group_no_one">
+                                <field name="rrule" invisible="0" readonly="0" />
+                                <field name="recurrent_id_date" invisible="0" />
+                                <field name="recurrent_id" invisible="0" />
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">

@@ -1,7 +1,7 @@
 openerp.base_calendar = function(instance) {
-var _t = instance.web._t;
-var QWeb = instance.web.qweb;
-instance.base_calendar = {}
+    var _t = instance.web._t;
+    var QWeb = instance.web.qweb;
+    instance.base_calendar = {}
 
     instance.base_calendar.invitation = instance.web.Widget.extend({
 
@@ -77,4 +77,4 @@ instance.base_calendar = {}
         });
     }
 };
-//vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
+
