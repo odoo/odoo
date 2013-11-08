@@ -294,9 +294,9 @@ class test_mail(TestMail):
                       'notification email: link should contain the user login')
         self.assertIn('message_id=%s' % mail.mail_message_id.id, url,
                       'notification email: link based on message should contain the mail_message id')
-        self.assertNotIn('model', url,
+        self.assertNotIn('model=mail.group', url,
                          'notification email: link based on message should not contain model')
-        self.assertNotIn('res_id', url,
+        self.assertNotIn('res_id=%s' % group_pigs.id, url,
                          'notification email: link based on message should not contain res_id')
 
     @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
