@@ -80,6 +80,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'date_to': datetime.today(),
                 'number_of_days_temp': 1,
             })
+        ids = self.hr_holidays.search(cr, uid, [('name', '=', 'Hol10')])
+        self.hr_holidays.unlink(cr, uid, ids)
 
         # Employee creates a leave request in a no-limit category
         hol1_id = self.hr_holidays.create(cr, self.user_employee_id, {
