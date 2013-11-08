@@ -205,11 +205,11 @@ class QWeb(orm.AbstractModel):
     def eval(self, expr, v):
         try:
             return v.safe_eval(expr)
-        except (osv.except_osv, orm.except_orm), err:
-            raise orm.except_orm("QWeb Error", "Invalid expression %r while rendering template '%s'.\n\n%s" % (expr, v.get('__template__'), err[1]))
-        except Exception:
-            raise QWebException("QWeb: invalid expression %r while rendering template '%s'." % (expr, v.get('__template__')),
-                template=v.get('__template__'))
+        except Exception, e:
+            # add qweb metdata on exception
+            setattr(e, 'qweb_eval', expr)
+            setattr(e, 'qweb_template', v.get('__template__'))
+            raise
 
     def eval_object(self, expr, v):
         return self.eval(expr, v)
@@ -308,14 +308,13 @@ class QWeb(orm.AbstractModel):
             for n in e.childNodes:
                 try:
                     g_inner.append(self.render_node(n, v))
-                except (osv.except_osv, orm.except_orm), err:
-                    raise err
-                except QWebException, err:
-                    if not err.node:
-                        err.node = e
-                    raise err
-                except Exception, err:
-                    raise QWebException("%s" % err, template=v.get('__template__'), node=e)
+                except Exception, ex:
+                    # add qweb metdata on exception
+                    if not getattr(ex, 'qweb_template', None):
+                        setattr(e, 'qweb_template', v.get('__template__'))
+                    if not getattr(ex, 'qweb_node', None):
+                        setattr(ex, 'qweb_node', e)
+                    raise
         name = str(e.nodeName)
         inner = "".join(g_inner)
         trim = t_att.get("trim", 0)
@@ -511,6 +510,7 @@ class FieldConverter(osv.AbstractModel):
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
         """ Converts a single value to its HTML version/output
         """
+        if not value: return ''
         return werkzeug.utils.escape(value)
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
@@ -606,6 +606,7 @@ class DateConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        if not value: return ''
         lang = self.user_lang(cr, uid, context=context)
 
         parse_format = openerp.tools.DEFAULT_SERVER_DATE_FORMAT
@@ -621,6 +622,7 @@ class DateTimeConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        if not value: return ''
         lang = self.user_lang(cr, uid, context=context)
 
         parse_format = openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT
@@ -642,6 +644,7 @@ class TextConverter(osv.AbstractModel):
         """
         Escapes the value and converts newlines to br. This is bullshit.
         """
+        if not value: return ''
         return werkzeug.utils.escape(value).replace('\n', '<br>\n')
 
 class SelectionConverter(osv.AbstractModel):
@@ -650,6 +653,7 @@ class SelectionConverter(osv.AbstractModel):
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         value = record[field_name]
+        if not value: return ''
         selection = dict(fields.selection.reify(
             cr, uid, record._model, column))
         return self.value_to_html(
@@ -671,7 +675,7 @@ class HTMLConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
-        return value
+        return value or ''
 
 class ImageConverter(osv.AbstractModel):
     """ ``image`` widget rendering, inserts a data:uri-using image tag in the

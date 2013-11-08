@@ -680,6 +680,7 @@ class view(osv.osv):
 
         arch = self.read_combined(cr, uid, id_, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
+
         if 'lang' in context:
             arch_tree = self.translate_qweb(cr, uid, id_, arch_tree, context['lang'], context)
         self.distribute_branding(arch_tree)
