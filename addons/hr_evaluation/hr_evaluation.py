@@ -347,11 +347,16 @@ class hr_evaluation_interview(osv.osv):
         """
         if context is None:
             context = {}
-        record = self.browse(cr, uid, ids, context=context)
-        record = record and record[0]
-        context.update({'survey_id': record.survey_id.id, 'response_id': [record.response.id], 'response_no':0,})
-        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
-        return value
+        records = self.browse(cr, uid, ids, context=context)
+        survey_ids = [record.survey_id.id for record in records]
+        record = records and records[0]
+        context.update({
+            'survey_id': record.survey_id.id,
+            'response_id': [record.response.id],
+            'response_no': 0,
+        })
+
+        return self.pool.get("survey").action_print_survey(cr, uid, survey_ids, context=context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1
