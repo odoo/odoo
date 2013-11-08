@@ -1,8 +1,10 @@
 /*---------------------------------------------------------
  * OpenERP web_graph
  *---------------------------------------------------------*/
-/*global openerp:true*/
+/*global openerp:true $:true*/
 /*global $:true*/
+/*global _:true*/
+
 'use strict';
 
 openerp.web_graph = function (instance) {
@@ -117,11 +119,11 @@ var ChartView = instance.web.Widget.extend({
     measure: null,
 
     show: function () {
-        this.$el.css('display', 'block');
+        $('.graph_chart').css('display', 'block');
     },
 
     hide: function () {
-        this.$el.css('display', 'none');
+        $('.graph_chart').css('display', 'none');
     },
 
     set_measure: function (measure) {
