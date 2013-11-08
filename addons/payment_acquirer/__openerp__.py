@@ -28,7 +28,7 @@
     'author': 'OpenERP SA',
     'depends': ['decimal_precision', 'mail'],
     'data': [
-        'views/payment_acquirer_views.xml',
+        'views/payment_acquirer.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,
