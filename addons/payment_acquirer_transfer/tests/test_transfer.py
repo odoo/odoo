@@ -1,8 +1,8 @@
-# -*- coding: utf-'8' "-*-"
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,17 +19,13 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
-# from openerp.osv import fields
-
-import logging
-
-_logger = logging.getLogger(__name__)
+from openerp.addons.payment_acquirer.tests.common import PaymentAcquirerCommon
+# from openerp.addons.payment_acquirer_ogone.controllers.main import OgoneController
+# from openerp.osv.orm import except_orm
 
 
-class TransferPaymentAcquirer(osv.Model):
-    _inherit = 'payment.acquirer'
+class TransferPayment(PaymentAcquirerCommon):
 
-
-class TransferPaymentTransaction(osv.Model):
-    _inherit = 'payment.transaction'
+    def test_00_transfer_form(self):
+        cr, uid = self.cr, self.uid
+        context = {}
