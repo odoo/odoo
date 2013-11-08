@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-09-27 08:53+0000\n"
-"Last-Translator: Marko Carevic <Unknown>\n"
+"PO-Revision-Date: 2013-11-07 14:04+0000\n"
+"Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16774)\n"
+"X-Launchpad-Export-Date: 2013-11-08 06:26+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -342,7 +342,7 @@ msgstr "Predviđeno"
 #. module: stock
 #: view:stock.partial.move:0
 msgid "_Validate"
-msgstr ""
+msgstr "_Potvrdi"
 
 #. module: stock
 #: help:stock.picking,message_summary:0
@@ -545,7 +545,7 @@ msgstr "Valuta prosječne cijene"
 #. module: stock
 #: view:product.product:0
 msgid "Stock and Expected Variations"
-msgstr ""
+msgstr "Zaliha"
 
 #. module: stock
 #: help:product.category,property_stock_valuation_account_id:0
@@ -1063,7 +1063,7 @@ msgstr "Datum kreiranja, obično vrijeme naloga"
 #: view:report.stock.inventory:0
 #: view:stock.move:0
 msgid "Scrap"
-msgstr "Scrap"
+msgstr "Otpis"
 
 #. module: stock
 #: field:product.template,property_stock_inventory:0
@@ -1495,6 +1495,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje novog dnevnika. \n"
+"              </p><p>\n"
+"                Sustav vođenja skladišnih dnevnika omogućuje dodjeljivanje\n"
+"                određenog dnevika svakoj poslovnoj promjene nastaloj u "
+"skladišnom\n"
+"                dijelu. Neki od primjera skladišnih dnevnika su: otprema, "
+"prijem,\n"
+"                redovne isporuke, inventura i sl.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
@@ -1815,7 +1826,7 @@ msgstr "Parent Location"
 #: code:addons/stock/product.py:168
 #, python-format
 msgid "Please define stock output account for this product: \"%s\" (id: %d)."
-msgstr ""
+msgstr "Definirajte konto izlaza za ovaj proizvod: \"%s\" (id: %d)."
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1852,7 +1863,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Storage Location"
-msgstr ""
+msgstr "Lokacija zalihe"
 
 #. module: stock
 #: help:stock.partial.move.line,currency:0
@@ -1899,7 +1910,7 @@ msgstr "Referenca dokumenta"
 #: view:stock.picking:0
 #: view:stock.picking.in:0
 msgid "Is a Back Order"
-msgstr ""
+msgstr "Zaostala narudžba"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1957,7 +1968,7 @@ msgstr "Otkaži dostupnost"
 #: code:addons/stock/wizard/stock_location_product.py:49
 #, python-format
 msgid "Current Inventory"
-msgstr ""
+msgstr "Trenutna zaliha"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -2633,7 +2644,7 @@ msgstr "Ostalo"
 #: model:stock.location,name:stock.stock_location_scrapped
 #: field:stock.move,scrapped:0
 msgid "Scrapped"
-msgstr "Scrapped"
+msgstr "Otpisano"
 
 #. module: stock
 #: field:product.product,track_incoming:0
@@ -2760,11 +2771,13 @@ msgid ""
 "Please define stock input account for this product or its category: \"%s\" "
 "(id: %d)"
 msgstr ""
+"Definirajte konto ulaza za ovaj artikl ili njegovu kategoriju: \"%s\" (id: "
+"%d)"
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Delay(Days)"
-msgstr "Delay(Days)"
+msgstr "Odgoda (dana)"
 
 #. module: stock
 #: field:stock.partial.move.line,move_id:0
@@ -2913,7 +2926,7 @@ msgstr "Fiksna lokacija"
 #. module: stock
 #: field:report.stock.inventory,scrap_location:0
 msgid "scrap"
-msgstr ""
+msgstr "otpis"
 
 #. module: stock
 #: code:addons/stock/stock.py:1891
@@ -3034,7 +3047,7 @@ msgstr "Polica"
 #: model:ir.actions.act_window,name:stock.move_scrap
 #: view:stock.move.scrap:0
 msgid "Scrap Move"
-msgstr "Premjesti Otpad"
+msgstr ""
 
 #. module: stock
 #: help:stock.move,prodlot_id:0
@@ -3141,6 +3154,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje lokacije.\n"
+"              </p><p>\n"
+"                Ovo je struktura skladišta i skladišnih lokacija Vaše "
+"tvrtke.\n"
+"                Možete odabrati lokaciju kako bi dobili listu proizvoda i\n"
+"                njihovu zalihu na ovoj određenoj lokaciji i svim njezinim \n"
+"                podređenim lokacijama.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: field:stock.location,stock_real:0
@@ -3276,6 +3299,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje primke ovog proizvoda. \n"
+"              </p><p>\n"
+"                Ovjde možete pronaći povijest svih primki povezanih sa\n"
+"                ovim proizvodom, kao i sve buduće primke koje očekujete\n"
+"                od Vaših dobavljača.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: help:stock.fill.inventory,recursive:0
@@ -3329,7 +3360,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Pritisnite za kreiranje skaldišnih dokumenata.\n"
+"                Pritisnite za kreiranje skladišnih dokumenata.\n"
 "              </p>\n"
 "              <p>\n"
 "                Na ovoj se listi nalaze proizvodi koje je potrebno "
@@ -3705,6 +3736,29 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje lokacije.\n"
+"              </p><p>\n"
+"                Definirajte svoje lokacije sukladno strukturi Vašeg "
+"poduzeća\n"
+"                i Vaših skladišta. OpenERP može upravljati fizičkim "
+"lokacijama\n"
+"                (skladišta, police, kutije, i sl.), partnerovim lokacijama \n"
+"                (lokacije kupaca i dobavljača) te virtualnim lokacijama koje "
+"su\n"
+"                protustavka skladišnim operacijama kao što su proizvodnja, \n"
+"                inventure, i sl.\n"
+"              </p><p>  \n"
+"                Svaka skladišna operacija u OpenERP-u premješta proizvod sa "
+"jedne lokacije\n"
+"                na drugu lokaciju. Na primjer, Ako zaprimite proizvod od "
+"dobavljača,\n"
+"                OpenERP će premjestiti proizvod sa lokacije dobavljača na "
+"lokaciju zalihe.\n"
+"                Sve izvještaje moguće je dobiti za fizičke, partnerove ili "
+"virtualne lokacije.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
@@ -3867,7 +3921,7 @@ msgstr "Datumi inventura"
 #: model:ir.actions.act_window,name:stock.action_receive_move
 #: view:product.product:0
 msgid "Receptions"
-msgstr ""
+msgstr "Primke"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -4132,7 +4186,7 @@ msgstr "Izvršene otpremnice"
 #. module: stock
 #: field:product.template,loc_case:0
 msgid "Case"
-msgstr ""
+msgstr "Sanduk"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -5064,7 +5118,7 @@ msgstr "Spremno za isporuku"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Warehouse Address :"
-msgstr ""
+msgstr "Adresa skladišta:"
 
 #~ msgid "_Cancel"
 #~ msgstr "_Cancel"

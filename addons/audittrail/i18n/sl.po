@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-10-09 20:45+0000\n"
+"PO-Revision-Date: 2013-11-06 14:18+0000\n"
 "Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-10 05:25+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-11-07 05:50+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -104,6 +104,8 @@ msgid ""
 "Select this if you want to keep track of read/open on any record of the "
 "object of this rule"
 msgstr ""
+"Označite, če želite slediti čitanju/odpiranju kateregakoli zapisa objekta "
+"tega pravila"
 
 #. module: audittrail
 #: field:audittrail.log,method:0
@@ -128,7 +130,7 @@ msgstr "Oznakavira"
 #. module: audittrail
 #: help:audittrail.rule,user_id:0
 msgid "if  User is not added then it will applicable for all users"
-msgstr ""
+msgstr "Če uporabnik ni dodan, bo uporabno za vse uporabnike"
 
 #. module: audittrail
 #: help:audittrail.rule,log_workflow:0
@@ -136,6 +138,8 @@ msgid ""
 "Select this if you want to keep track of workflow on any record of the "
 "object of this rule"
 msgstr ""
+"Izberite, če želite slediti delovnemu toku kateregakoli zapisa objekta tega "
+"pravila"
 
 #. module: audittrail
 #: field:audittrail.rule,user_id:0
@@ -202,6 +206,8 @@ msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "object of this rule"
 msgstr ""
+"Izberite, če želite slediti spremembam kateregakoli zapisa objekta tega "
+"pravila"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -221,12 +227,12 @@ msgstr "Revizija"
 #. module: audittrail
 #: field:audittrail.rule,log_workflow:0
 msgid "Log Workflow"
-msgstr ""
+msgstr "Beleženje delovnega toka"
 
 #. module: audittrail
 #: field:audittrail.rule,log_read:0
 msgid "Log Reads"
-msgstr ""
+msgstr "Beleženje čitanja"
 
 #. module: audittrail
 #: code:addons/audittrail/audittrail.py:77
@@ -247,7 +253,7 @@ msgstr "Polja"
 #. module: audittrail
 #: field:audittrail.rule,log_create:0
 msgid "Log Creates"
-msgstr ""
+msgstr "Beleženje kreiranja"
 
 #. module: audittrail
 #: help:audittrail.rule,log_unlink:0
@@ -255,6 +261,7 @@ msgid ""
 "Select this if you want to keep track of deletion on any record of the "
 "object of this rule"
 msgstr ""
+"Izberite, če želite slediti brisanju kateregakoli zapisa objekta tega pravila"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -270,7 +277,7 @@ msgstr "Oznaka dejanja"
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Users (if User is not added then it will applicable for all users)"
-msgstr ""
+msgstr "Uporabnik (če ni dodan, bo veljalo za vse uporabnike)"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -283,11 +290,13 @@ msgid ""
 "There is already a rule defined on this object\n"
 " You cannot define another: please edit the existing one."
 msgstr ""
+"Za ta objekt je že določeno pravilo\n"
+"Ne morete določiti drugega: prosim, uredite obstoječega."
 
 #. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
-msgstr ""
+msgstr "Beleži brisanja"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -303,12 +312,12 @@ msgstr "Opis polja"
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Search Audittrail Log"
-msgstr ""
+msgstr "Iskanje revizijske sledi"
 
 #. module: audittrail
 #: field:audittrail.rule,log_write:0
 msgid "Log Writes"
-msgstr ""
+msgstr "Beleži pisanja"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
@@ -334,7 +343,7 @@ msgstr "Nova vrednost"
 #: code:addons/audittrail/audittrail.py:223
 #, python-format
 msgid "'%s' field does not exist in '%s' model"
-msgstr ""
+msgstr "'%s' polje ne obstaja v '%s' modelu"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -350,13 +359,13 @@ msgstr "Osnutek pravila"
 #: view:audittrail.log:0
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
-msgstr ""
+msgstr "Revizijska sled"
 
 #. module: audittrail
 #: help:audittrail.rule,log_action:0
 msgid ""
 "Select this if you want to keep track of actions on the object of this rule"
-msgstr ""
+msgstr "Izberite, če želite slediti aktivnostim objekta tega pravila"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -376,12 +385,12 @@ msgstr "Prekliči"
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_view_log
 msgid "View Log"
-msgstr ""
+msgstr "Pokaži dnevnik"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log_line
 msgid "Log Line"
-msgstr ""
+msgstr "Vrstica"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
@@ -391,7 +400,7 @@ msgstr "ali"
 #. module: audittrail
 #: field:audittrail.rule,log_action:0
 msgid "Log Action"
-msgstr ""
+msgstr "Dejanje"
 
 #. module: audittrail
 #: help:audittrail.rule,log_create:0
@@ -399,3 +408,5 @@ msgid ""
 "Select this if you want to keep track of creation on any record of the "
 "object of this rule"
 msgstr ""
+"Izberite, če želite slediti kreiranju kateregakoli zapisa objekta tega "
+"pravila"
