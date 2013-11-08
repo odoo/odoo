@@ -281,7 +281,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.make_response(body, headers=[('Content-Type', 'text/plain')])
 
     @website.route('/sitemap', type='http', auth='public', multilang=True)
-    def sitemap(self, **kwargs):
+    def sitemap(self):
         return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
 
     @website.route('/sitemap.xml', type='http', auth="public")

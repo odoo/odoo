@@ -1,29 +1,34 @@
 # -*- coding: utf-8 -*-
 import fnmatch
 import functools
+import inspect
 import logging
 import math
-import simplejson
+import itertools
 import traceback
 import urllib
 import urlparse
 
+import simplejson
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.wrappers
 
 import openerp
 from openerp.exceptions import AccessError, AccessDenied
-from openerp.osv import osv, fields
+from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
+
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+
 
 logger = logging.getLogger(__name__)
 
 def route(routes, *route_args, **route_kwargs):
     def decorator(f):
         new_routes = routes if isinstance(routes, list) else [routes]
+        f.cms = True
         f.multilang = route_kwargs.get('multilang', False)
         if f.multilang:
             route_kwargs.pop('multilang')
@@ -257,6 +262,64 @@ class website(osv.osv):
             ]
         }
 
+
+    def rule_is_enumerable(self, rule):
+        """ Checks that it is possible to generate sensible GET queries for
+        a given rule (if the endpoint matches its own requirements)
+
+        :type rule: werkzeug.routing.Rule
+        :rtype: bool
+        """
+        endpoint = rule.endpoint
+        methods = rule.methods or ['GET']
+
+        return (
+                'GET' in methods
+            and endpoint.exposed == 'http'
+            and endpoint.auth in ('none', 'public')
+            and getattr(endpoint, 'cms', False)
+            # ensure all converters on the rule are able to generate values for
+            # themselves
+            and all(hasattr(converter, 'generate')
+                    for converter in rule._converters.itervalues())
+        ) and self.endpoint_is_enumerable(rule)
+
+    def endpoint_is_enumerable(self, rule):
+        """ Verifies that it's possible to generate a valid url for the rule's
+        endpoint
+
+        :type rule: werkzeug.routing.Rule
+        :rtype: bool
+        """
+
+        # apparently the decorator package makes getargspec work correctly
+        # on functions it decorates. That's not the case for
+        # @functools.wraps, so hack around to get the original function
+        # (and hope a single decorator was applied or we're hosed)
+        # FIXME: this is going to blow up if we want/need to use multiple @route (with various configurations) on a method
+        undecorated_func = rule.endpoint.func_closure[0].cell_contents
+
+        # If this is ever ported to py3, use signatures, it doesn't suck as much
+        spec = inspect.getargspec(undecorated_func)
+
+        # if *args or **kwargs, just bail the fuck out, only dragons can
+        # live there
+        if spec.varargs or spec.keywords:
+            return False
+
+        # remove all arguments with a default value from the list
+        defaults_count = len(spec.defaults or []) # spec.defaults can be None
+        # a[:-0] ~ a[:0] ~ [] -> replace defaults_count == 0 by None to get
+        # a[:None] ~ a
+        args = spec.args[:(-defaults_count or None)]
+
+        # params with defaults were removed, leftover allowed are:
+        # * self (technically should be first-parameter-of-instance-method but whatever)
+        # * any parameter mapping to a converter
+        return all(
+            (arg == 'self' or arg in rule._converters)
+            for arg in args)
+
     def list_pages(self, cr, uid, ids, context=None):
         """ Available pages in the website/CMS. This is mostly used for links
         generation and can be overridden by modules setting up new HTML
@@ -269,16 +332,32 @@ class website(osv.osv):
                   of the same.
         :rtype: list({name: str, url: str})
         """
-        View = self.pool['ir.ui.view']
-        views = View.search_read(cr, uid, [['page', '=', True]],
-                                 fields=['name'], order='name', context=context)
-        xids = View.get_external_id(cr, uid, [view['id'] for view in views], context=context)
 
-        return [
-            {'name': view['name'], 'url': '/page/' + xids[view['id']]}
-            for view in views
-            if xids[view['id']]
-        ]
+        router = request.httprequest.app.get_db_router(request.db)
+
+        for rule in router.iter_rules():
+            endpoint = rule.endpoint
+            if not self.rule_is_enumerable(rule):
+                continue
+
+            generated = map(dict, itertools.product(*(
+                itertools.izip(itertools.repeat(name), converter.generate())
+                for name, converter in rule._converters.iteritems()
+            )))
+
+            for values in generated:
+                name = endpoint.__name__
+                record = next((item for item in values.values() if isinstance(item, orm.browse_record)),
+                              None)
+                if record:
+                    #name = record.display_name
+                    [(_, record_name)] =  record.name_get()
+                    name = u"%s: %s" % (name, record_name)
+                yield {
+                    'name': name,
+                    # rule.build returns (domain_part, rel_url)
+                    'url': rule.build(values, append_unknown=False)[1]
+                }
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
         step = step and int(step) or 10
