@@ -152,7 +152,7 @@
     invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_001_fifo")).invoice_ids]
     line_ids = self.pool.get('account.invoice.line').search(cr, uid, [('invoice_id', 'in', invoice_ids)])
     self.pool.get('account.invoice.line').write(cr, uid, line_ids, {'price_unit': 10})
-    self.pool.get('account.invoice').workflow_invoice(cr, uid, invoice_ids, 'invoice_open')
+    self.pool.get('account.invoice').signal_workflow(cr, uid, invoice_ids, 'invoice_open')
 -
   I check the Stock Interim account (Received) is debited sucessfully when Invoice validated.
 -
