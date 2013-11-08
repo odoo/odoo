@@ -16,8 +16,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     init: function(parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
-        this.set_default_options(options);
-
     },
 
     do_show: function () {
