@@ -75,7 +75,6 @@ class WebsiteBlog(http.Controller):
         category_obj = request.registry['blog.category']
 
         blog_posts = None
-        nav = {}
 
         category_ids = category_obj.search(cr, uid, [], context=context)
         categories = category_obj.browse(cr, uid, category_ids, context=context)
@@ -115,7 +114,9 @@ class WebsiteBlog(http.Controller):
             pager_end = page * self._category_post_per_page
             blog_posts = blog_posts[pager_begin:pager_end]
 
+        nav = {}
         for group in blog_post_obj.read_group(cr, uid, [], ['name', 'create_date'], groupby="create_date", orderby="create_date asc", context=context):
+            # FIXME: vietnamese month names contain spaces. Set sail for fail.
             year = group['create_date'].split(" ")[1]
             if not year in nav:
                 nav[year] = {'name': year, 'create_date_count': 0, 'months': []}
