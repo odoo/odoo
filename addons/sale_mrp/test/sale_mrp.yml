@@ -102,7 +102,7 @@
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name)], context=context)
-    self.signal_workflow(cr, uid, proc_ids)
+    self.signal_workflow(cr, uid, proc_ids, 'button_check')
 -
   I verify that a procurement state is "running"
 -

@@ -211,7 +211,7 @@ class purchase_order(osv.osv):
                         proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
                         if proc_ids and po.state=='confirmed':
                             proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
-                        order.signal_workflow('purchase_cance')
+                        order.signal_workflow('purchase_cancel')
                     po.requisition_id.tender_done(context=context)
         return res
 

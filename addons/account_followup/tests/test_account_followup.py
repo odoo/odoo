@@ -42,7 +42,7 @@ class TestAccountFollowup(TransactionCase):
                                                                             'quantity': 5, 
                                                                             'price_unit':200
                                                                                  })]})
-        self.registry('account.invoice').signal_workflow(cr, uid, [self.invoice_id])
+        self.registry('account.invoice').signal_workflow(cr, uid, [self.invoice_id], 'invoice_open')
         
         self.voucher = self.registry("account.voucher")
         
