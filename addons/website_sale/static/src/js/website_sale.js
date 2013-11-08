@@ -17,7 +17,7 @@ $(document).ready(function () {
 
     function set_my_cart_quantity(qty) {
         var $q = $(".my_cart_quantity");
-        $q.parent().parent().toggleClass("hidden", !qty);
+        $q.parent().parent().removeClass("hidden", !qty);
         $q.html(qty)
             .hide()
             .fadeIn(600);

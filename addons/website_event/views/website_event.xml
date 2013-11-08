@@ -3,8 +3,8 @@
 <data>
 
     <!-- Layout add nav and footer -->
-    <template id="header_footer_custom" inherit_id="website.layout">
-        <xpath expr="//footer//div[@name='info']/ul" position="inside">
+    <template id="header_footer_custom" inherit_id="website.layout" name="Footer Events Link">
+        <xpath expr="//footer//ul[@name='products']" position="inside">
             <li><a t-href="/event">Events</a></li>
         </xpath>
     </template>
@@ -200,6 +200,7 @@
                                     <t t-set="object" t-value="event_id"/>
                                     <t t-set="publish_edit" t-value="True"/>
                                     <t t-set="publish_controller">/event/publish</t>
+                                    <t t-set="style">position: relative; top: -80px;</t>
                                 </t>
                                 <h4>Where</h4>
                             </div>

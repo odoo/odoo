@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
 import uuid
-import urllib
 import simplejson
 
 import werkzeug.exceptions
@@ -54,11 +53,11 @@ def get_current_order():
 
 class Website(osv.osv):
     _inherit = "website"
-    def preprocess_request(self, cr, uid, ids, *args, **kwargs):
+    def preprocess_request(self, cr, uid, ids, request, context=None):
         request.context.update({
             'website_sale_order': get_current_order(),
         })
-        return super(Website, self).preprocess_request(cr, uid, ids, *args, **kwargs)
+        return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
 class Ecommerce(http.Controller):
 
@@ -264,7 +263,7 @@ class Ecommerce(http.Controller):
             post.pop(key)
 
         return request.redirect("/shop/?filter=%s%s%s%s" % (
-                simplejson.dumps(filter).replace(" ", ""),
+                simplejson.dumps(filter),
                 add_filter and "&add_filter=%s" % add_filter or "",
                 post.get("search") and "&search=%s" % post.get("search") or "",
                 post.get("category") and "&category=%s" % post.get("category") or ""
@@ -331,7 +330,11 @@ class Ecommerce(http.Controller):
             'Ecommerce': self,
             'product_ids': product_ids,
             'product_ids_for_holes': fill_hole,
-            'search': post or dict(),
+            'search': {
+                'search': post.get('search') or '',
+                'category': category,
+                'filter': filter or '',
+            },
             'pager': pager,
             'styles': styles,
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
@@ -364,7 +367,11 @@ class Ecommerce(http.Controller):
             'category_list': category_list,
             'main_object': product,
             'product': product,
-            'search': post or dict(),
+            'search': {
+                'search': post.get('search') or '',
+                'category': post.get('category') or '',
+                'filter': post.get('filter') or '',
+            }
         }
         return request.website.render("website_sale.product", values)
 

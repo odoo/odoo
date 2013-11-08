@@ -28,7 +28,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
         if request.context['is_public_user']:
             base_partner_domain += [('website_published', '=', True)]
         partner_domain = list(base_partner_domain)
-        if grade_id:
+        if grade_id and grade_id != "all":
             partner_domain += [('grade_id', '=', int(grade_id))]  # try/catch int
         if country_id:
             country = country_obj.browse(request.cr, request.uid, country_id, request.context)

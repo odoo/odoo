@@ -12,7 +12,7 @@
 
         <template id="website.submenu" name="Submenu">
             <li t-if="not submenu.child_id">
-                <a t-att-href="url_for(submenu.url)">
+                <a t-att-href="url_for(submenu.url)" t-ignore="true">
                     <span t-field="submenu.name"/>
                 </a>
             </li>
@@ -118,7 +118,7 @@
                                                 <span class="icon-bar"></span>
                                                 <span class="icon-bar"></span>
                                             </button>
-                                            <a class="navbar-brand" t-href="/"><em>Your</em><b>Company</b></a>
+                                            <a class="navbar-brand" href="/"><em>Your</em> <b>Company</b></a>
                                         </div>
                                         <div class="collapse navbar-collapse navbar-top-collapse">
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
@@ -227,30 +227,32 @@
 
         <template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
             <xpath expr="//div[@id='footer_container']" position="before">
-                <section data-snippet-id='three-columns' class="mt16 mb16">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h4 class="mt16">Subtitle</h4>
-                                <p>
-                                    <a t-href="/">Homepage</a>
-                                </p>
-                            </div>
-                            <div class="col-md-4">
-                                <h4 class="mt16">Subtitle 2</h4>
-                                <p>
-                                    ...
-                                </p>
-                            </div>
-                            <div class="col-md-4">
-                                <h4 class="mt16">Subtitle 3</h4>
-                                <p>
-                                    ...
-                                </p>
+                <div class="oe_structure">
+                    <section data-snippet-id='three-columns' class="mt16 mb16">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h4 class="mt16">Subtitle</h4>
+                                    <p>
+                                        <a href="/">Homepage</a>
+                                    </p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4 class="mt16">Subtitle 2</h4>
+                                    <p>
+                                        ...
+                                    </p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4 class="mt16">Subtitle 3</h4>
+                                    <p>
+                                        ...
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </xpath>
             <xpath expr="//div[@id='footer_container']" position="attributes">
                 <attribute name="style">display: none</attribute>
@@ -258,8 +260,7 @@
         </template>
 
         <template id="publish_management">
-            <t t-if="editable" t-ignore="true">
-            <div class="pull-right">
+            <div t-if="editable" t-ignore="true" class="pull-right hidden-xs" t-att-style="style or ''">
                 <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
                     <a t-attf-class="btn btn-sm btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
@@ -275,7 +276,6 @@
                     </ul>
                 </div>
             </div>
-            </t>
         </template>
 
         <template id="publish_short">
@@ -292,7 +292,7 @@
         </template>
 
         <template id="pager" name="Pager">
-            <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination">
+            <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or ''">
                 <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
                     <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
                 </li>
