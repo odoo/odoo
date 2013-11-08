@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    'name': 'Payment acquirer',
+    'name': 'Payment Acquirer',
     'category': 'Hidden',
-    'summary': 'Payment acquirer, display and validate payments',
+    'summary': 'Payment Acquirer Base Module',
     'version': '0.1',
-    'description': """Payment acquirer module, use to display payment method and validate the payments.""",
+    'description': """Payment Acquirer Base Module""",
     'author': 'OpenERP SA',
     'depends': ['decimal_precision', 'mail'],
     'data': [

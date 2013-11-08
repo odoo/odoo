@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    'name': 'Transfer Payment acquirer',
+    'name': 'Transfer Payment Acquirer',
     'category': 'Hidden',
-    'summary': 'Transfer Payment acquirer',
+    'summary': 'Payment Acquirer: Transfer Implementation',
     'version': '0.1',
-    'description': """Transfer Payment acquirer""",
+    'description': """Transfer Payment Acquirer""",
     'author': 'OpenERP SA',
     'depends': ['payment_acquirer'],
     'data': [

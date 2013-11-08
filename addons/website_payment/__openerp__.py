@@ -20,14 +20,20 @@
 ##############################################################################
 
 {
-    'name': 'Payment (test mainly)',
+    'name': 'Payment: Website Integration (Test Module)',
     'category': 'Website',
-    'summary': 'Payment Acquirer (TMP / WIP)',
+    'summary': 'Payment: Website Integration (Test Module)',
     'version': '1.0',
-    'description': """
-        """,
+    'description': """Module installing all sub-payment modules and adding some
+    controllers and menu entries in order to test them.""",
     'author': 'OpenERP SA',
-    'depends': ['website', 'payment_acquirer', 'payment_acquirer_ogone', 'payment_acquirer_paypal'],
+    'depends': [
+        'website',
+        'payment_acquirer',
+        'payment_acquirer_ogone',
+        'payment_acquirer_paypal'
+        'payment_acquirer_transfer',
+    ],
     'data': [
         'views/website_payment_templates.xml',
     ],

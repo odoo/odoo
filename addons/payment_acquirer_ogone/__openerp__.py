@@ -22,7 +22,7 @@
 {
     'name': 'Ogone Payment Acquirer',
     'category': 'Hidden',
-    'summary': 'Payment acquirer: Ogone',
+    'summary': 'Payment Acquirer: Ogone Implementation',
     'version': '0.1',
     'description': """Ogone Payment Acquirer""",
     'author': 'OpenERP SA',

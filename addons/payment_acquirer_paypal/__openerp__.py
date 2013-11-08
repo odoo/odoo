@@ -22,7 +22,7 @@
 {
     'name': 'Paypal Payment Acquirer',
     'category': 'Hidden',
-    'summary': 'Paypal Payment Acquirer',
+    'summary': 'Payment Acquirer: Paypal Implementation',
     'version': '0.1',
     'description': """Paypal Payment Acquirer""",
     'author': 'OpenERP SA',
