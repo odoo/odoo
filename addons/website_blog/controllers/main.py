@@ -35,24 +35,23 @@ class WebsiteBlog(http.Controller):
 
     @website.route([
         '/blog/',
-        '/blog/<int:blog_post_id>/',
-        '/blog/<int:blog_post_id>/page/<int:page>/',
-        '/blog/cat/<int:category_id>/',
-        '/blog/cat/<int:category_id>/page/<int:page>/',
-        '/blog/tag/',
-        '/blog/tag/<int:tag_id>/',
+        '/blog/page/<int:page>/',
+        '/blog/<model("blog.post"):blog_post>/',
+        '/blog/<model("blog.post"):blog_post>/page/<int:page>/',
+        '/blog/cat/<model("blog.category"):category>/',
+        '/blog/cat/<model("blog.category"):category>/page/<int:page>/',
+        '/blog/tag/<model("blog.tag"):tag>/',
+        '/blog/tag/<model("blog.tag"):tag>/page/<int:page>/',
     ], type='http', auth="public", multilang=True)
-    def blog(self, category_id=None, blog_post_id=None, tag_id=None, page=1, **post):
+    def blog(self, category=None, blog_post=None, tag=None, page=1, enable_editor=None):
         """ Prepare all values to display the blog.
 
-        :param integer category_id: id of the category currently browsed.
-        :param integer tag_id: id of the tag that is currently used to filter
-                               blog posts
-        :param integer blog_post_id: ID of the blog post currently browsed. If not
-                                     set, the user is browsing the category and
-                                     a post pager is calculated. If set the user
-                                     is reading the blog post and a comments pager
-                                     is calculated.
+        :param category: category currently browsed.
+        :param tag: tag that is currently used to filter blog posts
+        :param blog_post: blog post currently browsed. If not set, the user is
+                          browsing the category and a post pager is calculated.
+                          If set the user is reading the blog post and a
+                          comments pager is calculated.
         :param integer page: current page of the pager. Can be the category or
                             post pager.
         :param dict post: kwargs, may contain
@@ -73,44 +72,40 @@ class WebsiteBlog(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         blog_post_obj = request.registry['blog.post']
-        tag_obj = request.registry['blog.tag']
         category_obj = request.registry['blog.category']
 
-        tag = None
-        category = None
-        blog_post = None
         blog_posts = None
-        pager = None
         nav = {}
 
         category_ids = category_obj.search(cr, uid, [], context=context)
         categories = category_obj.browse(cr, uid, category_ids, context=context)
 
-        if tag_id:
-            tag = tag_obj.browse(cr, uid, tag_id, context=context)
-        if category_id:
-            category = category_obj.browse(cr, uid, category_id, context=context)
-        elif blog_post_id:
-            blog_post = blog_post_obj.browse(cr, uid, blog_post_id, context=context)
-            blog_message_ids = blog_post.website_message_ids
+        if blog_post:
             category = blog_post.category_id
-            category_id = category.id
-
-        if not blog_post_id:
-            if category and tag:
-                blog_posts = [cat_post for cat_post in category.blog_post_ids
-                              if tag_id in [post_tag.id for post_tag in cat_post.tag_ids]]
-            elif category:
+            pager = request.website.pager(
+                url="/blog/%s/" % blog_post.id,
+                total=len(blog_post.website_message_ids),
+                page=page,
+                step=self._post_comment_per_page,
+                scope=7
+            )
+            pager_begin = (page - 1) * self._post_comment_per_page
+            pager_end = page * self._post_comment_per_page
+            blog_post.website_message_ids = blog_post.website_message_ids[pager_begin:pager_end]
+        else:
+            if category:
+                pager_url = "/blog/cat/%s/" % category.id
                 blog_posts = category.blog_post_ids
             elif tag:
+                pager_url = '/blog/tag/%s/' % tag.id
                 blog_posts = tag.blog_post_ids
             else:
+                pager_url = '/blog/'
                 blog_post_ids = blog_post_obj.search(cr, uid, [], context=context)
                 blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
-        if blog_posts:
             pager = request.website.pager(
-                url="/blog/cat/%s/" % category_id,
+                url=pager_url,
                 total=len(blog_posts),
                 page=page,
                 step=self._category_post_per_page,
@@ -119,18 +114,6 @@ class WebsiteBlog(http.Controller):
             pager_begin = (page - 1) * self._category_post_per_page
             pager_end = page * self._category_post_per_page
             blog_posts = blog_posts[pager_begin:pager_end]
-
-        if blog_post:
-            pager = request.website.pager(
-                url="/blog/%s/" % blog_post_id,
-                total=len(blog_message_ids),
-                page=page,
-                step=self._post_comment_per_page,
-                scope=7
-            )
-            pager_begin = (page - 1) * self._post_comment_per_page
-            pager_end = page * self._post_comment_per_page
-            blog_post.website_message_ids = blog_post.website_message_ids[pager_begin:pager_end]
 
         for group in blog_post_obj.read_group(cr, uid, [], ['name', 'create_date'], groupby="create_date", orderby="create_date asc", context=context):
             year = group['create_date'].split(" ")[1]
@@ -147,7 +130,7 @@ class WebsiteBlog(http.Controller):
             'blog_posts': blog_posts,
             'pager': pager,
             'nav_list': nav,
-            'enable_editor': post.get('enable_editor')
+            'enable_editor': enable_editor,
         }
 
         if blog_post:
