@@ -22,8 +22,9 @@
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
 
-            this.rte.on('rte:ready', this, function () {
+            this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
+                self.trigger('rte:snippets_ready');
             });
 
             return this._super.apply(this, arguments);
@@ -52,7 +53,7 @@
     });
 
     /* ----- SNIPPET SELECTOR ---- */
-    
+
     website.snippet = {};
     var observer = new website.Observer(function (mutations) {
         if (!_(mutations).find(function (m) {
@@ -504,7 +505,7 @@
                 console.debug( "A good node must have a [data-oe-model] attribute or must have at least one parent with [data-oe-model] attribute.");
                 console.debug( "Wrong node(s): ", selector);
             }
-            
+
             function is_visible($el){
                 return     $el.css('display')    != 'none'
                         && $el.css('opacity')    != '0'
@@ -519,7 +520,7 @@
                 var parents = $(this).parents().filter(function(){ return !is_visible($(this)); });
                 return parents.length === 0;
             });
-            
+
             $targets.each(function () {
                 var $target = $(this);
                 if (!$target.data('overlay')) {
@@ -558,13 +559,13 @@
         start: function () {
         },
         /* onFocusEdit
-        *  if they are an editor for this data-snippet-id 
+        *  if they are an editor for this data-snippet-id
         *  Called before onFocus of snippet editor
         */
         onFocusEdit : function () {},
 
         /* onBlurEdit
-        *  if they are an editor for this data-snippet-id 
+        *  if they are an editor for this data-snippet-id
         *  Called after onBlur of snippet editor
         */
         onBlurEdit : function () {},
@@ -665,7 +666,7 @@
             });
 
             $("body").addClass('move-important');
-            
+
             self._drag_and_drop_after_insert_dropzone();
             self._drag_and_drop_active_drop_zone($('.oe_drop_zone'));
         },
@@ -855,7 +856,7 @@
             if (!resize_values.s) $box.find(".oe_handle.s").remove();
             if (!resize_values.e) $box.find(".oe_handle.e").remove();
             if (!resize_values.w) $box.find(".oe_handle.w").remove();
-            
+
             this.$overlay.append($box.find(".oe_handles").html());
 
             this.$overlay.find(".oe_handle").on('mousedown', function (event){
@@ -1111,7 +1112,7 @@
             var index = $active.index();
             this.$target.find('.carousel-control, .carousel-indicators').removeClass("hidden");
             this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-            
+
             var $clone = this.$el.find(".item.active").clone();
             var bg = this.$editor.find('ul[name="carousel-background"] li:not([data-value="'+ $active.css("background-image").replace(/.*:\/\/[^\/]+|\)$/g, '') +'"]):first').data("value");
             $clone.css("background-image", "url('"+ bg +"')");
@@ -1216,7 +1217,7 @@
             var $li = $ul.find("li");
             var $parallax = this.$target.find('.parallax');
             var speed = $parallax.data('stellar-background-ratio') || 0.5 ;
-            
+
             $ul.find('[data-value="' + speed + '"]').addClass('active');
             $li.on('click', function (event) {
                 $li.removeClass("active");
