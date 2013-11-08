@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-07-02 08:11+0000\n"
-"Last-Translator: DWXXX <Unknown>\n"
+"PO-Revision-Date: 2013-11-07 09:32+0000\n"
+"Last-Translator: dengwei <250100785@qq.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-12 06:37+0000\n"
-"X-Generator: Launchpad (build 16761)\n"
+"X-Launchpad-Export-Date: 2013-11-08 05:42+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "注册令牌（Token）类型"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
@@ -97,7 +97,7 @@ msgstr "新建"
 #: code:addons/auth_signup/res_users.py:258
 #, python-format
 msgid "Mail sent to:"
-msgstr ""
+msgstr "收件人"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -116,6 +116,12 @@ msgid ""
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
+"\n"
+"<p>您收到这封邮件是因为绑定该邮件的openerp用户申请了密码重置</p><br/>\n"
+"\n"
+"<p><a href=\"${object.signup_url}\">点我</a>重置密码.</p><br/>\n"
+"\n"
+"<p>注意: 如果该邮件不是你想要的，请忽略掉.</p>"
 
 #. module: auth_signup
 #. openerp-web
@@ -144,7 +150,7 @@ msgstr "请输入您的用户名"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Active"
-msgstr "启用"
+msgstr "激活"
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:270
@@ -153,6 +159,8 @@ msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
 msgstr ""
+"无法发送邮件: 没有设置发送邮件服务器信息.\n"
+"请到菜单栏  Settings/General Settings 设置."
 
 #. module: auth_signup
 #. openerp-web
@@ -195,7 +203,7 @@ msgstr "注册过期"
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
+msgstr "用户可以在登录页点击来重置密码"
 
 #. module: auth_signup
 #. openerp-web
@@ -220,21 +228,21 @@ msgstr "注册令牌（ Token  ）是有效的"
 #: code:addons/auth_signup/static/src/js/auth_signup.js:173
 #, python-format
 msgid "Login"
-msgstr ""
+msgstr "用户名"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:97
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "密码错误"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:123
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "密码错误，请重新输入"
 
 #. module: auth_signup
 #. openerp-web
@@ -242,7 +250,7 @@ msgstr ""
 #: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "No database selected !"
-msgstr ""
+msgstr "请选择一个数据库"
 
 #. module: auth_signup
 #: view:res.users:0
@@ -252,7 +260,7 @@ msgstr "重置密码"
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "允许在登录页开启密码重置功能"
 
 #. module: auth_signup
 #. openerp-web
