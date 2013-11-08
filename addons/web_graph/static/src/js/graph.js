@@ -129,20 +129,18 @@ var ChartView = instance.web.Widget.extend({
     },
 
     draw: function (data, mode) {
-        // d3.select('.graph_chart_svg').remove();
-
-        $('.graph_chart_svg').empty();
-        $('.graph_chart_svg').append('<svg></svg>');
+        $('.graph_chart').empty();
+        $('.graph_chart').append('<svg></svg>');
 
         switch (mode) {
             case 'bar_chart':
                 this.render_bar_chart(data);
                 break;
-            case 'pie_chart':
-                this.render_pie_chart(data);
-                break;
             case 'line_chart':
                 this.render_line_chart(data);
+                break;
+            case 'pie_chart':
+                this.render_pie_chart(data);
                 break;
         }
     },
@@ -169,29 +167,8 @@ var ChartView = instance.web.Widget.extend({
                 .width(650)
                 .height(400);
 
-            d3.select('.graph_chart_svg svg')
+            d3.select('.graph_chart svg')
                 .datum(formatted_data)
-                .attr('width', 650)
-                .attr('height', 400)
-                .call(chart);
-
-            nv.utils.windowResize(chart.update);
-            return chart;
-        });
-    },
-
-    render_pie_chart: function (data) {
-        var formatted_data = _.map(data, this.format_data.bind(this));
-
-        nv.addGraph(function () {
-            var chart = nv.models.pieChart()
-                .color(d3.scale.category10().range())
-                .width(650)
-                .height(400);
-
-            d3.select('.graph_chart_svg svg')
-                .datum(formatted_data)
-                .transition().duration(1200)
                 .attr('width', 650)
                 .attr('height', 400)
                 .call(chart);
@@ -210,23 +187,41 @@ var ChartView = instance.web.Widget.extend({
             }];
 
         nv.addGraph(function () {
-            var width = 600,
-                height = 300;
-
             var chart = nv.models.lineChart()
                 .x(function (d,u) { return u; })
-                .width(width)
-                .height(height)
+                .width(600)
+                .height(300)
                 .margin({top: 30, right: 20, bottom: 20, left: 60});
 
-            d3.select('.graph_chart_svg svg')
-                .attr('width', width)
-                .attr('height', height)
+            d3.select('.graph_chart svg')
+                .attr('width', 600)
+                .attr('height', 300)
                 .datum(formatted_data)
                 .call(chart);
 
             return chart;
           });
+    },
+
+    render_pie_chart: function (data) {
+        var formatted_data = _.map(data, this.format_data.bind(this));
+
+        nv.addGraph(function () {
+            var chart = nv.models.pieChart()
+                .color(d3.scale.category10().range())
+                .width(650)
+                .height(400);
+
+            d3.select('.graph_chart svg')
+                .datum(formatted_data)
+                .transition().duration(1200)
+                .attr('width', 650)
+                .attr('height', 400)
+                .call(chart);
+
+            nv.utils.windowResize(chart.update);
+            return chart;
+        });
     },
 
 });
