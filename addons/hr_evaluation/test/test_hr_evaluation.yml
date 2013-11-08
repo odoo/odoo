@@ -36,25 +36,31 @@
     interview_obj = self.pool.get('hr.evaluation.interview')
     evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0') , context)
     assert evaluation.state == 'wait', "Evaluation should be 'Plan in progress' state"
-    interview_ids = interview_obj.search(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))])
-    assert len(interview_ids), "Interview evaluation survey not created"
+    n_interview_ids = interview_obj.search_count(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))], context=context)
+    assert n_interview_ids, "Interview evaluation survey not created"
 -
   Give answer of the first page in "Employee Evaluation" survey.
 -
   !python {model: survey.question.wiz}: |
     name_wiz_obj=self.pool.get('survey.name.wiz')
     interview_obj = self.pool.get('hr.evaluation.interview')
-    interview_ids = interview_obj.search(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))])
+    interview_ids = interview_obj.search(cr, uid, [('evaluation_id','=', ref('hr_evaluation_evaluation_0'))], context=context)
     assert len(interview_ids), "Interview evaluation survey not created"
-    ctx = {'active_model':'hr.evaluation.interview', 'active_id': interview_ids[0], 'active_ids': [interview_ids], 'survey_id': ref("survey_2")}
-    name_id = name_wiz_obj.create(cr, uid, {'survey_id': ref("survey_2")})
-    ctx ["sur_name_id"] = name_id
-    self.create(cr, uid, {str(ref("survey_question_2")) +"_" +str(ref("survey_answer_1")) + "_multi" :'tpa',
-               str(ref("survey_question_2")) +"_" +str(ref("survey_answer_10")) + "_multi" :'application eng',
-               str(ref("survey_question_2")) +"_" +str(ref("survey_answer_20")) + "_multi" :'3',
-               str(ref("survey_question_2")) +"_" +str(ref("survey_answer_25")) + "_multi" :'2011-12-02 16:42:00',
-               str(ref("survey_question_2")) +"_" +str(ref("survey_answer_43")) + "_multi" :'HR',
-               }, context = ctx)
+    name_id = name_wiz_obj.create(cr, uid, {'survey_id': ref("survey_2")}, context=context)
+    ctx = {
+      'active_model': 'hr.evaluation.interview',
+      'active_id': interview_ids[0],
+      'active_ids': [interview_ids],
+      'survey_id': ref("survey_2"),
+      'sur_name_id': name_id,
+    }
+    self.create(cr, uid, { 
+      "%s_%s_multi" % (ref("survey_question_2"), ref("survey_answer_1")) :'tpa',
+      "%s_%s_multi" % (ref("survey_question_2"), ref("survey_answer_10")) :'application eng',
+      "%s_%s_multi" % (ref("survey_question_2"), ref("survey_answer_20")) :'3',
+      "%s_%s_multi" % (ref("survey_question_2"), ref("survey_answer_25")) :'2011-12-02 16:42:00',
+      "%s_%s_multi" % (ref("survey_question_2"), ref("survey_answer_43")) :'HR',
+    }, context=ctx)
 -
   I close this Evaluation survey by giving answer of questions.
 -
@@ -69,13 +75,13 @@
   I print the evaluation.
 -
   !python {model: hr_evaluation.evaluation}: |
-    evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'))
-    self.pool.get('hr.evaluation.interview').action_print_survey(cr, uid, [r.id for r in evaluation.survey_request_ids])
+    evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'), context=context)
+    self.pool.get('hr.evaluation.interview').action_print_survey(cr, uid, [r.id for r in evaluation.survey_request_ids], context=context)
 -
   I click on "Final Validation" button to finalise evaluation.
 -
   !python {model: hr_evaluation.evaluation}: |
-    self.button_final_validation(cr, uid, [ref("hr_evaluation_evaluation_0")])
+    self.button_final_validation(cr, uid, [ref("hr_evaluation_evaluation_0")], context=context)
 -
   I check that state is "Waiting Appreciation".
 -
@@ -90,7 +96,7 @@
   I close this Evaluation by click on "Done" button of this wizard.
 -
   !python {model: hr_evaluation.evaluation}: |
-    self.button_done(cr, uid, [ref("hr_evaluation_evaluation_0")])
+    self.button_done(cr, uid, [ref("hr_evaluation_evaluation_0")], context=context)
 -
   I check that state of Evaluation is done.
 -
@@ -100,9 +106,10 @@
   Print Evaluations Statistics Report
 -
   !python {model: hr.evaluation.report}: |
-    import os, time
-    from openerp import tools
-    ctx={}
-    data_dict={'state': 'done', 'rating': 2, 'employee_id': ref("hr.employee_fp")}
     from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'hr_evaluation_evaluation_0',wiz_data=data_dict, context=ctx, our_module='hr_evaluation')
+    values = {
+        'state': 'done',
+        'rating': 2,
+        'employee_id': ref("hr.employee_fp")
+    }
+    test_reports.try_report_action(cr, uid, 'hr_evaluation_evaluation_0', wiz_data=values, context={}, our_module='hr_evaluation')
