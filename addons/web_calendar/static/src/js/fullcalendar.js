@@ -241,17 +241,16 @@ openerp.web_calendar = function(instance) {
         },
 
         open_quick_create: function(data_template) {
-            var self = this;
             if (this.quick) {
                 return this.quick.trigger('close');
             }
-            this.quick = new (get_class(this.quick_create_class))(
-                this, this.dataset, true, this.options, data_template)
-                .on('added', this, this.proxy('quick_created'))
+            var QuickCreate = get_class(this.quick_create_class);
+            this.quick = new QuickCreate(this, this.dataset, true, this.options, data_template);
+            this.quick.on('added', this, this.proxy('quick_created'))
                 .on('close', this, function() {
                     this.quick.destroy();
                     delete this.quick;
-                    self.$calendar.fullCalendar('unselect');
+                    this.$calendar.fullCalendar('unselect');
                 });
             this.quick.replace($(".oe_calendar_qc_placeholder"));
             this.quick.focus();
@@ -403,8 +402,6 @@ openerp.web_calendar = function(instance) {
                     color_key = color_key[0];
                 }
                 r.color = this.get_color(color_key);
-                r.backgroundColor = this.get_color(color_key);
-                console.log(r.backgroundColor)
             }
             return r;
         },
