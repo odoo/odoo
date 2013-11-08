@@ -824,7 +824,7 @@ class mrp_production(osv.osv):
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
-        self.signal_workflow(cr, uid, [product_id], 'button_produce_done')
+        self.signal_workflow(cr, uid, [production_id], 'button_produce_done')
         return True
 
     def _costs_generate(self, cr, uid, production):
