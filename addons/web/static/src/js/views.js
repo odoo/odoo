@@ -1178,11 +1178,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         self.getParent().sidebar_eval_context().done(function (sidebar_eval_context) {
             var ids = self.getParent().get_selected_ids();
+            var domain;
             if (self.getParent().get_active_domain) {
-                var domain = self.getParent().get_active_domain();
+                domain = self.getParent().get_active_domain();
             }
             else {
-                var domain = $.Deferred().resolve(undefined);
+                domain = $.Deferred().resolve(undefined);
             }
             if (ids.length === 0) {
                 instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
