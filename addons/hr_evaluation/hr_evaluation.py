@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from datetime import datetime
+
+import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil import parser
 import time
@@ -106,19 +107,32 @@ class hr_employee(osv.osv):
         'evaluation_date': fields.date('Next Appraisal Date', help="The date of the next appraisal is computed by the appraisal plan's dates (first appraisal + periodicity)."),
     }
     def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
-        now = parser.parse(datetime.now().strftime('%Y-%m-%d'))
+        now = datetime.date.today()
+        add_months = lambda m: now + relativedelta(months=m)
         obj_evaluation = self.pool.get('hr_evaluation.evaluation')
-        emp_ids =self.search(cr, uid, [ ('evaluation_plan_id','<>',False), ('evaluation_date','=', False)], context=context)
-        for emp in self.browse(cr, uid, emp_ids, context=context):
-            first_date = (now+ relativedelta(months=emp.evaluation_plan_id.month_first)).strftime('%Y-%m-%d')
-            self.write(cr, uid, [emp.id], {'evaluation_date': first_date}, context=context)
 
-        emp_ids =self.search(cr, uid, [
-            ('evaluation_plan_id','<>',False), ('evaluation_date','<=', time.strftime("%Y-%m-%d")),
-            ], context=context) 
+        domain = [
+            ('evaluation_plan_id', '!=', False),
+            ('evaluation_date', '=', False)
+        ]
+        emp_ids = self.search(cr, uid, domain, context=context)
+
         for emp in self.browse(cr, uid, emp_ids, context=context):
-            next_date = (now + relativedelta(months=emp.evaluation_plan_id.month_next)).strftime('%Y-%m-%d')
-            self.write(cr, uid, [emp.id], {'evaluation_date': next_date}, context=context)
+            first_date = add_months(emp.evaluation_plan_id.month_first).strftime('%Y-%m-%d')
+
+            emp.write({'evaluation_date': first_date})
+
+        domain = [
+            ('evaluation_plan_id', '!=', False),
+            ('evaluation_date','<=', now.strftime('%Y-%m-%d')),
+        ]
+        emp_ids = self.search(cr, uid, domain, context=context)
+
+        for emp in self.browse(cr, uid, emp_ids, context=context):
+            next_date = add_months(emp.evaluation_plan_id.month_next).strftime('%Y-%m-%d')
+
+            emp.write({'evaluation_date': next_date})
+
             plan_id = obj_evaluation.create(cr, uid, {'employee_id': emp.id, 'plan_id': emp.evaluation_plan_id.id}, context=context)
             obj_evaluation.button_plan_in_progress(cr, uid, [plan_id], context=context)
         return True
@@ -153,17 +167,19 @@ class hr_evaluation(osv.osv):
         ], 'Status', required=True, readonly=True),
         'date_close': fields.date('Ending Date', select=True),
     }
+    def _default_date(self, cr, uid, context=None):
+        return (datetime.date.today() + relativedelta(months=1)).strftime('%Y-%m-%d')
+
     _defaults = {
-        'date': lambda *a: (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'date': _default_date,
+        'state': 'draft',
     }
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.browse(cr, uid, ids, context=context)
         res = []
-        for record in reads:
+        for record in self.browse(cr, uid, ids, context=context):
             name = record.plan_id.name
             res.append((record['id'], name))
         return res
@@ -187,6 +203,7 @@ class hr_evaluation(osv.osv):
             wait = False
             for phase in evaluation.plan_id.phase_ids:
                 children = []
+
                 if phase.action == "bottom-up":
                     children = evaluation.employee_id.child_ids
                 elif phase.action in ("top-down", "final"):
@@ -194,12 +211,12 @@ class hr_evaluation(osv.osv):
                         children = [evaluation.employee_id.parent_id]
                 elif phase.action == "self":
                     children = [evaluation.employee_id]
-                for child in children:
 
+                for child in children:
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
                         'survey_id': phase.survey_id.id,
-                        'date_deadline': (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
+                        'date_deadline': (datetime.datetime.now() + relativedelta(months=1)).strftime('%Y-%m-%d'),
                         'user_id': child.user_id.id,
                         'user_to_review_id': evaluation.employee_id.id
                     }, context=context)
@@ -209,27 +226,42 @@ class hr_evaluation(osv.osv):
                         hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [int_id], context=context)
 
                     if (not wait) and phase.mail_feature:
-                        body = phase.mail_body % {'employee_name': child.name, 'user_signature': child.user_id.signature,
-                            'eval_name': phase.survey_id.title, 'date': time.strftime('%Y-%m-%d'), 'time': time }
+                        body = phase.mail_body % {
+                            'employee_name': child.name,
+                            'user_signature': child.user_id.signature,
+                            'eval_name': phase.survey_id.title,
+                            'date': time.strftime('%Y-%m-%d'),
+                            'time': time 
+                        }
                         sub = phase.email_subject
                         if child.work_email:
-                            vals = {'state': 'outgoing',
-                                    'subject': sub,
-                                    'body_html': '<pre>%s</pre>' % body,
-                                    'email_to': child.work_email,
-                                    'email_from': evaluation.employee_id.work_email}
+                            vals = {
+                                'state': 'outgoing',
+                                'subject': sub,
+                                'body_html': '<pre>%s</pre>' % body,
+                                'email_to': child.work_email,
+                                'email_from': evaluation.employee_id.work_email
+                            }
                             self.pool.get('mail.mail').create(cr, uid, vals, context=context)
 
-        self.write(cr, uid, ids, {'state':'wait'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'wait'}, context=context)
 
     def button_final_validation(self, cr, uid, ids, context=None):
         request_obj = self.pool.get('hr.evaluation.interview')
         self.write(cr, uid, ids, {'state':'progress'}, context=context)
+
         for evaluation in self.browse(cr, uid, ids, context=context):
             if evaluation.employee_id and evaluation.employee_id.parent_id and evaluation.employee_id.parent_id.user_id:
-                self.message_subscribe_users(cr, uid, [evaluation.id], user_ids=[evaluation.employee_id.parent_id.user_id.id], context=context)
-            if len(evaluation.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id),('state', 'in', ['done','cancel'])], context=context)):
+                evaluation.message_subscribe_users(user_ids=[evaluation.employee_id.parent_id.user_id.id])
+
+            domain = [
+                ('evaluation_id', '=', evaluation.id),
+                ('state', 'in', ['done','cancel']),
+            ]
+            n_survey_request = len(evaluation.survey_request_ids)
+            n_interview = request_obj.search_count(cr, uid, domain, context=context)
+
+            if n_survey_request != n_interview:
                 raise osv.except_osv(_('Warning!'),_("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
         return True
 
@@ -241,18 +273,14 @@ class hr_evaluation(osv.osv):
         interview_obj=self.pool.get('hr.evaluation.interview')
         evaluation = self.browse(cr, uid, ids[0], context)
         interview_obj.survey_req_cancel(cr, uid, [r.id for r in evaluation.survey_request_ids])
-        self.write(cr, uid, ids,{'state':'cancel'}, context=context)
-        return True
+        return self.write(cr, uid, ids,{'state':'cancel'}, context=context)
 
     def button_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids,{'state': 'draft'}, context=context)
-        return True
+        return self.write(cr, uid, ids,{'state': 'draft'}, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        if context is None:
-            context = {}
         default = default.copy()
         default['survey_request_ids'] = []
         return super(hr_evaluation, self).copy(cr, uid, id, default, context=context)
@@ -267,7 +295,7 @@ class hr_evaluation(osv.osv):
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
             for evalutation in self.browse(cr, uid, ids, context=context):
                 for survey_req in evalutation.survey_request_ids:
-                    obj_hr_eval_iterview.write(cr, uid, [survey_req.id], new_vals, context=context)
+                    survey_req.write(new_vals)
         return super(hr_evaluation, self).write(cr, uid, ids, vals, context=context)
 
 
@@ -296,43 +324,42 @@ class hr_evaluation_interview(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.browse(cr, uid, ids, context=context)
         res = []
-        for record in reads:
+        for record in self.browse(cr, uid, ids, context=context):
             name = record.request_id.survey_id.title
             res.append((record['id'], name))
         return res
 
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'waiting_answer'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'waiting_answer'}, context=context)
 
     def survey_req_done(self, cr, uid, ids, context=None):
-        hr_eval_obj = self.pool.get('hr_evaluation.evaluation')
-        for id in self.browse(cr, uid, ids, context=context):
+
+        for interview in self.browse(cr, uid, ids, context=context):
             flag = False
-            wating_id = 0
-            if not id.evaluation_id.id:
-                raise osv.except_osv(_('Warning!'),_("You cannot start evaluation without Appraisal."))
-            records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_request_ids
-            for child in records:
+            waiting_id = 0
+            if not interview.evaluation_id:
+                raise osv.except_osv(
+                    _('Warning!'),
+                    _("You cannot start evaluation without Appraisal.")
+                )
+
+            for child in interview.evaluation_id.survey_request_ids:
                 if child.state == "draft":
-                    wating_id = child.id
+                    waiting_id = child.id
                     continue
                 if child.state != "done":
                     flag = True
-            if not flag and wating_id:
-                self.survey_req_waiting_answer(cr, uid, [wating_id], context=context)
-        self.write(cr, uid, ids, { 'state': 'done'}, context=context)
-        return True
+            if not flag and waiting_id:
+                self.survey_req_waiting_answer(cr, uid, [waiting_id], context=context)
+
+        return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def survey_req_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'draft'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def survey_req_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'cancel'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """
