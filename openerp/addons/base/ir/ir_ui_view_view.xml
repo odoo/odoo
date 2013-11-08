@@ -82,7 +82,7 @@
                     <group col="4">
                         <field name="user_id"/>
                         <field name="ref_id"/>
-                        <field name="arch" colspan="4" nolabel="1"/>
+                        <field name="arch" colspan="4"/>
                     </group>
                    </sheet> 
                 </form>
@@ -110,7 +110,7 @@
             <field name="name">Customized Views</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.ui.view.custom</field>
-            <field name="help">Customized views are used when users reorganize the content of their dashboard views (via web client)</field>
+            <field name="help" type="html"><p class="oe_view_nocontent_create">Click here to create a customized view</p><p>Customized views are used when users reorganize the content of their dashboard views (via web client)</p></field>
         </record>
         <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" parent="base.next_id_2" sequence="3"/>
 

@@ -111,9 +111,11 @@
                                 <field name="application"/>
                                 <field name="state"/>
                             </group>
-                            <label for="views_by_module" string="Created Views"/>
+                            <h2><label for="views_by_module" string="Created Views"/></h2>
+                            <p class="oe_grey" attrs="{'invisible': [('views_by_module','not in',[None,False])]}"> -This module does not create views.</p>
                             <field name="views_by_module"/>
-                            <label for="dependencies_id"/>
+                            <h2><label for="dependencies_id"/></h2>
+                            <p class="oe_grey" attrs="{'invisible': [('dependencies_id','not in',[None,False])]}"> -This module does not create dependencies.</p>
                             <field name="dependencies_id">
                                 <tree string="Dependencies">
                                     <field name="name"/>
@@ -122,9 +124,11 @@
                             </field>
                         </page>
                         <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
-                            <label for="menus_by_module" string="Created Menus"/>
+                            <h2><label for="menus_by_module" string="Created Menus"/></h2>
+                            <p class="oe_grey" attrs="{'invisible': [('menus_by_module','not in',[None,False])]}"> -This module does not create menu.</p>
                             <field name="menus_by_module"/>
-                            <label for="reports_by_module" string="Defined Reports"/>
+                            <h2><label for="reports_by_module" string="Defined Reports"/></h2>
+                            <p class="oe_grey" attrs="{'invisible': [('reports_by_module','not in',[None,False])]}"> -This module does not create report.</p>
                             <field name="reports_by_module"/>
                         </page>
                     </notebook>
