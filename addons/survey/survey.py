@@ -368,7 +368,7 @@ class survey_question(osv.osv):
             ('has_length', 'Must have a specific length'),
             ('is_integer', 'Must be an integer'),
             ('is_decimal', 'Must be a decimal number'),
-            ('is_date', 'Must be a date'),
+            #('is_date', 'Must be a date'),
             ('is_email', 'Must be an email address')
             ], 'Validation type'),
         'validation_length': fields.integer('Specific length'),
@@ -376,8 +376,8 @@ class survey_question(osv.osv):
         'validation_max_float_value': fields.float('Maximum value'),
         'validation_min_int_value': fields.integer('Minimum value'),
         'validation_max_int_value': fields.integer('Maximum value'),
-        'validation_min_date': fields.date('Start date range'),
-        'validation_max_date': fields.date('End date range'),
+        #'validation_min_date': fields.date('Start date range'),
+        #'validation_max_date': fields.date('End date range'),
         'validation_error_msg': fields.char("Error message if validation \
             fails", oldname='validation_valid_err_msg'),
 
