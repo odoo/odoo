@@ -618,6 +618,18 @@
         </record>
 
         <!-- Variants -->
+        <record id="product_variant_search_form_view" model="ir.ui.view">
+            <field name="name">product.variant.search.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <search string="Product Variant">
+                   <field name="name" string="Product" filter_domain="['|','|',('name','ilike',self),('default_code','ilike',self),('variants','ilike',self)]"/>
+                   <group  expand='0' string='Group by...'>
+                       <filter string='Template' name="template_id" domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
+                   </group>
+                </search>
+            </field>
+        </record>
         <record id="product_variant_form_view" model="ir.ui.view">
             <field name="name">product.variant.form</field>
             <field name="model">product.product</field>
@@ -662,7 +674,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
             <field name="view_id" ref="product_variant_tree_view"/>
-            <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="search_view_id" ref="product_variant_search_form_view"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new variant of product.

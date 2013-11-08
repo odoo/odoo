@@ -799,9 +799,13 @@ class product_product(osv.osv):
         # will do the other languages).
         context_wo_lang = context.copy()
         context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name', 'list_price', 'standard_price', 'categ_id'], context=context_wo_lang)
+        product = self.read(cr, uid, id, ['name', 'list_price', 'standard_price', 'categ_id', 'variants', 'product_tmpl_id'], context=context_wo_lang)
         default = default.copy()
-        default.update(name=_("%s (copy)") % (product['name']), list_price=product['list_price'], standard_price=product['standard_price'], categ_id=product['categ_id'][0], product_tmpl_id=None)
+        if product['variants']:
+            default.update(variants=_("%s (copy)") % (product['variants']), product_tmpl_id=product['product_tmpl_id'][0])
+        else:
+            default.update(name=_("%s (copy)") % (product['name']), list_price=product['list_price'], standard_price=product['standard_price'], categ_id=product['categ_id'][0], product_tmpl_id=None)
+
         if context.get('variant',False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
                     'price_margin', 'price_extra']
@@ -816,6 +820,18 @@ class product_product(osv.osv):
         else:
             return super(product_product, self).copy(cr, uid, id, default=default,
                     context=context)
+
+    def copy_translations(self, cr, uid, old_id, new_id, context=None):
+        """ When we do not copy the template along the variant,
+          copy_translations sometimes receives 2 identical IDs.
+          That's because the ORM follows the o2m to copy the translations,
+          so in that case, it follows 'variant_ids' and for each variant,
+          it copy the translations. One of the variant is the 'new_id'.
+          Just skip the identical IDs.
+          """
+        if old_id == new_id:
+            return
+        super(product_product, self).copy_translations(cr, uid, old_id, new_id, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
