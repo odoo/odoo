@@ -341,25 +341,22 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.products", values)
 
-    @website.route(['/shop/product/<int:product_id>/'], type='http', auth="public", multilang=True)
-    def product(self, product_id=0, **post):
+    @website.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", multilang=True)
+    def product(self, product, search='', category='', filter='', promo=None):
 
-        if 'promo' in post:
-            self.change_pricelist(post.get('promo'))
+        if promo:
+            self.change_pricelist(promo)
 
-        product_obj = request.registry.get('product.template')
         category_obj = request.registry.get('product.public.category')
 
-        category_ids = category_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
+        category_ids = category_obj.search(request.cr, request.uid, [], context=request.context)
         category_list = category_obj.name_get(request.cr, request.uid, category_ids, context=request.context)
         category_list = sorted(category_list, key=lambda category: category[1])
 
-        category = None
-        if post.get('category') and int(post.get('category')):
-            category = category_obj.browse(request.cr, request.uid, int(post.get('category')), context=request.context)
+        if category:
+            category = category_obj.browse(request.cr, request.uid, int(category), context=request.context)
 
         request.context['pricelist'] = self.get_pricelist()
-        product = product_obj.browse(request.cr, request.uid, product_id, context=request.context)
 
         values = {
             'Ecommerce': self,
@@ -368,9 +365,9 @@ class Ecommerce(http.Controller):
             'main_object': product,
             'product': product,
             'search': {
-                'search': post.get('search') or '',
-                'category': post.get('category') or '',
-                'filter': post.get('filter') or '',
+                'search': search,
+                'category': category and str(category.id),
+                'filter': filter,
             }
         }
         return request.website.render("website_sale.product", values)
