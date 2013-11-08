@@ -342,7 +342,7 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.products", values)
 
     @website.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", multilang=True)
-    def product(self, product, search='', category='', filter='', promo=None):
+    def product(self, product, search='', category='', filter='', promo=None, lang_code=None):
 
         if promo:
             self.change_pricelist(promo)
