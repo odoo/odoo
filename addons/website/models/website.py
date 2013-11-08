@@ -346,18 +346,9 @@ class website(osv.osv):
             )))
 
             for values in generated:
-                name = endpoint.__name__
-                record = next((item for item in values.values() if isinstance(item, orm.browse_record)),
-                              None)
-                if record:
-                    #name = record.display_name
-                    [(_, record_name)] =  record.name_get()
-                    name = u"%s: %s" % (name, record_name)
-                yield {
-                    'name': name,
-                    # rule.build returns (domain_part, rel_url)
-                    'url': rule.build(values, append_unknown=False)[1]
-                }
+                # rule.build returns (domain_part, rel_url)
+                url = rule.build(values, append_unknown=False)[1]
+                yield {'name': url, 'url': url }
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
         step = step and int(step) or 10

@@ -6,7 +6,6 @@ import json
 import logging
 import os
 import datetime
-import re
 
 from sys import maxint
 
@@ -16,14 +15,6 @@ import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 from PIL import Image
-
-try:
-    from slugify import slugify
-except ImportError:
-    def slugify(s, max_length=None):
-        spaceless = re.sub(r'\s+', '-', s)
-        specialless = re.sub(r'[^-_a-z0-9]', '', spaceless)
-        return specialless[:max_length]
 
 import openerp
 from openerp.osv import fields
@@ -66,7 +57,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=NOPE):
         module = 'website'
         # completely arbitrary max_length
-        idname = slugify(path, max_length=50)
+        idname = http.slugify(path, max_length=50)
 
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']
