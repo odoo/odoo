@@ -426,6 +426,21 @@
                                 </group>
                             </group>
 
+                            <!-- Question validation -->
+                            <group colspan="1" string="Question required">
+                                <field name="constr_mandatory" string="Is this question mandatory?"/>
+                                <group colspan="2" attrs="{'invisible':[('constr_mandatory','=',False)]}">
+                                    <field name="constr_type" string="Users must answer..."/>
+                                    <group colspan="2" attrs="{'invisible':[('constr_type','not in',['at least','a range'])]}">
+                                        <field name="constr_minimum_req_ans" nolabel="1" />
+                                    </group>
+                                    <group colspan="2" attrs="{'invisible':[('constr_type','not in',['at most','a range', 'exactly'])]}">
+                                        <field name="constr_maximum_req_ans" nolabel="1" />
+                                    </group>
+                                    <field name="constr_error_msg" string="Error message"/>
+                                </group>
+                            </group>
+
                             <!-- Answer validation -->
                             <group colspan="1" string="Answer Validation" attrs="{'invisible':[('type','not in',['textbox','numerical_box','datetime'])]}">
                                 <group>
@@ -444,29 +459,16 @@
                                             <field name="validation_min_int_value" string="between"/>
                                             <field  name="validation_max_int_value" string="and"/>
                                         </group>
-                                        <group colspan="2" attrs="{'invisible':[('validation_type','!=','is_date')]}">
+<!--                                         <group colspan="2" attrs="{'invisible':[('validation_type','!=','is_date')]}">
                                             <field name="validation_min_date" string="between"/>
                                             <field name="validation_max_date" string="and"/>
-                                        </group>
+                                        </group> -->
                                         <field name="validation_error_msg" />
                                     </group>
                                 </group>
                             </group>
 
-                            <!-- Question validation -->
-                            <group colspan="1" string="Question required">
-                                <field name="constr_mandatory" string="Is this question mandatory?"/>
-                                <group colspan="2" attrs="{'invisible':[('constr_mandatory','=',False)]}">
-                                    <field name="constr_type" string="Users must answer..."/>
-                                    <group colspan="2" attrs="{'invisible':[('constr_type','not in',['at least','a range'])]}">
-                                        <field name="constr_minimum_req_ans" nolabel="1" />
-                                    </group>
-                                    <group colspan="2" attrs="{'invisible':[('constr_type','not in',['at most','a range', 'exactly'])]}">
-                                        <field name="constr_maximum_req_ans" nolabel="1" />
-                                    </group>
-                                    <field name="constr_error_msg" string="Error message"/>
-                                </group>
-                            </group>
+
 
                         </group>
                     </sheet>

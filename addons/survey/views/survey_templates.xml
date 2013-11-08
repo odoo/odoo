@@ -12,9 +12,9 @@
                                 <tr><th>Title</th><th>Category</th><th>Description</th><th>Public URL</th></tr>
                                 <t t-foreach="surveys" t-as="survey">
                                     <tr>
-                                        <td><t t-esc="survey.title" /></td>
-                                        <td><t t-esc="survey.category"/></td>
-                                        <td><t t-if="survey.description is not False"><t t-esc="survey.description"/></t></td>
+                                        <td><span t-field="survey.title" /></td>
+                                        <td><span t-field="survey.category"/></td>
+                                        <td><t t-if="survey.description is not False"><span t-field="survey.description"/></t></td>
                                         <td><a t-att-href="survey.public_url"><t t-esc="survey.id" /></a></td>
                                     </tr>
                                 </t>
@@ -45,16 +45,14 @@
                 <div class="wrap">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-1"> </div>
-                            <div class="col-md-1"> </div>
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <t t-if="pagination['current'] == -1">
                                     <div class='jumbotron'>
                                         <h1>
-                                            <t t-esc='survey.title'/>
+                                            <span t-field='survey.title'/>
                                             <t t-if="survey.description is not False">
                                                 <br/>
-                                                <small><t t-esc='survey.description'/></small>
+                                                <small><span t-field='survey.description'/></small>
                                             </t>
                                         </h1>
                                     </div>
@@ -69,7 +67,11 @@
                                 <t t-if="pagination['current'] != -1">
                                     <div class='page-header'>
                                         <h1>
-                                            <t t-esc='survey.title'/>
+                                            <span t-field='survey.title'/>
+                                            <t t-if="survey.description is not False">
+                                                <br/>
+                                                <small><span t-field='survey.description'/></small>
+                                            </t>
                                         </h1>
                                     </div>
                                     <t t-set='page' t-value="survey.page_ids[pagination['current']]" />
@@ -78,8 +80,6 @@
 
 
                             </div>
-                            <div class="col-md-1"> </div>
-                            <div class="col-md-1"> </div>
                         </div>
                     </div>
                 </div>
@@ -99,8 +99,8 @@
         <!-- A page -->
         <template id="page" name="Page">
             <div>
-                <h2><t t-esc='page.title' /></h2>
-                <p><t t-if="page.description"><t t-esc='page.description'/></t></p>
+                <h2><span t-field='page.title' /></h2>
+                <p><t t-if="page.description"><span t-field='page.description'/></t></p>
                 <p class="text-info text-right">Questions marked with <span class="glyphicon glyphicon-exclamation-sign"></span> are mandatory.</p>
             </div>
             <hr/>
@@ -113,9 +113,9 @@
                     </div>
                     <div class="panel-body text-danger">
                         <ul>
-                        <t t-foreach="problems" t-as='problem'>
-                            <li><strong><t t-esc="problem['qlabel']"/> :</strong> <t t-esc="problem['errmsg']"/></li>
-                        </t>
+                            <t t-foreach="problems" t-as='problem'>
+                                <li><strong><t t-esc="problem['qlabel']"/> :</strong> <t t-esc="problem['errmsg']"/></li>
+                            </t>
                         </ul>
                     </div>
                 </div>
@@ -146,12 +146,12 @@
                     <t t-if="question.constr_mandatory"><span class="glyphicon glyphicon-exclamation-sign"></span></t>
                     <span t-field='question.question'/><br/>
 
-                    <small><t t-if="question.description"><t t-esc='question.description'/></t></small>
+                    <small><t t-if="question.description"><span t-field='question.description'/></t></small>
                 </h3>
             </t>
             <t t-if="is_vector_element"> <!-- else -->
                 <t t-if="question.type == 'simple_choice_scale'">
-                    <t t-field='question.question'/><t t-raw="'&lt;/td&gt;&lt;td&gt;'" />
+                    <span t-field='question.question'/><t t-raw="'&lt;/td&gt;&lt;td&gt;'" />
                 </t>
             </t> <!-- endif -->
 
@@ -178,7 +178,7 @@
                     <div class="radio-inline">
                         <label>
                             <input type="radio" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__()" t-att-value='suggestion.value' />
-                            <t t-esc='suggestion.value'/>
+                            <span t-field='suggestion.value'/>
                         </label>
                     </div>
                 </t>
@@ -186,6 +186,7 @@
 
             <t t-if="question.type in ['simple_choice_dropdown']">
                 <select class="form-control" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__()">
+                    <option disabled="1" selected="1">Choose...</option>
                     <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
                         <option><t t-esc='suggestion.value'/></option>
                     </t>
@@ -197,7 +198,7 @@
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__() + '*' + suggestion.id.__str__()" t-att-value='suggestion.value' />
-                            <t t-esc='suggestion.value'/>
+                            <span t-field='suggestion.value'/>
                         </label>
                     </div>
                 </t>
@@ -229,7 +230,6 @@
 
             </t>
 
-
             <t t-if="question.type in ['matrix']">
                 <table class="table table-responsive">
                     <t t-foreach='question.children_ids' t-as='question'>
@@ -238,15 +238,9 @@
                 </table>
             </t>
 
-
             <!-- Comments -->
             <t t-if="question.comments_allowed">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Any comments ?</div>
-                    <div class="panel-body">
-                        TODO: show comments box here
-                    </div>
-                </div>
+                Other: <input type="text" class="form-control" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__() + '*comments'"/>
             </t>
 
         </template>
@@ -263,10 +257,10 @@
                             <div class="col-md-8">
                                 <div class='jumbotron'>
                                     <h1>
-                                        <t t-esc='survey.title'/>
+                                        <span t-field='survey.title'/>
                                         <t t-if="survey.description is not False">
                                             <br/>
-                                            <small><t t-esc='survey.description'/></small>
+                                            <small><span t-field='survey.description'/></small>
                                         </t>
                                     </h1>
                                 </div>

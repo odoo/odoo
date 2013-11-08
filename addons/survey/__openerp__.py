@@ -36,7 +36,7 @@ sent mails with user name and password for the invitation of the survey.
     'summary': 'Create surveys, collect answers and print statistics',
     'author': 'OpenERP SA',
     'website': 'https://www.openerp.com/',
-    'depends': ['email_template', 'mail'],
+    'depends': ['email_template', 'mail', 'website'],
     'data': [
         'security/survey_security.xml',
         'security/ir.model.access.csv',
