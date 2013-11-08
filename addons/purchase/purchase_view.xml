@@ -197,7 +197,7 @@
                             <field name="date_order"/>
                             <field name="origin" attr="{'invisible': [('origin','=',False)]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code_id','=','incoming')]" widget="selection"/>
+                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code_id','=','incoming')]" widget="selection" context="{'special_shortened_wh_name': True}"/>
                             <field name="related_location_id" invisible="1"/>
                             <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"
                                 attrs="{'invisible':['|', ('picking_type_id','=',False), ('related_location_id','!=', False)], 
@@ -347,7 +347,7 @@
             <field name="name">Requests for Quotation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="context">{'special_shortened_wh_name': True}</field>
+            <field name="context">{}</field>
             <field name="domain">[('state','in',('draft','sent','bid','cancel', 'confirmed'))]</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
@@ -373,7 +373,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,form,graph,calendar</field>
-            <field name="context">{'special_shortened_wh_name': True}</field>
+            <field name="context">{}</field>
             <field name="domain">[('state','not in',('draft','sent','bid', 'confirmed'))]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">

@@ -239,6 +239,19 @@ class product_category(osv.osv):
             res.append((record['id'], name))
         return res
 
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if not context:
+            context = {}
+        if name:
+            # Be sure name_search is symetric to name_get
+            name = name.split(' / ')[-1]
+            ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context)
+
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
@@ -279,8 +292,6 @@ class product_category(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
-    def child_get(self, cr, uid, ids):
-        return [ids]
 
 
 

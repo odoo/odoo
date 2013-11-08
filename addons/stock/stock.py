@@ -172,9 +172,9 @@ class stock_location_route(osv.osv):
         'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the route without removing it."),
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules'),
-        'product_selectable': fields.boolean('Selectable on Product'),
-        'product_categ_selectable': fields.boolean('Selectable on Product Category'),
-        'warehouse_selectable': fields.boolean('Selectable on Warehouse'),
+        'product_selectable': fields.boolean('Applicable on Product'),
+        'product_categ_selectable': fields.boolean('Applicable on Product Category'),
+        'warehouse_selectable': fields.boolean('Applicable on Warehouse'),
         'supplied_wh_id': fields.many2one('stock.warehouse', 'Supplied Warehouse'),
         'supplier_wh_id': fields.many2one('stock.warehouse', 'Supplier Warehouse'),
     }
@@ -238,6 +238,25 @@ class stock_quant(osv.osv):
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.quant', context=c),
     }
+
+    def action_view_quant_history(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display the history of the quant, which
+        mean all the stock moves that lead to this quant creation with this quant quantity.
+        '''
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+
+        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_move_form2')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context={})[0]
+
+        move_ids = []
+        for quant in self.browse(cr, uid, ids, context=context):
+            move_ids += [move.id for move in quant.history_ids]
+            
+        result['domain'] = "[('id','in',[" + ','.join(map(str, move_ids)) + "])]"
+        return result
 
     def quants_reserve(self, cr, uid, quants, move, context=None):
         toreserve = []
@@ -1937,7 +1956,7 @@ class stock_move(osv.osv):
         if move.move_dest_id and move.propagate:
             new_move_prop = self.split(cr, uid, move.move_dest_id, qty, context=context)
             self.write(cr, uid, [new_move], {'move_dest_id': new_move_prop}, context=context)
-            
+
         self.action_confirm(cr, uid, [new_move], context=context)
         return new_move
 
@@ -1953,6 +1972,31 @@ class stock_inventory(osv.osv):
                 res[inv.id] = True
         return res
 
+    def _get_available_filters(self, cr, uid, context=None):
+        """
+           This function will return the list of filter allowed according to the options checked
+           in 'Settings\Warehouse'.
+
+           :rtype: list of tuple
+        """
+        #default available choices
+        res_filter = [('none', ' All products of a whole location'), ('product', 'One product only')]
+        settings_obj = self.pool.get('stock.config.settings')
+        config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
+        #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
+        if not config_ids:
+            return res_filter
+
+        stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
+        if stock_settings.group_stock_tracking_owner:
+            res_filter.append(('owner', 'One owner only'))
+            res_filter.append(('product_owner', 'One product for a specific owner'))
+        if stock_settings.group_stock_production_lot:
+            res_filter.append(('lot', 'One Lot/Serial Number'))
+        if stock_settings.group_stock_tracking_lot:
+            res_filter.append(('pack', 'A Pack'))
+        return res_filter
+
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
         'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Create Date."),
@@ -1967,12 +2011,12 @@ class stock_inventory(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Owner', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Owner to focus your inventory on a particular Owner."),
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial Number."),
         'move_ids_exist': fields.function(_get_move_ids_exist, type='boolean', string=' Stock Move Exists?', help='technical field for attrs in view'),
-        'filter': fields.selection([('product', 'Product'), ('owner', 'Owner'), ('product_owner','Product & Owner'), ('lot','Lot/Serial Number'), ('pack','Pack'), ('none', 'None')], 'Selection Filter'),
+        'filter': fields.selection(_get_available_filters, 'Selection Filter'),
     }
 
     def _default_stock_location(self, cr, uid, context=None):
         try:
-            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')            
+            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0')
             return warehouse.lot_stock_id.id
         except:
             return False
@@ -2129,7 +2173,8 @@ class stock_inventory(osv.osv):
             product_line['inventory_id'] = inventory.id
             product_line['th_qty'] = product_line['product_qty']
             if product_line['product_id']:
-                product_line['product_uom_id'] = product_obj.browse(cr, uid, product_line['product_id'], context=context).uom_id.id
+                product = product_obj.browse(cr, uid, product_line['product_id'], context=context)
+                product_line['product_uom_id'] = product.uom_id.id
             vals.append(product_line)
         return vals
 
@@ -2578,8 +2623,9 @@ class stock_warehouse(osv.osv):
             }, context=context)
         vals['view_location_id'] = wh_loc_id
         #create all location
-        reception_steps = vals.get('reception_steps', False)
-        delivery_steps = vals.get('delivery_steps', False)
+        def_values = self.default_get(cr, uid, {'reception_steps', 'delivery_steps'})
+        reception_steps = vals.get('reception_steps',  def_values['reception_steps'])
+        delivery_steps = vals.get('delivery_steps', def_values['delivery_steps'])
         context_with_inactive = context.copy()
         context_with_inactive['active_test'] = False
         sub_locations = [
@@ -2627,8 +2673,10 @@ class stock_warehouse(osv.osv):
 
         #choose the next available color for the picking types of this warehouse
         all_used_colors = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')
-        not_used_colors = list(set(range(1, 10)) - set([x['color'] for x in all_used_colors]))
-        color = not_used_colors and not_used_colors[0] or 1
+        not_used_colors = list(set(range(0, 9)) - set([x['color'] for x in all_used_colors]))
+        color = 0
+        if not_used_colors:
+            color = not_used_colors[0]
 
         in_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receptions'),
@@ -3178,15 +3226,16 @@ class stock_warehouse_orderpoint(osv.osv):
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
 
-    def _get_draft_procurements(self, cr, uid, ids, field_name, arg, context=None):
+    def get_draft_procurements(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         result = {}
+        if not isinstance(ids, list):
+            ids = [ids]
         procurement_obj = self.pool.get('procurement.order')
         for orderpoint in self.browse(cr, uid, ids, context=context):
-            procurement_ids = procurement_obj.search(cr, uid, [('state', '=', 'draft'), ('product_id', '=', orderpoint.product_id.id), ('location_id', '=', orderpoint.location_id.id)])
-            result[orderpoint.id] = procurement_ids
-        return result
+            procurement_ids = procurement_obj.search(cr, uid, [('state', 'not in', ('cancel', 'done')), ('product_id', '=', orderpoint.product_id.id), ('location_id', '=', orderpoint.location_id.id)], context=context)            
+        return list(set(procurement_ids))
 
     def _check_product_uom(self, cr, uid, ids, context=None):
         '''
@@ -3200,6 +3249,18 @@ class stock_warehouse_orderpoint(osv.osv):
                 return False
 
         return True
+
+    def action_view_proc_to_process(self, cr, uid, ids, context=None):        
+        act_obj = self.pool.get('ir.actions.act_window')
+        mod_obj = self.pool.get('ir.model.data')
+        draft_ids = self.get_draft_procurements(cr, uid, ids, context=context)
+        result = mod_obj.get_object_reference(cr, uid, 'procurement', 'do_view_procurements')
+        if not result:
+            return False
+ 
+        result = act_obj.read(cr, uid, [result[1]], context=context)[0]
+        result['domain'] = "[('id', 'in', [" + ','.join(map(str, draft_ids)) + "])]"
+        return result
 
     _columns = {
         'name': fields.char('Name', size=32, required=True),
@@ -3218,9 +3279,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will be rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'procurement_draft_ids': fields.function(_get_draft_procurements, type='many2many', relation="procurement.order", \
-                                string="Related Procurement Orders", help="Draft procurement of the product and location of that orderpoint"),
+        'company_id': fields.many2one('res.company', 'Company', required=True)        
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -3424,11 +3483,11 @@ class stock_picking_type(osv.osv):
         return res and res[0] or False
 
     _columns = {
-        'name': fields.char('name', translate=True, required=True),
+        'name': fields.char('Name', translate=True, required=True),
         'complete_name': fields.function(_get_name, type='char', string='Name'),
         'pack': fields.boolean('Prefill Pack Operations', help='This picking type needs packing interface'),
         'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in source location.'),
-        'color': fields.integer('Color Index'),
+        'color': fields.integer('Color'),
         'delivery': fields.boolean('Print delivery'),
         'sequence_id': fields.many2one('ir.sequence', 'Reference Sequence', required=True),
         'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
@@ -3436,7 +3495,7 @@ class stock_picking_type(osv.osv):
         #TODO: change field name to "code" as it's not a many2one anymore
         'code_id': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Picking type code', required=True),
         'return_picking_type_id': fields.many2one('stock.picking.type', 'Picking Type for Returns'),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', ondelete='cascade'),
         'active': fields.boolean('Active'),
 
         # Statistics for the kanban view
