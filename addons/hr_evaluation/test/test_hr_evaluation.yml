@@ -66,11 +66,12 @@
 -
   !python {model: hr_evaluation.evaluation}: |
     interview_obj = self.pool.get('hr.evaluation.interview')
-    evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'))
-    interview_obj.survey_req_done(cr, uid, [r.id for r in evaluation.survey_request_ids])
+    evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'), context=context)
     for survey in evaluation.survey_request_ids:
-        interview = interview_obj.browse(cr, uid, survey.id, context)
-        assert interview.state == "done", 'survey must be in done state'
+      survey.survey_req_done()
+    survey_request_ids = [r.id for r in evaluation.survey_request_ids]
+    for survey in interview_obj.browse(cr, uid, survey_request_ids, context=context):
+      assert survey.state == 'done', 'survey must be in done state'
 -
   I print the evaluation.
 -
