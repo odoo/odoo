@@ -129,16 +129,18 @@ class mail_alias(osv.Model):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        """Return the mail alias display alias_name, inclusing the implicit
-           mail catchall domain from config.
-           e.g. `jobs@openerp.my.openerp.com` or `sales@openerp.my.openerp.com`
+        """Return the mail alias display alias_name, including the implicit
+           mail catchall domain if exists from config otherwise "New Alias".
+           e.g. `jobs@openerp.my.openerp.com` or `jobs` or 'New Alias'
         """
         res = []
         for record in self.browse(cr, uid, ids, context=context):
             if record.alias_name and record.alias_domain:
                 res.append((record['id'], "%s@%s" % (record.alias_name, record.alias_domain)))
+            elif record.alias_name:
+                res.append((record['id'], "%s" % (record.alias_name)))
             else:
-                res.append((record['id'], False))
+                res.append((record['id'], "New Alias"))
         return res
 
     def _find_unique(self, cr, uid, name, context=None):
