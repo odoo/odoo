@@ -42,6 +42,9 @@
         <!-- A survey -->
         <template id="survey" name="Survey">
             <t t-call="website.layout">
+                <t t-set="head">
+                    <script type="text/javascript" src="/survey/static/src/js/survey.js" />
+                </t>
                 <div class="wrap">
                     <div class="container">
                         <div class="row">
@@ -57,7 +60,7 @@
                                         </h1>
                                     </div>
                                     <div class="text-center">
-                                        <form role="form" method="post" t-att-name="survey.id.__str__() + '*-1'" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
+                                        <form role="form" method="post" t-att-name="survey.id.__str__() + '---1'" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
                                             <input type="hidden" name="current" t-att-value="pagination['current'].__str__()" />
                                             <input type="hidden" name="next" t-att-value="pagination['next'].__str__()" />
                                             <input type="submit" class="btn btn-primary active" value="Take survey"/>
@@ -90,8 +93,8 @@
         <!-- Navigation & Submission -->
         <template id="navsub" name="Footer for navigation and submission">
             <div class="text-center">
-                <t t-if="pagination['current'] != -1 and pagination['next'] != 'finished'"><input type="submit" class="btn btn-primary active" value="Next page"/></t>
-                <t t-if="pagination['next'] == 'finished'"><input type="submit" class="btn btn-success active" value="Submit survey"/></t>
+                <t t-if="pagination['current'] != -1 and pagination['next'] != 'finished'"><input type="submit" class="btn btn-primary active survey-btn" value="Next page"/></t>
+                <t t-if="pagination['next'] == 'finished'"><input type="submit" class="btn btn-success active survey-btn" value="Submit survey"/></t>
             </div>
         </template>
 
@@ -121,7 +124,7 @@
                 </div>
             </t>
 
-            <form role="form" method="post" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__()" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
+            <form role="form" method="post" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__()" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
                 <input type="hidden" name="current" t-att-value="pagination['current'].__str__()" />
                 <input type="hidden" name="next" t-att-value="pagination['next'].__str__()" />
                 <t t-foreach='page.question_ids' t-as='question'>
@@ -144,32 +147,31 @@
             <t t-if="not is_vector_element"> <!-- if -->
                 <h3>
                     <t t-if="question.constr_mandatory"><span class="glyphicon glyphicon-exclamation-sign"></span></t>
-                    <span t-field='question.question'/><br/>
-
+                    <span t-field='question.question' t-att-id="'survey_' + survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/><br/>
                     <small><t t-if="question.description"><span t-field='question.description'/></t></small>
                 </h3>
             </t>
             <t t-if="is_vector_element"> <!-- else -->
                 <t t-if="question.type == 'simple_choice_scale'">
-                    <span t-field='question.question'/><t t-raw="'&lt;/td&gt;&lt;td&gt;'" />
+                    <span t-field='question.question' t-att-id="'survey_' + survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/><t t-raw="'&lt;/td&gt;&lt;td&gt;'" />
                 </t>
             </t> <!-- endif -->
 
             <!-- instanciating different types of questions -->
             <t t-if="question.type in ['free_text']">
-                <textarea class="form-control" rows="3" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__()"></textarea>
+                <textarea class="form-control" rows="3" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"></textarea>
             </t>
 
             <t t-if="question.type in ['textbox']">
-                <input type="text" class="form-control" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__()"/>
+                <input type="text" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/>
             </t>
 
             <t t-if="question.type in ['numerical_box']">
-                <input type="number" class="form-control" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__()"/>
+                <input type="number" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/>
             </t>
 
             <t t-if="question.type in ['datetime']" >
-                <input type="datetime-local" class="form-control" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__()"/>
+                <input type="datetime-local" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/>
                 TODO: replace html5 datetime widget by OpenERP-CMS datetime widget
             </t>
 
@@ -177,7 +179,7 @@
                 <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
                     <div class="radio-inline">
                         <label>
-                            <input type="radio" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__()" t-att-value='suggestion.value' />
+                            <input type="radio" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()" t-att-value='suggestion.value' />
                             <span t-field='suggestion.value'/>
                         </label>
                     </div>
@@ -185,7 +187,7 @@
             </t>
 
             <t t-if="question.type in ['simple_choice_dropdown']">
-                <select class="form-control" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__()">
+                <select class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()">
                     <option disabled="1" selected="1">Choose...</option>
                     <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
                         <option><t t-esc='suggestion.value'/></option>
@@ -197,7 +199,7 @@
                 <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__() + '*' + suggestion.id.__str__()" t-att-value='suggestion.value' />
+                            <input type="checkbox" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__() + '--' + suggestion.id.__str__()" t-att-value='suggestion.value' />
                             <span t-field='suggestion.value'/>
                         </label>
                     </div>
@@ -240,7 +242,7 @@
 
             <!-- Comments -->
             <t t-if="question.comments_allowed">
-                Other: <input type="text" class="form-control" t-att-name="survey.id.__str__() + '*' + pagination['current'].__str__() + '*' + question.id.__str__() + '*comments'"/>
+                Other: <input type="text" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question."/>
             </t>
 
         </template>
