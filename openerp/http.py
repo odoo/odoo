@@ -859,7 +859,11 @@ class ModelConverter(routing.BaseConverter):
         return request.registry[self.model].browse(request.cr, request.uid, int(value), context=request.context)
 
     def to_url(self, value):
-        return value.id
+        return str(value.id)
+
+    def generate(self):
+        for id in request.registry[self.model].search(request.cr, request.uid, [], context=request.context):
+            yield request.registry[self.model].browse(request.cr, request.uid, id, context=request.context)
 
 class ModelsConverter(routing.BaseConverter):
 
