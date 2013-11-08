@@ -483,7 +483,7 @@ class Ecommerce(http.Controller):
         product_ids = []
         if order:
             for line in order.order_line:
-                suggested_ids += [p.id for p in line.product_id and line.product_id.suggested_product_ids or [] for line in order.order_line]
+                suggested_ids += [p.id for p in line.product_id and line.product_id.suggested_product_ids or []]
                 product_ids.append(line.product_id.id)
         suggested_ids = list(set(suggested_ids) - set(product_ids))
         if suggested_ids:
