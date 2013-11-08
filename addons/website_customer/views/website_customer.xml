@@ -3,13 +3,13 @@
 <data>
 
     <!-- Layout add nav and footer -->
-    <template id="footer_custom" inherit_id="website.layout" name="Custom Footer">
+    <template id="footer_custom" inherit_id="website.layout" name="Footer Customer References Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a href="/customers/">Customer References</a></li>
+            <li><a t-href="/customers/">Customer References</a></li>
         </xpath>
     </template>
 
-    <!-- Page --> 
+    <!-- Page -->
     <template id="layout" name="Customer References Layout">
         <t t-call="website.layout">
             <t t-set="additional_title">Customer References</t>
@@ -53,7 +53,7 @@
                                <t t-set="classname" t-value="'pull-left'"/>
                             </t>
                             <form action="/customers/" method="get" class="navbar-search pull-right pagination form-inline">
-                                <div class="form-group"> 
+                                <div class="form-group">
                                     <input type="text" name="search" class="search-query form-control"
                                         placeholder="Search" t-att-value="post.get('search', '')"/>
                                 </div>
@@ -63,11 +63,11 @@
                     <div>
                         <div t-foreach="partner_ids" t-as="partner" class="media thumbnail" data-publish="">
                             <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
-                            <a class="pull-left" t-attf-href="/customers/#{ partner.id }/">
+                            <a class="pull-left" t-href="/customers/#{ partner.id }/">
                                 <img class="media-object" t-att-src="partner.img('image_small')"/>
                             </a>
                             <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-attf-href="/customers/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a>
+                                <a class="media-heading" t-href="/customers/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a>
                                 <t t-if="partner.website_short_description"><div t-field="partner.website_short_description"/></t><a t-if="partner.website_short_description" class="pull-right" t-attf-href="/customers/#{ partner.id }/">Read More</a>
                             </div>
                         </div>

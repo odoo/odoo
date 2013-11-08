@@ -5,35 +5,30 @@
     // The following line can be removed in 2017
     openerp.website = website;
 
-    var templates = website.templates = [
-        '/website/static/src/xml/website.xml'
-    ];
-
     website.get_context = function (dict) {
         var html = document.documentElement;
         return _.extend({
-            lang: html.getAttribute('lang').replace('-', '_')
+            lang: html.getAttribute('lang').replace('-', '_'),
+            website_id: html.getAttribute('data-website-id')|0
         }, dict);
     };
 
     /* ----- TEMPLATE LOADING ---- */
-    website.add_template = function(template) {
-        templates.push(template);
-    };
-    website.load_templates = function(templates) {
-        var dones = _(templates).map(function (t) {
-            return new $.Deferred(function (d) {
-                openerp.qweb.add_template(t, function(err) {
-                    if (err) {
-                        d.reject(err);
-                    } else {
-                        d.resolve();
-                    }
-                });
+    var templates_def = $.Deferred().resolve();
+    website.add_template_file = function(template) {
+        templates_def = templates_def.then(function() {
+            var def = $.Deferred();
+            openerp.qweb.add_template(template, function(err) {
+                if (err) {
+                    def.reject(err);
+                } else {
+                    def.resolve();
+                }
             });
+            return def;
         });
-        return $.when.apply(null, dones);
     };
+    website.add_template_file('/website/static/src/xml/website.xml');
     website.reload = function () {
         location.hash = "scrollTop=" + window.document.body.scrollTop;
         if (location.search.indexOf("enable_editor") > -1) {
@@ -110,19 +105,32 @@
      */
     website.ready = function() {
         if (!all_ready) {
-            var tpl = website.load_templates(templates);
-            all_ready = dom_ready.then(function () {
+            all_ready = $.when(dom_ready, templates_def).then(function () {
                 if ($('html').data('editable')) {
+                    website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
                     var modules = ['website'];
                     return openerp._t.database.load_translations(website.session, modules, website.get_context().lang);
                 }
-            }).then(tpl).promise();
+            }).promise();
         }
         return all_ready;
     };
 
+    website.error = function(data, url) {
+        var $error = $(openerp.qweb.render('website.error_dialog', {
+            'title': data.data ? data.data.arguments[0] : data.statusText,
+            'message': data.data ? data.data.arguments[1] : "",
+            'backend_url': url
+        }));
+        $error.appendTo("body");
+        $error.modal('show');
+    };
+
     dom_ready.then(function () {
+
+        /* ----- BOOTSTRAP  STUFF ---- */
+        $('.js_tooltip').bstooltip();
 
         /* ----- PUBLISHING STUFF ---- */
         $('[data-publish]:has(.js_publish)').each(function () {
@@ -140,12 +148,15 @@
 
         $(document).on('click', '.js_publish', function (e) {
             e.preventDefault();
-            var $data = $(":first", this).parents("[data-publish]");
-            $data.attr("data-publish", $data.first().attr("data-publish") == 'off' ? 'on' : 'off');
-            openerp.jsonRpc('/website/publish', 'call', {'id': $(this).data('id'), 'object': $(this).data('object')})
+            var $a = $(this);
+            var $data = $a.find(":first").parents("[data-publish]");
+            openerp.jsonRpc($a.data('controller') || '/website/publish', 'call', {'id': +$a.data('id'), 'object': $a.data('object')})
                 .then(function (result) {
                     $data.attr("data-publish", +result ? 'on' : 'off');
+                }).fail(function (err, data) {
+                    website.error(data, '/web#model='+$a.data('object')+'&id='+$a.data('id'));
                 });
+            return false;
         });
 
         $(document).on('click', '.js_publish_management .js_publish_btn', function () {
@@ -156,11 +167,13 @@
             $data.toggleClass("css_unpublish css_publish");
             $btn.removeClass("btn-default btn-success");
 
-            openerp.jsonRpc('/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
+            openerp.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
                 .then(function (result) {
                     $btn.toggleClass("btn-default", !result).toggleClass("btn-success", result);
                     $data.toggleClass("css_unpublish", !result).toggleClass("css_publish", result);
                     $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
+                }).fail(function (err, data) {
+                    website.error(data, '/web#model='+$data.data('object')+'&id='+$data.data('id'));
                 });
         });
 

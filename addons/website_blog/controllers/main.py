@@ -159,7 +159,9 @@ class WebsiteBlog(http.Controller):
 
         return request.website.render("website_blog.index", values)
 
-    @website.route(['/blog/nav'], type='http', auth="public")
+    # TODO: Refactor (used in website_blog.js for archive links)
+    # => the archive links should be generated server side
+    @website.route(['/blog/nav'], type='http', auth="public", multilang=True)
     def nav(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         blog_post_ids = request.registry['blog.post'].search(
@@ -171,32 +173,25 @@ class WebsiteBlog(http.Controller):
         blog_post_data = [
             {
                 'id': blog_post.id,
-                'name': blog_post.name,
                 'website_published': blog_post.website_published,
-                'category_id': blog_post.category_id and blog_post.category_id.id or False,
+                'fragment': request.website.render("website_blog.blog_archive_link", {
+                    'blog_post': blog_post
+                }),
             }
             for blog_post in request.registry['blog.post'].browse(cr, uid, blog_post_ids, context=context)
         ]
         return simplejson.dumps(blog_post_data)
 
-    @website.route(['/blog/<int:blog_post_id>/post'], type='http', auth="public")
+    @website.route(['/blog/<int:blog_post_id>/comment'], type='http', auth="public")
     def blog_post_comment(self, blog_post_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        url = request.httprequest.host_url
-        request.session.body = post.get('body')
-        if request.context['is_public_user']:  # purpose of this ?
-            return '%s/web#action=redirect&url=%s/blog/%s/post' % (url, url, blog_post_id)
-
-        if request.session.get('body') and blog_post_id:
-            request.registry['blog.post'].message_post(
-                cr, uid, blog_post_id,
-                body=request.session.body,
-                type='comment',
-                subtype='mt_comment',
-                context=dict(context, mail_create_nosubcribe=True))
-            request.session.body = False
-
-        return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % (blog_post_id))
+        request.registry['blog.post'].message_post(
+            cr, uid, blog_post_id,
+            body=post.get('comment'),
+            type='comment',
+            subtype='mt_comment',
+            context=dict(context, mail_create_nosubcribe=True))
+        return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
     @website.route(['/blog/<int:category_id>/new'], type='http', auth="public")
     def blog_post_create(self, category_id=None, **post):

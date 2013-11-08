@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import base64
 import cStringIO
 import contextlib
 import hashlib
@@ -38,7 +37,7 @@ logger = logging.getLogger(__name__)
 def auth_method_public():
     registry = openerp.modules.registry.RegistryManager.get(request.db)
     if not request.session.uid:
-        request.uid = registry['website'].get_public_user().id
+        request.uid = registry['website'].get_public_user(request.cr, openerp.SUPERUSER_ID, request.context).id
     else:
         request.uid = request.session.uid
 http.auth_methods['public'] = auth_method_public
@@ -49,7 +48,19 @@ MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
     @website.route('/', type='http', auth="public", multilang=True)
     def index(self, **kw):
-        return self.page("website.homepage")
+        # TODO: check if plain SQL is needed
+        menu = request.registry['website.menu']
+        root_domain = [('parent_id', '=', False)] # TODO: multiwebsite ('website_id', '=', request.website.id),
+        root_id = menu.search(request.cr, request.uid, root_domain, limit=1, context=request.context)[0]
+        first_menu = menu.search_read(
+            request.cr, request.uid, [('parent_id', '=', root_id)], ['url'],
+            limit=1, order='sequence', context=request.context)
+        if first_menu:
+            first_menu = first_menu[0]['url']
+        if first_menu and first_menu != '/':
+            return request.redirect(first_menu)
+        else:
+            return self.page("website.homepage")
 
     @website.route('/pagenew/<path:path>', type='http', auth="user")
     def pagenew(self, path, noredirect=NOPE):
@@ -124,11 +135,8 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {
             'path': path,
         }
-        try:
-            html = request.website.render(path, values)
-        except ValueError:
-            html = request.website.render('website.404', values)
-        return html
+
+        return request.website.render(path, values)
 
     @website.route('/website/customize_template_toggle', type='json', auth='user')
     def customize_template_set(self, view_id):
@@ -269,7 +277,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
-        return request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+        body = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+        return request.make_response(body, headers=[('Content-Type', 'text/plain')])
 
     @website.route('/sitemap', type='http', auth='public', multilang=True)
     def sitemap(self, **kwargs):

@@ -133,7 +133,7 @@
   height: 560px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   #products_grid table, #products_grid tbody, #products_grid tr, #products_grid td {
     float: left;
     width: 100%;
@@ -144,6 +144,16 @@
     width: 100%;
     height: 300px;
     display: inline-block;
+  }
+
+  .products_pager {
+    text-align: center;
+    margin: 10px 0;
+  }
+  .products_pager .pagination {
+    float: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 }
 @media (max-width: 400px) {

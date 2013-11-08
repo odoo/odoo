@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 import fnmatch
 import functools
+import logging
+import math
 import simplejson
+import traceback
+import urllib
+import urlparse
+
+import werkzeug
+import werkzeug.exceptions
+import werkzeug.wrappers
 
 import openerp
+from openerp.exceptions import AccessError, AccessDenied
 from openerp.osv import osv, fields
+from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-import urllib
-from urlparse import urljoin
-import math
-import traceback
-from openerp.tools.safe_eval import safe_eval
-from openerp.exceptions import AccessError, AccessDenied
-import werkzeug
-from openerp.addons.base.ir.ir_qweb import QWebException
 
-import logging
 logger = logging.getLogger(__name__)
 
 def route(routes, *route_args, **route_kwargs):
@@ -33,47 +35,46 @@ def route(routes, *route_args, **route_kwargs):
             request.route_lang = kwargs.get('lang_code', None)
             if not hasattr(request, 'website'):
                 request.multilang = f.multilang
-                request.website = request.registry['website'].get_current()
+                # TODO: Select website, currently hard coded
+                request.website = request.registry['website'].browse(
+                    request.cr, request.uid, 1, context=request.context)
+
                 if request.route_lang:
                     lang_ok = [lg.code for lg in request.website.language_ids if lg.code == request.route_lang]
                     if not lang_ok:
                         return request.not_found()
-                request.website.preprocess_request(*args, **kwargs)
+                request.website.preprocess_request(request)
             return f(*args, **kwargs)
         return wrap
     return decorator
 
-def auth_method_public():
-    registry = openerp.modules.registry.RegistryManager.get(request.db)
-    if not request.session.uid:
-        request.uid = registry['website'].get_public_user().id
-    else:
-        request.uid = request.session.uid
-http.auth_methods['public'] = auth_method_public
-
-def url_for(path, lang=None, keep_query=None):
-    if request:
-        path = urljoin(request.httprequest.path, path)
+def url_for(path_or_uri, lang=None, keep_query=None):
+    location = path_or_uri.strip()
+    url = urlparse.urlparse(location)
+    if request and not url.netloc and not url.scheme:
+        location = urlparse.urljoin(request.httprequest.path, location)
         langs = request.context.get('langs')
-        if path[0] == '/' and (len(langs) > 1 or lang):
-            ps = path.split('/')
+        if location[0] == '/' and (len(langs) > 1 or lang):
+            ps = location.split('/')
             lang = lang or request.context.get('lang')
             if ps[1] in langs:
                 ps[1] = lang
             else:
                 ps.insert(1, lang)
-            path = '/'.join(ps)
+            location = '/'.join(ps)
         if keep_query:
-            keep = []
-            params = werkzeug.url_decode(request.httprequest.query_string)
-            params_keys = tuple(params.keys())
+            url = urlparse.urlparse(location)
+            location = url.path
+            params = werkzeug.url_decode(url.query)
+            query_params = frozenset(werkzeug.url_decode(request.httprequest.query_string).keys())
             for kq in keep_query:
-                keep += fnmatch.filter(params_keys, kq)
-            if keep:
-                params = dict([(k, params[k]) for k in keep])
-                path += u'?%s' % werkzeug.urls.url_encode(params)
+                for param in fnmatch.filter(query_params, kq):
+                    params[param] = request.params[param]
+            params = werkzeug.urls.url_encode(params)
+            if params:
+                location += '?%s' % params
 
-    return path
+    return location
 
 def urlplus(url, params):
     if not params:
@@ -103,32 +104,28 @@ class website(osv.osv):
 
     public_user = None
 
-    def get_public_user(self):
+    def get_public_user(self, cr, uid, context=None):
         if not self.public_user:
-            ref = request.registry['ir.model.data'].get_object_reference(request.cr, openerp.SUPERUSER_ID, 'website', 'public_user')
-            self.public_user = request.registry[ref[0]].browse(request.cr, openerp.SUPERUSER_ID, ref[1])
+            uid = openerp.SUPERUSER_ID
+            ref = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
+            self.public_user = self.pool[ref[0]].browse(cr, uid, ref[1])
         return self.public_user
 
-    def get_lang(self):
-        website = request.registry['website'].get_current()
-
-        if hasattr(request, 'route_lang'):
-            lang = request.route_lang
-        else:
-            lang = request.params.get('lang', None) or request.httprequest.cookies.get('lang', None)
-
-        if lang not in [lg.code for lg in website.language_ids]:
-            lang = website.default_lang_id.code
-
-        return lang
-
-    def preprocess_request(self, cr, uid, ids, *args, **kwargs):
+    def preprocess_request(self, cr, uid, ids, request, context=None):
         def redirect(url):
             return werkzeug.utils.redirect(url_for(url))
         request.redirect = redirect
 
-        is_public_user = request.uid == self.get_public_user().id
-        lang = self.get_lang()
+        is_public_user = request.uid == self.get_public_user(cr, uid, context).id
+
+        # Select current language
+        if hasattr(request, 'route_lang'):
+            lang = request.route_lang
+        else:
+            lang = request.params.get('lang', None) or request.httprequest.cookies.get('lang', None)
+        if lang not in [lg.code for lg in request.website.language_ids]:
+            lang = request.website.default_lang_id.code
+
         is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
             'lang': lang,
@@ -141,16 +138,15 @@ class website(osv.osv):
             'translatable': not is_public_user and not is_master_lang and request.multilang,
         })
 
-    def get_current(self):
-        # WIP, currently hard coded
-        return self.browse(request.cr, request.uid, 1)
+    def render(self, cr, uid, ids, template, values=None, context=None):
+        view = self.pool.get("ir.ui.view")
+        IMD = self.pool.get("ir.model.data")
+        user = self.pool.get("res.users")
 
-    def render(self, cr, uid, ids, template, values=None):
-        view = request.registry.get("ir.ui.view")
-        IMD = request.registry.get("ir.model.data")
-        user = request.registry.get("res.users")
+        if not context:
+            context = {}
 
-        qweb_context = request.context.copy()
+        qweb_context = context.copy()
 
         if values:
             qweb_context.update(values)
@@ -164,7 +160,6 @@ class website(osv.osv):
             user_id=user.browse(cr, uid, uid),
         )
 
-        context = request.context.copy()
         context.update(
             inherit_branding=qweb_context.setdefault('editable', False),
         )
@@ -179,12 +174,11 @@ class website(osv.osv):
             try:
                 view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
             except ValueError:
-                logger.error("Website Rendering Error.\n\n%s" % traceback.format_exc())
-                return self.render(cr, uid, ids, 'website.404', qweb_context)
+                return self.error(cr, uid, 404, qweb_context, context=context)
 
         if 'main_object' not in qweb_context:
             try:
-                main_object = request.registry[view_ref[0]].browse(cr, uid, view_ref[1])
+                main_object = self.pool[view_ref[0]].browse(cr, uid, view_ref[1])
                 qweb_context['main_object'] = main_object
             except Exception:
                 pass
@@ -197,26 +191,25 @@ class website(osv.osv):
             logger.error(err)
             qweb_context['error'] = err[1]
             logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.render(cr, uid, ids, 'website.401', qweb_context)
-        except (QWebException,), err:
+            return self.error(cr, uid, 401, qweb_context, context=context)
+        except Exception, e:
+            qweb_context['template'] = getattr(e, 'qweb_template', '')
+            node = getattr(e, 'qweb_node', None)
+            qweb_context['node'] = node and node.toxml()
+            qweb_context['expr'] = getattr(e, 'qweb_eval', '')
             qweb_context['traceback'] = traceback.format_exc()
-            qweb_context['template'] = err.template
-            qweb_context['message'] = err.message
-            qweb_context['node'] = err.node and err.node.toxml()
-            logger.error("Website Rendering Error.\n%(message)s\n%(node)s\n\n%(traceback)s" % qweb_context)
-            return view.render(
-                cr, uid,
-                'website.500' if qweb_context['editable'] else 'website.404',
-                qweb_context, context=context)
-        except Exception:
-            logger.exception("Website Rendering Error.")
-            qweb_context['traceback'] = traceback.format_exc()
-            return view.render(
-                cr, uid,
-                'website.500' if qweb_context['editable'] else 'website.404',
-                qweb_context, context=context)
+            logger.exception("Website Rendering Error.\n%(template)s\n%(expr)s\n%(node)s" % qweb_context)
+            return self.error(cr, uid, 500 if qweb_context['editable'] else 404,
+                              qweb_context, context=context)
 
-    def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None):
+    def error(self, cr, uid, code, qweb_context, context=None):
+        View = request.registry['ir.ui.view']
+        return werkzeug.wrappers.Response(
+            View.render(cr, uid, 'website.%d' % code, qweb_context),
+            status=code,
+            content_type='text/html;charset=utf-8')
+
+    def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
         page_count = int(math.ceil(float(total) / step))
 
@@ -287,15 +280,15 @@ class website(osv.osv):
             if xids[view['id']]
         ]
 
-    def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None):
+    def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
         step = step and int(step) or 10
         scope = scope and int(scope) or 5
         orderby = orderby or "name"
 
         get_args = dict(request.httprequest.args or {})
-        model_obj = request.registry[model]
+        model_obj = self.pool[model]
         relation = model_obj._columns.get(column)._obj
-        relation_obj = request.registry[relation]
+        relation_obj = self.pool[relation]
 
         get_args.setdefault('kanban', "")
         kanban = get_args.pop('kanban')
@@ -349,9 +342,9 @@ class website(osv.osv):
         }
         return request.website.render("website.kanban_contain", values)
 
-    def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby):
+    def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby, context=None):
         html = ""
-        model_obj = request.registry[model]
+        model_obj = self.pool[model]
         domain = safe_eval(domain)
         step = int(step)
         offset = (int(page)-1) * step
@@ -360,6 +353,74 @@ class website(osv.osv):
         for object_id in object_ids:
             html += request.website.render(template, {'object_id': object_id})
         return html
+
+    def get_menu(self, cr, uid, ids, context=None):
+        return self.pool['website.menu'].get_menu(cr, uid, ids[0], context=context)
+
+class website_menu(osv.osv):
+    _name = "website.menu"
+    _description = "Website Menu"
+    _columns = {
+        'name': fields.char('Menu', size=64, required=True, translate=True),
+        'url': fields.char('Url', required=True, translate=True),
+        'new_window': fields.boolean('New Window'),
+        'sequence': fields.integer('Sequence'),
+        # TODO: support multiwebsite once done for ir.ui.views
+        'website_id': fields.many2one('website', 'Website'),
+        'parent_id': fields.many2one('website.menu', 'Parent Menu', select=True, ondelete="cascade"),
+        'child_id': fields.one2many('website.menu', 'parent_id', string='Child Menus'),
+        'parent_left': fields.integer('Parent Left', select=True),
+        'parent_right': fields.integer('Parent Right', select=True),
+    }
+    _defaults = {
+        'url': '',
+        'sequence': 0,
+    }
+    _parent_store = True
+    _parent_order = 'sequence, name'
+    _order = "parent_left"
+
+    def get_menu(self, cr, uid, website_id, context=None):
+        root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
+        menu_ids = self.search(cr, uid, root_domain, context=context)
+        menu = self.browse(cr, uid, menu_ids, context=context)
+        return menu[0]
+
+    def get_tree(self, cr, uid, website_id, context=None):
+        def make_tree(node):
+            menu_node = dict(
+                id=node.id,
+                name=node.name,
+                url=node.url,
+                new_window=node.new_window,
+                sequence=node.sequence,
+                parent_id=node.parent_id.id,
+                children=[],
+            )
+            for child in node.child_id:
+                menu_node['children'].append(make_tree(child))
+            return menu_node
+        menu = self.get_menu(cr, uid, website_id, context=context)
+        return make_tree(menu)
+
+    def save(self, cr, uid, website_id, data, context=None):
+        def replace_id(old_id, new_id):
+            for menu in data['data']:
+                if menu['id'] == old_id:
+                    menu['id'] = new_id
+                if menu['parent_id'] == old_id:
+                    menu['parent_id'] = new_id
+        to_delete = data['to_delete']
+        if to_delete:
+            self.unlink(cr, uid, to_delete, context=context)
+        for menu in data['data']:
+            mid = menu['id']
+            if isinstance(mid, str):
+                new_id = self.create(cr, uid, {'name': menu['name']}, context=context)
+                replace_id(mid, new_id)
+        for menu in data['data']:
+            self.write(cr, uid, [menu['id']], menu, context=context)
+        return True
 
 class ir_attachment(osv.osv):
     _inherit = "ir.attachment"
@@ -400,6 +461,15 @@ class res_partner(osv.osv):
             'q': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
         }
         return urlplus('https://maps.google.be/maps' , params)
+
+class res_company(osv.osv):
+    _inherit = "res.company"
+    def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
+        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).parent_id
+        return partner and partner.google_map_img(zoom, width, height, context=context) or None
+    def google_map_link(self, cr, uid, ids, zoom=8, context=None):
+        partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).parent_id
+        return partner and partner.google_map_link(zoom, context=context) or None
 
 class base_language_install(osv.osv):
     _inherit = "base.language.install"

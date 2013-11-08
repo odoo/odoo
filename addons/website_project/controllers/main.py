@@ -28,13 +28,13 @@ from openerp.osv import osv
 class Website(osv.Model):
     _inherit = "website"
 
-    def preprocess_request(self, cr, uid, ids, *args, **kwargs):
+    def preprocess_request(self, cr, uid, ids, request, context=None):
         project_obj = request.registry['project.project']
         project_ids = project_obj.search(cr, uid, [('privacy_visibility', "=", "public")], context=request.context)
 
         request.context['website_project_ids'] = project_obj.browse(cr, uid, project_ids, request.context)
 
-        return super(Website, self).preprocess_request(cr, uid, ids, *args, **kwargs)
+        return super(Website, self).preprocess_request(cr, uid, ids, request, context)
 
 
 class website_project(http.Controller):
