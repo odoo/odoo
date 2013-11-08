@@ -15,7 +15,9 @@ Graph Views for Web Client.
     'version': '3.0',
     'depends': ['web'],
     'js': [
-        'static/src/js/graph.js'
+        'static/lib/nvd3/d3.v3.js',
+        'static/lib/nvd3/nv.d3.js',
+        'static/src/js/graph.js',
     ],
     'css': [
         'static/src/css/*.css',
