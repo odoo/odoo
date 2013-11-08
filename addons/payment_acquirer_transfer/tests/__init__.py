@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,17 +19,4 @@
 #
 ##############################################################################
 
-{
-    'name': 'Payment acquirer',
-    'category': 'Hidden',
-    'summary': 'Payment acquirer, display and validate payments',
-    'version': '0.1',
-    'description': """Payment acquirer module, use to display payment method and validate the payments.""",
-    'author': 'OpenERP SA',
-    'depends': ['decimal_precision', 'mail'],
-    'data': [
-        'views/payment_acquirer_views.xml',
-        'security/ir.model.access.csv',
-    ],
-    'installable': True,
-}
+import common

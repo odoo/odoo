@@ -168,9 +168,10 @@ class PaymentTransaction(osv.Model):
     def create(self, cr, uid, values, context=None):
         if not 'name' in values and 'reference' in values:
             values['name'] = values['reference']
-        if values.get('partner_id'):
+        if values.get('partner_id'):  # @TDENOTE: not sure
             values.update(self.on_change_partner_id(cr, uid, None, values.get('partner_id'), context=context)['values'])
 
+        # call custom create method if defined (i.e. ogone_create for ogone)
         if values.get('acquirer_id'):
             acquirer = self.pool['payment.acquirer'].browse(cr, uid, values.get('acquirer_id'), context=context)
             custom_method_name = '%s_create' % acquirer.name

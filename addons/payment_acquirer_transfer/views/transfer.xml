@@ -133,5 +133,16 @@
             parent='root_payment_menu'
             sequence='20' />
 
+        <!-- templates -->
+        <template id="transfer_acquirer_button">
+            <div>
+                <table>
+                    <tr><td>Bank account</td><td></td></tr>
+                    <tr><td>Communication</td><td><t t-esc="reference"/></td></tr>
+                </table>
+                <a t-att-href="return_url" class="btn btn-primary">Validate &amp; Pay <span class="icon-long-arrow-right"/></a>
+            </div>
+        </template>
+
     </data>
 </openerp>

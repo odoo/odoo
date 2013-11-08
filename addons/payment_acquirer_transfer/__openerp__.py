@@ -20,16 +20,16 @@
 ##############################################################################
 
 {
-    'name': 'Payment acquirer',
+    'name': 'Transfer Payment acquirer',
     'category': 'Hidden',
-    'summary': 'Payment acquirer, display and validate payments',
+    'summary': 'Transfer Payment acquirer',
     'version': '0.1',
-    'description': """Payment acquirer module, use to display payment method and validate the payments.""",
+    'description': """Transfer Payment acquirer""",
     'author': 'OpenERP SA',
-    'depends': ['decimal_precision', 'mail'],
+    'depends': ['payment_acquirer'],
     'data': [
-        'views/payment_acquirer_views.xml',
-        'security/ir.model.access.csv',
+        'views/transfer.xml',
+        'data/transfer.xml',
     ],
     'installable': True,
 }

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-'8' "-*-"
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -19,17 +19,18 @@
 #
 ##############################################################################
 
-{
-    'name': 'Payment acquirer',
-    'category': 'Hidden',
-    'summary': 'Payment acquirer, display and validate payments',
-    'version': '0.1',
-    'description': """Payment acquirer module, use to display payment method and validate the payments.""",
-    'author': 'OpenERP SA',
-    'depends': ['decimal_precision', 'mail'],
-    'data': [
-        'views/payment_acquirer_views.xml',
-        'security/ir.model.access.csv',
-    ],
-    'installable': True,
-}
+from openerp.osv import osv
+# from openerp.osv import fields
+
+import logging
+
+_logger = logging.getLogger(__name__)
+
+
+class TransferPaymentAcquirer(osv.Model):
+    _name = 'payment.acquirer'
+    _description = 'Online Payment Acquirer'
+
+
+class TransferPaymentTransaction(osv.Model):
+    _inherit = ['payment.transaction']
