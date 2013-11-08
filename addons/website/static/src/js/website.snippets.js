@@ -1,6 +1,21 @@
 (function () {
     'use strict';
 
+
+    var start_snippet_animation = function () {
+        hack_to_add_snippet_id();
+        $("[data-snippet-id]").each(function() {
+            var $snipped_id = $(this);
+            if (    !$snipped_id.parents("#oe_snippets").length &&
+                    typeof $snipped_id.data("snippet-view") === 'undefined' &&
+                    website.snippet.animationRegistry[$snipped_id.data("snippet-id")]) {
+                var snippet = new website.snippet.animationRegistry[$snipped_id.data("snippet-id")]($snipped_id);
+                $snipped_id.data("snippet-view", snippet);
+            }
+        });
+    };
+    $(document).ready(start_snippet_animation);
+
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.snippets.xml');
 
@@ -24,6 +39,7 @@
 
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
+                start_snippet_animation();
                 self.trigger('rte:snippets_ready');
             });
 
@@ -38,18 +54,6 @@
             remove_added_snippet_id();
             this._super();
         },
-    });
-
-
-    $(document).ready(function () {
-        hack_to_add_snippet_id();
-        $("[data-snippet-id]").each(function() {
-                var $snipped_id = $(this);
-                if (typeof $snipped_id.data("snippet-view") === 'undefined' &&
-                        website.snippet.animationRegistry[$snipped_id.data("snippet-id")]) {
-                    $snipped_id.data("snippet-view", new website.snippet.animationRegistry[$snipped_id.data("snippet-id")]($snipped_id));
-                }
-            });
     });
 
     /* ----- SNIPPET SELECTOR ---- */
@@ -1208,24 +1212,23 @@
     website.snippet.editorRegistry.parallax = website.snippet.editorRegistry.resize.extend({
         start : function () {
             this._super();
-            this.change_background($('.parallax', this.$target), 'ul[name="parallax-background"]');
+            this.change_background(this.$target, 'ul[name="parallax-background"]');
             this.scroll();
             this.change_size();
         },
-        scroll: function(){
+        scroll: function () {
+            var self = this;
             var $ul = this.$editor.find('ul[name="parallax-scroll"]');
             var $li = $ul.find("li");
-            var $parallax = this.$target.find('.parallax');
-            var speed = $parallax.data('stellar-background-ratio') || 0.5 ;
-
+            var speed = this.$target.data('scroll-background-ratio') || 0.6 ;
             $ul.find('[data-value="' + speed + '"]').addClass('active');
             $li.on('click', function (event) {
                 $li.removeClass("active");
                 $(this).addClass("active");
                 var speed =  $(this).data('value');
-                $parallax.attr('data-stellar-background-ratio', speed);
+                self.$target.attr('data-scroll-background-ratio', speed);
+                self.$target.data("snippet-view").set_values();
             });
-
         },
         clean_for_save: function () {
             this._super();
@@ -1233,12 +1236,11 @@
         },
         change_size: function () {
             var self = this;
-            var $el = $('.oe_big,.oe_medium,.oe_small', this.$target);
 
             var size = 'oe_big';
-            if ($el.hasClass('oe_small'))
+            if (this.$target.hasClass('oe_small'))
                 size = 'oe_small';
-            else if ($el.hasClass('oe_medium'))
+            else if (this.$target.hasClass('oe_medium'))
                 size = 'oe_medium';
             var $ul = this.$editor.find('ul[name="parallax-size"]');
             var $li = $ul.find("li");
@@ -1248,21 +1250,50 @@
             $li.on('click', function (event) {
                     $li.removeClass("active");
                     $(this).addClass("active");
+                    self.$target.data("snippet-view").set_values();
                 })
                 .on('mouseover', function (event) {
-                    $el.removeClass('oe_big oe_small oe_medium');
-                    $el.addClass($(event.currentTarget).data("value"));
+                    self.$target.removeClass('oe_big oe_small oe_medium');
+                    self.$target.addClass($(event.currentTarget).data("value"));
                 })
                 .on('mouseout', function (event) {
-                    $el.removeClass('oe_big oe_small oe_medium');
-                    $el.addClass($ul.find('li.active').data("value"));
+                    self.$target.removeClass('oe_big oe_small oe_medium');
+                    self.$target.addClass($ul.find('li.active').data("value"));
                 });
         }
     });
     website.snippet.animationRegistry.parallax = website.snippet.Animation.extend({
         start: function () {
-            $.stellar({ horizontalScrolling: false, verticalOffset: 0 });
+            var self = this;
+            this.set_values();
+            var on_scroll = function () {
+                var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
+                if (speed == 1) return;
+                var offset = parseFloat(self.$target.attr("data-scroll-background-offset") || 0);
+                var top = offset + window.scrollY * speed;
+                self.$target.css("background-position", "0px " + top + "px");
+            };
+            $(window).off("scroll").on("scroll", on_scroll);
         },
+        set_values: function () {
+            var self = this;
+            var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
+
+            if (speed == 1) {
+                this.$target.css("background-attachment", "fixed").css("background-position", "0px 0px");
+                return;
+            } else {
+                this.$target.css("background-attachment", "scroll");
+            }
+
+            this.$target.attr("data-scroll-background-offset", 0);
+            var img = new Image();
+            img.onload = function () {
+                self.$target.attr("data-scroll-background-offset", self.$target.outerHeight() - this.height);
+                $(window).scroll();
+            };
+            img.src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
+        }
     });
 
     /*
