@@ -408,10 +408,9 @@ class procurement_order(osv.osv):
                     if op.product_id.type not in ('consu'):
                         procurement_draft_ids = orderpoint_obj.get_draft_procurements(cr, uid, op. id, context=context)
                         if procurement_draft_ids:
-                        # Check draft procurement related to this order point
-                            pro_ids = [x.id for x in procurement_draft_ids]
+                            # Check draft procurement related to this order point
                             procure_datas = procurement_obj.read(
-                                cr, uid, pro_ids, ['id', 'product_qty'], context=context)
+                                cr, uid, procurement_draft_ids, ['id', 'product_qty'], context=context)
                             to_generate = qty
                             for proc_data in procure_datas:
                                 if to_generate >= proc_data['product_qty']:
