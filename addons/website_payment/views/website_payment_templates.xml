@@ -1,32 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 
-    <!-- Layout add nav and footer -->
+    <!-- Add menus for testing -->
     <data noupdate="0">
         <record id="menu_paypal_test" model="website.menu">
             <field name="name">Paypal (Test)</field>
             <field name="url">/payment/paypal/test</field>
             <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">50</field>
+            <field name="sequence" type="int">90</field>
         </record>
-    </data>
-    <data noupdate="0">
+
         <record id="menu_paypal_ogone" model="website.menu">
             <field name="name">Ogone (Test)</field>
             <field name="url">/payment/ogone/test</field>
             <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">50</field>
+            <field name="sequence" type="int">91</field>
+        </record>
+
+        <record id="menu_transfer_test" model="website.menu">
+            <field name="name">Transfer (Test)</field>
+            <field name="url">/payment/transfer/test</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">92</field>
         </record>
     </data>
 
-    <!-- Page --> 
+    <!-- Page -->
     <data>
         <template id="index_paypal" name="Paypal (Test)" page="True">
             <t t-call="website.layout">
+                <t t-set="head">
+                    <script type="text/javascript" src="/website_payment/static/src/js/payment_acquirer.js"></script>
+                    <script type="text/javascript" src="/website_payment/static/lib/jquery.payment/jquery.payment.js"></script>
+                    <link rel='stylesheet' href='/website_payment/static/src/css/website_payment.css'/>
+                </t>
                 <div id="wrap">
                     <div class="container mt16 js_website_blog">
                         <div class="row">
-                            Paypal payment
+                            <h3>Paypal payment: server 2 server</h3>
+                            <form class="form-horizontal col-sm-4" role="form">
+                                <div class="form-group col-sm-8">
+                                    <label for="cc_number">Card number</label>
+                                    <input type="tel" id="cc_number" class="form-control"/>
+                                    <div class="pull-right card_placeholder"></div>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="cc_cvc">Card code</label>
+                                    <input type="text" id="cc_cvc" class="form-control" maxlength="4" palceholder="CVC"/>
+                                </div>
+                                <div class="form-group col-sm-7">
+                                    <label for="cc_holder_name">Holder Name</label>
+                                    <input type="text" id="cc_hoder_name" class="form-control"/>
+                                </div>
+                                <div class="form-group col-sm-5">
+                                    <label for="cc_expires_mm">Expires</label>
+                                    <select id="cc_expires_mm" class="form-control col-sm-2" maxlength="2">
+                                        <option>MM</option>
+                                        <option>01</option>
+                                        <option>02</option>
+                                        <option>03</option>
+                                    </select>
+                                    <select id="cc_expires_yy" class="form-control col-sm-2" maxlength="2">
+                                        <option>YY</option>
+                                        <option>13</option>
+                                        <option>14</option>
+                                        <option>15</option>
+                                        <option>16</option>
+                                    </select>
+                                </div>
+
+                            </form>
+                            
+                        </div>
+                        <div>
+                            <h3>Paypal payment: form based</h3>
                             <t t-raw="acquirer_form"/>
                         </div>
                     </div>
@@ -46,6 +93,19 @@
                 </div>
             </t>
         </template>
-    </data>
 
+        <template id="index_transfer" name="Ogone (Test)" page="True">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="container mt16 js_website_blog">
+                        <div class="row">
+                            Transfer payment
+                            <t t-raw="acquirer_form"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
 </openerp>

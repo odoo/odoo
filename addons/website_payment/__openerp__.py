@@ -31,7 +31,7 @@
         'website',
         'payment_acquirer',
         'payment_acquirer_ogone',
-        'payment_acquirer_paypal'
+        'payment_acquirer_paypal',
         'payment_acquirer_transfer',
     ],
     'data': [
