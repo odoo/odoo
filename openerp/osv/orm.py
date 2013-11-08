@@ -2153,8 +2153,8 @@ class BaseModel(object):
                             attribute = (child.get('name'), child.text and child.text.encode('utf8') or None)
                             if attribute[1]:
                                 node.set(attribute[0], attribute[1])
-                            else:
-                                del(node.attrib[attribute[0]])
+                            elif attribute[0] in node.attrib:
+                                del node.attrib[attribute[0]]
                     else:
                         sib = node.getnext()
                         for child in spec:

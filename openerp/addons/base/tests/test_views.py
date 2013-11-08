@@ -40,6 +40,19 @@ class test_views(common.TransactionCase):
                         """,
             })
 
+    def test_20_remove_unexisting_attribute(self):
+        Views = self.registry('ir.ui.view')
+        Views.create(self.cr, self.uid, {
+            'name': 'Test View',
+            'model': 'ir.ui.view',
+            'inherit_id': self.browse_ref('base.view_view_tree').id,
+            'arch': """<?xml version="1.0"?>
+                        <xpath expr="//field[@name='name']" position="attributes">
+                            <attribute name="non_existing_attribute"></attribute>
+                        </xpath>
+                    """,
+        })
+
     def _insert_view(self, **kw):
         """Insert view into database via a query to passtrough validation"""
         kw.pop('id', None)
