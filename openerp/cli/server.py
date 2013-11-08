@@ -174,6 +174,19 @@ def dumpstacks(sig, frame):
             if line:
                 yield "  %s" % (line.strip(),)
 
+    # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
+    # modified for python 2.5 compatibility
+    threads_info = dict([(th.ident, {'name': th.name, 'uid': getattr(th, 'uid', 'n/a')})
+                        for th in threading.enumerate()])
+    for threadId, stack in sys._current_frames().items():
+        thread_info = threads_info.get(threadId)
+        code.append("\n# Thread: %s (id:%s) (uid:%s)" %
+                    (thread_info and thread_info['name'] or 'n/a',
+                     threadId,
+                     thread_info and thread_info['uid'] or 'n/a'))
+        for line in extract_stack(stack):
+            code.append(line)
+
     if openerp.evented:
         # code from http://stackoverflow.com/questions/12510648/in-gevent-how-can-i-dump-stack-traces-of-all-running-greenlets
         import gc
@@ -183,20 +196,6 @@ def dumpstacks(sig, frame):
                 continue
             code.append("\n# Greenlet: %r" % (ob,))
             for line in extract_stack(ob.gr_frame):
-                code.append(line)
-
-    else:
-        # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
-        # modified for python 2.5 compatibility
-        threads_info = dict([(th.ident, {'name': th.name, 'uid': getattr(th, 'uid', 'n/a')})
-                            for th in threading.enumerate()])
-        for threadId, stack in sys._current_frames().items():
-            thread_info = threads_info.get(threadId)
-            code.append("\n# Thread: %s (id:%s) (uid:%s)" %
-                        (thread_info and thread_info['name'] or 'n/a',
-                         threadId,
-                         thread_info and thread_info['uid'] or 'n/a'))
-            for line in extract_stack(stack):
                 code.append(line)
 
     _logger.info("\n".join(code))
