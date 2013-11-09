@@ -124,12 +124,6 @@
                                                 <t t-foreach="website.get_menu().child_id" t-as="submenu">
                                                     <t t-call="website.submenu"/>
                                                 </t>
-
-                                                <li class="active" t-if="user_id.id == website.public_user.id">
-                                                    <a t-attf-href="/web#redirect=#{ url_for('') }">
-                                                        Sign in
-                                                    </a>
-                                                </li>
                                                 <li class="active dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
                                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                                         <span t-esc="user_id.name"/>
@@ -222,6 +216,16 @@
                         </div>
                     </body>
                 </html>
+        </template>
+
+        <template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
+            <xpath expr="//ul[@id='top_menu']" position="inside">
+                <li class="active" t-if="user_id.id == website.public_user.id">
+                    <a t-attf-href="/web#redirect=#{ url_for('') }">
+                        Sign in
+                    </a>
+                </li>
+            </xpath>
         </template>
 
         <template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
