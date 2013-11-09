@@ -780,7 +780,7 @@
         *  This method is called when the user click inside the snippet in the dom
         */
         onFocus : function () {
-            this.$overlay.addClass('oe_active').effect('bounce', {distance: 18, times: 5}, 250);
+            this.$overlay.addClass('oe_active');
         },
 
         /* onFocus

@@ -402,8 +402,9 @@
                             }
                         });
                         // Adding Static Menus
-                        menu.append('<li class="divider"></li><li class="js_change_theme"><a href="/page/website.themes">Change Theme</a></li>');
-                        menu.append('<li><a data-action="ace" href="#">HTML Editor</a></li>');
+                        menu.append('<li class="divider"></li>');
+			menu.append('<li><a data-action="ace" href="#">HTML Editor</a></li>');
+                        menu.append('<li class="js_change_theme"><a href="/page/website.themes">Change Theme</a></li>');
                         self.trigger('rte:customize_menu_ready');
                     }
                 );
