@@ -21,19 +21,19 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
                         <li class="divider-vertical"></li>
+                        <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
                         <li class="dropdown js_hide_on_translate">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Content <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a data-action="edit-structure" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
-                                <li class="divider"> </li> <!-- Todo: Implement with inheritancy -->
-                                <li><a href="">New Page</a></li>
+                                <li><a href="">New Page</a></li> <!-- Todo: Implement with inheritancy -->
                                 <li><a href="">New Blog Post</a></li>
                                 <li><a href="">New Product</a></li>
                                 <li><a href="">New Event</a></li>
                                 <li><a href="">New Job Offer</a></li>
+                                <li class="divider"> </li>
+                                <li><a data-action="edit-structure" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
                             </ul>
                         </li>
-                        <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
                         <li class="dropdown js_hide_on_translate">
                             <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Customize <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" id="customize-menu">
@@ -45,9 +45,6 @@
                             <ul class="dropdown-menu" role="menu" id="help-menu">
                                 <!-- filled in JS -->
                             </ul>
-                        </li>
-                        <li>
-                            <a href="/web#action=website.action_module_website">Apps</a>
                         </li>
                     </ul>
                 </div>
