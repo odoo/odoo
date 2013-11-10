@@ -13,6 +13,43 @@ from openerp.osv import osv
 
 _logger = logging.getLogger(__name__)
 
+class RequestUID(object):
+    pass
+
+class ModelConverter(werkzeug.routing.BaseConverter):
+
+    def __init__(self, url_map, model=False):
+        super(ModelConverter, self).__init__(url_map)
+        self.model = model
+        # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
+        self.regex = '([0-9]+)'
+
+    def to_python(self, value):
+        # TODO:
+        # - raise routing.ValidationError() if no browse record can be createdm
+        # - support slug 
+        return request.registry[self.model].browse(request.cr, RequestUID(), int(value), context=request.context)
+
+    def to_url(self, value):
+        return value.id
+
+class ModelsConverter(werkzeug.routing.BaseConverter):
+
+    def __init__(self, url_map, model=False):
+        super(ModelsConverter, self).__init__(url_map)
+        self.model = model
+        # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
+        self.regex = '([0-9,]+)'
+
+    def to_python(self, value):
+        # TODO:
+        # - raise routing.ValidationError() if no browse record can be createdm
+        # - support slug
+        return request.registry[self.model].browse(request.cr, RequestUID(), [int(i) for i in value.split(',')], context=request.context)
+
+    def to_url(self, value):
+        return ",".join([i.id for i in value])
+
 class ir_http(osv.osv):
     _name = 'ir.http'
     _description = "HTTP routing"
@@ -29,7 +66,7 @@ class ir_http(osv.osv):
             ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')])
             installed = set(x['name'] for x in m.read(cr, 1, ids, ['name']))
             mods = ['', "web"] + sorted(installed)
-            self.routing_map = http.routing_map(mods, False)
+            self.routing_map = http.routing_map(mods, False, converters={'model': ModelConverter, 'models': ModelsConverter})
 
         # fallback to non-db handlers
         path = request.httprequest.path
@@ -83,6 +120,11 @@ class ir_http(osv.osv):
             auth_method = self._authenticate(func, arguments)
         except werkzeug.exceptions.NotFound, e:
             return self._handle_403(e)
+
+        # post process arg to set uid on browse records
+        for arg in arguments:
+            if isinstance(arg, openerp.osv.orm.browse_record) and isinstance(arg._uid, RequestUID):
+                arg._uid = request.uid
 
         # set and execute handler
         try:

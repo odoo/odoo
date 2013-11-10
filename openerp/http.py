@@ -495,8 +495,8 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
-def routing_map(modules, nodb_only):
-    routing_map = werkzeug.routing.Map(strict_slashes=False)
+def routing_map(modules, nodb_only, converters=None):
+    routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
     for module in modules:
         if module not in controllers_per_module:
             continue
