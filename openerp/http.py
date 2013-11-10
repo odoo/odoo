@@ -970,7 +970,7 @@ class Root(object):
             request = self.get_request(httprequest)
 
             with set_request(request):
-                db = request.db 
+                db = request.session.db 
                 if db:
                     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
                     result = request.registry['ir.http']._dispatch()

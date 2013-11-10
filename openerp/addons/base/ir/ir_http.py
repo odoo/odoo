@@ -50,8 +50,9 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
     def to_url(self, value):
         return ",".join([i.id for i in value])
 
-class ir_http(osv.osv):
+class ir_http(osv.AbstractModel):
     _name = 'ir.http'
+    
     _description = "HTTP routing"
 
     def __init__(self, registry, cr):
