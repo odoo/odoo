@@ -553,7 +553,7 @@ class Home(http.Controller):
         if db is None and guessed_db is not None:
             return redirect(guessed_db)
 
-        if db is not None and db != guessed_db:
+        if db is not None and db != request.session.db:
             request.session.logout()
             request.session.db = db
             guessed_db = db
