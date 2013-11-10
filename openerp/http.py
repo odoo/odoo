@@ -169,10 +169,12 @@ class WebRequest(object):
                 # Backward for 7.0
                 if getattr(self.func, '_first_arg_is_req', False):
                     args = (request,) + args
-                # TODO by chs
-                #@service_model.check
-                #def checked_call(dbname, *a, **kw):
-                #    return func(*a, **kw)
+                # Correct exception handling and concurency retry
+                @service_model.check
+                def checked_call(dbname, *a, **kw):
+                    return self.func(*a, **kw)
+                if self.db:
+                    return checked_call(self.db, *args, **kwargs)
                 return self.func(*args, **kwargs)
         finally:
             # just to be sure no one tries to re-use the request

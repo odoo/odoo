@@ -55,9 +55,6 @@ class ir_http(osv.AbstractModel):
     
     _description = "HTTP routing"
 
-    def __init__(self, registry, cr):
-        osv.osv.__init__(self, registry, cr)
-
     def _find_handler(self):
         # TODO move to __init__(self, registry, cr)
         if not hasattr(self, 'routing_map'):
