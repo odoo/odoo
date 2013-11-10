@@ -55,6 +55,9 @@ class ir_http(osv.AbstractModel):
     
     _description = "HTTP routing"
 
+    def _get_converters(self):
+        return {'model': ModelConverter, 'models': ModelsConverter}
+
     def _find_handler(self):
         # TODO move to __init__(self, registry, cr)
         if not hasattr(self, 'routing_map'):
@@ -64,7 +67,7 @@ class ir_http(osv.AbstractModel):
             ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')])
             installed = set(x['name'] for x in m.read(cr, 1, ids, ['name']))
             mods = ['', "web"] + sorted(installed)
-            self.routing_map = http.routing_map(mods, False, converters={'model': ModelConverter, 'models': ModelsConverter})
+            self.routing_map = http.routing_map(mods, False, converters=self._get_converters())
 
         # fallback to non-db handlers
         path = request.httprequest.path
