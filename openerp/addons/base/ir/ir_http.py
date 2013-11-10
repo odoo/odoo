@@ -131,8 +131,13 @@ class ir_http(osv.AbstractModel):
         try:
             request.set_handler(func, arguments, auth_method)
             result = request.dispatch()
+        except werkzeug.exceptions.HTTPException, e:
+            fn = getattr(self, '_handle_%s' % (e.code,), None)
+            if fn:
+                return fn(e)
+            return self._handle_500(e)
         except Exception, e:
-            return  self._handle_500(e)
+            return self._handle_500(e)
         return result
 
 # vim:et:
