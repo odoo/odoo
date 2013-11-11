@@ -25,6 +25,9 @@ from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp.addons import website_sale
 from openerp.addons.website.models import website
+from openerp.addons.website.controllers.main import Website as controllers
+controllers = controllers()
+
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -76,13 +79,14 @@ class website_event(http.Controller):
         ]
 
         # search domains
-        current_date = dates[0][1]
+        current_date = None
         current_type = None
         current_country = None
         for date in dates:
             if searches["date"] == date[0]:
                 domain_search["date"] = date[2]
-                current_date = date[1]
+                if date[0] != 'all':
+                    current_date = date[1]
         if searches["type"] != 'all':
             current_type = type_obj.browse(cr, uid, int(searches['type']), context=context)
             domain_search["type"] = [("type", "=", int(searches["type"]))]
@@ -182,7 +186,10 @@ class website_event(http.Controller):
 
         _values = None
         for key, value in post.items():
-            quantity = int(value)
+            try:
+                quantity = int(value)
+            except:
+                quantity = None
             ticket_id = key.split("-")[0] == 'ticket' and int(key.split("-")[1]) or None
             if not ticket_id or not quantity:
                 continue
@@ -213,3 +220,15 @@ class website_event(http.Controller):
         if not _values:
             return request.redirect("/event/%s/" % event_id)
         return request.redirect("/shop/checkout")
+
+    @website.route(['/event/publish'], type='json', auth="public")
+    def publish(self, id, object):
+        # if a user publish an event, he publish all linked res.partner
+        event = request.registry[object].browse(request.cr, request.uid, int(id))
+        if not event.website_published:
+            if event.organizer_id and not event.organizer_id.website_published:
+                event.organizer_id.write({'website_published': True})
+            if event.address_id and not event.address_id.website_published:
+                event.address_id.write({'website_published': True})
+
+        return controllers.publish(id, object)

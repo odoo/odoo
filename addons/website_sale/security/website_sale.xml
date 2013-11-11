@@ -42,5 +42,16 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
+
+    <record id="product_pricelist_public" model="ir.rule">
+        <field name="name">Public product pricelist</field>
+        <field name="model_id" ref="product.model_product_pricelist"/>
+        <field name="domain_force">[('id','=',session.get('ecommerce_pricelist'))]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
 </data>
 </openerp>

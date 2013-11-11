@@ -14,7 +14,7 @@ class WebsiteCustomer(http.Controller):
     @website.route([
         '/customers/', '/customers/page/<int:page>/',
         '/customers/country/<int:country_id>', '/customers/country/<int:country_id>/page/<int:page>/'
-    ], type='http', auth="public")
+    ], type='http', auth="public", multilang=True)
     def customers(self, country_id=None, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         partner_obj = request.registry['res.partner']
@@ -70,7 +70,7 @@ class WebsiteCustomer(http.Controller):
         }
         return request.website.render("website_customer.index", values)
 
-    @website.route(['/customers/<int:partner_id>/'], type='http', auth="public")
+    @website.route(['/customers/<int:partner_id>/'], type='http', auth="public", multilang=True)
     def customer(self, partner_id=None, **post):
         """ Route for displaying a single partner / customer.
 

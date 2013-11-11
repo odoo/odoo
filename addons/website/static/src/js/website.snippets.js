@@ -1,8 +1,23 @@
 (function () {
     'use strict';
 
+
+    var start_snippet_animation = function () {
+        hack_to_add_snippet_id();
+        $("[data-snippet-id]").each(function() {
+            var $snipped_id = $(this);
+            if (    !$snipped_id.parents("#oe_snippets").length &&
+                    typeof $snipped_id.data("snippet-view") === 'undefined' &&
+                    website.snippet.animationRegistry[$snipped_id.data("snippet-id")]) {
+                var snippet = new website.snippet.animationRegistry[$snipped_id.data("snippet-id")]($snipped_id);
+                $snipped_id.data("snippet-view", snippet);
+            }
+        });
+    };
+    $(document).ready(start_snippet_animation);
+
     var website = openerp.website;
-    website.templates.push('/website/static/src/xml/website.snippets.xml');
+    website.add_template_file('/website/static/src/xml/website.snippets.xml');
 
     website.EditorBar.include({
         start: function () {
@@ -17,9 +32,17 @@
             return this._super();
         },
         edit: function () {
+            var self = this;
             $("body").off('click');
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
+
+            this.on('rte:ready', this, function () {
+                self.snippets.$button.removeClass("hidden");
+                start_snippet_animation();
+                self.trigger('rte:snippets_ready');
+            });
+
             return this._super.apply(this, arguments);
         },
         save: function () {
@@ -33,20 +56,8 @@
         },
     });
 
-
-    $(document).ready(function () {
-        hack_to_add_snippet_id();
-        $("[data-snippet-id]").each(function() {
-                var $snipped_id = $(this);
-                if (typeof $snipped_id.data("snippet-view") === 'undefined' &&
-                        website.snippet.animationRegistry[$snipped_id.data("snippet-id")]) {
-                    $snipped_id.data("snippet-view", new website.snippet.animationRegistry[$snipped_id.data("snippet-id")]($snipped_id));
-                }
-            });
-    });
-
     /* ----- SNIPPET SELECTOR ---- */
-    
+
     website.snippet = {};
     var observer = new website.Observer(function (mutations) {
         if (!_(mutations).find(function (m) {
@@ -118,10 +129,11 @@
         start: function() {
             var self = this;
 
-            var $ul = this.parent.$("#website-top-edit ul");
+            this.$button = $(openerp.qweb.render('website.snippets_button'))
+                .prependTo(this.parent.$("#website-top-edit ul"))
+                .find("button");
 
-            var $button = $(openerp.qweb.render('website.snippets_button')).prependTo($ul);
-            $button.find('button').click(function () {
+            this.$button.click(function () {
                 self.make_active(false);
                 self.$el.toggleClass("hidden");
             });
@@ -237,6 +249,7 @@
             }
             if (this.$active_snipped_id) {
                 this.snippet_blur(this.$active_snipped_id);
+                this.$active_snipped_id = false;
             }
             if ($snipped_id) {
                 if(_.indexOf(this.snippets, $snipped_id.get(0)) === -1) {
@@ -245,8 +258,6 @@
                 this.$active_snipped_id = $snipped_id;
                 this.create_overlay(this.$active_snipped_id);
                 this.snippet_focus($snipped_id);
-            } else {
-                self.$active_snipped_id = false;
             }
         },
         create_overlay: function ($snipped_id) {
@@ -361,7 +372,7 @@
                             }
 
                             self.create_overlay($target);
-                            $target.data("snippet-editor").build_snippet($target);
+                            $target.data("snippet-editor").drop_and_build_snippet($target);
 
                         } else {
                             $target = $(this).data('target');
@@ -369,7 +380,7 @@
                             self.create_overlay($target);
                             if (website.snippet.editorRegistry[snipped_id]) {
                                 var snippet = new website.snippet.editorRegistry[snipped_id](self, $target);
-                                snippet.build_snippet($target);
+                                snippet.drop_and_build_snippet($target);
                             }
                         }
                         setTimeout(function () {self.make_active($target);},0);
@@ -498,7 +509,7 @@
                 console.debug( "A good node must have a [data-oe-model] attribute or must have at least one parent with [data-oe-model] attribute.");
                 console.debug( "Wrong node(s): ", selector);
             }
-            
+
             function is_visible($el){
                 return     $el.css('display')    != 'none'
                         && $el.css('opacity')    != '0'
@@ -513,7 +524,7 @@
                 var parents = $(this).parents().filter(function(){ return !is_visible($(this)); });
                 return parents.length === 0;
             });
-            
+
             $targets.each(function () {
                 var $target = $(this);
                 if (!$target.data('overlay')) {
@@ -552,13 +563,13 @@
         start: function () {
         },
         /* onFocusEdit
-        *  if they are an editor for this data-snippet-id 
+        *  if they are an editor for this data-snippet-id
         *  Called before onFocus of snippet editor
         */
         onFocusEdit : function () {},
 
         /* onBlurEdit
-        *  if they are an editor for this data-snippet-id 
+        *  if they are an editor for this data-snippet-id
         *  Called after onBlur of snippet editor
         */
         onBlurEdit : function () {},
@@ -589,7 +600,8 @@
         *       Displayed into the overlay options on focus
         */
         _readXMLData: function() {
-            this.$el = this.parent.$snippets.siblings("[data-snippet-id='"+this.snippet_id+"']").clone();
+            var self = this;
+            this.$el = this.parent.$snippets.filter(function () { return $(this).data("snippet-id") == self.snippet_id; }).clone();
             this.$editor = this.$el.find(".oe_snippet_options");
             var $options = this.$overlay.find(".oe_overlay_options");
             this.$editor.prependTo($options.find(".oe_options ul"));
@@ -658,7 +670,7 @@
             });
 
             $("body").addClass('move-important');
-            
+
             self._drag_and_drop_after_insert_dropzone();
             self._drag_and_drop_active_drop_zone($('.oe_drop_zone'));
         },
@@ -710,7 +722,7 @@
 
             if (website.snippet.editorRegistry[snipped_id]) {
                 var snippet = new website.snippet.editorRegistry[snipped_id](this, this.$target);
-                snippet.build_snippet(this.$target);
+                snippet.drop_and_build_snippet(this.$target);
             }
             var _class = "oe_snippet_" + snipped_id + " " + ($li.data("class") || "");
             if (active) {
@@ -749,6 +761,7 @@
                 var index = _.indexOf(self.parent.snippets, self.$target.get(0));
                 delete self.parent.snippets[index];
                 self.$target.remove();
+                self.$overlay.remove();
                 return false;
             });
             this._drag_and_drop();
@@ -756,11 +769,11 @@
         },
 
         /*
-        *  build_snippet
+        *  drop_and_build_snippet
         *  This method is called just after that a thumbnail is drag and dropped into a drop zone
         *  (after the insertion of this.$body, if this.$body exists)
         */
-        build_snippet: function ($target) {
+        drop_and_build_snippet: function ($target) {
         },
 
         /* onFocus
@@ -847,7 +860,7 @@
             if (!resize_values.s) $box.find(".oe_handle.s").remove();
             if (!resize_values.e) $box.find(".oe_handle.e").remove();
             if (!resize_values.w) $box.find(".oe_handle.w").remove();
-            
+
             this.$overlay.append($box.find(".oe_handles").html());
 
             this.$overlay.find(".oe_handle").on('mousedown', function (event){
@@ -1026,7 +1039,7 @@
         },
     });
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
-        build_snippet: function() {
+        drop_and_build_snippet: function() {
             var id = 0;
             $("body .carousel").each(function () {
                 var _id = +$(this).attr("id").replace(/^myCarousel/, '');
@@ -1037,6 +1050,7 @@
             this.$target.attr("id", "myCarousel" + id);
             this.$target.find(".carousel-control").attr("href", "#myCarousel" + id);
             this.$target.find("[data-target='#myCarousel']").attr("data-target", "#myCarousel" + id);
+
             this.rebind_event();
         },
         onFocus: function () {
@@ -1053,6 +1067,9 @@
             if(!this.$target.find(".item.active").length) {
                 this.$target.find(".item:first").addClass("active");
             }
+            this.$target.removeAttr('contentEditable')
+                .find('.content, .carousel-image img')
+                    .removeAttr('contentEditable');
         },
         start : function () {
             this._super();
@@ -1087,6 +1104,10 @@
                 self.$target.carousel($(this).data('slide')); });
             this.$target.off('click').on('click', '.carousel-indicators [data-target]', function () {
                 self.$target.carousel(+$(this).data('slide-to')); });
+
+            this.$target.attr('contentEditable', 'false')
+                .find('.content, .carousel-image img')
+                    .attr('contentEditable', 'true');
         },
         on_add: function (e) {
             e.preventDefault();
@@ -1095,7 +1116,7 @@
             var index = $active.index();
             this.$target.find('.carousel-control, .carousel-indicators').removeClass("hidden");
             this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-            
+
             var $clone = this.$el.find(".item.active").clone();
             var bg = this.$editor.find('ul[name="carousel-background"] li:not([data-value="'+ $active.css("background-image").replace(/.*:\/\/[^\/]+|\)$/g, '') +'"]):first').data("value");
             $clone.css("background-image", "url('"+ bg +"')");
@@ -1191,24 +1212,23 @@
     website.snippet.editorRegistry.parallax = website.snippet.editorRegistry.resize.extend({
         start : function () {
             this._super();
-            this.change_background($('.parallax', this.$target), 'ul[name="parallax-background"]');
+            this.change_background(this.$target, 'ul[name="parallax-background"]');
             this.scroll();
             this.change_size();
         },
-        scroll: function(){
+        scroll: function () {
+            var self = this;
             var $ul = this.$editor.find('ul[name="parallax-scroll"]');
             var $li = $ul.find("li");
-            var $parallax = this.$target.find('.parallax');
-            var speed = $parallax.data('stellar-background-ratio') || 0.5 ;
-            
+            var speed = this.$target.data('scroll-background-ratio') || 0.6 ;
             $ul.find('[data-value="' + speed + '"]').addClass('active');
             $li.on('click', function (event) {
                 $li.removeClass("active");
                 $(this).addClass("active");
                 var speed =  $(this).data('value');
-                $parallax.attr('data-stellar-background-ratio', speed);
+                self.$target.attr('data-scroll-background-ratio', speed);
+                self.$target.data("snippet-view").set_values();
             });
-
         },
         clean_for_save: function () {
             this._super();
@@ -1216,14 +1236,12 @@
         },
         change_size: function () {
             var self = this;
-            var $el = $('.oe_big,.oe_medium,.oe_small', this.$target);
 
             var size = 'oe_big';
-            if ($el.hasClass('oe_small'))
+            if (this.$target.hasClass('oe_small'))
                 size = 'oe_small';
-            else if ($el.hasClass('oe_medium'))
+            else if (this.$target.hasClass('oe_medium'))
                 size = 'oe_medium';
-
             var $ul = this.$editor.find('ul[name="parallax-size"]');
             var $li = $ul.find("li");
 
@@ -1232,21 +1250,50 @@
             $li.on('click', function (event) {
                     $li.removeClass("active");
                     $(this).addClass("active");
+                    self.$target.data("snippet-view").set_values();
                 })
                 .on('mouseover', function (event) {
-                    $el.removeClass('oe_big oe_small oe_medium');
-                    $el.addClass($(event.currentTarget).data("value"));
+                    self.$target.removeClass('oe_big oe_small oe_medium');
+                    self.$target.addClass($(event.currentTarget).data("value"));
                 })
                 .on('mouseout', function (event) {
-                    $el.removeClass('oe_big oe_small oe_medium');
-                    $el.addClass($ul.find('li.active').data("value"));
+                    self.$target.removeClass('oe_big oe_small oe_medium');
+                    self.$target.addClass($ul.find('li.active').data("value"));
                 });
         }
     });
     website.snippet.animationRegistry.parallax = website.snippet.Animation.extend({
         start: function () {
-            $.stellar({ horizontalScrolling: false, verticalOffset: 0 });
+            var self = this;
+            this.set_values();
+            var on_scroll = function () {
+                var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
+                if (speed == 1) return;
+                var offset = parseFloat(self.$target.attr("data-scroll-background-offset") || 0);
+                var top = offset + window.scrollY * speed;
+                self.$target.css("background-position", "0px " + top + "px");
+            };
+            $(window).off("scroll").on("scroll", on_scroll);
         },
+        set_values: function () {
+            var self = this;
+            var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
+
+            if (speed == 1) {
+                this.$target.css("background-attachment", "fixed").css("background-position", "0px 0px");
+                return;
+            } else {
+                this.$target.css("background-attachment", "scroll");
+            }
+
+            this.$target.attr("data-scroll-background-offset", 0);
+            var img = new Image();
+            img.onload = function () {
+                self.$target.attr("data-scroll-background-offset", self.$target.outerHeight() - this.height);
+                $(window).scroll();
+            };
+            img.src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
+        }
     });
 
     /*

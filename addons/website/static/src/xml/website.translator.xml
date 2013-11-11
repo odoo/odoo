@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="website.TranslatorAdditionalButtons">
-    <strong class="oe_translate_or">or</strong>
-    <a class="btn btn-default" data-action="edit_master" href="#">Edit Master</a>
+    <span class="oe_translate_or">or</span>
+    <a class="btn btn-link" data-action="edit_master" href="#">Edit Master</a>
 </t>
 <t t-name="website.TranslatorDialog">
     <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
@@ -18,21 +18,22 @@
                             You are about to enter the translation mode.
                         </p>
                         <p>
-                            In this mode you can not change the structure of the document, you can only translate text.
-                        </p>
-                        <p>
-                            Here are the visuals used in order to help you in your translation flow:
+                            Here are the visuals used to help you translate efficiently:
                             <ul class="oe_translate_examples">
-                                <li class="oe_translatable_text">
-                                    Normal translatable content
-                                </li>
-                                <li class="oe_translatable_field">
-                                    ERP translatable object data
-                                </li>
                                 <li class="oe_translatable_todo">
-                                    Translation TODO
+                                    Content to translate
+                                </li>
+                                <li class="oe_translatable_text">
+                                    Translated content
                                 </li>
                             </ul>
+                        </p>
+                        <p>
+                            In this mode, you can only translate texts.  To
+                            change the structure of the page, you must edit the
+                            master page. Each modification on the master page
+                            is automatically applied to all translated
+                            versions.
                         </p>
                     </section>
                     <hr/>

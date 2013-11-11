@@ -6,7 +6,7 @@
     var hash = "#advanced-view-editor";
 
     var website = openerp.website;
-    website.templates.push('/website/static/src/xml/website.ace.xml');
+    website.add_template_file('/website/static/src/xml/website.ace.xml');
 
     website.ready().then(function () {
         if (window.location.hash.indexOf(hash) >= 0) {

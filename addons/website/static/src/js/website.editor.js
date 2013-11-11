@@ -4,17 +4,26 @@
     var website = openerp.website;
     // $.fn.data automatically parses value, '0'|'1' -> 0|1
 
-    website.templates.push('/website/static/src/xml/website.editor.xml');
+    website.add_template_file('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
         var is_smartphone = $(document.body)[0].clientWidth < 767;
 
         if (!is_smartphone) {
             website.ready().then(website.init_editor);
         }
+
+        $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
+            // Prevent dropdown closing when a contenteditable children is focused
+            if (ev.originalEvent
+                    && $(ev.target).has(ev.originalEvent.target).length
+                    && $(ev.originalEvent.target).is('[contenteditable]')) {
+                ev.preventDefault();
+            }
+        });
     });
 
     function link_dialog(editor) {
-        return new website.editor.LinkDialog(editor).appendTo(document.body);
+        return new website.editor.RTELinkDialog(editor).appendTo(document.body);
     }
     function image_dialog(editor) {
         return new website.editor.RTEImageDialog(editor).appendTo(document.body);
@@ -53,6 +62,39 @@
                     editor.getSelection().selectElement(element);
                     link_dialog(editor);
                 }, null, null, 500);
+
+                var previousSelection;
+                editor.on('selectionChange', function (evt) {
+                    var selected = evt.data.path.lastElement;
+                    if (previousSelection) {
+                        // cleanup previous selection
+                        $(previousSelection).next().remove();
+                        previousSelection = null;
+                    }
+                    if (!selected.is('img')
+                            || selected.data('cke-realelement')
+                            || selected.isReadOnly()
+                            || selected.data('oe-model') === 'ir.ui.view') {
+                        return;
+                    }
+
+                    // display button
+                    var $el = $(previousSelection = selected.$);
+                    var $btn = $('<button type="button" class="btn btn-primary" contenteditable="false">Edit</button>')
+                        .insertAfter($el)
+                        .click(function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            image_dialog(editor);
+                        });
+
+                    var position = $el.position();
+                    $btn.css({
+                        position: 'absolute',
+                        top: $el.height() / 2 + position.top - $btn.outerHeight() / 2,
+                        left: $el.width() / 2 + position.left - $btn.outerWidth() / 2,
+                    });
+                });
 
                 //noinspection JSValidateTypes
                 editor.addCommand('link', {
@@ -360,8 +402,10 @@
                             }
                         });
                         // Adding Static Menus
-                        menu.append('<li class="divider"></li><li class="js_change_theme"><a href="/page/website.themes">Change Theme</a></li>');
-                        menu.append('<li class="divider"></li><li><a data-action="ace" href="#">Advanced view editor</a></li>');
+                        menu.append('<li class="divider"></li>');
+			menu.append('<li><a data-action="ace" href="#">HTML Editor</a></li>');
+                        menu.append('<li class="js_change_theme"><a href="/page/website.themes">Change Theme</a></li>');
+			menu.append('<li><a href="/web#action=website.action_module_website">Install Apps</a></li>');
                         self.trigger('rte:customize_menu_ready');
                     }
                 );
@@ -806,6 +850,106 @@
             this.text = null;
         },
         start: function () {
+            var self = this;
+            return $.when(
+                this.fetch_pages().done(this.proxy('fill_pages')),
+                this._super()
+            ).done(function () {
+                self.bind_data();
+            });
+        },
+        save: function () {
+            var self = this, _super = this._super.bind(this);
+            var $e = this.$('.list-group-item.active .url-source');
+            var val = $e.val();
+            if (!val || !$e[0].checkValidity()) {
+                // FIXME: error message
+                $e.closest('.form-group').addClass('has-error');
+                $e.focus();
+                return;
+            }
+
+            var done = $.when();
+            if ($e.hasClass('email-address')) {
+                this.make_link('mailto:' + val, false, val);
+            } else if ($e.hasClass('existing')) {
+                self.make_link(val, false, this.pages[val]);
+            } else if ($e.hasClass('pages')) {
+                // Create the page, get the URL back
+                done = $.get(_.str.sprintf(
+                        '/pagenew/%s?noredirect', encodeURI(val)))
+                    .then(function (response) {
+                        self.make_link(response, false, val);
+                    });
+            } else {
+                this.make_link(val, this.$('input.window-new').prop('checked'));
+            }
+            done.then(_super);
+        },
+        make_link: function (url, new_window, label) {
+        },
+        bind_data: function (text, href, new_window) {
+            href = href || this.element && (this.element.data( 'cke-saved-href')
+                                    ||  this.element.getAttribute('href'));
+            if (!href) { return; }
+
+            if (new_window === undefined) {
+                new_window = this.element.getAttribute('target') === '_blank';
+            }
+            if (text === undefined) {
+                text = this.element.getText();
+            }
+
+            var match, $control;
+            if ((match = /mailto:(.+)/.exec(href))) {
+                $control = this.$('input.email-address').val(match[1]);
+            } else if (href in this.pages) {
+                $control = this.$('select.existing').val(href);
+            } else if ((match = /\/page\/(.+)/.exec(href))) {
+                var actual_href = '/page/website.' + match[1];
+                if (actual_href in this.pages) {
+                    $control = this.$('select.existing').val(actual_href);
+                }
+            }
+            if (!$control) {
+                $control = this.$('input.url').val(href);
+            }
+
+            this.changed($control);
+
+            this.$('input#link-text').val(text);
+            this.$('input.window-new').prop('checked', new_window);
+        },
+        changed: function ($e) {
+            this.$('.url-source').not($e).val('');
+            $e.closest('.list-group-item')
+                .addClass('active')
+                .siblings().removeClass('active')
+                .addBack().removeClass('has-error');
+        },
+        fetch_pages: function () {
+            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+                model: 'website',
+                method: 'list_pages',
+                args: [null],
+                kwargs: {
+                    context: website.get_context()
+                },
+            });
+        },
+        fill_pages: function (results) {
+            var self = this;
+            var pages = this.$('select.existing')[0];
+            _(results).each(function (result) {
+                self.pages[result.url] = result.name;
+
+                pages.options[pages.options.length] =
+                        new Option(result.name, result.url);
+            });
+        },
+    });
+    website.editor.RTELinkDialog = website.editor.LinkDialog.extend({
+        start: function () {
             var element;
             if ((element = this.get_selected_link()) && element.hasAttribute('href')) {
                 this.editor.getSelection().selectElement(element);
@@ -815,10 +959,7 @@
                 this.add_removal_button();
             }
 
-            return $.when(
-                this.fetch_pages().done(this.proxy('fill_pages')),
-                this._super()
-            ).done(this.proxy('bind_data'));
+            return this._super();
         },
         add_removal_button: function () {
             this.$('.modal-footer').prepend(
@@ -884,66 +1025,6 @@
                 }, 0);
             }
         },
-        save: function () {
-            var self = this, _super = this._super.bind(this);
-            var $e = this.$('.list-group-item.active .url-source');
-            var val = $e.val();
-            if (!val || !$e[0].checkValidity()) {
-                // FIXME: error message
-                $e.closest('.form-group').addClass('has-error');
-                return;
-            }
-
-            var done = $.when();
-            if ($e.hasClass('email-address')) {
-                this.make_link('mailto:' + val, false, val);
-            } else if ($e.hasClass('existing')) {
-                self.make_link(val, false, this.pages[val]);
-            } else if ($e.hasClass('pages')) {
-                // Create the page, get the URL back
-                done = $.get(_.str.sprintf(
-                        '/pagenew/%s?noredirect', encodeURI(val)))
-                    .then(function (response) {
-                        self.make_link(response, false, val);
-                    });
-            } else {
-                this.make_link(val, this.$('input.window-new').prop('checked'));
-            }
-            done.then(_super);
-        },
-        bind_data: function () {
-            var href = this.element && (this.element.data( 'cke-saved-href')
-                                    ||  this.element.getAttribute('href'));
-            if (!href) { return; }
-
-            var match, $control;
-            if (match = /mailto:(.+)/.exec(href)) {
-                $control = this.$('input.email-address').val(match[1]);
-            } else if (href in this.pages) {
-                $control = this.$('select.existing').val(href);
-            } else if (match = /\/page\/(.+)/.exec(href)) {
-                var actual_href = '/page/website.' + match[1];
-                if (actual_href in this.pages) {
-                    $control = this.$('select.existing').val(actual_href);
-                }
-            }
-            if (!$control) {
-                $control = this.$('input.url').val(href);
-            }
-
-            this.changed($control);
-
-            this.$('input#link-text').val(this.element.getText());
-            this.$('input.window-new').prop(
-                'checked', this.element.getAttribute('target') === '_blank');
-        },
-        changed: function ($e) {
-            this.$('.url-source').not($e).val('');
-            $e.closest('.list-group-item')
-                .addClass('active')
-                .siblings().removeClass('active')
-                .addBack().removeClass('has-error');
-        },
         /**
          * CKEDITOR.plugins.link.getSelectedLink ignores the editor's root,
          * if the editor is set directly on a link it will thus not work.
@@ -951,27 +1032,8 @@
         get_selected_link: function () {
             return get_selected_link(this.editor);
         },
-        fetch_pages: function () {
-            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
-                model: 'website',
-                method: 'list_pages',
-                args: [null],
-                kwargs: {
-                    context: website.get_context()
-                },
-            });
-        },
-        fill_pages: function (results) {
-            var self = this;
-            var pages = this.$('select.existing')[0];
-            _(results).each(function (result) {
-                self.pages[result.url] = result.name;
-
-                pages.options[pages.options.length] =
-                        new Option(result.name, result.url);
-            });
-        },
     });
+
     /**
      * ImageDialog widget. Lets users change an image, including uploading a
      * new image in OpenERP or selecting the image style (if supported by
@@ -1003,6 +1065,7 @@
         }),
 
         start: function () {
+            this.$('.modal-footer [disabled]').text("Uploading…");
             var $options = this.$('.image-style').children();
             this.image_styles = $options.map(function () { return this.value; }).get();
 
@@ -1038,6 +1101,7 @@
         },
 
         file_selection: function () {
+            this.$el.addClass('nosave');
             this.$('button.filepicker').removeClass('btn-danger btn-success');
 
             var self = this;
@@ -1060,6 +1124,7 @@
             this.set_image(url);
         },
         preview_image: function () {
+            this.$el.removeClass('nosave');
             var image = this.$('input.url').val();
             if (!image) { return; }
 
