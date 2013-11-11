@@ -772,8 +772,8 @@ class product_product(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = product[ptype] or 0.0
-            if ptype == 'list_price':
-                res[product.id] = (res[product.id] + ((res[product.id] * (product.price_margin)) / 100)) + \
+            if ptype == 'list_price' or ptype == 'lst_price':
+                res[product.id] = (product.list_price + ((product.list_price * (product.price_margin)) / 100)) + \
                         product.price_extra
             if 'uom' in context:
                 uom = product.uom_id or product.uos_id
