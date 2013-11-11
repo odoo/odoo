@@ -11,7 +11,7 @@ import base64
 class website_hr_recruitment(http.Controller):
 
     @website.route(['/jobs', '/jobs/page/<int:page>/', '/department/<id>/', '/department/<id>/page/<int:page>/'], type='http', auth="public", multilang=True)
-    def jobs(self, id=0, page=1, **post):
+    def jobs(self, id=0, page=1):
         id = id and int(id) or 0
         hr_job_obj = request.registry['hr.job']
         hr_department_obj = request.registry['hr.department']
@@ -51,7 +51,7 @@ class website_hr_recruitment(http.Controller):
         return request.website.render("website_hr_recruitment.index", values)
 
     @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
-    def detail(self, job=None, **kwargs):
+    def detail(self, job):
         values = {
             'job': job,
             'vals_date': job.write_date.split(' ')[0],
@@ -77,7 +77,7 @@ class website_hr_recruitment(http.Controller):
         return request.website.render("website_hr_recruitment.thankyou", values)
 
     @website.route(['/apply/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
-    def applyjobpost(self, job=None, **kwargs):
+    def applyjobpost(self, job):
         return request.website.render("website_hr_recruitment.applyjobpost", { 'job': job })
 
     @website.route('/job/publish', type='json', auth="admin", multilang=True)
