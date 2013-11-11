@@ -98,7 +98,7 @@ class website_event(http.Controller):
             domain_search["country"] = [("country_id", "=", int(searches["country"]))]
 
         def dom_without(without):
-            domain = SUPERUSER_ID != request.uid and [('website_published', '=', True)] or [(1, "=", 1)]
+            domain = [('state', "in", ['draft','confirm','done'])]
             for key, search in domain_search.items():
                 if key != without:
                     domain += search

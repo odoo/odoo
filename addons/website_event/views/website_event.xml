@@ -28,7 +28,7 @@
                     <div class="col-md-3 col-sm-4 css_noprint" id="left_column">
                         <ul class="nav nav-pills nav-stacked">
                             <t t-foreach="dates" t-as="date">
-                                <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0]=='old')">
+                                <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
                                     <a t-href="/event/#{ search_path }&amp;date=#{ date[0] }"><t t-esc="date[1]"/>
                                         <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                                     </a>
@@ -42,6 +42,14 @@
                         </t>
                         <div class="oe_structure">
                         </div>
+                        <t t-if="not event_ids">
+                            <p t-if="current_date or current_country or current_type">
+                                No event found in this category, check <a href="/event">all events</a>.
+                            </p>
+                            <p t-if="(current_date is None) and (current_country is None) and (current_type is None)">
+                                No events are planned for now on.
+                            </p>
+                        </t>
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
                                 <div class="media-body">
