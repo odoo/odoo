@@ -81,7 +81,7 @@ class hr_job(osv.osv):
             nb_employees = len(job.employee_ids or [])
             res[job.id] = {
                 'no_of_employee': nb_employees,
-                'expected_employees': nb_employees + job.no_of_recruitment,
+                'no_of_recruitment': max(0, (job.expected_employees or nb_employees) - nb_employees),
             }
         return res
 
@@ -97,24 +97,21 @@ class hr_job(osv.osv):
     _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        # TO CLEAN: when doing a cleaning, we should change like this:
-        #   no_of_recruitment: a function field
-        #   expected_employees: float
-        # This would allow a clean update when creating new employees.
-        'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
-            help='Expected number of employees for this job position after new recruitment.',
+        'no_of_recruitment': fields.function(_no_of_employee, string='Expected in Recruitment',
+            help='Number of new employees you expect to recruit.',
             store = {
-                'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
-                'hr.employee': (_get_job_position, ['job_id'], 10),
-            },
+                'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['expected_employees'], 10),
+                'hr.employee': (_get_job_position, ['job_id'], 11),
+            }, type='integer',
             multi='no_of_employee'),
         'no_of_employee': fields.function(_no_of_employee, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
             store = {
                 'hr.employee': (_get_job_position, ['job_id'], 10),
-            },
+            }, type='integer',
             multi='no_of_employee'),
-        'no_of_recruitment': fields.float('Expected in Recruitment', help='Number of new employees you expect to recruit.'),
+        'expected_employees': fields.integer('Total Forecasted Employees',
+            help='Expected number of employees for this job position after new recruitment.'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
@@ -133,20 +130,15 @@ class hr_job(osv.osv):
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
     ]
 
-
-    def on_change_expected_employee(self, cr, uid, ids, no_of_recruitment, no_of_employee, context=None):
-        if context is None:
-            context = {}
-        return {'value': {'expected_employees': no_of_recruitment + no_of_employee}}
-
     def job_recruitement(self, cr, uid, ids, *args):
         for job in self.browse(cr, uid, ids):
-            no_of_recruitment = job.no_of_recruitment == 0 and 1 or job.no_of_recruitment
-            self.write(cr, uid, [job.id], {'state': 'recruit', 'no_of_recruitment': no_of_recruitment})
+            expected = max(job.no_of_employee + 1, job.expected_employees)
+            self.write(cr, uid, [job.id], {'state': 'recruit', 'expected_employees': expected})
         return True
 
     def job_open(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0})
+        for job in self.browse(cr, uid, ids):
+            self.write(cr, uid, ids, {'state': 'open', 'expected_employees': job.no_of_employee})
         return True
 
 

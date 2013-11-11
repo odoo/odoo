@@ -343,9 +343,9 @@
                         </div>
                         <group>
                             <group name="job_data">
-                                <field name="no_of_employee" groups="base.group_user"/>
-                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
-                                <field name="expected_employees" groups="base.group_user"/>
+                                <field name="no_of_employee"/>
+                                <field name="no_of_recruitment"/>
+                                <field name="expected_employees"/>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                 <field name="department_id"/>
                             </group>
