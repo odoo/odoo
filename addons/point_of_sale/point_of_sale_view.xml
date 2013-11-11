@@ -8,10 +8,6 @@
             groups="group_pos_manager,group_pos_user"
             sequence="30"/>
 
-        <record id="categ_others" model="pos.category">
-            <field name="name">Others</field>
-        </record>
-
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
             <field name="model">pos.order</field>
@@ -85,7 +81,7 @@
                             <group string="General Information">
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
-                                <field name="user_id"/>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_user']}"/>
                                 <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
                                 <field name="picking_id" readonly="1"/>
                                 <field name="pos_reference"/>
@@ -161,7 +157,7 @@
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Order Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     </group>
                 </search>
             </field>
@@ -177,8 +173,8 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
-            <field name="context" eval="{'default_pos_categ_id': ref('point_of_sale.categ_others')}"/>
-            <field name="domain" eval="[('pos_categ_id','&lt;&gt;',False)]"/>
+            <field name="context" eval="{}"/>
+            <field name="domain" eval="[('available_in_pos','&lt;&gt;',False)]"/>
             <field name="view_id" ref="product.product_product_tree_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="help" type="html">
@@ -898,7 +894,7 @@
                         <group>
                             <field name="cash_control" invisible="1" />
                             <group>
-                                <field name="user_id"/>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_manager', 'base.group_sale_manager']}"/>
                                 <field name="config_id"/>
                             </group>
                             <group>
@@ -1049,7 +1045,7 @@
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Session" icon="terp-personal" domain="[]" context="{'group_by':'session_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Order Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     </group>
                 </search>
             </field>

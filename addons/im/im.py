@@ -18,19 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+import json
+import logging
+import select
+import time
 
 import openerp
 import openerp.tools.config
 import openerp.modules.registry
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-import datetime
+from openerp import http
+from openerp.http import request
 from openerp.osv import osv, fields
-import time
-import logging
-import json
-import select
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -140,14 +140,17 @@ class im_message(osv.osv):
     _order = "date desc"
 
     _columns = {
-        'message': fields.char(string="Message", size=200, required=True),
+        'message': fields.text(string="Message", required=True),
         'from_id': fields.many2one("im.user", "From", required= True, ondelete='cascade'),
-        'to_id': fields.many2one("im.user", "To", required=True, select=True, ondelete='cascade'),
+        'session_id': fields.many2one("im.session", "Session", required=True, select=True, ondelete='cascade'),
+        'to_id': fields.many2many("im.user", "im_message_users", 'message_id', 'user_id', 'To'),
         'date': fields.datetime("Date", required=True, select=True),
+        'technical': fields.boolean("Technical Message"),
     }
 
     _defaults = {
         'date': lambda *args: datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'technical': False,
     }
     
     def get_messages(self, cr, uid, last=None, users_watch=None, uuid=None, context=None):
@@ -165,8 +168,8 @@ class im_message(osv.osv):
             last = c_user.im_last_received or -1
 
         # how fun it is to always need to reorder results from read
-        mess_ids = self.search(cr, openerp.SUPERUSER_ID, [['id', '>', last], ['to_id', '=', my_id]], order="id", context=context)
-        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from_id", "date"], context=context)
+        mess_ids = self.search(cr, openerp.SUPERUSER_ID, ["&", ['id', '>', last], "|", ['from_id', '=', my_id], ['to_id', 'in', [my_id]]], order="id", context=context)
+        mess = self.read(cr, openerp.SUPERUSER_ID, mess_ids, ["id", "message", "from_id", "session_id", "date", "technical"], context=context)
         index = {}
         for i in xrange(len(mess)):
             index[mess[i]["id"]] = mess[i]
@@ -179,12 +182,59 @@ class im_message(osv.osv):
         users_status = users.read(cr, openerp.SUPERUSER_ID, users_watch, ["im_status"], context=context)
         return {"res": mess, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
-    def post(self, cr, uid, message, to_user_id, uuid=None, context=None):
+    def post(self, cr, uid, message, to_session_id, technical=False, uuid=None, context=None):
         assert_uuid(uuid)
         my_id = self.pool.get('im.user').get_my_id(cr, uid, uuid)
-        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id, 'to_id': to_user_id}, context=context)
-        notify_channel(cr, "im_channel", {'type': 'message', 'receiver': to_user_id})
+        session = self.pool.get('im.session').browse(cr, uid, to_session_id, context)
+        to_ids = [x.id for x in session.user_ids if x.id != my_id]
+        self.create(cr, openerp.SUPERUSER_ID, {"message": message, 'from_id': my_id,
+            'to_id': [(6, 0, to_ids)], 'session_id': to_session_id, 'technical': technical}, context=context)
+        notify_channel(cr, "im_channel", {'type': 'message', 'receivers': [my_id] + to_ids})
         return False
+
+class im_session(osv.osv):
+    _name = 'im.session'
+
+    def _calc_name(self, cr, uid, ids, something, something_else, context=None):
+        res = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            res[obj.id] = ", ".join([x.name for x in obj.user_ids])
+        return res
+
+    _columns = {
+        'user_ids': fields.many2many('im.user'),
+        "name": fields.function(_calc_name, string="Name", type='char'),
+    }
+
+    # Todo: reuse existing sessions if possible
+    def session_get(self, cr, uid, users_to, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        users = [my_id] + users_to
+        domain = []
+        for user_to in users:
+            domain.append(('user_ids', 'in', [user_to]))
+        sids = self.search(cr, openerp.SUPERUSER_ID, domain, context=context, limit=1)
+        session_id = None
+        for session in self.browse(cr, uid, sids, context=context):
+            if len(session.user_ids) == len(users):
+                session_id = session.id
+                break
+        if not session_id:
+            session_id = self.create(cr, openerp.SUPERUSER_ID, {
+                'user_ids': [(6, 0, users)]
+            }, context=context)
+        return self.read(cr, uid, session_id, context=context)
+
+    def add_to_session(self, cr, uid, session_id, user_id, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        session = self.read(cr, uid, session_id, context=context)
+        if my_id not in session.get("user_ids"):
+            raise Exception("Not allowed to modify a session when you are not in it.")
+        self.write(cr, uid, session_id, {"user_ids": [(4, user_id)]}, context=context)
+
+    def remove_me_from_session(self, cr, uid, session_id, uuid=None, context=None):
+        my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
+        self.write(cr, openerp.SUPERUSER_ID, session_id, {"user_ids": [(3, my_id)]}, context=context)
 
 class im_user(osv.osv):
     _name = "im.user"
@@ -201,7 +251,8 @@ class im_user(osv.osv):
 
     def search_users(self, cr, uid, text_search, fields, limit, context=None):
         my_id = self.get_my_id(cr, uid, None, context)
-        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False]], limit=limit, context=context)
+        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False]],
+            order="name asc", limit=limit, context=context)
         return self.read(cr, uid, found, fields, context=context)
 
     def im_connect(self, cr, uid, uuid=None, context=None):
@@ -252,7 +303,7 @@ class im_user(osv.osv):
         'name': fields.function(_get_name, type='char', size=200, string="Name", store=True, readonly=True),
         'assigned_name': fields.char(string="Assigned Name", size=200, required=False),
         'image': fields.related('user_id', 'image_small', type='binary', string="Image", readonly=True),
-        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
+        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade', oldname='user'),
         'uuid': fields.char(string="UUID", size=50, select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),

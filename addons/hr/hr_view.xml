@@ -135,6 +135,7 @@
     <record model="ir.ui.view" id="hr_kanban_view_employees">
         <field name="name">HR - Employess Kanban</field>
         <field name="model">hr.employee</field>
+        <field name="priority">10</field>
         <field name="arch" type="xml">
             <kanban>
                 <field name="last_login"/>
@@ -223,13 +224,6 @@
         </record>
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
-
-        <record id="ir_ui_view_sc_employee" model="ir.ui.view_sc">
-            <field name="name">Employees</field>
-            <field name="resource">ir.ui.menu</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
-        </record>
 
         <!-- Employee architecture -->
         <record id="view_partner_tree2" model="ir.ui.view">

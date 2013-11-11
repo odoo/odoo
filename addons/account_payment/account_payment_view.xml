@@ -79,7 +79,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="user_id"/>
+                            <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
                             <field name="mode"/>
                         </group>
                         <group>
@@ -93,7 +93,7 @@
                             <notebook>
                                 <page string="Payment">
                                     <group col="4">
-                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_residual','>',0)] "/>
+                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True)] "/>
                                         <separator colspan="4" string="Transaction Information"/>
                                         <field name="date"/>
                                         <label for="amount_currency" groups="base.group_multi_currency"/>
@@ -219,7 +219,7 @@
                         <page string="Payment">
                             <group col="4">
                                 <field name="order_id"/>
-                                <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_residual','>',0)]"/>
+                                <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True)]"/>
                                 <separator colspan="4" string="Transaction Information"/>
                                 <field name="date"/>
                                 <label for="amount_currency" groups="base.group_multi_currency"/>

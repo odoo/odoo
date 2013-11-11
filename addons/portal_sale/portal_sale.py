@@ -104,6 +104,14 @@ class account_invoice(osv.Model):
             pass
         return action_dict
 
+    def invoice_validate(self, cr, uid, ids, context=None):
+        # fetch the partner's id and subscribe the partner to the invoice
+        for invoice in self.browse(cr, uid, ids, context=context):
+            partner = invoice.partner_id
+            if partner.id not in invoice.message_follower_ids:
+                self.message_subscribe(cr, uid, [invoice.id], [partner.id], context=context)
+        return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+
     def get_signup_url(self, cr, uid, ids, context=None):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)

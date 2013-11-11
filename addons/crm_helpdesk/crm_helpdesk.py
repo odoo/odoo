@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
@@ -53,8 +54,8 @@ class crm_helpdesk(osv.osv):
             'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
             'email_from': fields.char('Email', size=128, help="Destination email for email gateway"),
             'date': fields.datetime('Date'),
-            'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-            'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
+            'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
+            'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
             'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
@@ -80,7 +81,7 @@ class crm_helpdesk(osv.osv):
         'active': lambda *a: 1,
         'user_id': lambda s, cr, uid, c: uid,
         'state': lambda *a: 'draft',
-        'date': lambda *a: fields.datetime.now(),
+        'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
