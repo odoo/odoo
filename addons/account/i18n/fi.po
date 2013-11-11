@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-10-13 17:09+0000\n"
+"PO-Revision-Date: 2013-11-08 21:29+0000\n"
 "Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-14 05:33+0000\n"
-"X-Generator: Launchpad (build 16799)\n"
+"X-Launchpad-Export-Date: 2013-11-10 06:43+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -26,7 +26,7 @@ msgstr "Järjestelmämaksu"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
+msgstr "Tilin verokanta voidaan määritellä vain yhden kerran per tili."
 
 #. module: account
 #: help:account.tax.code,sequence:0
@@ -112,7 +112,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
 #, python-format
 msgid "Reconcile"
-msgstr "Suoritus"
+msgstr "Täsmäytä"
 
 #. module: account
 #: field:account.bank.statement,name:0
@@ -132,8 +132,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
 msgstr ""
-"Jos aktiivinen kenttä on tilassa epätosi (false), voit piilottaa maksun "
-"poistamatta sitä."
+"Jos aktiivinen kenttä on asetettu tilaan epätosi (false), niin voit "
+"piilottaa maksuehdon poistamatta sitä."
 
 #. module: account
 #: code:addons/account/account.py:641
@@ -204,7 +204,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr "Viimeisen 15 päivän aikana luodut laskut"
+msgstr "Viimeisten 15 päivän aikana luodut laskut"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -291,6 +291,9 @@ msgid ""
 "sales, purchase, expense, contra, etc.\n"
 "                This installs the module account_voucher."
 msgstr ""
+"Tämä sisältää kaikki perusvaatimukset voucher-merkinnöiksi pankki, käteinen, "
+"osto, kulu, vasta etc.\n"
+"                Tämä asentaa account_voucher -moduulin."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
@@ -1689,6 +1692,8 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
+"Poistamalla valinnan aktiivisesta kentästä, voi verokannan piilottaa, "
+"kuitenkaan poistamatta sitä."
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -1739,7 +1744,7 @@ msgstr "Toistuvat viennit"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "Malli rahoitusasemalle"
+msgstr "Verokannan malli"
 
 #. module: account
 #: view:account.subscription:0
@@ -2277,7 +2282,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr ""
+msgstr "Verokanta voidaan määritellä vain kerran samalle verolle."
 
 #. module: account
 #: view:account.tax:0
@@ -2450,7 +2455,7 @@ msgstr "Tilin verokartta"
 #: model:account.payment.term,name:account.account_payment_term_net
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr ""
+msgstr "30 päivää netto"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:256
@@ -2675,7 +2680,7 @@ msgstr "Maksuehto"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Talouskannat"
+msgstr "Verokanta"
 
 #. module: account
 #: code:addons/account/account_move_line.py:579
@@ -3146,7 +3151,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
-msgstr "Varokoodit"
+msgstr "Verokoodit"
 
 #. module: account
 #: view:account.account:0
@@ -3281,7 +3286,7 @@ msgstr "Voitto ja tappio"
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
 msgid "Fiscal Position"
-msgstr "Talouskanta"
+msgstr "Verokanta"
 
 #. module: account
 #: code:addons/account/account_invoice.py:823
@@ -3459,7 +3464,7 @@ msgstr "Analyyttiset rivit"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma Invoices"
-msgstr ""
+msgstr "Proforma laskut"
 
 #. module: account
 #: model:process.node,name:account.process_node_electronicfile0
@@ -4257,7 +4262,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,date:0
 msgid "Effective date"
-msgstr "Tehokas päiväys"
+msgstr "Kirjauspäivä"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:100
@@ -4687,6 +4692,8 @@ msgstr ""
 #: help:res.company,paypal_account:0
 msgid "Paypal username (usually email) for receiving online payments."
 msgstr ""
+"Paypal -käyttäjänimi (yleensä sähköpostiosoite) online-maksujen "
+"vastaanottamista varten."
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -4773,7 +4780,7 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Main Title 1 (bold, underlined)"
-msgstr ""
+msgstr "Pääotsikko 1 (lihavoitu, alleviivattu)"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -5539,7 +5546,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,allow_date:0
 msgid "Check Date in Period"
-msgstr ""
+msgstr "Tarkista jakson päiväys"
 
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
@@ -5845,7 +5852,7 @@ msgstr "Tuotteen määrä"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Unposted"
-msgstr ""
+msgstr "Kirjaamatta"
 
 #. module: account
 #: view:account.change.currency:0
@@ -5974,7 +5981,7 @@ msgstr ""
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr "Talouskannan malli"
+msgstr "Verokannan malli"
 
 #. module: account
 #: view:account.invoice:0
@@ -6006,7 +6013,7 @@ msgstr "Avaa kassakone"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Automatic formatting"
-msgstr ""
+msgstr "Automaattinen muotoilu"
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -6314,7 +6321,7 @@ msgstr "Ilmoita"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr ""
+msgstr "Verokannan malli"
 
 #. module: account
 #: help:account.tax,name:0
@@ -6373,7 +6380,7 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr "Tilikausiposition huomautus :"
+msgstr "Verokanta, huomautus:"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -7258,7 +7265,7 @@ msgstr "Tilien suoritusmerkinnät"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr ""
+msgstr "Verokannat"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -7902,7 +7909,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr ""
+msgstr "Kirjaamattomat päiväkirjamerkinnät"
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -10231,7 +10238,7 @@ msgstr "Valitse kausi"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Posted"
-msgstr "Postitettu"
+msgstr "Kirjattu"
 
 #. module: account
 #: report:account.account.balance:0

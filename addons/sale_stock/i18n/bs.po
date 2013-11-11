@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-10-26 14:34+0000\n"
+"Last-Translator: Bosko Stojakovic <bluesoft83@gmail.com>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:22+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-10-27 06:13+0000\n"
+"X-Generator: Launchpad (build 16810)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -23,6 +23,8 @@ msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
 msgstr ""
+"Omogućuje prodavaču izradu računa za dostave koristeći  izbornik \"Dostave "
+"na fakturu\""
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
@@ -33,18 +35,18 @@ msgstr "Otpremnica"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "Dostave na fakturu"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:570
 #, python-format
 msgid "Picking Information ! : "
-msgstr ""
+msgstr "Informacije prikupljanja proizvoda ! : "
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_packinglist0
 msgid "Pick List"
-msgstr ""
+msgstr "Lista prikupljanja proizvoda"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:565
@@ -55,16 +57,20 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Izabrali ste količinu od %d komada.\n"
+"Ali nije kompatibilno sa odabranim pakovanjem.\n"
+"Evo prijedloga za količine na osnovu pakovanja:\n"
+"EAN: %s Količina: %s Tip: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr ""
+msgstr "Dokument premještaja na izlaz ili kod kupca."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
 msgid "Manage multiple shops"
-msgstr ""
+msgstr "Upravljaj sa više prodavnica"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_validate0
@@ -74,7 +80,7 @@ msgstr "Potvrdi"
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "Otkaži narudžbu"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:209
@@ -82,11 +88,13 @@ msgstr ""
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
+"Prvo je potrebno otkazati sve narudžbe dostave koje su povezane sa ovom "
+"prodajnom narudžbom."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
 msgid "Create Procurement Order"
-msgstr ""
+msgstr "Kreiraj nalog naručivanja"
 
 #. module: sale_stock
 #: field:stock.picking.out,sale_id:0
@@ -99,6 +107,8 @@ msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
 msgstr ""
+"Za svaku stavku prodajne narudžbe kreira se nalog naručivanja da bi se "
+"obezbjedio proizvod koji se prodaje."
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
@@ -113,67 +123,67 @@ msgstr "Prodavnica"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sales order line."
-msgstr ""
+msgstr "Vodi nalog naručivanja za svaku stavku prodajne narudžbe."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Kretanje zalihe"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Neispravna akcija!"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "Vremenski listovi projekta"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Dopusti različite adrese za dostavu i fakturisanje "
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:572
 #: code:addons/sale_stock/sale_stock.py:623
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Greška u konfiguraciji!"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
 msgid "Procurement Order"
-msgstr ""
+msgstr "Nalog naručivanja"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
 msgid "Contact Details"
-msgstr ""
+msgstr "Detalji o kontaktu"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "Faktura baziran na dostavama"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 #: field:stock.picking,sale_id:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodajna narudžba"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Narudžba dostave"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Stavka prodajne narudžbe"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_packing0
@@ -183,11 +193,15 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
+"Obrazac liste prikupljanja proizvoda se kreira čim se prodajna narudžba "
+"potvrdi, u isto vrijeme kao i nalog naručivanja. Predstavlja dodjeljivanje "
+"dijelova prodajnoj narudžbi. Postoji 1 lista prikupljanja proizvoda po "
+"stavci prodajne narudžbe koja napreduje sa dostupnosti dijelova."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Lista prikupljanja proizvoda"
 
 #. module: sale_stock
 #: field:sale.shop,warehouse_id:0
@@ -202,37 +216,37 @@ msgstr "Prinudni prenos"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "Zadana metoda fakturisanja je"
 
 #. module: sale_stock
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Vrijeme trajanja isporuke"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_deliveryorder0
 msgid "Document of the move to the customer."
-msgstr ""
+msgstr "Dokument kretanja prema kupcu"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
-msgstr ""
+msgstr "Pregledaj narudžbu dostave"
 
 #. module: sale_stock
 #: field:sale.order.line,move_ids:0
 msgid "Inventory Moves"
-msgstr ""
+msgstr "Inventurna kretanja"
 
 #. module: sale_stock
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Zadane opcije"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
 msgid "Project MRP"
-msgstr ""
+msgstr "Projekat proizvodnje"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
@@ -243,6 +257,12 @@ msgid ""
 "order to create invoice 'On Demand', then track and process the sales order "
 "that have been fully delivered and invoice them from there."
 msgstr ""
+"Ako je prodajna narudžba postavljena da kreira fakturu 'Pri narudžbi "
+"dostave', tada će se automatski kreirati faktura bazirano na onome šta je "
+"dostavljeno. Ako radije želite da kreirate vašu fakturu bazirano na vašoj "
+"prodajnoj narudžbi, možete da postavite prodajnu narudžbu da kreira fakturu "
+"'Pri zahtjevu', tada pratite i obrađujte prodajnu narudžbu koja je bila u "
+"potpunosti dostavljena i fakturišite odatle."
 
 #. module: sale_stock
 #: field:sale.order.line,procurement_id:0
@@ -254,13 +274,13 @@ msgstr "Nabavka"
 #: field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
-msgstr ""
+msgstr "Otpremljeno"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:265
 #, python-format
 msgid "invalid mode for test_state"
-msgstr ""
+msgstr "Neispravan način za test_state"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_saleprocurement0
@@ -270,26 +290,29 @@ msgid ""
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
 msgstr ""
+"Nalog naručivanja je automatski kreiran čim se potvrdi prodajna narudžba ili "
+"čim se plati faktura. Ono vodi nabavku i proizvodnju proizvoda na osnovu "
+"pravila postavljenim u parametrima prodajne narudžbe. "
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+msgstr "Dozvoljava Vam da označite stavke prodajne narudžbe sa svojstvima."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "Generiši fakture bazirano na narudžbama dostave"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "Dozvoljava Vam dodavanje troškova isporuke."
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "days"
-msgstr ""
+msgstr "dani"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -302,6 +325,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Internacionalni komercijalni uslovi su niz predefiniranih komercijalnih "
+"uslova koji se koriste za inostrane transakcije."
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -311,43 +336,50 @@ msgid ""
 "prices.\n"
 "                This installs the module delivery."
 msgstr ""
+"Dozvoljava vam da dodate metode dostave na prodajne narudžbe i narudžbe "
+"dostave.\n"
+"                Možete da definišete sopstvene prevoznike i mrežu dostave za "
+"cijene.\n"
+"                Ovo instalira modul delivery."
 
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr ""
+msgstr "Dostavi sve odjednom kada  svi proizvodi budu spremni."
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Omogući fakturisanje narudžbi dostave"
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr ""
+msgstr "Sigurnosni dani"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
 msgid "Procurement of sold material"
-msgstr ""
+msgstr "Naručivanja prodanih materijala"
 
 #. module: sale_stock
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
 msgstr ""
+"Odaberite \"Dostavi svaki proizvod kada bude dostupan\" ako dopuštate "
+"nepotpunu dostavu."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:208
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "Otkazivanje prodajne narudžbe nije moguće!"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
 msgid "Sales Shop"
-msgstr ""
+msgstr "Prodavnica"
 
 #. module: sale_stock
 #: help:sale.order,shipped:0
@@ -355,6 +387,8 @@ msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
 msgstr ""
+"Pokazatelj da je prodajna narudžba dostavljena. Ovo polje se ažurira samo "
+"nakon pokretanja planera."
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
@@ -368,27 +402,30 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised "
 "date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"Granice grešaka za datume obećane kupcima. Proizvodi će biti zakazani za "
+"naručivanje i dostavu onoliko dana prije nego što je u stvari obećano, da bi "
+"se izborili sa neplaniranim odgodama u lancu snadbjevanja."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "Svojstva artikla na stavkama narudžbe"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
 msgid ""
 "You can generate invoices based on sales orders or based on shippings."
-msgstr ""
+msgstr "Možete napraviti fakture prema nabavnim narudžbama ili isporukama."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
+msgstr "Statistika prodajnih narudžbi"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Kompanije"
 
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
@@ -401,6 +438,13 @@ msgid ""
 "lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
+"Dozvoljava Vam da premjestite zapise pod zadatcima definisanim u Upravljanju "
+"Projektima na\n"
+"                stavke vremenskih listova za određen datum i određenog "
+"korisnika sa efektom kreiranja, uređivanja i brisanja \n"
+"                i da automatski kreira projektne zadatke iz stavki "
+"naručivanja.\n"
+"                Ovo instalira module project_timesheet i project_mrp."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -408,6 +452,8 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"Moguće unijeti različite adrese za dostavu i fakturisanje na prodajnoj "
+"narudžbi."
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -415,6 +461,8 @@ msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
 msgstr ""
+"Jedan nalog naručivanja za svaku stavku prodajne narudžbe i za svaku od "
+"komponenti."
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_assign0
@@ -425,14 +473,14 @@ msgstr "Dodjeli"
 #: code:addons/sale_stock/sale_stock.py:618
 #, python-format
 msgid "Not enough stock ! : "
-msgstr ""
+msgstr "Nema dovoljno zalihe! : "
 
 #. module: sale_stock
 #: help:sale.order.line,delay:0
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "Broj dana između potvrde narudžbe i isporuke proizvoda kupcu."
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -441,11 +489,14 @@ msgid ""
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
 msgstr ""
+"Prodajna narudžba će po zadanim vrijednostima biti podešen da dostavi sve "
+"proizvode odjednom, umjesto dostavljanja svakog proizvoda pojedinačno kada "
+"bude dostupan. To može imati utjecaja na cijenu transporta."
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Fakturisanje bazirano na prodajnim narudžbama"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -465,6 +516,9 @@ msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
 msgstr ""
+"Ako želite obrisati potvrđenu prodajnu narudžbu, prvo je morate otkazati.\n"
+"Da biste to učinili, najprije morate otkazati vezane stavke na narudžbama "
+"dostave."
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -474,7 +528,7 @@ msgstr "Broj pakovanja"
 #. module: sale_stock
 #: field:sale.order,shipped:0
 msgid "Delivered"
-msgstr ""
+msgstr "Dostavljeno"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
@@ -484,18 +538,19 @@ msgstr "Kreriaj Fakturu"
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Pripremi fakture bazirano na aktivnostima zadataka"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "Avansna faktura prodaje"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:523
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
+"Prvo morate otkazati sve skladišne dokumente vezane uz ovu prodajnu narudžbu."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:561
@@ -512,7 +567,7 @@ msgstr "Incoterm"
 #: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "Cannot cancel sales order line!"
-msgstr ""
+msgstr "Nije moguće otkazati stavku prodajne narudžbe !"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
@@ -522,17 +577,17 @@ msgstr "Otkazi prijenos"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
 msgid "Based on the shipped or on the ordered quantities."
-msgstr ""
+msgstr "Bazirano na isporukama ili naručenim količinama."
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Isporuči sve proizvode odjednom"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
-msgstr ""
+msgstr "Povezana prikupljanja proizvoda"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
@@ -545,21 +600,22 @@ msgid ""
 "This is a list of delivery orders that has been generated for this sales "
 "order."
 msgstr ""
+"Ovo je lista narudžbi dostave koje su generisane za ovu prodajnu narudžbu."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr ""
+msgstr "Zahtjev za prodajnom narudžbom"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr ""
+msgstr "Kreiraj narudžbu dostave"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr ""
+msgstr "Zanemari iznimku"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:614
@@ -568,16 +624,18 @@ msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
+"Planirate prodati %.2f %s ali vam je raspoloživo samo %.2f %s !\n"
+"Prava zaliha je %.2f %s. (bez rezervacija)"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "Ponovno izradi narudžbu dostave"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_multiple_shops:0
 msgid "This allows to configure and use multiple shops."
-msgstr ""
+msgstr "Korištenje više 'prodavnica' (multi shops)"
 
 #. module: sale_stock
 #: field:sale.order,picked_rate:0
@@ -587,12 +645,12 @@ msgstr "Izuzeto"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Isporuči svaki proizvod kada je dostupan"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_packing0
 msgid "Create Pick List"
-msgstr ""
+msgstr "Kreiraj nalog prikupljanja proizvoda"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_deliver0
@@ -601,3 +659,5 @@ msgid ""
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
 msgstr ""
+"U zavisnosti o postavkama izlazne lokacije, premještaj između izlaznog "
+"područja i kupca se izvršava preko narudžbe dostave ručno ili automatski."

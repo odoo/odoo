@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-09-26 13:29+0000\n"
+"PO-Revision-Date: 2013-11-09 13:37+0000\n"
 "Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-27 06:16+0000\n"
-"X-Generator: Launchpad (build 16774)\n"
+"X-Launchpad-Export-Date: 2013-11-10 06:44+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -42,6 +42,9 @@ msgid ""
 "under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
 msgstr ""
+"Pokreće automatsku radnju nabave za sve proizvode kojima je virtualna zaliha "
+"ispod nule. Vrlo vjerovatno ne trebate koristiti ovu opciju, poredlažemo da "
+"koristite metodu nabave 'Po narudžbi (MTO)' u matičnom kartonu artikla."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -59,6 +62,8 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr ""
+"tražene količine su uvijek\n"
+"                           dostupne"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -240,7 +245,7 @@ msgstr "Spremno"
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
 msgid "Automatic orderpoint"
-msgstr ""
+msgstr "Automatsko naručivanje"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -259,6 +264,21 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Nabavka predstavlja potrebu za određenom količinom proizvoda "
+"u određeno vrijeme na određenoj lokaciji. Prodajni nalozi su tipičan izvor "
+"Nabavki (iako su to odvojeni dokumenti). Ovisno o parametrima nabavke i "
+"konfiguraciji proizvoda, modul Nabavke će pokušati zadovoljiti potrebu za "
+"rezerviranjem količina na zalihi, naručivanjem proizvoda od dobavljača (u MK "
+"artikla mora biti upisan dobavljač), ili prosljeđivanja proizvodnog naloga i "
+"sl. Izuzetak u nabavci pojavljuje se kada sustav ne može pronaći način za "
+"izvršenje nabavke. Neki izuzetci će se automatski riješiti, ali neki "
+"zahtjevaju ručnu intervenciju (to su oni koji imaju određenu poruku sa "
+"greškom). Primjer neke od mogućih grešaka je nabavka artikala koji u "
+"matičnom kartonu nemaju upisanog dobavljača, pa sustav nezna za kojeg "
+"dobavljača da napravi Nalog za nabavu\n"
+"                </p>\n"
+"            "
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -406,7 +426,7 @@ msgstr "Jedinica mjere"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Sa skladišta (MTS)"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -447,13 +467,15 @@ msgid ""
 "use the available\n"
 "                           inventory"
 msgstr ""
+"koristi dostupnu\n"
+"                           zalihu"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
 #: model:process.process,name:procurement.process_process_procurementprocess0
 #: view:procurement.order:0
 msgid "Procurement"
-msgstr ""
+msgstr "Nabava"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
@@ -625,6 +647,9 @@ msgid ""
 "will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
 msgstr ""
+"Proizvedi: kod nabavke proizvoda kreirati će se proizvodni nalog ili "
+"zadatak, ovisno o vrsti proizvoda. \n"
+"Kupi: kod nabavke proizvoda kreirati će se nalog za nabavu."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -701,6 +726,9 @@ msgid ""
 "procurement method as\n"
 "                           'Make to Stock'."
 msgstr ""
+"Kada prodajete ovu uslugu, sustav neće ništa odraditi u pozadini\n"
+"                           ukoliko odaberete metudu nabave\n"
+"                           'Sa skladišta (MTS)'."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
@@ -735,7 +763,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.order,date_close:0
 msgid "Date Closed"
-msgstr ""
+msgstr "Datum zatvaranja"
 
 #. module: procurement
 #: view:res.company:0
@@ -749,6 +777,10 @@ msgid ""
 "for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
 msgstr ""
+"Sa skladišta (MTS): Prema potrebi, proizvod se uzima sa skladišta ili se "
+"čeka nadopuna zalihe. \n"
+"Po narudžbi (MTO): Prema potrebi, proizvod se kupuje od dobavljača ili "
+"proizvodi."
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -922,7 +954,7 @@ msgstr "Po narudžbi (MTO)"
 #. module: procurement
 #: field:product.template,supply_method:0
 msgid "Supply Method"
-msgstr ""
+msgstr "Metoda zalihe"
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -1004,7 +1036,7 @@ msgstr "Vrlo hitno"
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
 msgid "Automatic Orderpoint"
-msgstr ""
+msgstr "Automatsko naručivanje"
 
 #. module: procurement
 #: help:procurement.order,message_ids:0

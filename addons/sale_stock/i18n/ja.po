@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-10 04:51+0000\n"
+"Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:22+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-11 05:39+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -27,24 +27,24 @@ msgstr ""
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr "配達オーダー"
+msgstr "配送オーダ"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "請求対象配送"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:570
 #, python-format
 msgid "Picking Information ! : "
-msgstr "集荷情報： "
+msgstr "ピッキング情報： "
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_packinglist0
 msgid "Pick List"
-msgstr "集荷リスト"
+msgstr "ピックリスト"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:565
@@ -68,24 +68,24 @@ msgstr "製造品へのあるいは顧客への移動のドキュメント"
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
 msgid "Manage multiple shops"
-msgstr ""
+msgstr "複数店舗を管理"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_validate0
 msgid "Validate"
-msgstr "検証"
+msgstr "確認"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "オーダ取消"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:209
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
+msgstr "始めにこの受注に紐づく配送オーダを取り消してください。"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -95,7 +95,7 @@ msgstr "調達オーダーの作成"
 #. module: sale_stock
 #: field:stock.picking.out,sale_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "受注"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_saleorderprocurement0
@@ -107,12 +107,12 @@ msgstr "全ての受注オーダー行について、調達オーダーは販売
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr ""
+msgstr "出荷方針"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
 msgid "Shop"
-msgstr "店"
+msgstr "店舗"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
@@ -128,12 +128,12 @@ msgstr "在庫移動"
 #: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "操作は無効です。"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "プロジェクトタイムシート"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
@@ -145,7 +145,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:623
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "設定エラー"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
@@ -155,7 +155,7 @@ msgstr "調達オーダー"
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
 msgid "Contact Details"
-msgstr ""
+msgstr "コンタクトの詳細"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -166,7 +166,7 @@ msgstr "配達基準の請求書"
 #: model:ir.model,name:sale_stock.model_sale_order
 #: field:stock.picking,sale_id:0
 msgid "Sales Order"
-msgstr "受注オーダー"
+msgstr "受注"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
@@ -177,7 +177,7 @@ msgstr ""
 #: model:ir.model,name:sale_stock.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr "受注オーダー行"
+msgstr "受注明細"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_packing0
@@ -193,7 +193,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr "集荷リスト"
+msgstr "ピッキングリスト"
 
 #. module: sale_stock
 #: field:sale.shop,warehouse_id:0
@@ -208,7 +208,7 @@ msgstr "強制割当"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "デフォルト請求方法は"
 
 #. module: sale_stock
 #: field:sale.order.line,delay:0
@@ -223,7 +223,7 @@ msgstr "顧客への移動のドキュメント"
 #. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
-msgstr ""
+msgstr "配送オーダ照会"
 
 #. module: sale_stock
 #: field:sale.order.line,move_ids:0
@@ -233,12 +233,12 @@ msgstr "在庫移動"
 #. module: sale_stock
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "デフォルトオプション"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
 msgid "Project MRP"
-msgstr ""
+msgstr "プロジェクトMRP"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
@@ -297,7 +297,7 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "days"
-msgstr ""
+msgstr "日数"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -350,7 +350,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:208
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "受注を取り消せません。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
@@ -380,7 +380,7 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "受注明細上の品目属性"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
@@ -391,7 +391,7 @@ msgstr "受注オーダー基準、または出荷基準の請求書を生成し
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "受注オーダーの統計値"
+msgstr "受注統計"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company

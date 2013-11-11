@@ -110,7 +110,9 @@ class res_partner(osv.osv):
     _description = 'Partner'
 
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context=None):
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        ctx = context.copy()
+        ctx['all_fiscalyear'] = True
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=ctx)
         cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)

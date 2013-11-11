@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-08 21:28+0000\n"
+"Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:47+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-10 06:44+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in draft and open states"
-msgstr ""
+msgstr "Ehdotetut ja avoimet varat"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
@@ -67,6 +67,8 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
 msgstr ""
+"Ilmaisee että ensimmäinen poisto näitä varoja varten täytyy tehdä "
+"ostopäivästä alkaen tammikuun ensimmäisen päivän sijaan."
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -105,7 +107,7 @@ msgstr ""
 #: model:ir.model,name:account_asset.model_asset_asset_report
 #: model:ir.ui.menu,name:account_asset.menu_action_asset_asset_report
 msgid "Assets Analysis"
-msgstr ""
+msgstr "Varallisuusanalyysi"
 
 #. module: account_asset
 #: field:asset.modify,name:0
@@ -116,13 +118,13 @@ msgstr ""
 #: field:account.asset.asset,method_progress_factor:0
 #: field:account.asset.category,method_progress_factor:0
 msgid "Degressive Factor"
-msgstr ""
+msgstr "Degressiivinen kerroin"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
 msgid "Asset Categories"
-msgstr ""
+msgstr "Varallisuuskategoriat"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -136,7 +138,7 @@ msgstr ""
 #: view:account.asset.asset:0
 #: field:account.asset.asset,depreciation_line_ids:0
 msgid "Depreciation Lines"
-msgstr ""
+msgstr "Poistojen rivit"
 
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
@@ -153,7 +155,7 @@ msgstr ""
 #: view:asset.asset.report:0
 #: field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
-msgstr ""
+msgstr "Poistojen pvm"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
@@ -178,7 +180,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.category,account_depreciation_id:0
 msgid "Depreciation Account"
-msgstr ""
+msgstr "Poistojen tili"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -192,7 +194,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
-msgstr ""
+msgstr "Poistojen kirjaus"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:82
@@ -204,7 +206,7 @@ msgstr ""
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
-msgstr ""
+msgstr "Poistorivien lkm"
 
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
@@ -214,7 +216,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in draft state"
-msgstr ""
+msgstr "Ehdotetut varat"
 
 #. module: account_asset
 #: field:account.asset.asset,method_end:0
@@ -238,14 +240,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Compute Assets"
-msgstr ""
+msgstr "Laske varat"
 
 #. module: account_asset
 #: field:account.asset.category,method_period:0
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
 msgid "Period Length"
-msgstr ""
+msgstr "Jakson pituus"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0
@@ -257,12 +259,12 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Date of asset purchase"
-msgstr ""
+msgstr "Varojen hankintapäivä"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Change Duration"
-msgstr ""
+msgstr "Muuta kesto"
 
 #. module: account_asset
 #: help:account.asset.asset,method_number:0
@@ -285,7 +287,7 @@ msgstr ""
 #: field:account.asset.asset,method:0
 #: field:account.asset.category,method:0
 msgid "Computation Method"
-msgstr ""
+msgstr "Laskutapa"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
@@ -302,19 +304,19 @@ msgstr ""
 #. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
-msgstr ""
+msgstr "Kahden poiston väli kuukauden aikana"
 
 #. module: account_asset
 #: view:asset.modify:0
 #: model:ir.actions.act_window,name:account_asset.action_asset_modify
 #: model:ir.model,name:account_asset.model_asset_modify
 msgid "Modify Asset"
-msgstr ""
+msgstr "Muokkaa varoja"
 
 #. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
-msgstr ""
+msgstr "Jäännösarvo"
 
 #. module: account_asset
 #: field:account.asset.asset,category_id:0
@@ -322,12 +324,12 @@ msgstr ""
 #: field:account.invoice.line,asset_category_id:0
 #: view:asset.asset.report:0
 msgid "Asset Category"
-msgstr ""
+msgstr "Varojen kategoria"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in closed state"
-msgstr ""
+msgstr "Suljetut varat"
 
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
@@ -338,12 +340,12 @@ msgstr ""
 #: view:account.asset.history:0
 #: model:ir.model,name:account_asset.model_account_asset_history
 msgid "Asset history"
-msgstr ""
+msgstr "Varojen historia"
 
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Search Asset Category"
-msgstr ""
+msgstr "Hae varojen kategoria"
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -452,7 +454,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Date of depreciation"
-msgstr ""
+msgstr "Poistojen pvm"
 
 #. module: account_asset
 #: field:account.asset.history,user_id:0
@@ -462,7 +464,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.category,account_asset_id:0
 msgid "Asset Account"
-msgstr ""
+msgstr "Varojen tili"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -473,7 +475,7 @@ msgstr ""
 #: view:account.asset.asset:0
 #: view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
-msgstr ""
+msgstr "Laske"
 
 #. module: account_asset
 #: view:account.asset.history:0
@@ -493,12 +495,12 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
 msgid "State of Asset"
-msgstr ""
+msgstr "Varojen tila"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,name:0
 msgid "Depreciation Name"
-msgstr ""
+msgstr "Poiston nimi"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -509,7 +511,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
 msgid "Compute Asset"
-msgstr ""
+msgstr "Laske varat"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -525,7 +527,7 @@ msgstr ""
 #: field:account.asset.asset,prorata:0
 #: field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "Suhteessa kuluneeseen aikaan"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -547,7 +549,7 @@ msgstr ""
 #: selection:account.asset.asset,state:0
 #: selection:asset.asset.report,state:0
 msgid "Close"
-msgstr ""
+msgstr "Sulje"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move_line
@@ -570,7 +572,7 @@ msgstr ""
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Degressive"
-msgstr ""
+msgstr "Degressiivinen"
 
 #. module: account_asset
 #: help:asset.depreciation.confirmation.wizard,period_id:0
@@ -593,7 +595,7 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Depreciation Method"
-msgstr ""
+msgstr "Poistomenetelmä"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
@@ -608,12 +610,12 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
 msgid "Skip Draft State"
-msgstr ""
+msgstr "Ohita ehdotusvaihe"
 
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Depreciation Dates"
-msgstr ""
+msgstr "Poistojen päivät"
 
 #. module: account_asset
 #: field:account.asset.asset,currency_id:0
@@ -696,7 +698,7 @@ msgstr ""
 #: field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
-msgstr ""
+msgstr "Varojen kategoria"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -723,7 +725,7 @@ msgstr ""
 #. module: account_asset
 #: help:account.asset.category,method_period:0
 msgid "State here the time between 2 depreciations, in months"
-msgstr ""
+msgstr "Anna kahden poiston välinen aika, kuukausissa."
 
 #. module: account_asset
 #: field:account.asset.history,date:0
@@ -739,7 +741,7 @@ msgstr ""
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr ""
+msgstr "Poistojen lukumäärä"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -749,10 +751,10 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Confirm Asset"
-msgstr ""
+msgstr "Vahvista varat"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
-msgstr ""
+msgstr "Varojen hierarkia"
