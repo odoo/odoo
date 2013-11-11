@@ -454,6 +454,89 @@
             <field name="email">federal@yourcompany.example.com</field>
             <field name="website">http://www.federal.com</field>
         </record>
+        <record id="res_partner_address_1" model="res.partner">
+            <field name="name">Tang Tsui</field>
+            <field name="parent_id" eval="ref('res_partner_1')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Service Manager</field>
+            <field name="email">tang@asustek.com</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_2" model="res.partner">
+            <field name="name">Joseph Walters</field>
+            <field name="parent_id" eval="ref('res_partner_1')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Store Manager</field>
+            <field name="email">joseph.walters@asustek.com</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_7" model="res.partner">
+            <field name="name">Richard Ellis</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Production Supervisor</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_8" model="res.partner">
+            <field name="name">Paul Williams</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Line Mechanic</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_9" model="res.partner">
+            <field name="name">Brian Williams</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Computer Technician</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_12" model="res.partner">
+            <field name="name">James Miller</field>
+            <field name="parent_id" eval="ref('res_partner_6')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Electrical Supervisor</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_31" model="res.partner">
+            <field name="name">Edward Foster</field>
+            <field name="parent_id" eval="ref('res_partner_19')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Sales Representative</field>
+            <field name="email">efoster@seagate.com</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_27" model="res.partner">
+            <field name="name">Arthur Gomez</field>
+            <field name="parent_id" eval="ref('res_partner_16')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Software Developer</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_26" model="res.partner">
+            <field name="name">Julia Rivero</field>
+            <field name="parent_id" eval="ref('res_partner_16')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Technical Director</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_35" model="res.partner">
+            <field name="name">Peter Mitchell</field>
+            <field name="parent_id" eval="ref('res_partner_22')"/>
+            <field name="use_parent_address">1</field>
+            <field name="function">Store Manager</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+        </record>
     </data>
 </openerp>
 
