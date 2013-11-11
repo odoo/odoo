@@ -123,11 +123,13 @@ class wkf_transition(osv.osv):
     _defaults = {
         'condition': lambda *a: 'True',
     }
+
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
         line = self.browse(cr, uid, ids, context=context)
-        return [(line.id, (line.act_from.name or '')+'+'+line.act_to.name+'') if line.signal == False else (line.id, line.signal) for line in line ]
+        return [(line.id, (line.act_from.name)+'+'+(line.act_to.name)) if line.signal == False else (line.id, line.signal) for line in line ]
+
 wkf_transition()
 
 class wkf_instance(osv.osv):
