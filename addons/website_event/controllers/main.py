@@ -79,13 +79,14 @@ class website_event(http.Controller):
         ]
 
         # search domains
-        current_date = dates[0][1]
+        current_date = None
         current_type = None
         current_country = None
         for date in dates:
             if searches["date"] == date[0]:
                 domain_search["date"] = date[2]
-                current_date = date[1]
+                if date[0] != 'all':
+                    current_date = date[1]
         if searches["type"] != 'all':
             current_type = type_obj.browse(cr, uid, int(searches['type']), context=context)
             domain_search["type"] = [("type", "=", int(searches["type"]))]

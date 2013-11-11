@@ -13,21 +13,20 @@
     <template id="index" name="Events">
         <t t-call="website.layout">
           <div id="wrap">
+            <div class="oe_structure"/>
             <div class="container">
-                <div class="oe_structure"/>
                 <h1 class="text-center">
-                    Our Events
+                    Next Events
                 </h1>
                 <h3 class="text-center text-muted">
-                    <t t-esc="current_date"/><t t-if="current_type">,
-                      <t t-esc="current_type.name"/></t><t t-if="current_country">,
+                    <t t-esc="current_date or ''"/><span t-if="current_type"><t t-if="current_date">,</t>
+                      <t t-esc="current_type.name"/></span><span t-if="current_country"><t t-if="current_type or current_date">,</t>
                       <t t-esc="current_country.name"/>
-                    </t>
+                    </span>
                 </h3>
                 <div class="row mt16 mb32">
                     <div class="col-md-3 col-sm-4 css_noprint" id="left_column">
                         <ul class="nav nav-pills nav-stacked">
-                            <li class="nav-header">Date</li>
                             <t t-foreach="dates" t-as="date">
                                 <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3]">
                                     <a t-href="/event/#{ search_path }&amp;date=#{ date[0] }"><t t-esc="date[1]"/>
@@ -37,7 +36,7 @@
                             </t>
                         </ul>
                     </div>
-                    <div class="col-sm-8 col-md-9">
+                    <div class="col-sm-7 col-md-6" id="middle_column">
                         <t t-call="website.pager" >
                             <t t-set="classname">pull-left</t>
                         </t>
@@ -45,17 +44,11 @@
                         </div>
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
-                                <t t-call="website.publish_management">
-                                    <t t-set="object" t-value="event"/>
-                                    <t t-set="publish_controller">/event/publish</t>
-                                </t>
                                 <div class="media-body">
-                                    <span t-if="not event.event_ticket_ids" class="label label-danger pull-right">Registration Closed</span>
                                     <t t-if="event.event_ticket_ids">
-                                        <span t-if="event.register_avail == 9999" class="label label-default pull-right label-info">Tickets Available</span>
                                         <span t-if="not event.register_avail" class="label label-danger pull-right">Sold Out</span>
-                                        <span t-if="event.register_avail and event.register_avail != 9999" t-attf-class="label label-default pull-right label-#{ event.register_avail &lt;= 10 and 'warning' or 'info' }">
-                                            Tickets Available
+                                        <span t-if="event.register_avail and event.register_avail &lt;= ((event.register_max or 0) / 4)" class="label pull-right label-info">
+                                            Only <t t-esc="event.register_avail"/> Remaining
                                         </span>
                                     </t>
                                     <h4 class="media-heading"><a t-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a></h4>
@@ -77,6 +70,10 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="col-sm-2 col-md-3 oe_structure" id="right_column">
+
+
+                    </div>
                     <div class="col-md-8 col-lg-offset-4 text-center">
                         <t t-call="website.pager" />
                     </div>
@@ -87,10 +84,45 @@
         </t>
     </template>
 
-    <template id="event_category" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Category">
+    <template id="event_right_photos" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Photos">
+        <xpath expr="//div[@id='right_column']" position="inside">
+            <div class="row">
+                <div class="col-md-12 mb16">
+                    <div class="oe_demo">
+                        <img src="http://ebmedia.eventbrite.com/s3-build/17022-rc2013-11-04-acfb89e/django/images/pages/home/featcats_bizpro.jpg"/>
+                        <div class="text-center"><a href="/">Photos of Events</a></div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb16">
+                    <div class="oe_demo">
+                        <img src="http://ebmedia.eventbrite.com/s3-build/17022-rc2013-11-04-acfb89e/django/images/pages/home/featcats_bizpro.jpg"/>
+                        <div class="text-center"><a href="/">Customer Quotes</a></div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="event_right_quotes" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Quotes">
+        <xpath expr="//div[@id='right_column']" position="inside">
+            <div class="row">
+                <div class="col-md-12 mb16">
+                    <blockquote class="oe_snippet_body">
+                        <p>
+                            Write here a quote from one of your attendees.
+                            It gives confidence in your
+                            events.
+                        </p>
+                        <small>Author</small>
+                    </blockquote>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="event_category" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Filter by Category">
         <xpath expr="//div[@id='left_column']" position="inside">
             <ul class="nav nav-pills nav-stacked mt32">
-                <li class="nav-header">Category</li>
                 <t t-foreach="types">
                     <li t-if="type" t-att-class="searches.get('type') == str(type and type[0]) and 'active' or ''">
                         <a t-href="/event/#{ search_path }&amp;type=#{ type[0] }"><t t-esc="type[1]"/>
@@ -101,10 +133,9 @@
             </ul>
         </xpath>
     </template>
-    <template id="event_location" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Location">
+    <template id="event_location" inherit_id="website_event.index" inherit_option_id="website_event.index" name="Filter by Country">
         <xpath expr="//div[@id='left_column']" position="inside">
             <ul class="nav nav-pills nav-stacked mt32">
-                <li class="nav-header">Location</li>
                 <t t-foreach="countries">
                     <li t-if="country_id" t-att-class="searches.get('country') == str(country_id and country_id[0]) and 'active' or ''">
                         <a t-href="/event/#{ search_path }&amp;country=#{ country_id[0] }"><t t-esc="country_id[1]"/>

@@ -76,7 +76,6 @@
                         <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
                         <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
 
-                        <script type="text/javascript" src="/website/static/lib/stellar/jquery.stellar.js"></script>
                         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
 
                         <t t-if="editable">
@@ -118,19 +117,13 @@
                                                 <span class="icon-bar"></span>
                                                 <span class="icon-bar"></span>
                                             </button>
-                                            <a class="navbar-brand" href="/"><em>Your</em> <b>Company</b></a>
+                                            <a class="navbar-brand" href="/">Your<b>Company</b></a>
                                         </div>
                                         <div class="collapse navbar-collapse navbar-top-collapse">
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
                                                 <t t-foreach="website.get_menu().child_id" t-as="submenu">
                                                     <t t-call="website.submenu"/>
                                                 </t>
-
-                                                <li class="active" t-if="user_id.id == website.public_user.id">
-                                                    <a t-attf-href="/web#redirect=#{ url_for('') }">
-                                                        Sign in
-                                                    </a>
-                                                </li>
                                                 <li class="active dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
                                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                                         <span t-esc="user_id.name"/>
@@ -223,6 +216,16 @@
                         </div>
                     </body>
                 </html>
+        </template>
+
+        <template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
+            <xpath expr="//ul[@id='top_menu']" position="inside">
+                <li class="active" t-if="user_id.id == website.public_user.id">
+                    <a t-attf-href="/web#redirect=#{ url_for('') }">
+                        Sign in
+                    </a>
+                </li>
+            </xpath>
         </template>
 
         <template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
@@ -502,25 +505,23 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
         <template id="aboutus" name="About us" page="True">
             <t t-call="website.layout">
-                <div id="wrap">
-                    <div data-snippet-id="parallax">
-                        <div style="background-image: url('/website/static/src/img/parallax/parallax_bg.jpg')" data-stellar-background-ratio="0.3" class="parallax oe_structure mt32 mb32 oe_small">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12 mt32 mb32" data-snippet-id="colmd">
-                                        <div class="text-center">
-                                            <img src="/web/static/src/img/logo.png" class="img shadow logo-img"/>
-                                        </div>
-                                        <h3 class="text-center text-muted" t-field="res_company.rml_header1"></h3>
-                                    </div>
-                                </div>
+                <div id="wrap" class="oe_structure">
+
+                <section data-snippet-id="title">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1 class="text-center">About us</h1>
+                                <h3 class="text-muted text-center">Great products for great people</h3>
                             </div>
                         </div>
                     </div>
-                    <div class="oe_structure"/>
-                    <div class="container mb32">
-                        <div class="row col-wrap" id="aboutus">
-                            <div class="col-sm-8 mt16">
+                </section>
+
+                <section data-snippet-id="text-image">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 mt32">
                                 <p>
                                       We are a team of passionated people whose goal is to improve everyone's
                                       life through disruptive products. We build great products to solve your
@@ -531,12 +532,37 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                                       their performance.
                                 </p>
                             </div>
-                            <div class="col-sm-3 col-sm-offset-1">
-                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Out Team"/>
+                            <div class="col-md-4 col-md-offset-2 mt16 mb16">
+                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Our Team"/>
                             </div>
                         </div>
                     </div>
-                    <div class="oe_structure"/>
+                </section>
+
+                <div class="parallax oe_structure mt16 oe_medium mb64" data-scroll-background-offset="0" data-scroll-background-ratio="1" data-snippet-id="parallax" style="background-image: url(http://localhost:8069/website/static/src/img/parallax/parallax_bg.jpg); background-attachment: scroll; background-position: 0px 0px; ">
+                    <section class="mb32 mt16" data-snippet-id="references">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 mt16 mb8">
+                                    <h1 class="text-center">What do customers say about us...</h1>
+                                </div>
+                                <div class="col-md-4 col-md-offset-1 mt16 mb0">
+                                    <blockquote data-snippet-id="quote">
+                                        <p><span style="background-color:#FFFFFF;">Write here a quote from one of your customer. Quotes are are great way to give confidence in your products or services.</span></p>
+                                        <small><span style="background-color:#FFFFFF;">Author of this quote</span></small>
+                                    </blockquote>
+                                </div>
+                                <div class="col-md-4 col-md-offset-2 mt16 mb32">
+                                    <blockquote data-snippet-id="quote">
+                                        <p><span style="background-color:#FFFFFF;">OpenERP provides essential platform for our project management. Things are better organized and more visible with it.</span></p>
+                                        <small><span style="background-color:#FFFFFF;">John Doe, CEO</span></small>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
                 </div>
             </t>
         </template>
