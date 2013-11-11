@@ -10,16 +10,37 @@ import base64
 
 
 class website_hr_recruitment(http.Controller):
-
-    @website.route(['/jobs', '/department/<model("hr.department"):id>'], type='http', auth="public", multilang=True)
-    def jobs(self, department=None, page=0):
+    @website.route(['/jobs', '/jobs/department/<model("hr.department"):department>/office/<model("res.partner"):office>', '/jobs/department/<model("hr.department"):department>', '/jobs/office/<model("res.partner"):office>'], type='http', auth="public", multilang=True)
+    def jobs(self, department=None, office=None, page=0):
         hr_job_obj = request.registry['hr.job']
         domain = []
-        if department:
-            domain += [('department_id','=', department.id)]
         jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published,no_of_recruitment", context=request.context)
+        jobs = hr_job_obj.browse(request.cr, request.uid, jobpost_ids, request.context)
+
+        departments = set()
+        for job in jobs:
+            if job.department_id:
+                departments.add(job.department_id)
+
+        offices = set()
+        for job in jobs:
+            if job.address_id:
+                offices.add(job.address_id)
+
+        if department or office:
+            if office:
+                domain += [('address_id','=', office.id)]
+            if department:
+                domain += [('department_id','=', department.id)]
+            jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published,no_of_recruitment", context=request.context)
+            jobs = hr_job_obj.browse(request.cr, request.uid, jobpost_ids, request.context)
+
         return request.website.render("website_hr_recruitment.index", {
-            'jobs': hr_job_obj.browse(request.cr, request.uid, jobpost_ids, request.context),
+            'jobs': jobs,
+            'departments': departments,
+            'offices': offices,
+            'active': department and department.id or None, 
+            'office': office and office.id or None
         })
 
     @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
@@ -39,7 +60,8 @@ class website_hr_recruitment(http.Controller):
             'partner_name': post.get('partner_name', False),
             'description': post.get('description', False),
             'department_id': post.get('department_id', False),
-            'job_id': post.get('job_id', False)
+            'job_id': post.get('job_id', False),
+            'user_id': False
         }
 
         imd = request.registry['ir.model.data']

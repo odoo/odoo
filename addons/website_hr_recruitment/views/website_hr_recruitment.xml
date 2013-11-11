@@ -50,7 +50,10 @@
                     </div>
                     <div class="container oe_website_jobs">
                         <div class="row">
-                            <div class="col-md-12" id="jobs_grid">
+                            <div class="col-md-1" id="jobs_grid_left">
+
+                            </div>
+                            <div class="col-md-9" id="jobs_grid">
                                 <ul class="media-list">
                                     <li t-foreach="jobs" t-as="job" class="media">
                                         <div class="media-body" t-att-data-publish="job.website_published and 'on' or 'off'">
@@ -63,11 +66,11 @@
                                                 </small>
                                             </h3>
 
-                                            <div t-if="job.department_id and job.department_id.company_id">
+                                            <div t-if="job.address_id">
                                                 <i class="icon-map-marker"/>
-                                                <span t-field="job.department_id.company_id.city"/>
-                                                <span t-if="job.department_id.company_id.state_id" t-field="job.department_id.company_id.state_id.name"/>
-                                                , <span t-field="job.department_id.company_id.country_id.name"/>
+                                                <span t-field="job.address_id.city"/>
+                                                <span t-if="job.address_id.state_id" t-field="job.address_id.state_id"/>
+                                                , <span t-field="job.address_id.country_id.name"/>
                                             </div>
                                             <div class="text-muted">
                                                 <i class="icon-time"/> <span t-field="job.write_date"/>
@@ -98,19 +101,29 @@
             <t t-call="website.layout">
             <t t-set="additional_title">Job Detail</t>
             <div id="wrap">
-                <div class="container oe_website_hr_recruitment">
+
+                <section class="container mt8">
                     <div class="row">
-                        <t t-call="website.publish_management">
-                            <t t-set="object" t-value="job"/>
-                            <t t-set="publish_edit" t-value="True"/>
-                            <t t-set="publish_controller">/job/publish</t>
-                        </t>
+                      <div class="col-sm-5">
+                          <ol class="breadcrumb mb0">
+                              <li><a t-href="/jobs">Our Jobs</a></li>
+                              <li class="active"><span t-field="job.name"></span></li>
+                          </ol>
+                      </div><div class="col-sm-7">
+                          <t t-call="website.publish_management">
+                              <t t-set="object" t-value="job"/>
+                              <t t-set="publish_edit" t-value="True"/>
+                              <t t-set="publish_controller">/job/publish</t>
+                          </t>
+                      </div>
                     </div>
-                </div>
+                </section>
+
                 <div class="oe_structure" style="clear:both;">
                     <h1 class="text-center" t-field="job.name"/>
                     <h5 class="text-center">
-                        <i class="icon-map-marker"/> <span t-field="job.company_id.city"> </span>  <span t-if="job.company_id.state_id" t-field="job.company_id.state_id.name"> </span>, <span t-field="job.company_id.country_id.name"> </span></h5>
+                        <i class="icon-map-marker"/> <span t-field="job.address_id.city"/> <span t-if="job.address_id.state_id" t-field="job.address_id.state_id.name"/>, <span t-field="job.address_id.country_id.name"/>
+                    </h5>
                     <h5 class="text-center text-muted">
                                     <i class="icon-time"/> <span><t t-esc="vals_date"/></span>
                     </h5>
@@ -196,52 +209,67 @@
             </t>
         </template>
 
-    <template id="thankyou">
-        <t t-call="website.layout">
-            <div id="wrap">
-                <div class="oe_structure">
-                    <div class="container">
-                        <h1>Thank you!</h1>
-                        <p>
-                            Your job application has been successfully registered,
-                            we will get back to you soon.
-                        </p>
-                    </div>
-                    <section data-snippet-id="cta" class="darken">
+        <template id="thankyou">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure">
                         <div class="container">
-                            <div class="row">
-                                <div class="col-md-12 text-center mt16 mb16">
-                                    <a t-href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                            <h1>Thank you!</h1>
+                            <p>
+                                Your job application has been successfully registered,
+                                we will get back to you soon.
+                            </p>
+                        </div>
+                        <section data-snippet-id="cta" class="darken">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12 text-center mt16 mb16">
+                                        <a t-href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
+                    </div>
                 </div>
-            </div>
-        </t>
-    </template>
+            </t>
+        </template>
 
-    <template id="job_departments" inherit_option_id="website_hr_recruitment.index" name="Job Departments">
-        <xpath expr="//div[@id='jobs_grid']" position="before">
-            <div class="col-md-3">
-                <ul class="nav nav-pills nav-stacked mt16">
+        <template id="job_departments" inherit_option_id="website_hr_recruitment.index" name="Filter on Departments">
+            <xpath expr="//div[@id='jobs_grid_left']" position="inside">
+                <ul class="nav nav-pills nav-stacked mb32">
                     <li t-att-class=" '' if active else 'active' "><a t-href="/jobs">All Departments</a></li>
                     <t t-foreach="departments" t-as="department">
                         <li t-att-class="department.id == active and 'active' or ''">
-                        <a t-href="/department/#{ department.id }/" ><span t-field="department.name"/></a>
+                        <a t-href="/jobs/department/#{ department.id }/" ><span t-field="department.name"/></a>
                         </li>
                     </t>
                 </ul>
-            </div>
-        </xpath>
-        <xpath expr="//div[@id='jobs_grid']" position="attributes">
-            <attribute name="class">col-md-9</attribute>
-        </xpath>
-        <xpath expr="//div[@class='row']/div" position="before">
-            <div class="col-md-4">
-            <h1>Departments</h1>
-            </div>
-        </xpath>
-    </template>
-     </data>
+            </xpath>
+            <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
+                <attribute name="class">col-md-3</attribute>
+            </xpath>
+        </template>
+
+        <template id="job_offices" inherit_option_id="website_hr_recruitment.index" name="Filter on Offices">
+            <xpath expr="//div[@id='jobs_grid_left']" position="inside">
+                <ul class="nav nav-pills nav-stacked mb32">
+                    <li t-att-class=" '' if office else 'active' "><a t-href="/jobs">All Offices</a></li>
+                    <t t-foreach="offices" t-as="thisoffice">
+                        <li t-att-class="thisoffice.id == office and 'active' or ''">
+                            <a t-href="/jobs/office/#{ thisoffice.id }/" >
+                                <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">, 
+                                    <span t-field="thisoffice.country_id.name"/>
+                                </t>
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+            </xpath>
+            <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
+                <attribute name="class">col-md-3</attribute>
+            </xpath>
+        </template>
+
+
+    </data>
 </openerp>

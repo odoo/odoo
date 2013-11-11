@@ -466,6 +466,13 @@ class hr_job(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
+        'address_id': fields.many2one('res.partner', 'Job Location', help="Address where employees are working"),
+    }
+    def _address_get(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id.partner_id.id
+    _defaults = {
+        'address_id': _address_get
     }
 
     def _auto_init(self, cr, context=None):

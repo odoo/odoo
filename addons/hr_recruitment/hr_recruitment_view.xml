@@ -306,7 +306,14 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <field name="expected_employees" version="7.0" position="after">
+            <group name="job_data" position="inside">
+                <label for="address_id"/>
+                <div>
+                    <field name="address_id"/>
+                    <span class="oe_grey">(empty = remote work)</span>
+                </div>
+            </group>
+            <field name="expected_employees" position="after">
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
                     <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>
