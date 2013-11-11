@@ -7,8 +7,8 @@ from werkzeug.exceptions import BadRequest
 
 import openerp
 from openerp import SUPERUSER_ID
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 from openerp.addons.web.controllers.main import db_monodb, set_cookie_and_redirect, login_and_redirect
 from openerp.modules.registry import RegistryManager
 

@@ -235,9 +235,12 @@ class MergePartnerAutomatic(osv.TransientModel):
         record_ids = proxy.search(cr, openerp.SUPERUSER_ID, domain, context=context)
 
         for record in proxy.browse(cr, openerp.SUPERUSER_ID, record_ids, context=context):
-            proxy_model = self.pool[record.model]
-
-            field_type = proxy_model._columns.get(record.name).__class__._type
+            try:
+                proxy_model = self.pool[record.model]
+                field_type = proxy_model._columns[record.name].__class__._type
+            except KeyError:
+                # unknown model or field => skip
+                continue
 
             if field_type == 'function':
                 continue

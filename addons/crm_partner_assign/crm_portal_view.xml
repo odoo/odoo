@@ -59,6 +59,10 @@
                     <field name="description" nolabel="1" colspan="2"/>
                   </group>
                 </sheet>
+                <div class="oe_chatter">
+                  <field name="message_follower_ids" widget="mail_followers"/>
+                  <field name="message_ids" widget="mail_thread" readonly="1"/>
+                </div>
               </form>
             </field>
         </record>
@@ -145,6 +149,10 @@
                 </page>
                 </notebook>
               </sheet>
+              <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread" readonly="1"/>
+              </div>
               </form>
             </field>
         </record>
