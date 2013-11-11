@@ -3,10 +3,8 @@
 # OpenERP HTTP layer
 #----------------------------------------------------------
 import ast
-import cgi
 import contextlib
 import errno
-import functools
 import getpass
 import inspect
 import logging
@@ -33,7 +31,15 @@ import werkzeug.routing as routing
 
 import openerp
 from openerp.service import security, model as service_model
-from openerp.tools import config
+
+try:
+    # use python-slugify (https://github.com/un33k/python-slugify) if available
+    from slugify import slugify
+except ImportError:
+    def slugify(s, max_length=None):
+        spaceless = re.sub(r'\s+', '-', s)
+        specialless = re.sub(r'[^-_A-Za-z0-9]', '', spaceless)
+        return specialless[:max_length]
 
 _logger = logging.getLogger(__name__)
 
@@ -850,16 +856,22 @@ class ModelConverter(routing.BaseConverter):
         super(ModelConverter, self).__init__(url_map)
         self.model = model
         # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
-        self.regex = '([0-9]+)'
+        self.regex = r'[A-Za-z0-9-_]*?(\d+)'
 
     def to_python(self, value):
         # TODO:
         # - raise routing.ValidationError() if no browse record can be createdm
-        # - support slug 
-        return request.registry[self.model].browse(request.cr, request.uid, int(value), context=request.context)
+        m = re.match(self.regex, value)
+        return request.registry[self.model].browse(
+            request.cr, request.uid, int(m.group(1)), context=request.context)
 
     def to_url(self, value):
-        return value.id
+        [(_, name)] = value.name_get()
+        return "%s-%d" % (slugify(name), value.id)
+
+    def generate(self):
+        for id in request.registry[self.model].search(request.cr, request.uid, [], context=request.context):
+            yield request.registry[self.model].browse(request.cr, request.uid, id, context=request.context)
 
 class ModelsConverter(routing.BaseConverter):
 
