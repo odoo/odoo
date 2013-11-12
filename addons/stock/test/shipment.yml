@@ -1,13 +1,14 @@
 -
-   Stock manager can only test whole process related to Shipment, so let's check data with stock manager.
+   Stock manager can only test whole process related to Shipment, so we check data with stock manager.
 -
   !context
     uid: 'res_users_stock_manager'
 -
-  I confirm incomming shipment of 50 kgm Ice-cream.
+  I confirm incomming move of 50 kgm Ice-cream
 -
-  !python {model: stock.picking}: |
-      self.action_confirm(cr, uid, [ref("incomming_shipment")])
+  !python {model: stock.move}: |
+      incomming_move = self.browse(cr, uid, ref("incomming_shipment_icecream"))
+      self.action_confirm(cr, uid, [incomming_move.id])
 -
   I receive 40kgm Ice-cream so It will make backorder of incomming shipment for 10 kgm.
 -
