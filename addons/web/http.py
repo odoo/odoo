@@ -122,9 +122,8 @@ class WebRequest(object):
         if self.session.uid:
             try:
                 self.session.check_security()
-            except SessionExpiredException, e:
+            except:
                 self.session.logout()
-                raise SessionExpiredException("Session expired for request %s" % self.httprequest)
         auth_methods[self.auth_method]()
     @property
     def registry(self):
