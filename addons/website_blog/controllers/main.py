@@ -177,7 +177,7 @@ class WebsiteBlog(http.Controller):
             context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
-    @website.route(['/blog/<int:category_id>/new'], type='http', auth="public")
+    @website.route(['/blog/<int:category_id>/new'], type='http', auth="public", multilang=True)
     def blog_post_create(self, category_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
