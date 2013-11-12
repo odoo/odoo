@@ -23,6 +23,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from openerp.exceptions import Warning
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 

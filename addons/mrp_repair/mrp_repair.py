@@ -518,8 +518,9 @@ class mrp_repair(osv.osv):
                     'location_dest_id': move.location_dest_id.id,
                     'tracking_id': False,
                     'prodlot_id': move.prodlot_id and move.prodlot_id.id or False,
-                    'state': 'done',
+                    'state': 'assigned',
                 })
+                move_obj.action_done(cr, uid, [move_id], context=context)
                 repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
             if repair.deliver_bool:
                 pick_name = seq_obj.get(cr, uid, 'stock.picking.out')

@@ -187,7 +187,7 @@ class res_partner(osv.osv):
             return {}
         data['partner_ids'] = wizard_partner_ids
         datas = {
-             'ids': [],
+             'ids': wizard_partner_ids,
              'model': 'account_followup.followup',
              'form': data
         }
