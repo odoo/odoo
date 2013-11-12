@@ -1,11 +1,10 @@
 /*---------------------------------------------------------
  * OpenERP web_graph
  *---------------------------------------------------------*/
-/*global openerp:true $:true*/
-/*global $:true*/
-/*global _:true*/
 
 'use strict';
+/* jshint undef: false  */
+
 
 openerp.web_graph = function (instance) {
 
@@ -48,6 +47,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.measure = null;
         this.domain = [];
         this.model = null;
+        this.model_fields = [];
 
     },
 
@@ -71,12 +71,20 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.chart_view.appendTo('.graph_chart');
         this.chart_view.hide();
         this.get_data().done(this.pivot_table.draw);
+
+        return this.model.call('fields_get', []).then(function (fields) {
+            self.model_fields = fields;
+        });
     },
 
     get_data: function () {
         var view_fields = this.x_groups.concat(this.measure);
 
         return query_groups(this.model, view_fields, this.domain, this.x_groups);
+    },
+
+    get_desc: function(field_id) {
+        return this.model_fields[field_id].string;
     },
 
     do_search: function (domain, context, group_by) {
@@ -106,7 +114,7 @@ var PivotTable = instance.web.Widget.extend({
     },
 
     draw: function (data) {
-        console.log("data",data);
+        console.log('data',data);
     },
 });
 
@@ -260,3 +268,4 @@ function query_groups (model, fields, domain, groupbys) {
 
 
 };
+
