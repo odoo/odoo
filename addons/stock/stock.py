@@ -3039,6 +3039,13 @@ class stock_picking_in(osv.osv):
         """Send the unsubscribe action on stock.picking model to match with subscribe"""
         return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
 
+    def default_get(self, cr, uid, fields_list, context=None):
+        # merge defaults from stock.picking with possible defaults defined on stock.picking.in
+        defaults = self.pool['stock.picking'].default_get(cr, uid, fields_list, context=context)
+        out_defaults = super(stock_picking_in, self).default_get(cr, uid, fields_list, context=context)
+        defaults.update(in_defaults)
+        return defaults
+
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'state': fields.selection(
@@ -3101,6 +3108,13 @@ class stock_picking_out(osv.osv):
     def message_unsubscribe(self, *args, **kwargs):
         """Send the unsubscribe action on stock.picking model to match with subscribe"""
         return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        # merge defaults from stock.picking with possible defaults defined on stock.picking.out
+        defaults = self.pool['stock.picking'].default_get(cr, uid, fields_list, context=context)
+        out_defaults = super(stock_picking_out, self).default_get(cr, uid, fields_list, context=context)
+        defaults.update(out_defaults)
+        return defaults
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
