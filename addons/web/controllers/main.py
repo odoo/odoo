@@ -33,10 +33,9 @@ import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
 from openerp.tools import config
+from openerp import http
 
-from .. import http
-
-from openerp.addons.web.http import request
+from openerp.http import request
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -91,13 +90,16 @@ db_list = http.db_list
 db_monodb = http.db_monodb
 
 def redirect_with_hash(url, code=303):
+    redirect_code = "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
     if request.httprequest.user_agent.browser == 'msie':
         try:
             version = float(request.httprequest.user_agent.version)
             if version < 10:
-                return "<html><head><script>window.location = '%s#' + location.hash;</script></head></html>" % url
+                return redirect_code
         except Exception:
             pass
+    elif request.httprequest.user_agent.browser == 'safari':
+        return redirect_code
     return werkzeug.utils.redirect(url, code)
 
 def module_topological_sort(modules):
@@ -346,7 +348,7 @@ def make_conditional(response, last_modified=None, etag=None):
         response.set_etag(etag)
     return response.make_conditional(request.httprequest)
 
-def login_and_redirect(db, login, key, redirect_url='/'):
+def login_and_redirect(db, login, key, redirect_url='/web'):
     request.session.authenticate(db, login, key)
     return set_cookie_and_redirect(redirect_url)
 
@@ -551,7 +553,7 @@ class Home(http.Controller):
         if db is None and guessed_db is not None:
             return redirect(guessed_db)
 
-        if db is not None and db != guessed_db:
+        if db is not None and db != request.session.db:
             request.session.logout()
             request.session.db = db
             guessed_db = db
@@ -567,7 +569,7 @@ class Home(http.Controller):
         }
         return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
 
-    @http.route('/login', type='http', auth="user")
+    @http.route('/login', type='http', auth="none")
     def login(self, db, login, key):
         return login_and_redirect(db, login, key)
 
@@ -926,6 +928,11 @@ class Session(http.Controller):
     @http.route('/web/session/destroy', type='json', auth="user")
     def destroy(self):
         request.session.logout()
+
+    @http.route('/web/session/logout', type='http', auth="user")
+    def logout(self, redirect='/web'):
+        request.session.logout()
+        return werkzeug.utils.redirect(redirect, 303)
 
 class Menu(http.Controller):
 

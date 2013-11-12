@@ -35,8 +35,8 @@ Now you can put the following content in ``controllers/my_controllers.py``:
 
 ::
 
-    import openerp.addons.web.http as http
-    from openerp.addons.web.http import request
+    import openerp.http as http
+    from openerp.http import request
 
 
 Controller Declaration

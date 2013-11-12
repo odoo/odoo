@@ -724,7 +724,7 @@ instance.web.Login =  instance.web.Widget.extend({
         params.db = db;
         this.$('.oe_login_dbpane').empty().text(_t('Loading...'));
         this.$('[name=login], [name=password]').prop('readonly', true);
-        instance.web.redirect('/?' + $.param(params));
+        instance.web.redirect('/web?' + $.param(params));
     },
     on_db_loaded: function (result) {
         var self = this;
@@ -1377,7 +1377,11 @@ instance.web.WebClient = instance.web.Client.extend({
 
         this.action_manager.do_action(action);
         this.action_manager.inner_widget.on('login_successful', this, function() {
-            this.show_application();        // will load the state we just pushed
+            if ('redirect' in state) {
+                openerp.web.redirect(state.redirect);
+            } else {
+                this.show_application();        // will load the state we just pushed
+            }
         });
     },
     show_application: function() {
