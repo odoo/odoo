@@ -332,9 +332,21 @@ class website(osv.osv):
                   of the same.
         :rtype: list({name: str, url: str})
         """
+        # FIXME: possibility to add custom converters without editing server
+        #        would allow the creation of a pages converter generating page
+        #        urls on its own
+        View = self.pool['ir.ui.view']
+        views = View.search_read(cr, uid, [['page', '=', True]],
+                                 fields=['name'], order='name', context=context)
+        xids = View.get_external_id(cr, uid, [view['id'] for view in views], context=context)
+        for view in views:
+            if xids[view['id']]:
+                yield {
+                    'name': view['name'],
+                    'url': '/page/' + xids[view['id']],
+                }
 
         router = request.httprequest.app.get_db_router(request.db)
-
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
