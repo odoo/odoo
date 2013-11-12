@@ -37,7 +37,7 @@ def route(routes, *route_args, **route_kwargs):
         @http.route(new_routes, *route_args, **route_kwargs)
         @functools.wraps(f, assigned=functools.WRAPPER_ASSIGNMENTS + ('func_name',))
         def wrap(*args, **kwargs):
-            request.route_lang = kwargs.get('lang_code', None)
+            request.route_lang = kwargs.pop('lang_code', None)
             if not hasattr(request, 'website'):
                 request.multilang = f.multilang
                 # TODO: Select website, currently hard coded
