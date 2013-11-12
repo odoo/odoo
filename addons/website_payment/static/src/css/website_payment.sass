@@ -1,29 +1,45 @@
 @charset "utf-8"
 
-@import "compass/css3"
+input#cc_number
+    background-image: url('/website_payment/static/src/img/grey-dots.png')
+    background-repeat: no-repeat
+    background-position: 14px 14px
 
-.css_website_mail
-    .has-error
-        border-color: red
-    .css_nav_month
-        display: none
-        &:first-of-type
-            display: block
+div.card_placeholder
+    background-image: url('/website_payment/static/src/img/placeholder.png')
+    background-repeat: no-repeat
+    width: 32px
+    height: 20px
+    position: absolute
+    top: 34px
+    right: 20px
+    -webkit-transition: .4s cubic-bezier(0.455,0.03,0.515,0.955)
+    transition: .4s cubic-bezier(0.455,0.03,0.515,0.955)
+    pointer-events: none
 
-.blog_content
-    a.oe_mail_expand:after
-        content: " →"
-    a.oe_mail_expand
-        font-weight: bold
+div.amex
+    background-image: url('/website_payment/static/src/img/amex.png')
+    background-repeat: no-repeat
 
-p.post-meta
-    position: relative
-    top: -5px
+div.diners
+    background-image: url('/website_payment/static/src/img/diners.png')
+    background-repeat: no-repeat
 
-.js_website_blog
-    div#right_column
-        section
-            +opacity(0.6)
-        section:hover
-            +opacity(1)
-            @include transition(all 0.2s ease-out)
+div.discover
+    background-image: url('/website_payment/static/src/img/discover.png')
+    background-repeat: no-repeat
+
+div.jcb
+    background-image: url('/website_payment/static/src/img/jcb.png')
+    background-repeat: no-repeat
+
+div.mastercard
+    background-image: url('/website_payment/static/src/img/mastercard.png')
+    background-repeat: no-repeat
+
+div.visa
+    background-image: url('/website_payment/static/src/img/visa.png')
+    background-repeat: no-repeat
+
+input#cc_number:active, input#cc_number:focus
+    background-image: none

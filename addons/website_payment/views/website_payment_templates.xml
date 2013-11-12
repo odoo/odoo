@@ -38,23 +38,25 @@
                     <div class="container mt16 js_website_blog">
                         <div class="row">
                             <h3>Paypal payment: server 2 server</h3>
-                            <form class="form-horizontal col-sm-4" role="form">
+                            <form class="form-horizontal col-sm-4 oe_cc" role="form">
                                 <div class="form-group col-sm-8">
-                                    <label for="cc_number">Card number</label>
+                                    <label class="control-label" for="cc_number">Card number</label>
                                     <input type="tel" id="cc_number" class="form-control"/>
-                                    <div class="pull-right card_placeholder"></div>
+                                    <div class="card_placeholder"></div>
+                                    <div class="visa"></div>
                                 </div>
                                 <div class="form-group col-sm-4">
-                                    <label for="cc_cvc">Card code</label>
+                                    <label class="control-label" for="cc_cvc">Card code</label>
                                     <input type="text" id="cc_cvc" class="form-control" maxlength="4" palceholder="CVC"/>
                                 </div>
                                 <div class="form-group col-sm-7">
-                                    <label for="cc_holder_name">Holder Name</label>
+                                    <label class="control-label" for="cc_holder_name">Holder Name</label>
                                     <input type="text" id="cc_hoder_name" class="form-control"/>
                                 </div>
                                 <div class="form-group col-sm-5">
-                                    <label for="cc_expires_mm">Expires</label>
-                                    <select id="cc_expires_mm" class="form-control col-sm-2" maxlength="2">
+                                    <label class="control-label" for="cc_expires_mm">Expires</label>
+                                    <input type="text" id="cc_expiry" class="form-control" maxlength="7" placeholder="MM / YY"/>
+                                    <!-- <select id="cc_expires_mm" class="form-control col-sm-2" maxlength="2">
                                         <option>MM</option>
                                         <option>01</option>
                                         <option>02</option>
@@ -66,7 +68,7 @@
                                         <option>14</option>
                                         <option>15</option>
                                         <option>16</option>
-                                    </select>
+                                    </select> -->
                                 </div>
 
                             </form>
