@@ -566,29 +566,37 @@ class mail_thread(osv.AbstractModel):
         self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, *self._get_inbox_action_xml_id(cr, uid, context=context))
         action = self.pool.get(act_model).read(cr, uid, act_id, [])
+        params = context.get('params')
+        msg_id = model = res_id = None
 
-        # if msg_id specified: try to redirect to the document or fallback on the Inbox
-        msg_id = context.get('params', {}).get('message_id')
-        if not msg_id:
+        if params:
+            msg_id = params.get('message_id')
+            model = params.get('model')
+            res_id = params.get('res_id')
+        if not msg_id and not (model and res_id):
             return action
-        msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
-        if msg.model and msg.res_id:
-            action.update({
-                'context': {
-                    'search_default_model': msg.model,
-                    'search_default_res_id': msg.res_id,
-                }
-            })
-            if self.pool.get(msg.model).check_access_rights(cr, uid, 'read', raise_exception=False):
+        if msg_id and not (model and res_id):
+            msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
+            model, res_id = msg.model, msg.res_id
+
+        # if model + res_id found: try to redirect to the document or fallback on the Inbox
+        if model and res_id:
+            model_obj = self.pool.get(model)
+            if model_obj.check_access_rights(cr, uid, 'read', raise_exception=False):
                 try:
-                    model_obj = self.pool.get(msg.model)
-                    model_obj.check_access_rule(cr, uid, [msg.res_id], 'read', context=context)
+                    model_obj.check_access_rule(cr, uid, [res_id], 'read', context=context)
                     if not hasattr(model_obj, '_get_formview_action'):
-                        action = self.pool.get('mail.thread')._get_formview_action(cr, uid, msg.res_id, model=msg.model, context=context)
+                        action = self.pool.get('mail.thread')._get_formview_action(cr, uid, res_id, model=model, context=context)
                     else:
-                        action = model_obj._get_formview_action(cr, uid, msg.res_id, context=context)
+                        action = model_obj._get_formview_action(cr, uid, res_id, context=context)
                 except (osv.except_osv, orm.except_orm):
                     pass
+            action.update({
+                'context': {
+                    'search_default_model': model,
+                    'search_default_res_id': res_id,
+                }
+            })
         return action
 
     #------------------------------------------------------

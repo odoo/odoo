@@ -3,7 +3,7 @@ import psycopg2
 
 import openerp
 from openerp import SUPERUSER_ID
-import openerp.addons.web.http as http
+from openerp import http
 from openerp.addons.web.controllers.main import content_disposition
 
 
