@@ -21,19 +21,19 @@
         </ul>
     </li>
 </t>
-<t t-name="website.menu.dialog.footer-button">
-    <button type="button" class="btn pull-left js_add_menu btn-success">
-        <i class="icon-plus-sign"/> Add Menu Entry
-    </button>
-</t>
 <t t-name="website.menu.dialog.edit">
     <t t-call="website.editor.dialog">
-        <t t-set="title">Edit Structure</t>
+        <t t-set="title">Edit Menu</t>
         <ul class="oe_menu_editor">
             <t t-foreach="widget.menu.children" t-as="submenu">
                 <t t-call="website.menu.dialog.submenu"/>
             </t>
         </ul>
+        <p class="mt32">
+            <a href="#" class="js_add_menu">
+                <i class="icon-plus-sign"/> Add Menu Entry
+            </a>
+        </p>
     </t>
 </t>
 <t t-name="website.menu.dialog.add" t-extend="website.editor.dialog.link">
