@@ -55,7 +55,7 @@ class WebsiteMembership(http.Controller):
         if post_country_id:
             line_domain += [('partner.country_id', '=', post_country_id)]
 
-        membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
+        membership_line_ids = membership_line_obj.search(cr, uid, line_domain, order='membership_id', context=context)
         membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
         partner_ids = [m.partner and m.partner.id for m in membership_lines]
         google_map_partner_ids = ",".join([str(pid) for pid in partner_ids])
