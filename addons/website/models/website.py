@@ -345,8 +345,7 @@ class website(osv.osv):
             )))
 
             for values in generated:
-                # rule.build returns (domain_part, rel_url)
-                url = rule.build(values, append_unknown=False)[1]
+                domain_part, url = rule.build(values, append_unknown=False)
                 yield {'name': url, 'url': url }
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
