@@ -24,10 +24,14 @@
                     stepId: 'edit-page',
                     element: 'button[data-action=edit]',
                     placement: 'bottom',
-                    reflex: true,
                     title: "Edit this page",
                     content: "Every page of your website can be modified through the <i>Edit</i> button.",
                     template: render('website.tour_popover'),
+                    onShow: function () {
+                        editor.on('rte:snippets_ready', editor, function() {
+                            self.movetoStep('add-block');
+                        });
+                    },
                 },
                 {
                     stepId: 'add-block',
@@ -37,11 +41,6 @@
                     content: "To add content in a page, you can insert building blocks.",
                     template: render('website.tour_popover'),
                     onShow: function () {
-                        function refreshAddBlockStep () {
-                            self.tour.showStep(self.indexOfStep('add-block'));
-                            editor.off('rte:ready', editor, refreshAddBlockStep);
-                        }
-                        editor.on('rte:ready', editor, refreshAddBlockStep);
                         $('button[data-action=snippet]').click(function () {
                             self.movetoStep('drag-banner');
                         });
