@@ -404,17 +404,15 @@ class stock_location(osv.osv):
         uom_rounding = self.pool.get('product.product').browse(cr, uid, product_id, context=context).uom_id.rounding
         if context.get('uom'):
             uom_rounding = uom_obj.browse(cr, uid, context.get('uom'), context=context).rounding
-        prodlot_id = context.get('prodlot_id', False)
 
         locations_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
         if locations_ids:
             # Fetch only the locations in which this product has ever been processed (in or out)
             cr.execute("""SELECT l.id FROM stock_location l WHERE l.id in %s AND
                         EXISTS (SELECT 1 FROM stock_move m WHERE m.product_id = %s
-                                AND (NOT BOOL(%s) OR m.prodlot_id=%s)
                                 AND ((state = 'done' AND m.location_dest_id = l.id)
                                     OR (state in ('done','assigned') AND m.location_id = l.id)))
-                       """, (tuple(locations_ids), product_id, prodlot_id, prodlot_id or None))
+                       """, (tuple(locations_ids), product_id,))
             locations_ids = [i for (i,) in cr.fetchall()]
         for id in locations_ids:
             if lock:
@@ -426,7 +424,6 @@ class stock_location(osv.osv):
                     cr.execute("SAVEPOINT stock_location_product_reserve")
                     cr.execute("""SELECT id FROM stock_move
                                   WHERE product_id=%s AND
-                                        (NOT BOOL(%s) OR prodlot_id=%s) AND
                                           (
                                             (location_dest_id=%s AND
                                              location_id<>%s AND
@@ -436,7 +433,7 @@ class stock_location(osv.osv):
                                              location_dest_id<>%s AND
                                              state in ('done', 'assigned'))
                                           )
-                                  FOR UPDATE of stock_move NOWAIT""", (product_id, prodlot_id, prodlot_id or None, id, id, id, id), log_exceptions=False)
+                                  FOR UPDATE of stock_move NOWAIT""", (product_id, id, id, id, id), log_exceptions=False)
                 except Exception:
                     # Here it's likely that the FOR UPDATE NOWAIT failed to get the LOCK,
                     # so we ROLLBACK to the SAVEPOINT to restore the transaction to its earlier
@@ -452,22 +449,20 @@ class stock_location(osv.osv):
                           WHERE location_dest_id=%s AND
                                 location_id<>%s AND
                                 product_id=%s AND
-                                (NOT BOOL(%s) OR prodlot_id=%s) AND
                                 state='done'
                           GROUP BY product_uom
                        """,
-                       (id, id, product_id, prodlot_id, prodlot_id or None))
+                       (id, id, product_id))
             results = cr.dictfetchall()
             cr.execute("""SELECT product_uom,-sum(product_qty) AS product_qty
                           FROM stock_move
                           WHERE location_id=%s AND
                                 location_dest_id<>%s AND
                                 product_id=%s AND
-                                (NOT BOOL(%s) OR prodlot_id=%s) AND
                                 state in ('done', 'assigned')
                           GROUP BY product_uom
                        """,
-                       (id, id, product_id, prodlot_id, prodlot_id or None))
+                       (id, id, product_id))
             results += cr.dictfetchall()
             total = 0.0
             results2 = 0.0
@@ -2187,12 +2182,8 @@ class stock_move(osv.osv):
                 pickings[move.picking_id.id] = 1
                 continue
             if move.state in ('confirmed', 'waiting'):
-                ctx = context.copy()
-                ctx.update({'uom': move.product_uom.id})
-                if move.prodlot_id:
-                    ctx.update({'prodlot_id': move.prodlot_id.id})
                 # Important: we must pass lock=True to _product_reserve() to avoid race conditions and double reservations
-                res = self.pool.get('stock.location')._product_reserve(cr, uid, [move.location_id.id], move.product_id.id, move.product_qty, context=ctx, lock=True)
+                res = self.pool.get('stock.location')._product_reserve(cr, uid, [move.location_id.id], move.product_id.id, move.product_qty, {'uom': move.product_uom.id}, lock=True)
                 if res:
                     #_product_available_test depends on the next status for correct functioning
                     #the test does not work correctly if the same product occurs multiple times
