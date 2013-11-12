@@ -526,8 +526,27 @@ class stock_quant(osv.osv):
                 raise osv.except_osv(_('Error'), _('You cannot move product %s to a location of type view %s.')% (record.product_id.name, record.location_id.name))
         return True
 
+    # FP Note: rehab this, with the auto creation algo
+    # def _check_tracking(self, cr, uid, ids, context=None):
+    #     """ Checks if serial number is assigned to stock move or not.
+    #     @return: True or False
+    #     """
+    #     for move in self.browse(cr, uid, ids, context=context):
+    #         if not move.lot_id and \
+    #            (move.state == 'done' and \
+    #            ( \
+    #                (move.product_id.track_production and move.location_id.usage == 'production') or \
+    #                (move.product_id.track_production and move.location_dest_id.usage == 'production') or \
+    #                (move.product_id.track_incoming and move.location_id.usage == 'supplier') or \
+    #                (move.product_id.track_outgoing and move.location_dest_id.usage == 'customer') or \
+    #                (move.product_id.track_incoming and move.location_id.usage == 'inventory') \
+    #            )):
+    #             return False
+    #     return True
+
     _constraints = [
         (_check_location, 'You cannot move products to a location of the type view.', ['location_id'])
+    #    (_check_tracking, 'You must assign a serial number for this product.', ['prodlot_id']),
     ]
 
 
@@ -841,7 +860,7 @@ class stock_picking(osv.osv):
                     test_pack = pack
                     while cont:
                         quants = pack_obj.get_content(cr, uid, [test_pack.id], context=context)
-                        if all([x.reservation_id.id  == move.id for x in quant_obj.browse(cr, uid, quants, context=context) if x.reservation_id]):
+                        if all([x.reservation_id.id == move.id for x in quant_obj.browse(cr, uid, quants, context=context) if x.reservation_id]):
                             good_pack = test_pack.id
                             if test_pack.parent_id:
                                 test_pack = test_pack.parent_id
@@ -865,9 +884,9 @@ class stock_picking(osv.osv):
                     pack_operation_obj.create(cr, uid, {
                         'picking_id': picking.id,
                         'package_id': pack.id,
-                        'product_qty': 1.0, 
+                        'product_qty': 1.0,
                     }, context=context)
-                
+
                 yet_to_reserve = list(reserved)
                 #Create operations based on quants
                 for quant in quant_obj.browse(cr, uid, yet_to_reserve, context=context):
@@ -921,13 +940,11 @@ class stock_picking(osv.osv):
         if create and move.location_id.usage != 'internal':
             # Create quants
             quant = quant_obj._quant_create(cr, uid, qty, move, lot_id=ops.lot_id and ops.lot_id.id or False, owner_id=ops.owner_id and ops.owner_id.id or False, context=context)
-            #TODO: location_id -> force location?
             quant.write({'reservation_op_id': ops.id, 'location_id': move.location_id.id})
             quant_obj.quants_reserve(cr, uid, [(quant, qty)], move, context=context)
             return 0
         else:
             #Quants get
-            #prefered_order = "reservation_id IS NOT NULL" #TODO: reservation_id as such might work
             dom = op_obj._get_domain(cr, uid, ops, context=context)
             dom = dom + [('reservation_id', 'not in', [x.id for x in move.picking_id.move_lines])]
             quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_domain=[('reservation_id', '=', False)], fallback_domain=[('reservation_id', '!=', False)], context=context)
@@ -1013,7 +1030,6 @@ class stock_picking(osv.osv):
                         res.setdefault(ops.id, {}).setdefault(quant.product_id.id, 0.0)
                         res[ops.id][quant.product_id.id] += qty_to_do
         return (res, res2, resneg)
-
 
     def do_partial(self, cr, uid, picking_ids, context=None):
         """
@@ -1206,24 +1222,6 @@ class stock_move(osv.osv):
             res.append((line.id, name))
         return res
 
-    # FP Note: put this on quants, with the auto creation algo
-    # def _check_tracking(self, cr, uid, ids, context=None):
-    #     """ Checks if serial number is assigned to stock move or not.
-    #     @return: True or False
-    #     """
-    #     for move in self.browse(cr, uid, ids, context=context):
-    #         if not move.lot_id and \
-    #            (move.state == 'done' and \
-    #            ( \
-    #                (move.product_id.track_production and move.location_id.usage == 'production') or \
-    #                (move.product_id.track_production and move.location_dest_id.usage == 'production') or \
-    #                (move.product_id.track_incoming and move.location_id.usage == 'supplier') or \
-    #                (move.product_id.track_outgoing and move.location_dest_id.usage == 'customer') or \
-    #                (move.product_id.track_incoming and move.location_id.usage == 'inventory') \
-    #            )):
-    #             return False
-    #     return True
-
     def _quantity_normalize(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
         res = {}
@@ -1356,18 +1354,6 @@ class stock_move(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any)."),
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default['move_orig_ids'] = []
-        default['quant_ids'] = []
-        default['reserved_quant_ids'] = []
-        default['returned_move_ids'] = []
-        default['origin_returned_move_id'] = False
-        default['state'] = 'draft'
-        return super(stock_move, self).copy(cr, uid, id, default, context)
-
     def _default_location_destination(self, cr, uid, context=None):
         context = context or {}
         if context.get('default_picking_type_id', False):
@@ -1401,6 +1387,29 @@ class stock_move(osv.osv):
         'procure_method': 'make_to_stock',
         'propagate': True,
     }
+
+    def _check_uom(self, cr, uid, ids, context=None):
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.product_id.uom_id.category_id.id != move.product_uom.category_id.id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_uom,
+            'You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.',
+            ['product_uom'])]
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['move_orig_ids'] = []
+        default['quant_ids'] = []
+        default['reserved_quant_ids'] = []
+        default['returned_move_ids'] = []
+        default['origin_returned_move_id'] = False
+        default['state'] = 'draft'
+        return super(stock_move, self).copy(cr, uid, id, default, context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
         origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or "/")
@@ -3137,6 +3146,29 @@ class stock_pack_operation(osv.osv):
             res[ops.id] = qty
         return res
 
+    def product_id_change(self, cr, uid, ids, product_id, product_uom_id, product_qty, context=None):
+        res = {'value': {}}
+        uom_obj = self.pool.get('product.uom')
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            if not product_uom_id:
+                product_uom_id = product.uom_id.id
+                res['value']['product_uom_id'] = product_uom_id
+            selected_uom = uom_obj.browse(cr, uid, product_uom_id, context=context)
+            if selected_uom.category_id.id != product.uom_id.category_id.id:
+                res['warning'] = {
+                    'title': _('Warning: wrong UoM!'),
+                    'message': _('The selected UoM for product %s is not compatible with the UoM set on the product form. \nPlease choose an UoM within the same UoM category.') % (product.name)
+                }
+            if product_qty and 'warning' not in res:
+                rounded_qty = uom_obj._compute_qty(cr, uid, product_uom_id, product_qty, product_uom_id, round=True)
+                if rounded_qty != product_qty:
+                    res['warning'] = {
+                        'title': _('Warning: wrong quantity!'),
+                        'message': _('The chosen quantity for product %s is not compatible with the UoM rounding. It will be automatically converted at confirmation') % (product.name)
+                    }
+        return res
+
     _columns = {
         'picking_id': fields.many2one('stock.picking', 'Stock Picking', help='The stock operation where the packing has been made', required=True),
         'product_id': fields.many2one('product.product', 'Product', ondelete="CASCADE"),  # 1
@@ -3144,7 +3176,7 @@ class stock_pack_operation(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
         'quant_id': fields.many2one('stock.quant', 'Quant'),  # 3
-        'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'), 
+        'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
         'result_package_id': fields.many2one('stock.quant.package', 'Container Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
         'date': fields.datetime('Date', required=True),
         'owner_id': fields.many2one('res.partner', 'Owner', help="Owner of the quants"),
@@ -3156,13 +3188,12 @@ class stock_pack_operation(osv.osv):
     }
 
     _defaults = {
-        'date': fields.date.context_today,        
+        'date': fields.date.context_today,
     }
-
 
     def _get_domain(self, cr, uid, ops, context=None):
         '''
-            Gives domain for different 
+            Gives domain for different
         '''
         res = []
         if ops.package_id:

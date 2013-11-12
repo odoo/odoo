@@ -793,12 +793,12 @@
                             </group>
                             <field name="pack_operation_ids" attrs="{'invisible': [('pack_operation_exist', '=', False)]}" context="{'default_owner_id': owner_id}">
                                 <tree editable="top">   
-                                    <field name="product_id"/>
-                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="product_id" on_change='product_id_change(product_id, product_uom_id, product_qty, context)'/>
+                                    <field name="product_uom_id" groups="product.group_uom" on_change='product_id_change(product_id, product_uom_id, product_qty, context)'/>
                                     <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                     <field name="package_id" groups="stock.group_tracking_lot"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
-                                    <field name="product_qty" attrs="{'required': [('product_id', '!=', False)]}"/>
+                                    <field name="product_qty" attrs="{'required': [('product_id', '!=', False)]}" on_change='product_id_change(product_id, product_uom_id, product_qty, context)'/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                 </tree>
                             </field>
