@@ -22,7 +22,13 @@
         <field name="view_id" ref="view_crm_meeting_type_tree"/>
     </record>
 
-    <menuitem id="menu_crm_meeting_type" parent="base.menu_calendar_configuration" sequence="1"
+    <menuitem id="base.menu_calendar_configuration" name="Calendar"
+            parent="base.menu_base_config" sequence="50" groups="base.group_no_one"/>
+    
+   <!--<menuitem id="menu_events" name="Events" parent="base.menu_calendar_configuration"
+                sequence="15" action="action_view_event"/>-->
+   
+    <menuitem id="menu_crm_meeting_type" parent="base.menu_calendar_configuration" 
         action="action_crm_meeting_type" groups="base.group_no_one"/>
 
     <!-- CRM Meetings Form View -->
@@ -33,10 +39,8 @@
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
                 <header>
-                    <button name="do_accept" type="object"
-                        string="Accept" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','accepted')]}"/>
-                    <button name="do_decline" type="object"
-                        string="Decline" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','declined')]}"/>
+                    <button name="do_accept" type="object" string="Accept" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','accepted')]}"/>
+                    <button name="do_decline" type="object" string="Decline" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','declined')]}"/>
                     <field name="state" invisible="True"/>
                 </header>
                 <sheet>
@@ -116,14 +120,14 @@
                                             attrs="{'invisible': [('rrule_type','!=','monthly')]}"/>
     
                                         <div attrs="{'invisible': [('rrule_type','!=','monthly')]}">
-                                            <field name="select1"/>
+                                            <field name="month_by"/>
                                             <field name="day"
-                                                attrs="{'required': [('select1','=','date'), ('rrule_type','=','monthly')],
-                                                    'invisible': [('select1','=','day')]}"/>
+                                                attrs="{'required': [('month_by','=','date'), ('rrule_type','=','monthly')],
+                                                    'invisible': [('month_by','=','day')]}"/>
                                             <field name="byday" string="The"
-                                                attrs="{'required': [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible': [('select1','=','date')]}"/>
+                                                attrs="{'required': [('month_by','=','day'), ('rrule_type','=','monthly')], 'invisible': [('month_by','=','date')]}"/>
                                             <field name="week_list" nolabel="1"
-                                                attrs="{'required': [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible': [('select1','=','date')]}"/>
+                                                attrs="{'required': [('month_by','=','day'), ('rrule_type','=','monthly')], 'invisible': [('month_by','=','date')]}"/>
                                         </div>
                                     </group>
                                 </group>
@@ -148,23 +152,11 @@
                                     <field name="email"/>
                                     <field name="rsvp"/>
                                     <field name="cutype"/> 
-                                    <button name="do_tentative"
-                                        states="needs-action,declined,accepted"
-                                        string="Uncertain" type="object"
-                                        icon="terp-crm" />
-                                    <button name="do_accept" string="Accept"
-                                        states="needs-action,tentative,declined"
-                                        type="object" icon="gtk-apply"/>
-                                    <button name="do_decline" string="Decline"
-                                        states="needs-action,tentative,accepted"
-                                        type="object" icon="gtk-cancel"/>
+                                    <button name="do_tentative" states="needs-action,declined,accepted" string="Uncertain" type="object" icon="terp-crm" />
+                                    <button name="do_accept" string="Accept" states="needs-action,tentative,declined" type="object" icon="gtk-apply"/>
+                                    <button name="do_decline" string="Decline" states="needs-action,tentative,accepted" type="object" icon="gtk-cancel"/>
                                 </tree>
                             </field>
-                        </page>
-                        <page string="DEBUG" groups="base.group_no_one">
-                                <field name="rrule" invisible="0" readonly="0" />
-                                <field name="recurrent_id_date" invisible="0" />
-                                <field name="recurrent_id" invisible="0" />
                         </page>
                     </notebook>
                 </sheet>

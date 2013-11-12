@@ -95,10 +95,9 @@ def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
         if len(res) >= 2:
             real_id = res[0]
             if with_date:
-                real_date = time.strftime("%Y-%m-%d %H:%M:%S", \
-                                 time.strptime(res[1], "%Y%m%d%H%M%S"))
+                real_date = time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(res[1], "%Y%m%d%H%M%S"))
                 start = datetime.strptime(real_date, "%Y-%m-%d %H:%M:%S")
-                end = start + timedelta(hours=with_date)
+                end = start + timedelta(hours=with_date) 
                 return (int(real_id), real_date, end.strftime("%Y-%m-%d %H:%M:%S"))
             return int(real_id)
 
@@ -115,19 +114,20 @@ def get_real_ids(ids):
         return res
 
 def real_id2base_calendar_id(real_id, recurrent_date):
-    """
-    Convert a real event id (type int) into a "virtual/recurring event id" (type string).
-    E.g. real event id is 1 and recurrent_date is set to 01-12-2009 10:00:00, so
-    it will return 1-20091201100000.
-    @param real_id: real event id
-    @param recurrent_date: real event recurrent date
-    @return: string containing the real id and the recurrent date
-    """
-    if real_id and recurrent_date:
-        recurrent_date = time.strftime("%Y%m%d%H%M%S", \
-                            time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
-        return '%d-%s' % (real_id, recurrent_date)
-    return real_id
+#     """
+#     Convert a real event id (type int) into a "virtual/recurring event id" (type string).
+#     E.g. real event id is 1 and recurrent_date is set to 01-12-2009 10:00:00, so
+#     it will return 1-20091201100000.
+#     @param real_id: real event id
+#     @param recurrent_date: real event recurrent date
+#     @return: string containing the real id and the recurrent date
+#     """
+#     if real_id and recurrent_date:
+#         recurrent_date = time.strftime("%Y%m%d%H%M%S", time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
+#         return '%d-%s' % (real_id, recurrent_date)
+#     return real_id
+    raise  osv.except_osv(_('Warning!'), _('Methode removed ! :/ '))
+
 
 class calendar_attendee(osv.osv):
     """
@@ -208,7 +208,7 @@ class calendar_attendee(osv.osv):
     
     def onchange_partner_id(self, cr, uid, ids, partner_id,context=None):
         """
-        Make entry on email and availbility on change of partner_id field.
+        Make entry on email and availability on change of partner_id field.
         @param partner_id: changed value of partner id
         @return: dictionary of values which put value in email and availability fields
         """
@@ -253,17 +253,6 @@ class calendar_attendee(osv.osv):
             event.add('location').value = event_obj.location
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
-#         if event_obj.organizer:
-#             event_org = event.add('organizer')
-#             event_org.params['CN'] = [event_obj.organizer]
-#             event_org.value = 'MAILTO:' + (event_obj.organizer)
-#         elif event_obj.user_id or event_obj.organizer_id:
-#             event_org = event.add('organizer')
-#             organizer = event_obj.organizer_id
-#             if not organizer:
-#                 organizer = event_obj.user_id
-#             event_org.params['CN'] = [organizer.name]
-#             event_org.value = 'MAILTO:' + (organizer.email or organizer.name)
 
         #"TO DO == replace by alarm ids"
         
@@ -686,6 +675,7 @@ class res_partner(osv.osv):
             self.write(cr, uid, [alarm.id], update_vals)
         return True
 
+
 class calendar_alarm(osv.osv):
     _name = 'calendar.alarm'
     _description = 'Event alarm'
@@ -701,37 +691,6 @@ class calendar_alarm(osv.osv):
         'duration': 1,
         'interval': 'hours',
     }
-# 
-#     def _get_date(self, cr, uid, ids, name, arg, context=None):
-#         """
-#         Get Date
-#         @param self: The object pointer
-#         @param cr: the current row, from the database cursor,
-#         @param uid: the current user's ID for security checks,
-#         @param ids: List of calendar todo's IDs.
-#         @param args: list of tuples of form [(‘name_of_the_field', ‘operator', value), ...].
-#         @param context: A standard dictionary for contextual values
-#         """
-# 
-#         res = {}
-#         for event in self.browse(cr, uid, ids, context=context):
-#             res[event.id] = event.date_start
-#         return res
-# 
-#     def _set_date(self, cr, uid, id, name, value, arg, context=None):
-#         """
-#         Set Date
-#         @param self: The object pointer
-#         @param cr: the current row, from the database cursor,
-#         @param uid: the current user's ID for security checks,
-#         @param id: calendar's ID.
-#         @param value: Get Value
-#         @param args: list of tuples of form [('name_of_the_field', 'operator', value), ...].
-#         @param context: A standard dictionary for contextual values
-#         """
-# 
-#         assert name == 'date'
-#         return self.write(cr, uid, id, { 'date_start': value }, context=context)
 
 
 class ir_values(osv.osv):
@@ -760,12 +719,12 @@ class ir_values(osv.osv):
         return super(ir_values, self).get(cr, uid, key, key2, new_model, \
                          meta, context, res_id_req, without_user, key2_req)
 
+
 class ir_model(osv.osv):
 
     _inherit = 'ir.model'
 
-    def read(self, cr, uid, ids, fields=None, context=None,
-            load='_classic_read'):
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
                 
         new_ids = isinstance(ids, (str, int, long)) and [ids] or ids
         if context is None:

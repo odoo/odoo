@@ -2,12 +2,12 @@
 <template>
     <t t-name="many2manyattendee">
         <t t-set="i" t-value="0"/>
-        <t t-foreach="elements" t-as="el">
-            <span class="oe_tag" t-att-data-index="i">
-                <a t-attf-class="oe_invitation #{el[2]}"/>
-                <t t-esc="el[1]"/>
-            </span>
-        <t t-set="i" t-value="i + 1"/>
+            <t t-foreach="elements" t-as="el">
+                <span class="oe_tag" t-att-data-index="i">
+                    <a t-attf-class="oe_invitation #{el[2]}"/>
+                    <t t-esc="el[1]"/>
+                </span>
+            <t t-set="i" t-value="i + 1"/>
         </t>
     </t>
     <t t-name="invitation_view">

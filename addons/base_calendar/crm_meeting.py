@@ -24,12 +24,14 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
-from base_calendar import get_real_ids, base_calendar_id2real_id
+from base_calendar import get_real_ids, base_calendar_id2real_id,get_recurrent_dates,real_id2base_calendar_id
+from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta, date
 import pytz
 from openerp import tools, SUPERUSER_ID
 import openerp
 import hashlib
+import re
 
 import ipdb;
 
@@ -52,47 +54,66 @@ class crm_meeting(osv.Model):
     _order = "id desc"
     _inherit = ["mail.thread", "ir.needaction_mixin"]
     
-    def _get_recurrence_end_date(self, cr, uid, ids, name, arg, context=None):
-        """Get a good estimate of the end of the timespan concerned by an event.
-
-        This means we need to concider the last event of a recurrency, and that we
-        add its duration. For simple events (no rrule), the date_deadline is sufficient.
-
-        This value is stored in database and will help select events that should be
-        concidered candidate for display when filters are made upon dates (typically
-        the agenda filter will make one-month, one-week, one-day timespan searches).
-
-        """
-
-        if not context:
-            context = {}
-            
-        events = self.read(cr, uid, ids, ['rrule', 'exdate', 'exrule', 'duration', 'date_deadline', 'date', 'vtimezone'], context=context)
-        result = {}
-        for event in events:
-
-            duration = timedelta(hours=event['duration'])
-
-            if event['rrule']:
-                all_dates = get_recurrent_dates(
-                    event['rrule'], event['date'], event['exdate'], event['vtimezone'],
-                    event['exrule'], context=context)
-                if not event['vtimezone'] and not context.get('tz'):
-                    ## We are called by the server probably at update time (no
-                    ## context), and no vtimezone was recorded, so we have no
-                    ## idea of possible client timezone so we have a possible
-                    ## one-day-of error when applying RRULEs on floating dates.
-                    ## Let's add a day.
-                    duration += timedelta(days=1)
-                result[event['id']] = (all_dates[-1] + duration).astimezone(pytz.UTC).strftime("%Y-%m-%d %H:%M:%S") \
-                    if all_dates else None
-            else:
-                result[event['id']] = event['date_deadline']
-
-        return result
+#     def _get_recurrence_end_date(self, cr, uid, ids, name, arg, context=None):
+#         """Get a good estimate of the end of the timespan concerned by an event.
+#  
+#         This means we need to concider the last event of a recurrency, and that we
+#         add its duration. For simple events (no rrule), the date_deadline is sufficient.
+#  
+#         This value is stored in database and will help select events that should be
+#         concidered candidate for display when filters are made upon dates (typically
+#         the agenda filter will make one-month, one-week, one-day timespan searches).
+#  
+#         """
+#  
+#         if not context:
+#             context = {}
+#              
+#         events = self.read(cr, uid, ids, ['rrule', 'exdate', 'exrule', 'duration', 'date_deadline', 'date', 'vtimezone'], context=context)
+#         result = {}
+#         for event in events:
+#  
+#             duration = timedelta(hours=event['duration'])
+#  
+#             if event['rrule']:
+#                 all_dates = get_recurrent_dates(event['rrule'], event['date'], event['exdate'], 
+#                                                 event['vtimezone'], event['exrule'], context=context)
+#                 if not event['vtimezone'] and not context.get('tz'):
+#                     ## We are called by the server probably at update time (no
+#                     ## context), and no vtimezone was recorded, so we have no
+#                     ## idea of possible client timezone so we have a possible
+#                     ## one-day-of error when applying RRULEs on floating dates.
+#                     ## Let's add a day.
+#                     duration += timedelta(days=1)
+#                 result[event['id']] = (all_dates[-1] + duration).astimezone(pytz.UTC).strftime("%Y-%m-%d %H:%M:%S") \
+#                     if all_dates else None
+#             else:
+#                 result[event['id']] = event['date_deadline']
+#  
+#         return result
    
-    def _find_user_attendee(self, cr, uid, meeting_ids, context=None):
-        attendee_pool = self.pool.get('calendar.attendee')
+    def _get_recurrency_end_date(self, data, context=None): #TODO : Check with function _get_recurrence_end_date ! 
+        if data.get('recurrency') and data.get('end_type') in ('count', unicode('count')):
+            data_date_deadline = datetime.strptime(data.get('date_deadline'), '%Y-%m-%d %H:%M:%S')
+            if data.get('rrule_type') in ('daily', unicode('count')):
+                rel_date = relativedelta(days=data.get('count')+1)
+            elif data.get('rrule_type') in ('weekly', unicode('weekly')):
+                rel_date = relativedelta(days=(data.get('count')+1)*7) 
+            elif data.get('rrule_type') in ('monthly', unicode('monthly')):
+                rel_date = relativedelta(months=data.get('count')+1)
+            elif data.get('rrule_type') in ('yearly', unicode('yearly')):
+                rel_date = relativedelta(years=data.get('count')+1)            
+            end_date = data_date_deadline + rel_date
+            print "rel date : ",rel_date," + deadline : ",data_date_deadline, " = ",end_date
+        else:
+            end_date = data.get('end_date')
+            print "End date : ", end_date
+        return end_date
+    
+    def _find_my_attendee(self, cr, uid, meeting_ids, context=None):
+        """
+            Return the first attendee where the user connected has been invited from all the meetings in parameters
+        """
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for meeting_id in meeting_ids:
             for attendee in self.browse(cr,uid,meeting_id,context).attendee_ids:
@@ -100,7 +121,7 @@ class crm_meeting(osv.Model):
                     return attendee
         return False
     
-    def _compute_time(self, cr, uid, meeting_id, context=None):
+    def _get_display_time(self, cr, uid, meeting_id, context=None):
         """
             Return date and time (from to from) based on duration with timezone in string :
             eg.
@@ -114,28 +135,28 @@ class crm_meeting(osv.Model):
         date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(meeting.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
         date_deadline = fields.datetime.context_timestamp(cr, uid, datetime.strptime(meeting.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
         event_date = date.strftime('%B-%d-%Y')
-        event_time = date.strftime('%H-%M')
+        display_time = date.strftime('%H-%M')
         if meeting.allday:
             time =  _("AllDay , %s") % (event_date)
         elif meeting.duration < 24:
             duration =  date + timedelta(hours= meeting.duration)
-            time = ("%s at ( %s To %s) (%s)") % (event_date, event_time, duration.strftime('%H-%M'), tz)
+            time = ("%s at ( %s To %s) (%s)") % (event_date, display_time, duration.strftime('%H-%M'), tz)
         else :
-            time = ("%s at %s To\n %s at %s (%s)") % (event_date, event_time, date_deadline.strftime('%B-%d-%Y'), date_deadline.strftime('%H-%M'), tz)
+            time = ("%s at %s To\n %s at %s (%s)") % (event_date, display_time, date_deadline.strftime('%B-%d-%Y'), date_deadline.strftime('%H-%M'), tz)
         return time
     
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}
         for meeting_id in ids:
             res[meeting_id] = {}
-            attendee = self._find_user_attendee(cr, uid, [meeting_id], context)
+            attendee = self._find_my_attendee(cr, uid, [meeting_id], context)
             for field in fields:
                 if field == 'is_attendee':
                     res[meeting_id][field] = True if attendee else False
                 elif field == 'attendee_status':
                     res[meeting_id][field] = attendee.state if attendee else 'needs-action'
-                elif field == 'event_time':
-                    res[meeting_id][field] = self._compute_time(cr, uid, meeting_id, context=context)
+                elif field == 'display_time':
+                    res[meeting_id][field] = self._get_display_time(cr, uid, meeting_id, context=context)
         return res
       
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
@@ -155,12 +176,13 @@ class crm_meeting(osv.Model):
                 raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
             if data.count <= 0:
                 raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
-            data = self.browse(cr, uid, id, context=context)
-                        
-            if data.recurrency:
-                result[data.id] = self.compute_rule_string(data)
+           
+            data = self.read(cr, uid, id, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context)
+            event = data['id']
+            if data['recurrency']:
+                result[event] = self.compute_rule_string(data)
             else:
-                result[data.id] = ""
+                result[event] = ""
         return result
 
     def _rrule_write(self, obj, cr, uid, ids, field_name, field_value, args, context=None):
@@ -168,7 +190,7 @@ class crm_meeting(osv.Model):
         if field_value:
             data['recurrency'] = True
             for event in self.browse(cr, uid, ids, context=context):
-                rdate = rule_date or event.date
+                rdate = rule_date or event.date #TO CHECK :/
                 update_data = self._parse_rrule(field_value, dict(data), rdate)
                 data.update(update_data)
                 self.write(cr, uid, ids, data, context=context)
@@ -180,14 +202,13 @@ class crm_meeting(osv.Model):
     _columns = {
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Write Date', readonly=True),
-        'date_open': fields.datetime('Confirmed', readonly=True),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'state': fields.selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', size=16, readonly=True, track_visibility='onchange'),
+        #'state': fields.selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', size=16, readonly=True, track_visibility='onchange'),
+        
         # Meeting fields
         'name': fields.char('Meeting Subject', size=128, required=True, states={'done': [('readonly', True)]}),
         'is_attendee': fields.function(_compute, string='Attendee', type="boolean", multi='attendee'),
         'attendee_status': fields.function(_compute, string='Attendee Status', type="selection", multi='attendee'),
-        'event_time': fields.function(_compute, string='Event Time', type="char", multi='attendee'),
+        'display_time': fields.function(_compute, string='Event Time', type="char", multi='attendee'),
         
         # ---------------------
         # OLD CALENDAR_EVENT 
@@ -214,7 +235,7 @@ class crm_meeting(osv.Model):
         'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),
         'recurrent_id': fields.integer('Recurrent ID'),
         'recurrent_id_date': fields.datetime('Recurrent ID date'),
-        'recurrence_end_date': fields.function(_get_recurrence_end_date, type='datetime', store=True, string='Recurrence end date',priority=30),
+        #'recurrence_end_date': fields.function(_get_recurrence_end_date, type='datetime', store=True, string='Recurrence end date',priority=30),
         'vtimezone': fields.selection(_tz_get, size=64, string='Timezone'),
         'end_type' : fields.selection([('count', 'Number of repetitions'), ('end_date','End date')], 'Recurrence Termination'),
         'interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
@@ -226,22 +247,19 @@ class crm_meeting(osv.Model):
         'fr': fields.boolean('Fri'),
         'sa': fields.boolean('Sat'),
         'su': fields.boolean('Sun'),
-        'select1': fields.selection([('date', 'Date of month'),('day', 'Day of month')], 'Option'),
+        'month_by': fields.selection([('date', 'Date of month'),('day', 'Day of month')], 'Option'),
         'day': fields.integer('Date of month'),
         'week_list': fields.selection([('MO', 'Monday'),('TU', 'Tuesday'),('WE', 'Wednesday'),('TH', 'Thursday'),('FR', 'Friday'),('SA', 'Saturday'),('SU', 'Sunday')], 'Weekday'),
         'byday': fields.selection([('1', 'First'),('2', 'Second'),('3', 'Third'),('4', 'Fourth'),('5', 'Fifth'),('-1', 'Last')], 'By day'),
         'end_date': fields.date('Repeat Until'),
+        'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
-                
-        'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."),
 
         'categ_ids': fields.many2many('crm.meeting.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
-        
         'attendee_ids': fields.many2many('calendar.attendee', 'crmmeeting_attendee_rel', 'crmmeeting_id', 'attendee_id', 'Attendees'),
         'partner_ids': fields.many2many('res.partner', string='Attendees', states={'done': [('readonly', True)]}),
-        
         'alarm_ids': fields.many2many('calendar.alarm', string='Reminders'),
     }
     _defaults = {
@@ -252,7 +270,7 @@ class crm_meeting(osv.Model):
         'state': 'tentative',
         'class': 'public',
         'show_as': 'busy',
-        'select1': 'date',
+        'month_by': 'date',
         'interval': 1,
         'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid
@@ -293,10 +311,9 @@ class crm_meeting(osv.Model):
             user = self.pool.get('res.users').browse(cr, uid, uid)
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc
             start = pytz.utc.localize(start).astimezone(tz)     # convert start in user's timezone
-            start = start.replace(hour=0, minute=0, second=0)   # change start's time to 00:00:00
+            start = start.replace(hour=0, minute=0, second=0)   # remove time 
             start = start.astimezone(pytz.utc)                  # convert start back to utc
-            start_date = start.strftime("%Y-%m-%d %H:%M:%S")
-            value['date'] = start_date
+            value['date'] = start.strftime("%Y-%m-%d %H:%M:%S")
 
         if end_date and not duration:
             end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
@@ -325,8 +342,11 @@ class crm_meeting(osv.Model):
         if context is None:
             context = {}
         for event_id in ids:
+            r_ids_BROWSE = self.browse(cr,uid,[('recurrent_id','=',event_id)],context=context)
             cr.execute("select id from %s where recurrent_id=%%s" % (self._table), (event_id,))
             r_ids = map(lambda x: x[0], cr.fetchall())
+            print r_ids, '   vs   ', r_ids_BROWSE
+            ipdb.set_trace()
             self.unlink(cr, uid, r_ids, context=context)
         return True
 
@@ -362,9 +382,11 @@ class crm_meeting(osv.Model):
                     'attendee_ids': [(4, att_id)]
                 }, context=context)
                 new_attendees.append(att_id)
+                
+            #TODO : MOVE WRITE HERE... NOT IN FOR
+            
             if mail_to and current_user.email:
-                is_sent_mail = att_obj._send_mail(cr, uid, new_attendees, mail_to,
-                    email_from = current_user.email, context=context)
+                is_sent_mail = att_obj._send_mail(cr, uid, new_attendees, mail_to, email_from = current_user.email, context=context)
                 if is_sent_mail:
                     self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), context=context)
         return True
@@ -449,7 +471,9 @@ class crm_meeting(osv.Model):
 
                 if [True for item in new_pile if not item]:
                     continue
-                idval = real_id2base_calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
+                # idval = real_id2base_calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
+                idval = '%d-%s' % (data['id'], r_date.strftime("%Y%m%d%H%M%S"))
+    
                 result.append(idval)
 
         if isinstance(select, (str, int, long)):
@@ -469,18 +493,20 @@ class crm_meeting(osv.Model):
             weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
             if freq == 'weekly':
                 byday = map(lambda x: x.upper(), filter(lambda x: data.get(x) and x in weekdays, data))
+                #byday = map(lambda x: x.upper(),[data[day] for day in weekdays if data[day]]) 
+                
                 if byday:
                     return ';BYDAY=' + ','.join(byday)
             return ''
 
         def get_month_string(freq, data):
             if freq == 'monthly':
-                if data.get('select1')=='date' and (data.get('day') < 1 or data.get('day') > 31):
+                if data.get('month_by')=='date' and (data.get('day') < 1 or data.get('day') > 31):
                     raise osv.except_osv(_('Error!'), ("Please select a proper day of the month."))
 
-                if data.get('select1')=='day':
+                if data.get('month_by')=='day': #Eg : Second Monday of the month
                     return ';BYDAY=' + data.get('byday') + data.get('week_list')
-                elif data.get('select1')=='date':
+                elif data.get('month_by')=='date': #Eg : 16th of the month
                     return ';BYMONTHDAY=' + str(data.get('day'))
             return ''
 
@@ -491,7 +517,7 @@ class crm_meeting(osv.Model):
             return (data.get('end_type') == 'count' and (';COUNT=' + str(data.get('count'))) or '') +\
                              ((data.get('end_date_new') and data.get('end_type') == 'end_date' and (';UNTIL=' + data.get('end_date_new'))) or '')
 
-        freq = data.get('rrule_type', False)
+        freq = data.get('rrule_type', False) #day/week/month/year
         res = ''
         if freq:
             interval_srting = data.get('interval') and (';INTERVAL=' + str(data.get('interval'))) or ''
@@ -505,7 +531,7 @@ class crm_meeting(osv.Model):
             'recurrency' : False,
             'end_date' : False,
             'rrule_type' : False,
-            'select1' : False,
+            'month_by' : False,
             'interval' : 0,
             'count' : False,
             'end_type' : False,
@@ -542,12 +568,12 @@ class crm_meeting(osv.Model):
         if r._bynweekday:
             data['week_list'] = day_list[r._bynweekday[0][0]].upper()
             data['byday'] = r._bynweekday[0][1]
-            data['select1'] = 'day'
+            data['month_by'] = 'day'
             data['rrule_type'] = 'monthly'
 
         if r._bymonthday:
             data['day'] = r._bymonthday[0]
-            data['select1'] = 'date'
+            data['month_by'] = 'date'
             data['rrule_type'] = 'monthly'
 
         #repeat yearly but for openerp it's monthly, take same information as monthly but interval is 12 times
@@ -565,21 +591,21 @@ class crm_meeting(osv.Model):
             data['end_type'] = 'end_date'
         return data
 
-    def _get_data(self, cr, uid, id, context=None):
-        return self.read(cr, uid, id,['date', 'date_deadline'])
+    #def _get_data(self, cr, uid, id, context=None):
+    #    return self.read(cr, uid, id,['date', 'date_deadline'])
 
-    def need_to_update(self, event_id, vals):
-        split_id = str(event_id).split("-")
-        if len(split_id) < 2:
-            return False
-        else:
-            date_start = vals.get('date', '')
-            try:
-                date_start = datetime.strptime(date_start, '%Y-%m-%d %H:%M:%S').strftime("%Y%m%d%H%M%S")
-                return date_start == split_id[1]
-            except Exception:
-                return True
-    
+#     def need_to_update(self, event_id, vals):
+#         split_id = str(event_id).split("-")
+#         if len(split_id) < 2:
+#             return False
+#         else:
+#             date_start = vals.get('date', '')
+#             try:
+#                 date_start = datetime.strptime(date_start, '%Y-%m-%d %H:%M:%S').strftime("%Y%m%d%H%M%S")
+#                 return date_start == split_id[1]
+#             except Exception:
+#                 return True
+        
     def message_get_subscription_data(self, cr, uid, ids, user_pid=None, context=None):
         res = {}
         for virtual_id in ids:
@@ -624,10 +650,10 @@ class crm_meeting(osv.Model):
     # shows events of the day for this user
    
     def _needaction_domain_get(self, cr, uid, context=None):
-        return [('date', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')), ('date_deadline', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')), ('user_id', '=', uid)]
+        print 'IN _needaction_domain_get'
+        return [('date', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')), ('end_date', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')), ('user_id', '=', uid)]
 
-    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
-                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         if isinstance(thread_id, str):
             thread_id = get_real_ids(thread_id)
         if context.get('default_date'):
@@ -636,15 +662,35 @@ class crm_meeting(osv.Model):
 
     def do_decline(self, cr, uid, ids, context=None):
          attendee_pool = self.pool.get('calendar.attendee')
-         attendee = self._find_user_attendee(cr, uid, ids, context)
+         attendee = self._find_my_attendee(cr, uid, ids, context)
          return attendee_pool.do_decline(cr, uid, [attendee.id], context=context)
 
     def do_accept(self, cr, uid, ids, context=None):
         attendee_pool = self.pool.get('calendar.attendee')
-        attendee = self._find_user_attendee(cr, uid, ids, context)
+        attendee = self._find_my_attendee(cr, uid, ids, context)
         return attendee_pool.do_accept(cr, uid, [attendee.id], context=context)
+    
+    def do_tentative(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as Tentative
+        @param ids: List of Event IDs
+        """
+        return self.write(cr, uid, ids, {'state': 'tentative'}, context)
+
+    def do_cancel(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as Tentative
+        @param ids: List of Event IDs
+        """
+        return self.write(cr, uid, ids, {'state': 'cancelled'}, context)
+
+    def do_confirm(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as Tentative
+        @param ids: List of Event IDs
+        @param context: A standard dictionary for contextual values
+        """
+        return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
+        #Used for view in controller 
         invitation = {'meeting':{}, 'attendee': [], 'logo': ''}
         attendee_pool = self.pool.get('calendar.attendee')
         company_logo = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.logo
@@ -653,7 +699,7 @@ class crm_meeting(osv.Model):
                 'event':meeting.name,
                 'organizer': meeting.organizer,
                 'where': meeting.location,
-                'when':meeting.event_time
+                'when':meeting.display_time
         }
         invitation['logo'] = company_logo.replace('\n','\\n') if company_logo else ''
         for attendee in meeting.attendee_ids:
@@ -661,6 +707,7 @@ class crm_meeting(osv.Model):
         return invitation
 
     def get_interval(self, cr, uid, ids, date, interval, context=None):
+        #Function used only in crm_meeting_data.xml for email template
         date = datetime.strptime(date, DEFAULT_SERVER_DATETIME_FORMAT)
         if interval == 'day':
             res = str(date.day)
@@ -672,21 +719,6 @@ class crm_meeting(osv.Model):
             res = date.strftime('%I:%M %p')
         return res
     
-    def _set_recurrency_end_date(self, data, context=None):
-        end_date = data.get('end_date')
-        if data.get('recurrency') and data.get('end_type') in ('count', unicode('count')):
-            data_date_deadline = datetime.strptime(data.get('date_deadline'), '%Y-%m-%d %H:%M:%S')
-            if data.get('rrule_type') in ('daily', unicode('count')):
-                rel_date = relativedelta(days=data.get('count')+1)
-            elif data.get('rrule_type') in ('weekly', unicode('weekly')):
-                rel_date = relativedelta(days=(data.get('count')+1)*7)
-            elif data.get('rrule_type') in ('monthly', unicode('monthly')):
-                rel_date = relativedelta(months=data.get('count')+1)
-            elif data.get('rrule_type') in ('yearly', unicode('yearly')):
-                rel_date = relativedelta(years=data.get('count')+1)
-            end_date = data_date_deadline + rel_date
-        return end_date
-
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
         print 'IN SEARCH',args
         
@@ -697,20 +729,20 @@ class crm_meeting(osv.Model):
             partner_id = self.pool.get('res.users').browse(cr, uid, uid, context).partner_id.id
             args += ['|', ('partner_ids', 'in', [partner_id]), ('user_id', '=', uid)]
         
-        
         new_args = []    
         for arg in args:
             new_arg = arg
             if arg[0] in ('date_deadline', unicode('date_deadline')):
                 if context.get('virtual_id', True):
 #                     new_args += ['|','&',('recurrency','=',1),('end_date', arg[1], arg[2])]
-                    new_args += ['|','&',('recurrency','=',1),('recurrence_end_date', arg[1], arg[2])]
+                    new_args += ['|','&',('recurrency','=',1),('date_deadline', arg[1], arg[2])]
             elif arg[0] == "id":
                 new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
             new_args.append(new_arg)
         #offset, limit and count must be treated separately as we may need to deal with virtual ids
-        
+        print 'AFTER SEARCH',args
+         
         res = super(crm_meeting,self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
         
         if context.get('virtual_id', True):
@@ -729,12 +761,9 @@ class crm_meeting(osv.Model):
         default['attendee_ids'] = False
         
         res = super(crm_meeting, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
-        #alarm_obj = self.pool.get('res.alarm')
-        #alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
         return res        
 
     def write(self, cr, uid, ids, values, context=None):
-        """ Override to add case management: open/close dates """
                 
         def _only_changes_to_apply_on_real_ids(field_names):
             ''' return True if changes are only to be made on the real ids'''
@@ -748,9 +777,7 @@ class crm_meeting(osv.Model):
             ids = [ids]
         res = False
                 
-        if values.get('state')and values.get('state') == 'open':
-            values['date_open'] = fields.datetime.now()
-            
+          
          # Special write of complex IDS
         for event_id in ids[:]:
             if len(str(event_id).split('-')) == 1:
@@ -761,7 +788,7 @@ class crm_meeting(osv.Model):
             # if we are setting the recurrency flag to False or if we are only changing fields that
             # should be only updated on the real ID and not on the virtual (like message_follower_ids):
             # then set real ids to be updated.
-            if not vals.get('recurrency', True) or _only_changes_to_apply_on_real_ids(vals.keys()):
+            if not values.get('recurrency', True) or _only_changes_to_apply_on_real_ids(values.keys()):
                 ids.append(real_event_id)
                 continue
 
@@ -770,7 +797,7 @@ class crm_meeting(osv.Model):
                                                 'rrule', 'duration', 'exdate'])
             if data.get('rrule'):
                 data.update(
-                    vals,
+                    values,
                     recurrent_id=real_event_id,
                     recurrent_id_date=data.get('date'),
                     rrule_type=False,
@@ -801,7 +828,7 @@ class crm_meeting(osv.Model):
         if values.get('recurrency', True) and values.get('end_type', 'count') in ('count', unicode('count')) and \
                 (values.get('rrule_type') or values.get('count') or values.get('date') or values.get('date_deadline')):
             for data in self.read(cr, uid, ids, ['date', 'date_deadline', 'recurrency', 'rrule_type', 'count', 'end_type'], context=context):
-                end_date = self._set_recurrency_end_date(data, context=context)
+                end_date = self._get_recurrency_end_date(data, context=context)
                 super(crm_meeting, self).write(cr, uid, [data['id']], {'end_date': end_date}, context=context)
 
         if values.get('partner_ids', False):
@@ -814,57 +841,26 @@ class crm_meeting(osv.Model):
         return res or True and False
 
     def create(self, cr, uid, vals, context=None):
+        print "Create",vals
+        
         if context is None:
             context = {}
-
+            
+        
         if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
 
-        vals['end_date'] = self._set_recurrency_end_date(vals, context=context)
+        vals['end_date'] = self._get_recurrency_end_date(vals, context=context)
         
         res = super(crm_meeting, self).create(cr, uid, vals, context)
         
-        #alarm_obj = self.pool.get('res.alarm')
+        alarm_obj = self.pool.get('res.alarm')
         #alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
         self.create_attendees(cr, uid, [res], context)
         return res
 
-    def do_tentative(self, cr, uid, ids, context=None, *args):
-        """ Makes event invitation as Tentative
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user's ID for security checks,
-        @param ids: List of Event IDs
-        @param *args: Get Tupple value
-        @param context: A standard dictionary for contextual values
-        """
-        return self.write(cr, uid, ids, {'state': 'tentative'}, context)
-
-    def do_cancel(self, cr, uid, ids, context=None, *args):
-        """ Makes event invitation as Tentative
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user's ID for security checks,
-        @param ids: List of Event IDs
-        @param *args: Get Tupple value
-        @param context: A standard dictionary for contextual values
-        """
-        return self.write(cr, uid, ids, {'state': 'cancelled'}, context)
-
-    def do_confirm(self, cr, uid, ids, context=None, *args):
-        """ Makes event invitation as Tentative
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user's ID for security checks,
-        @param ids: List of Event IDs
-        @param *args: Get Tupple value
-        @param context: A standard dictionary for contextual values
-        """
-        return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
-
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         print 'IN READ_GROUP',args
-        ipdb.set_trace()
         
         if not context:
             context = {}
@@ -918,7 +914,10 @@ class crm_meeting(osv.Model):
                     for d in get_recurrent_dates(
                         res['rrule'], res['date'], res['exdate'],
                         res['vtimezone'], res['exrule'], context=context)]
+                
                 if ls[1] not in recurrent_dates:
+                    print 'will raise'
+                    ipdb.set_trace()
                     raise KeyError(
                         'Virtual id %r is not valid, event %r can '
                         'not produce it.' % (base_calendar_id, real_id))

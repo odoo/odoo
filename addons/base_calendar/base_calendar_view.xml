@@ -191,19 +191,19 @@
                                 attrs="{'invisible' : [('rrule_type','!=','monthly')]}">
                                 <separator string="Choose day in the month where repeat the meeting" colspan="12"/>
                                 <group col="2" colspan="1">
-                                    <field name="select1"/>
+                                    <field name="month_by"/>
                                 </group>
                                 <group col="2" colspan="1">
                                     <field name="day"
-                                        attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')],
-                                            'invisible' : ['|', ('select1','=','day'), ('rrule_type','!=','monthly')]}"/>
+                                        attrs="{'required' : [('month_by','=','date'), ('rrule_type','=','monthly')],
+                                            'invisible' : ['|', ('month_by','=','day'), ('rrule_type','!=','monthly')]}"/>
                                 </group>
                                 <group col="3" colspan="1"
-                                    attrs="{'invisible' : ['|', ('select1','=','date'), ('rrule_type','!=','monthly')]}">
+                                    attrs="{'invisible' : ['|', ('month_by','=','date'), ('rrule_type','!=','monthly')]}">
                                     <field name="byday" string="The"
-                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')]}"/>
-                                    <field name="week_list" nolabel="1"
-                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')]}"/>
+                                        attrs="{'required' : [('month_by','=','day'), ('rrule_type','=','monthly')]}"/>
+                                    <field name="week_list" nolabel="1" 
+                                        attrs="{'required' : [('month_by','=','day'), ('rrule_type','=','monthly')]}"/>
                                 </group>
                             </group>
                         </group>
