@@ -218,7 +218,7 @@
     <!-- List view of products -->
 
     <template id="list_view" inherit_option_id="website_sale.products" name="List View">
-        <xpath expr="//div[@id='products_grid']/table" position="replace">
+        <xpath expr="//div[@id='products_grid']//table" position="replace">
           <div class="row">
             <t t-set="products" t-value="Ecommerce.get_products(product_ids)"/>
             <t t-foreach="products" t-as="product">
