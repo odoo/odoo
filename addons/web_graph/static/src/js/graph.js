@@ -67,8 +67,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
         });
 
         this.chart_view.set_measure(this.measure);
-        this.pivot_table.appendTo('.graph_pivot');
-        this.chart_view.appendTo('.graph_chart');
+        this.pivot_table.appendTo('.graph_main_content');
+        this.chart_view.appendTo('.graph_main_content');
         this.chart_view.hide();
         this.get_data().done(this.pivot_table.draw);
 
@@ -127,11 +127,11 @@ var ChartView = instance.web.Widget.extend({
     measure: null,
 
     show: function () {
-        $('.graph_chart').css('display', 'block');
+        this.$el.css('display', 'block');
     },
 
     hide: function () {
-        $('.graph_chart').css('display', 'none');
+        this.$el.css('display', 'none');
     },
 
     set_measure: function (measure) {
@@ -139,8 +139,8 @@ var ChartView = instance.web.Widget.extend({
     },
 
     draw: function (data, mode) {
-        $('.graph_chart').empty();
-        $('.graph_chart').append('<svg></svg>');
+        this.$el.empty();
+        this.$el.append('<svg></svg>');
 
         switch (mode) {
             case 'bar_chart':
