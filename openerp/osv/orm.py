@@ -2129,7 +2129,7 @@ class BaseModel(object):
     # display_name, name_get, name_create, name_search
     #
 
-    @api.depends('*')
+    @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
     def _compute_display_name(self):
         name = self._rec_name
         if name in self._fields:

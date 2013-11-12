@@ -453,7 +453,9 @@ class Field(object):
                 method = getattr(type(self.model), self.compute)
             else:
                 method = self.compute
-            self.depends = getattr(method, '_depends', ())
+
+            depends = getattr(method, '_depends', ())
+            self.depends = depends(self.model) if callable(depends) else depends
 
         # put invalidation/recomputation triggers on dependencies
         for path in self.depends:

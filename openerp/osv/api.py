@@ -122,7 +122,13 @@ def depends(*args):
     """ Return a decorator that specifies the field dependencies of a "compute"
         method (for new-style function fields). Each argument must be a string
         that consists in a dot-separated sequence of field names.
+
+        One may also pass a single function as argument. In that case, the
+        dependencies are given by calling the function with the field's model.
     """
+    if args and callable(args[0]):
+        args = args[0]
+
     def decorate(method):
         method._depends = args
         return method
