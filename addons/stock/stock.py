@@ -968,6 +968,7 @@ class stock_picking(osv.osv):
         """
         quant_obj = self.pool.get("stock.quant")
         pack_obj = self.pool.get("stock.quant.package")
+        uom_obj = self.pool.get('product.uom')
         res = {} # Qty still to do from ops
         res2 = {} #what is left from moves
         resneg= {} #Number of negative quants to create for move/op
@@ -992,7 +993,7 @@ class stock_picking(osv.osv):
                 if ops.product_id:
                     # Match with moves
                     move_ids = ops.product_id.id in products_moves and filter(lambda x: res2[x.id] > 0, products_moves[ops.product_id.id]) or []
-                    qty_to_do = ops.product_qty
+                    qty_to_do = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, ops.product_qty, to_uom_id=ops.product_id.uom_id.id)
                     while qty_to_do > 0 and move_ids:
                         move = move_ids.pop()
                         if res2[move.id] > qty_to_do: 
@@ -3147,13 +3148,18 @@ class stock_pack_operation(osv.osv):
         return res
 
     def product_id_change(self, cr, uid, ids, product_id, product_uom_id, product_qty, context=None):
+        res = self.on_change_tests(cr, uid, ids, product_id, product_uom_id, product_qty, context=context)
+        if product_id and not product_uom_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            res['value']['product_uom_id'] = product.uom_id.id
+        return res
+
+    def on_change_tests(self, cr, uid, ids, product_id, product_uom_id, product_qty, context=None):
         res = {'value': {}}
         uom_obj = self.pool.get('product.uom')
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            if not product_uom_id:
-                product_uom_id = product.uom_id.id
-                res['value']['product_uom_id'] = product_uom_id
+            product_uom_id = product_uom_id or product.uom_id.id
             selected_uom = uom_obj.browse(cr, uid, product_uom_id, context=context)
             if selected_uom.category_id.id != product.uom_id.category_id.id:
                 res['warning'] = {
