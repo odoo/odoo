@@ -24,7 +24,17 @@
     <record id="event_product_product_public" model="ir.rule">
         <field name="name">Product linked to event: Public</field>
         <field name="model_id" ref="product.model_product_product"/>
-        <field name="domain_force">[("event_type_id", "!=", False), ('event_ticket_ids.event_id.website_published', '=', True)]</field>
+        <field name="domain_force">[('event_ticket_ids.event_id.website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="event_product_template_public" model="ir.rule">
+        <field name="name">Product template linked to event: Public</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="domain_force">[('product_variant_ids.event_ticket_ids.event_id.website_published', '=', True)]</field>
         <field name="groups" eval="[(4, ref('base.group_public'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
