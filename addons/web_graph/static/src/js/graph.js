@@ -22,59 +22,72 @@ instance.web_graph.GraphView = instance.web.View.extend({
     template: 'GraphView',
     display_name: _lt('Graph'),
     view_type: 'graph',
+    mode: 'pivot',   // pivot => display pivot table, chart => display chart
 
     events: {
         'click .graph_mode_selection li' : function (event) {
             event.preventDefault();
-            var self = this,
-                mode = event.target.attributes['data-mode'].nodeValue;
-            if (mode == 'data') {
-                this.chart_view.hide();
-                this.pivot_table.show();
+            var view_mode = event.target.attributes['data-mode'].nodeValue;
+            if (view_mode === 'data') {
+                this.mode = 'pivot';
             } else {
-                this.pivot_table.hide();
-                this.chart_view.set_mode(mode);
-                this.chart_view.show();
+                this.mode = 'chart';
+                this.chart_view.set_mode(view_mode);
             }
+            this.display_data();
         },
+    },
+
+    display_data : function () {
+        if (this.mode === 'pivot') {
+            this.chart_view.hide();
+            this.pivot_table.show();
+        } else {
+            this.pivot_table.hide();
+            this.chart_view.draw();
+            this.chart_view.show();
+        }
     },
 
     view_loading: function (fields_view_get) {
         var self = this;
-        var model = new instance.web.Model(fields_view_get.model, {group_by_no_leaf: true});
-        var measure = null;
-        var groupbys = []
+        this.model = new instance.web.Model(fields_view_get.model, {group_by_no_leaf: true});
+        this.measure = null;
+        this.groupbys = [];
 
         // get the default groupbys and measure defined in the field view
         _.each(fields_view_get.arch.children, function (field) {
             if ('name' in field.attrs) {
                 if ('operator' in field.attrs) {
-                    measure = field.attrs.name;
+                    self.measure = field.attrs.name;
                 } else {
-                    groupbys.push(field.attrs.name);
+                    self.groupbys.push(field.attrs.name);
                 }
             }
         });
 
-        return model.call('fields_get', []).then(function (fields) {
-            var view_fields = groupbys.concat(measure);
-            query_groups(model, view_fields, self.domain, groupbys).done(function (data) {
-                self.pivot_table = new PivotTable(data, fields, groupbys, measure);
-                self.chart_view = new ChartView(data, fields, groupbys, measure);
-                self.pivot_table.appendTo('.graph_main_content')
-                    .done(function () {
-                        self.pivot_table.draw();
-                    });
-                self.chart_view.appendTo('.graph_main_content')
-                    .done(function () {
-                        self.chart_view.hide();
-                    });
-            });
+        return this.model.call('fields_get', []).then(function (fields) {
+            self.pivot_table = new PivotTable(fields, self.groupbys, self.measure);
+            self.chart_view = new ChartView(fields, self.groupbys, self.measure);
+            self.pivot_table.appendTo('.graph_main_content');
+            self.chart_view.appendTo('.graph_main_content');
         });
     },
 
+    get_data: function () {
+        var view_fields = this.groupbys.concat(this.measure);
+        return query_groups(this.model, view_fields, this.domain, this.groupbys);
+    },
+
     do_search: function (domain, context, group_by) {
+        var self = this;
         this.domain = new instance.web.CompoundDomain(domain);
+        return this.get_data().done(function (data) {
+            self.pivot_table.set_data(data);
+            self.chart_view.set_data(data);
+            self.pivot_table.draw();
+            self.display_data();
+        });
     },
 
     do_show: function () {
@@ -90,12 +103,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
   * and ChartView widget.
   */
 var BasicDataView = instance.web.Widget.extend({
-    init: function (data, fields, groupby, measure) {
-        this.data = data;
+    init: function (fields, groupby, measure) {
         this.fields = fields;
         this.groupby = groupby;
         this.measure = measure;
         this.measure_label = measure ? fields[measure].string : 'Quantity';
+        this.data = [];
+    },
+
+    set_data : function (data) {
+        this.data = data;
     },
 
     show: function () {
@@ -104,6 +121,9 @@ var BasicDataView = instance.web.Widget.extend({
 
     hide: function () {
         this.$el.css('display', 'none');
+    },
+
+    draw: function() {
     },
 });
 
@@ -115,19 +135,19 @@ var PivotTable = BasicDataView.extend({
     template: 'pivot_table',
 
     draw: function () {
+        this.$el.empty();
         var self = this;
-        console.log("data",this.data);
 
-        var rows = '<tr><td class="graph_border">' + 
+        var rows = '<tr><td class="graph_border">' +
                     this.fields[this.groupby[0]].string +
-                    '</td><td class="graph_border">' + 
+                    '</td><td class="graph_border">' +
                     this.measure_label +
                     '</td></tr>';
         _.each(this.data, function (datapt) {
-            rows += '<tr><td class="graph_border">' + 
+            rows += '<tr><td class="graph_border">' +
                     datapt.attributes.value[1] +
-                    '</td><td>' + 
-                    datapt.attributes.aggregates[self.measure]+
+                    '</td><td>' +
+                    datapt.attributes.aggregates[self.measure] +
                     '</td></tr>';
         });
 
@@ -141,28 +161,21 @@ var PivotTable = BasicDataView.extend({
   */
 var ChartView = BasicDataView.extend({
     template: 'chart_view',
-    mode: 'bar_chart',
 
     set_mode: function (mode) {
-        this.mode = mode;
-        this.draw();
+        var render_functions = {
+                'bar_chart' : this.render_bar_chart,
+                'line_chart' : this.render_line_chart,
+                'pie_chart' : this.render_pie_chart,
+            };
+
+        this.render = render_functions[mode];
     },
 
     draw: function () {
         this.$el.empty();
         this.$el.append('<svg></svg>');
-
-        switch (this.mode) {
-            case 'bar_chart':
-                this.render_bar_chart();
-                break;
-            case 'line_chart':
-                this.render_line_chart();
-                break;
-            case 'pie_chart':
-                this.render_pie_chart();
-                break;
-        }
+        this.render();
     },
 
     format_data:  function (datapt) {
@@ -199,7 +212,6 @@ var ChartView = BasicDataView.extend({
     },
 
     render_line_chart: function () {
-
         var formatted_data = [{
                 key: this.measure_label,
                 values: _.map(this.data, this.format_data.bind(this))
