@@ -6,7 +6,7 @@
     <!-- Layout add nav and footer -->
     <template id="footer_custom" inherit_id="website.layout" name="Footer Partners Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/partners/">Partners</a></li>
+            <li><a href="/partners/">Partners</a></li>
         </xpath>
     </template>
 
@@ -52,7 +52,7 @@
                             <t t-call="website.pager">
                                <t t-set="classname">pull-left</t>
                             </t>
-                            <form t-action="/partners/" method="get" class="navbar-search pull-right pagination form-inline">
+                            <form action="/partners/" method="get" class="navbar-search pull-right pagination form-inline">
                                 <div class="form-group">
                                     <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="name_search"/>
                                 </div>

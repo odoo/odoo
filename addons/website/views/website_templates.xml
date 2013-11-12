@@ -147,13 +147,13 @@
                                         <div class="col-md-3" name="product">
                                             <h4>Our products &amp; Services</h4>
                                             <ul class="list-unstyled" name="products">
-                                                <li><a t-href="/">Home</a></li>
+                                                <li><a href="/">Home</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-md-3" name="info">
                                             <h4 name="info_title">Connect with us</h4>
                                             <ul class="list-unstyled">
-                                                <li><a t-href="/page/website.contactus">Contact us</a></li>
+                                                <li><a href="/page/website.contactus">Contact us</a></li>
                                             </ul>
                                             <ul class="list-unstyled">
                                                 <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
@@ -209,7 +209,7 @@
                                         <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                     </div>
                                     <div class="pull-left text-muted">
-                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a t-href="/sitemap">Sitemap</a>
+                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
                                     </div>
                                 </div>
                             </footer>
@@ -366,7 +366,7 @@
                     <div class="well mt32">
                         <p>This page does not exists, but you can create it as you are administrator of this site.</p>
                         <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a>
-                        <span class="text-muted">or</span> <a t-href="/sitemap">Search a Page</a>
+                        <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
                     </div>
                     <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
                 </div>
@@ -381,8 +381,8 @@
                         </p>
                         <p>Maybe you were looking for one of these popular pages ?</p>
                         <ul>
-                            <li><a t-href="/">Homepage</a></li>
-                            <li><a t-href="/page/website.contactus/">Contact Us</a></li>
+                            <li><a href="/">Homepage</a></li>
+                            <li><a href="/page/website.contactus/">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -420,8 +420,8 @@
                     </p>
                     <pre t-if="editable" t-esc="error"/>
                     <ul>
-                        <li><a t-href="/">Homepage</a></li>
-                        <li><a t-href="/page/website.contactus/">Contact Us</a></li>
+                        <li><a href="/">Homepage</a></li>
+                        <li><a href="/page/website.contactus/">Contact Us</a></li>
                     </ul>
                 </div>
               </div>
