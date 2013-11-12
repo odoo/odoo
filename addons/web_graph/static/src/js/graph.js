@@ -10,6 +10,7 @@ openerp.web_graph = function (instance) {
 
 var _lt = instance.web._lt;
 var _t = instance.web._t;
+var QWeb = instance.web.qweb;
 
 instance.web.views.add('graph', 'instance.web_graph.GraphView');
 
@@ -94,6 +95,7 @@ var BasicDataView = instance.web.Widget.extend({
         this.fields = fields;
         this.groupby = groupby;
         this.measure = measure;
+        this.measure_label = measure ? fields[measure].string : 'Quantity';
     },
 
     show: function () {
@@ -113,7 +115,23 @@ var PivotTable = BasicDataView.extend({
     template: 'pivot_table',
 
     draw: function () {
-        console.log('data',this.data);
+        var self = this;
+        console.log("data",this.data);
+
+        var rows = '<tr><td class="graph_border">' + 
+                    this.fields[this.groupby[0]].string +
+                    '</td><td class="graph_border">' + 
+                    this.measure_label +
+                    '</td></tr>';
+        _.each(this.data, function (datapt) {
+            rows += '<tr><td class="graph_border">' + 
+                    datapt.attributes.value[1] +
+                    '</td><td>' + 
+                    datapt.attributes.aggregates[self.measure]+
+                    '</td></tr>';
+        });
+
+        this.$el.append(rows);
     },
 });
 
@@ -181,10 +199,9 @@ var ChartView = BasicDataView.extend({
     },
 
     render_line_chart: function () {
-        var measure_label = (this.measure) ? this.measure : 'Quantity';
 
         var formatted_data = [{
-                key: measure_label,
+                key: this.measure_label,
                 values: _.map(this.data, this.format_data.bind(this))
             }];
 
