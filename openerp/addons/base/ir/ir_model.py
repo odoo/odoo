@@ -193,6 +193,7 @@ class ir_model(osv.osv):
                 select=vals.get('select_level', '0'),
                 update_custom_fields=True)
             self.pool[vals['model']]._auto_init(cr, ctx)
+            self.pool[vals['model']]._auto_end(cr, ctx) # actually create FKs!
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
@@ -352,6 +353,7 @@ class ir_model_fields(osv.osv):
                     select=vals.get('select_level', '0'),
                     update_custom_fields=True)
                 self.pool[vals['model']]._auto_init(cr, ctx)
+                self.pool[vals['model']]._auto_end(cr, ctx) # actually create FKs!
                 openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
@@ -466,6 +468,7 @@ class ir_model_fields(osv.osv):
                 for col_name, col_prop, val in patch_struct[1]:
                     setattr(obj._columns[col_name], col_prop, val)
                 obj._auto_init(cr, ctx)
+                obj._auto_end(cr, ctx) # actually create FKs!
             openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 

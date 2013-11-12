@@ -637,3 +637,322 @@ MSOFFICE_3 = """<div>
 
 MSOFFICE_3_IN = ['I saw your boss yesterday']
 MSOFFICE_3_OUT = ['I noticed you recently downloaded OpenERP.', 'You indicated that you wish', 'Belgium: +32.81.81.37.00']
+
+
+# ------------------------------------------------------------
+# Test cases coming from bugs
+# ------------------------------------------------------------
+
+# bug: read more not apparent, strange message in read more span
+BUG1 = """<pre>Hi Migration Team,
+
+Paragraph 1, blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah.
+
+Paragraph 2, blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah.
+
+Paragraph 3, blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+blah blah blah blah blah blah blah blah.
+
+Thanks.
+
+Regards,
+
+-- 
+Olivier Laurent
+Migration Manager
+OpenERP SA
+Chaussée de Namur, 40
+B-1367 Gérompont
+Tel: +32.81.81.37.00
+Web: http://www.openerp.com</pre>"""
+
+BUG_1_IN = [
+    'Hi Migration Team',
+    'Paragraph 1'
+]
+BUG_1_OUT = [
+    'Olivier Laurent',
+    'Chaussée de Namur',
+    '81.81.37.00',
+    'openerp.com',
+]
+
+
+BUG2 = """
+<div>
+    <br>
+    <div class="moz-forward-container"><br>
+      <br>
+      -------- Original Message --------
+      <table class="moz-email-headers-table" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <th nowrap="" valign="BASELINE" align="RIGHT">Subject:
+            </th>
+            <td>Fwd: TR: OpenERP S.A. Payment Reminder</td>
+          </tr>
+          <tr>
+            <th nowrap="" valign="BASELINE" align="RIGHT">Date: </th>
+            <td>Wed, 16 Oct 2013 14:11:13 +0200</td>
+          </tr>
+          <tr>
+            <th nowrap="" valign="BASELINE" align="RIGHT">From: </th>
+            <td>Christine Herrmann <a class="moz-txt-link-rfc2396E" href="mailto:che@openerp.com">&lt;che@openerp.com&gt;</a></td>
+          </tr>
+          <tr>
+            <th nowrap="" valign="BASELINE" align="RIGHT">To: </th>
+            <td><a class="moz-txt-link-abbreviated" href="mailto:online@openerp.com">online@openerp.com</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      
+      <br>
+      <div class="moz-forward-container"><br>
+        <br>
+        -------- Message original --------
+        <table class="moz-email-headers-table" border="0" cellpadding="0" cellspacing="0">
+          <tbody>
+            <tr>
+              <th nowrap="" valign="BASELINE" align="RIGHT">Sujet:
+              </th>
+              <td>TR: OpenERP S.A. Payment Reminder</td>
+            </tr>
+            <tr>
+              <th nowrap="" valign="BASELINE" align="RIGHT">Date&nbsp;:
+              </th>
+              <td>Wed, 16 Oct 2013 10:34:45 -0000</td>
+            </tr>
+            <tr>
+              <th nowrap="" valign="BASELINE" align="RIGHT">De&nbsp;: </th>
+              <td>Ida Siwatala <a class="moz-txt-link-rfc2396E" href="mailto:infos@inzoservices.com">&lt;infos@inzoservices.com&gt;</a></td>
+            </tr>
+            <tr>
+              <th nowrap="" valign="BASELINE" align="RIGHT">Répondre
+
+                à&nbsp;: </th>
+              <td><a class="moz-txt-link-abbreviated" href="mailto:catchall@openerp.my.openerp.com">catchall@openerp.my.openerp.com</a></td>
+            </tr>
+            <tr>
+              <th nowrap="" valign="BASELINE" align="RIGHT">Pour&nbsp;:
+              </th>
+              <td>Christine Herrmann (che) <a class="moz-txt-link-rfc2396E" href="mailto:che@openerp.com">&lt;che@openerp.com&gt;</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <br>
+        <div>
+          <div class="WordSection1">
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Bonjour,</span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D"></span></p>
+            <p>&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Pourriez-vous
+
+                me faire un retour sur ce point.</span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D"></span></p>
+            <p>&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Cordialement</span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D"></span></p>
+            <p>&nbsp;</p>
+            <div>
+              <div style="border:none;border-top:solid #B5C4DF
+                1.0pt;padding:3.0pt 0cm 0cm 0cm">
+                <p class="MsoNormal"><b><span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">De&nbsp;:</span></b><span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">
+                    Ida Siwatala [<a class="moz-txt-link-freetext" href="mailto:infos@inzoservices.com">mailto:infos@inzoservices.com</a>]
+                    <br>
+                    <b>Envoyé&nbsp;:</b> vendredi 4 octobre 2013 20:03<br>
+                    <b>À&nbsp;:</b> 'Followers of
+                    INZO-services-8-all-e-Maxime-Lisbonne-77176-Savigny-le-temple-France'<br>
+                    <b>Objet&nbsp;:</b> RE: OpenERP S.A. Payment Reminder</span></p>
+              </div>
+            </div>
+            <p>&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Bonsoir,</span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D"></span></p>
+            <p>&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Je
+
+                me permets de revenir vers vous par écrit , car j’ai
+                fait 2 appels vers votre service en exposant mon
+                problème, mais je n’ai pas eu de retour.</span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Cela
+
+                fait un mois que j’ai fait la souscription de votre
+                produit, mais je me rends compte qu’il est pas adapté à
+                ma situation ( fonctionnalité manquante et surtout je
+                n’ai pas beaucoup de temps à passer à résoudre des
+                bugs). </span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">C’est
+
+                pourquoi , j’ai demandé qu’un accord soit trouvé avec
+                vous pour annuler le contrat (tout en vous payant le
+                mois d’utilisation de septembre).</span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D"></span></p>
+            <p>&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Pourriez-vous
+
+                me faire un retour sur ce point.</span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D"></span></p>
+            <p>&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Cordialement,</span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D"></span></p>
+            <p>&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D">Ida
+
+                Siwatala</span></p>
+            <p class="MsoNormal"><span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#1F497D"></span></p>
+            <p>&nbsp;</p>
+            <p class="MsoNormal"><b><span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">De&nbsp;:</span></b><span style="font-size:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;">
+                <a href="mailto:che@openerp.com">che@openerp.com</a>
+                [<a href="mailto:che@openerp.com">mailto:che@openerp.com</a>]
+                <br>
+                <b>Envoyé&nbsp;:</b> vendredi 4 octobre 2013 17:41<br>
+                <b>À&nbsp;:</b> <a href="mailto:infos@inzoservices.com">infos@inzoservices.com</a><br>
+                <b>Objet&nbsp;:</b> OpenERP S.A. Payment Reminder</span></p>
+            <p>&nbsp;</p>
+            <div>
+              <p style="background:white"><span style="font-size:9.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:#222222">Dear
+
+                  INZO services,</span></p>
+              <p style="background:white"><span style="font-size:9.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:#222222">Exception
+
+                  made if there was a mistake of ours, it seems that the
+                  following amount stays unpaid. Please, take
+                  appropriate measures in order to carry out this
+                  payment in the next 8 days. </span></p>
+              <p class="MsoNormal" style="background:white"><span style="font-size:9.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:#222222"></span></p>
+              <p>&nbsp;</p>
+              <table class="MsoNormalTable" style="width:100.0%;border:outset 1.5pt" width="100%" border="1" cellpadding="0">
+                <tbody>
+                  <tr>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal">Date de facturation</p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal">Description</p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal">Reference</p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal">Due Date</p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal">Amount (€)</p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal">Lit.</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal"><b>2013-09-24</b></p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal"><b>2013/1121</b></p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal"><b>Enterprise - Inzo Services
+                          - Juillet 2013</b></p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal"><b>2013-09-24</b></p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt">
+                      <p class="MsoNormal"><b>420.0</b></p>
+                    </td>
+                    <td style="padding:.75pt .75pt .75pt .75pt"><br>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:.75pt .75pt .75pt .75pt"><br>
+                    </td>
+                    <td style="border:none;padding:.75pt .75pt .75pt
+                      .75pt"><br>
+                    </td>
+                    <td style="border:none;padding:.75pt .75pt .75pt
+                      .75pt"><br>
+                    </td>
+                    <td style="border:none;padding:.75pt .75pt .75pt
+                      .75pt"><br>
+                    </td>
+                    <td style="border:none;padding:.75pt .75pt .75pt
+                      .75pt"><br>
+                    </td>
+                    <td style="border:none;padding:.75pt .75pt .75pt
+                      .75pt"><br>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p class="MsoNormal" style="text-align:center;background:white" align="center"><span style="font-size:9.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:#222222">Amount
+
+                  due : 420.00 € </span></p>
+              <p style="background:white"><span style="font-size:9.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:#222222">Would
+
+                  your payment have been carried out after this mail was
+                  sent, please ignore this message. Do not hesitate to
+                  contact our accounting department. </span></p>
+              <p class="MsoNormal" style="background:white"><span style="font-size:9.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:#222222"><br>
+                  Best Regards, <br>
+                  Aurore Lesage <br>
+                  OpenERP<br>
+                  Chaussée de Namur, 40 <br>
+                  B-1367 Grand Rosières <br>
+                  Tel: +32.81.81.37.00 - Fax: +32.81.73.35.01 <br>
+                  E-mail : <a href="mailto:ale@openerp.com">ale@openerp.com</a> <br>
+                  Web: <a href="http://www.openerp.com">http://www.openerp.com</a></span></p>
+            </div>
+          </div>
+        </div>
+        --<br>
+        INZO services <small>Sent by <a style="color:inherit" href="http://www.openerp.com">OpenERP
+            S.A.</a> using <a style="color:inherit" href="https://www.openerp.com/">OpenERP</a>.</small>
+        <small>Access your messages and documents <a style="color:inherit" href="https://accounts.openerp.com?db=openerp#action=mail.action_mail_redirect&amp;login=che&amp;message_id=5750830">in
+
+            OpenERP</a></small> <br>
+        <pre class="moz-signature" cols="72">-- 
+Christine Herrmann 
+
+OpenERP 
+Chaussée de Namur, 40 
+B-1367 Grand Rosières 
+Tel: +32.81.81.37.00 - Fax: +32.81.73.35.01 
+
+Web: <a class="moz-txt-link-freetext" href="http://www.openerp.com">http://www.openerp.com</a> </pre>
+        <br>
+      </div>
+      <br>
+      <br>
+    </div>
+    <br>
+  
+</div>"""
+
+BUG_2_IN = [
+    'read more',
+    '...',
+]
+BUG_2_OUT = [
+    'Fwd: TR: OpenERP S.A'
+    'fait un mois'
+]

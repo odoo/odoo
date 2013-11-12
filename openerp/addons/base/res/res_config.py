@@ -102,13 +102,10 @@ class res_config_configurable(osv.osv_memory):
             res = next.action_launch(context=context)
             res['nodestroy'] = False
             return res
-        # reload the client; open the first available root menu
-        menu_obj = self.pool['ir.ui.menu']
-        menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
-            'params': {'menu_id': menu_ids and menu_ids[0] or False},
         }
 
     def start(self, cr, uid, ids, context=None):

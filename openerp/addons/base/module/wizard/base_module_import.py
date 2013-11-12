@@ -47,33 +47,8 @@ class base_module_import(osv.osv_memory):
     }
 
     def importzip(self, cr, uid, ids, context):
-        (data,) = self.browse(cr, uid, ids , context=context)
-        module_data = data.module_file
-        zip_data = base64.decodestring(module_data)
-        fp = StringIO()
-        fp.write(zip_data)
-        try:
-            file_data = zipfile.ZipFile(fp, 'r')
-        except zipfile.BadZipfile:
-            raise osv.except_osv(_('Error!'), _('File is not a zip file!'))
-        init_file_name = sorted(file_data.namelist())[0]
-        module_name = os.path.split(init_file_name)[0]
-
-        file_path = os.path.join(ADDONS_PATH, '%s.zip' % module_name)
-        try:
-            zip_file = open(file_path, 'wb')
-        except IOError:
-            raise osv.except_osv(_('Error!'),
-                                 _('Can not create the module file: %s!') % \
-                                 (file_path,) )
-        zip_file.write(zip_data)
-        zip_file.close()
-
-        self.pool.get('ir.module.module').update_list(cr, uid,
-                                                  {'module_name': module_name,})
-        self.write(cr, uid, ids, {'state':'done', 'module_name': module_name},
-                   context)
-        return False
+        #TODO: drop this model and the corresponding view/action in trunk
+        raise NotImplementedError('This feature is not available')
 
     def action_module_open(self, cr, uid, ids, context):
         (data,) = self.browse(cr, uid, ids , context=context)
