@@ -336,7 +336,6 @@ class website(osv.osv):
         router = request.httprequest.app.get_db_router(request.db)
 
         for rule in router.iter_rules():
-            endpoint = rule.endpoint
             if not self.rule_is_enumerable(rule):
                 continue
 
