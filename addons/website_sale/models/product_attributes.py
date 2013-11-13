@@ -41,6 +41,7 @@ class attributes(osv.Model):
         'type': fields.selection([('distinct', 'Textual Value'), ('float', 'Numeric Value')], "Type", required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values'),
         'product_ids': fields.one2many('product.attribute.product', 'attribute_id', 'Products'),
+
         'float_max': fields.function(_get_float_max, type='float', string="Max", store={
                 'product.attribute.product': (_get_min_max, ['value','attribute_id'], 20),
             }),
