@@ -15,6 +15,9 @@
     width: 100%;
     height: 100%;
 }
+.oe_pick_widget .oe_hidden{
+    display: none !important;
+}
 
 .oe_pick_widget .oe_pick_header{
     background: #454343;
@@ -174,3 +177,50 @@
 }
 
 
+/* ----------------------- *
+ *    MAIN PICKING MENU    *
+ * ----------------------- */
+
+.oe_pick_widget .oe_picking{
+    background: rgb(223, 226, 246);
+    padding: 10px;
+    margin-bottom: 3px;
+    border-radius: 3px;
+    border-bottom: solid 2px rgb(189, 189, 241);
+    cursor: pointer;
+}
+.oe_pick_widget .oe_picking.oe_empty {
+    border: solid 1px rgb(228, 226, 241);
+    background: white;
+    cursor: default;
+}
+.oe_pick_widget .oe_picking > .oe_picking_name{
+    display: inline-block;
+    min-width: 100px;
+    margin-right: 10px;
+}
+.oe_pick_widget .oe_search_empty{
+    padding: 10px;
+    border-radius: 3px;
+    background: rgb(228, 226, 241);
+    text-align: center;
+}
+
+/* ----------------------- *
+ *       SEARCH BOX        *
+ * ----------------------- */
+
+.oe_pick_widget .oe_searchbox{
+    float: right;
+}
+.oe_pick_widget .oe_searchbox input{
+    padding: 8px;
+}
+.oe_pick_widget .oe_picking_not_found{
+    padding: 8px;
+    margin: 24px 0px;
+    text-align: center;
+    background: rgb(239, 240, 247);
+    border-radius: 3px;
+    color: rgb(119, 77, 77);
+}
