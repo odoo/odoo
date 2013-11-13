@@ -1,7 +1,9 @@
 
 function openerp_picking_widgets(instance){
+
     var module = instance.stock;
-    var _t = instance.web._t;
+    var _t     = instance.web._t;
+    var QWeb   = instance.web.qweb;
 
     module.PickingEditorWidget = instance.web.Widget.extend({
         template: 'PickingEditorWidget',
@@ -108,7 +110,9 @@ function openerp_picking_widgets(instance){
             this.scanning_type = 0;
             this.barcode_scanner = new module.BarcodeScanner();
             this.pickings_by_type = {};
-
+            this.pickings_by_id = {};
+            this.picking_search_string = "";
+            
         },
         load: function(){
             var self = this;
@@ -129,7 +133,10 @@ function openerp_picking_widgets(instance){
                     for(var i = 0; i < pickings.length; i++){
                         var picking = pickings[i];
                         self.pickings_by_type[picking.picking_type_id[0]].push(picking);
+                        self.pickings_by_id[picking.id] = picking;
+                        self.picking_search_string += '' + picking.id + ':' + picking.name.toUpperCase() + '\n'
                     }
+
                 });
         },
         renderElement: function(){
@@ -137,7 +144,10 @@ function openerp_picking_widgets(instance){
             var self = this;
             this.$('.js_pick_quit').click(function(){ self.quit(); });
             this.$('.js_pick_scan').click(function(){ self.scan_picking($(this).data('id')); });
-            this.$('.js_pick_last').click(function(){ self.goto_picking($(this).data('id')); });
+            this.$('.js_pick_last').click(function(){ self.goto_last_picking_of_type($(this).data('id')); });
+            this.$('.oe_searchbox input').keyup(function(event){
+                self.on_searchbox($(this).val());
+            });
         },
         start: function(){
             var self = this;
@@ -148,7 +158,17 @@ function openerp_picking_widgets(instance){
                 self.renderElement();
             });
         },
-        goto_picking: function(type_id){
+        goto_picking: function(picking_id){
+            this.do_action({
+                type:   'ir.actions.client',
+                tag:    'stock.ui',
+                target: 'current',
+                context: { picking_id: picking_id },
+            },{
+                clear_breadcrumbs: true,
+            });
+        },
+        goto_last_picking_of_type: function(type_id){
             this.do_action({
                 type:   'ir.actions.client',
                 tag:    'stock.ui',
@@ -158,30 +178,60 @@ function openerp_picking_widgets(instance){
                 clear_breadcrumbs: true,
             });
         },
-        scan_picking: function(id){
-            this.$('.js_pick_scan.oe_active').text(_t('Scan')).removeClass('oe_active');
-            if(id !== this.scanning_type){
-                this.$('.js_pick_scan[data-id='+id+']').text(_t('Please scan a barcode ...')).addClass('oe_active');
-                this.scanning_type = id;
-            }else{
-                this.scanning_type = 0;
-            }
-        },
-        on_scan: function(barcode){
-            for(var i = 0, len = this.pickings.length; i < len; i++){
-                var picking = this.pickings[i];
-                if(picking.picking_type_id[0] === this.scanning_type && picking.name.toUpperCase() === barcode.toUpperCase()){
-                    this.do_action({
-                        type:   'ir.actions.client',
-                        tag:    'stock.ui',
-                        target: 'current',
-                        context: { picking_id: picking.id },
-                    },{
-                        clear_breadcrumbs: true,
-                    });
+        search_picking: function(barcode){
+            var re = RegExp("([0-9]+):.*?"+barcode.toUpperCase(),"gi");
+            var results = [];
+            for(var i = 0; i < 100; i++){
+                r = re.exec(this.picking_search_string);
+                if(r){
+                    var picking = this.pickings_by_id[Number(r[1])];
+                    if(picking){
+                        results.push(picking);
+                    }
+                }else{
+                    break;
                 }
             }
-            this.$('.js_pick_scan.oe_active').text(_t('Scanned picking not found'));
+            return results;
+        },
+        on_scan: function(barcode){
+            var self = this;
+
+            for(var i = 0, len = this.pickings.length; i < len; i++){
+                var picking = this.pickings[i];
+                if(picking.name.toUpperCase() === barcode.toUpperCase()){
+                    this.goto_picking(picking.id);
+                    break;
+                }
+            }
+            this.$('.oe_picking_not_found').removeClass('oe_hidden');
+
+            clearTimeout(this.picking_not_found_timeout);
+            this.picking_not_found_timeout = setTimeout(function(){
+                self.$('.oe_picking_not_found').addClass('oe_hidden');
+            },2000);
+
+        },
+        on_searchbox: function(query){
+            var self = this;
+
+            clearTimeout(this.searchbox_timeout);
+            this.searchbox_timout = setTimeout(function(){
+                if(query){
+                    self.$('.oe_picking_not_found').addClass('oe_hidden');
+                    self.$('.oe_picking_categories').addClass('oe_hidden');
+                    self.$('.oe_picking_search_results').html(
+                        QWeb.render('PickingSearchResults',{results:self.search_picking(query)})
+                    );
+                    self.$('.oe_picking_search_results .oe_picking').click(function(){
+                        self.goto_picking($(this).data('id'));
+                    });
+                    self.$('.oe_picking_search_results').removeClass('oe_hidden');
+                }else{
+                    self.$('.oe_picking_categories').removeClass('oe_hidden');
+                    self.$('.oe_picking_search_results').addClass('oe_hidden');
+                }
+            },100);
         },
         quit: function(){
             instance.webclient.set_content_full_screen(false);
@@ -314,6 +364,16 @@ function openerp_picking_widgets(instance){
             this.$('.js_pick_prev').click(function(){ self.picking_prev(); });
             this.$('.js_pick_next').click(function(){ self.picking_next(); });
             this.$('.js_pick_menu').click(function(){ self.menu(); });
+
+            this.hotkey_handler = function(event){
+                if(event.keyCode === 37 ){  // Left Arrow
+                    self.picking_prev();
+                }else if(event.keyCode === 39){ // Right Arrow
+                    self.picking_next();
+                }
+            };
+
+            $('body').on('keyup',this.hotkey_handler);
 
             $.when(this.loaded).done(function(){
                 self.picking_editor = new module.PickingEditorWidget(self);
@@ -548,6 +608,7 @@ function openerp_picking_widgets(instance){
             this._super();
             this.disconnect_numpad();
             this.barcode_scanner.disconnect();
+            $('body').off('keyup',this.hotkey_handler);
             instance.webclient.set_content_full_screen(false);
         },
     });
