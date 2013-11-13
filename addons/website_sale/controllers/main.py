@@ -545,14 +545,13 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/checkout/'], type='http', auth="public", multilang=True)
     def checkout(self, **post):
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         order = get_current_order()
 
         if not order or order.state != 'draft' or not order.order_line:
             return self.mycart(**post)
 
-        registry = request.registry
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
         orm_country = registry.get('res.country')
@@ -572,7 +571,6 @@ class Ecommerce(http.Controller):
         }
         checkout = values['checkout']
         error = values['error']
-        import pudb; pu.db
 
         if not context['is_public_user']:
             partner = orm_user.browse(cr, uid, uid, context).partner_id
@@ -598,14 +596,13 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/confirm_order/'], type='http', auth="public", multilang=True)
     def confirm_order(self, **post):
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         order = get_current_order()
 
         if not order or order.state != 'draft' or not order.order_line:
             return self.mycart(**post)
 
-        registry = request.registry
         orm_parter = registry.get('res.partner')
         orm_user = registry.get('res.users')
         orm_country = registry.get('res.country')
@@ -626,7 +623,6 @@ class Ecommerce(http.Controller):
         checkout = values['checkout']
         checkout.update(post)
         error = values['error']
-        import pudb; pu.db
 
         for field_name in info.mandatory_billing_fields:
             if not checkout[field_name]:
