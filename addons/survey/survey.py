@@ -23,6 +23,7 @@ from urlparse import urljoin
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import uuid
+import json
 
 
 class survey_survey(osv.osv):
@@ -376,8 +377,8 @@ class survey_question(osv.osv):
         'validation_max_float_value': fields.float('Maximum value'),
         'validation_min_int_value': fields.integer('Minimum value'),
         'validation_max_int_value': fields.integer('Maximum value'),
-        #'validation_min_date': fields.date('Start date range'),
-        #'validation_max_date': fields.date('End date range'),
+        'validation_min_date': fields.date('Start date range'),
+        'validation_max_date': fields.date('End date range'),
         'validation_error_msg': fields.char("Error message if validation \
             fails", oldname='validation_valid_err_msg'),
 

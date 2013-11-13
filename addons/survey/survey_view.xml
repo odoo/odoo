@@ -142,6 +142,8 @@
                             <field name="visible_to_user"/>
                             <field name="public_url" widget="url"/>
                             <field name="auth_required" />
+                            <field name="date_open" />
+                            <field name="date_close" />
                         </group>
                     </group>
                     <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}" context="{'default_survey_id': active_id}">

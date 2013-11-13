@@ -60,39 +60,18 @@ class WebsiteSurvey(http.Controller):
 
         _logger.debug('Post request data: %s', post)
 
-        # Answer validation and storage
-        problems = []
-        if post and int(post['current']) != -1:
-            for question in survey.page_ids[int(post['current'])].question_ids:
-
-                # validation methods are dynamically loaded, if defined for the
-                # question type
-                #
-                # eg: if question type is 'new_question_type', this will try to
-                # load validate_new_question_type
-
-                try:
-                    checker = getattr(self, 'validate_' + question.type)
-                except AttributeError:
-                    _logger.warning(question.type + ": This type of question has no validation method")
-                else:
-                    problems = problems + checker(survey.id, post['current'], question, post)
-
-        # Return the same survey page if problems occur
-        if problems:
-            _logger.debug('Problems in the survey: %s', problems)
-            pagination = {'current': int(post['current']), 'next': int(post['next'])}
-            return request.website.render('survey.survey',
-                                    {'survey': survey,
-                                    'pagination': pagination,
-                                    'problems': problems})
+        # Store answer data
+        # (/!\ assumes JavaScript validation of answers has succeeded!)
+        # TODO
 
         # Display success message if totally succeeded
         if post and post['next'] == "finished":
             return request.website.render('survey.finished')
 
         # Page selection
-        pagination = {'current': -1, 'next': 0}  # Default pagination if first opening
+        pagination = {'current': -1, 'next': 0}
+        # Default pagination if first opening
+
         if 'current' in post and 'next' in post and post['next'] != "finished":
             oldnext = int(post['next'])
             if oldnext not in range(0, len(survey.page_ids)):
@@ -106,8 +85,7 @@ class WebsiteSurvey(http.Controller):
 
         return request.website.render('survey.survey',
                                     {'survey': survey,
-                                    'pagination': pagination,
-                                    'problems': None})
+                                    'pagination': pagination})
 
     @website.route(['/survey/print/<model("survey.survey"):survey>/'],
         type='http', auth='public', multilang=True)
@@ -117,95 +95,3 @@ class WebsiteSurvey(http.Controller):
         return request.website.render('survey.survey_print',
                                     {'survey': survey,
                                     'pagination': pagination})
-
-    def validate_free_text(self, survey_id, page_nr, question, post):
-        answer_tag = survey_id.__str__() + '--' + page_nr + '--' + question.id.__str__()
-        problems = []
-        if question.constr_mandatory:
-            problems = problems + self.__has_empty_input(question, post, answer_tag)
-        return problems
-
-    def validate_textbox(self, survey_id, page_nr, question, post):
-        answer_tag = survey_id.__str__() + '--' + page_nr + '--' + question.id.__str__()
-        problems = []
-        if question.constr_mandatory:
-            problems = problems + self.__has_empty_input(question, post, answer_tag)
-        return problems
-
-    def validate_numerical_box(self, survey_id, page_nr, question, post):
-        answer_tag = survey_id.__str__() + '--' + page_nr + '--' + question.id.__str__()
-        # Check for an empty input
-        problems = []
-        if question.constr_mandatory:
-            problems = problems + self.__has_empty_input(question, post, answer_tag)
-        # Check for a non number input
-        if answer_tag in post and post[answer_tag].strip() != "":
-            try:
-                float(post[answer_tag].strip())
-            except ValueError:
-                problems = problems + [{'qlabel': question.question,
-                                    'errmsg': "This is not a number"}]
-
-        return problems
-
-    def validate_datetime(self, survey_id, page_nr, question, post):
-        answer_tag = survey_id.__str__() + '--' + page_nr + '--' + question.id.__str__()
-        problems = []
-        if question.constr_mandatory:
-            problems = problems + self.__has_empty_input(question, post, answer_tag)
-
-        # TODO CHECK, check if this is a date
-
-        return problems
-
-    def validate_simple_choice_scale(self, survey_id, page_nr, question, post):
-        answer_tag = survey_id.__str__() + '--' + page_nr + '--' + question.id.__str__()
-        problems = []
-        if question.constr_mandatory:
-            problems = problems + self.__has_empty_input(question, post, answer_tag)
-        return problems
-
-    def validate_simple_choice_dropdown(self, survey_id, page_nr, question, post):
-        answer_tag = survey_id.__str__() + '--' + page_nr + '--' + question.id.__str__()
-        problems = []
-        if question.constr_mandatory:
-            problems = problems + self.__has_empty_input(question, post, answer_tag)
-        return problems
-
-    def validate_multiple_choice(self, survey_id, page_nr, question, post):
-        answer_tag = survey_id.__str__() + '--' + page_nr + '--' + question.id.__str__()
-        problems = []
-        if question.constr_mandatory:
-            answers = dict_keys_startswith(post, answer_tag)
-            print(answers)
-            if not answers:
-                return [{'qlabel': question.question,
-                'errmsg': "This question is mandatory"}]
-        return problems
-
-    # def validate_vector(self, survey_id, page_nr, question, post):
-    #     answer_tag = survey_id.__str__() + '--' + page_nr + '--' + question.id.__str__()
-    #     problems = []
-    #     return problems
-
-    # def validate_matrix(self, survey_id, page_nr, question, post):
-    #     answer_tag = survey_id.__str__() + '--' + page_nr + '--' + question.id.__str__()
-    #     problems = []
-    #     return problems
-
-    def __has_empty_input(self, question, post, answer_tag):
-        ''' Check for an empty input '''
-        if answer_tag not in post or post[answer_tag].strip() == "":
-            return [{'qlabel': question.question,
-                'errmsg': "This question is mandatory"}]
-        else:
-            return []
-
-
-def dict_keys_startswith(dictionary, string):
-    '''Returns a dictionary containing the elements of <dict> whose keys start
-    with <string>.
-
-    .. note::
-        This function uses dictionary comprehensions (Python >= 2.7)'''
-    return {k: dictionary[k] for k in filter(lambda key: key.startswith(string), dictionary.keys())}

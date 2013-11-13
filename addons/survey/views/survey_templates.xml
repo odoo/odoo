@@ -31,7 +31,8 @@
                 <div class="wrap">
                     <div class="container">
                         <div class="jumbotron">
-                            <h1>Thank you!<br/><small>Your answers have been recorded.</small></h1>
+                            <h1>Thank you!</h1>
+                            <p>Your answers have been recorded.</p>
                         </div>
                     </div>
                 </div>
@@ -51,37 +52,19 @@
                             <div class="col-md-12">
                                 <t t-if="pagination['current'] == -1">
                                     <div class='jumbotron'>
-                                        <h1>
-                                            <span t-field='survey.title'/>
-                                            <t t-if="survey.description is not False">
-                                                <br/>
-                                                <small><span t-field='survey.description'/></small>
-                                            </t>
-                                        </h1>
-                                    </div>
-                                    <div class="text-center">
+                                        <h1><span t-field='survey.title'/></h1>
+                                        <t t-if="survey.description"><p><span t-field='survey.description'/></p></t>
                                         <form role="form" method="post" t-att-name="survey.id.__str__() + '---1'" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
                                             <input type="hidden" name="current" t-att-value="pagination['current'].__str__()" />
                                             <input type="hidden" name="next" t-att-value="pagination['next'].__str__()" />
-                                            <input type="submit" class="btn btn-primary active" value="Take survey"/>
+                                            <input type="submit" class="btn btn-primary btn-lg active" value="Take survey"/>
                                         </form>
                                     </div>
                                 </t>
                                 <t t-if="pagination['current'] != -1">
-                                    <div class='page-header'>
-                                        <h1>
-                                            <span t-field='survey.title'/>
-                                            <t t-if="survey.description is not False">
-                                                <br/>
-                                                <small><span t-field='survey.description'/></small>
-                                            </t>
-                                        </h1>
-                                    </div>
                                     <t t-set='page' t-value="survey.page_ids[pagination['current']]" />
                                     <t t-call="survey.page" />
                                 </t>
-
-
                             </div>
                         </div>
                     </div>
@@ -101,15 +84,13 @@
 
         <!-- A page -->
         <template id="page" name="Page">
-            <div>
+            <div class="page-header">
                 <h2><span t-field='page.title' /></h2>
                 <p><t t-if="page.description"><span t-field='page.description'/></t></p>
-                <p class="text-info text-right">Questions marked with <span class="glyphicon glyphicon-exclamation-sign"></span> are mandatory.</p>
             </div>
-            <hr/>
 
             <!-- Panel to display input errors -->
-            <t t-if="problems">
+<!--             <t t-if="problems">
                 <div class="panel panel-danger">
                     <div class="panel-heading">
                         <h3 class="panel-title">Errors on this page</h3>
@@ -122,7 +103,7 @@
                         </ul>
                     </div>
                 </div>
-            </t>
+            </t> -->
 
             <form role="form" method="post" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__()" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
                 <input type="hidden" name="current" t-att-value="pagination['current'].__str__()" />
@@ -143,13 +124,18 @@
             <t t-if="question.parent_id and question.children_ids"><t t-set="is_matrix_vector" t-value="True" /></t>
             <t t-if="question.parent_id"><t t-set="is_vector_element" t-value="True" /></t>
 
+            <div class="question-wrapper" t-att-id="'survey_' + survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()" t-att-data-oe-survey-qparams='json.dumps({
+                    "type": question.type,
+                    "constr_mandatory": question.constr_mandatory,
+                    "constr_type": question.constr_type,
+                    "constr_maximum_req_ans": question.constr_maximum_req_ans,
+                    "constr_minimum_req_ans": question.constr_minimum_req_ans,
+                    "constr_error_msg": question.constr_error_msg
+                })'>
 
             <t t-if="not is_vector_element"> <!-- if -->
-                <h3>
-                    <t t-if="question.constr_mandatory"><span class="glyphicon glyphicon-exclamation-sign"></span></t>
-                    <span t-field='question.question' t-att-id="'survey_' + survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/><br/>
-                    <small><t t-if="question.description"><span t-field='question.description'/></t></small>
-                </h3>
+                <h3><span t-field='question.question' /> <t t-if="question.constr_mandatory"><abbr title="This question is mandatory." class="text-danger">*</abbr></t></h3>
+                <p class="text-muted"><t t-if="question.description"><span t-field='question.description'/></t></p>
             </t>
             <t t-if="is_vector_element"> <!-- else -->
                 <t t-if="question.type == 'simple_choice_scale'">
@@ -167,17 +153,17 @@
             </t>
 
             <t t-if="question.type in ['numerical_box']">
-                <input type="number" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/>
+                <input type="number" step=".1" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/>
             </t>
 
             <t t-if="question.type in ['datetime']" >
-                <input type="datetime-local" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/>
+                <input type="datetime-local" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()" placeholder="jj-mm-aaaaThh:mm" />
                 TODO: replace html5 datetime widget by OpenERP-CMS datetime widget
             </t>
 
             <t t-if="question.type in ['simple_choice_scale']">
                 <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
-                    <div class="radio-inline">
+                    <div class="radio">
                         <label>
                             <input type="radio" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()" t-att-value='suggestion.value' />
                             <span t-field='suggestion.value'/>
@@ -245,6 +231,11 @@
                 Other: <input type="text" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question."/>
             </t>
 
+
+            <div class="js_errzone alert alert-danger" style="display:none;"></div>
+            </div>
+
+
         </template>
 
 
@@ -254,25 +245,14 @@
                 <div class="wrap">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-1"> </div>
-                            <div class="col-md-1"> </div>
-                            <div class="col-md-8">
-                                <div class='jumbotron'>
-                                    <h1>
-                                        <span t-field='survey.title'/>
-                                        <t t-if="survey.description is not False">
-                                            <br/>
-                                            <small><span t-field='survey.description'/></small>
-                                        </t>
-                                    </h1>
-                                </div>
-                                <t t-foreach="survey.page_ids" t-as="page">
-                                    <t t-call="survey.page" />
-                                    <hr/>
-                                </t>
+                            <div class='jumbotron'>
+                                <h1><span t-field='survey.title'/></h1>
+                                <t t-if="survey.description is not False"><p><span t-field='survey.description'/></p></t>
                             </div>
-                            <div class="col-md-1"> </div>
-                            <div class="col-md-1"> </div>
+                            <t t-foreach="survey.page_ids" t-as="page">
+                                <t t-call="survey.page" />
+                                <hr/>
+                            </t>
                         </div>
                     </div>
                 </div>
