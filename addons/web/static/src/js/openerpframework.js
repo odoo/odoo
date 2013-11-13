@@ -809,7 +809,8 @@ var genericJsonRpc = function(fct_name, params, fct) {
         params: params,
         id: Math.floor(Math.random() * 1000 * 1000 * 1000)
     };
-    return fct(data).pipe(function(result) {
+    var xhr = fct(data);
+    var result = xhr.pipe(function(result) {
         if (result.error !== undefined) {
             console.error("Server application error", result.error);
             return $.Deferred().reject("server", result.error);
@@ -821,6 +822,9 @@ var genericJsonRpc = function(fct_name, params, fct) {
         var def = $.Deferred();
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });
+    // FIXME: jsonp?
+    result.abort = function () { xhr.abort && xhr.abort(); };
+    return result;
 };
 
 openerp.jsonRpc = function(url, fct_name, params, settings) {
