@@ -23,20 +23,9 @@
                 </div>
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-4" id="ref_left_column">
-                            <ul class="nav nav-pills nav-stacked mt16 mb32">
-                                <t t-foreach="countries" t-as="country_dict">
-                                    <t t-if="country_dict['country_id']">
-                                        <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                                            <a t-href="/customers/country/#{ country_dict['country_id'][0] }">
-                                                <t t-esc="country_dict['country_id'][1]"/> <small>(<t t-esc="country_dict['country_id_count']"/>)</small>
-                                            </a>
-                                        </li>
-                                    </t>
-                                </t>
-                            </ul>
+                        <div class="col-md-3" id="ref_left_column">
                         </div>
-                        <div class="col-md-8" id="ref_content">
+                        <div class="col-md-9" id="ref_content">
                             <div class='navbar mb0'>
                                 <t t-call="website.pager">
                                    <t t-set="classname" t-value="'pull-left'"/>
@@ -74,17 +63,35 @@
     </template>
 
     <!-- Option: left column: World Map -->
-    <template id="opt_country" inherit_id="website_customer.index" inherit_option_id="website_customer.index" name="Show Map">
-        <xpath expr="//div[@id='ref_left_column']//ul[last()]" position="after">
+    <template id="opt_country" inherit_option_id="website_customer.index" name="Show Map">
+        <xpath expr="//div[@id='ref_left_column']" position="inside">
 
             <iframe t-attf-src="/google_map/?partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/&amp;output=embed"
                 style="width:100%; border:0; padding:0; margin:0;"></iframe>
         </xpath>
     </template>
 
+    <template id="opt_country_list" inherit_id="website_customer.index" inherit_option_id="website_customer.index" name="Filter on Countries">
+        <xpath expr="//div[@id='ref_left_column']" position="inside">
+
+            <ul class="nav nav-pills nav-stacked mt16 mb32">
+                <t t-foreach="countries" t-as="country_dict">
+                    <t t-if="country_dict['country_id']">
+                        <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
+                            <a t-href="/customers/country/#{ country_dict['country_id'][0] }">
+                                <span class="badge pull-right" t-esc="country_dict['country_id_count']"/>
+                                <t t-esc="country_dict['country_id'][1]"/>
+                            </a>
+                        </li>
+                    </t>
+                </t>
+            </ul>
+
+        </xpath>
+    </template>
+
     <template id="details" name="Customer Detail">
       <t t-call="website.layout">
-        <t t-set="additional_title">Customer Reference: <t t-esc="partner_id.name"/></t>
         <div id="wrap">
             <div class="container mt16">
                 <div class="row">
@@ -115,7 +122,7 @@
       </t>
     </template>
 
-    <template id="customer_contact" inherit_id="website_customer.details" inherit_option_id="website_customer.details" name="Customer Reference">
+    <template id="customer_contact" inherit_id="website_customer.details" inherit_option_id="website_customer.details" name="Customer Contacts">
         <xpath expr="//div[@id='ref_right_column']" position="inside">
             <div class="panel panel-default">
                 <div class="panel-heading">
