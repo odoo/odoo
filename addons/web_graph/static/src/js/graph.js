@@ -74,7 +74,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.pivot_table.show();
         } else {
             this.pivot_table.hide();
-            this.chart_view.draw();
             this.chart_view.show();
         }
     },
@@ -85,7 +84,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return this.get_data().done(function (data) {
             self.pivot_table.set_data(data);
             self.chart_view.set_data(data);
-            self.pivot_table.draw();
             self.display_data();
         });
     },
@@ -103,6 +101,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
   * and ChartView widget.
   */
 var BasicDataView = instance.web.Widget.extend({
+
+    need_redraw: false,
+
     init: function (fields, groupby, measure) {
         this.fields = fields;
         this.groupby = groupby;
@@ -113,9 +114,14 @@ var BasicDataView = instance.web.Widget.extend({
 
     set_data : function (data) {
         this.data = data;
+        this.need_redraw = true;
     },
 
     show: function () {
+        if (this.need_redraw) {
+            this.draw();
+            this.need_redraw = false;
+        }
         this.$el.css('display', 'block');
     },
 
@@ -170,6 +176,7 @@ var ChartView = BasicDataView.extend({
             };
 
         this.render = render_functions[mode];
+        this.need_redraw = true;
     },
 
     draw: function () {
