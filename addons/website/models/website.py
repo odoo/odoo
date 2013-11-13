@@ -323,7 +323,7 @@ class website(osv.osv):
             (arg == 'self' or arg in rule._converters)
             for arg in args)
 
-    def list_pages(self, cr, uid, ids, context=None):
+    def enumerate_pages(self, cr, uid, ids, context=None):
         """ Available pages in the website/CMS. This is mostly used for links
         generation and can be overridden by modules setting up new HTML
         controllers for dynamic pages (e.g. blog).
@@ -362,6 +362,41 @@ class website(osv.osv):
             for values in generated:
                 domain_part, url = rule.build(values, append_unknown=False)
                 yield {'name': url, 'url': url }
+
+    def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
+        pages = self.enumerate_pages(cr, uid, ids, context=context)
+
+        if needle:
+            pages = itertools.ifilter(lambda v: self.page_matches(
+                cr, uid, v, needle, context=None), pages)
+
+        return list(itertools.islice(pages, limit))
+
+    def page_matches(self, cr, uid, page, needle, context=None):
+        """ Checks that a "page" matches a user-provide search string.
+
+        The default implementation attempts to perform a non-contiguous
+        substring match of the page's name.
+
+        :param page: {'name': str, 'url': str}
+        :param needle: str
+        :rtype: bool
+        """
+        haystack = page['name'].lower()
+
+        needle = iter(needle.lower())
+        n = next(needle)
+        end = object()
+
+        for char in haystack:
+            if char != n: continue
+
+            n = next(needle, end)
+            # found all characters of needle in haystack in order
+            if n is end:
+                return True
+
+        return False
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
         step = step and int(step) or 10

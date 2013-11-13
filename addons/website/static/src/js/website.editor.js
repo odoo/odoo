@@ -930,9 +930,10 @@
         fetch_pages: function () {
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website',
-                method: 'list_pages',
+                method: 'search_pages',
                 args: [null],
                 kwargs: {
+                    limit: 10,
                     context: website.get_context()
                 },
             });
