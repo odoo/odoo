@@ -38,17 +38,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
         },
     },
 
-    display_data : function () {
-        if (this.mode === 'pivot') {
-            this.chart_view.hide();
-            this.pivot_table.show();
-        } else {
-            this.pivot_table.hide();
-            this.chart_view.draw();
-            this.chart_view.show();
-        }
-    },
-
     view_loading: function (fields_view_get) {
         var self = this;
         this.model = new instance.web.Model(fields_view_get.model, {group_by_no_leaf: true});
@@ -77,6 +66,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
     get_data: function () {
         var view_fields = this.groupbys.concat(this.measure);
         return query_groups(this.model, view_fields, this.domain, this.groupbys);
+    },
+
+    display_data : function () {
+        if (this.mode === 'pivot') {
+            this.chart_view.hide();
+            this.pivot_table.show();
+        } else {
+            this.pivot_table.hide();
+            this.chart_view.draw();
+            this.chart_view.show();
+        }
     },
 
     do_search: function (domain, context, group_by) {
@@ -138,7 +138,7 @@ var PivotTable = BasicDataView.extend({
         this.$el.empty();
         var self = this;
 
-        var rows = '<tr><td class="graph_border">' +
+        var rows = '<tr><td class="graph_border"><i class="fa fa-sort-asc"></i> fa-sort-asc' +
                     this.fields[this.groupby[0]].string +
                     '</td><td class="graph_border">' +
                     this.measure_label +
