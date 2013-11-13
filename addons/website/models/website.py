@@ -30,6 +30,7 @@ def route(routes, *route_args, **route_kwargs):
         new_routes = routes if isinstance(routes, list) else [routes]
         f.cms = True
         f.multilang = route_kwargs.get('multilang', False)
+        f.methods = route_kwargs.pop('methods', None)
         if f.multilang:
             route_kwargs.pop('multilang')
             for r in list(new_routes):
@@ -49,6 +50,8 @@ def route(routes, *route_args, **route_kwargs):
                     if not lang_ok:
                         return request.not_found()
                 request.website.preprocess_request(request)
+            if f.methods and request.httprequest.method not in f.methods:
+                return werkzeug.exceptions.MethodNotAllowed(valid_methods=f.methods)
             return f(*args, **kwargs)
         return wrap
     return decorator
