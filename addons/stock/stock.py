@@ -979,7 +979,7 @@ class stock_picking(osv.osv):
                 quant_obj.quants_unreserve(cr, uid, move, context=context)
                 res2[move.id] = move.product_qty
                 resneg[move.id] = {}
-                if move.state == 'assigned':
+                if move.state in ('confirmed', 'assigned'):
                     products_moves.setdefault(move.product_id.id, []).append(move)
                 
                 
