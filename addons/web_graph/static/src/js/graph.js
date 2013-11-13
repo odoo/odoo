@@ -167,30 +167,67 @@ var BasicDataView = instance.web.Widget.extend({
   */
 var PivotTable = BasicDataView.extend({
     template: 'pivot_table',
+    rows: null,
+    cols: null,
 
     draw: function () {
-        this.get_data(this.row_groupby).done(this._draw.bind(this));
+        this.get_data(this.row_groupby)
+            .then(this.proxy('build_table'))
+            .done(this.proxy('_draw'));
     },
 
-    _draw: function (data) {
-        console.log("data",data);
+    build_table: function (data) {
+        var self = this;
+        function make_cell (content, is_border) {
+            return '<td' +
+                   ((is_border) ? ' class="graph_border"' : '') +
+                   '>' + content + '</td>';
+        }
+
+        this.cols = [{
+            path: [],
+            value: this.measure_label,
+            expanded: false,
+            parent: null,
+            children: [],
+            html_tds: [],
+            domain: this.domain,
+            header: $(make_cell(this.measure_label, true)),
+        }];
+
+        this.rows = _.map(data, function (datapt) {
+            var row = $('<tr></tr>');
+            row.html(make_cell(datapt.attributes.value[1], true));
+            row.append(make_cell(datapt.attributes.aggregates[self.measure]));
+
+            return {
+                path: [datapt.attributes.grouped_on],
+                value: datapt.attributes.value[1],
+                expanded: false,
+                parent: null,
+                children: [],
+                html_tr: row,
+                domain: datapt.model._domain
+            };
+        });
+    }, 
+
+    _draw: function () {
+
         this.$el.empty();
         var self = this;
 
-        var rows = '<tr><td class="graph_border">' +
+        var header = '<tr><td class="graph_border">' +
                     this.fields[this.row_groupby[0]].string +
                     '</td><td class="graph_border">' +
                     this.measure_label +
                     '</td></tr>';
+        this.$el.append(header);
 
-        _.each(data, function (datapt) {
-            rows += '<tr><td class="graph_border">' +
-                    datapt.attributes.value[1] +
-                    '</td><td>' +
-                    datapt.attributes.aggregates[self.measure] +
-                    '</td></tr>';
+        _.each(this.rows, function (row) {
+            self.$el.append(row.html_tr);
         });
-        this.$el.append(rows);
+
     }
 });
 
@@ -202,13 +239,7 @@ var ChartView = BasicDataView.extend({
     template: 'chart_view',
 
     set_mode: function (mode) {
-        var render_functions = {
-                'bar_chart' : this.render_bar_chart,
-                'line_chart' : this.render_line_chart,
-                'pie_chart' : this.render_pie_chart,
-            };
-
-        this.render = render_functions[mode];
+        this.render = this['render_' + mode];
         this.need_redraw = true;
     },
 
@@ -232,7 +263,7 @@ var ChartView = BasicDataView.extend({
     render_bar_chart: function (data) {
         var formatted_data = [{
                 key: 'Bar chart',
-                values: _.map(data, this.format_data.bind(this)),
+                values: _.map(data, this.proxy('format_data')),
             }];
 
         nv.addGraph(function () {
@@ -257,7 +288,7 @@ var ChartView = BasicDataView.extend({
     render_line_chart: function (data) {
         var formatted_data = [{
                 key: this.measure_label,
-                values: _.map(data, this.format_data.bind(this))
+                values: _.map(data, this.proxy('format_data'))
             }];
 
         nv.addGraph(function () {
@@ -278,7 +309,7 @@ var ChartView = BasicDataView.extend({
     },
 
     render_pie_chart: function (data) {
-        var formatted_data = _.map(data, this.format_data.bind(this));
+        var formatted_data = _.map(data, this.proxy('format_data'));
 
         nv.addGraph(function () {
             var chart = nv.models.pieChart()
