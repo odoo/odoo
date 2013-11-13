@@ -132,6 +132,42 @@
         $error.modal('show');
     };
 
+    website.prompt = function (window_title, field_name, field_type, on_init) {
+        // A bootstraped version of javascript prompt albeit asynchronous
+        // Built to handle only one field, for anything more complex, use editor.Dialog class
+        // TODO: use option dict for parameters
+        field_type = field_type || 'input';
+        on_init = on_init || function() {};
+        var def = $.Deferred();
+        var dialog = $(openerp.qweb.render('website.prompt', {
+            field_type: field_type,
+            field_name: field_name,
+            window_title: window_title,
+        })).appendTo("body");
+        var input = dialog.find(field_type).first();
+        var init = on_init(input);
+        $.when(init).then(function () {
+            dialog.modal('show');
+            input.focus();
+            dialog.on('click', '.btn-primary', function () {
+                def.resolve(input.val(), input);
+                dialog.remove();
+            });
+        });
+        dialog.on('hidden.bs.modal', function () {
+            def.reject();
+            dialog.remove();
+        });
+        if (input.is('input[type="text"]')) {
+            input.keypress(function (e) {
+                if (e.which == 13) {
+                    dialog.find('.btn-primary').trigger('click');
+                }
+            });
+        }
+        return def;
+    };
+
     dom_ready.then(function () {
 
         /* ----- BOOTSTRAP  STUFF ---- */

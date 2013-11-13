@@ -79,7 +79,7 @@
                         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
                         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
 
-                        <t t-if="editable">
+                        <t t-if="editable" id="editable_scripts_hook">
                             <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
                             <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>

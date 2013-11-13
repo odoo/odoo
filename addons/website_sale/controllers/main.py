@@ -342,7 +342,7 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.products", values)
 
     @website.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", multilang=True)
-    def product(self, product, search='', category='', filter='', promo=None):
+    def product(self, product, search='', category='', filter='', promo=None, **kwargs):
 
         if promo:
             self.change_pricelist(promo)
@@ -372,11 +372,8 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.product", values)
 
-    @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="public", multilang=True)
+    @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="user", multilang=True, methods=['POST'])
     def add_product(self, cat_id=0, **post):
-        if request.httprequest.method != 'POST':
-            return werkzeug.exceptions.MethodNotAllowed(valid_methods=['POST'])
-
         Product = request.registry.get('product.product')
         product_id = Product.create(request.cr, request.uid, {
             'name': 'New Product', 'public_categ_id': cat_id

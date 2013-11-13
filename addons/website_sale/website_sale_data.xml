@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data>
+        <template id="website_sale_script" inherit_id="website.layout" name="Website Sale script">
+            <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js" t-ignore="true"></script>
+            </xpath>
+        </template>
+    </data>
     <data noupdate="1">
 
         <record id="menu_shop" model="website.menu">

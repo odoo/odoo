@@ -2,6 +2,12 @@
 <openerp>
 <data>
 
+    <template id="website_event_script" inherit_id="website.layout" name="Website Event script">
+        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+            <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js" t-ignore="true"></script>
+        </xpath>
+    </template>
+
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout" name="Footer Events Link">
         <xpath expr="//footer//ul[@name='products']" position="inside">
