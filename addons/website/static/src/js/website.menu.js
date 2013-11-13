@@ -27,7 +27,7 @@
     website.menu.EditMenuDialog = website.editor.Dialog.extend({
         template: 'website.menu.dialog.edit',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'click button.js_add_menu': 'add_menu',
+            'click a.js_add_menu': 'add_menu',
             'click button.js_edit_menu': 'edit_menu',
             'click button.js_delete_menu': 'delete_menu',
         }),
@@ -40,8 +40,6 @@
         },
         start: function () {
             var r = this._super.apply(this, arguments);
-            var button = openerp.qweb.render('website.menu.dialog.footer-button');
-            this.$('.modal-footer').prepend(button);
             this.$('.oe_menu_editor').nestedSortable({
                 listType: 'ul',
                 handle: 'div',

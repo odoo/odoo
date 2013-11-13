@@ -9,7 +9,7 @@ OpenERP Contact Form
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['hr_recruitment', 'website_mail'],
+    'depends': ['website_partner', 'hr_recruitment', 'website_mail'],
     'data': [
         'data/website_hr_recruitment_data.xml',
         'views/website_hr_recruitment.xml',

@@ -5,7 +5,7 @@
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout" name="Footer Events Link">
         <xpath expr="//footer//ul[@name='products']" position="inside">
-            <li><a t-href="/event">Events</a></li>
+            <li><a href="/event">Events</a></li>
         </xpath>
     </template>
 
@@ -315,7 +315,7 @@
                             <li t-if="event_id.country_id">
                                 <a t-href="/event?country=#{event_id.country_id.id}"><strong><span class="icon-double-angle-right"/> Other Events in <span t-esc="event_id.country_id.name"/></strong></a>
                             </li>
-                            <li><a t-href="/event"><strong><span class="icon-double-angle-right"/> All Events</strong></a></li>
+                            <li><a href="/event"><strong><span class="icon-double-angle-right"/> All Events</strong></a></li>
                         </ul>
                     </div>
                 </div>

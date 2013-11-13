@@ -7,7 +7,7 @@
     <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <li t-att-class="(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''">
-                <a t-href="/shop/mycart/">
+                <a href="/shop/mycart/">
                     <i class="icon-shopping-cart"></i>
                     My cart <sup t-attf-class="my_cart_quantity label label-primary"
                                   t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
@@ -95,7 +95,7 @@
                             <t t-set="classname">pull-right</t>
                             <t t-set="style">padding-left: 5px;</t>
                         </t>
-                        <form t-action="/shop/" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;">
+                        <form action="/shop/" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;">
                             <t t-call="website_sale.search" />
                         </form>
                     </div>
@@ -218,7 +218,7 @@
     <!-- List view of products -->
 
     <template id="list_view" inherit_option_id="website_sale.products" name="List View">
-        <xpath expr="//div[@id='products_grid']/table" position="replace">
+        <xpath expr="//div[@id='products_grid']//table" position="replace">
           <div class="row">
             <t t-set="products" t-value="Ecommerce.get_products(product_ids)"/>
             <t t-foreach="products" t-as="product">
@@ -245,7 +245,7 @@
                 <div class="row">
                   <div class="col-sm-5">
                       <ol class="breadcrumb">
-                          <li><a t-href="/shop">Products</a></li>
+                          <li><a href="/shop">Products</a></li>
                           <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,facettes"><span t-field="category.name"/></a></li>
                           <li class="active"><span t-field="product.name"></span></li>
                       </ol>
@@ -262,7 +262,7 @@
                         </li>
                       </t>
                   </div><div class="col-sm-3 col-sm-offset-1">
-                        <form t-action="/shop/" method="get" class="pull-right">
+                        <form action="/shop/" method="get" class="pull-right">
                             <t t-call="website_sale.search" />
                         </form>
                   </div>
@@ -276,7 +276,7 @@
                   </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                       <h1 t-field="product.name">Product Name</h1>
 
-                      <form t-action="./add_cart/" class="js_add_cart_json">
+                      <form action="./add_cart/" class="js_add_cart_json">
                           <input type="hidden" t-if="len(product.product_variant_ids) &lt;= 1" name="product_id" t-att-value="product.id"/>
                           <t t-if="len(product.product_variant_ids) &gt; 1">
                               <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
@@ -472,8 +472,8 @@
                             </thead>
                         </table>
                         <div class="clearfix"/>
-                        <a t-href="/shop" class="btn btn-default mb32"><span class="icon-long-arrow-left"/> Continue Shopping</a>
-                        <a t-if="website_sale_order and website_sale_order.order_line" t-href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
+                        <a href="/shop" class="btn btn-default mb32"><span class="icon-long-arrow-left"/> Continue Shopping</a>
+                        <a t-if="website_sale_order and website_sale_order.order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
                         <div class="oe_structure"/>
                     </div>
                     <div class="col-md-3 text-muted" id="right_column">
@@ -501,7 +501,7 @@
     <template id="products_categories" inherit_option_id="website_sale.products" name="Product Categories">
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <ul class="nav nav-pills nav-stacked mt16">
-                <li t-att-class=" '' if search.get('category') else 'active' "><a t-href="/shop/">All Products</a></li>
+                <li t-att-class=" '' if search.get('category') else 'active' "><a href="/shop/">All Products</a></li>
                 <t t-set="categ" t-value="Ecommerce.get_categories()"/>
                 <t t-foreach="categ[0]" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
@@ -614,7 +614,7 @@
             <p>
                 Have a coupon code? Fill in this field and apply.
             </p>
-            <form t-if="website_sale_order and website_sale_order.order_line" t-action="/shop/mycart/" method="post" class="mb32">
+            <form t-if="website_sale_order and website_sale_order.order_line" action="/shop/mycart/" method="post" class="mb32">
                 <div class="input-group">
                     <input name="promo" class='form-control' type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
                     <div class="input-group-btn">
@@ -645,7 +645,7 @@
                     <li class="text-muted">Confirmation<span class="chevron"></span></li>
                 </ul>
                 <h1>Your Address</h1>
-                <form t-action="/shop/confirm_order/" method="post">
+                <form action="/shop/confirm_order/" method="post">
 
                 <div class="row">
                 <div class="col-md-8 oe_mycart">
@@ -899,6 +899,7 @@
                     <t t-foreach="payments" t-as="payment">
                         <div t-att-data-id="payment.id" t-raw="payment._content" class="hidden"/>
                     </t>
+<<<<<<< TREE
                 </div>
 
                 <div class="js_payment_validation mb64" t-if="payment_acquirer_id">
@@ -1007,6 +1008,7 @@
                 </div>
 
                 <h2>Tanks you for your order.</h2>
+                <a href="/shop/payment_validate/" class="btn btn-primary mt16">Validate &amp; Pay <span class="icon-long-arrow-right"/></a>
 
               </div>
               <div class="oe_structure"/>
