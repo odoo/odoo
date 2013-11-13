@@ -51,13 +51,16 @@ def get_current_order():
     else:
         return False
 
+
 class Website(osv.osv):
     _inherit = "website"
+
     def preprocess_request(self, cr, uid, ids, request, context=None):
         request.context.update({
             'website_sale_order': get_current_order(),
         })
         return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
+
 
 class Ecommerce(http.Controller):
 
@@ -644,6 +647,7 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/payment/'], type='http', auth="public", multilang=True)
     def payment(self, payment_acquirer_id=None, **post):
+        cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
         order = get_current_order()
 
@@ -663,23 +667,22 @@ class Ecommerce(http.Controller):
             elif values['validation'][0] == "refused":
                 values['payment_acquirer_id'] = None
 
+        # fetch all registered payment means
         if not values['payment_acquirer_id']:
-            payment_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('visible', '=', True)], context=request.context)
-            values['payments'] = payment_obj.browse(request.cr, request.uid, payment_ids, context=request.context)
+            payment_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('portal_published', '=', True)], context=request.context)
+            values['payments'] = payment_obj.browse(cr, uid, payment_ids, context=context)
             for pay in values['payments']:
-                pay._content = payment_obj.render(request.cr, request.uid, pay.id,
-                    object=order,
-                    reference=order.name,
-                    currency=order.pricelist_id.currency_id,
-                    amount=order.amount_total,
-                    cancel_url=request.httprequest.base_url,
-                    return_url="%sshop/payment/?payment_acquirer_id=%s" % (request.httprequest.host_url, pay.id),
-                    context=request.context)
+                pay._content = payment_obj.render(
+                    cr, uid, pay.id,
+                    order.name,
+                    order.amount_total,
+                    order.pricelist_id.currency_id,
+                    context=context)
 
         return request.website.render("website_sale.payment", values)
 
     @website.route(['/shop/payment_validation/'], type='json', auth="public", multilang=True)
-    def payment_validation(self, payment_acquirer_id=None):
+    def payment_validation(self, payment_acquirer_id=None, **post):
         payment_obj = request.registry.get('payment.acquirer')
         order = get_current_order()
         return payment_obj.validate_payement(request.cr, request.uid, int(payment_acquirer_id), 
@@ -690,7 +693,7 @@ class Ecommerce(http.Controller):
             context=request.context)
 
     @website.route(['/shop/confirmation/'], type='http', auth="public", multilang=True)
-    def confirmation(self, **post):
+    def payment_confirmation(self, **post):
         order = get_current_order()
 
         if not order or not order.order_line:
