@@ -2,7 +2,7 @@
     'use strict';
 
     var website = openerp.website;
-    // $.fn.data automatically parses value, '0'|'1' -> 0|1
+    var _t = openerp._t;
 
     website.add_template_file('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
@@ -828,7 +828,7 @@
     website.editor.LinkDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.link',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'change .url-source': function (e) { this.changed($(e.target)); },
+            'change :input.url-source': function (e) { this.changed($(e.target)); },
             'mousedown': function (e) {
                 var $target = $(e.target).closest('.list-group-item');
                 if (!$target.length || $target.hasClass('active')) {
@@ -836,7 +836,7 @@
                     return;
                 }
 
-                this.changed($target.find('.url-source'));
+                this.changed($target.find('.url-source').filter(':input'));
             },
             'click button.remove': 'remove_link',
             'change input#link-text': function (e) {
@@ -846,21 +846,36 @@
         init: function (editor) {
             this._super(editor);
             // url -> name mapping for existing pages
-            this.pages = Object.create(null);
             this.text = null;
         },
         start: function () {
             var self = this;
-            return $.when(
-                this.fetch_pages().done(this.proxy('fill_pages')),
-                this._super()
-            ).done(function () {
-                self.bind_data();
+            this.$('#link-page').select2({
+                minimumInputLength: 3,
+                placeholder: _t("New or existing page"),
+                query: function (q) {
+                    // FIXME: out-of-order, abort
+                    self.fetch_pages(q.term).then(function (results) {
+                        var rs = _.map(results, function (r) {
+                            return { id: r.url, text: r.name, };
+                        });
+                        rs.push({
+                            create: true,
+                            id: q.term,
+                            text: "Create " + q.term,
+                        });
+                        q.callback({
+                            more: false,
+                            results: rs
+                        });
+                    });
+                },
             });
+            return this._super().then(this.proxy('bind_data'));
         },
         save: function () {
             var self = this, _super = this._super.bind(this);
-            var $e = this.$('.list-group-item.active .url-source');
+            var $e = this.$('.list-group-item.active .url-source').filter(':input');
             var val = $e.val();
             if (!val || !$e[0].checkValidity()) {
                 // FIXME: error message
@@ -872,15 +887,18 @@
             var done = $.when();
             if ($e.hasClass('email-address')) {
                 this.make_link('mailto:' + val, false, val);
-            } else if ($e.hasClass('existing')) {
-                self.make_link(val, false, this.pages[val]);
-            } else if ($e.hasClass('pages')) {
-                // Create the page, get the URL back
-                done = $.get(_.str.sprintf(
-                        '/pagenew/%s?noredirect', encodeURI(val)))
-                    .then(function (response) {
-                        self.make_link(response, false, val);
-                    });
+            } else if ($e.hasClass('page')) {
+                var data = $e.select2('data');
+                if (!data.create) {
+                    self.make_link(data.id, false, data.text);
+                } else {
+                    // Create the page, get the URL back
+                    done = $.get(_.str.sprintf(
+                            '/pagenew/%s?noredirect', encodeURI(data.id)))
+                        .then(function (response) {
+                            self.make_link(response, false, data.id);
+                        });
+                }
             } else {
                 this.make_link(val, this.$('input.window-new').prop('checked'));
             }
@@ -903,13 +921,6 @@
             var match, $control;
             if ((match = /mailto:(.+)/.exec(href))) {
                 $control = this.$('input.email-address').val(match[1]);
-            } else if (href in this.pages) {
-                $control = this.$('select.existing').val(href);
-            } else if ((match = /\/page\/(.+)/.exec(href))) {
-                var actual_href = '/page/website.' + match[1];
-                if (actual_href in this.pages) {
-                    $control = this.$('select.existing').val(actual_href);
-                }
             }
             if (!$control) {
                 $control = this.$('input.url').val(href);
@@ -921,31 +932,23 @@
             this.$('input.window-new').prop('checked', new_window);
         },
         changed: function ($e) {
-            this.$('.url-source').not($e).val('');
+            this.$('.url-source').filter(':input').not($e).val('')
+                    .filter(function () { return !!$(this).data('select2'); })
+                    .select2('data', null);
             $e.closest('.list-group-item')
                 .addClass('active')
                 .siblings().removeClass('active')
                 .addBack().removeClass('has-error');
         },
-        fetch_pages: function () {
+        fetch_pages: function (term) {
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website',
                 method: 'search_pages',
-                args: [null],
+                args: [null, term],
                 kwargs: {
-                    limit: 10,
+                    limit: 9,
                     context: website.get_context()
                 },
-            });
-        },
-        fill_pages: function (results) {
-            var self = this;
-            var pages = this.$('select.existing')[0];
-            _(results).each(function (result) {
-                self.pages[result.url] = result.name;
-
-                pages.options[pages.options.length] =
-                        new Option(result.name, result.url);
             });
         },
     });

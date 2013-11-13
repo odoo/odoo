@@ -355,6 +355,7 @@ class website(osv.osv):
                 continue
 
             generated = map(dict, itertools.product(*(
+                # generate w/ pattern using name_search
                 itertools.izip(itertools.repeat(name), converter.generate())
                 for name, converter in rule._converters.iteritems()
             )))
