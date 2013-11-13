@@ -845,8 +845,9 @@
         }),
         init: function (editor) {
             this._super(editor);
-            // url -> name mapping for existing pages
             this.text = null;
+            // Store last-performed request to be able to cancel/abort it.
+            this.req = null;
         },
         start: function () {
             var self = this;
@@ -941,7 +942,9 @@
                 .addBack().removeClass('has-error');
         },
         fetch_pages: function (term) {
-            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+            var self = this;
+            if (this.req) { this.req.abort(); }
+            return this.req = openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website',
                 method: 'search_pages',
                 args: [null, term],
@@ -949,6 +952,9 @@
                     limit: 9,
                     context: website.get_context()
                 },
+            }).done(function () {
+                // request completed successfully -> unstore it
+                self.req = null;
             });
         },
     });
