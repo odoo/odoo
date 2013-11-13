@@ -150,7 +150,6 @@
         template: 'website.menu.dialog.add',
         init: function (editor, data) {
             this.data = data;
-            this.update_mode = !!this.data;
             return this._super.apply(this, arguments);
         },
         start: function () {
