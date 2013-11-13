@@ -55,6 +55,4 @@ class crm_lead(osv.osv):
                         salesmans_leads[salesman_id] = [lead.id]
         for salesman_id, lead_ids in salesmans_leads.items():
             salesteam_id = self.on_change_user(cr, uid, lead_ids, salesman_id, context=None)['value'].get('section_id')
-            import pudb
-            pudb.set_trace()
             self.write(cr, uid, lead_ids, {'user_id': salesman_id, 'section_id': salesteam_id}, context=context)
