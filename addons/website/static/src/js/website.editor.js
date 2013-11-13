@@ -863,7 +863,7 @@
                         rs.push({
                             create: true,
                             id: q.term,
-                            text: "Create " + q.term,
+                            text: _.str.sprintf(_t("Create page '%s'"), q.term),
                         });
                         q.callback({
                             more: false,
