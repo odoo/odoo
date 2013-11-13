@@ -200,7 +200,7 @@
 
                                 <div class='oe_picking_categories'>
                                     <p>
-                                        Select the picking category you want to process.
+                                        Select the type of picking you want to process.
                                     </p>
                                     <t t-foreach="widget.picking_types" t-as="type">
                                         <div t-att-class="'oe_picking ' + (widget.pickings_by_type[type.id].length === 0 ? 'oe_empty':'js_pick_last') " 
@@ -209,6 +209,9 @@
                                             <span class='oe_picking_name'><t t-esc="type.name" /></span>
                                             <t t-if="widget.pickings_by_type[type.id].length === 0">
                                                 <span class='oe_pick_app_info'>Nothing to do</span>
+                                            </t>
+                                            <t t-if="widget.pickings_by_type[type.id].length > 0">
+                                                <span class='oe_pick_app_info'><t t-esc="widget.pickings_by_type[type.id].length" /> pickings </span>
                                             </t>
                                         </div>
                                     </t>
