@@ -749,17 +749,19 @@ class stock_picking(osv.osv):
         
         return True
 
-    def action_assign(self, cr, uid, ids, *args):
-        """ Changes state of picking to available if all moves are confirmed.
+    def action_assign(self, cr, uid, ids, context=None):
+        """ Check availability of picking moves.
+        This has the effect of changing the state and reserved quants of available moves, and may
+        also impact the state of the picking as it is computed based on move's states.
         @return: True
         """
-        for pick in self.browse(cr, uid, ids):
+        for pick in self.browse(cr, uid, ids, context=context):
             if pick.state == 'draft':
-                self.action_confirm(cr, uid, [pick.id])
+                self.action_confirm(cr, uid, [pick.id], context=context)
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
                 raise osv.except_osv(_('Warning!'), _('No product available.'))
-            self.pool.get('stock.move').action_assign(cr, uid, move_ids)
+            self.pool.get('stock.move').action_assign(cr, uid, move_ids, context=context)
         return True
 
     def force_assign(self, cr, uid, ids, context=None):
@@ -1085,7 +1087,7 @@ class stock_picking(osv.osv):
                         mov = stock_move_obj.browse(cr, uid, move, context=context)
                         new_move = stock_move_obj.split(cr, uid, mov, res2[move], context=context)
                         #Assign move as it was assigned before
-                        stock_move_obj.action_assign(cr, uid, [new_move])
+                        stock_move_obj.action_assign(cr, uid, [new_move], context=context)
                 todo = []
                 orig_moves = [x for x in orig_moves if res[1][x.id] < orig_qtys[x.id]]
                 for move in orig_moves + stock_move_obj.browse(cr, uid, extra_moves, context=context):
