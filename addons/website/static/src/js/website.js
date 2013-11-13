@@ -40,7 +40,10 @@
 
     var all_ready = null;
     var dom_ready = website.dom_ready = $.Deferred();
-    $(dom_ready.resolve);
+    $(document).ready(function () {
+        website.is_editable = $('html').data('editable');
+        dom_ready.resolve();
+    });
 
     website.init_kanban = function ($kanban) {
         $('.js_kanban_col', $kanban).each(function () {
@@ -105,8 +108,10 @@
      */
     website.ready = function() {
         if (!all_ready) {
-            all_ready = $.when(dom_ready, templates_def).then(function () {
-                if ($('html').data('editable')) {
+            all_ready = dom_ready.then(function () {
+                return templates_def;
+            }).then(function () {
+                if (website.is_editable) {
                     website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
                     var modules = ['website'];
