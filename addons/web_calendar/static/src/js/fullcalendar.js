@@ -53,6 +53,8 @@ openerp.web_calendar = function(instance) {
         return typeof id == "string" && id.indexOf('-') >= 0;
     }
 
+
+
     instance.web.views.add('calendar', 'instance.web_calendar.FullCalendarView');
 
     instance.web_calendar.FullCalendarView = instance.web.View.extend({
@@ -81,7 +83,7 @@ openerp.web_calendar = function(instance) {
             this.range_start = null;
             this.range_stop = null;
             this.selected_filters = [];
-
+                        
         },
 
         set_default_options: function(options) {
@@ -94,6 +96,7 @@ openerp.web_calendar = function(instance) {
 
         destroy: function() {
             this.$calendar.fullCalendar('destroy');
+            this.$small_calendar.datepicker('destroy');
             this._super.apply(this, arguments);
         },
 
@@ -103,6 +106,7 @@ openerp.web_calendar = function(instance) {
             this.fields_view = fv;
 
             this.$calendar = this.$el.find(".oe_fullcalendar_widget");
+            this.$small_calendar = this.$el.find(".oe_calendar_mini");
 
             this.info_fields = [];
 
@@ -235,7 +239,25 @@ openerp.web_calendar = function(instance) {
             });
         },
 
+        smallCalChanged: function (context) {
+            return function(datum,obj) {
+                var curView = context.$calendar.fullCalendar( 'getView');
+                var curDate = new Date(obj.currentYear , obj.currentMonth, obj.currentDay);
+                
+                if (curView.name == "agendaWeek") {
+                    if (curDate <= curView.end && curDate >= curView.start) {
+                        context.$calendar.fullCalendar('changeView','agendaDay');
+                    }
+                }
+                else if (curView.name != "agendaDay" || (curView.name == "agendaDay" && curDate.compareTo(curView.start)==0)) { 
+                        context.$calendar.fullCalendar('changeView','agendaWeek');
+                }                
+                context.$calendar.fullCalendar( 'gotoDate', obj.currentYear , obj.currentMonth, obj.currentDay);
+            }
+        },              
+        
         init_fullcalendar: function() {
+            this.$small_calendar.datepicker({ onSelect: this.smallCalChanged(this) });            
             this.$calendar.fullCalendar(this.get_fc_init_options());
             return $.when();
         },
@@ -247,11 +269,12 @@ openerp.web_calendar = function(instance) {
             var QuickCreate = get_class(this.quick_create_class);
             this.quick = new QuickCreate(this, this.dataset, true, this.options, data_template);
             this.quick.on('added', this, this.proxy('quick_created'))
-                .on('close', this, function() {
-                    this.quick.destroy();
-                    delete this.quick;
-                    this.$calendar.fullCalendar('unselect');
-                });
+                    .on('slowadded', this, this.proxy('slow_created'))
+                    .on('close', this, function() {
+                        this.quick.destroy();
+                        delete this.quick;
+                        this.$calendar.fullCalendar('unselect');
+                    });
             this.quick.replace($(".oe_calendar_qc_placeholder"));
             this.quick.focus();
         },
@@ -415,7 +438,7 @@ openerp.web_calendar = function(instance) {
             var event_end = event.end;
             if (event.allDay) {
                 // Sometimes fullcalendar doesn't give any event.end.
-                if (event_end === null || typeof evend_end === "undefined")
+                if (event_end === null || typeof event_end === "undefined")
                     event_end = event.start;
                 // Avoid inplace changes
                 event_end = (new Date(event_end.getTime())).addDays(1);
@@ -550,6 +573,11 @@ openerp.web_calendar = function(instance) {
             this.dataset.trigger("dataset_changed", id);
             this.refresh_event(id);
         },
+        slow_created: function () {
+            // refresh all view, because maybe some recurrents item
+            var self = this;
+            self.$calendar.fullCalendar('refetchEvents');
+        },
 
         append_deletion_handle: function (event, element, view) {
             var self = this;
@@ -596,7 +624,7 @@ openerp.web_calendar = function(instance) {
          * a "close" event.
          */
         init: function(parent, dataset, buttons, options, data_template) {
-            this._super(parent);
+            this._super(parent);            
             this.dataset = dataset;
             this._buttons = buttons || false;
             this.options = options;
@@ -631,6 +659,10 @@ openerp.web_calendar = function(instance) {
                 self.quick_add();
                 self.focus();
             });
+            this.$el.find(".oe_calendar_quick_create_edit").click(function () {
+                self.slow_add();
+                self.focus();
+            });            
             this.$el.find(".oe_calendar_quick_create_close").click(function (ev) {
                 ev.preventDefault();
                 self.trigger('close');
@@ -656,6 +688,12 @@ openerp.web_calendar = function(instance) {
             var val = this.$input.val();
             if (/^\s*$/.test(val)) { return; }
             this.quick_create({'name': val});
+        },
+        
+        slow_add: function() {
+            var val = this.$input.val();
+            if (/^\s*$/.test(val)) { return; }
+            this.slow_create({'name': val});
         },
 
         /**
@@ -732,7 +770,7 @@ openerp.web_calendar = function(instance) {
                     def.resolve();
             });
             pop.on('create_completed', self, function(id) {
-                self.trigger('added', id);
+                 self.trigger('slowadded');
             });
             def.then(function() {
                 self.trigger('close');
@@ -1071,6 +1109,7 @@ openerp.web_calendar = function(instance) {
 
     instance.web.form.widgets.add('many2many_calendar','instance.web_calendar.FieldMany2ManyCalendar');
     instance.web.form.widgets.add('one2many_calendar','instance.web_calendar.FieldOne2ManyCalendar');
+   
 
 };
 

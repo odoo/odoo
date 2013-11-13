@@ -1,12 +1,20 @@
 <template>
-  <t t-name="FullCalendarView">
-    <div class="oe_calendar_view">
-      <div class="oe_calendar_buttons"/>
-      <div class="oe_fullcalendar_widget" />
-      <div class="oe_calendar_qc_placeholder"/>
-    </div>
+  <t t-name="FullCalendarView"> 
+    <table cellspacing="0" cellpadding="0" border="0" width="100%" class="oe_calendar_table">
+        <tr>
+            <td width="100%">
+                <div class="oe_calendar_view">        
+                  <div class="oe_fullcalendar_widget" />
+                  <div class="oe_calendar_buttons"/>
+                  <div class="oe_calendar_qc_placeholder"/>                    
+                </div>                
+            </td>
+            <td class='oe_calendar_sidebar_container'>
+                <div class="oe_calendar_mini" /> 
+            </td>
+        </tr>
+    </table>
   </t>
-
   <div t-name="CalendarView.buttons" class="oe_calendar_buttons">
     <t t-if="widget.options.action_buttons !== false">
       <t t-if="widget.is_action_enabled('create') &amp;&amp;
@@ -20,14 +28,17 @@
     </t>
   </div>
 
-  <div t-name="CalendarView.quick_create" class="oe_calendar_quick_create">
+  <div t-name="CalendarView.quick_create" class="oe_calendar_quick_create openerp">
     <input/>
     <t t-if="widget._buttons">
       <div class="oe_calendar_quick_create_buttons">
         <button class="oe_button oe_highlight oe_calendar_quick_create_add ">Add</button>
+        <button class="oe_button oe_calendar_quick_create_edit ">More</button>
         or <a href="#" class="oe_calendar_quick_create_close">Cancel</a>
       </div>
     </t>
   </div>
 
+
+  
 </template>
