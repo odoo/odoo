@@ -1,21 +1,6 @@
 (function () {
     'use strict';
 
-
-    var start_snippet_animation = function () {
-        hack_to_add_snippet_id();
-        $("[data-snippet-id]").each(function() {
-            var $snipped_id = $(this);
-            if (    !$snipped_id.parents("#oe_snippets").length &&
-                    typeof $snipped_id.data("snippet-view") === 'undefined' &&
-                    website.snippet.animationRegistry[$snipped_id.data("snippet-id")]) {
-                var snippet = new website.snippet.animationRegistry[$snipped_id.data("snippet-id")]($snipped_id);
-                $snipped_id.data("snippet-view", snippet);
-            }
-        });
-    };
-    $(document).ready(start_snippet_animation);
-
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.snippets.xml');
 
@@ -39,7 +24,8 @@
 
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                start_snippet_animation();
+                website.snippet.stop_animation();
+                website.snippet.start_animation();
                 self.trigger('rte:snippets_ready');
             });
 
@@ -58,7 +44,6 @@
 
     /* ----- SNIPPET SELECTOR ---- */
 
-    website.snippet = {};
     var observer = new website.Observer(function (mutations) {
         if (!_(mutations).find(function (m) {
                     return m.type === 'childList' && m.addedNodes.length > 0;
@@ -87,6 +72,10 @@
             });
         });
     }
+
+    $(document).ready(function() {
+        hack_to_add_snippet_id();
+    });
 
     website.snippet.selector = [];
     website.snippet.BuildingBlock = openerp.Widget.extend({
@@ -219,16 +208,10 @@
                 if ($snipped_id.data("snippet-editor")) {
                     $snipped_id.data("snippet-editor").onBlur();
                 }
-                if ($snipped_id.data("snippet-view")) {
-                    $snipped_id.data("snippet-view").onBlurEdit();
-                }
             }
         },
         snippet_focus: function ($snipped_id) {
             if ($snipped_id) {
-                if ($snipped_id.data("snippet-view")) {
-                    $snipped_id.data("snippet-view").onFocusEdit();
-                }
                 if ($snipped_id.data("snippet-editor")) {
                     $snipped_id.data("snippet-editor").onFocus();
                 }
@@ -367,9 +350,7 @@
                         if(action === 'insert'){
                             $target = $toInsert;
 
-                            if (website.snippet.animationRegistry[snipped_id]) {
-                                new website.snippet.animationRegistry[snipped_id]($target);
-                            }
+                            website.snippet.start_animation();
 
                             self.create_overlay($target);
                             $target.data("snippet-editor").drop_and_build_snippet($target);
@@ -546,34 +527,6 @@
         }
     });
 
-
-    website.snippet.animationRegistry = {};
-    website.snippet.Animation = openerp.Class.extend({
-        $: function () {
-            return this.$el.find.apply(this.$el, arguments);
-        },
-        init: function (dom) {
-            this.$el = this.$target = $(dom);
-            this.start();
-        },
-        /*
-        *  start
-        *  This method is called after init
-        */
-        start: function () {
-        },
-        /* onFocusEdit
-        *  if they are an editor for this data-snippet-id
-        *  Called before onFocus of snippet editor
-        */
-        onFocusEdit : function () {},
-
-        /* onBlurEdit
-        *  if they are an editor for this data-snippet-id
-        *  Called after onBlur of snippet editor
-        */
-        onBlurEdit : function () {},
-    });
 
     website.snippet.editorRegistry = {};
     website.snippet.Editor = openerp.Class.extend({
@@ -797,7 +750,7 @@
 
         },
 
-        change_background: function (bg, ul_options) {
+        change_background: function (bg, ul_options, callback) {
             var self = this;
             this.set_options_background(bg, ul_options);
             var $ul = this.$editor.find(ul_options);
@@ -818,6 +771,9 @@
                             $bg.css("background-image", "url(" + o.url + ")");
                         });
                         editor.appendTo($('body'));
+                    }
+                    if (callback) {
+                        callback();
                     }
                 })
                 .on('mouseover', function (event) {
@@ -1033,11 +989,6 @@
         },
     });
 
-    website.snippet.animationRegistry.carousel = website.snippet.Animation.extend({
-        start: function () {
-            this.$target.carousel({interval: false});
-        },
-    });
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.resize.extend({
         drop_and_build_snippet: function() {
             var id = 0;
@@ -1211,8 +1162,11 @@
 
     website.snippet.editorRegistry.parallax = website.snippet.editorRegistry.resize.extend({
         start : function () {
+            var self = this;
             this._super();
-            this.change_background(this.$target, 'ul[name="parallax-background"]');
+            this.change_background(this.$target, 'ul[name="parallax-background"]', function () {
+                self.$target.data("snippet-view").set_values();
+            });
             this.scroll();
             this.change_size();
         },
@@ -1228,11 +1182,15 @@
                 var speed =  $(this).data('value');
                 self.$target.attr('data-scroll-background-ratio', speed);
                 self.$target.data("snippet-view").set_values();
+                return false;
             });
+            this.$target.data("snippet-view").set_values();
         },
         clean_for_save: function () {
             this._super();
-            this.$target.find(".parallax").css("background-position", '');
+            this.$target.find(".parallax")
+                .css("background-position", '')
+                .removeAttr("data-scroll-background-offset");
         },
         change_size: function () {
             var self = this;
@@ -1251,6 +1209,7 @@
                     $li.removeClass("active");
                     $(this).addClass("active");
                     self.$target.data("snippet-view").set_values();
+                    return false;
                 })
                 .on('mouseover', function (event) {
                     self.$target.removeClass('oe_big oe_small oe_medium');
@@ -1260,39 +1219,6 @@
                     self.$target.removeClass('oe_big oe_small oe_medium');
                     self.$target.addClass($ul.find('li.active').data("value"));
                 });
-        }
-    });
-    website.snippet.animationRegistry.parallax = website.snippet.Animation.extend({
-        start: function () {
-            var self = this;
-            this.set_values();
-            var on_scroll = function () {
-                var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
-                if (speed == 1) return;
-                var offset = parseFloat(self.$target.attr("data-scroll-background-offset") || 0);
-                var top = offset + window.scrollY * speed;
-                self.$target.css("background-position", "0px " + top + "px");
-            };
-            $(window).off("scroll").on("scroll", on_scroll);
-        },
-        set_values: function () {
-            var self = this;
-            var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
-
-            if (speed == 1) {
-                this.$target.css("background-attachment", "fixed").css("background-position", "0px 0px");
-                return;
-            } else {
-                this.$target.css("background-attachment", "scroll");
-            }
-
-            this.$target.attr("data-scroll-background-offset", 0);
-            var img = new Image();
-            img.onload = function () {
-                self.$target.attr("data-scroll-background-offset", self.$target.outerHeight() - this.height);
-                $(window).scroll();
-            };
-            img.src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
         }
     });
 

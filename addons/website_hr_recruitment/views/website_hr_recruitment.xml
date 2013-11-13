@@ -9,7 +9,7 @@
 
         <template id="job_footer_custom" inherit_id="website.layout" name="Footer Job Link">
             <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/jobs">Jobs</a></li>
+            <li><a href="/jobs">Jobs</a></li>
             </xpath>
         </template>
 
@@ -83,7 +83,7 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-12 text-center mt16 mb16">
-                                        <a t-href="/job/apply" class="btn btn-primary btn-lg">Apply</a>
+                                        <a href="/job/apply" class="btn btn-primary btn-lg">Apply</a>
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +102,7 @@
                     <div class="row">
                       <div class="col-sm-5">
                           <ol class="breadcrumb mb0">
-                              <li><a t-href="/jobs">Our Jobs</a></li>
+                              <li><a href="/jobs">Our Jobs</a></li>
                               <li class="active"><span t-field="job.name"></span></li>
                           </ol>
                       </div><div class="col-sm-7">
@@ -220,7 +220,7 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-12 text-center mt16 mb16">
-                                        <a t-href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                                        <a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
                                     </div>
                                 </div>
                             </div>
@@ -233,7 +233,7 @@
         <template id="job_departments" inherit_option_id="website_hr_recruitment.index" name="Filter on Departments">
             <xpath expr="//div[@id='jobs_grid_left']" position="inside">
                 <ul class="nav nav-pills nav-stacked mb32">
-                    <li t-att-class=" '' if active else 'active' "><a t-href="/jobs">All Departments</a></li>
+                    <li t-att-class=" '' if active else 'active' "><a href="/jobs">All Departments</a></li>
                     <t t-foreach="departments" t-as="department">
                         <li t-att-class="department.id == active and 'active' or ''">
                         <a t-href="/jobs/department/#{ department.id }/" ><span t-field="department.name"/></a>
@@ -249,7 +249,7 @@
         <template id="job_offices" inherit_option_id="website_hr_recruitment.index" name="Filter on Offices">
             <xpath expr="//div[@id='jobs_grid_left']" position="inside">
                 <ul class="nav nav-pills nav-stacked mb32">
-                    <li t-att-class=" '' if office else 'active' "><a t-href="/jobs">All Offices</a></li>
+                    <li t-att-class=" '' if office else 'active' "><a href="/jobs">All Offices</a></li>
                     <t t-foreach="offices" t-as="thisoffice">
                         <li t-att-class="thisoffice.id == office and 'active' or ''">
                             <a t-href="/jobs/office/#{ thisoffice.id }/" >

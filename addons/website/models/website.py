@@ -30,6 +30,7 @@ def route(routes, *route_args, **route_kwargs):
         new_routes = routes if isinstance(routes, list) else [routes]
         f.cms = True
         f.multilang = route_kwargs.get('multilang', False)
+        f.methods = route_kwargs.pop('methods', None)
         if f.multilang:
             route_kwargs.pop('multilang')
             for r in list(new_routes):
@@ -37,7 +38,7 @@ def route(routes, *route_args, **route_kwargs):
         @http.route(new_routes, *route_args, **route_kwargs)
         @functools.wraps(f, assigned=functools.WRAPPER_ASSIGNMENTS + ('func_name',))
         def wrap(*args, **kwargs):
-            request.route_lang = kwargs.get('lang_code', None)
+            request.route_lang = kwargs.pop('lang_code', None)
             if not hasattr(request, 'website'):
                 request.multilang = f.multilang
                 # TODO: Select website, currently hard coded
@@ -49,6 +50,8 @@ def route(routes, *route_args, **route_kwargs):
                     if not lang_ok:
                         return request.not_found()
                 request.website.preprocess_request(request)
+            if f.methods and request.httprequest.method not in f.methods:
+                return werkzeug.exceptions.MethodNotAllowed(valid_methods=f.methods)
             return f(*args, **kwargs)
         return wrap
     return decorator
@@ -332,11 +335,22 @@ class website(osv.osv):
                   of the same.
         :rtype: list({name: str, url: str})
         """
+        # FIXME: possibility to add custom converters without editing server
+        #        would allow the creation of a pages converter generating page
+        #        urls on its own
+        View = self.pool['ir.ui.view']
+        views = View.search_read(cr, uid, [['page', '=', True]],
+                                 fields=['name'], order='name', context=context)
+        xids = View.get_external_id(cr, uid, [view['id'] for view in views], context=context)
+        for view in views:
+            if xids[view['id']]:
+                yield {
+                    'name': view['name'],
+                    'url': '/page/' + xids[view['id']],
+                }
 
         router = request.httprequest.app.get_db_router(request.db)
-
         for rule in router.iter_rules():
-            endpoint = rule.endpoint
             if not self.rule_is_enumerable(rule):
                 continue
 
@@ -346,8 +360,7 @@ class website(osv.osv):
             )))
 
             for values in generated:
-                # rule.build returns (domain_part, rel_url)
-                url = rule.build(values, append_unknown=False)[1]
+                domain_part, url = rule.build(values, append_unknown=False)
                 yield {'name': url, 'url': url }
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):

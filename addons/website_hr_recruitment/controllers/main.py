@@ -91,17 +91,4 @@ class website_hr_recruitment(http.Controller):
     @website.route('/job/publish', type='json', auth="admin", multilang=True)
     def publish (self, id, object):
         res = controllers.publish(id, object)
-
-        hr_job = request.registry[object]
-        id = int(id)
-        rec = hr_job.browse(request.cr, request.uid, id)
-        vals = {}
-        if rec.website_published:
-            vals['state'] = 'recruit'
-            if not rec.no_of_recruitment:
-                vals ['no_of_recruitment'] = 1.0
-        else:
-            vals['state'] = 'open'
-        hr_job.write(request.cr, request.uid, [rec.id], vals, context=request.context)
-
         return res

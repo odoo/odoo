@@ -100,25 +100,6 @@ class view(osv.osv):
 
         return arch
 
-    URL_ATTRS = {
-        'form': 'action',
-        'a': 'href',
-        'link': 'href',
-        'frame': 'src',
-        'iframe': 'src',
-        'script': 'src',
-    }
-    def _normalize_urls(self, root):
-        for element in root.iter():
-            attr = self.URL_ATTRS.get(element.tag)
-            if attr is None or attr not in element.attrib:
-                continue
-
-            value = element.get(attr)
-            if not urlparse(value).scheme:
-                element.attrib.pop(attr)
-                element.set('t-' + attr, value)
-
     def save(self, cr, uid, res_id, value, xpath=None, context=None):
         """ Update a view section. The view section may embed fields to write
 
@@ -130,10 +111,6 @@ class view(osv.osv):
 
         arch_section = html.fromstring(
             value, parser=html.HTMLParser(encoding='utf-8'))
-
-        # TODO fme: Temporary desactivated because this breaks most of the snippets
-        # Need to find another way to normalize multilang urls (postprocessing) ?
-        # self._normalize_urls(arch_section)
 
         if xpath is None:
             # value is an embedded field on its own, not a view section
