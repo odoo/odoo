@@ -30,7 +30,6 @@
                 <tr>
                     <td class="cal_lable">Who</td>
                     <td>
-                        <span>: <t t-esc="invitation['meeting'].organizer"/> - <a class="cal_lable">Organizer</a></span>
                         <t t-foreach="invitation['attendee']" t-as="att">
                             <br/>
                             <span class="cal_status"><a t-attf-class="oe_invitation #{att.status}"/><t t-esc="att.name"/></span>

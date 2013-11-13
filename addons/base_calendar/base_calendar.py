@@ -31,7 +31,7 @@ import time
 from openerp import tools
 import openerp.service.report
 
-def get_recurrent_dates(rrulestring, startdate, exdate=None, tz=None, exrule=None, context=None):
+def get_recurrent_dates(rrulestring, startdate, exdate=None, tz=None, context=None):
     """Get recurrent dates based on Rule string considering exdate and start date.
 
     All input dates and output dates are in UTC. Dates are infered
@@ -41,15 +41,13 @@ def get_recurrent_dates(rrulestring, startdate, exdate=None, tz=None, exrule=Non
     @param rrulestring: rulestring (ie: 'FREQ=DAILY;INTERVAL=1;COUNT=3')
     @param exdate: string of dates separated by commas (ie: '20130506220000Z,20130507220000Z')
     @param startdate: string start date for computing recurrent dates
-    @param tz: pytz timezone for computing recurrent dates
-    @param exrule: string exrule
+    @param tz: pytz timezone for computing recurrent dates    
     @return: list of Recurrent dates
 
     """
 
     exdate = exdate.split(',') if exdate else []
-    startdate = pytz.UTC.localize(
-        datetime.strptime(startdate, "%Y-%m-%d %H:%M:%S"))
+    startdate = pytz.UTC.localize(datetime.strptime(startdate, "%Y-%m-%d %H:%M:%S"))
 
     def todate(date):
         val = parser.parse(''.join((re.compile('\d')).findall(date)))
@@ -75,10 +73,8 @@ def get_recurrent_dates(rrulestring, startdate, exdate=None, tz=None, exrule=Non
     for date in exdate:
         datetime_obj = todate(date)
         rset1._exdate.append(datetime_obj)
-
-    if exrule:
-        rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
-
+    
+    print [d.astimezone(pytz.UTC) for d in rset1]        
     return [d.astimezone(pytz.UTC) for d in rset1]
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
@@ -91,7 +87,6 @@ def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
     """
     if base_calendar_id and isinstance(base_calendar_id, (str, unicode)):
         res = base_calendar_id.split('-')
-
         if len(res) >= 2:
             real_id = res[0]
             if with_date:
@@ -112,22 +107,6 @@ def get_real_ids(ids):
         for id in ids:
             res.append(base_calendar_id2real_id(id))
         return res
-
-def real_id2base_calendar_id(real_id, recurrent_date):
-#     """
-#     Convert a real event id (type int) into a "virtual/recurring event id" (type string).
-#     E.g. real event id is 1 and recurrent_date is set to 01-12-2009 10:00:00, so
-#     it will return 1-20091201100000.
-#     @param real_id: real event id
-#     @param recurrent_date: real event recurrent date
-#     @return: string containing the real id and the recurrent date
-#     """
-#     if real_id and recurrent_date:
-#         recurrent_date = time.strftime("%Y%m%d%H%M%S", time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
-#         return '%d-%s' % (real_id, recurrent_date)
-#     return real_id
-    raise  osv.except_osv(_('Warning!'), _('Methode removed ! :/ '))
-
 
 class calendar_attendee(osv.osv):
     """
@@ -185,7 +164,6 @@ class calendar_attendee(osv.osv):
     _columns = {
         'cutype': fields.selection([('individual', 'Individual'), ('group', 'Group'), ('resource', 'Resource'), ('room', 'Room'), ('unknown', 'Unknown') ], 'Invite Type', help="Specify the type of Invitation"),
         'state': fields.selection([('needs-action', 'Needs Action'),('tentative', 'Uncertain'),('declined', 'Declined'),('accepted', 'Accepted')], 'Status', readonly=True, help="Status of the attendee's participation"),
-        'rsvp':  fields.boolean('Required Reply?', help="Indicats whether the favor of a reply is requested"),
         'cn': fields.function(_compute_data, string='Common name', type="char", size=124, multi='cn', store=True),
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."),
         'partner_id': fields.many2one('res.partner', 'Contact'),
@@ -199,7 +177,6 @@ class calendar_attendee(osv.osv):
     }
     _defaults = {
         'state': 'needs-action',
-        'rsvp':  True,
         'cutype': 'individual',
     }
 
@@ -283,7 +260,7 @@ class calendar_attendee(osv.osv):
             attendee_add = event.add('attendee')
             attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
             #attendee_add.params['ROLE'] = [str(attendee.role)]
-            attendee_add.params['RSVP'] = [str(attendee.rsvp)]
+            attendee_add.params['RSVP'] = [str(False)]
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
         res = cal.serialize()
         return res

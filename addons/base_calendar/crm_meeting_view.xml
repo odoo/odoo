@@ -135,7 +135,6 @@
                                     <field name="class"/>
                                     <field name="show_as"/>
                                     <field name="rrule" invisible="1" readonly="0" />
-                                    <field name="recurrent_id_date" invisible="1" />
                                     <field name="recurrent_id" invisible="1" />
                                 </group>
                             </group>
@@ -149,8 +148,7 @@
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="email" string="Mail To"/>
                                     <field name="state"/>
-                                    <field name="email"/>
-                                    <field name="rsvp"/>
+                                    <field name="email"/>                                    
                                     <field name="cutype"/> 
                                     <button name="do_tentative" states="needs-action,declined,accepted" string="Uncertain" type="object" icon="terp-crm" />
                                     <button name="do_accept" string="Accept" states="needs-action,tentative,declined" type="object" icon="gtk-apply"/>
@@ -220,21 +218,29 @@
                 <field name="partner_ids"/>
                 <field name="categ_ids"/>
                 <field name="user_id"/>
-                <separator/>
+                <field name="show_as"/>
+                <field name="class" string="Privacy"/>
+                <filter icon="terp-go-today" string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>                
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <separator/>                
+                <group expand="0" string="Group By...">
+                    <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}"/>
+                    <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Event Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Start Date of Event by Month"/>
+                </group>
             </search>
         </field>
     </record>
-
-    <!-- CRM Meetings action and menu -->
 
     <record id="action_crm_meeting" model="ir.actions.act_window">
         <field name="name">Meetings</field>
         <field name="res_model">crm.meeting</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
         <field name="view_id" ref="view_crm_meeting_calendar"/>
-        <field name="search_view_id" ref="view_crm_meeting_search"/>
+        <field name="search_view_id" ref="view_crm_meeting_search"/>       
         <field name="context">{"search_default_mymeetings": 1}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">

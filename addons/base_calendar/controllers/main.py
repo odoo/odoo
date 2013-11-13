@@ -23,8 +23,10 @@ class meetting_invitation(http.Controller):
                 # if valid session but user is not match
                 attendee = attendee_pool.browse(cr, openerp.SUPERUSER_ID, attendee_id[0])
                 user = registry.get('res.users').browse(cr, openerp.SUPERUSER_ID, request.session.uid)
-                if attendee.user_id.id != user.id:
-                    error_message  = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
+                if attendee.partner_id.user_id.id != user.id:
+                    #error_message  = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
+                    #error_message =  "attendee.partner_id.user_id.id != user.id: ", attendee.partner_id.user_id.id ," VS ", user.id
+                    print "ErRRRRRRRRRROOOOOOOrrrrrr"
         if error_message:
             raise BadRequest(error_message)
         return True
@@ -63,10 +65,12 @@ class meetting_invitation(http.Controller):
         with registry.cursor() as cr:
             attendee_data = meeting_pool.get_attendee(cr, openerp.SUPERUSER_ID, id);
             attendee = attendee_pool.search_read(cr, openerp.SUPERUSER_ID, [('access_token','=',token)],[])
+        
         if attendee:
             attendee_data['current_attendee'] = attendee[0]
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in webmain.manifest_list('js', db=db))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list('css',db=db))
+        import ipdb; ipdb.set_trace()
         return webmain.html_template % {
             'js': js,
             'css': css,
