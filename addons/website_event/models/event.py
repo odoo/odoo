@@ -34,6 +34,14 @@ class product(osv.osv):
 class event(osv.osv):
     _name = 'event.event'
     _inherit = ['event.event','website.seo.metadata']
+
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, '')
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        for event in self.browse(cr, uid, ids, context=context):
+            res[event.id] = "%s/event/%s/" % (base_url, event.id)
+        return res
+
     _columns = {
         'twitter_hashtag': fields.char('Twitter Hashtag'),
         'website_published': fields.boolean('Available in the website'),
@@ -46,6 +54,7 @@ class event(osv.osv):
             string='Website Messages',
             help="Website communication history",
         ),
+        'website_url': fields.function(_website_url, string="Website url"),
     }
     _defaults = {
         'website_published': False,
@@ -75,7 +84,6 @@ class event(osv.osv):
         partner = self.browse(cr, uid, ids[0], context=context)
         if partner.address_id:
             return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()
-
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
