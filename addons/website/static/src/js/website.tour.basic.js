@@ -87,7 +87,7 @@
                     element: '.oe_overlay_options .oe_options',
                     placement: 'left',
                     title: "Customize the banner",
-                    content: "You can customize components of your page through the <em>Customize</em> menu. Try to change the background of your banner.",
+                    content: "You can customize characteristic of any blocks through the Customize menu. For instance, change the background of the banner.",
                     template: render('website.tour_popover', { next: "Continue" }),
                     onShow: function () {
                         $('.dropdown-menu [name=carousel-background]').click(function () {
@@ -120,7 +120,7 @@
                     element: '#help-menu-button',
                     placement: 'left',
                     title: "Help is always available",
-                    content: "But you can always click here if you want more tutorials.",
+                    content: "You can always click here if you want more helps or continue to build and get more tips about your website contents like page menu, ...",
                     template: render('website.tour_popover', { end: "Close" }),
                 }
             ];
