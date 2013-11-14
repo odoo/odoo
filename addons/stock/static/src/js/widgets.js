@@ -10,10 +10,6 @@ function openerp_picking_widgets(instance){
         init: function(parent,options){
             this._super(parent,options);
         },
-        get_header: function(){
-            var model = this.getParent();
-            return 'Picking: '+model.picking.name;
-        },
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
@@ -397,6 +393,8 @@ function openerp_picking_widgets(instance){
                     self.$('.js_pick_next').removeClass('oe_disabled');
                 }
 
+                self.$('.oe_pick_app_header').text(self.get_header());
+
             });
 
 
@@ -411,6 +409,7 @@ function openerp_picking_widgets(instance){
                     self.picking_editor.renderElement();
                     self.package_editor.renderElement();
                     self.package_selector.renderElement();
+
                     if( self.picking.id === self.pickings[0]){
                         self.$('.js_pick_prev').addClass('oe_disabled');
                     }else{
@@ -422,7 +421,16 @@ function openerp_picking_widgets(instance){
                     }else{
                         self.$('.js_pick_next').removeClass('oe_disabled');
                     }
+
+                    self.$('.oe_pick_app_header').text(self.get_header());
                 });
+        },
+        get_header: function(){
+            if(this.picking){
+                return _t('Picking:') +' '+this.picking.name;
+            }else{
+                return _t('Picking:');
+            }
         },
         menu: function(){
             this.do_action({

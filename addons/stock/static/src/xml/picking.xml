@@ -48,7 +48,9 @@
 
     <t t-name='PickingEditorWidget'>
         <div class='oe_pick_list'>
-            <div class='oe_pick_list_header'><t t-esc="widget.get_header()" /></div>
+            <div class='oe_pick_list_header'>
+                Operations To Process
+            </div>
             <table class='oe_pick_list_table'>
 
                 <colgroup>
@@ -123,7 +125,7 @@
 
     <t t-name='PackageSelectorWidget'>
         <div class='oe_pick_list'>
-            <div class='oe_pick_list_header'> <t t-esc="widget.get_header()" /> </div>
+            <div class='oe_pick_list_header'><t t-esc="widget.get_header()" /></div>
             <table class='oe_pick_list_table'>
 
                 <colgroup>
@@ -251,6 +253,9 @@
                     <td class='oe_pick_body_cont'> 
                         <div class='oe_pick_body'>
                             <div class='oe_pick_app'>
+                                <div class='oe_pick_app_header'>
+                                    <t t-esc='widget.get_header()' />
+                                </div>
 
                                 <div class='oe_placeholder_picking_editor'></div>
                                 <div class='oe_placeholder_package_editor'></div>
