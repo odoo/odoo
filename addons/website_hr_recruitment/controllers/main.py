@@ -44,7 +44,7 @@ class website_hr_recruitment(http.Controller):
         })
 
     @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
-    def detail(self, job):
+    def detail(self, job, **kwargs):
         values = {
             'job': job,
             'vals_date': job.write_date.split(' ')[0],
@@ -89,6 +89,15 @@ class website_hr_recruitment(http.Controller):
         return request.website.render("website_hr_recruitment.applyjobpost", { 'job': job })
 
     @website.route('/job/publish', type='json', auth="admin", multilang=True)
-    def publish (self, id, object):
+    def publish(self, id, object):
         res = controllers.publish(id, object)
         return res
+
+    @website.route('/job/add_job_offer/', type='http', auth="user", multilang=True, methods=['POST'])
+    def add_job_offer(self, **kwargs):
+        Job = request.registry.get('hr.job')
+        job_id = Job.create(request.cr, request.uid, {
+            'name': 'New Job Offer',
+        }, context=request.context)
+
+        return request.redirect("/job/detail/%s/?enable_editor=1" % job_id)

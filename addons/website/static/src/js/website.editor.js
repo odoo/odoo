@@ -12,6 +12,16 @@
             website.ready().then(website.init_editor);
         }
 
+        $(document).on('click', 'a.js_link2post', function (ev) {
+            ev.preventDefault();
+            var form = document.createElement('form');
+            form.action = this.pathname; // restrict to same origin
+            form.method = 'POST';
+            // TODO: support this.search as form input fields
+            $(this).append(form);
+            form.submit();
+        });
+
         $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
             // Prevent dropdown closing when a contenteditable children is focused
             if (ev.originalEvent
@@ -383,6 +393,7 @@
             'click button[data-action=edit]': 'edit',
             'click button[data-action=save]': 'save',
             'click button[data-action=cancel]': 'cancel',
+            'click a[data-action=new_page]': 'new_page',
         },
         container: 'body',
         customize_setup: function() {
@@ -530,6 +541,12 @@
         },
         cancel: function () {
             website.reload();
+        },
+        new_page: function (ev) {
+            ev.preventDefault();
+            website.prompt('Create a new page', 'Page name').then(function (val) {
+                document.location = '/pagenew/' + encodeURI(val);
+            });
         },
     });
 

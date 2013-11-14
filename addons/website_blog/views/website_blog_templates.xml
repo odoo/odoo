@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+    <template id="website_blog_script" inherit_id="website.layout" name="Website Blog script">
+        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+            <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js" t-ignore="true"></script>
+        </xpath>
+    </template>
+
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
