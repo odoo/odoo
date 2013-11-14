@@ -216,18 +216,24 @@ var PivotTable = BasicDataView.extend({
         'click .graph_border > a' : function (event) {
             var self = this;
             event.preventDefault();
+            var row_id = event.target.attributes['data-row-id'].nodeValue;
 
-            var dropdown_options = {
-                fields: _.map(this.important_fields, function (field) {
-                    return {id: field, value: self.get_descr(field)};
-                }),
-                row_id: event.target.attributes['data-row-id'].nodeValue,
-            };
+            var row = this.get_row(row_id);
+            if (row.expanded) {
+                this.fold_row(row_id)
+            } else {
+                var dropdown_options = {
+                    fields: _.map(this.important_fields, function (field) {
+                        return {id: field, value: self.get_descr(field)};
+                    }),
+                    row_id: row_id,
+                };
+                this.dropdown = $(QWeb.render('field_selection', dropdown_options));
+                $(event.target).after(this.dropdown);
+                $('.field-selection').next('.dropdown-menu').toggle();
+            }
 
-            this.dropdown = $(QWeb.render('field_selection', dropdown_options));
-
-            $(event.target).after(this.dropdown);
-            $('.field-selection').next('.dropdown-menu').toggle();
+    
         },
         'click a.field-selection' : function (event) {
             event.preventDefault();
@@ -284,7 +290,6 @@ var PivotTable = BasicDataView.extend({
         var parent = has_parent ? this.get_row(parent_id) : null;
         var path;
         if (has_parent) {
-            console.log("parent",parent);
             path = parent.path.concat(data.attributes.grouped_on);
         } else if (data.attributes.grouped_on !== undefined) {
             path = [data.attributes.grouped_on];
@@ -293,7 +298,7 @@ var PivotTable = BasicDataView.extend({
         }
 
         var indent_level = has_parent ? parent.path.length : 0;
-        var value = (this.row_groupby.length > 0) ? data.attributes.value[1] : "Total";
+        var value = (this.row_groupby.length > 0) ? data.attributes.value[1] : 'Total';
 
 
         var jquery_row = $('<tr></tr>');
@@ -313,10 +318,12 @@ var PivotTable = BasicDataView.extend({
             html_tr: jquery_row,
             domain: data.model._domain,
         };
+        // rows.splice(index of parent if any,0,row);
         this.rows.push(row);  // to do, insert it properly
 
         if (this.row_groupby.length === 0) {
             row.remove_when_expanded = true;
+            row.domain = this.domain;
         }
         if (has_parent) {
             parent.children.push(row);
@@ -333,7 +340,6 @@ var PivotTable = BasicDataView.extend({
 
         if (row.remove_when_expanded) {
             this.rows = [];
-            row.html_tr.remove();
         } else {
             row.expanded = true;
             row.html_tr.find('.icon-plus-sign')
@@ -343,7 +349,7 @@ var PivotTable = BasicDataView.extend({
 
         query_groups(this.model, visible_fields, row.domain, [field_id])
             .then(function (data) {
-                _.each(data, function (datapt) {
+                _.each(data.reverse(), function (datapt) {
                     var new_row;
                     if (row.remove_when_expanded) {
                         new_row = self.make_row(datapt);
@@ -353,7 +359,14 @@ var PivotTable = BasicDataView.extend({
                         row.html_tr.after(new_row.html_tr);
                     }
                 });
+                if (row.remove_when_expanded) {
+                    row.html_tr.remove();            
+                }
         });
+
+    },
+
+    fold_row: function (row_id) {
 
     },
 
@@ -365,8 +378,6 @@ var PivotTable = BasicDataView.extend({
 
     build_table: function (data) {
         var self = this;
-
-        console.log("data",data);
 
         this.cols = [{
             path: [],
