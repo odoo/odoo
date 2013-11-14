@@ -7,7 +7,7 @@
 
     website.EditorShopTour = website.EditorTour.extend({
         id: 'shop_tour',
-        name: "Shop",
+        name: "Create a product",
         init: function (editor) {
             var self = this;
             var $body = $(document.body);
