@@ -35,21 +35,22 @@ class WebsiteMembership(http.Controller):
             base_line_domain += [('membership_id', '=', membership_id)]
             membership = product_obj.browse(cr, openerp.SUPERUSER_ID, membership_id, context=context)
         else:
-            membership = ''
+            membership = None
         if post_name:
             base_line_domain += ['|', ('partner.name', 'ilike', "%%%s%%" % post_name), ('partner.website_description', 'ilike', "%%%s%%" % post_name)]
 
         if request.context['is_public_user']:
-            where = 'partner.website_published = True'
+            where = "r.website_published = True"
         else:
-            where = '1 = 1'
+            where = "1 = 1"
         if membership_id:
-            where += ' and membership_id = '+ membership_id
+            where += " and m.membership_id = "+ membership_id
             membership = product_obj.browse(cr, openerp.SUPERUSER_ID, membership_id, context=context)
         else:
-            membership = ''
+            membership = None
         if post_name:
-            where += " or partner.name ilike '" + post_name + "' partner.website_description ilike '" + post_name +"'"
+            where += " or r.name ilike '%%%s%%'" % post_name + " or r.website_description ilike '%%%s%%'" % post_name
+
         query = 'select m.id, p.name_template, m.membership_id, m.partner, r.name, r.parent_id, r.website_short_description, r.image_small from membership_membership_line m, product_product p, res_partner r where m.membership_id=p.id and m.partner=r.id and '+ where + ' order by m.membership_id, m.member_price DESC'
         cr.execute(query)
         search_membership_ids = [x[0] for x in cr.fetchall()]
