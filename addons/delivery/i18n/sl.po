@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-01-01 14:19+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
+"PO-Revision-Date: 2013-11-10 08:51+0000\n"
+"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:56+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-11 05:38+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -30,7 +30,7 @@ msgstr "Dostava po pošti"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid " in Function of "
-msgstr ""
+msgstr " v vlogi "
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -46,7 +46,7 @@ msgstr "Neto teža"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "Dostavna pot"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
@@ -58,7 +58,7 @@ msgstr "Enota mere"
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
-msgstr ""
+msgstr "Dostavne mreže"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -76,12 +76,12 @@ msgstr "Pošta"
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr ""
+msgstr "pot"
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Partner, ki izvaja dostavo."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -93,21 +93,23 @@ msgstr "Dobavnica"
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
+"Nobena pot se ne ujema s tem proizvodom ali naročilom v izbrani dostavni "
+"mreži."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "Odpreme za fakturiranje"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Napredno določanje cen"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "Poda zaporedje naročila pri izpisu liste dostavne mreže."
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -132,6 +134,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknite za kreiranje cenika dostave za določeno regijo.\n"
+"              </p><p>\n"
+"                Cenik dostave omogoča izračun stroškov in \n"
+"                prodajne cene dostave na osnovi teže proizvodov\n"
+"                in drugih kriterijev. Definirate lahko več cenikov\n"
+"                za vsako dostavno metodo: po državi, po coni ali specifični\n"
+"                državi, definirano glede na rang poštnih številk.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -151,7 +163,7 @@ msgstr "Znesek"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "Dodaj v kvoti"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -169,7 +181,7 @@ msgstr "Način dostave"
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No price available!"
-msgstr ""
+msgstr "Cena ni na voljo!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -180,7 +192,7 @@ msgstr "Premik zaloge"
 #: field:stock.picking,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Prevoznikova referenca sledenja"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
@@ -198,7 +210,7 @@ msgstr "Mrežne črte"
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Grid definition"
-msgstr ""
+msgstr "Definiranje mreže"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:90
@@ -232,16 +244,18 @@ msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing "
 "based on delivery order(s)."
 msgstr ""
+"Če ne dodate v kvoti, bo točna cena izračunana na v trenutku fakturiranja na "
+"osnovi dobavnic."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Transportno podjetje"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr ""
+msgstr "Dostavna mreža"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -264,6 +278,8 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"Če je naročilo večje vrednosti kot določen znesek, lahko kupec pridobi z "
+"brezplačno dostavo"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
@@ -271,11 +287,12 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Znesek naročila za pridobitev brezplačne dostave, izražen v valuti podjetja"
 
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Brezplačno, če skupni znesek naročila presega"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -288,6 +305,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Če je aktivno polje označeno kot Napačno, bo dovoljeno skriti dostavno mrežo "
+"brez brisanja le te."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -298,12 +317,12 @@ msgstr "do poštbe številke"
 #: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Privzeta cena"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Normalna cena"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -313,13 +332,13 @@ msgstr "Datum naročila"
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr ""
+msgstr "Ime mreže"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 #: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "Število paketov"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -340,18 +359,22 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
+"Označite to polje, če želite upravljati cene dobave v odvisnosti od "
+"razdalje, teže, skupnega zneska naročila itd."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Pusti prazno, če je določanje cene odvisno od naprednega določanja cen po "
+"destinacijah"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "Nobena mreža ni na voljo!"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -362,12 +385,12 @@ msgstr ">="
 #: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "Naročilo ni v statusu \"Osnutek\"!"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr ""
+msgstr "Sklop"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -383,7 +406,7 @@ msgstr "Datum dostave"
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr ""
+msgstr "Dostavni proizvod"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -405,6 +428,7 @@ msgstr "Spremenljivka"
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
+"Ta dostavna metoda bo uporabljena pri fakturiranju na osnovi odpreme."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -426,6 +450,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknite za določitev nove dostavne metode. \n"
+"              </p><p>\n"
+"               Vsak prevoznik (npr. UPS) ima lahko več dostavnih metod "
+"(npr.\n"
+"                UPS Express, UPS Standard) s setom cenovnih pravil, ki "
+"veljajo\n"
+"                za izbrano metodo.\n"
+"              </p><p>\n"
+"                Te metode vam omogočajo avtomatični izračun cene dostave\n"
+"                glede na nastavitve; na prodajnih nalogih (osnovanih na\n"
+"                ponudbah) ali na računu (osnovanem na prodajnem nalogu).\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -447,12 +485,13 @@ msgstr "Zažetna poštna številka"
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Izpolnite to polje, če načrtujete fakturiranje dobave na osnovi odpremnic."
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Brezplačno, če je več kot %.2f"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
@@ -467,7 +506,7 @@ msgstr "<="
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Enota mere za težo"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -480,6 +519,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Če je aktivno polje označeno kot Napačno, boste lahko skrili prevoznika, ne "
+"da ga izbrišete."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -498,7 +539,7 @@ msgstr "Cena"
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Za tega prevoznika ni določena mreža!"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -515,17 +556,17 @@ msgstr "Teža * prostornina"
 #: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "Prevoznik %s (id:  %d) nima dostavne mreže!"
 
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
+msgstr "Cenovna informacija"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Napredno določanje cen po destinacijah"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -541,18 +582,18 @@ msgstr "Nosilec"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Načini dostave"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "Status naročila mora biti \"Osnutek\", če želite dodati postavke."
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr ""
+msgstr "Dostavne mreže"
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -579,7 +620,7 @@ msgstr "Pokrajine"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "Enota mere je enota mere za težo."
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0

@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-11-04 11:02+0000\n"
+"PO-Revision-Date: 2013-11-09 11:45+0000\n"
 "Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-05 06:00+0000\n"
+"X-Launchpad-Export-Date: 2013-11-10 06:44+0000\n"
 "X-Generator: Launchpad (build 16820)\n"
 
 #. module: point_of_sale
@@ -103,7 +103,7 @@ msgstr "Podrobnosti prodaje"
 #. module: point_of_sale
 #: constraint:pos.config:0
 msgid "You cannot have two cash controls in one Point Of Sale !"
-msgstr ""
+msgstr "V eni POS blagajni ne morete imeti dvojne kontrole gotovine!"
 
 #. module: point_of_sale
 #: field:pos.payment.report.user,user_id:0
@@ -240,7 +240,7 @@ msgstr "Partner"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Closing Cash Control"
-msgstr ""
+msgstr "Kontrola gotovine ob zaključku blagajne"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -264,12 +264,12 @@ msgstr "Računovodski podatki"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:427
 #, python-format
 msgid "0.00€"
-msgstr ""
+msgstr "0.00€"
 
 #. module: point_of_sale
 #: field:pos.session.opening,show_config:0
 msgid "Show Config"
-msgstr ""
+msgstr "Prikaz nastavitev"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -295,7 +295,7 @@ msgstr "Razhroščevalno okno"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:613
 #, python-format
 msgid "Change:"
-msgstr ""
+msgstr "Vračilo:"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_2l_product_template
@@ -347,6 +347,8 @@ msgid ""
 "Check this if this point of sale should open by default in a self checkout "
 "mode. If unchecked, OpenERP uses the normal cashier mode by default."
 msgstr ""
+"Označite, če se naj ta POS-blagajna odpre kot privzeta v načinu z avtomatsko "
+"odjavo. Če ni označeno, uporabi OpenERP normalni način blagajne kot privzet."
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
@@ -363,7 +365,7 @@ msgstr "Pijače"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session_opening
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_opening
 msgid "Your Session"
-msgstr ""
+msgstr "Vaša seja"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_50cl_product_template
@@ -441,7 +443,7 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:301
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr ""
+msgstr "POS-blagajno morate prirediti vaši seji."
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -456,7 +458,7 @@ msgstr "Skupna kol."
 #: code:addons/point_of_sale/static/src/js/screens.js:874
 #, python-format
 msgid "Back"
-msgstr ""
+msgstr "Nazaj"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_33cl_product_template
@@ -472,6 +474,9 @@ msgid ""
 "close this session, you can update the 'Closing Cash Control' to avoid any "
 "difference."
 msgstr ""
+"Prosimo nastavite vaše konte dobička/izgube za metodo plačila '%s'. Tako "
+"dovolite OpenERP knjiženje razlik %.2f v vaši zaključni bilanci. Za končanje "
+"te seje lahko v izogib razlikam posodobite 'Kontrolo zapiranja blagajne'."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:315
@@ -505,7 +510,7 @@ msgstr "Onions"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Validate & Open Session"
-msgstr ""
+msgstr "Potrdi & Odpri sejo"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:99
@@ -533,6 +538,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Srednje velika slika kategorije. Avtomatično je spremenjena v velikost "
+"128x128, ob upoštevanju razmerja. Uporabite to polje v pogledih forme ali "
+"nekaterih kanban pogledih."
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -597,14 +605,14 @@ msgstr "Postavka POS naročila"
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Nastavitve POS-blagajne"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:359
 #, python-format
 msgid "Your order has to be validated by a cashier."
-msgstr ""
+msgstr "Vaše naročilo mora biti potrjeno preko blagajne."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_50cl_product_template
@@ -614,7 +622,7 @@ msgstr "Fanta Orange 50cl"
 #. module: point_of_sale
 #: field:pos.category,child_id:0
 msgid "Children Categories"
-msgstr ""
+msgstr "Podrejene kategorije"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -734,7 +742,7 @@ msgstr "Način Plačila"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr ""
+msgstr "Knjiži postavke POS-dnevnika"
 
 #. module: point_of_sale
 #. openerp-web
@@ -754,6 +762,9 @@ msgid ""
 "Check if, this is a product you can use to take cash from a statement for "
 "the point of sale backend, example: money lost, transfer to bank, etc."
 msgstr ""
+"Označite, če je to produkt, ki ga lahko uporabite za odvzem gotovine pri "
+"pripravi poročila POS-blagajne, npr.: izgubljen denar, prenos na banko in "
+"podobno."
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -770,6 +781,8 @@ msgid ""
 "use\n"
 "                        a modern browser like"
 msgstr ""
+"POS ni podprt za Microsoft Internet Explorer. Prosimo, uporabite\n"
+"                        sodobnejši brskalnik."
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -831,7 +844,7 @@ msgstr "Tel.:"
 #: code:addons/point_of_sale/static/src/js/widgets.js:981
 #, python-format
 msgid "Self-Checkout"
-msgstr ""
+msgstr "Avtomatična odjava"
 
 #. module: point_of_sale
 #. openerp-web
@@ -863,7 +876,7 @@ msgstr "Končni saldo"
 #: code:addons/point_of_sale/wizard/pos_box_out.py:89
 #, python-format
 msgid "please check that account is set to %s."
-msgstr ""
+msgstr "Prosim preverite, da je ta konto nastavljen na %s."
 
 #. module: point_of_sale
 #: help:pos.category,image:0

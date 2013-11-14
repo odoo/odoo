@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-11 19:08+0000\n"
+"Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:14+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-12 06:23+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
 msgid "Schedulers"
-msgstr "Ajastimet"
+msgstr "Jaksottimet"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_make_procurement
@@ -34,9 +34,9 @@ msgid ""
 "procurements. All procurements that are not between today and today+range "
 "are skipped for future computation."
 msgstr ""
-"Aikaikkuna jonka ajastin analysoi hankintojen laskennassa. Kaikki hankinnat "
-"jotka eivät ole jakson tänään  ja tänään+jakso sisällä ohitetaan tulevia "
-"laskentoja varten"
+"Aikaikkuna jonka ajastin analysoi hankintojen laskennassa. Kaikki hankinnat, "
+"jotka eivät ole jakson \"tänään ja tänään+jakso\" sisällä ohitetaan tulevia "
+"laskentoja varten."
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -45,9 +45,9 @@ msgid ""
 "under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
 msgstr ""
-"Liipaisee automaattisen hankinnan kaikille tuotteille joiden näennäisvarasto "
-"on alle 0. Tätä vaihtoehtoa ei yleensä käytetä, vaan tuotteille on parempi "
-"määrittää varastosäännöt."
+"Liipaisee automaattisesti hankinnan kaikille tuotteille joiden "
+"virtuaalivarasto on alle 0. Tätä vaihtoehtoa ei yleensä käytetä, vaan "
+"tuotteille on parempi määrittää varastosäännöt."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -57,7 +57,7 @@ msgstr "Ryhmittely.."
 #. module: procurement
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Draft procurement of the product and location of that orderpoint"
-msgstr "Luonnnos hankinta tuotteelle ja tilauspisteen paikalle"
+msgstr "Tuotteen hankintaehdotus ja tilauspisteen paikka"
 
 #. module: procurement
 #: view:product.product:0
@@ -65,11 +65,13 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr ""
+"tarvittavat määrät ovat aina\n"
+"                           saatavilla"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "External note..."
-msgstr ""
+msgstr "Ulkoinen huomautus"
 
 #. module: procurement
 #: view:product.product:0
@@ -89,7 +91,7 @@ msgstr "Hankintatapa"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr ""
+msgstr "Valmista"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -104,7 +106,7 @@ msgstr "Laske vain varaston minimirajat"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Rules"
-msgstr ""
+msgstr "Säännöt"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -115,7 +117,7 @@ msgstr "Yritys"
 #. module: procurement
 #: field:procurement.order,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr "Myyntiyksikkö määrä"
+msgstr "my määrä"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -149,7 +151,7 @@ msgstr "Viimeisin virhe"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "Minimi määrä"
 
 #. module: procurement
 #: help:mrp.property,composition:0
@@ -164,22 +166,22 @@ msgstr "Viimeisin hankinta"
 #. module: procurement
 #: field:procurement.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Viestit"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Cancel Procurement"
-msgstr ""
+msgstr "Peruuta hankinta"
 
 #. module: procurement
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "Tuotteet"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Peruttu"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -189,12 +191,12 @@ msgstr "Pysyvät hankinnan poikkeukset"
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
 msgid "Scheduler Parameters"
-msgstr "Aikataulutuksen parametrit"
+msgstr "Jaksottimen parametrit"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_move
@@ -204,13 +206,13 @@ msgstr "Varastosiirto"
 #. module: procurement
 #: view:product.product:0
 msgid "Stockable products"
-msgstr ""
+msgstr "varastotuotteet"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Virheellinen toiminto!"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -218,6 +220,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on "
+"valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -255,7 +259,7 @@ msgstr "Vahvistettu"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Retry"
-msgstr "Yritä uudelleen"
+msgstr "Uudelleenyritys"
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -271,7 +275,7 @@ msgstr "Vahvista"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "Määräkerroin"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -279,11 +283,13 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by OpenERP."
 msgstr ""
+"Tämän hankinnan luoneen documenting viite.\n"
+"OpenERP suorittaa tämän loppuun automaattisesti."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr "Prosessoitavat hankintatilaukset"
+msgstr "Hankintatilaukset käsittelyyn"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
@@ -304,29 +310,29 @@ msgstr "Prioriteetti"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "Uudelleentilauksen sääntöjen etsintä"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Waiting"
-msgstr "Odotetaan"
+msgstr "Odottaa"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: procurement
 #: field:procurement.order,location_id:0
 #: view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,location_id:0
 msgid "Location"
-msgstr "Sijainti"
+msgstr "Paikka"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_picking
 msgid "Picking List"
-msgstr "Keräilylista"
+msgstr "Keräilyluettelo"
 
 #. module: procurement
 #: field:make.procurement,warehouse_id:0
@@ -344,7 +350,7 @@ msgstr "Paras hinta (ei vielä aktiivinen!)"
 #: code:addons/procurement/schedulers.py:110
 #, python-format
 msgid "PROC %d: from stock - %3.2f %-5s - %s"
-msgstr ""
+msgstr "HANKINTA %d: varastosta - %3.2f %-5s - %s"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
@@ -364,12 +370,12 @@ msgstr "Kysy uusia tuotteita"
 #. module: procurement
 #: field:make.procurement,date_planned:0
 msgid "Planned Date"
-msgstr "Suunniteltu päivämäärä"
+msgstr "Suunniteltupäivä"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Group By"
-msgstr "Ryhmittelyn peruste"
+msgstr "Ryhmittely"
 
 #. module: procurement
 #: field:make.procurement,qty:0
@@ -381,19 +387,19 @@ msgstr "Määrä"
 #: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr "Ei tarpeeksi varastoa eikä minimitilauspistesääntöä määriteltynä"
+msgstr "Ei tarpeeksi varastoa eikä minimitilauspistesääntöä määriteltynä."
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
 #: view:procurement.order:0
 msgid "Unit of Measure"
-msgstr "Mittayksikkö"
+msgstr "Yksikkö"
 
 #. module: procurement
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Varastoon tuotanto"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -422,8 +428,8 @@ msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
 msgstr ""
-"Jos haluat syöttäää hankinnan käsin, haluat todennäköisesti käyttää hanki "
-"tilaukseen metodia."
+"Jos haluat syöttää hankinnan manuaalisesti, niin haluat todennäköisesti "
+"käyttää \"tilausohjautuva\" menetelmää."
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -462,7 +468,7 @@ msgstr "Poikkeukset"
 #. module: procurement
 #: model:process.node,note:procurement.process_node_serviceonorder0
 msgid "Assignment from Production or Purchase Order."
-msgstr "Määritys tuotannosta tai ostotilaukselta."
+msgstr "Tehtäväksianto tuotannosta tai ostotilaukselta."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property
@@ -493,7 +499,7 @@ msgstr "Liittyvät hankintatilaukset"
 #. module: procurement
 #: field:procurement.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Lukemattomat viestit"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -513,6 +519,13 @@ msgid ""
 " It is in 'Waiting'. status when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"Kun hankinta on luotu, tilaksi asetetaan \"Ehdotus\".\n"
+" Jos hankinta on vahvistettu, tilaksi asetetaan \"Vahvistettu\".\n"
+"Vahvistuksen jälkeen tilaksi asetetaan \"Käynnissä\".\n"
+" Jos tilaukselle syntyy mikä tahansa poikkeus, niin tilaksi asetetaan "
+"\"Poikkeus\".\n"
+" Kun poikkeus on poistettu tilaksi asetetaan \"Valmis\".\n"
+" Tila on \"Odottaa\", kun hankinta odottaa toisen valmistumista."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -520,13 +533,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
-"Jos aktiivisen kentän tilaksi asetetaan epätosi (false) se mahdollistaa "
-"tilauspisteen piilottamisen ilman sen poistamista"
+"Jos aktiivisen kentän tilaksi asetetaan epätosi, niin se mahdollistaa "
+"tilauspisteen piilottamisen ilman sen poistamista."
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Internal note..."
-msgstr ""
+msgstr "Sisäinen huomautus"
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
@@ -537,7 +550,7 @@ msgstr "Jos tuotteen varastosaldo on alle 0, toimii se tilauspisteenä"
 #: field:procurement.order,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Tuotteen yksikkö"
 
 #. module: procurement
 #: constraint:stock.warehouse.orderpoint:0
@@ -549,7 +562,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Lines"
-msgstr "Hankinnan rivit"
+msgstr "Hankintarivit"
 
 #. module: procurement
 #: view:product.product:0
@@ -570,18 +583,20 @@ msgid ""
 "OpenERP generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
 msgstr ""
+"Kun virtuaalivarasto alittaa tälle kentälle määritellyn minimimäärän, "
+"OpenERP luo hankinnan palauttaakseen ennustetun määrän maksimimääräksi."
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Draft"
-msgstr "Luonnos"
+msgstr "Ehdotus"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
 #: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
 #: view:procurement.order.compute.all:0
 msgid "Run Schedulers"
-msgstr ""
+msgstr "Suorita ajastimet"
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -597,12 +612,12 @@ msgstr "Tila"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr ""
+msgstr "Osta"
 
 #. module: procurement
 #: view:product.product:0
 msgid "for the delivery order."
-msgstr ""
+msgstr "toimitustilaukselle"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -620,12 +635,12 @@ msgstr ""
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Maximum Quantity"
-msgstr ""
+msgstr "Maksimimäärä"
 
 #. module: procurement
 #: field:procurement.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "on seuraaja"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:367
@@ -650,11 +665,13 @@ msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
 msgstr ""
+"Tarkista tuotteen \"%s\" määrä hankintatilauksella tai -tilauksilla, määrän "
+"ei pidä olla 0 tai alle!"
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
 msgid "Scheduled date"
-msgstr "Arvioitu päivämäärä"
+msgstr "Ajastettu päivä"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -682,7 +699,7 @@ msgstr "Automaattinen tilauspiste"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
-msgstr "Määrän kerroin"
+msgstr "Määräkerroin"
 
 #. module: procurement
 #: view:product.product:0
@@ -711,12 +728,12 @@ msgstr "Lisätiedot"
 #. module: procurement
 #: field:procurement.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Yhteenveto"
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than zero."
-msgstr "Määrän kertoimen tulee olla yli 0"
+msgstr "Määräkertoimen tulee olla yli nolla"
 
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
@@ -731,7 +748,7 @@ msgstr "Sulkemispäivä"
 #. module: procurement
 #: view:res.company:0
 msgid "Logistics"
-msgstr ""
+msgstr "Logistiikka"
 
 #. module: procurement
 #: help:product.template,procure_method:0
@@ -744,7 +761,7 @@ msgstr ""
 #. module: procurement
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr "Ominaisuuksien koostumus"
+msgstr "Ominaisuuksien yhdistelmä"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:311
@@ -790,7 +807,7 @@ msgstr "Peruuta"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr "Uusintatilauksen tapa"
+msgstr "Uudelleentilaustila"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -818,11 +835,13 @@ msgid ""
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
 msgstr ""
+"Kun virtuaalivarasto alittaa määritellyn minimimäärän, OpenERP luo hankinnan "
+"palauttaakseen ennustetun määrän maksimimääräksi."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr "Laske kaikki ajastimet"
+msgstr "Laske kaikki ajoittimet"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -832,18 +851,18 @@ msgstr "Myöhässä"
 #. module: procurement
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr "Poikkeavat hankinnat"
+msgstr "Hankinnat poikkemassa"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.product_open_orderpoint
 #: view:product.product:0
 msgid "Orderpoints"
-msgstr ""
+msgstr "Tilauspisteet"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
-msgstr "Varaston minimirajat"
+msgstr "Minimivarastosäännöt"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -864,7 +883,7 @@ msgstr "Sulje siirto lopussa"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Scheduled Date"
-msgstr "Suunniteltu päivämäärä"
+msgstr "Ajoitettu päivä"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_product
@@ -902,12 +921,12 @@ msgstr "Käynnissä olevat"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Valmista tilaukselle"
+msgstr "Tilausohjautuva tuotanto"
 
 #. module: procurement
 #: field:product.template,supply_method:0
 msgid "Supply Method"
-msgstr ""
+msgstr "Toimitustapa"
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -917,12 +936,12 @@ msgstr "Varaus"
 #. module: procurement
 #: model:process.node,note:procurement.process_node_procureproducts0
 msgid "The way to procurement depends on the product type."
-msgstr "Hankintatapa riippuu tuotteen tyypistä"
+msgstr "Hankintatavan riippuvuus tuotteen tyypistä"
 
 #. module: procurement
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will"
-msgstr ""
+msgstr "Kun myyt tämän tuotteen, OpenERP tekee"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -947,39 +966,41 @@ msgstr "maksimi"
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Uudelleentilauksen säännöt"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
+msgstr "Hankintatilausta joka on %s tilassa, ei voi poistaa."
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
 msgid "Product UoS"
-msgstr "Tuotteen myyntiyksikkö"
+msgstr "Tuotteen my"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Tuotteen malli"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
-msgstr "Velho tarkistaa kaikki minimivarastosäännöt ja luo hankintatilauksen"
+msgstr ""
+"Ohjattu toiminto tarkistaa kaikki minimivarastosäännöt ja luo "
+"hankintatilauksen."
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Search Procurement"
-msgstr "Hae hankinnoista"
+msgstr "Hae hankinta"
 
 #. module: procurement
 #: help:procurement.order,message:0
 msgid "Exception occurred while computing procurement orders."
-msgstr "Hankintatilausten laskennassa sattui poikkeus."
+msgstr "Hankintatilausten laskennassa tapahtui poikkeus."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -994,7 +1015,7 @@ msgstr "Automaattinen tilauspiste"
 #. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -1012,7 +1033,7 @@ msgstr "minimi"
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "or"
-msgstr ""
+msgstr "tai"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:134
@@ -1023,16 +1044,16 @@ msgstr "AJASTIN"
 #. module: procurement
 #: view:product.product:0
 msgid "Request Procurement"
-msgstr ""
+msgstr "Pyydä hankinta"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:87
 #, python-format
 msgid "PROC %d: on order - %3.2f %-5s - %s"
-msgstr ""
+msgstr "HANKINTA %d: tilauksella - %3.2f %-5s - %s"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:339
 #, python-format
 msgid "Products reserved from stock."
-msgstr ""
+msgstr "Tuotteet varattu varastosta."
