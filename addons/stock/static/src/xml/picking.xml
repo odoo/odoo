@@ -210,7 +210,10 @@
                                             <t t-if="widget.pickings_by_type[type.id].length === 0">
                                                 <span class='oe_pick_app_info'>Nothing to do</span>
                                             </t>
-                                            <t t-if="widget.pickings_by_type[type.id].length > 0">
+                                            <t t-if="widget.pickings_by_type[type.id].length === 1">
+                                                <span class='oe_pick_app_info'>1 picking</span>
+                                            </t>
+                                            <t t-if="widget.pickings_by_type[type.id].length > 1">
                                                 <span class='oe_pick_app_info'><t t-esc="widget.pickings_by_type[type.id].length" /> pickings </span>
                                             </t>
                                         </div>
