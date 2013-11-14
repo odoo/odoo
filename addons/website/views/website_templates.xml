@@ -77,8 +77,9 @@
                         <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
 
                         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+                        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
 
-                        <t t-if="editable">
+                        <t t-if="editable" id="editable_scripts_hook">
                             <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
                             <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
@@ -98,7 +99,7 @@
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.basic.js"></script>
-                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
                             <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
                         </t>
@@ -147,13 +148,13 @@
                                         <div class="col-md-3" name="product">
                                             <h4>Our products &amp; Services</h4>
                                             <ul class="list-unstyled" name="products">
-                                                <li><a t-href="/">Home</a></li>
+                                                <li><a href="/">Home</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-md-3" name="info">
                                             <h4 name="info_title">Connect with us</h4>
                                             <ul class="list-unstyled">
-                                                <li><a t-href="/page/website.contactus">Contact us</a></li>
+                                                <li><a href="/page/website.contactus">Contact us</a></li>
                                             </ul>
                                             <ul class="list-unstyled">
                                                 <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
@@ -209,7 +210,7 @@
                                         <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                     </div>
                                     <div class="pull-left text-muted">
-                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a t-href="/sitemap">Sitemap</a>
+                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
                                     </div>
                                 </div>
                             </footer>
@@ -366,7 +367,7 @@
                     <div class="well mt32">
                         <p>This page does not exists, but you can create it as you are administrator of this site.</p>
                         <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a>
-                        <span class="text-muted">or</span> <a t-href="/sitemap">Search a Page</a>
+                        <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
                     </div>
                     <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
                 </div>
@@ -381,8 +382,8 @@
                         </p>
                         <p>Maybe you were looking for one of these popular pages ?</p>
                         <ul>
-                            <li><a t-href="/">Homepage</a></li>
-                            <li><a t-href="/page/website.contactus/">Contact Us</a></li>
+                            <li><a href="/">Homepage</a></li>
+                            <li><a href="/page/website.contactus/">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -420,8 +421,8 @@
                     </p>
                     <pre t-if="editable" t-esc="error"/>
                     <ul>
-                        <li><a t-href="/">Homepage</a></li>
-                        <li><a t-href="/page/website.contactus/">Contact Us</a></li>
+                        <li><a href="/">Homepage</a></li>
+                        <li><a href="/page/website.contactus/">Contact Us</a></li>
                     </ul>
                 </div>
               </div>
@@ -505,64 +506,67 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
         <template id="aboutus" name="About us" page="True">
             <t t-call="website.layout">
-                <div id="wrap" class="oe_structure">
+                <div id="wrap">
+                    <div class="oe_structure">
 
-                <section data-snippet-id="title">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h1 class="text-center">About us</h1>
-                                <h3 class="text-muted text-center">Great products for great people</h3>
+                        <section data-snippet-id="title">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h1 class="text-center">About us</h1>
+                                        <h3 class="text-muted text-center">Great products for great people</h3>
+                                    </div>
+                                </div>
                             </div>
+                        </section>
+
+                        <section data-snippet-id="text-image">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6 mt32">
+                                        <p>
+                                              We are a team of passionated people whose goal is to improve everyone's
+                                              life through disruptive products. We build great products to solve your
+                                              business problems.
+                                        </p>
+                                        <p>
+                                              Our products are designed for small to medium companies willing to optimize
+                                              their performance.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 col-md-offset-2 mt16 mb16">
+                                        <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Our Team"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="parallax oe_structure mt16 oe_medium mb64" data-scroll-background-ratio="0.6" data-snippet-id="parallax" style="background-image: url(http://localhost:8069/website/static/src/img/parallax/parallax_bg.jpg); background-attachment: scroll; background-position: 0px 0px; ">
+                            <section class="mb32 mt16" data-snippet-id="references">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12 mt16 mb8">
+                                            <h1 class="text-center">What do customers say about us...</h1>
+                                        </div>
+                                        <div class="col-md-4 col-md-offset-1 mt16 mb0">
+                                            <blockquote data-snippet-id="quote">
+                                                <p><span style="background-color:#FFFFFF;">Write here a quote from one of your customer. Quotes are are great way to give confidence in your products or services.</span></p>
+                                                <small><span style="background-color:#FFFFFF;">Author of this quote</span></small>
+                                            </blockquote>
+                                        </div>
+                                        <div class="col-md-4 col-md-offset-2 mt16 mb32">
+                                            <blockquote data-snippet-id="quote">
+                                                <p><span style="background-color:#FFFFFF;">OpenERP provides essential platform for our project management. Things are better organized and more visible with it.</span></p>
+                                                <small><span style="background-color:#FFFFFF;">John Doe, CEO</span></small>
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
                         </div>
+
                     </div>
-                </section>
-
-                <section data-snippet-id="text-image">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6 mt32">
-                                <p>
-                                      We are a team of passionated people whose goal is to improve everyone's
-                                      life through disruptive products. We build great products to solve your
-                                      business problems.
-                                </p>
-                                <p>
-                                      Our products are designed for small to medium companies willing to optimize
-                                      their performance.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-md-offset-2 mt16 mb16">
-                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Our Team"/>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="parallax oe_structure mt16 oe_medium mb64" data-scroll-background-offset="0" data-scroll-background-ratio="1" data-snippet-id="parallax" style="background-image: url(http://localhost:8069/website/static/src/img/parallax/parallax_bg.jpg); background-attachment: scroll; background-position: 0px 0px; ">
-                    <section class="mb32 mt16" data-snippet-id="references">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12 mt16 mb8">
-                                    <h1 class="text-center">What do customers say about us...</h1>
-                                </div>
-                                <div class="col-md-4 col-md-offset-1 mt16 mb0">
-                                    <blockquote data-snippet-id="quote">
-                                        <p><span style="background-color:#FFFFFF;">Write here a quote from one of your customer. Quotes are are great way to give confidence in your products or services.</span></p>
-                                        <small><span style="background-color:#FFFFFF;">Author of this quote</span></small>
-                                    </blockquote>
-                                </div>
-                                <div class="col-md-4 col-md-offset-2 mt16 mb32">
-                                    <blockquote data-snippet-id="quote">
-                                        <p><span style="background-color:#FFFFFF;">OpenERP provides essential platform for our project management. Things are better organized and more visible with it.</span></p>
-                                        <small><span style="background-color:#FFFFFF;">John Doe, CEO</span></small>
-                                    </blockquote>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
+                    <div class="oe_structure"></div>
                 </div>
             </t>
         </template>

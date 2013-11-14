@@ -2,10 +2,16 @@
 <openerp>
 <data>
 
+    <template id="website_event_script" inherit_id="website.layout" name="Website Event script">
+        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+            <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js" t-ignore="true"></script>
+        </xpath>
+    </template>
+
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout" name="Footer Events Link">
         <xpath expr="//footer//ul[@name='products']" position="inside">
-            <li><a t-href="/event">Events</a></li>
+            <li><a href="/event">Events</a></li>
         </xpath>
     </template>
 
@@ -24,11 +30,11 @@
                       <t t-esc="current_country.name"/>
                     </span>
                 </h3>
-                <div class="row mt16 mb32">
+                <div class="row mt32 mb32">
                     <div class="col-md-3 col-sm-4 css_noprint" id="left_column">
                         <ul class="nav nav-pills nav-stacked">
                             <t t-foreach="dates" t-as="date">
-                                <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3]">
+                                <li t-att-class="searches.get('date') == date[0] and 'active' or ''" t-if="date[3] or (date[0] in ('old','all'))">
                                     <a t-href="/event/#{ search_path }&amp;date=#{ date[0] }"><t t-esc="date[1]"/>
                                         <span t-if="date[3]" class="badge pull-right"><t t-esc="date[3]"/></span>
                                     </a>
@@ -42,6 +48,14 @@
                         </t>
                         <div class="oe_structure">
                         </div>
+                        <t t-if="not event_ids">
+                            <p t-if="current_date or current_country or current_type">
+                                No event found in this category, check <a href="/event">all events</a>.
+                            </p>
+                            <p t-if="(current_date is None) and (current_country is None) and (current_type is None)">
+                                No events are planned for now on.
+                            </p>
+                        </t>
                         <ul class="media-list">
                             <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
                                 <div class="media-body">
@@ -89,14 +103,14 @@
             <div class="row">
                 <div class="col-md-12 mb16">
                     <div class="oe_demo">
-                        <img src="http://ebmedia.eventbrite.com/s3-build/17022-rc2013-11-04-acfb89e/django/images/pages/home/featcats_bizpro.jpg"/>
-                        <div class="text-center"><a href="/">Photos of Events</a></div>
+                        <img src="/website_event/static/src/img/openerp_enterprise_of_the_year.png" class="img-rounded"/>
+                        <div class="text-center"><a href="/event">Photos of Past Events</a></div>
                     </div>
                 </div>
                 <div class="col-md-12 mb16">
                     <div class="oe_demo">
-                        <img src="http://ebmedia.eventbrite.com/s3-build/17022-rc2013-11-04-acfb89e/django/images/pages/home/featcats_bizpro.jpg"/>
-                        <div class="text-center"><a href="/">Customer Quotes</a></div>
+                        <img src="/website_event/static/src/img/training.jpg" class="img-rounded"/>
+                        <div class="text-center"><a href="/event">Our Trainings</a></div>
                     </div>
                 </div>
             </div>
@@ -307,7 +321,7 @@
                             <li t-if="event_id.country_id">
                                 <a t-href="/event?country=#{event_id.country_id.id}"><strong><span class="icon-double-angle-right"/> Other Events in <span t-esc="event_id.country_id.name"/></strong></a>
                             </li>
-                            <li><a t-href="/event"><strong><span class="icon-double-angle-right"/> All Events</strong></a></li>
+                            <li><a href="/event"><strong><span class="icon-double-angle-right"/> All Events</strong></a></li>
                         </ul>
                     </div>
                 </div>

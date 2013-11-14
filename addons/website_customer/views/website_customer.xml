@@ -5,19 +5,56 @@
     <!-- Layout add nav and footer -->
     <template id="footer_custom" inherit_id="website.layout" name="Footer Customer References Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/customers/">Customer References</a></li>
+            <li><a href="/customers/">Our References</a></li>
         </xpath>
     </template>
 
-    <!-- Page -->
-    <template id="layout" name="Customer References Layout">
+    <template id="index" name="Our References">
         <t t-call="website.layout">
-            <t t-set="additional_title">Customer References</t>
             <div id="wrap">
-                <div class="oe_structure"/>
+                <div class="oe_structure">
+                    <section data-snippet-id="title">
+                        <h1 class="text-center">
+                            Our References
+                        </h1><h2 class="text-center text-muted">
+                            Trusted by millions worldwide
+                        </h2>
+                    </section>
+                </div>
                 <div class="container">
                     <div class="row">
-                        <t t-raw="ref_content"/>
+                        <div class="col-md-3" id="ref_left_column">
+                        </div>
+                        <div class="col-md-9" id="ref_content">
+                            <div class='navbar mb0'>
+                                <t t-call="website.pager">
+                                   <t t-set="classname" t-value="'pull-left'"/>
+                                </t>
+                                <form action="/customers/" method="get" class="navbar-search pull-right pagination form-inline">
+                                    <div class="form-group">
+                                        <input type="text" name="search" class="search-query form-control"
+                                            placeholder="Search" t-att-value="post.get('search', '')"/>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="row">
+                                <t t-foreach="partner_ids" t-as="partner" class="media">
+                                    <div class="col-md-2">
+                                        <a t-href="/customers/#{ partner.id }/">
+                                            <img class="img img-thumbnail" t-att-src="partner.img('image_medium')"/>
+                                        </a>
+                                    </div><div class="col-md-10">
+                                        <h4>
+                                            <a t-href="/customers/#{ partner.id }/" t-field="partner.name"/>
+                                        </h4>
+                                        <div t-field="partner.website_short_description"/>
+                                    </div>
+                                    <div class="clearfix mb8"/>
+                                </t>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="oe_structure"/>
@@ -76,48 +113,92 @@
             </t>
         </t>
     </template>
-
     <!-- Option: left column: World Map -->
-    <template id="opt_country" inherit_id="website_customer.index" inherit_option_id="website_customer.index" name="Left World Map">
-        <xpath expr="//div[@id='ref_left_column']//ul[last()]" position="after">
-            <h3>World Map</h3>
-            <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
-                style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
+    <template id="opt_country" inherit_option_id="website_customer.index" name="Show Map">
+        <xpath expr="//div[@id='ref_left_column']" position="inside">
+
+            <iframe t-attf-src="/google_map/?partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/&amp;output=embed"
+                style="width:100%; border:0; padding:0; margin:0;"></iframe>
+        </xpath>
+    </template>
+
+    <template id="opt_country_list" inherit_id="website_customer.index" inherit_option_id="website_customer.index" name="Filter on Countries">
+        <xpath expr="//div[@id='ref_left_column']" position="inside">
+
+            <ul class="nav nav-pills nav-stacked mt16 mb32">
+                <t t-foreach="countries" t-as="country_dict">
+                    <t t-if="country_dict['country_id']">
+                        <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
+                            <a t-href="/customers/country/#{ country_dict['country_id'][0] }">
+                                <span class="badge pull-right" t-esc="country_dict['country_id_count']"/>
+                                <t t-esc="country_dict['country_id'][1]"/>
+                            </a>
+                        </li>
+                    </t>
+                </t>
+            </ul>
+
         </xpath>
     </template>
 
     <template id="details" name="Customer Detail">
-        <t t-call="website_customer.layout">
-            <t t-set="ref_content">
-                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
-                <h1 class="col-md-12 text-center" t-field="partner_id.name"/>
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img t-att-src="partner_id.img('image_medium')"/>
+      <t t-call="website.layout">
+        <div id="wrap">
+            <div class="container mt16">
+                <div class="row">
+                    <div class="col-md-5">
+                        <ol class="breadcrumb">
+                            <li><a href="/customers">Our References</a></li>
+                            <li class="active" t-field="partner.name"/>
+                        </ol>
                     </div>
-                    <address>
-                        <table style="margin: auto;" class="well">
-                            <colgroup>
-                                <col width="100"/>
-                                <col/>
-                            </colgroup>
-                            <tbody>
-                                <t t-set="address" t-value="'&lt;br/&gt;'.join(partner_id.name_get()[0][1].split('\n')[1:])"/>
-                                <tr t-if="address or editable"><th>Address</th><td class="span2" t-raw="address"/></tr>
-                                <tr t-if="partner_id.website or editable"><th>Website</th><td class="span2"><span t-field="partner_id.website"/></td></tr>
-                                <tr t-if="partner_id.phone or editable"><th>Tel</th><td class="span2"><span t-field="partner_id.phone"/></td></tr>
-                                <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="span2"><span t-field="partner_id.mobile"/></td></tr>
-                                <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="span2"><span t-field="partner_id.fax"/></td></tr>
-                                <tr t-if="partner_id.email or editable"><th>Email</th><td class="span2"><span t-field="partner_id.email"/></td></tr>
-                            </tbody>
-                        </table>
+                    <div class="col-md-7">
+                        <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center" t-field="partner.name"/>
+                    </div>
+                    <div class="col-md-9">
+                        <div t-field="partner.website_description"/>
+                    </div>
+                    <div class="col-md-3" id="ref_right_column">
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </div>
+      </t>
+    </template>
+
+    <template id="customer_contact" inherit_id="website_customer.details" inherit_option_id="website_customer.details" name="Customer Contacts">
+        <xpath expr="//div[@id='ref_right_column']" position="inside">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Customer Reference</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="text-center">
+                        <img t-att-src="partner.img('image')" class="img img-shadow"/>
+                    </div>
+                    <address class="mt16 mb8">
+                        <strong t-field="partner.name"/>
+                        <p t-field="partner.commercial_partner_id"/>
+                        <div t-if="partner.phone">
+                            <span class="icon-phone"/> <span t-field="partner.phone"/>
+                        </div>
+                        <div t-if="partner.email">
+                            <span class="icon-envelope"/>
+                            <a t-att-href="'mailto:'+partner.email">
+                              <span t-field="partner.email"/>
+                            </a>
+                        </div>
                     </address>
                 </div>
-                <div class="col-md-8 mt32">
-                    <div t-field="partner_id.website_description"/>
-                </div>
-            </t>
-        </t>
+            </div>
+        </xpath>
     </template>
 
  </data>

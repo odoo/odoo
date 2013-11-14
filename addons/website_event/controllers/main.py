@@ -29,15 +29,13 @@ from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
 
 
 class website_event(http.Controller):
-    _order = 'website_published desc, date_begin desc'
-
     @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public", multilang=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
@@ -51,30 +49,35 @@ class website_event(http.Controller):
 
         domain_search = {}
 
+        def sdn(date):
+            return date.strftime('%Y-%m-%d 23:59:59')
         def sd(date):
             return date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
         today = datetime.today()
         dates = [
-            ['all', _('All Dates'), [(1, "=", 1)], 0],
+            ['all', _('Next Events'), [("date_end", ">", sd(today))], 0],
             ['today', _('Today'), [
-                ("date_begin", ">", sd(today)),
-                ("date_begin", "<", sd(today + relativedelta(days=1)))],
-                0],
-            ['tomorrow', _('Tomorrow'), [
-                ("date_begin", ">", sd(today + relativedelta(days=1))),
-                ("date_begin", "<", sd(today + relativedelta(days=2)))],
+                ("date_end", ">", sd(today)),
+                ("date_begin", "<", sdn(today))],
                 0],
             ['week', _('This Week'), [
-                ("date_begin", ">=", sd(today + relativedelta(days=-today.weekday()))),
-                ("date_begin", "<", sd(today  + relativedelta(days=6-today.weekday())))],
+                ("date_end", ">=", sd(today + relativedelta(days=-today.weekday()))),
+                ("date_begin", "<", sdn(today  + relativedelta(days=6-today.weekday())))],
                 0],
             ['nextweek', _('Next Week'), [
-                ("date_begin", ">=", sd(today + relativedelta(days=7-today.weekday()))),
-                ("date_begin", "<", sd(today  + relativedelta(days=13-today.weekday())))],
+                ("date_end", ">=", sd(today + relativedelta(days=7-today.weekday()))),
+                ("date_begin", "<", sdn(today  + relativedelta(days=13-today.weekday())))],
                 0],
             ['month', _('This month'), [
-                ("date_begin", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
-                ("date_begin", "<", sd(today.replace(day=1)  + relativedelta(months=1)))],
+                ("date_end", ">=", sd(today.replace(day=1))),
+                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d 00:00:00'))],
+                0],
+            ['nextmonth', _('Next month'), [
+                ("date_end", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
+                ("date_begin", "<", (today.replace(day=1)  + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
+                0],
+            ['old', _('Old Events'), [
+                ("date_end", "<", today.strftime('%Y-%m-%d 00:00:00'))],
                 0],
         ]
 
@@ -95,7 +98,7 @@ class website_event(http.Controller):
             domain_search["country"] = [("country_id", "=", int(searches["country"]))]
 
         def dom_without(without):
-            domain = SUPERUSER_ID != request.uid and [('website_published', '=', True)] or [(1, "=", 1)]
+            domain = [('state', "in", ['draft','confirm','done'])]
             for key, search in domain_search.items():
                 if key != without:
                     domain += search
@@ -103,9 +106,10 @@ class website_event(http.Controller):
 
         # count by domains without self search
         for date in dates:
-            date[3] = event_obj.search(
-                request.cr, request.uid, dom_without('date') + date[2],
-                count=True, context=request.context)
+            if date[0] <> 'old':
+                date[3] = event_obj.search(
+                    request.cr, request.uid, dom_without('date') + date[2],
+                    count=True, context=request.context)
 
         domain = dom_without('type')
         types = event_obj.read_group(
@@ -134,9 +138,13 @@ class website_event(http.Controller):
             request.cr, request.uid, dom_without("none"), count=True,
             context=request.context)
         pager = request.website.pager(url="/event/", total=event_count, page=page, step=step, scope=5)
+
+        order = 'website_published desc, date_begin'
+        if searches.get('date','all') == 'old':
+            order = 'website_published desc, date_begin desc'
         obj_ids = event_obj.search(
             request.cr, request.uid, dom_without("none"), limit=step,
-            offset=pager['offset'], order=self._order, context=request.context)
+            offset=pager['offset'], order=order, context=request.context)
         events_ids = event_obj.browse(request.cr, request.uid, obj_ids,
                                       context=request.context)
 
@@ -232,3 +240,15 @@ class website_event(http.Controller):
                 event.address_id.write({'website_published': True})
 
         return controllers.publish(id, object)
+
+    @website.route('/event/add_event/', type='http', auth="user", multilang=True, methods=['POST'])
+    def add_event(self, **kwargs):
+        Event = request.registry.get('event.event')
+        date_begin = datetime.today() + timedelta(days=(15)) # FIXME: better defaults
+        event_id = Event.create(request.cr, request.uid, {
+            'name': 'New Event',
+            'date_begin': date_begin.strftime('%Y-%m-%d'),
+            'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
+        }, context=request.context)
+
+        return request.redirect("/event/%s/?enable_editor=1" % event_id)

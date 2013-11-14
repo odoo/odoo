@@ -7,38 +7,75 @@
             <field name="description">Job Posts on your website</field>
         </record>
 
+        <template id="website_hr_recruitment_script" inherit_id="website.layout" name="Website Hr Recruitment script">
+            <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+                <script type="text/javascript" src="/website_hr_recruitment/static/src/js/website_hr_recruitment.editor.js" t-ignore="true"></script>
+            </xpath>
+        </template>
+
         <template id="job_footer_custom" inherit_id="website.layout" name="Footer Job Link">
             <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/jobs">Jobs</a></li>
+            <li><a href="/jobs">Jobs</a></li>
             </xpath>
         </template>
 
         <template id="index" name="Jobs">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <div class="oe_structure"/>
-                    <div class="container oe_website_jobs">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <t t-call="website.pager">
-                                    <t t-set="classname">pull-left</t>
-                                </t>
+                    <div class="oe_structure">
+
+                    <section data-snippet-id="text-block" class="mb32">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 text-center mb16" data-snippet-id="colmd">
+                                    <h2>Our Job Offers</h2>
+                                    <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
+                                </div>
+                                <div class="col-md-12" data-snippet-id="colmd">
+                                    <p>
+                                        With a small team of smart people, we released the most
+                                        disruptive enterprise management software in the world.
+                                        OpenERP is fully open source, super easy, full featured
+                                        (3000+ apps) and its online offer is 3 times cheaper than
+                                        traditional competitors like SAP and Ms Dynamics.
+                                    </p>
+                                    <p>
+                                        Join us, we offer you an extraordinary chance to learn, to
+                                        develop and to be part of an exciting experience and
+                                        team.
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        <div class='row style_default mt16'>
-                            <div class="col-md-12" id="jobs_grid">
+                    </section>
+
+                    </div>
+                    <div class="container oe_website_jobs">
+                        <div class="row">
+                            <div class="col-md-1" id="jobs_grid_left">
+
+                            </div>
+                            <div class="col-md-9" id="jobs_grid">
                                 <ul class="media-list">
-                                    <li t-foreach="res_job" t-as="job" class="media">
+                                    <li t-foreach="jobs" t-as="job" class="media">
                                         <div class="media-body" t-att-data-publish="job.website_published and 'on' or 'off'">
-                                            <t t-if="job.no_of_recruitment">
-                                            <span class="label label-default pull-right label-info"><t t-esc="vals[job.id]['count']"/> Vacancies.</span>
-                                            </t>
-                                            <h4 class="media-heading"><a t-href="/job/detail/#{ job.id }/"><span t-field="job.name"> </span></a></h4>
-                                            <div t-if="companies[0].country_id">
-                                                <i class="icon-map-marker"/> <span t-field="companies[0].city"> </span>  <span t-if="companies[0].state_id" t-field="companies[0].state_id.name"> </span>, <span t-field="companies[0].country_id.name"> </span>
+                                            <h3 class="media-heading">
+                                                <a t-href="/job/detail/#{ job.id }/">
+                                                    <span t-field="job.name"/>
+                                                </a>
+                                                <small t-if="job.no_of_recruitment &gt; 1">
+                                                    <t t-esc="job.no_of_recruitment"/> open positions
+                                                </small>
+                                            </h3>
+
+                                            <div t-if="job.address_id">
+                                                <i class="icon-map-marker"/>
+                                                <span t-field="job.address_id.city"/>
+                                                <span t-if="job.address_id.state_id" t-field="job.address_id.state_id"/>
+                                                , <span t-field="job.address_id.country_id.name"/>
                                             </div>
                                             <div class="text-muted">
-                                                <i class="icon-time"/> <span><t t-esc="vals[job.id]['date_recruitment']"/></span>
+                                                <i class="icon-time"/> <span t-field="job.write_date"/>
                                             </div>
                                         </div>
                                     </li>
@@ -46,7 +83,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="oe_structure"/>
+
+                    <div class="oe_structure">
+                        <section data-snippet-id="cta" class="darken">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12 text-center mt16 mb16">
+                                        <a href="/job/apply" class="btn btn-primary btn-lg">Apply</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </t>
         </template>
@@ -55,25 +103,29 @@
             <t t-call="website.layout">
             <t t-set="additional_title">Job Detail</t>
             <div id="wrap">
-                <div class="container oe_website_hr_recruitment">
+
+                <section class="container mt8">
                     <div class="row">
-                        <div class="col-md-3">
-                            <t t-call="website_mail.follow">
-                                <t t-set="email" t-value="user_id.email"/>
-                                <t t-set="object" t-value="job"/>
-                            </t>
-                        </div>
-                        <t t-call="website.publish_management">
-                            <t t-set="object" t-value="job"/>
-                            <t t-set="publish_edit" t-value="True"/>
-                            <t t-set="publish_controller">/job/publish</t>
-                        </t>
+                      <div class="col-sm-5">
+                          <ol class="breadcrumb mb0">
+                              <li><a href="/jobs">Our Jobs</a></li>
+                              <li class="active"><span t-field="job.name"></span></li>
+                          </ol>
+                      </div><div class="col-sm-7">
+                          <t t-call="website.publish_management">
+                              <t t-set="object" t-value="job"/>
+                              <t t-set="publish_edit" t-value="True"/>
+                              <t t-set="publish_controller">/job/publish</t>
+                          </t>
+                      </div>
                     </div>
-                </div>
+                </section>
+
                 <div class="oe_structure" style="clear:both;">
                     <h1 class="text-center" t-field="job.name"/>
                     <h5 class="text-center">
-                        <i class="icon-map-marker"/> <span t-field="job.company_id.city"> </span>  <span t-if="job.company_id.state_id" t-field="job.company_id.state_id.name"> </span>, <span t-field="job.company_id.country_id.name"> </span></h5>
+                        <i class="icon-map-marker"/> <span t-field="job.address_id.city"/> <span t-if="job.address_id.state_id" t-field="job.address_id.state_id.name"/>, <span t-field="job.address_id.country_id.name"/>
+                    </h5>
                     <h5 class="text-center text-muted">
                                     <i class="icon-time"/> <span><t t-esc="vals_date"/></span>
                     </h5>
@@ -86,7 +138,7 @@
                                 <div class="container">
                                     <div class="row">
                                     <div class="col-md-12 text-center mt16 mb16">
-                                        <a t-href="/apply/#{ job.id }/" class="btn btn-primary btn-lg">Apply</a>
+                                        <a t-href="/job/apply/#{ job.id }/" class="btn btn-primary btn-lg">Apply</a>
                                     </div>
                                       </div>
                                 </div>
@@ -103,28 +155,39 @@
                 <t t-set="additional_title">Apply Job</t>
                 <div id="wrap">
                     <div class="container">
-                        <h1 class="text-center">Apply for <span t-field="job.name"/></h1>
+                        <h1 class="text-center">
+                            Job Application Form
+                        </h1>
+                        <h2 t-if="job" class="text-center text-muted">
+                            <span t-field="job.name"/>
+                        </h2>
+
                         <div class="row">
                             <section id="forms">
                                 <!-- TODO Multilingual form action support ? -->
                                 <form class="form-horizontal mt32" action="/job/success" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" t-att-value="job.department_id.id" name="department_id"/>
-                                    <input type="hidden" t-att-value="job.id" name="job_id"/>
-                                    <input type="hidden" t-att-value="job.name" name="name"/>
+                                    <input type="hidden" t-att-value="job and job.department_id.id or False" name="department_id"/>
+                                    <input type="hidden" t-att-value="job and job.id or False" name="job_id"/>
                                     <div class="form-group">
-                                        <label class="col-md-3 col-sm-4 control-label" for="partner_name">Name</label>
+                                        <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Name</label>
                                         <div class="col-md-7 col-sm-8">
                                             <input type="text" class="form-control" name="partner_name" required="True" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-3 col-sm-4 control-label" for="email_from">Email</label>
+                                        <label class="col-md-3 col-sm-4 control-label" for="email_from">Your Email</label>
                                         <div class="col-md-7 col-sm-8">
                                             <input type="email" class="form-control" name="email_from" required="True" />
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-md-3 col-sm-4 control-label" for="description">Cover Note</label>
+                                        <label class="col-md-3 col-sm-4 control-label" for="phone">Your Phone</label>
+                                        <div class="col-md-7 col-sm-8">
+                                            <input type="text" class="form-control" name="phone" required="True" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-sm-4 control-label" for="description">Short Introduction</label>
                                         <div class="col-md-7 col-sm-8">
                                             <textarea  class="form-control" name="description" style="min-height: 120px"/>
                                         </div>
@@ -147,41 +210,68 @@
                 </div>
             </t>
         </template>
+
         <template id="thankyou">
             <t t-call="website.layout">
                 <div id="wrap">
-                    <div class="container">
-                        <h1>Thank you!</h1>
-                        <p>
-                            We have received your application for the position,
-                            we will contact you soon for the next part of the
-                            recruitment process.
-                        </p>
+                    <div class="oe_structure">
+                        <div class="container">
+                            <h1>Thank you!</h1>
+                            <p>
+                                Your job application has been successfully registered,
+                                we will get back to you soon.
+                            </p>
+                        </div>
+                        <section data-snippet-id="cta" class="darken">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12 text-center mt16 mb16">
+                                        <a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </t>
         </template>
-    <template id="job_departments" inherit_option_id="website_hr_recruitment.index" name="Job Departments">
-        <xpath expr="//div[@id='jobs_grid']" position="before">
-            <div class="col-md-3">
-                <ul class="nav nav-pills nav-stacked mt16">
-                    <li t-att-class=" '' if active else 'active' "><a t-href="/jobs">All Departments</a></li>
+
+        <template id="job_departments" inherit_option_id="website_hr_recruitment.index" name="Filter on Departments">
+            <xpath expr="//div[@id='jobs_grid_left']" position="inside">
+                <ul class="nav nav-pills nav-stacked mb32">
+                    <li t-att-class=" '' if active else 'active' "><a href="/jobs">All Departments</a></li>
                     <t t-foreach="departments" t-as="department">
                         <li t-att-class="department.id == active and 'active' or ''">
-                        <a t-href="/department/#{ department.id }/" ><span t-field="department.name"/></a>
+                        <a t-href="/jobs/department/#{ department.id }/" ><span t-field="department.name"/></a>
                         </li>
                     </t>
                 </ul>
-            </div>
-        </xpath>
-        <xpath expr="//div[@id='jobs_grid']" position="attributes">
-            <attribute name="class">col-md-9</attribute>
-        </xpath>
-        <xpath expr="//div[@class='row']/div" position="before">
-            <div class="col-md-4">
-            <h1>Departments</h1>
-            </div>
-        </xpath>
-    </template>
-     </data>
+            </xpath>
+            <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
+                <attribute name="class">col-md-3</attribute>
+            </xpath>
+        </template>
+
+        <template id="job_offices" inherit_option_id="website_hr_recruitment.index" name="Filter on Offices">
+            <xpath expr="//div[@id='jobs_grid_left']" position="inside">
+                <ul class="nav nav-pills nav-stacked mb32">
+                    <li t-att-class=" '' if office else 'active' "><a href="/jobs">All Offices</a></li>
+                    <t t-foreach="offices" t-as="thisoffice">
+                        <li t-att-class="thisoffice.id == office and 'active' or ''">
+                            <a t-href="/jobs/office/#{ thisoffice.id }/" >
+                                <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">, 
+                                    <span t-field="thisoffice.country_id.name"/>
+                                </t>
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+            </xpath>
+            <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
+                <attribute name="class">col-md-3</attribute>
+            </xpath>
+        </template>
+
+
+    </data>
 </openerp>

@@ -40,7 +40,10 @@
 
     var all_ready = null;
     var dom_ready = website.dom_ready = $.Deferred();
-    $(dom_ready.resolve);
+    $(document).ready(function () {
+        website.is_editable = $('html').data('editable');
+        dom_ready.resolve();
+    });
 
     website.init_kanban = function ($kanban) {
         $('.js_kanban_col', $kanban).each(function () {
@@ -105,8 +108,10 @@
      */
     website.ready = function() {
         if (!all_ready) {
-            all_ready = $.when(dom_ready, templates_def).then(function () {
-                if ($('html').data('editable')) {
+            all_ready = dom_ready.then(function () {
+                return templates_def;
+            }).then(function () {
+                if (website.is_editable) {
                     website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
                     var modules = ['website'];
@@ -125,6 +130,42 @@
         }));
         $error.appendTo("body");
         $error.modal('show');
+    };
+
+    website.prompt = function (window_title, field_name, field_type, on_init) {
+        // A bootstraped version of javascript prompt albeit asynchronous
+        // Built to handle only one field, for anything more complex, use editor.Dialog class
+        // TODO: use option dict for parameters
+        field_type = field_type || 'input';
+        on_init = on_init || function() {};
+        var def = $.Deferred();
+        var dialog = $(openerp.qweb.render('website.prompt', {
+            field_type: field_type,
+            field_name: field_name,
+            window_title: window_title,
+        })).appendTo("body");
+        var input = dialog.find(field_type).first();
+        var init = on_init(input);
+        $.when(init).then(function () {
+            dialog.modal('show');
+            input.focus();
+            dialog.on('click', '.btn-primary', function () {
+                def.resolve(input.val(), input);
+                dialog.remove();
+            });
+        });
+        dialog.on('hidden.bs.modal', function () {
+            def.reject();
+            dialog.remove();
+        });
+        if (input.is('input[type="text"]')) {
+            input.keypress(function (e) {
+                if (e.which == 13) {
+                    dialog.find('.btn-primary').trigger('click');
+                }
+            });
+        }
+        return def;
     };
 
     dom_ready.then(function () {

@@ -24,14 +24,10 @@
                         <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
                         <li class="dropdown js_hide_on_translate">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Content <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
+                            <ul class="dropdown-menu oe_content_menu" role="menu">
                                 <li><a data-action="edit-structure" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
                                 <li class="divider"> </li>
-                                <li><a href="">New Page</a></li> <!-- Todo: Implement with inheritancy in each module-->
-                                <li><a href="">New Blog Post</a></li>
-                                <li><a href="">New Event</a></li>
-                                <li><a href="">New Job Offer</a></li>
-                                <li><a href="">New Product</a></li>
+                                <li><a href="#" data-action="new_page">New Page</a></li>
                             </ul>
                         </li>
                         <li class="dropdown js_hide_on_translate">
@@ -61,9 +57,16 @@
                         <h3 class="modal-title">Mobile preview</h3>
                     </div>
                     <div class="modal-body">
-                        <div>
-                            <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
-                        </div>
+                        <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
+                        <script>
+                            var $o = $('<div style="width:50px; overflow:scroll;"><div style="width:100%;"></div></div>');
+                            $o.appendTo("body");
+                            var scrollSize = 50 - $o.find("div").innerWidth();
+                            $o.remove();
+
+                            $(".modal-body").css({'overflow': 'hidden', 'margin-right': '5px'});
+                            $(".oe_mobile_viewport").css({'width': (320 + scrollSize + 5) + 'px'});
+                        </script>
                     </div>
                 </div>
             </div>
@@ -93,4 +96,31 @@
             </div>
         </div>
     </t>
+
+    <t t-name="website.prompt">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title"><t t-esc="window_title"/></h3>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="list-group-item-heading">
+                            <label for="page-name" class="control-label">
+                                <t t-esc="field_name"/>
+                            </label>
+                        </h4>
+                        <!-- TODO: support other types -->
+                        <input type="text" class="form-control" required="required" t-att-placeholder="field_name"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                        <button type="button" class="btn btn-primary">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
 </templates>

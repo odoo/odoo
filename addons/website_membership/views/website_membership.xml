@@ -5,14 +5,14 @@
     <!-- Layout add nav and footer -->
     <template id="footer_custom" inherit_id="website.layout" name="Footer Associations Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/members/">Associations</a></li>
+            <li><a href="/members/">Members</a></li>
         </xpath>
     </template>
 
     <!-- Page --> 
     <template id="layout" name="Members Layout">
         <t t-call="website.layout">
-            <t t-set="additional_title">Associations</t>
+            <t t-set="additional_title">Members</t>
             <div id="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
@@ -29,8 +29,8 @@
         <t t-call="website_membership.layout">
             <t t-set="ref_content">
                 <h1 class="col-md-12 text-center">
-                    Looking for a partner ?<br/>
-                    <small>Find an association member</small>
+                    Looking for a partner?<br/>
+                    <small>Find a member</small>
                 </h1>
                 <div class="col-md-4" id="left_column">
                     <ul class="nav nav-pills nav-stacked mt16">
@@ -52,7 +52,7 @@
                         <t t-call="website.pager">
                            <t t-set="classname">pull-left</t>
                         </t>
-                        <form t-action="/members/" method="get" class="navbar-search pull-right pagination form-inline">
+                        <form action="/members/" method="get" class="navbar-search pull-right pagination form-inline">
                             <div class="form-group">
                                 <input type="text" name="name" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="post.get('name', '')"/>
                             </div>
