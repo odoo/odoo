@@ -205,8 +205,8 @@ var BasicDataView = instance.web.Widget.extend({
   */
 var PivotTable = BasicDataView.extend({
     template: 'pivot_table',
-    rows: null,
-    cols: null,
+    rows: [],
+    cols: [],
     current_row_id : 0,
 
     events: {
@@ -250,29 +250,74 @@ var PivotTable = BasicDataView.extend({
         });
     },
 
-    make_cell: function (content, is_border) {
-        return '<td' +
-               ((is_border) ? ' class="graph_border"' : '') +
-               '>' + content + '</td>';
+    make_cell: function (content, options) {
+        var attrs = ['<td'];
+        if (options && options.is_border) {
+            attrs.push('class="graph_border"');
+        }
+
+        attrs.push('>');
+        if (options && options.indent) {
+            _.each(_.range(options.indent), function () {
+                attrs.push('<span class="web_graph_indent"></span>');
+            });
+        }
+        return attrs.join(' ') + content + '</td>';
+    },
+
+    make_row: function (data, parent_id) {
+        var has_parent = (parent_id !== undefined);
+        var parent = has_parent ? this.get_row(parent_id) : null;
+        var path = has_parent ? parent.path.concat(data.attributes.grouped_on)
+                              : [data.attributes.grouped_on];
+
+
+        var indent_level = has_parent ? parent.path.length : 0;
+
+
+        var jquery_row = $('<tr></tr>');
+        var header = $(this.make_cell(data.attributes.value[1], {is_border:true, indent: indent_level}));
+        var row_id = this.generate_id();
+
+        header.prepend('<a data-row-id="'+ row_id + '" href="#">+ </a>');
+        jquery_row.html(header);
+        jquery_row.append(this.make_cell(data.attributes.aggregates[this.measure]));
+
+        var row = {
+            id: row_id,
+            path: path,
+            value: data.attributes.value[1],
+            expanded: false,
+            parent: parent_id,
+            children: [],
+            html_tr: jquery_row,
+            domain: data.model._domain,
+        };
+        this.rows.push(row);  // to do, insert it properly
+
+        if (has_parent) {
+            parent.children.push(row);
+        }
+        return row;
     },
 
     expand_row: function (row_id, field_id) {
+        var self = this;
         var row = this.get_row(row_id);
         this.row_groupby.push(field_id);
         var visible_fields = this.row_groupby.concat(this.col_groupby, this.measure);
 
-        console.log("model",this.model);
-        console.log("vf",visible_fields);
-        console.log("domain",row.domain);
-        console.log("gb",this.row_groupby);
-
         query_groups(this.model, visible_fields, row.domain, [field_id])
             .then(function (data) {
-            console.log("datapt",data);
+                _.each(data, function (datapt) {
+
+                    var new_row = self.make_row(datapt, row_id);
+                    row.html_tr.after(new_row.html_tr);
+                });
+                row.expanded = true;
         });
 
     },
-// function query_groups (model, fields, domain, groupbys) {
 
     draw: function () {
         this.get_data(this.row_groupby)
@@ -292,31 +337,13 @@ var PivotTable = BasicDataView.extend({
             children: [],
             html_tds: [],
             domain: this.domain,
-            header: $(this.make_cell(this.measure_label, true)),
+            header: $(this.make_cell(this.measure_label, {is_border:true})),
         }];
 
-        this.rows = _.map(data, function (datapt) {
-            var jquery_row = $('<tr></tr>');
-            var header = $(self.make_cell(datapt.attributes.value[1], true));
-            var row_id = self.generate_id();
-
-            header.prepend('<a data-row-id="'+ row_id + '" href="#">+ </a>');
-            jquery_row.html(header);
-            jquery_row.append(self.make_cell(datapt.attributes.aggregates[self.measure]));
-
-            var row = {
-                id: row_id,
-                path: [datapt.attributes.grouped_on],
-                value: datapt.attributes.value[1],
-                expanded: false,
-                parent: null,
-                children: [],
-                html_tr: jquery_row,
-                domain: datapt.model._domain,
-            };
-            return row;
+        _.each(data, function (datapt) {
+            self.make_row(datapt);
         });
-    }, 
+    },
 
     _draw: function () {
 
