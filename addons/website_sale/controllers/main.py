@@ -324,6 +324,11 @@ class Ecommerce(http.Controller):
 
         domain = [("sale_ok", "=", True)]
 
+        try:
+            product_obj.check_access_rights(request.cr, request.uid, 'write')
+        except:
+            domain += [('website_published', '=', True)]
+
         # remove product_product_consultant from ecommerce editable mode, this product never be publish
         ref = request.registry.get('ir.model.data').get_object_reference(request.cr, SUPERUSER_ID, 'product', 'product_product_consultant')
         domain += [("id", "!=", ref[1])]
