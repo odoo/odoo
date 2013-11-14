@@ -70,10 +70,10 @@ class WebsiteCustomer(http.Controller):
         }
         return request.website.render("website_customer.index", values)
 
-    @website.route(['/customers/<model("res.partner"):partner_id>/'], type='http', auth="public", multilang=True)
-    def customer(self, partner_id=None, **post):
+    @website.route(['/customers/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
+    def customer(self, partner=None, **post):
         """ Route for displaying a single partner / customer. """
         values = {
-            'partner_id': partner_id
+            'partner': partner
         }
         return request.website.render("website_customer.details", values)

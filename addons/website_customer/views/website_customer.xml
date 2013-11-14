@@ -98,20 +98,20 @@
                     <div class="col-md-5">
                         <ol class="breadcrumb">
                             <li><a href="/customers">Our References</a></li>
-                            <li class="active" t-field="partner_id.name"/>
+                            <li class="active" t-field="partner.name"/>
                         </ol>
                     </div>
                     <div class="col-md-7">
-                        <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
+                        <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
                     </div>
                 </div>
                 <div class="oe_structure"/>
                 <div class="row">
                     <div class="col-md-12">
-                        <h1 class="text-center" t-field="partner_id.name"/>
+                        <h1 class="text-center" t-field="partner.name"/>
                     </div>
                     <div class="col-md-9">
-                        <div t-field="partner_id.website_description"/>
+                        <div t-field="partner.website_description"/>
                     </div>
                     <div class="col-md-3" id="ref_right_column">
                     </div>
@@ -130,18 +130,18 @@
                 </div>
                 <div class="panel-body">
                     <div class="text-center">
-                        <img t-att-src="partner_id.img('image')" class="img img-shadow"/>
+                        <img t-att-src="partner.img('image')" class="img img-shadow"/>
                     </div>
                     <address class="mt16 mb8">
-                        <strong t-field="partner_id.name"/>
-                        <p t-field="partner_id.commercial_partner_id"/>
-                        <div t-if="partner_id.phone">
-                            <span class="icon-phone"/> <span t-field="partner_id.phone"/>
+                        <strong t-field="partner.name"/>
+                        <p t-field="partner.commercial_partner_id"/>
+                        <div t-if="partner.phone">
+                            <span class="icon-phone"/> <span t-field="partner.phone"/>
                         </div>
-                        <div t-if="partner_id.email">
+                        <div t-if="partner.email">
                             <span class="icon-envelope"/>
-                            <a t-att-href="'mailto:'+partner_id.email">
-                              <span t-field="partner_id.email"/>
+                            <a t-att-href="'mailto:'+partner.email">
+                              <span t-field="partner.email"/>
                             </a>
                         </div>
                     </address>
