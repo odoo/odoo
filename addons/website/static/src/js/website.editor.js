@@ -545,8 +545,8 @@
         new_page: function (ev) {
             ev.preventDefault();
             website.prompt({
-                window_title: "Create a new page",
-                input: "Page name",
+                window_title: "New Page",
+                input: "Page Title",
             }).then(function (val) {
                 document.location = '/pagenew/' + encodeURI(val);
             });

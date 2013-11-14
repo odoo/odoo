@@ -9,8 +9,8 @@
             'click a[data-action=new_blog_post]': function (ev) {
                 ev.preventDefault();
                 website.prompt({
-                    window_title: "Create a new blog post",
-                    select: "Select Blog Category",
+                    window_title: "New Blog Post",
+                    select: "Select Blog",
                     init: function (field) {
                         return website.session.model('blog.category')
                                 .call('name_search', [], { context: website.get_context() });
