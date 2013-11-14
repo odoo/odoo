@@ -747,9 +747,9 @@
                 <form string="Transfer" version="7.0">
                 <header>
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="do_rereserve" states="confirmed" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="do_partial" states="assigned" string="Transfer Done" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                    <button name="do_transfer" states="assigned" string="Transfer Done" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="do_prepare_partial" string="Partial Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','!=','assigned')]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="action_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
@@ -779,7 +779,14 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <separator string="Expected Quantities" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
+                            <group>
+                                <group col="3"> 
+                                    <separator string="Expected Quantities" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
+                                </group>
+                                <group col="1">
+                                    <button name="do_recompute_remaining_quantities" string="Recompute Remaining Quantities" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}" class="oe_link oe_right oe_inline"/>
+                                </group>
+                            </group>
                             <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"/>
                             <group>
                                 <group col="3"> 
@@ -1039,6 +1046,7 @@
                        groups="base.group_user"/>
                     <field name="scrapped" invisible="1"/>
                     <field name="location_dest_id" groups="stock.group_locations"/>
+                    <field name="remaining_qty"/>
                     <field name="state"/>
                 </tree>
             </field>
