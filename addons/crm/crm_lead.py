@@ -836,9 +836,11 @@ class crm_lead(base_stage, format_address, osv.osv):
         model_data = self.pool.get('ir.model.data')
         phonecall_dict = {}
         if not categ_id:
-            res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
-            if res_id:
+            try:
+                res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
                 categ_id = model_data.browse(cr, uid, res_id, context=context).res_id
+            except ValueError:
+                pass
         for lead in self.browse(cr, uid, ids, context=context):
             if not section_id:
                 section_id = lead.section_id and lead.section_id.id or False
