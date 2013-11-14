@@ -40,8 +40,7 @@ def get_addons_from_paths(paths, exclude):
     module_names = []
     for p in paths:
         if os.path.exists(p):
-            names = list(set(os.listdir(p)))
-            names = filter(lambda a: not (a.startswith('.') or a in exclude), names)
+            names = [n for n in os.listdir(p) if os.path.isfile(os.path.join(p, n, '__openerp__.py')) and not n.startswith('.') and n not in exclude]
             names = filter(lambda a: os.path.isdir(os.path.join(p, a)), names)
             names = filter(lambda a: os.path.exists(os.path.join(p, a, '__openerp__.py')), names)
             module_names.extend(names)
