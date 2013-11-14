@@ -52,7 +52,17 @@ def route(routes, *route_args, **route_kwargs):
                 request.website.preprocess_request(request)
             if f.methods and request.httprequest.method not in f.methods:
                 return werkzeug.exceptions.MethodNotAllowed(valid_methods=f.methods)
-            return f(*args, **kwargs)
+            try:
+                return f(*args, **kwargs)
+            except Exception, err:
+                logger.exception("Website Rendering Error.")
+                if request.context['is_public_user']:
+                    return request.website.render("website.401")
+                else:
+                    return request.website.render("website.500", {
+                        'traceback': traceback.format_exc(),
+                        'controller': [f.__module__, "%s.%s" % (args[0].__class__.__name__, f.__name__)],
+                    })
         return wrap
     return decorator
 
