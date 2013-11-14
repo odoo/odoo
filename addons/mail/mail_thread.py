@@ -1303,7 +1303,7 @@ class mail_thread(osv.AbstractModel):
         if headers:
             header_domain = ['|'] * (len(headers) - 1)
             for header in headers:
-                header_domain += [('res_model', '=', header[0]), ('res_id', '=', header[1])]
+                header_domain += ['&', ('res_model', '=', header[0]), ('res_id', '=', header[1])]
             header_follower_ids = follower_obj.search(
                 cr, SUPERUSER_ID,
                 header_domain,
