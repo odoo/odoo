@@ -4,7 +4,6 @@
         <div>
             <i class="icon-reorder"/>
             <span><t t-esc="submenu.name"/></span>
-            <i class="icon-home"/>
             <div class="btn-group btn-group-xs pull-right oe_menu_buttons">
                 <button type="button" class="btn js_edit_menu">
                     <i class="icon-edit"/>
@@ -13,6 +12,7 @@
                     <i class="icon-trash"/>
                 </button>
             </div>
+            <i class="icon-home pull-right"/>
         </div>
         <t t-set="children" t-value="submenu.children"/>
         <ul t-if="children">
@@ -32,7 +32,7 @@
         </ul>
         <div class="mt16">
             <div class="pull-right text-muted">
-                Right indent for multi-level menus
+                <span class="icon-indent-right"/> right indent for multi-level menus
             </div>
             <div>
                 <a href="#" class="js_add_menu">
