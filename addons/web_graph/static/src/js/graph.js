@@ -262,6 +262,9 @@ var PivotTable = BasicDataView.extend({
                 attrs.push('<span class="web_graph_indent"></span>');
             });
         }
+        if (options && options.foldable) {
+            attrs.push('<a data-row-id="'+ options.row_id + '" href="#" class="icon-caret-right"> </a>');
+        }
         return attrs.join(' ') + content + '</td>';
     },
 
@@ -276,10 +279,9 @@ var PivotTable = BasicDataView.extend({
 
 
         var jquery_row = $('<tr></tr>');
-        var header = $(this.make_cell(data.attributes.value[1], {is_border:true, indent: indent_level}));
         var row_id = this.generate_id();
 
-        header.prepend('<a data-row-id="'+ row_id + '" href="#">+ </a>');
+        var header = $(this.make_cell(data.attributes.value[1], {is_border:true, indent: indent_level, foldable:true, row_id: row_id}));
         jquery_row.html(header);
         jquery_row.append(this.make_cell(data.attributes.aggregates[this.measure]));
 
@@ -315,6 +317,12 @@ var PivotTable = BasicDataView.extend({
                     row.html_tr.after(new_row.html_tr);
                 });
                 row.expanded = true;
+                console.log("tr",row.html_tr);
+                var icon = row.html_tr.find('.icon-caret-right');
+                icon.removeClass('icon-caret-right')
+                    .addClass('icon-caret-down');
+                console.log("icon",icon);
+                // console.log("nrst",);
         });
 
     },
