@@ -49,12 +49,14 @@ class WebsiteMembership(http.Controller):
         else:
             membership = None
         if post_name:
-            where += " or r.name ilike '%%%s%%'" % post_name + " or r.website_description ilike '%%%s%%'" % post_name
+            where += " and (r.name ilike '%%%s%%'" % post_name + " or r.website_description ilike '%%%s%%'" % post_name + ")"
 
-        query = 'select m.id, p.name_template, m.membership_id, m.partner, r.name, r.parent_id, r.website_short_description, r.image_small from membership_membership_line m, product_product p, res_partner r where m.membership_id=p.id and m.partner=r.id and '+ where + ' order by m.membership_id, m.member_price DESC'
+        query = 'select m.id from membership_membership_line m, product_product p, res_partner r where m.membership_id=p.id and m.partner=r.id and '+ where + ' order by m.membership_id, m.member_price DESC'
         cr.execute(query)
-        search_membership_ids = [x[0] for x in cr.fetchall()]
-
+        def _uniquify_list(seq):
+            seen = set()
+            return [x for x in seq if x not in seen and not seen.add(x)]
+        search_membership_ids = _uniquify_list([x[0] for x in cr.fetchall()])
         # group by country, based on all customers (base domain)
         membership_line_ids = membership_line_obj.search(cr, uid, base_line_domain, context=context)
         countries = partner_obj.read_group(

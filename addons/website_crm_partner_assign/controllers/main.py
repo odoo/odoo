@@ -59,12 +59,13 @@ class WebsiteCrmPartnerAssign(http.Controller):
             country = country_obj.browse(request.cr, request.uid, country_id, request.context)
             where += " and r.country_id = "+str(country_id)
         if post_name:
-            where += " or r.name ilike '%%%s%%'" % post_name + " or r.website_description ilike '%%%s%%'" % post_name
+            where += " and (r.name ilike '%%%s%%'" % post_name + " or r.website_description ilike '%%%s%%'" % post_name + ")"
         query = 'select r.id from res_partner r, res_partner_grade g where r.grade_id=g.id and '+ where+ ' order by g.sequence DESC limit '+ str(self._references_per_page)+ ' offset '+ str(pager['offset'])
         request.cr.execute(query)
-        partnerres = request.cr.fetchall()
-        search_partner_ids = [x[0] for x in partnerres]
-
+        def _uniquify_list(seq):
+            seen = set()
+            return [x for x in seq if x not in seen and not seen.add(x)]
+        search_partner_ids = _uniquify_list([x[0] for x in request.cr.fetchall()])
         partners = partner_obj.browse(
             request.cr, openerp.SUPERUSER_ID, search_partner_ids, request.context)
 
