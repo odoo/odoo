@@ -98,4 +98,14 @@
         },
     });
 
+    website.EditorBar.include({
+        start: function () {
+            $('.tour-backdrop').click(function (e) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+            });
+            return this._super();
+        },
+    });
+
 }());

@@ -151,10 +151,6 @@
             if (url.search.indexOf('?tutorial=true') === 0 || bannerTour.startOfPart2()) {
                 bannerTour.start();
             }
-            $('.tour-backdrop').click(function (e) {
-                e.stopImmediatePropagation();
-                e.preventDefault();
-            });
             return this._super();
         },
     });

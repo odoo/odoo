@@ -23,9 +23,6 @@
             ];
             return this._super();
         },
-        canResume: function () {
-            return this._super();
-        },
     });
 
     website.EditorBar.include({
@@ -38,10 +35,6 @@
                 builderTour.start();
             });
             menu.append($menuItem);
-            $('.tour-backdrop').click(function (e) {
-                e.stopImmediatePropagation();
-                e.preventDefault();
-            });
             return this._super();
         },
     });
