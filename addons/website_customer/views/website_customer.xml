@@ -62,57 +62,6 @@
         </t>
     </template>
 
-    <template id="index" name="Customer References">
-        <t t-call="website_customer.layout">
-            <t t-set="ref_content">
-                <h1 class="col-md-12 text-center">
-                    Customer References<br/>
-                    <small>Trusted by millions worldwide</small>
-                </h1>
-                <div class="col-md-4" id="ref_left_column">
-                    <h3>Search by Country</h3>
-                    <ul class="nav nav-pills nav-stacked mt16">
-                        <t t-foreach="countries" t-as="country_dict">
-                            <t t-if="country_dict['country_id']">
-                                <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                                    <a t-href="/customers/country/#{ country_dict['country_id'][0] }">
-                                        <t t-esc="country_dict['country_id'][1]"/> <small>(<t t-esc="country_dict['country_id_count']"/>)</small>
-                                    </a>
-                                </li>
-                            </t>
-                        </t>
-                    </ul>
-                </div>
-                <div class="col-md-8" id="ref_content">
-                    <div class='navbar'>
-                        <div>
-                            <t t-call="website.pager">
-                               <t t-set="classname" t-value="'pull-left'"/>
-                            </t>
-                            <form action="/customers/" method="get" class="navbar-search pull-right pagination form-inline">
-                                <div class="form-group">
-                                    <input type="text" name="search" class="search-query form-control"
-                                        placeholder="Search" t-att-value="post.get('search', '')"/>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div>
-                        <div t-foreach="partner_ids" t-as="partner" class="media thumbnail" data-publish="">
-                            <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
-                            <a class="pull-left" t-href="/customers/#{ partner.id }/">
-                                <img class="media-object" t-att-src="partner.img('image_small')"/>
-                            </a>
-                            <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-href="/customers/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a>
-                                <t t-if="partner.website_short_description"><div t-field="partner.website_short_description"/></t><a t-if="partner.website_short_description" class="pull-right" t-attf-href="/customers/#{ partner.id }/">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </t>
-    </template>
     <!-- Option: left column: World Map -->
     <template id="opt_country" inherit_option_id="website_customer.index" name="Show Map">
         <xpath expr="//div[@id='ref_left_column']" position="inside">
