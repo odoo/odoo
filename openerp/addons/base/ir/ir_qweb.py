@@ -177,7 +177,7 @@ class QWeb(orm.AbstractModel):
     def register_tag(self, tag, func):
         self._render_tag[tag] = func
 
-    def load_document(self, x, into):
+    def load_document(self, x, into, context):
         """
         Loads an XML document and installs any contained template in the engine
         """
@@ -190,12 +190,15 @@ class QWeb(orm.AbstractModel):
 
         for n in dom.documentElement.childNodes:
             if n.nodeType == self.node.ELEMENT_NODE and n.getAttribute('t-name'):
-                into[str(n.getAttribute("t-name"))] = n
+                self.add_template(into, str(n.getAttribute("t-name")), n, context)
+
+    def add_template(self, into, name, node, context):
+        into[name] = node
 
     def get_template(self, name, context):
         if context.loader and name not in context.templates:
             xml_doc = context.loader(name)
-            self.load_document(xml_doc, into=context.templates)
+            self.load_document(xml_doc, into=context.templates, context=context)
 
         if name in context.templates:
             return context.templates[name]
