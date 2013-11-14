@@ -5,7 +5,7 @@
 
     var render = website.tour.render;
 
-    website.EditorBasicTour = website.EditorTour.extend({
+    website.EditorBannerTour = website.EditorTour.extend({
         id: 'add_banner_tour',
         name: "Insert a banner",
         init: function (editor) {
@@ -140,16 +140,16 @@
     website.EditorBar.include({
         start: function () {
             var menu = $('#help-menu');
-            var basicTour = new website.EditorBasicTour(this);
-            var $menuItem = $($.parseHTML('<li><a href="#">'+basicTour.name+'</a></li>'));
+            var bannerTour = new website.EditorBannerTour(this);
+            var $menuItem = $($.parseHTML('<li><a href="#">'+bannerTour.name+'</a></li>'));
             $menuItem.click(function () {
-                basicTour.reset();
-                basicTour.start();
+                bannerTour.reset();
+                bannerTour.start();
             });
             menu.append($menuItem);
             var url = new website.UrlParser(window.location.href);
-            if (url.search.indexOf('?tutorial=true') === 0 || basicTour.startOfPart2()) {
-                basicTour.start();
+            if (url.search.indexOf('?tutorial=true') === 0 || bannerTour.startOfPart2()) {
+                bannerTour.start();
             }
             $('.tour-backdrop').click(function (e) {
                 e.stopImmediatePropagation();
