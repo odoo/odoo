@@ -17,7 +17,7 @@
                     orphan: true,
                     backdrop: true,
                     title: "Welcome to your website!",
-                    content: "This tutorial will guide you to build your first page. We will start by adding a banner.",
+                    content: "This tutorial will guide you to build your home page. We will start by adding a banner.",
                     template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
                 },
                 {
