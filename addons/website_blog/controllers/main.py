@@ -33,21 +33,99 @@ class WebsiteBlog(http.Controller):
     _category_post_per_page = 6
     _post_comment_per_page = 6
 
+    def nav_list(self):
+        blog_post_obj = request.registry['blog.post']
+        nav = {}
+        for group in blog_post_obj.read_group(request.cr, request.uid, [], ['name', 'create_date'], 
+                groupby="create_date", orderby="create_date asc", context=request.context):
+            # FIXME: vietnamese month names contain spaces. Set sail for fail.
+            year = group['create_date'].split(" ")[1]
+            if not year in nav:
+                nav[year] = {'name': year, 'create_date_count': 0, 'months': []}
+            nav[year]['create_date_count'] += group['create_date_count']
+            nav[year]['months'].append(group)
+        return nav
+
     @website.route([
         '/blog/',
         '/blog/page/<int:page>/',
-        '/blog/<model("blog.post"):blog_post>/',
-        '/blog/<model("blog.post"):blog_post>/page/<int:page>/',
         '/blog/cat/<model("blog.category"):category>/',
         '/blog/cat/<model("blog.category"):category>/page/<int:page>/',
         '/blog/tag/<model("blog.tag"):tag>/',
         '/blog/tag/<model("blog.tag"):tag>/page/<int:page>/',
     ], type='http', auth="public", multilang=True)
-    def blog(self, category=None, blog_post=None, tag=None, page=1, enable_editor=None):
+    def blog(self, category=None, tag=None, page=1):
         """ Prepare all values to display the blog.
 
         :param category: category currently browsed.
         :param tag: tag that is currently used to filter blog posts
+        :param integer page: current page of the pager. Can be the category or
+                            post pager.
+
+        :return dict values: values for the templates, containing
+
+         - 'blog_posts': list of browse records that are the posts to display
+                         in a given category, if not blog_post_id
+         - 'category': browse of the current category, if category_id
+         - 'categories': list of browse records of categories
+         - 'pager': the pager to display posts pager in a category
+         - 'tag': current tag, if tag_id
+         - 'nav_list': a dict [year][month] for archives navigation
+        """
+        cr, uid, context = request.cr, request.uid, request.context
+        blog_post_obj = request.registry['blog.post']
+        category_obj = request.registry['blog.category']
+
+        blog_posts = None
+
+        category_ids = category_obj.search(cr, uid, [], context=context)
+        categories = category_obj.browse(cr, uid, category_ids, context=context)
+
+        if category:
+            pager_url = "/blog/cat/%s/" % category.id
+            blog_posts = category.blog_post_ids
+        elif tag:
+            pager_url = '/blog/tag/%s/' % tag.id
+            blog_posts = tag.blog_post_ids
+        else:
+            pager_url = '/blog/'
+            blog_post_ids = blog_post_obj.search(cr, uid, [], context=context)
+            blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
+
+        pager = request.website.pager(
+            url=pager_url,
+            total=len(blog_posts),
+            page=page,
+            step=self._category_post_per_page,
+            scope=7
+        )
+        pager_begin = (page - 1) * self._category_post_per_page
+        pager_end = page * self._category_post_per_page
+        blog_posts = blog_posts[pager_begin:pager_end]
+
+        values = {
+            'category': category,
+            'categories': categories,
+            'tag': tag,
+            'blog_posts': blog_posts,
+            'pager': pager,
+            'nav_list': self.nav_list(),
+        }
+
+        if tag:
+            values['main_object'] = tag
+        elif category:
+            values['main_object'] = category
+
+        return request.website.render("website_blog.index", values)
+
+    @website.route([
+        '/blog/<model("blog.post"):blog_post>/',
+        '/blog/<model("blog.post"):blog_post>/page/<int:page>/'
+    ], type='http', auth="public", multilang=True)
+    def blog_post(self, blog_post=None, page=1, enable_editor=None):
+        """ Prepare all values to display the blog.
+
         :param blog_post: blog post currently browsed. If not set, the user is
                           browsing the category and a post pager is calculated.
                           If set the user is reading the blog post and a
@@ -61,85 +139,28 @@ class WebsiteBlog(http.Controller):
         :return dict values: values for the templates, containing
 
          - 'blog_post': browse of the current post, if blog_post_id
-         - 'blog_posts': list of browse records that are the posts to display
-                         in a given category, if not blog_post_id
          - 'category': browse of the current category, if category_id
-         - 'categories': list of browse records of categories
-         - 'pager': the pager to display, posts pager in a category or comments
-                    pager in a blog post
-         - 'tag': current tag, if tag_id
+         - 'pager': the pager to display comments pager in a blog post
          - 'nav_list': a dict [year][month] for archives navigation
         """
-        cr, uid, context = request.cr, request.uid, request.context
-        blog_post_obj = request.registry['blog.post']
-        category_obj = request.registry['blog.category']
-
-        blog_posts = None
-
-        category_ids = category_obj.search(cr, uid, [], context=context)
-        categories = category_obj.browse(cr, uid, category_ids, context=context)
-
-        if blog_post:
-            category = blog_post.category_id
-            pager = request.website.pager(
-                url="/blog/%s/" % blog_post.id,
-                total=len(blog_post.website_message_ids),
-                page=page,
-                step=self._post_comment_per_page,
-                scope=7
-            )
-            pager_begin = (page - 1) * self._post_comment_per_page
-            pager_end = page * self._post_comment_per_page
-            blog_post.website_message_ids = blog_post.website_message_ids[pager_begin:pager_end]
-        else:
-            if category:
-                pager_url = "/blog/cat/%s/" % category.id
-                blog_posts = category.blog_post_ids
-            elif tag:
-                pager_url = '/blog/tag/%s/' % tag.id
-                blog_posts = tag.blog_post_ids
-            else:
-                pager_url = '/blog/'
-                blog_post_ids = blog_post_obj.search(cr, uid, [], context=context)
-                blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
-
-            pager = request.website.pager(
-                url=pager_url,
-                total=len(blog_posts),
-                page=page,
-                step=self._category_post_per_page,
-                scope=7
-            )
-            pager_begin = (page - 1) * self._category_post_per_page
-            pager_end = page * self._category_post_per_page
-            blog_posts = blog_posts[pager_begin:pager_end]
-
-        nav = {}
-        for group in blog_post_obj.read_group(cr, uid, [], ['name', 'create_date'], groupby="create_date", orderby="create_date asc", context=context):
-            # FIXME: vietnamese month names contain spaces. Set sail for fail.
-            year = group['create_date'].split(" ")[1]
-            if not year in nav:
-                nav[year] = {'name': year, 'create_date_count': 0, 'months': []}
-            nav[year]['create_date_count'] += group['create_date_count']
-            nav[year]['months'].append(group)
+        pager = request.website.pager(
+            url="/blog/%s/" % blog_post.id,
+            total=len(blog_post.website_message_ids),
+            page=page,
+            step=self._post_comment_per_page,
+            scope=7
+        )
+        pager_begin = (page - 1) * self._post_comment_per_page
+        pager_end = page * self._post_comment_per_page
+        blog_post.website_message_ids = blog_post.website_message_ids[pager_begin:pager_end]
 
         values = {
-            'category': category,
-            'categories': categories,
-            'tag': tag,
+            'category': blog_post.category_id,
             'blog_post': blog_post,
-            'blog_posts': blog_posts,
             'pager': pager,
-            'nav_list': nav,
+            'nav_list': self.nav_list(),
             'enable_editor': enable_editor,
         }
-
-        if blog_post:
-            values['main_object'] = blog_post
-        elif tag:
-            values['main_object'] = tag
-        elif category:
-            values['main_object'] = category
 
         return request.website.render("website_blog.index", values)
 
