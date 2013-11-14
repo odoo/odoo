@@ -141,7 +141,7 @@
          * Usage Ex:
          *
          * website.prompt("What... is your quest ?").then(function (answer) {
-         *     arthur.reply("To seek the Holy Grail.");
+         *     arthur.reply(answer || "To seek the Holy Grail.");
          * });
          *
          * website.prompt({
