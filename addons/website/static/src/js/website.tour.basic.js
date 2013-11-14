@@ -71,7 +71,7 @@
                 {
                     stepId: 'edit-title',
                     element: '#wrap [data-snippet-id=carousel]:first .carousel-caption',
-                    placement: 'left',
+                    placement: 'top',
                     title: "Customize banner's text",
                     content: "Click in the text and start editing it. Click continue once it's done.",
                     template: render('website.tour_popover', { next: "Continue" }),
