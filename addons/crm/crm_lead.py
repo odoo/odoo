@@ -933,6 +933,23 @@ class crm_lead(base_stage, format_address, osv.osv):
                 vals['probability'] = stage.probability
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        if not context:
+            context = {}
+        lead = self.browse(cr, uid, id, context=context)
+        local_context = dict(context)
+        local_context.setdefault('default_type', lead.type)
+        local_context.setdefault('default_section_id', lead.section_id)
+        if lead.type == 'opportunity':
+            default['date_open'] = fields.datetime.now()
+        else:
+            default['date_open'] = False
+        default['date_closed'] = False
+        default['stage_id'] = self._get_default_stage_id(cr, uid, local_context)
+        return super(crm_lead, self).copy(cr, uid, id, default, context=context)
+
     def new_mail_send(self, cr, uid, ids, context=None):
         '''
         This function opens a window to compose an email, with the edi sale template message loaded by default
