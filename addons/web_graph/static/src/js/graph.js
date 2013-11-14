@@ -263,7 +263,7 @@ var PivotTable = BasicDataView.extend({
             });
         }
         if (options && options.foldable) {
-            attrs.push('<a data-row-id="'+ options.row_id + '" href="#" class="icon-caret-right"> </a>');
+            attrs.push('<a data-row-id="'+ options.row_id + '" href="#" class="icon-plus-sign"> </a>');
         }
         return attrs.join(' ') + content + '</td>';
     },
@@ -312,17 +312,13 @@ var PivotTable = BasicDataView.extend({
         query_groups(this.model, visible_fields, row.domain, [field_id])
             .then(function (data) {
                 _.each(data, function (datapt) {
-
                     var new_row = self.make_row(datapt, row_id);
                     row.html_tr.after(new_row.html_tr);
                 });
                 row.expanded = true;
-                console.log("tr",row.html_tr);
-                var icon = row.html_tr.find('.icon-caret-right');
-                icon.removeClass('icon-caret-right')
-                    .addClass('icon-caret-down');
-                console.log("icon",icon);
-                // console.log("nrst",);
+                var icon = row.html_tr.find('.icon-plus-sign');
+                icon.removeClass('icon-plus-sign')
+                    .addClass('icon-minus-sign');
         });
 
     },
