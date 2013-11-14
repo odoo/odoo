@@ -1,5 +1,15 @@
 $(document).ready(function () {
 
+    var the_form = $('form');
+    var prefill_controller = the_form.attr("data-prefill");
+    var validate_controller = the_form.attr("data-validate");
+    var submit_controller = the_form.attr("data-submit");
+
+    console.log(prefill_controller);
+    console.log(validate_controller);
+    console.log(submit_controller);
+
+
     // startsWith compatibility patch with old browsers
     if (typeof String.prototype.startsWith != 'function') {
         String.prototype.startsWith = function (str){
@@ -21,7 +31,6 @@ $(document).ready(function () {
     // check if answer type is ok
     // check if number of answers is ok
     // check if answer has good qualities
-
 
     $('form').submit(
         function(){

@@ -54,7 +54,7 @@
                                     <div class='jumbotron'>
                                         <h1><span t-field='survey.title'/></h1>
                                         <t t-if="survey.description"><p><span t-field='survey.description'/></p></t>
-                                        <form role="form" method="post" t-att-name="survey.id.__str__() + '---1'" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
+                                        <form role="form" method="post" t-att-name="survey.id.__str__() + '_-1'" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
                                             <input type="hidden" name="current" t-att-value="pagination['current'].__str__()" />
                                             <input type="hidden" name="next" t-att-value="pagination['next'].__str__()" />
                                             <input type="submit" class="btn btn-primary btn-lg active" value="Take survey"/>
@@ -89,26 +89,11 @@
                 <p><t t-if="page.description"><span t-field='page.description'/></t></p>
             </div>
 
-            <!-- Panel to display input errors -->
-<!--             <t t-if="problems">
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Errors on this page</h3>
-                    </div>
-                    <div class="panel-body text-danger">
-                        <ul>
-                            <t t-foreach="problems" t-as='problem'>
-                                <li><strong><t t-esc="problem['qlabel']"/> :</strong> <t t-esc="problem['errmsg']"/></li>
-                            </t>
-                        </ul>
-                    </div>
-                </div>
-            </t> -->
-
-            <form role="form" method="post" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__()" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
+            <form role="form" method="post" t-att-name="survey.id.__str__() + '_' + pagination['current'].__str__()" t-att-action="'/survey/fill/' + survey.id.__str__()" t-att-data-prefill="'/survey/prefill/' + survey.id.__str__()" t-att-data-validate="'/survey/validate/' + survey.id.__str__()" t-att-data-submit="'/survey/submit/' + survey.id.__str__()">
                 <input type="hidden" name="current" t-att-value="pagination['current'].__str__()" />
                 <input type="hidden" name="next" t-att-value="pagination['next'].__str__()" />
                 <t t-foreach='page.question_ids' t-as='question'>
+                    <t t-set="prefix" t-value="'%s_%s_%s' % (survey.id, pagination['current'], question.id)" />
                     <t t-call='survey.question'/>
                 </t>
                 <t t-call='survey.navsub' />
@@ -124,14 +109,7 @@
             <t t-if="question.parent_id and question.children_ids"><t t-set="is_matrix_vector" t-value="True" /></t>
             <t t-if="question.parent_id"><t t-set="is_vector_element" t-value="True" /></t>
 
-            <div class="question-wrapper" t-att-id="'survey_' + survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()" t-att-data-oe-survey-qparams='json.dumps({
-                    "type": question.type,
-                    "constr_mandatory": question.constr_mandatory,
-                    "constr_type": question.constr_type,
-                    "constr_maximum_req_ans": question.constr_maximum_req_ans,
-                    "constr_minimum_req_ans": question.constr_minimum_req_ans,
-                    "constr_error_msg": question.constr_error_msg
-                })'>
+            <div class="question-wrapper" t-att-id="prefix">
 
             <t t-if="not is_vector_element"> <!-- if -->
                 <h3><span t-field='question.question' /> <t t-if="question.constr_mandatory"><abbr title="This question is mandatory." class="text-danger">*</abbr></t></h3>
@@ -139,25 +117,25 @@
             </t>
             <t t-if="is_vector_element"> <!-- else -->
                 <t t-if="question.type == 'simple_choice_scale'">
-                    <span t-field='question.question' t-att-id="'survey_' + survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/><t t-raw="'&lt;/td&gt;&lt;td&gt;'" />
+                    <span t-field='question.question' t-att-id="prefix"/><t t-raw="'&lt;/td&gt;&lt;td&gt;'" />
                 </t>
             </t> <!-- endif -->
 
             <!-- instanciating different types of questions -->
             <t t-if="question.type in ['free_text']">
-                <textarea class="form-control" rows="3" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"></textarea>
+                <textarea class="form-control" rows="3" t-att-name="prefix"></textarea>
             </t>
 
             <t t-if="question.type in ['textbox']">
-                <input type="text" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/>
+                <input type="text" class="form-control" t-att-name="prefix"/>
             </t>
 
             <t t-if="question.type in ['numerical_box']">
-                <input type="number" step=".1" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()"/>
+                <input type="number" step=".1" class="form-control" t-att-name="prefix"/>
             </t>
 
             <t t-if="question.type in ['datetime']" >
-                <input type="datetime-local" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()" placeholder="jj-mm-aaaaThh:mm" />
+                <input type="datetime-local" class="form-control" t-att-name="prefix" placeholder="jj-mm-aaaaThh:mm" />
                 TODO: replace html5 datetime widget by OpenERP-CMS datetime widget
             </t>
 
@@ -165,7 +143,7 @@
                 <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
                     <div class="radio">
                         <label>
-                            <input type="radio" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()" t-att-value='suggestion.value' />
+                            <input type="radio" t-att-name="prefix" t-att-value='suggestion.value' />
                             <span t-field='suggestion.value'/>
                         </label>
                     </div>
@@ -173,7 +151,7 @@
             </t>
 
             <t t-if="question.type in ['simple_choice_dropdown']">
-                <select class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__()">
+                <select class="form-control" t-att-name="prefix">
                     <option disabled="1" selected="1">Choose...</option>
                     <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
                         <option><t t-esc='suggestion.value'/></option>
@@ -185,37 +163,11 @@
                 <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question.id.__str__() + '--' + suggestion.id.__str__()" t-att-value='suggestion.value' />
+                            <input type="checkbox" t-att-name="prefix + '_' + suggestion.id.__str__()" t-att-value='suggestion.value' />
                             <span t-field='suggestion.value'/>
                         </label>
                     </div>
                 </t>
-            </t>
-
-            <t t-if="question.type in ['vector']">
-
-                <t t-if="not is_matrix_vector">
-                    <t t-raw="'&lt;table class=&quot;table table-responsive&quot;&gt;'" />
-                </t>
-
-                <t t-if="question.children_ids[0].type != 'simple_choice_scale'">
-                    <tr>
-                        <t t-foreach='question.children_ids' t-as='question'>
-                            <td><t t-call='survey.question' /></td>
-                        </t>
-                    </tr>
-                </t>
-                <t t-if="question.children_ids[0].type == 'simple_choice_scale'">
-                    <t t-foreach='question.children_ids' t-as='question'>
-                        <tr>
-                            <td><t t-call='survey.question' /></td>
-                        </tr>
-                    </t>
-                </t>
-                <t t-if="not is_matrix_vector">
-                    <t t-raw="'&lt;/table&gt;'" />
-                </t>
-
             </t>
 
             <t t-if="question.type in ['matrix']">
@@ -228,7 +180,7 @@
 
             <!-- Comments -->
             <t t-if="question.comments_allowed">
-                Other: <input type="text" class="form-control" t-att-name="survey.id.__str__() + '--' + pagination['current'].__str__() + '--' + question."/>
+                Other: <input type="text" class="form-control" />
             </t>
 
 

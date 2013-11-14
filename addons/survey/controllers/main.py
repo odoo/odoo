@@ -47,7 +47,7 @@ class WebsiteSurvey(http.Controller):
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
         return request.website.render('survey.list', {'surveys': surveys})
 
-    @website.route(['/survey/fill/<model("survey.survey"):survey>/'],
+    @website.route(['/survey/fill/<model("survey.survey"):survey>'],
         type='http', auth='public', multilang=True)
     def fill_survey(self, survey=None, **post):
         '''Display and validates a survey'''
@@ -86,6 +86,18 @@ class WebsiteSurvey(http.Controller):
         return request.website.render('survey.survey',
                                     {'survey': survey,
                                     'pagination': pagination})
+
+    # @website.route(['/survey/validate/<model("survey.survey"):survey>'], type='json', auth='public', multilang=True):
+    # return {
+    #     'error' : {}
+    # }
+
+
+    # @website.route(['/survey/submit/<model("survey.survey"):survey>'], type='json', auth='public', multilang=True):
+    # return {
+    #     'redirect' : None
+    # }
+
 
     @website.route(['/survey/print/<model("survey.survey"):survey>/'],
         type='http', auth='public', multilang=True)

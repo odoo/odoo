@@ -23,7 +23,6 @@ from urlparse import urljoin
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import uuid
-import json
 
 
 class survey_survey(osv.osv):
