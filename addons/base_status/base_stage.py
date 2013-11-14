@@ -192,9 +192,9 @@ class base_stage(object):
 
         if hasattr(self, '_columns'):
             if self._columns.get('date_closed'):
-                default.update({ 'date_closed': False, })
+                default.setdefault('date_closed', False)
             if self._columns.get('date_open'):
-                default.update({ 'date_open': False })
+                default.setdefault('date_open', False )
         return super(base_stage, self).copy(cr, uid, id, default, context=context)
 
     def case_escalate(self, cr, uid, ids, context=None):
