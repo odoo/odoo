@@ -324,6 +324,10 @@ class Ecommerce(http.Controller):
 
         domain = [("sale_ok", "=", True)]
 
+        # remove product_product_consultant from ecommerce editable mode, this product never be publish
+        ref = request.registry.get('ir.model.data').get_object_reference(request.cr, SUPERUSER_ID, 'product', 'product_product_consultant')
+        domain += [("id", "!=", ref[1])]
+
         if post.get("search"):
             domain += ['|', '|', '|',
                 ('name', 'ilike', "%%%s%%" % post.get("search")),
