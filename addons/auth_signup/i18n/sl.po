@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-01-05 16:55+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
+"PO-Revision-Date: 2013-11-09 09:42+0000\n"
+"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:51+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-10 06:44+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: auth_signup
 #: view:res.users:0
@@ -23,16 +23,18 @@ msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
 msgstr ""
+"Za tega uporabnika je zahtevana sprememba gesla. Poslano je bilo elektronsko "
+"sporočilo z naslendnjo povezavo:"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
 msgid "Signup Token Type"
-msgstr ""
+msgstr "Tip prijavnih podatkov"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_uninvited:0
 msgid "Allow external users to sign up"
-msgstr ""
+msgstr "Dovoli prijavo zunanjim uporabnikom"
 
 #. module: auth_signup
 #. openerp-web
@@ -44,17 +46,17 @@ msgstr "Potrdite geslo"
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "Če ni označeno, se lahko prijavijo samo povabljeni uporabniki."
 
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send an invitation email"
-msgstr ""
+msgstr "Pošlji e-mail s povabilom"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Activated"
-msgstr ""
+msgstr "Aktivirano"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -65,7 +67,7 @@ msgstr "base.config.settings"
 #: code:addons/auth_signup/res_users.py:266
 #, python-format
 msgid "Cannot send email: user has no email address."
-msgstr ""
+msgstr "Ne morem poslati elektronskega sporočila: uporabnik nima naslova."
 
 #. module: auth_signup
 #. openerp-web
@@ -78,24 +80,24 @@ msgstr "Ponastavi geslo"
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "Predloga uporabnika za kreiranje novega uporabnika s prijavo"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Ponastavitev gesla"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:120
 #, python-format
 msgid "Please enter a password and confirm it."
-msgstr ""
+msgstr "Prosimo vpišite geslo in ga potrdite."
 
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send reset password link by email"
-msgstr ""
+msgstr "Pošlji povezavo za ponastavitev gesla po elektronski pošti."
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -109,12 +111,22 @@ msgid ""
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
 msgstr ""
+"\n"
+"<p>Za OpenERP račun, povezan s tem elektronskim naslovom, je bila zahtevana "
+"ponastavitev gesla.</p>\n"
+"\n"
+"<p>Geslo lahko spremenite tukaj <a href=\"${object.signup_url}\">this "
+"link</a>.</p>\n"
+"\n"
+"<p>Opomba: če tega ne pričakujete, ignorirajte to sporočilo.</p>"
 
 #. module: auth_signup
 #: view:res.users:0
 msgid ""
 "An invitation email containing the following subscription link has been sent:"
 msgstr ""
+"Poslano je bilo elektronsko sporočilo s povabilom in naslednjo prijavno "
+"povezavo:"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -124,7 +136,7 @@ msgstr "Status"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Nikoli povezan"
 
 #. module: auth_signup
 #. openerp-web
@@ -141,7 +153,7 @@ msgstr "Uporabniki"
 #. module: auth_signup
 #: field:res.partner,signup_url:0
 msgid "Signup URL"
-msgstr ""
+msgstr "Prijavni URL"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.set_password_email
@@ -176,13 +188,41 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Povabljeni ste k prijavi "
+"\"${object.company_id.name}\" , da boste lahko dostopali do dokumentov v "
+"OpenERP.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                       Za sprejem povabila kliknite na to povezavo:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept "
+"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Hvala,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #, python-format
 msgid "Please enter a username."
-msgstr ""
+msgstr "Prosimo, vpišite uporabniško ime."
 
 #. module: auth_signup
 #: code:addons/auth_signup/res_users.py:270
@@ -191,6 +231,8 @@ msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
 msgstr ""
+"Ne morem poslati elektronskega sporočila: izhodni server ni nastavljen.\n"
+"Lahko ga nastavite pod Nastavitve/Splošne nastavitve."
 
 #. module: auth_signup
 #. openerp-web
@@ -198,6 +240,7 @@ msgstr ""
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
+"Elektronsko sporočilo s podatki za ponastavitev vašega gesla je bilo poslano."
 
 #. module: auth_signup
 #. openerp-web
@@ -218,24 +261,24 @@ msgstr "Ime"
 #: code:addons/auth_signup/static/src/js/auth_signup.js:173
 #, python-format
 msgid "Please enter a username or email address."
-msgstr ""
+msgstr "Prosimo, vpišite uporabniško ime ali elektronski naslov."
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:13
 #, python-format
 msgid "Username (Email)"
-msgstr ""
+msgstr "Uporabniško ime (E-mail)"
 
 #. module: auth_signup
 #: field:res.partner,signup_expiration:0
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Iztek prijave"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_reset_password:0
 msgid "This allows users to trigger a password reset from the Login page."
-msgstr ""
+msgstr "To dovoljuje uporabnikom izvesti spremembo gesla s prijavne strani."
 
 #. module: auth_signup
 #. openerp-web
@@ -247,7 +290,7 @@ msgstr "Prijava"
 #. module: auth_signup
 #: field:res.partner,signup_valid:0
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Prijava je pravilna"
 
 #. module: auth_signup
 #. openerp-web
@@ -267,14 +310,14 @@ msgstr "Prijava"
 #: code:addons/auth_signup/static/src/js/auth_signup.js:97
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Prijava je napačna"
 
 #. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/js/auth_signup.js:123
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "Gesla se ne ujemajo; prosimo, vpišite jih ponovno."
 
 #. module: auth_signup
 #. openerp-web
@@ -287,12 +330,12 @@ msgstr "Nobena podatkovna zbirka ni izbrana!"
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Omogoči spremembo gesla na prijavni strani"
 
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on OpenERP"
-msgstr ""
+msgstr "${object.company_id.name} povabilo za prijavo v OpenERP"
 
 #. module: auth_signup
 #. openerp-web
@@ -309,7 +352,7 @@ msgstr "Partner"
 #. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
-msgstr ""
+msgstr "Prijavni podatki"
 
 #. module: auth_signup
 #. openerp-web

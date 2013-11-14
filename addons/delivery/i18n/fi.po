@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-12 05:53+0000\n"
+"Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:56+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-13 06:08+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -30,7 +30,7 @@ msgstr "Toimitus postilla"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid " in Function of "
-msgstr ""
+msgstr " toiminto "
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -46,13 +46,13 @@ msgstr "Nettopaino"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr "Toimitus ruudukko"
+msgstr "Toimitustaulukon rivi"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Yksikkö"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -71,12 +71,12 @@ msgstr "Tilavuus"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr ""
+msgstr "Postinumero"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "Taulukkorivi"
+msgstr "Taulukon rivi"
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
@@ -93,6 +93,7 @@ msgstr "Toimitustilaus"
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
+"Valitun toimitustaulukon yksikään rivi ei vastaa tätä tuotetta tai tilausta."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -102,12 +103,12 @@ msgstr "Laskutettava keräily"
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr "Kehittynyt hinnoittelu"
+msgstr "Edistyksellinen hinnoittelu"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "Antaa järjestyksen näytettäessä luetteloa toimitusruudukosta"
+msgstr "Antaa järjestyksen näytettäessä luetteloa toimitustaulukosta."
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -132,16 +133,27 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikkaa luodaksesi toimitushinnastoa tietylle alueelle.\n"
+"              </p><p>\n"
+"                Toimitushinnasto sallii kustannusten laskennan ja\n"
+"                toimituksen myyntihinnoittelun perustuen tuotteiden \n"
+"                painoon ja muihin kriteereihin. Voit luoda useita hinnastoja "
+"\n"
+"                kullekin menetelmälle: maittain, alueittain tietyyn maahan\n"
+"                postinumeroittain ryhmiteltynä.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr "Toimitusjärjestys :"
+msgstr "Toimitustilaus :"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr "Vaihteleva kerroin"
+msgstr "Muunnoskerroin"
 
 #. module: delivery
 #: field:delivery.carrier,amount:0
@@ -151,7 +163,7 @@ msgstr "Määrä"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "Lisäys tarjoukseen"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -204,7 +216,7 @@ msgstr "Taulukon määrittely"
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varoitus!"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -224,7 +236,7 @@ msgstr "Myyntitilaus"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Toimitustilaukset"
 
 #. module: delivery
 #: view:sale.order:0
@@ -232,6 +244,8 @@ msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing "
 "based on delivery order(s)."
 msgstr ""
+"Jos et käytä \"Lisäys tarjoukseen\" -toimintoa, tarkka hinta lasketaan kun "
+"laskutetaan toimitustilauksia."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -251,7 +265,7 @@ msgstr "Laskutuksen kohde"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr "Keräilylista"
+msgstr "Keräilyluettelo"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -265,7 +279,7 @@ msgid ""
 "benefit from a free shipping"
 msgstr ""
 "Jos tilaus on arvokkaampi kuin tietty määrä, asiakas hyötyy ilmaisesta "
-"toimituksesta"
+"toimituksesta."
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
@@ -278,7 +292,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Ilmainen jos tilauksen kokonaisarvo on enemmän kuin"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -291,13 +305,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
-"Jos aktiivisen kentän tila on epätosi (false), voit piilottaa jakeluruudukon "
-"poistamatta sitä."
+"Jos aktiivisen kentän tilaksi on asetettu epätosi, voit piilottaa "
+"jakelutaulukon poistamatta sitä."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr "Kohde postinumero"
+msgstr "Kohteen postinumero"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:147
@@ -313,7 +327,7 @@ msgstr "Normaalihinta"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr "Tilauksen päivämäärä"
+msgstr "Tilauspäivä"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -345,22 +359,22 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
-"Valitse tämä ruutu jos haluat hallita toimitushintoja, jotka riippuvat "
-"kohteesta, painosta ja tilauksen summasta yms."
+"Valitse tämä valintaruutu, jos haluat hallita toimitushintoja. Hinnat voivat "
+"riippua kohteesta, painosta ja tilauksen summasta yms."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
-"Jätä tyhjäksi jos hinnoittelu riippuu kohdekohtaisesta kehittyneestä "
+"Jätä tyhjäksi jos hinnoittelu riippuu kohdekohtaisesta edistyksellisestä "
 "hinnoittelusta"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
-msgstr "Ruudukkoa ei saatavilla !"
+msgstr "Taulukkoa ei ole saatavilla !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -371,7 +385,7 @@ msgstr ">="
 #: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
-msgstr "Tilaus ei ole luonnostilassa!"
+msgstr "Tila ei ole tilausehdotus!"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -392,7 +406,7 @@ msgstr "Toimituspäivä"
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr "Kuljetustuote"
+msgstr "Toimitustuote"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -449,14 +463,14 @@ msgstr "Määrä"
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr "Lähtö postinumero"
+msgstr "Alku pnro"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
-"Täytä tämä kenttä jos suunnittelet laskuttavasi toimituksen keräilyn "
+"Täytä tämä kenttä, jos suunnittelet laskuttavasi toimituksen keräilyn "
 "perusteella."
 
 #. module: delivery
@@ -468,7 +482,7 @@ msgstr "Ilmainen jos enemmän kuin %.2f"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Vastaanotot"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -478,7 +492,7 @@ msgstr "<="
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Painoyksikkö"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -491,7 +505,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
-"Jos aktiivisen kentän tila on epätosi (false), voit piilottaa jakelijan "
+"Jos aktiivisen kentän tila on epätosi, voit piilottaa toimituksen jakelijan "
 "poistamatta sitä."
 
 #. module: delivery
@@ -511,7 +525,7 @@ msgstr "Hinta"
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr "Kuljetusliikkeen taulukossa ei ole lähetystä vastaavia kohtia!"
+msgstr "Tälle kuljetusliikkeelle ei ole määritelty kuljetustaulukkoa !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -528,17 +542,17 @@ msgstr "Paino * Tilavuus"
 #: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "Kuljetusliikkeellä %s (tunnus: %d) ei ole taulukkoa kuljetuksille!"
+msgstr "Kuljetusliikkeellä %s (tunnus: %d) ei ole kuljetustaulukkoa!"
 
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr "Hinnoittelun tiedot"
+msgstr "Hinnoittelutiedot"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr "Kehittynyt hinnoittelu kohteen mukaan"
+msgstr "Edistyksellinen hinnoittelu kohteen mukaan"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -554,14 +568,13 @@ msgstr "Kuljetusliike"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Toimitustavat"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
-"Tilauksen tilan täytyy olla luonnos jos haluat lisätä toimitusrivejä."
+msgstr "Vain tilausehdotuksille voi lisätä tilausrivejä."
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -581,19 +594,19 @@ msgstr "Myyntihinta"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr ""
+msgstr "Tulosta toimitustilaus"
 
 #. module: delivery
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr "Osavaltiot"
+msgstr "Tilat"
 
 #. module: delivery
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "Yksikkö (Yksikkö) on painoyksikkö"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0

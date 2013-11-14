@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-09-17 19:05+0000\n"
+"PO-Revision-Date: 2013-11-05 22:16+0000\n"
 "Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-18 05:11+0000\n"
-"X-Generator: Launchpad (build 16765)\n"
+"X-Launchpad-Export-Date: 2013-11-06 05:51+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -33,11 +33,14 @@ msgid ""
 "Shirts, for the same \"Linux T-Shirt\", you may have variants on  sizes or "
 "colors; S, M, L, XL, XXL."
 msgstr ""
+"Tillader at håndtere flere varianter pr. vare. For eksempel, du sælger en T-"
+"Shirt, der findes i flere farver og størrelser som en kombination af "
+"varianter."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
 msgid "Stock move Split lines"
-msgstr ""
+msgstr "Lager flytning split linie"
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -48,6 +51,12 @@ msgid ""
 "value for all products in this category. It can also directly be set on each "
 "product"
 msgstr ""
+"Ved realtids lagerpostering, vil alle modposter til indkommende varer lande "
+"på denne konto, med mindre der er defineret en specifik konto på kilde-"
+"lageret. Dette er standard værdien for alle varer i denne kategori. Du kan "
+"også opsætte konteringen direkte på hver vare, dog ikke ved produktion, hvor "
+"du skal udfylde \"Modpost-lokations egenskaber\" under \"Lager\" faneblad på "
+"varen."
 
 #. module: stock
 #: view:stock.picking.out:0
@@ -243,12 +252,12 @@ msgstr "Du kan ikke slette poster!"
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders to invoice"
-msgstr "Leverede ordrer til fakturering"
+msgstr "Leverings ordrer til fakturering"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Assigned Delivery Orders"
-msgstr ""
+msgstr "Tildelte leverings ordrer"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_standard_price.py:107
@@ -408,7 +417,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that have been processed"
-msgstr ""
+msgstr "Behandlede lagerflytninger"
 
 #. module: stock
 #: field:stock.inventory.line.split,use_exist:0
@@ -439,7 +448,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Incoming Shipments Available"
-msgstr ""
+msgstr "Modtagne leverancer"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -623,7 +632,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
 msgid "Moves Statistics"
-msgstr ""
+msgstr "Flytnings statistik"
 
 #. module: stock
 #: help:stock.config.settings,group_uom:0
@@ -646,7 +655,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
 msgid "Receive/Deliver Products"
-msgstr ""
+msgstr "Modtag/lever varer"
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -660,7 +669,7 @@ msgstr ""
 #: field:stock.picking.in,move_lines:0
 #: field:stock.picking.out,move_lines:0
 msgid "Internal Moves"
-msgstr ""
+msgstr "Interne flytninger"
 
 #. module: stock
 #: field:stock.move,location_dest_id:0
@@ -711,7 +720,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_stock_move_report
 #: view:report.stock.move:0
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Flytnings analyse"
 
 #. module: stock
 #: view:stock.location:0
@@ -802,7 +811,7 @@ msgstr "August"
 #: model:ir.ui.menu,name:stock.menu_action_tracking_form
 #: view:stock.tracking:0
 msgid "Packs"
-msgstr ""
+msgstr "Pakker"
 
 #. module: stock
 #: selection:stock.location.product,type:0
@@ -839,7 +848,7 @@ msgstr ""
 #. module: stock
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
-msgstr ""
+msgstr "Indkøbs lokation"
 
 #. module: stock
 #: view:stock.picking:0
@@ -876,6 +885,8 @@ msgid ""
 "Please define stock output account for this product or its category: \"%s\" "
 "(id: %d)"
 msgstr ""
+"Angiv lager afgangskonto for denne vare eller dens varekategori: \"%s\" (id: "
+"%d)"
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -1013,7 +1024,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 #: view:stock.picking.in:0
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Indkommende leverancer"
 
 #. module: stock
 #: help:stock.picking,date:0
@@ -1031,7 +1042,7 @@ msgstr ""
 #. module: stock
 #: field:product.template,property_stock_inventory:0
 msgid "Inventory Location"
-msgstr ""
+msgstr "Lager lokation"
 
 #. module: stock
 #: constraint:stock.move:0
@@ -1205,7 +1216,7 @@ msgstr ""
 #. module: stock
 #: field:product.template,property_stock_production:0
 msgid "Production Location"
-msgstr ""
+msgstr "Produktions lokation"
 
 #. module: stock
 #: code:addons/stock/product.py:121
@@ -1541,7 +1552,7 @@ msgstr "Fra"
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Incoming Shipments already processed"
-msgstr ""
+msgstr "behandlede Indkommende leverancer"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:102
@@ -1715,7 +1726,7 @@ msgstr ""
 #: code:addons/stock/product.py:168
 #, python-format
 msgid "Please define stock output account for this product: \"%s\" (id: %d)."
-msgstr ""
+msgstr "Angiv lager afgangskonto for denne vare: \"%s\" (id: %d)."
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1874,7 +1885,7 @@ msgstr ""
 #. module: stock
 #: field:stock.inventory,move_ids:0
 msgid "Created Moves"
-msgstr ""
+msgstr "Oprettede flytninger"
 
 #. module: stock
 #: field:stock.location,valuation_in_account_id:0
@@ -1903,7 +1914,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Counter-Part Locations Properties"
-msgstr ""
+msgstr "Modpost-lokations egenskaber"
 
 #. module: stock
 #: view:stock.location:0
@@ -1936,6 +1947,10 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"Ved realtids lagerpostering, vil alle modposter til indkommende varer lande "
+"på denne konto, med mindre der er defineret en specifik konto på kilde-"
+"lageret. Hvis der ikke er sat konti på varen, bruges konti fra produkt "
+"kategorien."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2339,7 +2354,7 @@ msgstr "Pris"
 #: field:product.template,property_stock_account_input:0
 #: field:stock.change.standard.price,stock_account_input:0
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Lager tilgangskonto"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2882,7 +2897,7 @@ msgstr "Indkøb"
 #: model:ir.ui.menu,name:stock.menu_action_pdct_out
 #, python-format
 msgid "Deliver Products"
-msgstr ""
+msgstr "Lever varer"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -3364,13 +3379,13 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Assigned Internal Moves"
-msgstr ""
+msgstr "Tildelte interne flytninger"
 
 #. module: stock
 #: code:addons/stock/stock.py:790
 #, python-format
 msgid "You cannot process picking without stock moves."
-msgstr ""
+msgstr "Du kan ikke plukke uden lagerflytninger."
 
 #. module: stock
 #: field:stock.production.lot,move_ids:0
@@ -3452,7 +3467,7 @@ msgstr "Guide"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Completed Stock-Moves"
-msgstr ""
+msgstr "Gennemførte lager flytninger"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
@@ -3804,7 +3819,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Delivery Orders"
-msgstr ""
+msgstr "Bekræftede leverings ordrer"
 
 #. module: stock
 #: view:stock.move:0
@@ -3876,12 +3891,12 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree
 #: view:stock.picking.out:0
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Leverings-ordrer"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders already processed"
-msgstr ""
+msgstr "Leveringsordrer der er behandlet"
 
 #. module: stock
 #: field:product.template,loc_case:0
@@ -3988,7 +4003,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Internal Moves"
-msgstr ""
+msgstr "Bekræftede interne flytninger"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
@@ -4138,7 +4153,7 @@ msgstr ""
 #: code:addons/stock/product.py:142
 #, python-format
 msgid "Please define stock input account for this product: \"%s\" (id: %d)."
-msgstr ""
+msgstr "Angiv lagertilgangskonto for denne vare: \"%s\" (id: %d)."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_reception_picking_move
@@ -4382,12 +4397,12 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
 msgid "Future Stock Moves"
-msgstr ""
+msgstr "Fremtidige lager flytninger"
 
 #. module: stock
 #: field:stock.move,move_history_ids2:0
 msgid "Move History (parent moves)"
-msgstr ""
+msgstr "Flytnings historik"
 
 #. module: stock
 #: code:addons/stock/product.py:455
@@ -4480,7 +4495,7 @@ msgstr ""
 #: field:stock.partial.move,move_ids:0
 #: field:stock.return.picking,product_return_moves:0
 msgid "Moves"
-msgstr ""
+msgstr "Flytninger"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -4538,7 +4553,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.move:0
 msgid "Future Stock-Moves"
-msgstr ""
+msgstr "Fremtidige lager flytninger"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -4602,7 +4617,7 @@ msgstr ""
 #: field:product.template,property_stock_account_output:0
 #: field:stock.change.standard.price,stock_account_output:0
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Lager afgangskonto"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0

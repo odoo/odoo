@@ -8,20 +8,20 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-14 02:31+0000\n"
+"Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:01+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-14 06:30+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
-msgstr "承認された経費"
+msgstr "承認済経費"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:349
@@ -66,7 +66,7 @@ msgstr "航空券"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Validated By"
-msgstr "検証済み"
+msgstr "検証者"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -85,7 +85,7 @@ msgstr "新規経費"
 #: field:hr.expense.line,uom_id:0
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "単位"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -95,12 +95,12 @@ msgstr "3月"
 #. module: hr_expense
 #: field:hr.expense.expense,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未読メッセージ"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting Payment"
-msgstr ""
+msgstr "支払待ち"
 
 #. module: hr_expense
 #: field:hr.expense.expense,company_id:0
@@ -112,7 +112,7 @@ msgstr "会社"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Set to Draft"
-msgstr "草稿に設定"
+msgstr "ドラフトに設定"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -125,7 +125,7 @@ msgstr "支払い"
 msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
-msgstr ""
+msgstr "経費用の仕訳帳がありません。タイプが「購買」の仕訳帳を登録してください。"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
@@ -153,7 +153,7 @@ msgstr "注記"
 #. module: hr_expense
 #: field:hr.expense.expense,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "メッセージ"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:172
@@ -174,17 +174,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: view:product.product:0
 msgid "Products"
-msgstr "プロダクト"
+msgstr "品目"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Confirm Expenses"
-msgstr "経費を確認する。"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
 msgid "Cancelled"
-msgstr "キャンセルされました"
+msgstr "取消済"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_refused0
@@ -209,7 +209,7 @@ msgstr "確認待ち"
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
 msgid "Accepted"
-msgstr "受理済み"
+msgstr "受理済"
 
 #. module: hr_expense
 #: field:hr.expense.line,ref:0
@@ -245,7 +245,7 @@ msgstr ""
 #: code:addons/hr_expense/hr_expense.py:453
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -418,7 +418,7 @@ msgstr "請求書を作成後、経費を精算する。"
 #: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
@@ -646,7 +646,7 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Generate Accounting Entries"
-msgstr ""
+msgstr "会計仕訳生成"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -676,7 +676,7 @@ msgstr "交通費"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Submit to Manager"
-msgstr "マネジャに提出する。"
+msgstr "上長に申請"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -745,7 +745,7 @@ msgstr "再請求"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expense Date"
-msgstr ""
+msgstr "経費発生日"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
@@ -900,7 +900,7 @@ msgstr "氏名"
 #: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "You can only delete draft expenses!"
-msgstr ""
+msgstr "削除できるのはドラフトの経費のみです。"
 
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
@@ -925,12 +925,12 @@ msgstr "4月"
 #. module: hr_expense
 #: field:hr.expense.line,name:0
 msgid "Expense Note"
-msgstr "経費の注記"
+msgstr "経費注記"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Approve"
-msgstr "承認する。"
+msgstr "承認"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_ids:0
@@ -964,13 +964,13 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Accounting"
-msgstr ""
+msgstr "会計"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
 msgid "To Approve"
-msgstr "承認する。"
+msgstr "未承認"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0

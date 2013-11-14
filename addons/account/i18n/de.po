@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-03-20 23:09+0000\n"
+"PO-Revision-Date: 2013-10-08 18:47+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:39+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-10-09 05:48+0000\n"
+"X-Generator: Launchpad (build 16799)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -41,7 +41,7 @@ msgstr ""
 #. module: account
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "der Mutterkonzern"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -748,6 +748,13 @@ msgid ""
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
 msgstr ""
+"Datum, an dem das Konto des Partners vollständig ausgeglichen wurde. Dieses "
+"Datum unterscheidet sich vom Tag der jüngsten Zahlung, durch die Tatsache, "
+"dass keine weiteren offenen Rechnungen vorhanden sind. Dies kann auf 2 "
+"verschiedene Arten erfolgen: Entweder wurde tatsächlich die aktuell letzte "
+"verfügbare Rechnung für den Partner ausgeglichen, oder der Benutzer hat "
+"während des Ausgleichs auf den Button \"keine weiteren Ausgleiche "
+"erforderlich\" geklickt."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
@@ -802,6 +809,9 @@ msgid ""
 "The amount expressed in the secondary currency must be positive when the "
 "journal item is a debit and negative when if it is a credit."
 msgstr ""
+"Der Betrag der alternativen Währung muss positiv eingegeben werden, wenn es "
+"sich hierbei um eine Debitorenbuchung und negativ wenn es sich um eine "
+"Kreditorenbuchung handelt."
 
 #. module: account
 #: constraint:account.move:0
@@ -1029,7 +1039,7 @@ msgstr "September"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
 #, python-format
 msgid "Latest Manual Reconciliation Processed:"
-msgstr ""
+msgstr "Letzter manueller Abgleich:"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -1846,7 +1856,7 @@ msgstr "Wiederkehrend"
 #. module: account
 #: report:account.invoice:0
 msgid "TIN :"
-msgstr ""
+msgstr "TIN:"
 
 #. module: account
 #: field:account.journal,groups_id:0
@@ -4621,7 +4631,7 @@ msgstr "Komplettes  Set der Steuern"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Full Reconciliation Date"
-msgstr ""
+msgstr "Letzter vollständiger Abgleich"
 
 #. module: account
 #: field:account.account,name:0
@@ -5534,7 +5544,7 @@ msgstr "DIV"
 #. module: account
 #: view:res.partner:0
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "Buchhaltung spezifische Einstellungen werden gemanagt durch"
 
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
@@ -6658,6 +6668,8 @@ msgstr "März"
 #, python-format
 msgid "You can not re-open a period which belongs to closed fiscal year"
 msgstr ""
+"Sie können keine abgeschlossene Buchungsperiode aus einem beendeten "
+"Geschäftsjahr wieder eröffnen."
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -10693,7 +10705,7 @@ msgstr "Rechnungsentwürfe"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
 #, python-format
 msgid "Nothing more to reconcile"
-msgstr ""
+msgstr "Alle Zahlungen wurden abgeglichen"
 
 #. module: account
 #: view:cash.box.in:0

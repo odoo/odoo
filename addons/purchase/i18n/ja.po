@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-10 08:45+0000\n"
+"Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:19+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-11 05:38+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -44,7 +44,7 @@ msgstr ""
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr "ドラフト発注価格リスト"
+msgstr "デフォルト購買価格リスト"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -67,7 +67,7 @@ msgstr "日"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "オーダ取消"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -84,7 +84,7 @@ msgstr ""
 #: model:process.node,name:purchase.process_node_packinglist0
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Incoming Products"
-msgstr "入庫製品"
+msgstr "入荷製品"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -94,7 +94,7 @@ msgstr "参照"
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr "分析アカウント"
+msgstr "分析勘定"
 
 #. module: purchase
 #: help:purchase.order,message_summary:0
@@ -113,7 +113,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:589
 #, python-format
 msgid "You must first cancel all receptions related to this purchase order."
-msgstr "最初に、この発注オーダーに関連する全ての受領をキャンセルすべきです。"
+msgstr "始めにこの発注に紐づく全ての入荷を取り消してください。"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -149,12 +149,12 @@ msgstr "平均価格"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase order which are in the exception state"
-msgstr "発注オーダーは例外状態です。"
+msgstr "例外状態の発注"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr "発注オーダーの集約"
+msgstr "発注を集約"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -178,7 +178,7 @@ msgstr "送付先住所："
 #. module: purchase
 #: view:purchase.order:0
 msgid "Confirm Order"
-msgstr ""
+msgstr "発注確認"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -190,7 +190,7 @@ msgstr ""
 #: view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
-msgstr "オーダー参照"
+msgstr "発注参照"
 
 #. module: purchase
 #: view:purchase.config.settings:0
@@ -229,7 +229,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved purchase orders"
-msgstr "承認済発注オーダー"
+msgstr "承認済発注"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
@@ -263,7 +263,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
-msgstr ""
+msgstr "ステータス"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -283,7 +283,7 @@ msgstr "6月"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr "発注オーダー"
+msgstr "発注"
 
 #. module: purchase
 #: help:account.config.settings,group_analytic_account_for_purchases:0
@@ -365,7 +365,7 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
 #: view:purchase.order:0
 msgid "Incoming Shipments"
-msgstr "内部出荷"
+msgstr "入荷"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -398,7 +398,7 @@ msgstr "日付要求"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr "発注オーダー行"
+msgstr "発注明細"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -451,13 +451,13 @@ msgstr "予約"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders that include lines not invoiced."
-msgstr "請求なしの行を含む発注オーダー"
+msgstr "未請求明細を含む発注"
 
 #. module: purchase
 #: view:product.product:0
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr ""
+msgstr "購買可能"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -467,7 +467,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Request for Quotation "
-msgstr ""
+msgstr "見積依頼 "
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
@@ -501,7 +501,7 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "見積依頼承認"
 
 #. module: purchase
 #: view:purchase.config.settings:0
@@ -511,7 +511,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "非課税金額"
+msgstr "税抜金額"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -523,17 +523,17 @@ msgstr "買い手は仕入先に送られる前に見積依頼（RFQ）を承認
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "見積依頼確認"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Customer Address"
-msgstr ""
+msgstr "顧客アドレス"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ Sent"
-msgstr ""
+msgstr "見積依頼送付済"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -575,12 +575,12 @@ msgstr "小計"
 #. module: purchase
 #: field:purchase.order,shipped:0
 msgid "Received"
-msgstr "受信済"
+msgstr "入荷済"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase order which are in draft state"
-msgstr "ドラフト状態の発注オーダー"
+msgstr "ドラフト状態の発注"
 
 #. module: purchase
 #: view:product.product:0
@@ -636,7 +636,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "(update)"
-msgstr ""
+msgstr "(更新)"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -694,7 +694,7 @@ msgstr "価格リスト"
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
-msgstr "発注価格リスト"
+msgstr "購買価格リスト"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -710,7 +710,7 @@ msgstr "価格リスト"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr ""
+msgstr "ドラフトPO"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:967
@@ -730,7 +730,7 @@ msgstr "見積依頼"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Send by Email"
-msgstr ""
+msgstr "Eメールで送信"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -739,7 +739,7 @@ msgstr ""
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
-msgstr "オーダー日"
+msgstr "発注日"
 
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
@@ -755,7 +755,7 @@ msgstr "ドラフト請求書"
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
-msgstr "税金額"
+msgstr "税額"
 
 #. module: purchase
 #: field:purchase.order,shipped_rate:0
@@ -781,12 +781,12 @@ msgstr "見積依頼："
 #: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
 msgid "On Incoming Shipments"
-msgstr ""
+msgstr "入荷ベース"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Taxes :"
-msgstr "税金："
+msgstr "税："
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -812,7 +812,7 @@ msgstr "これは請求書は既に支払われたことを意味しています
 #. module: purchase
 #: field:purchase.order,notes:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "諸条件"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -909,12 +909,12 @@ msgstr "キャンセル"
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr "オーダー参照は、会社ごとに固有でなければなりません。"
+msgstr "発注参照は会社で一意である必要があります。"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "From a purchase order"
-msgstr "発注オーダーから"
+msgstr "発注より"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -995,7 +995,7 @@ msgstr ""
 #: field:purchase.order,warehouse_id:0
 #: field:stock.picking.in,warehouse_id:0
 msgid "Destination Warehouse"
-msgstr ""
+msgstr "入荷倉庫"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:967
@@ -1052,12 +1052,12 @@ msgstr "グループ化…"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved purchase order"
-msgstr "承認済発注オーダー"
+msgstr "承認済発注"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Purchase Orders Statistics"
-msgstr "発注オーダー統計値"
+msgstr "発注統計"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1097,7 +1097,7 @@ msgstr ""
 #: field:purchase.order,amount_tax:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr "税金"
+msgstr "税"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
@@ -1109,7 +1109,7 @@ msgstr "製品"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "諸条件..."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1137,7 +1137,7 @@ msgstr "製品の価値"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in exception state"
-msgstr "発注オーダーは例外状態です。"
+msgstr "例外状態の発注"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
@@ -1285,12 +1285,12 @@ msgstr ""
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "State of the Purchase Order."
-msgstr "発注オーダーの状態"
+msgstr "発注の状態"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "製品単位"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -1353,7 +1353,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed"
-msgstr ""
+msgstr "税抜金額"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
@@ -1364,7 +1364,7 @@ msgstr "生成された集荷リスト"
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "On Purchase Order Lines"
-msgstr ""
+msgstr "発注明細ベース"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1386,7 +1386,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
 msgid "Price Types"
-msgstr ""
+msgstr "価格タイプ"
 
 #. module: purchase
 #: help:purchase.order,date_approve:0
@@ -1416,7 +1416,7 @@ msgstr "請求書"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "Confirmed purchase order to invoice"
-msgstr "請求のための確認済発注オーダー"
+msgstr "請求待ち確認済発注"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
@@ -1440,11 +1440,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                見積依頼の作成はこちらをクリック。\n"
+"              </p><p>\n"
+"                見積依頼は仕入先との調整や交渉の経緯を含むドキュメントです。\n"
+"                見積依頼は「確認」により発注に 変換されます。\n"
+"              </p><p>\n"
+"                見積依頼は発注提案の位置付けで、需給状況に応じてOpenERPより\n"
+"                自動生成することが可能です。\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "The supplier approves the Purchase Order."
-msgstr "仕入先は発注オーダーを承認します。"
+msgstr "仕入先は発注承認します。"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:80
@@ -1455,12 +1465,12 @@ msgstr "仕入先は発注オーダーを承認します。"
 #: view:res.partner:0
 #, python-format
 msgid "Purchase Orders"
-msgstr "発注オーダー"
+msgstr "発注"
 
 #. module: purchase
 #: field:purchase.order,origin:0
 msgid "Source Document"
-msgstr "基となるドキュメント"
+msgstr "参照元"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1527,7 +1537,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr "分類別製品"
+msgstr "カテゴリ別製品"
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -1545,7 +1555,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoice Received"
-msgstr ""
+msgstr "請求書受領済"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -1575,7 +1585,7 @@ msgstr "マネジャ"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr "発注オーダー行基準"
+msgstr "発注明細基準"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -1596,12 +1606,12 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
-msgstr "宛先"
+msgstr "配送先"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Customer Address (Direct Delivery)"
-msgstr ""
+msgstr "顧客アドレス(直送)"
 
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
@@ -1648,12 +1658,12 @@ msgstr "部分集荷処理ウィザード"
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr "デフォルト発注価格リストバージョン"
+msgstr "デフォルト購買価格リストバージョン"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on generated draft invoice"
-msgstr "生成されたドラフト請求書に基づく"
+msgstr "生成ドラフト請求書基準"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
@@ -1679,7 +1689,7 @@ msgstr ""
 #: field:stock.picking,purchase_id:0
 #: field:stock.picking.in,purchase_id:0
 msgid "Purchase Order"
-msgstr "発注オーダー"
+msgstr "発注"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:322
@@ -1891,7 +1901,7 @@ msgstr "オーダー製品のリスト"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Incoming Shipments & Invoices"
-msgstr ""
+msgstr "入荷・請求"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -1914,7 +1924,7 @@ msgstr "請求済"
 #: view:purchase.order.line:0
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr "発注オーダー行"
+msgstr "発注明細"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -1924,7 +1934,7 @@ msgstr "ドラフト"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
 msgid "Purchase Order Merge"
-msgstr "発注オーダーの集約"
+msgstr "発注集約"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_email_templates
@@ -1994,7 +2004,7 @@ msgstr "ユーザの月別合計オーダー"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr ""
+msgstr "入荷基準"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1044
@@ -2118,7 +2128,7 @@ msgstr "2月"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "On Draft Invoices"
-msgstr ""
+msgstr "ドラフト請求書ベース"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2134,7 +2144,7 @@ msgstr "オーダー参照"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr "発注オーダー確認番号"
+msgstr "発注確認番号"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -2186,12 +2196,12 @@ msgstr "価格リストバージョン"
 #. module: purchase
 #: field:purchase.order,payment_term_id:0
 msgid "Payment Term"
-msgstr ""
+msgstr "支払条件"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in draft state"
-msgstr "ドラフト状態の発注オーダー"
+msgstr "ドラフト状態の発注"
 
 #. module: purchase
 #: view:purchase.report:0

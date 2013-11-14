@@ -98,7 +98,8 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
             through message_process.
             This override updates the document according to the email.
         """
-        if custom_values is None: custom_values = {}
+        if custom_values is None:
+            custom_values = {}
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
@@ -109,32 +110,6 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
             'partner_id': msg.get('author_id', False),
         }
         defaults.update(custom_values)
-        return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=defaults, context=context)
-
-    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
-        """ Overrides mail_thread message_update that is called by the mailgateway
-            through message_process.
-            This method updates the document according to the email.
-        """
-        if isinstance(ids, (str, int, long)):
-            ids = [ids]
-        if update_vals is None: update_vals = {}
-
-        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            update_vals['priority'] = msg.get('priority')
-
-        maps = {
-            'cost':'planned_cost',
-            'revenue': 'planned_revenue',
-            'probability':'probability'
-        }
-        for line in msg['body'].split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res and maps.get(res.group(1).lower()):
-                key = maps.get(res.group(1).lower())
-                update_vals[key] = res.group(2).lower()
-
-        return super(crm_helpdesk,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+        return super(crm_helpdesk, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

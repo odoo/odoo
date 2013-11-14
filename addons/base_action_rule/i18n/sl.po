@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-31 00:23+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
+"PO-Revision-Date: 2013-11-09 10:24+0000\n"
+"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:51+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-10 06:44+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -29,6 +29,9 @@ msgid ""
 "enter the name (Ex: Create the 01/01/2012) and add the option \"Share with "
 "all users\""
 msgstr ""
+"V tem istem pogledu \"Iskanje\", izberite meni \"Shrani trenutni filter\", "
+"vpišite naziv (npr. Kreirano 01/01/2013) in označite opcijo \"Deli z vsemi "
+"uporabniki\""
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_id:0
@@ -36,16 +39,18 @@ msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Kdaj se naj izvede pogoj. Če je navedeno, ga bo načrtovalec preveril. Če je "
+"prazno, bo preverjeno ob kreiranju in popravljanju."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
 msgid "Action Rules"
-msgstr ""
+msgstr "Pravila aktivnosti"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Select a filter or a timer as condition."
-msgstr ""
+msgstr "Izberite filter ali timer kot pogoj"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,user_id:0
@@ -55,17 +60,17 @@ msgstr "Odgovoren"
 #. module: base_action_rule
 #: help:base.action.rule,server_action_ids:0
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "Primeri: opomniki po e-pošti, klicanje servisa, itd."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_followers:0
 msgid "Add Followers"
-msgstr ""
+msgstr "Dodaj sledilce"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
 msgid "Set Responsible"
-msgstr ""
+msgstr "Določi odgovornega"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_range:0
@@ -74,6 +79,8 @@ msgid ""
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Zamik po datumu izvedbe. Lahko vpišete negativno število, če potrebujete "
+"zamik pred datumom izvedbe, npr. pošiljanje opomnika 15 minut pred sestankom."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -93,7 +100,7 @@ msgstr "Novo"
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "Zamik po datumu izvedbe"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -113,33 +120,33 @@ msgstr "Status"
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "Filter pred popravkom"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Action Rule"
-msgstr ""
+msgstr "Pravilo aktivnosti"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_id:0
 msgid ""
 "If present, this condition must be satisfied after the update of the record."
-msgstr ""
+msgstr "Če je določen, mora biti ta pogoj izpolnjen po spremembi zapisa."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Fields to Change"
-msgstr ""
+msgstr "Polja, ki se spremenijo"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "Zato mora biti filter dostopen na tej strani."
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
 msgid "After Update Filter"
-msgstr ""
+msgstr "filter po spremembi"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -149,7 +156,7 @@ msgstr "Ure"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "To create a new filter:"
-msgstr ""
+msgstr "Za kreiranje novega filtra:"
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
@@ -160,7 +167,7 @@ msgstr "Aktivno"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Delay After Trigger Date"
-msgstr ""
+msgstr "Zamik po datumu sprožitve"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -170,11 +177,15 @@ msgid ""
 "while the postcondition filter is checked after the modification. A "
 "precondition filter will therefore not work during a creation."
 msgstr ""
+"Pravilo aktivnosti je preverjeno, ko kreirate ali spremenite \"Povezan "
+"dokumentni model\". Filter predpogoja je preverjen tik pred spremembo, "
+"medtem ko je posledični filter preverjen po spremembi. Napovedani filter bo "
+"delal med kreiranjem."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Filter Condition"
-msgstr ""
+msgstr "Pogoj filtriranja"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -183,6 +194,9 @@ msgid ""
 "in the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
 msgstr ""
+"Pojdite na stran \"Povezani dokumenti model\" in nastavite parametre filtra "
+"v pogledu \"Iskanje\" (primer filtra temeljni na Možnostih/Priložnostih: "
+"Datum kreiranja \"je enak\" 01/01/2012)"
 
 #. module: base_action_rule
 #: field:base.action.rule,name:0
@@ -198,7 +212,7 @@ msgstr "Avtomatska dejanja"
 #. module: base_action_rule
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr ""
+msgstr "Določitev zaporedja nalogov pri izpisu seznama pravil"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -218,22 +232,22 @@ msgstr "Časomerilnik"
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
-msgstr ""
+msgstr "Tip zamika"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server actions to run"
-msgstr ""
+msgstr "serverske aktivnosti, ki naj se izvedejo"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "Če ni označeno, je pravilo skrito in ne bo izvedeno."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Preklicano"
 
 #. module: base_action_rule
 #: field:base.action.rule,model:0
@@ -253,13 +267,13 @@ msgstr "Minute"
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "Povezan dokumentni model"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
 "If present, this condition must be satisfied before the update of the record."
-msgstr ""
+msgstr "Če je prisoten, mora biti ta pogoj izveden pred spremembo zapisa."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -287,6 +301,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Potrdite za nastavitev novega avtomatičnega pravila "
+"aktivnosti. \n"
+"              </p><p>\n"
+"                Uporabite avtomatične akitvnosti za avtomatsko izvedbo "
+"aktivnosti za\n"
+"                različne ekrane. Npr.: možnost, ki jo kreira nek uporabnik, "
+"je lahko\n"
+"                avtomatično prirejena določeni prodajni ekipi. Ali: "
+"priložnost, ki je še\n"
+"                v statusu čakanja, lahko avtomatično čez 14 dni sproži\n"
+"                avtomatično e-sporočilo za opomnik.\n"
+"              </p>\n"
+"            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -296,7 +324,7 @@ msgstr "Datum nastanka"
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "Zadnja aktivnost"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,partner_id:0
@@ -306,13 +334,13 @@ msgstr "Stranka"
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_id:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Sproženo dne"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 #: field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
-msgstr ""
+msgstr "Aktivnosti strežnika"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0

@@ -3073,6 +3073,20 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
 
+
+    def _get_chart_parent_ids(self, cr, uid, chart_template, context=None):
+        """ Returns the IDs of all ancestor charts, including the chart itself.
+            (inverse of child_of operator)
+        
+            :param browse_record chart_template: the account.chart.template record
+            :return: the IDS of all ancestor charts, including the chart itself.
+        """
+        result = [chart_template.id]
+        while chart_template.parent_id:
+            chart_template = chart_template.parent_id
+            result.append(chart_template.id)
+        return result
+
     def onchange_tax_rate(self, cr, uid, ids, rate=False, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 
@@ -3092,12 +3106,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             res['value'].update({'complete_tax_set': data.complete_tax_set, 'currency_id': currency_id})
             if data.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
-                sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
-                purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence, id desc")
-                res['value'].update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False, 'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
-
+                chart_ids = self._get_chart_parent_ids(cr, uid, data, context=context)
+                base_tax_domain = [("chart_template_id", "in", chart_ids), ('parent_id', '=', False)]
+                sale_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('sale','all'))]
+                purchase_tax_domain = base_tax_domain + [('type_tax_use', 'in', ('purchase','all'))]
+                sale_tax_ids = tax_templ_obj.search(cr, uid, sale_tax_domain, order="sequence, id desc")
+                purchase_tax_ids = tax_templ_obj.search(cr, uid, purchase_tax_domain, order="sequence, id desc")
+                res['value'].update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False,
+                                     'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
+                res.setdefault('domain', {})
+                res['domain']['sale_tax'] = repr(sale_tax_domain)
+                res['domain']['purchase_tax'] = repr(purchase_tax_domain)
             if data.code_digits:
                res['value'].update({'code_digits': data.code_digits})
         return res
@@ -3105,6 +3124,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         res = super(wizard_multi_charts_accounts, self).default_get(cr, uid, fields, context=context)
         tax_templ_obj = self.pool.get('account.tax.template')
+        account_chart_template = self.pool['account.chart.template']
         data_obj = self.pool.get('ir.model.data')
 
         if 'bank_accounts_id' in fields:
@@ -3119,23 +3139,28 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 currency_id = company_obj.on_change_country(cr, uid, company_id, country_id, context=context)['value']['currency_id']
                 res.update({'currency_id': currency_id})
 
-        ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
+        ids = account_chart_template.search(cr, uid, [('visible', '=', True)], context=context)
         if ids:
+            #in order to set default chart which was last created set max of ids.
+            chart_id = max(ids)
+            if context.get("default_charts"):
+                data_ids = data_obj.search(cr, uid, [('model', '=', 'account.chart.template'), ('module', '=', context.get("default_charts"))], limit=1, context=context)
+                if data_ids:
+                    chart_id = data_obj.browse(cr, uid, data_ids[0], context=context).res_id
+            chart = account_chart_template.browse(cr, uid, chart_id, context=context)
+            chart_hierarchy_ids = self._get_chart_parent_ids(cr, uid, chart, context=context) 
             if 'chart_template_id' in fields:
-                #in order to set default chart which was last created set max of ids.
-                chart_id = max(ids)
-                if context.get("default_charts"):
-                    data_ids = data_obj.search(cr, uid, [('model', '=', 'account.chart.template'), ('module', '=', context.get("default_charts"))], limit=1, context=context)
-                    if data_ids:
-                        chart_id = data_obj.browse(cr, uid, data_ids[0], context=context).res_id
-                res.update({'only_one_chart_template': len(ids) == 1, 'chart_template_id': chart_id})
+                res.update({'only_one_chart_template': len(ids) == 1,
+                            'chart_template_id': chart_id})
             if 'sale_tax' in fields:
-                sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
+                sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id", "in", chart_hierarchy_ids),
+                                                              ('type_tax_use', 'in', ('sale','all'))],
+                                                    order="sequence")
                 res.update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False})
             if 'purchase_tax' in fields:
-                purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                          , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+                purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id", "in", chart_hierarchy_ids),
+                                                                  ('type_tax_use', 'in', ('purchase','all'))],
+                                                        order="sequence")
                 res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
         res.update({
             'purchase_tax_rate': 15.0,
@@ -3403,12 +3428,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_tax_temp = self.pool.get('account.tax.template')
         chart_template = obj_wizard.chart_template_id
         vals = {}
-        # get the ids of all the parents of the selected account chart template
-        current_chart_template = chart_template
-        all_parents = [current_chart_template.id]
-        while current_chart_template.parent_id:
-            current_chart_template = current_chart_template.parent_id
-            all_parents.append(current_chart_template.id)
+        all_parents = self._get_chart_parent_ids(cr, uid, chart_template, context=context)
         # create tax templates and tax code templates from purchase_tax_rate and sale_tax_rate fields
         if not chart_template.complete_tax_set:
             value = obj_wizard.sale_tax_rate

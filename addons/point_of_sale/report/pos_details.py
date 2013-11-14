@@ -162,7 +162,7 @@ class pos_details(report_sxw.rml_parse):
                 for tax in line_taxes['taxes']:
                     taxes.setdefault(tax['id'], {'name': tax['name'], 'amount':0.0})
                     taxes[tax['id']]['amount'] += tax['amount']
-        return [value for value in taxes.values()] or []
+        return taxes.values()
 
     def _get_user_names(self, user_ids):
         user_obj = self.pool.get('res.users')

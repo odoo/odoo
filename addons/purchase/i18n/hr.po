@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-09-26 12:08+0000\n"
+"PO-Revision-Date: 2013-11-05 12:31+0000\n"
 "Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-27 06:16+0000\n"
-"X-Generator: Launchpad (build 16774)\n"
+"X-Launchpad-Export-Date: 2013-11-06 05:51+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -414,6 +414,18 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Pritisnite za kreiranje ulaznog računa dobavljača.\n"
+"                </p><p>\n"
+"                    Ulazni računi dobavljača mogu biti automatski kreirani "
+"unaprijed  \n"
+"                    temeljem naloga za nabavu ili primke. Na taj je način "
+"moguće kontrolirati\n"
+"                    račune koje dobivate od Vaših dobavljača temeljem "
+"unaprijed kreiranog nacrta\n"
+"                    dokumenta u OpenERP-u.\n"
+"                </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order:0
@@ -660,6 +672,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje ponude koja će biti pretvorena u "
+"nalog za nabavu. \n"
+"              </p><p>\n"
+"                Koristite ovaj izbornik za pretragu naloga za nabavu "
+"koristeći polja\n"
+"                referenca, dobavljač, proizvod, i sl. Za svaki nalog za "
+"nabavu\n"
+"                moguće je pratiti povezanu diskusiju sa dobavljačem, "
+"kontrolirati\n"
+"                zaprimljene proizvode kao i vršiti kontrolu dobavljačevih "
+"faktura.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -768,7 +794,7 @@ msgstr "Cjenik"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr "Nacrt"
+msgstr "Nacrt naloga za nabavu"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:967
@@ -1278,13 +1304,18 @@ msgid ""
 "received the\n"
 "                        products."
 msgstr ""
+"za traženu količinu definiranom dobavljaču.\n"
+"                        Otpremnica će biti spremna nakon što zaprimite\n"
+"                        tražene količine."
 
 #. module: purchase
 #: view:product.product:0
 msgid ""
 "a draft\n"
 "                        purchase order"
-msgstr "nacrt"
+msgstr ""
+"nacrt\n"
+"                        naloga za nabavu"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:322
@@ -1307,6 +1338,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Pritisnite za kreiranje nove primke.\n"
+"              </p><p> \n"
+"                Ovdje možete pratiti sve ulaze proizvoda naloga za nabavu\n"
+"                ne kojima je označena metoda fakturiranja \"Bazirano na "
+"dolaznim pošiljkama\",\n"
+"                za koje dobavljač još uvijek nije ispostavio fakturu.\n"
+"                Ulazne je račune moguće generirati temeljem ovih primki.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1634,6 +1675,13 @@ msgid ""
 "* The 'Cancelled' status is set automatically when user cancel purchase "
 "order."
 msgstr ""
+" * 'Nacrt' status je automatski status kada je nalog za nabavu u statusu "
+"pripreme.                                        \n"
+"* 'Potvrđeno' je status koji se dobiva nakon potvrđivanja naloga za nabavu.  "
+"                                      \n"
+"* 'Završeno' je status kada je nalog za nabavu završen.                      "
+"                  \n"
+"* 'Otkazano' je status kada korisnik otkaže nalog za nabavu."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -2070,6 +2118,12 @@ msgid ""
 "Bases on incoming shipments: let you create an invoice when receptions are "
 "validated."
 msgstr ""
+"Prema stavkama naloga za nabavu: svaku stavku postavlja u 'Kontrolu računa > "
+"temeljem stavke naloga za nabavu' odakle je selektivno moguće kreirati "
+"ulaznu fakturu.\n"
+"Prema generiranim nacrtima ul. računa: kreira ulazni račun u statusu nacrt.\n"
+"Bazirano na dolaznim pošiljkama: kreiranje ulazne fakture nakon što se "
+"potvrdi dokument prijema robe."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form

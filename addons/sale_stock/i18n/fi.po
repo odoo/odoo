@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-08 18:19+0000\n"
+"Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:22+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-10 06:45+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -23,6 +23,8 @@ msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
 msgstr ""
+"Sallii myyjien tehdä suoraan toimitusmääräyksistä laskuja valinnalla "
+"'Toimitusten laskutus'."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
@@ -33,7 +35,7 @@ msgstr "Toimitusmääräys"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "Toimitusten laskutus"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:570
@@ -64,7 +66,7 @@ msgstr "Dokumentti siirrosta kohdepaikkaan tai asiakkalle."
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
 msgid "Manage multiple shops"
-msgstr ""
+msgstr "Hallitse useita toimipaikkoja"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_validate0
@@ -82,6 +84,7 @@ msgstr ""
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
+"Peruuta ensin kaikki tähän myyntitilaukseen liittyvät toimitusmääräykset."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -110,7 +113,7 @@ msgstr "Toimituskäytäntö"
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
 msgid "Shop"
-msgstr "Myymälä"
+msgstr "Toimipaikka"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
@@ -131,29 +134,29 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr ""
+msgstr "Projektin tuntilomake"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Salli eri osoite toimitukselle ja laskulle. "
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:572
 #: code:addons/sale_stock/sale_stock.py:623
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Konfiguraatiovirhe!"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
 msgid "Procurement Order"
-msgstr ""
+msgstr "Hankintatilaus"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
 msgid "Contact Details"
-msgstr ""
+msgstr "Yhteystiedot"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -169,13 +172,13 @@ msgstr "Myyntitilaus"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Toimitusmääräykset"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr "Myyntitilauksen Rivi"
+msgstr "Myyntitilausrivi"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_packing0
@@ -185,6 +188,9 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
+"Keräilylistalomake luodaan heti, kun myyntitilaus on vahvistettu samaan "
+"aikaan hankintatilauksen kanssa. Lomake toimii myyntitilauksen  osien "
+"varauksena tilaukselle. Kullekin myyntitilausriville on yksi keräilylista."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -219,7 +225,7 @@ msgstr "Dokumentti siirrosta asiakkaalle"
 #. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
-msgstr ""
+msgstr "Näytä toimitusmääräys"
 
 #. module: sale_stock
 #: field:sale.order.line,move_ids:0
@@ -229,12 +235,12 @@ msgstr "Varastosiirrot"
 #. module: sale_stock
 #: view:sale.config.settings:0
 msgid "Default Options"
-msgstr ""
+msgstr "Oletusarvojen vaihtoehdot"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
 msgid "Project MRP"
-msgstr ""
+msgstr "Projektin tarvelaskenta"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
@@ -262,7 +268,7 @@ msgstr "Toimitettu"
 #: code:addons/sale_stock/sale_stock.py:265
 #, python-format
 msgid "invalid mode for test_state"
-msgstr "invalid mode for test_state"
+msgstr "virheellinen test_state tila"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_saleprocurement0
@@ -279,12 +285,12 @@ msgstr ""
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+msgstr "Sallii myyntitilauksen rivien merkinnän ominaisuuksilla."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "Luodaan laskut perustuen toimitustilauksiiin."
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
@@ -294,7 +300,7 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "days"
-msgstr ""
+msgstr "päivät"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -352,7 +358,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
 msgid "Sales Shop"
-msgstr "Myymälä"
+msgstr "Toimipaikka"
 
 #. module: sale_stock
 #: help:sale.order,shipped:0
@@ -375,11 +381,13 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised "
 "date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"Ennakkoaika luvattu asiakkaalle, jotta odottamattomat viipeet kompensoidaan. "
+"Tuotteet ajoitetaan hankintaan ja valmistukseen tämän verran päivinä aiemmin."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr ""
+msgstr "Tuotteen ominaisuudet tilausriveillä."
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
@@ -415,6 +423,7 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"Sallii eri toimitus- ja laskuosoitteiden määrittelyn myyntitilaukselle."
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -442,6 +451,7 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
+"Aika päivinä tilauksen vahvistuksesta tuotteiden toimitukseen asiakkaalle."
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -450,11 +460,13 @@ msgid ""
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
 msgstr ""
+"Oletuksena myyntitilaus on konfiguroitu toimittamaan kaikki tuotteet yhdellä "
+"kertaa, kun ovat saatavilla.. Tällä on merkitys toimitusmaksuun."
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Myyntitilaukseiin perustuva lasku"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -474,11 +486,13 @@ msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
 msgstr ""
+"Poistaaksesi vahvistetun myyntitilauksen, peruuta ensin\n"
+"myyntitilauksen liittyvät keräilyt."
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr "Pakkauksien määrä"
+msgstr "Numeroi paketit"
 
 #. module: sale_stock
 #: field:sale.order,shipped:0
@@ -493,12 +507,12 @@ msgstr "Luo lasku"
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Valmistele laskut perustuen tehtävän aktiviteetteihin"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "Myynnin ennakkomaksulasku"
+msgstr "Myynnin ennakkolasku"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:523
@@ -585,12 +599,12 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "Luo uudelleen toimitusmääräin"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_multiple_shops:0
 msgid "This allows to configure and use multiple shops."
-msgstr ""
+msgstr "Tämä sallii useiden toimipaikkojen konfiguroinnin ja käytön."
 
 #. module: sale_stock
 #: field:sale.order,picked_rate:0

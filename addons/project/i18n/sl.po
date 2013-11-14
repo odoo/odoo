@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-09-29 10:57+0000\n"
+"PO-Revision-Date: 2013-10-02 06:32+0000\n"
 "Last-Translator: Matmoz <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-30 05:43+0000\n"
-"X-Generator: Launchpad (build 16774)\n"
+"X-Launchpad-Export-Date: 2013-10-03 05:55+0000\n"
+"X-Generator: Launchpad (build 16791)\n"
 
 #. module: project
 #: view:project.project:0
@@ -1060,7 +1060,7 @@ msgstr "Za fakturiranje ali nastavitve uporabite povezano pogodbo:"
 #. module: project
 #: field:project.task.delegate,state:0
 msgid "Validation State"
-msgstr "Faza potrditve"
+msgstr "Stanje potrditve"
 
 #. module: project
 #: field:project.task.work,name:0
@@ -1222,6 +1222,9 @@ msgid ""
 "automatically synchronizedwith Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
+"Interna elektronska pošta povezana s tem projektom. Vstopna sporočila so "
+"samodejno sinhronizirana z Opravili (ali Zadevami, če je nameščen modul "
+"Issue Tracker)."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1238,7 +1241,12 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Nova faza\n"
+"                Klik doda stopnjo v razvod nalog.\n"
+"              </p><p>\n"
+"                Definira korake uporabljene v projektu od odprtja opravil\n"
+"                do zaprtja opravil ali zadev.\n"
+"                Stopnje se uporablja za sledenje napredovanja del\n"
+"                pri izvedbi opravila ali reševanja zadeve.\n"
 "              </p>\n"
 "            "
 
@@ -1300,7 +1308,7 @@ msgstr "Ekipa"
 #. module: project
 #: help:project.config.settings,time_unit:0
 msgid "This will set the unit of measure used in projects and tasks."
-msgstr "Nastavitev enote mere."
+msgstr "Nastavitev enote mere za projekte in opravila."
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1316,7 +1324,7 @@ msgstr "Mesec"
 #. module: project
 #: model:project.task.type,name:project.project_tt_design
 msgid "Design"
-msgstr "Design"
+msgstr "Načrtovanje"
 
 #. module: project
 #: view:project.task:0
@@ -1405,6 +1413,8 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
 msgstr ""
+"Novo stanje vaše naloge. Naloga na čakanju se samodejno ponovno odpre ko se "
+"delegirana naloga zaključi."
 
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
@@ -1830,7 +1840,7 @@ msgstr "Naloga potrjevanja"
 #. module: project
 #: field:project.config.settings,module_project_long_term:0
 msgid "Manage resources planning on gantt view"
-msgstr ""
+msgstr "Upravljanje načrtovanja virov v pogledu Gantt"
 
 #. module: project
 #: view:project.task:0
@@ -1848,7 +1858,7 @@ msgstr "Vsota planiranih ur"
 #. module: project
 #: view:res.partner:0
 msgid "For changing to done state"
-msgstr "Za sprememo v status Opravljeno."
+msgstr "Za spremembo v stanje Opravljeno"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -2051,7 +2061,7 @@ msgstr "Najprej morate izbrisati povezani projekt."
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr "Naloga kreirana"
+msgstr "Naloga ustvarjena"
 
 #. module: project
 #: view:report.project.task.user:0

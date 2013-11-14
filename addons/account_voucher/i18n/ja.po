@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-11 10:10+0000\n"
+"Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:49+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-12 06:22+0000\n"
+"X-Generator: Launchpad (build 16820)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 msgid "Reconciliation"
-msgstr ""
+msgstr "消込"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_config_settings
@@ -116,7 +116,7 @@ msgstr "取引参照番号"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Allocation"
-msgstr "割り当て"
+msgstr "消込額"
 
 #. module: account_voucher
 #: help:account.voucher,currency_help_label:0
@@ -147,7 +147,7 @@ msgstr ""
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr ""
+msgstr "ステータスが変更されました。"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -158,7 +158,7 @@ msgstr "検証"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "仕入先支払"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -202,7 +202,7 @@ msgstr "OK"
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
 msgid "Full Reconcile"
-msgstr "全消し込み"
+msgstr "全消込"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -226,12 +226,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "購買領収書"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
 msgid "Journal Item"
-msgstr "仕訳帳項目"
+msgstr "仕訳項目"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:558
@@ -362,7 +362,7 @@ msgstr "請求書インポート"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "e.g. Invoice SAJ/0042"
-msgstr ""
+msgstr "[例] 請求書SAJ/0042"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1208
@@ -400,7 +400,7 @@ msgstr "販売行"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Cancel Voucher"
-msgstr ""
+msgstr "支払取消"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -460,6 +460,8 @@ msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
 msgstr ""
+"処理日時点の為替レートは次の通りでした。\n"
+"%s = %s"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -497,7 +499,7 @@ msgstr "請求書支払"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr "このレコードを本当に消し込みしキャンセルしますか？"
+msgstr "本当にこの消込を取り消しますか？"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -634,7 +636,7 @@ msgstr "バウチャーが多通貨であるかどうかを示す内部目的の
 #. module: account_voucher
 #: view:account.invoice:0
 msgid "Register Payment"
-msgstr ""
+msgstr "支払登録"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice.lines,line_ids:0
@@ -696,12 +698,12 @@ msgstr "バウチャーは全て支払済です。"
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr "消し込み支払残高"
+msgstr "差額を消し込む"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "入金取消"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1067
@@ -791,7 +793,7 @@ msgstr "支払済"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "販売領収書"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
@@ -801,7 +803,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
 msgid "Write-Off Analytic Account"
-msgstr "償却の分析アカウント"
+msgstr "差額適用分析勘定"
 
 #. module: account_voucher
 #: field:account.voucher,date:0
@@ -889,14 +891,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "顧客入金"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "販売領収分析"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -932,7 +934,7 @@ msgstr "請求日"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Unreconcile"
-msgstr "未消し込み"
+msgstr "消込取消"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1009,7 +1011,7 @@ msgstr "プロフォーマ"
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
 msgid "Journal Items"
-msgstr "仕訳帳項目"
+msgstr "仕訳項目"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:558
@@ -1105,7 +1107,7 @@ msgstr "貸方"
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
 msgid "Original Amount"
-msgstr "元アカウント"
+msgstr "計上額"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1237,12 +1239,12 @@ msgstr "会計エントリーの有効日"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr ""
+msgstr "ステータス変化"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Keep Open"
-msgstr "開くの継続"
+msgstr "オープンのまま残す"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
@@ -1279,7 +1281,7 @@ msgstr "パートナ"
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr "期首残高"
+msgstr "残額"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1106
