@@ -49,8 +49,23 @@ class WebsiteCrmPartnerAssign(http.Controller):
             limit=self._references_per_page, offset=pager['offset'],
             order="grade_id ASC,partner_weight DESC")
         google_map_partner_ids = ",".join([str(p) for p in partner_ids])
+
+        where = 'r.is_company = True'
+        if request.context['is_public_user']:
+            where += ' and r.website_published = True'
+        if grade_id and grade_id != "all":
+            where += ' and r.grade_id = '+str(grade_id)  # try/catch int
+        if country_id:
+            country = country_obj.browse(request.cr, request.uid, country_id, request.context)
+            where += ' and r.country_id = '+str(country_id)
+        if post_name:
+            where += " or r.name ilike '"+post_name+"' or r.website_description ilike '"+post_name+"'"
+        query = 'select r.id from res_partner r, res_partner_grade g where r.grade_id=g.id and '+ where + ' order by g.sequence DESC limit %s offset %s'
+        request.cr.execute(query, (self._references_per_page, pager['offset']))
+        search_partner_ids = [x[0] for x in request.cr.fetchall()]
+
         partners = partner_obj.browse(
-            request.cr, openerp.SUPERUSER_ID, partner_ids, request.context)
+            request.cr, openerp.SUPERUSER_ID, search_partner_ids, request.context)
 
         # group by country
         countries = partner_obj.read_group(
