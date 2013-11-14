@@ -26,4 +26,17 @@
     	<div class="graph_chart"></div>
     </t>
 
+	<t t-name="field_selection">
+		<div class="btn-group">
+			<span class="btn btn-default field-selection dropdown-toggle" data-toggle="dropdown"></span>
+	        <ul class="dropdown-menu" role="menu">
+    	    	<t t-foreach="fields" t-as="field">
+			        <li>
+			        	<a class="field-selection" t-att-data-field-id="field.id" t-att-data-row-id="row_id" href="#"><t t-esc="field.value"/></a>
+			        </li>
+		        </t>	            
+	        </ul>
+	    </div>
+    </t>
+
 </templates>

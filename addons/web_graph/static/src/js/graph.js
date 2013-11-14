@@ -60,7 +60,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         // get the most important fields (of the model) by looking at the
         // groupby filters defined in the search view
-        options.important_fields = []
+        options.important_fields = [];
         var load_view = instance.web.fields_view_get({
             model: model,
             view_type: 'search',
@@ -79,7 +79,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     }
                 });
             });
-        }).then
+        });
 
         // get the fields descriptions from the model
         var field_descr_def = model.call('fields_get', [])
@@ -92,7 +92,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 self.chart_view = new ChartView(model, options);
             })
             .then(function () {
-                return self.pivot_table.appendTo('.graph_main_content')                
+                return self.pivot_table.appendTo('.graph_main_content');
             })
             .then(function() {
                 return self.chart_view.appendTo('.graph_main_content');
@@ -153,6 +153,10 @@ var BasicDataView = instance.web.Widget.extend({
         this.important_fields = options.important_fields;
     },
 
+    get_descr: function (field_id) {
+        return this.fields[field_id].string;
+    },
+
     set_domain: function (domain) {
         this.domain = domain;
         this.need_redraw = true;
@@ -206,17 +210,69 @@ var PivotTable = BasicDataView.extend({
     current_row_id : 0,
 
     events: {
-        'click .graph_border a' : function (event) {
+        'click .graph_border > a' : function (event) {
+            var self = this;
             event.preventDefault();
-            var row_id = event.target.attributes['data-row-id'].nodeValue;
-            console.log("clickclick on row ", row_id);
+
+            var dropdown_options = {
+                fields: _.map(this.important_fields, function (field) {
+                    return {id: field, value: self.fields[field].string};
+                }),
+                row_id: event.target.attributes['data-row-id'].nodeValue,
+            };
+
+            this.dropdown = $(QWeb.render('field_selection', dropdown_options));
+
+            $(event.target).after(this.dropdown);
+            $('.field-selection').next('.dropdown-menu').toggle();
         },
+        'click a.field-selection' : function (event) {
+            event.preventDefault();
+            this.dropdown.remove();
+            var row_id = event.target.attributes['data-row-id'].nodeValue;
+            var field_id = event.target.attributes['data-field-id'].nodeValue;
+            this.expand_row(row_id, field_id);
+        },
+    },
+
+    init: function (model, options) {
+        this._super(model, options);
     },
 
     generate_id: function () {
         this.current_row_id += 1;
         return this.current_row_id - 1;
     },
+
+    get_row: function (id) {
+        return _.find(this.rows, function(row) {
+            return (row.id == id);
+        });
+    },
+
+    make_cell: function (content, is_border) {
+        return '<td' +
+               ((is_border) ? ' class="graph_border"' : '') +
+               '>' + content + '</td>';
+    },
+
+    expand_row: function (row_id, field_id) {
+        var row = this.get_row(row_id);
+        this.row_groupby.push(field_id);
+        var visible_fields = this.row_groupby.concat(this.col_groupby, this.measure);
+
+        console.log("model",this.model);
+        console.log("vf",visible_fields);
+        console.log("domain",row.domain);
+        console.log("gb",this.row_groupby);
+
+        query_groups(this.model, visible_fields, row.domain, [field_id])
+            .then(function (data) {
+            console.log("datapt",data);
+        });
+
+    },
+// function query_groups (model, fields, domain, groupbys) {
 
     draw: function () {
         this.get_data(this.row_groupby)
@@ -226,11 +282,7 @@ var PivotTable = BasicDataView.extend({
 
     build_table: function (data) {
         var self = this;
-        function make_cell (content, is_border) {
-            return '<td' +
-                   ((is_border) ? ' class="graph_border"' : '') +
-                   '>' + content + '</td>';
-        }
+
 
         this.cols = [{
             path: [],
@@ -240,26 +292,27 @@ var PivotTable = BasicDataView.extend({
             children: [],
             html_tds: [],
             domain: this.domain,
-            header: $(make_cell(this.measure_label, true)),
+            header: $(this.make_cell(this.measure_label, true)),
         }];
 
         this.rows = _.map(data, function (datapt) {
             var jquery_row = $('<tr></tr>');
-            var header = $(make_cell(datapt.attributes.value[1], true));
+            var header = $(self.make_cell(datapt.attributes.value[1], true));
             var row_id = self.generate_id();
 
             header.prepend('<a data-row-id="'+ row_id + '" href="#">+ </a>');
             jquery_row.html(header);
-            jquery_row.append(make_cell(datapt.attributes.aggregates[self.measure]));
+            jquery_row.append(self.make_cell(datapt.attributes.aggregates[self.measure]));
 
             var row = {
+                id: row_id,
                 path: [datapt.attributes.grouped_on],
                 value: datapt.attributes.value[1],
                 expanded: false,
                 parent: null,
                 children: [],
                 html_tr: jquery_row,
-                domain: datapt.model._domain
+                domain: datapt.model._domain,
             };
             return row;
         });
