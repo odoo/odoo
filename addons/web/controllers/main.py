@@ -564,7 +564,7 @@ class Home(http.Controller):
         }
         return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
 
-    @http.route('/login', type='http', auth="user")
+    @http.route('/login', type='http', auth="none")
     def login(self, db, login, key):
         return login_and_redirect(db, login, key)
 
