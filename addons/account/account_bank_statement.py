@@ -450,7 +450,8 @@ class account_bank_statement(osv.osv):
 
     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
         res = False
-        if journal_id:
+        journal = self.pool.get('account.journal').browse(cr, uid, journal_id,context=context)
+        if journal_id and journal.with_last_closing_balance:
             cr.execute('SELECT balance_end_real \
                     FROM account_bank_statement \
                     WHERE journal_id = %s AND NOT state = %s \
