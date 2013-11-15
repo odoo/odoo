@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-01-16 19:30+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
+"PO-Revision-Date: 2013-11-14 11:54+0000\n"
+"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:07+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-15 06:32+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: lunch
 #: field:lunch.product,category_id:0
@@ -26,17 +26,17 @@ msgstr "Kategorija"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_order_by_supplier_form
 msgid "Today's Orders by Supplier"
-msgstr ""
+msgstr "Današnja naročila po dobaviteljih"
 
 #. module: lunch
 #: view:lunch.order:0
 msgid "My Orders"
-msgstr ""
+msgstr "Moja naročila"
 
 #. module: lunch
 #: selection:lunch.order,state:0
 msgid "Partially Confirmed"
-msgstr ""
+msgstr "Delno potrjeno"
 
 #. module: lunch
 #: view:lunch.cashmove:0
@@ -68,7 +68,7 @@ msgstr "Marec"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "By Employee"
-msgstr ""
+msgstr "Po zaposlenih"
 
 #. module: lunch
 #: field:lunch.alert,friday:0
@@ -78,12 +78,12 @@ msgstr "Petek"
 #. module: lunch
 #: view:lunch.validation:0
 msgid "validate order lines"
-msgstr ""
+msgstr "potrdite vrstice naročila"
 
 #. module: lunch
 #: view:lunch.order.line:0
 msgid "Order lines Tree"
-msgstr ""
+msgstr "Drevesna struktura vrstic naročila"
 
 #. module: lunch
 #: field:lunch.alert,specific_day:0
@@ -100,7 +100,7 @@ msgstr "Prejeto"
 #. module: lunch
 #: view:lunch.order.line:0
 msgid "By Supplier"
-msgstr ""
+msgstr "Po dobaviteljih"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.action_lunch_order_tree
@@ -117,27 +117,39 @@ msgid ""
 "            </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknite za kreiranje naročila obroka. \n"
+"            </p>\n"
+"            <p>\n"
+"                Naročilo obroka je določeno po uporabniku, datumu in "
+"vrsticah naročila.\n"
+"                Vsaka vrstica naročila vsebuje proizvod, dodatno opombo in "
+"ceno.\n"
+"                Preden izberete vaše obroke, ne pozabite prebrati opozoril v "
+"rdeče obarvanem območju.\n"
+"            </p>\n"
+"            "
 
 #. module: lunch
 #: view:lunch.order.line:0
 msgid "Not Received"
-msgstr ""
+msgstr "Ni bilo prejeto"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_by_supplier_form
 #: model:ir.ui.menu,name:lunch.menu_lunch_control_suppliers
 msgid "Orders by Supplier"
-msgstr ""
+msgstr "Naročila po dobaviteljih"
 
 #. module: lunch
 #: view:lunch.validation:0
 msgid "Receive Meals"
-msgstr ""
+msgstr "Prejem obrokov"
 
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "cashmove form"
-msgstr ""
+msgstr "transkacije gotovine"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
@@ -151,6 +163,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Tu vidite gotovinske transakcije.<br/>Gotovinska transakcija "
+"je lahko strošek ali plačilo.\n"
+"                Strošek se avtomatično kreira, ko je naročilo prevzeto, "
+"medtem ko je plačilo nadomestilo podjetju, potrjeno s strani vodje.\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
 #: field:lunch.cashmove,amount:0
@@ -179,28 +198,28 @@ msgstr "Preklicano"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "lunch employee payment"
-msgstr ""
+msgstr "plačilo obroka"
 
 #. module: lunch
 #: view:lunch.alert:0
 msgid "alert tree"
-msgstr ""
+msgstr "drevo alarmov"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_report_lunch_order_line
 msgid "Lunch Orders Statistics"
-msgstr ""
+msgstr "Statistika naročil obrokov"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_alert
 msgid "Lunch Alert"
-msgstr ""
+msgstr "Alarm obroka"
 
 #. module: lunch
 #: code:addons/lunch/lunch.py:183
 #, python-format
 msgid "Select a product and put your order comments on the note."
-msgstr ""
+msgstr "Izberite proizvod in dodajte svoje komentarje."
 
 #. module: lunch
 #: selection:lunch.alert,alter_type:0
@@ -210,7 +229,7 @@ msgstr "Vsak teden"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_cashmove
 msgid "Register Cash Moves"
-msgstr ""
+msgstr "Zabeleži gotovinske transakcije"
 
 #. module: lunch
 #: selection:lunch.order,state:0
@@ -220,7 +239,7 @@ msgstr "Potrjeno"
 #. module: lunch
 #: view:lunch.order:0
 msgid "lunch orders"
-msgstr ""
+msgstr "Naročila obrokov"
 
 #. module: lunch
 #: view:lunch.order.line:0
