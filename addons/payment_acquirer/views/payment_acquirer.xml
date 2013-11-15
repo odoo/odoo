@@ -11,32 +11,30 @@
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <form string="Payment Acquirer" version="7.0">
-                    <group col="1">
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/><h1><field name="name"/></h1>
-                            <div class="oe_edit_only"><field name="portal_published"/><label for="portal_published"/></div>
-                            <field name="env"/>
-                        </div>
-                        <group string="Form Template">
+                    <group>
+                        <field name="name"/>
+                        <field name="portal_published"/>
+                        <field name="env"/>
+                        <label for="view_template_id"/>
+                        <div>
+                            <field name="view_template_id" nolabel="1"/>
                             <div>
-                                <p>
                                 This is an HTML form template to submit a payment through this acquirer.
                                 The template will be rendered with qWeb, so it may use qWeb expressions.
                                 The qWeb evaluation context provides:
                                 <ul>
-                                    <li>reference: the reference number of the document to pay</li>
-                                    <li>currency: the currency record in which the document is issued (e.g. currency.name could be EUR)</li>
-                                    <li>amount: the total amount to pay, as a float</li>
-                                    <li>amount_str: the total amount to pay, as a string with the account precision</li>
-                                    <li>object: the browse record on which the payment form is rendered (usually an invoice or sales order record)</li>
-                                    <li>user_id: the current user browse record</li>
+                                    <li>acquirer: payment.acquirer browse record</li>
+                                    <li>user: current user browse record</li>
+                                    <li>reference: the transaction reference number</li>
+                                    <li>currency: the transaction currency browse record</li>
+                                    <li>amount: the transaction amount, a float</li>
+                                    <li>partner: the buyer partner browse record, not necessarily set</li>
+                                    <li>partner_values: specific values about the buyer, for example coming from a shipping form</li>
+                                    <li>tx_values: specific transaction values</li>
                                     <li>context: the current context dictionary</li>
                                 </ul>
-                                If the template renders to an empty result in a certain context it will be ignored, as if it was inactive.
-                                </p>
                             </div>
-                            <field name="view_template_id" nolabel="1" colspan="2"/>
-                        </group>
+                        </div>
                     </group>
                 </form>
             </field>
@@ -79,20 +77,30 @@
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <form string="Payment Transactions" version="7.0">
-                    <group>
-                        <field name="date_create"/>
-                        <field name="date_validate"/>
-                        <field name="acquirer_id"/>
-                        <field name="state"/>
-                        <field name="state_message"/>
-                        <field name="amount"/>
-                        <field name="currency_id"/>
-                        <field name="reference"/>
-                        <field name="name"/>
-                        <field name="partner_id"/>
-                        <field name="partner_name"/>
-                        <field name="partner_email"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="reference"/>
+                                <field name="amount"/>
+                                <field name="currency_id"/>
+                                <field name="partner_id"/>
+                                <field name="partner_name"/>
+                                <field name="partner_email"/>
+                            </group>
+                            <group>
+                                <field name="date_create"/>
+                                <field name="date_validate"/>
+                                <field name="acquirer_id"/>
+                                <field name="state"/>
+                                <field name="state_message"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                    </div>
                 </form>
             </field>
         </record>

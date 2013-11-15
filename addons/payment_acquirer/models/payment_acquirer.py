@@ -36,7 +36,7 @@ class PaymentAcquirer(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True),
-        'view_template_id': fields.many2one('ir.ui.view', required=True),
+        'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
         'env': fields.selection(
             [('test', 'Test'), ('prod', 'Production')],
             string='Environment'),
