@@ -17,6 +17,16 @@
     <!-- Blog Post Summary -->
     <template id="blog_post_short" name="Blog Post Summary">
         <t t-call="website_blog.index">
+        <div t-if="not blog_posts">
+            <h1>
+                No blog post yet!
+            </h1>
+            <p t-if="editable">
+                To create a new blog post, use the top-right menu <em>Content</em>
+                and select the menuitem <em>New Blog Post</em>.
+            </p>
+
+        </div>
         <div t-foreach="blog_posts" t-as="blog_post" data-publish="">
             <h2 class="text-center">
                 <a t-href="/blog/#{blog_post.id}" t-field="blog_post.name"></a>
@@ -275,7 +285,7 @@
             <attribute name="class">col-lg-8 col-sm-8</attribute>
         </xpath>
         <xpath expr="//div[@id='blog_right_column']" position="inside">
-            <section class="mt32">
+            <section class="mt32 mb32">
             <h4>Our Blogs</h4>
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="categories" t-as="nav_category">
