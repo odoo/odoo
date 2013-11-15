@@ -253,7 +253,7 @@
                         <t t-set="object" t-value="category"/>
                     </t>
                 </t>
-                <p class="text-muted mb0">
+                <p class="text-muted mb0 mt16">
                     Participate on our social stream.
                 </p>
                 <h2 class="mt4">
@@ -280,7 +280,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="categories" t-as="nav_category">
                     <li>
-                        <a t-href="/blog/#{nav_category.id}">
+                        <a t-href="/blog/cat/#{nav_category.id}">
                             <span t-field="nav_category.name"/>
                         </a>
                     </li>
