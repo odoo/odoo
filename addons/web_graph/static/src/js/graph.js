@@ -144,11 +144,15 @@ var BasicDataView = instance.web.Widget.extend({
     //      measure: quantity to display. either a field from the model, or 
     //            null, in which case we use the "count" measure
     init: function (model, options) {
+        var self = this;
         this.model = model;
         this.fields = options.fields;
         this.domain = options.domain;
-        this.row_groupby = options.row_groupby;
-        this.col_groupby = options.col_groupby;
+        this.groupby = {
+            row: options.row_groupby,
+            col: options.col_groupby,
+        };
+
         this.measure = options.measure;
         this.measure_label = options.measure ? options.fields[options.measure].string : 'Quantity';
         this.data = [];
@@ -166,12 +170,12 @@ var BasicDataView = instance.web.Widget.extend({
     },
 
     set_row_groupby: function (row_groupby) {
-        this.row_groupby = row_groupby;
+        this.groupby.row = row_groupby;
         this.need_redraw = true;
     },
 
     set_col_groupby: function (col_groupby) {
-        this.col_groupby = col_groupby;
+        this.groupby.col = col_groupby;
         this.need_redraw = true;
     },
 
@@ -196,7 +200,7 @@ var BasicDataView = instance.web.Widget.extend({
     },
 
     get_data: function (groupby) {
-        var view_fields = this.row_groupby.concat(this.measure, this.col_groupby);
+        var view_fields = this.groupby.row.concat(this.measure, this.groupby.col);
         return query_groups(this.model, view_fields, this.domain, groupby);
     },
 
@@ -222,11 +226,11 @@ var PivotTable = BasicDataView.extend({
             if (row.expanded) {
                 this.fold_row(row_id);
             } else {
-                if (row.path.length < this.row_groupby.length) {
-                    var field_to_expand = this.row_groupby[row.path.length];
+                if (row.path.length < this.groupby.row.length) {
+                    var field_to_expand = this.groupby.row[row.path.length];
                     this.expand_row(row_id, field_to_expand);
                 } else {
-                    var already_grouped = self.row_groupby.concat(self.col_groupby);
+                    var already_grouped = self.groupby.row.concat(self.groupby.col);
                     var possible_groups = _.difference(self.important_fields, already_grouped);
                     var dropdown_options = {
                         fields: _.map(possible_groups, function (field) {
@@ -252,8 +256,8 @@ var PivotTable = BasicDataView.extend({
     },
 
     clear_groups: function () {
-        this.row_groupby = [];
-        this.col_groupby = [];
+        this.groupby.row = [];
+        this.groupby.col = [];
         this.rows = [];
         this.cols = [];
         this.draw();
@@ -305,7 +309,7 @@ var PivotTable = BasicDataView.extend({
         }
 
         var indent_level = has_parent ? parent.path.length : 0;
-        var value = (this.row_groupby.length > 0) ? data.attributes.value[1] : 'Total';
+        var value = (this.groupby.row.length > 0) ? data.attributes.value[1] : 'Total';
 
 
         var jquery_row = $('<tr></tr>');
@@ -328,7 +332,7 @@ var PivotTable = BasicDataView.extend({
         // rows.splice(index of parent if any,0,row);
         this.rows.push(row);  // to do, insert it properly
 
-        if (this.row_groupby.length === 0) {
+        if (this.groupby.row.length === 0) {
             row.remove_when_expanded = true;
             row.domain = this.domain;
         }
@@ -342,11 +346,11 @@ var PivotTable = BasicDataView.extend({
         var self = this;
         var row = this.get_row(row_id);
 
-        if (row.path.length == this.row_groupby.length) {
-            this.row_groupby.push(field_id);
+        if (row.path.length == this.groupby.row.length) {
+            this.groupby.row.push(field_id);
         }
 
-        var visible_fields = this.row_groupby.concat(this.col_groupby, this.measure);
+        var visible_fields = this.groupby.row.concat(this.groupby.col, this.measure);
 
         if (row.remove_when_expanded) {
             this.rows = [];
@@ -381,15 +385,21 @@ var PivotTable = BasicDataView.extend({
         var row = this.get_row(row_id);
 
         _.each(row.children, function (child_row) {
-            self.remove_row(child_row);            
+            self.remove_row(child_row);
         });
         row.children = [];
 
         row.expanded = false;
         row.html_tr.find('.icon-minus-sign')
             .removeClass('icon-minus-sign')
-            .addClass('icon-plus-sign');;
+            .addClass('icon-plus-sign');
 
+        var fold_levels = _.map(self.rows, function(g) {return g.path.length;});
+        var new_groupby_length = _.reduce(fold_levels, function (x, y) {
+            return Math.max(x,y);
+        }, 0);
+
+        this.groupby.row.splice(new_groupby_length);
     },
 
     remove_row: function (row_id) {
@@ -401,10 +411,11 @@ var PivotTable = BasicDataView.extend({
         });
 
         row.html_tr.remove();
+        removeFromArray(this.rows, row);
     },
 
     draw: function () {
-        this.get_data(this.row_groupby)
+        this.get_data(this.groupby.row)
             .then(this.proxy('build_table'))
             .done(this.proxy('_draw'));
     },
@@ -434,9 +445,9 @@ var PivotTable = BasicDataView.extend({
         var self = this;
         var header;
 
-        if (this.row_groupby.length > 0) {
+        if (this.groupby.row.length > 0) {
             header = '<tr><td class="graph_border">' +
-                    this.fields[this.row_groupby[0]].string +
+                    this.fields[this.groupby.row[0]].string +
                     '</td><td class="graph_border">' +
                     this.measure_label +
                     '</td></tr>';
@@ -471,7 +482,7 @@ var ChartView = BasicDataView.extend({
         var self = this;
         this.$el.empty();
         this.$el.append('<svg></svg>');
-        this.get_data(this.row_groupby).done(function (data) {
+        this.get_data(this.groupby.row).done(function (data) {
             self.render(data);
         });
     },
@@ -554,6 +565,14 @@ var ChartView = BasicDataView.extend({
     },
 
 });
+
+// utility
+function removeFromArray(array, element) {
+    var index = array.indexOf(element);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+}
 
 /**
  * Query the server and return a deferred which will return the data
