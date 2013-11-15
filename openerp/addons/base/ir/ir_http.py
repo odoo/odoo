@@ -9,12 +9,13 @@ import werkzeug.routing
 import openerp
 from openerp import http
 from openerp.http import request
-from openerp.osv import osv
+from openerp.osv import osv, orm
 
 _logger = logging.getLogger(__name__)
 
-class RequestUID(object):
-    pass
+
+# FIXME: replace by proxy on request.uid?
+_uid = object()
 
 class ModelConverter(werkzeug.routing.BaseConverter):
 
@@ -28,7 +29,7 @@ class ModelConverter(werkzeug.routing.BaseConverter):
         # TODO:
         # - raise routing.ValidationError() if no browse record can be createdm
         # - support slug 
-        return request.registry[self.model].browse(request.cr, RequestUID(), int(value), context=request.context)
+        return request.registry[self.model].browse(request.cr, _uid, int(value), context=request.context)
 
     def to_url(self, value):
         return value.id
@@ -45,10 +46,10 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         # TODO:
         # - raise routing.ValidationError() if no browse record can be createdm
         # - support slug
-        return request.registry[self.model].browse(request.cr, RequestUID(), [int(i) for i in value.split(',')], context=request.context)
+        return request.registry[self.model].browse(request.cr, _uid, [int(i) for i in value.split(',')], context=request.context)
 
     def to_url(self, value):
-        return ",".join([i.id for i in value])
+        return ",".join(i.id for i in value)
 
 class ir_http(osv.AbstractModel):
     _name = 'ir.http'
@@ -59,30 +60,16 @@ class ir_http(osv.AbstractModel):
         return {'model': ModelConverter, 'models': ModelsConverter}
 
     def _find_handler(self):
-        # TODO move to __init__(self, registry, cr)
-        if not hasattr(self, 'routing_map'):
-            _logger.info("Generating routing map")
-            cr = request.cr
-            m = request.registry.get('ir.module.module')
-            ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')])
-            installed = set(x['name'] for x in m.read(cr, 1, ids, ['name']))
-            mods = ['', "web"] + sorted(installed)
-            self.routing_map = http.routing_map(mods, False, converters=self._get_converters())
-
-        # fallback to non-db handlers
-        path = request.httprequest.path
-        urls = self.routing_map.bind_to_environ(request.httprequest.environ)
-
-        return urls.match(path)
+        return self.routing_map.bind_to_environ(request.httprequest.environ).match()
 
     def _auth_method_user(self):
         request.uid = request.session.uid
         if not request.uid:
-            raise SessionExpiredException("Session expired")
+            raise http.SessionExpiredException("Session expired")
 
     def _auth_method_admin(self):
         if not request.db:
-            raise SessionExpiredException("No valid database for request %s" % request.httprequest)
+            raise http.SessionExpiredException("No valid database for request %s" % request.httprequest)
         request.uid = openerp.SUPERUSER_ID
 
     def _auth_method_none(self):
@@ -94,9 +81,12 @@ class ir_http(osv.AbstractModel):
         if request.session.uid:
             try:
                 request.session.check_security()
-            except SessionExpiredException, e:
+                # what if error in security.check()
+                #   -> res_users.check()
+                #   -> res_users.check_credentials()
+            except http.SessionExpiredException:
                 request.session.logout()
-                raise SessionExpiredException("Session expired for request %s" % request.httprequest)
+                raise http.SessionExpiredException("Session expired for request %s" % request.httprequest)
         getattr(self, "_auth_method_%s" % auth_method)()
         return auth_method
 
@@ -124,27 +114,33 @@ class ir_http(osv.AbstractModel):
 
         # post process arg to set uid on browse records
         for arg in arguments:
-            if isinstance(arg, openerp.osv.orm.browse_record) and isinstance(arg._uid, RequestUID):
+            if isinstance(arg, orm.browse_record) and arg._uid is _uid:
                 arg._uid = request.uid
 
         # set and execute handler
         try:
             request.set_handler(func, arguments, auth_method)
             result = request.dispatch()
-        except werkzeug.exceptions.HTTPException, e:
-            fn = getattr(self, '_handle_%s' % (e.code,), None)
-            if not fn:
-                fn = self._handle_500
-            return fn(e)
+            if isinstance(result, Exception):
+                raise result
         except Exception, e:
-            return self._handle_500(e)
-
-        if isinstance(result, werkzeug.exceptions.HTTPException):
-            fn = getattr(self, '_handle_%s' % (result.code,), None)
-            if not fn:
-                fn = self._handle_500
-            return fn(result)
+            fn = getattr(self, '_handle_%s' % getattr(e, 'code', 500),
+                         self._handle_500)
+            return fn(e)
 
         return result
+
+    @property
+    def routing_map(self):
+        if not hasattr(self, '_routing_map'):
+            _logger.info("Generating routing map")
+            cr = request.cr
+            m = request.registry.get('ir.module.module')
+            ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')], context=request.context)
+            installed = set(x['name'] for x in m.read(cr, 1, ids, ['name'], context=request.context))
+            mods = ['', "web"] + sorted(installed)
+            self._routing_map = http.routing_map(mods, False, converters=self._get_converters())
+
+        return self._routing_map
 
 # vim:et:
