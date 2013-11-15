@@ -288,7 +288,8 @@ class project(osv.osv):
                                         help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
-        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
+        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached",
+            type='integer')
      }
 
     def _get_type_common(self, cr, uid, context):
