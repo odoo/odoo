@@ -224,3 +224,7 @@ class PaymentTransaction(osv.Model):
                 'partner_phone': False,
             }
         return {'values': values}
+
+    def create_s2s(self, cr, uid, tx_values, cc_values, context=None):
+        tx_id = self.create(cr, uid, tx_values, context=context)
+        return tx_id
