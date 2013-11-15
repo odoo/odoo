@@ -7,7 +7,7 @@
 
     website.InstallAppTour = website.EditorTour.extend({
         id: 'install_app',
-        name: "Instal a new App",
+        name: "Install a new App",
         init: function (editor) {
             var self = this;
             var $body = $(document.body);
