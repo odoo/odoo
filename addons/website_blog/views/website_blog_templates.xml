@@ -287,7 +287,7 @@
         <xpath expr="//div[@id='blog_right_column']" position="inside">
             <section class="mt32 mb32">
             <h4>Our Blogs</h4>
-            <ul class="nav nav-pills nav-stacked">
+            <ul class="list-unstyled">
                 <t t-foreach="categories" t-as="nav_category">
                     <li>
                         <a t-href="/blog/cat/#{nav_category.id}">
