@@ -54,4 +54,5 @@ $(document).ready(function () {
             $(this).parent('.form-group').removeClass('has-success');
         }
     });
+
 });
