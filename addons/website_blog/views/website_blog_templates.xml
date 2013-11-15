@@ -132,7 +132,7 @@
     </template>
 
     <!-- Options: Blog Post: user can reply -->
-    <template id="opt_blog_post_complete_comment" name="Comment Form"
+    <template id="opt_blog_post_complete_comment" name="Allow Comments"
             inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete">
         <xpath expr="//ul[@id='comments-list']" position="after">
             <t t-if="not is_public_user">
