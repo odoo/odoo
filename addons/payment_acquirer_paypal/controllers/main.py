@@ -35,9 +35,11 @@ class PaypalController(http.Controller):
     _notify_url = '/payment/paypal/ipn/'
     _return_url = '/payment/paypal/dpn/'
     _cancel_url = '/payment/paypal/cancel/'
-    # _ipn_url2 = '/payment/paypal/<int:acquirer_id>/ipn/'
 
-    @website.route('/payment/paypal/<int:acquirer_id>/ipn/', type='http', auth='admin')
+    @website.route([
+        '/payment/paypal/test/ipn/'
+        '/payment/paypal/ipn/',
+    ], type='http', auth='admin')
     def paypal_ipn(self, **post):
         print 'Entering paypal_ipn with post', post
         # step 1: return an empty HTTP 200 response -> will be done at the end by returning ''
@@ -65,10 +67,22 @@ class PaypalController(http.Controller):
 
     @website.route([
         '/payment/paypal/test/dpn',
+        '/payment/paypal/dpn',
     ], type='http', auth="public")
-    def paypal_test_success(self, **post):
+    def paypal_dpn(self, **post):
         """ TODO
         """
         cr, uid, context = request.cr, request.uid, request.context
-        print post
+        print 'Entering paypal_dpn with post', post
+        return ''
+
+    @website.route([
+        '/payment/paypal/test/cancel',
+        '/payment/paypal/cancel',
+    ], type='http', auth="public")
+    def paypal_cancel(self, **post):
+        """ TODO
+        """
+        cr, uid, context = request.cr, request.uid, request.context
+        print 'Entering paypal_cancel with post', post
         return ''

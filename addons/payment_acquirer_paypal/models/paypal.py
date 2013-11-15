@@ -64,16 +64,16 @@ class AcquirerPaypal(osv.Model):
             'item_number': reference,
             'amount': amount,
             'currency_code': currency and currency.name or 'EUR',
-            'address1': partner and ' '.join((partner.street, partner.street2)).strip() or ' '.join((partner_values.get('street', ''), partner_values.get('street2', ''))).strip(),
+            'address1': partner and ' '.join((partner.street or '', partner.street2 or '')).strip() or ' '.join((partner_values.get('street', ''), partner_values.get('street2', ''))).strip(),
             'city': partner and partner.city or partner_values.get('city', ''),
             'country': partner and partner.country_id and partner.country_id.name or partner_values.get('country_name', ''),
             'email': partner and partner.email or partner_values.get('email', ''),
             'zip': partner and partner.zip or partner_values.get('zip', ''),
             'first_name': partner and partner.name or partner_values.get('name', '').split()[-1:],
             'last_name': partner and partner.name or partner_values.get('name', '').split()[:-1],
-            'return': '%s/%s' % (base_url, PaypalController._return_url),
-            'notify_url': '%s/%s' % (base_url, PaypalController._notify_url),
-            'cancel_return': '%s/%s' % (base_url, PaypalController._cancel_url),
+            'return': '%s' % urlparse.urljoin(base_url, PaypalController._return_url),
+            'notify_url': '%s' % urlparse.urljoin(base_url, PaypalController._notify_url),
+            'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
         }
         if tx_custom_values:
             tx_values.update(tx_custom_values)
@@ -235,7 +235,3 @@ class TxPaypal(osv.Model):
                     response.get("reason_code")))
             )
         return response
-
-    def _transaction_feedback_paypal(self, **values):
-        print values
-        return True
