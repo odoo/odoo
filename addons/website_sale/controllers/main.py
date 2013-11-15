@@ -2,6 +2,7 @@
 import random
 import uuid
 import simplejson
+import urllib
 
 import werkzeug.exceptions
 
@@ -619,6 +620,7 @@ class Ecommerce(http.Controller):
                 'street': post['shipping_street'],
                 'city': post['shipping_city'],
                 'name': post['shipping_name'],
+                'email': post['email'],
                 'type': 'delivery',
                 'parent_id': partner_id,
                 'country_id': post['shipping_country_id'],
@@ -654,8 +656,13 @@ class Ecommerce(http.Controller):
         if not order or not order.order_line:
             return request.redirect("/shop/checkout/")
 
+        if 'website_sale_order' in context:
+            shipping_pid = context['website_sale_order'].partner_id.id
+        else:
+            shipping_pid = False
+
         values = {
-            'partner': False,
+            'partner': shipping_pid,
             'payment_acquirer_id': payment_acquirer_id,
             'order': order
         }
@@ -677,9 +684,51 @@ class Ecommerce(http.Controller):
                     order.name,
                     order.amount_total,
                     order.pricelist_id.currency_id,
+                    partner_id=shipping_pid,
+                    tx_custom_values={
+                        'return_url': '/shop/payment',
+                    },
                     context=context)
 
         return request.website.render("website_sale.payment", values)
+
+    @website.route(['/shop/payment/transaction/<int:acquirer_id>/'], type='http', auth="public")
+    def payment_transaction(self, acquirer_id=None, **post):
+        """ Hook method that creates a payment.transaction and redirect to the
+        acquirer, using post values to re-create the post action.
+
+        :param int acquirer_id: id of a payment.acquirer record. If not set the
+                                user is redirected to the checkout page
+        :param dict post: should coutain only post data used by the acquirer
+        """
+        # @TDEFIXME: don't know why we received those data, but should not be send to the acquirer
+        post.pop('submit.x', None)
+        post.pop('submit.y', None)
+        cr, uid, context = request.cr, request.uid, request.context
+        payment_obj = request.registry.get('payment.acquirer')
+        transaction_obj = request.registry.get('payment.transaction')
+        order = get_current_order()
+
+        if not order or not order.order_line or not acquirer_id:
+            return request.redirect("/shop/checkout/")
+
+        # find an already existing transaction
+        tx_ids = transaction_obj.search(cr, uid, [
+            ('reference', '=', order.name), ('acquirer_id', '=', acquirer_id)
+        ], context=context)
+        if not tx_ids:
+            transaction_obj.create(cr, uid, {
+                'acquirer_id': acquirer_id,
+                'type': 'form',
+                'amount': order.amount_total,
+                'currency_id': order.pricelist_id.currency_id.id,
+                'partner_id': order.partner_id.id,
+                'reference': order.name,
+            }, context=context)
+
+        acquirer_form_post_url = payment_obj.get_form_action_url(cr, uid, acquirer_id, context=context)
+        acquirer_total_url = '%s?%s' % (acquirer_form_post_url, urllib.urlencode(post))
+        return request.redirect(acquirer_total_url)
 
     @website.route(['/shop/payment_validation/'], type='json', auth="public", multilang=True)
     def payment_validation(self, payment_acquirer_id=None, **post):
