@@ -25,7 +25,7 @@ var Charts = {
                 .width(650)
                 .height(400);
 
-            d3.select('.graph_chart svg')
+            d3.select('.graph_main_content svg')
                 .datum(formatted_data)
                 .attr('width', 650)
                 .attr('height', 400)
@@ -49,7 +49,7 @@ var Charts = {
                 .height(300)
                 .margin({top: 30, right: 20, bottom: 20, left: 60});
 
-            d3.select('.graph_chart svg')
+            d3.select('.graph_main_content svg')
                 .attr('width', 600)
                 .attr('height', 300)
                 .datum(formatted_data)
@@ -68,7 +68,7 @@ var Charts = {
                 .width(650)
                 .height(400);
 
-            d3.select('.graph_chart svg')
+            d3.select('.graph_main_content svg')
                 .datum(formatted_data)
                 .transition().duration(1200)
                 .attr('width', 650)

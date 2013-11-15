@@ -22,18 +22,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
     template: 'GraphView',
     display_name: _lt('Graph'),
     view_type: 'graph',
-    mode: 'pivot',   // pivot => display pivot table, chart => display chart
+    mode: 'pivot',   // pivot, bar_chart, line_chart or pie_chart
 
     events: {
         'click .graph_mode_selection li' : function (event) {
             event.preventDefault();
-            var view_mode = event.target.attributes['data-mode'].nodeValue;
-            if (view_mode === 'data') {
-                this.mode = 'pivot';
-            } else {
-                this.mode = 'chart';
-                this.chart_view.set_mode(view_mode);
-            }
+            this.mode = event.target.attributes['data-mode'].nodeValue;
             this.display_data();
         },
         'click .graph_clear_groups' : function (event) {
@@ -91,31 +85,48 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         return $.when(important_fields_def, field_descr_def)
             .then(function () {
+
+                self.data = {
+                    model: model,
+                    domain: options.domain,
+                    fields: options.fields,
+                    important_fields: options.important_fields,
+                    measure: options.measure,
+                    measure_label: options.fields[options.measure].string,
+                    col_groupby: [],
+                    row_groupby: options.row_groupby,
+                    groups: [],
+                    total: null,
+                };
                 self.pivot_table = new PivotTable(model, options);
-                self.chart_view = new ChartView(model, options);
             })
             .then(function () {
                 return self.pivot_table.appendTo('.graph_main_content');
-            })
-            .then(function() {
-                return self.chart_view.appendTo('.graph_main_content');
             });
+
     },
 
     display_data : function () {
+        var content = this.$el.filter('.graph_main_content');
+        content.find('svg').remove();
+        var self = this;
         if (this.mode === 'pivot') {
-            this.chart_view.hide();
             this.pivot_table.show();
+
         } else {
             this.pivot_table.hide();
-            this.chart_view.show();
+            content.append('<svg></svg>');
+            var view_fields = this.data.row_groupby.concat(this.data.measure, this.data.col_groupby);
+            query_groups(this.data.model, view_fields, this.data.domain, this.data.row_groupby).then(function (groups) {
+                Charts[self.mode](groups, self.data.measure, self.data.measure_label);
+            });
+
         }
     },
 
     do_search: function (domain, context, group_by) {
-        this.domain = new instance.web.CompoundDomain(domain);
+        this.data.domain = new instance.web.CompoundDomain(domain);
         this.pivot_table.set_domain(domain);
-        this.chart_view.set_domain(domain);
         this.display_data();
     },
 
@@ -127,14 +138,15 @@ instance.web_graph.GraphView = instance.web.View.extend({
 });
 
 
-
  /**
-  * BasicDataView widget.  Basic widget to manage show/hide functionality
-  * and to initialize some attributes.  It is inherited by PivotTable 
-  * and ChartView widget.
+  * PivotTable widget.  It displays the data in tabular data and allows the
+  * user to drill down and up in the table
   */
-var BasicDataView = instance.web.Widget.extend({
-
+var PivotTable = instance.web.Widget.extend({
+    template: 'pivot_table',
+    rows: [],
+    cols: [],
+    current_row_id : 0,
     need_redraw: false,
 
     // Input parameters: 
@@ -198,54 +210,12 @@ var BasicDataView = instance.web.Widget.extend({
         this.$el.css('display', 'none');
     },
 
-    draw: function() {
-    },
 
     get_data: function (groupby) {
         var view_fields = this.groupby.row.concat(this.measure, this.groupby.col);
         return query_groups(this.model, view_fields, this.domain, groupby);
     },
 
-});
-
-
-
- /**
-  * ChartView widget.  It displays the data in chart form, using the nvd3
-  * library.  Various modes include bar charts, pie charts or line charts.
-  */
-var ChartView = BasicDataView.extend({
-    template: 'chart_view',
-
-    set_mode: function (mode) {
-        this.mode = mode;
-        console.log("mode",mode);
-        this.render = this['render_' + mode];
-        this.need_redraw = true;
-    },
-
-    draw: function () {
-        var self = this;
-        this.$el.empty();
-        console.log("measrue",self.measure);
-        this.$el.append('<svg></svg>');
-        this.get_data(this.groupby.row).done(function (data) {
-            Charts[self.mode](data, self.measure, self.measure_label);
-        });
-    },
-
-
-
-});
- /**
-  * PivotTable widget.  It displays the data in tabular data and allows the
-  * user to drill down and up in the table
-  */
-var PivotTable = BasicDataView.extend({
-    template: 'pivot_table',
-    rows: [],
-    cols: [],
-    current_row_id : 0,
 
     events: {
         'click .web_graph_click' : function (event) {
@@ -295,10 +265,6 @@ var PivotTable = BasicDataView.extend({
         this.rows = [];
         this.cols = [];
         this.draw();
-    },
-
-    init: function (model, options) {
-        this._super(model, options);
     },
 
     generate_id: function () {
