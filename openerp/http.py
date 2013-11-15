@@ -100,6 +100,7 @@ class WebRequest(object):
         self.disable_db = False
         self.uid = None
         self.func = None
+        self.func_arguments = {}
         self.auth_method = None
         self._cr_cm = None
         self._cr = None
@@ -143,7 +144,8 @@ class WebRequest(object):
 
     def set_handler(self, func, arguments, auth):
         # is this needed ?
-        arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
+        arguments = dict((k, v) for k, v in arguments.iteritems()
+                         if not k.startswith("_ignored_"))
 
         self.func = func
         self.func_request_type = func.exposed
@@ -167,6 +169,9 @@ class WebRequest(object):
                 if self.func_request_type != self._request_type:
                     raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
                         % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
+
+                kwargs.update(self.func_arguments)
+
                 # Backward for 7.0
                 if getattr(self.func, '_first_arg_is_req', False):
                     args = (request,) + args
@@ -986,6 +991,11 @@ class Root(object):
 
         except werkzeug.exceptions.HTTPException, e:
             return e(environ, start_response)
+
+    def get_db_router(self, db):
+        if not db:
+            return self.nodb_routing_map
+        return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
     httprequest = httprequest or request.httprequest

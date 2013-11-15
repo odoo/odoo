@@ -2,6 +2,7 @@
 # ir_http modular http routing
 #----------------------------------------------------------
 import logging
+import re
 
 import werkzeug.exceptions
 import werkzeug.routing
@@ -22,14 +23,12 @@ class ModelConverter(werkzeug.routing.BaseConverter):
     def __init__(self, url_map, model=False):
         super(ModelConverter, self).__init__(url_map)
         self.model = model
-        # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
         self.regex = '([0-9]+)'
 
     def to_python(self, value):
-        # TODO:
-        # - raise routing.ValidationError() if no browse record can be createdm
-        # - support slug 
-        return request.registry[self.model].browse(request.cr, _uid, int(value), context=request.context)
+        m = re.match(self.regex, value)
+        return request.registry[self.model].browse(
+            request.cr, _uid, int(m.group(1)), context=request.context)
 
     def to_url(self, value):
         return value.id
@@ -60,7 +59,7 @@ class ir_http(osv.AbstractModel):
         return {'model': ModelConverter, 'models': ModelsConverter}
 
     def _find_handler(self):
-        return self.routing_map.bind_to_environ(request.httprequest.environ).match()
+        return self.routing_map().bind_to_environ(request.httprequest.environ).match()
 
     def _auth_method_user(self):
         request.uid = request.session.uid
@@ -113,7 +112,7 @@ class ir_http(osv.AbstractModel):
             return self._handle_403(e)
 
         # post process arg to set uid on browse records
-        for arg in arguments:
+        for arg in arguments.itervalues():
             if isinstance(arg, orm.browse_record) and arg._uid is _uid:
                 arg._uid = request.uid
 
@@ -130,7 +129,6 @@ class ir_http(osv.AbstractModel):
 
         return result
 
-    @property
     def routing_map(self):
         if not hasattr(self, '_routing_map'):
             _logger.info("Generating routing map")
