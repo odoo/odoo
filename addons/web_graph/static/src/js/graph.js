@@ -126,6 +126,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
 });
 
+
+
  /**
   * BasicDataView widget.  Basic widget to manage show/hide functionality
   * and to initialize some attributes.  It is inherited by PivotTable 
@@ -206,6 +208,35 @@ var BasicDataView = instance.web.Widget.extend({
 
 });
 
+
+
+ /**
+  * ChartView widget.  It displays the data in chart form, using the nvd3
+  * library.  Various modes include bar charts, pie charts or line charts.
+  */
+var ChartView = BasicDataView.extend({
+    template: 'chart_view',
+
+    set_mode: function (mode) {
+        this.mode = mode;
+        console.log("mode",mode);
+        this.render = this['render_' + mode];
+        this.need_redraw = true;
+    },
+
+    draw: function () {
+        var self = this;
+        this.$el.empty();
+        console.log("measrue",self.measure);
+        this.$el.append('<svg></svg>');
+        this.get_data(this.groupby.row).done(function (data) {
+            Charts[self.mode](data, self.measure, self.measure_label);
+        });
+    },
+
+
+
+});
  /**
   * PivotTable widget.  It displays the data in tabular data and allows the
   * user to drill down and up in the table
@@ -479,106 +510,8 @@ var PivotTable = BasicDataView.extend({
     }
 });
 
- /**
-  * ChartView widget.  It displays the data in chart form, using the nvd3
-  * library.  Various modes include bar charts, pie charts or line charts.
-  */
-var ChartView = BasicDataView.extend({
-    template: 'chart_view',
 
-    set_mode: function (mode) {
-        this.render = this['render_' + mode];
-        this.need_redraw = true;
-    },
-
-    draw: function () {
-        var self = this;
-        this.$el.empty();
-        this.$el.append('<svg></svg>');
-        this.get_data(this.groupby.row).done(function (data) {
-            self.render(data);
-        });
-    },
-
-    format_data:  function (datapt) {
-        var val = datapt.attributes;
-        return {
-            x: datapt.attributes.value[1],
-            y: this.measure ? val.aggregates[this.measure] : val.length,
-        };
-    },
-
-    render_bar_chart: function (data) {
-        var formatted_data = [{
-                key: 'Bar chart',
-                values: _.map(data, this.proxy('format_data')),
-            }];
-
-        nv.addGraph(function () {
-            var chart = nv.models.discreteBarChart()
-                .tooltips(false)
-                .showValues(true)
-                .staggerLabels(true)
-                .width(650)
-                .height(400);
-
-            d3.select('.graph_chart svg')
-                .datum(formatted_data)
-                .attr('width', 650)
-                .attr('height', 400)
-                .call(chart);
-
-            nv.utils.windowResize(chart.update);
-            return chart;
-        });
-    },
-
-    render_line_chart: function (data) {
-        var formatted_data = [{
-                key: this.measure_label,
-                values: _.map(data, this.proxy('format_data'))
-            }];
-
-        nv.addGraph(function () {
-            var chart = nv.models.lineChart()
-                .x(function (d,u) { return u; })
-                .width(600)
-                .height(300)
-                .margin({top: 30, right: 20, bottom: 20, left: 60});
-
-            d3.select('.graph_chart svg')
-                .attr('width', 600)
-                .attr('height', 300)
-                .datum(formatted_data)
-                .call(chart);
-
-            return chart;
-          });
-    },
-
-    render_pie_chart: function (data) {
-        var formatted_data = _.map(data, this.proxy('format_data'));
-
-        nv.addGraph(function () {
-            var chart = nv.models.pieChart()
-                .color(d3.scale.category10().range())
-                .width(650)
-                .height(400);
-
-            d3.select('.graph_chart svg')
-                .datum(formatted_data)
-                .transition().duration(1200)
-                .attr('width', 650)
-                .attr('height', 400)
-                .call(chart);
-
-            nv.utils.windowResize(chart.update);
-            return chart;
-        });
-    },
-
-});
-
+////////////////////////////////////////////////////////////////////////////////
 // utility
 function removeFromArray(array, element) {
     var index = array.indexOf(element);
