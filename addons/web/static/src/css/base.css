@@ -741,9 +741,6 @@
   display: block;
   color: #4c4c4c;
   text-decoration: none;
-  width: 200px;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 .openerp .oe_dropdown_menu > li > a:hover {
   text-decoration: none;
@@ -1455,7 +1452,7 @@
   display: table-row;
   height: inherit;
 }
-.openerp .oe_view_manager .oe_view_manager_view_kanban {
+.openerp .oe_view_manager .oe_view_manager_view_kanban:not(:empty) {
   height: inherit;
 }
 .openerp .oe_view_manager table.oe_view_manager_header {

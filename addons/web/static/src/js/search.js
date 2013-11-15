@@ -1540,7 +1540,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             context: context
         }).then(function (results) {
             if (_.isEmpty(results)) { return null; }
-            return [{label: _.escape(self.attrs.string)}].concat(
+            return [{label: self.attrs.string}].concat(
                 _(results).map(function (result) {
                     return {
                         label: _.escape(result[1]),
@@ -1726,7 +1726,10 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         var $name = this.$('input:first');
         var private_filter = !this.$('#oe_searchview_custom_public').prop('checked');
         var set_as_default = this.$('#oe_searchview_custom_default').prop('checked');
-
+        if (_.isEmpty($name.val())){
+            this.do_warn(_t("Error"), _t("Filter name is required."));
+            return false;
+        }
         var search = this.view.build_search_data();
         instance.web.pyeval.eval_domains_and_contexts({
             domains: search.domains,

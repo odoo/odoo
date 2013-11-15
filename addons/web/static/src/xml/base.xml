@@ -684,7 +684,8 @@
 <tr t-name="TreeView.rows"
         t-foreach="records" t-as="record"
         t-att-id="'treerow_' + record.id"
-        t-att-data-id="record.id" t-att-data-level="level + 1">
+        t-att-data-id="record.id" t-att-data-level="level + 1"
+        t-att-data-row-parent-id="row_parent_id">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
     <t t-set="rank" t-value="'oe-treeview-first'"/>
@@ -1651,8 +1652,8 @@
         <ul class="oe_searchview_custom_list"/>
         <div class="oe_searchview_custom">
             <h4>Save current filter</h4>
-            <form>
-                <p><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
+            <form class="oe_form">
+                <p class="oe_form_required"><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
                 <p>
                     <input id="oe_searchview_custom_public" type="checkbox"/>
                     <label for="oe_searchview_custom_public">Share with all users</label>

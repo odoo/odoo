@@ -632,9 +632,6 @@ $sheet-padding: 16px
                 display: block
                 color: #4c4c4c
                 text-decoration: none
-                width: 200px
-                text-overflow: ellipsis
-                overflow: hidden
                 &:hover
                     text-decoration: none
     .oe_dropdown_arrow:after
@@ -1171,7 +1168,7 @@ $sheet-padding: 16px
         .oe_view_manager_body
             display: table-row
             height: inherit
-        .oe_view_manager_view_kanban
+        .oe_view_manager_view_kanban:not(:empty)
             height: inherit
 
         table.oe_view_manager_header

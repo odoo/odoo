@@ -163,12 +163,13 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             var is_loaded = 0,
                 $this = $(this),
                 record_id = $this.data('id'),
+                row_parent_id = $this.data('row-parent-id'),
                 record = self.records[record_id],
                 children_ids = record[self.children_field];
 
             _(children_ids).each(function(childid) {
-                if (self.$el.find('#treerow_' + childid).length) {
-                    if (self.$el.find('#treerow_' + childid).is(':hidden')) {
+                if (self.$el.find('[id=treerow_' + childid + '][data-row-parent-id='+ record_id +']').length ) {
+                    if (self.$el.find('[id=treerow_' + childid + '][data-row-parent-id='+ record_id +']').is(':hidden')) {
                         is_loaded = -1;
                     } else {
                         is_loaded++;
@@ -180,7 +181,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                     self.getdata(record_id, children_ids);
                 }
             } else {
-                self.showcontent(record_id, is_loaded < 0);
+                self.showcontent($this, record_id, is_loaded < 0);
             }
         });
     },
@@ -192,7 +193,6 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             _(records).each(function (record) {
                 self.records[record.id] = record;
             });
-
             var $curr_node = self.$el.find('#treerow_' + id);
             var children_rows = QWeb.render('TreeView.rows', {
                 'records': records,
@@ -201,9 +201,9 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                 'fields': self.fields,
                 'level': $curr_node.data('level') || 0,
                 'render': instance.web.format_value,
-                'color_for': self.color_for
+                'color_for': self.color_for,
+                'row_parent_id': id
             });
-
             if ($curr_node.length) {
                 $curr_node.addClass('oe_open');
                 $curr_node.after(children_rows);
@@ -243,14 +243,13 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
     },
 
     // show & hide the contents
-    showcontent: function (record_id, show) {
-        this.$el.find('#treerow_' + record_id)
-                .toggleClass('oe_open', show);
-
+    showcontent: function (curnode,record_id, show) {
+        curnode.parent('tr').toggleClass('oe_open', show);
         _(this.records[record_id][this.children_field]).each(function (child_id) {
-            var $child_row = this.$el.find('#treerow_' + child_id);
+            var $child_row = this.$el.find('[id=treerow_' + child_id + '][data-row-parent-id='+ curnode.data('id') +']');
             if ($child_row.hasClass('oe_open')) {
-                this.showcontent(child_id, false);
+                $child_row.toggleClass('oe_open',show);
+                this.showcontent($child_row, child_id, false);
             }
             $child_row.toggle(show);
         }, this);

@@ -3027,7 +3027,7 @@ instance.web.form.CompletionFieldMixin = {
                 values.push({
                     label: _t("Search More..."),
                     action: function() {
-                        dataset.name_search(search_val, self.build_domain(), 'ilike', false).done(function(data) {
+                        dataset.name_search(search_val, self.build_domain(), 'ilike', 160).done(function(data) {
                             self._search_create_popup("search", data);
                         });
                     },
@@ -3649,7 +3649,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 _.extend(view.options, {
                     addable: null,
                     selectable: self.multi_selection,
-                    sortable: false,
+                    sortable: true,
                     import_enabled: false,
                     deletable: true
                 });
@@ -4044,7 +4044,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             else
                 return $.when();
         }).done(function () {
-            self.handle_button(name, id, callback);
+            if (!self.o2m.options.reload_on_button) {
+                self.handle_button(name, id, callback);
+            }else {
+                self.handle_button(name, id, function(){
+                    self.o2m.view.reload();
+                });
+            }
         });
     },
 
