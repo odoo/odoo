@@ -63,24 +63,20 @@ class WebsitePayment(http.Controller):
         currency_obj = request.registry['res.currency']
 
         ogone_id = acquirer_obj.search(cr, uid, [('name', '=', 'ogone')], limit=1, context=context)[0]
-
         currency_id = currency_obj.search(cr, uid, [('name', '=', 'EUR')], limit=1, context=context)[0]
-        currency = currency_obj.browse(cr, uid, currency_id, context=context)
 
         nbr_tx = payment_obj.search(cr, uid, [], count=True, context=context)
         tx_id = payment_obj.create(cr, uid, {
-            'reference': '%s' % (nbr_tx),
+            'reference': 'test_ref_%s' % (nbr_tx),
             'amount': 1.95,
             'currency_id': currency_id,
             'acquirer_id': ogone_id,
+            'partner_name': 'Norbert Buyer',
+            'partner_email': 'norbert.buyer@example.com',
+            'partner_lang': 'fr_FR',
         }, context=context)
 
-        partner_values = {
-            'name': 'Norbert Poilu',
-            'lang': 'fr_FR',
-        }
-
-        ogone_form = acquirer_obj.render(cr, uid, ogone_id, None, None, None, tx_id=tx_id, partner_values=partner_values, context=context)
+        ogone_form = acquirer_obj.render(cr, uid, ogone_id, None, None, None, tx_id=tx_id, context=context)
         ogone = acquirer_obj.browse(cr, uid, ogone_id, context=context)
 
         values = {
