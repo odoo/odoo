@@ -101,10 +101,12 @@
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <tree string="Payment Transactions">
+                    <field name="name"/>
+                    <field name="reference"/>
+                    <field name="acquirer_id"/>
                     <field name="partner_id"/>
                     <field name="partner_name"/>
                     <field name="state"/>
-                    <field name="reference"/>
                 </tree>
             </field>
         </record>
@@ -113,9 +115,10 @@
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <search>
+                    <field name="reference"/>
+                    <field name="acquirer_id"/>
                     <field name="partner_id"/>
                     <field name="partner_name"/>
-                    <field name="reference"/>
                 </search>
             </field>
         </record>

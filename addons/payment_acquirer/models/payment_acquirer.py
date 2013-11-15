@@ -70,8 +70,17 @@ class PaymentAcquirer(osv.Model):
          - reference: reference of the transaction
          - partner: the current partner browse record, if any (not necessarily set)
          - partner_values: a dictionary of partner-related values
-         - tx_values: a dictionary of transaction related values that depends on
-                      on the acquirer
+         - tx_custom_values: a dictionary of transaction related values that depends
+                             on the acquirer. Some specific keys should be managed
+                             in each provider, depending on the features it offers:
+
+          - 'feedback_url': feedback URL, controler that manage answer of the acquirer
+                            (without base url)
+          - 'return_url': URL for coming back after payment validation (wihout
+                          base url)
+          - 'cancel_url': URL if the client cancels the payment
+          - 'error_url': URL if there is an issue with the payment
+
          - context: OpenERP context dictionary
 
         :param string reference: the transaction reference
@@ -114,6 +123,12 @@ class PaymentAcquirer(osv.Model):
             'context': context,
         }
         return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.id, qweb_context, engine='ir.qweb', context=context)
+
+    def get_form_action_url(self, cr, uid, id, context=None):
+        acquirer = self.browse(cr, uid, id, context=context)
+        if hasattr(self, '%s_get_form_action_url' % acquirer.name):
+            return getattr(self, '%s_get_form_action_url' % acquirer.name)(cr, uid, id, context=context)
+        return False
 
 
 class PaymentTransaction(osv.Model):
@@ -158,6 +173,10 @@ class PaymentTransaction(osv.Model):
         'partner_reference': fields.char('Buyer Reference'),
     }
 
+    _sql_constraints = [
+        ('reference_uniq', 'UNIQUE(reference)', 'The payment transaction reference must be unique!'),
+    ]
+
     _defaults = {
         'date_create': fields.datetime.now,
         'type': 'form',
@@ -188,7 +207,7 @@ class PaymentTransaction(osv.Model):
                 'partner_lang': partner.lang,
                 'partner_email': partner.email,
                 'partner_zip': partner.zip,
-                'partner_address': ' '.join((partner.street, partner.street2)).strip(),
+                'partner_address': ' '.join((partner.street or '', partner.street2 or '')).strip(),
                 'partner_city': partner.city,
                 'partner_country_id': partner.country_id.id,
                 'partner_phone': partner.phone,
@@ -205,38 +224,3 @@ class PaymentTransaction(osv.Model):
                 'partner_phone': False,
             }
         return {'values': values}
-
-    def validate(self, cr, uid, ids, context=None):
-        """
-        return (status, retry_time, log)
-            status: "validated" or "refused" or "pending"
-            retry_time = False (don't retry validation) or int (seconds for retry validation)
-            log = str
-        """
-        res = []
-        for tx in self.browse(cr, uid, ids, context=context):
-            method = getattr(self, '%s_validate')
-            status, retry_time, log = method(cr, uid, [tx.id], context=context)[0]
-
-            # log validation on transaction
-            self.message_post(
-                cr, uid, tx.id,
-                body=log or "",
-                subject="%s%s" % (status, retry_time and ": %s" % retry_time or ""),
-                type='notification',
-                context=context
-            )
-
-            if status == "validated":
-                _logger.info("Tx Validated for %s:%s" % (tx.acquirer_id.name, tx.reference))
-            elif status == "pending":
-                _logger.debug("Tx Pending for %s:%s. Reason: %s" % (tx.acquirer_id.name, tx.reference))
-            else:
-                _logger.error("Tx Refused for %s:%s. Reason: %s" % (tx.acquirer_id.name, tx.reference))
-
-            res.append((status, retry_time, log))
-
-        return res
-
-    def create_s2s(self, cr, uid, context=None):
-        pass
