@@ -1819,7 +1819,7 @@ class BaseModel(object):
             in_tree_view = node.tag == 'tree'
 
         elif node.tag == 'calendar':
-            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
+            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day','attendee'):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
