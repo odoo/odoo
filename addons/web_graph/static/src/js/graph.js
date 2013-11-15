@@ -144,7 +144,6 @@ var BasicDataView = instance.web.Widget.extend({
     //      measure: quantity to display. either a field from the model, or 
     //            null, in which case we use the "count" measure
     init: function (model, options) {
-        console.log("initializing", model, options);
         var self = this;
         this.model = model;
         this.fields = options.fields;
@@ -218,7 +217,7 @@ var PivotTable = BasicDataView.extend({
     current_row_id : 0,
 
     events: {
-        'click .graph_border > a' : function (event) {
+        'click .web_graph_click' : function (event) {
             var self = this;
             event.preventDefault();
             var row_id = event.target.attributes['data-row-id'].nodeValue;
@@ -241,6 +240,9 @@ var PivotTable = BasicDataView.extend({
                     };
                     this.dropdown = $(QWeb.render('field_selection', dropdown_options));
                     $(event.target).after(this.dropdown);
+                    this.dropdown.css({position:"absolute",
+                                       left:event.pageX, 
+                                       top:event.pageY});
                     $('.field-selection').next('.dropdown-menu').toggle();
                 }
             }
@@ -292,9 +294,18 @@ var PivotTable = BasicDataView.extend({
             });
         }
         if (options && options.foldable) {
-            attrs.push('<a data-row-id="'+ options.row_id + '" href="#" class="icon-plus-sign"> </a>');
+            attrs.push('<span data-row-id="'+ options.row_id + '" href="#" class="icon-plus-sign web_graph_click">');
         }
-        return attrs.join(' ') + content + '</td>';
+        if (content) {
+            attrs.push(content);
+        } else {
+            attrs.push('Undefined');
+        }
+        if (options && options.foldable) {
+            attrs.push('</span>');
+        }
+        attrs.push('</td>');
+        return attrs.join(' ');
     },
 
     make_row: function (data, parent_id) {
