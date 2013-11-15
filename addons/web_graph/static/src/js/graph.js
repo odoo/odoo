@@ -144,6 +144,7 @@ var BasicDataView = instance.web.Widget.extend({
     //      measure: quantity to display. either a field from the model, or 
     //            null, in which case we use the "count" measure
     init: function (model, options) {
+        console.log("initializing", model, options);
         var self = this;
         this.model = model;
         this.fields = options.fields;
@@ -422,6 +423,7 @@ var PivotTable = BasicDataView.extend({
 
     build_table: function (data) {
         var self = this;
+        this.rows = [];
 
         this.cols = [{
             path: [],
