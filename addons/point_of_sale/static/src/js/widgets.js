@@ -560,26 +560,32 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var products = this.pos.db.get_product_by_category(this.category.id);
             self.pos.get('products').reset(products);
 
+
+            var searchtimeout = null;
             // filter the products according to the search string
             this.$('.searchbox input').keyup(function(event){
-                console.log('event',event);
-                query = $(this).val().toLowerCase();
-                if(query){
-                    if(event.which === 13){
-                        if( self.pos.get('products').size() === 1 ){
-                            self.pos.get('selectedOrder').addProduct(self.pos.get('products').at(0));
-                            self.clear_search();
+                clearTimeout(searchtimeout);
+
+                var query = $(this).val().toLowerCase();
+                
+                searchtimeout = setTimeout(function(){
+                    if(query){
+                        if(event.which === 13){
+                            if( self.pos.get('products').size() === 1 ){
+                                self.pos.get('selectedOrder').addProduct(self.pos.get('products').at(0));
+                                self.clear_search();
+                            }
+                        }else{
+                            var products = self.pos.db.search_product_in_category(self.category.id, query);
+                            self.pos.get('products').reset(products);
+                            self.$('.search-clear').fadeIn();
                         }
                     }else{
-                        var products = self.pos.db.search_product_in_category(self.category.id, query);
+                        var products = self.pos.db.get_product_by_category(self.category.id);
                         self.pos.get('products').reset(products);
-                        self.$('.search-clear').fadeIn();
+                        self.$('.search-clear').fadeOut();
                     }
-                }else{
-                    var products = self.pos.db.get_product_by_category(self.category.id);
-                    self.pos.get('products').reset(products);
-                    self.$('.search-clear').fadeOut();
-                }
+                },200);
             });
 
             //reset the search when clicking on reset
