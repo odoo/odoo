@@ -33,7 +33,6 @@ import openerp
 import hashlib
 import re
 
-import ipdb;
 
 #
 # crm.meeting is defined here so that it may be used by modules other than crm,
@@ -186,6 +185,7 @@ class crm_meeting(osv.Model):
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
         'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),        
+        
         'state': fields.selection([('tentative', 'Uncertain'),('cancelled', 'Cancelled'),('confirmed', 'Confirmed'),],'Status', readonly=True),
         
         
@@ -215,7 +215,8 @@ class crm_meeting(osv.Model):
         'end_date': fields.date('Repeat Until'),
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         
-        'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
+        'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),        
+        'color_partner_id': fields.related('user_id','partner_id','id',type="int",string="colorize",store=False), #Color of creator
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."),
 
         'categ_ids': fields.many2many('crm.meeting.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
@@ -224,7 +225,6 @@ class crm_meeting(osv.Model):
         'alarm_ids': fields.many2many('calendar.alarm', string='Reminders'),
     }
     _defaults = {
-        'state': 'open',
         'end_type': 'count',
         'count': 1,
         'rrule_type': False,
@@ -234,7 +234,8 @@ class crm_meeting(osv.Model):
         'month_by': 'date',
         'interval': 1,
         'active': 1,
-        'user_id': lambda self, cr, uid, ctx: uid
+        'user_id': lambda self, cr, uid, ctx: uid,
+        'partner_ids': lambda self, cr, uid, ctx: [self.pool.get('res.users').browse(cr, uid, [uid],context=ctx)[0].partner_id.id]
     }
         
     def _check_closing_date(self, cr, uid, ids, context=None):
@@ -317,7 +318,7 @@ class crm_meeting(osv.Model):
         att_obj = self.pool.get('calendar.attendee')
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, uid, uid, context=context)
-        for event in self.browse(cr, uid, ids, context):
+        for event in self.browse(cr, uid, ids, context):            
             attendees = {}
             for att in event.attendee_ids:
                 attendees[att.partner_id.id] = True
@@ -336,17 +337,10 @@ class crm_meeting(osv.Model):
                 }, context=context)
                 if partner.email:
                     mail_to = mail_to + " " + partner.email
-                self.write(cr, uid, [event.id], {
-                    'attendee_ids': [(4, att_id)]
-                }, context=context)
                 new_attendees.append(att_id)
-                
-            #TODO : MOVE WRITE HERE... NOT IN FOR
             
-            if mail_to and current_user.email:
-                is_sent_mail = att_obj._send_mail(cr, uid, new_attendees, mail_to, email_from = current_user.email, context=context)
-                if is_sent_mail:
-                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), context=context)
+            self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]},context=context)
+                                      
         return True
 
     def get_recurrent_ids(self, cr, uid, select, domain, limit=100, context=None):
@@ -553,8 +547,10 @@ class crm_meeting(osv.Model):
             :param value: value format: [[6, 0, [3, 4]]]
         """
         res = {'value': {}}
+        
         if not value or not value[0] or not value[0][0] == 6:
             return
+        
         res.update(self.check_partners_email(cr, uid, value[0][2], context=context))
         return res
 
@@ -593,34 +589,55 @@ class crm_meeting(osv.Model):
             del context['default_date']
         return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
-    def do_decline(self, cr, uid, ids, context=None):
+    def do_sendmail(self, cr, uid, ids, context=None):
+        for event in self.browse(cr, uid, ids, context):            
+            attendees_dest = []
+            
+            for partner in event.partner_ids:
+                att_id = self.pool.get('calendar.attendee').search(cr, uid,[('partner_id','=',partner.id),('ref','=',event.id)], context=context)
+                attendees_dest.append(att_id[0])
+                               
+            current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)                       
+            if current_user.email:
+                is_sent_mail = self.pool.get('calendar.attendee')._send_mail(cr, uid, attendees_dest, '', email_from = current_user.email, context=context)
+                if is_sent_mail:
+                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), context=context)
+        return;
+
+    def do_attendee_decline(self, cr, uid, ids, context=None):
          attendee_pool = self.pool.get('calendar.attendee')
          attendee = self._find_my_attendee(cr, uid, ids, context)
          return attendee_pool.do_decline(cr, uid, [attendee.id], context=context)
-
-    def do_accept(self, cr, uid, ids, context=None):
+     
+    def do_attendee_accept(self, cr, uid, ids, context=None):
         attendee_pool = self.pool.get('calendar.attendee')
         attendee = self._find_my_attendee(cr, uid, ids, context)
         return attendee_pool.do_accept(cr, uid, [attendee.id], context=context)
     
-    def do_tentative(self, cr, uid, ids, context=None, *args):
-        """ Makes event invitation as Tentative
-        @param ids: List of Event IDs
-        """
-        return self.write(cr, uid, ids, {'state': 'tentative'}, context)
+    def do_attendee_maybe(self, cr, uid, ids, context=None):
+        attendee_pool = self.pool.get('calendar.attendee')
+        attendee = self._find_my_attendee(cr, uid, ids, context)
+        return attendee_pool.do_tentative(cr, uid, [attendee.id], context=context)
 
-    def do_cancel(self, cr, uid, ids, context=None, *args):
-        """ Makes event invitation as Tentative
+    def do_meeting_uncertain(self, cr, uid, ids, context=None, *args):
+          """ Makes event invitation as Tentative
+          @param ids: List of Event IDs          """
+          return self.write(cr, uid, ids, {'state': 'tentative'}, context)
+ 
+    def do_meeting_cancel(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as cancelles
         @param ids: List of Event IDs
         """
         return self.write(cr, uid, ids, {'state': 'cancelled'}, context)
-
-    def do_confirm(self, cr, uid, ids, context=None, *args):
+ 
+    def do_meeting_confirm(self, cr, uid, ids, context=None, *args):
         """ Makes event invitation as Tentative
         @param ids: List of Event IDs
         @param context: A standard dictionary for contextual values
         """
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
+
+
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
         #Used for view in controller 
@@ -653,7 +670,6 @@ class crm_meeting(osv.Model):
     
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
         print 'IN SEARCH',args
-        
         if context is None:
             context={}        
     
@@ -777,7 +793,7 @@ class crm_meeting(osv.Model):
 
         if vals.get('duration', '') and vals.get('duration', '')==24 and not 'allday' in vals: #If from quick create
             vals['allday'] = True
-        
+                 
         res = super(crm_meeting, self).create(cr, uid, vals, context)
         #res = self.write(cr, uid, id_res,vals, context)
         
@@ -804,7 +820,7 @@ class crm_meeting(osv.Model):
         return res
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        print 'IN READ'
+        print 'IN READ [',ids,']'
         
         if context is None:
             context = {}
@@ -829,10 +845,7 @@ class crm_meeting(osv.Model):
         
         
         for base_calendar_id, real_id in select:
-            try:
-                res = real_data[real_id].copy()
-            except:
-                ipdb.set_trace()
+            res = real_data[real_id].copy()
                 
             res = real_data[real_id].copy()
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
@@ -842,7 +855,6 @@ class crm_meeting(osv.Model):
                 if not (ls[1] in recurrent_dates or ls[1] in res['exdate']): #when update a recurrent event
                     print 'will raise' 
                     #NEED TO UPDATE ACTIVE ID ?
-                    ipdb.set_trace()
                     #NEED TO CONVERT EXDATE IN STR_DATE
 #                     raise KeyError(
 #                         'Virtual id %r is not valid, event %r can '
@@ -850,7 +862,6 @@ class crm_meeting(osv.Model):
                 res['date'] = ls[1]
                 res['date_deadline'] = ls[2]
             res['id'] = base_calendar_id
-
             result.append(res)
 
         for r in result:

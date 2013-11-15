@@ -114,9 +114,6 @@ class calendar_attendee(osv.osv):
     """
     _name = 'calendar.attendee'
     _description = 'Attendee information'
-    _rec_name = 'cutype'
-
-    __attribute__ = {}
 
     def _get_address(self, name=None, email=None):
         """
@@ -162,7 +159,6 @@ class calendar_attendee(osv.osv):
         return result
 
     _columns = {
-        'cutype': fields.selection([('individual', 'Individual'), ('group', 'Group'), ('resource', 'Resource'), ('room', 'Room'), ('unknown', 'Unknown') ], 'Invite Type', help="Specify the type of Invitation"),
         'state': fields.selection([('needs-action', 'Needs Action'),('tentative', 'Uncertain'),('declined', 'Declined'),('accepted', 'Accepted')], 'Status', readonly=True, help="Status of the attendee's participation"),
         'cn': fields.function(_compute_data, string='Common name', type="char", size=124, multi='cn', store=True),
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."),
@@ -172,12 +168,10 @@ class calendar_attendee(osv.osv):
         'event_end_date': fields.function(_compute_data, string='Event End Date', type="datetime", multi='event_end_date'),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
         'access_token':fields.char('Invitation Token', size=256),        
-        'ref': fields.many2one('crm.meeting','Meeting linked'),
-        
+        'ref': fields.many2one('crm.meeting','Meeting linked'),        
     }
     _defaults = {
-        'state': 'needs-action',
-        'cutype': 'individual',
+        'state': 'needs-action',        
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -187,9 +181,7 @@ class calendar_attendee(osv.osv):
         """
         Make entry on email and availability on change of partner_id field.
         @param partner_id: changed value of partner id
-        @return: dictionary of values which put value in email and availability fields
-        """
-        
+        """        
         if not partner_id:
             return {'value': {'email': ''}}
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -198,11 +190,7 @@ class calendar_attendee(osv.osv):
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
         Returns iCalendar file for the event invitation.
-        @param self: the object pointer
-        @param cr: the current row, from the database cursor
-        @param uid: the current user's id for security checks
         @param event_obj: event object (browse record)
-        @param context: a standard dictionary for contextual values
         @return: .ics file content
         """
         res = None
@@ -211,11 +199,13 @@ class calendar_attendee(osv.osv):
                 #returns the datetime as UTC, because it is stored as it in the database
                 return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('UTC'))
             return False
+        
         try:
             # FIXME: why isn't this in CalDAV?
             import vobject
         except ImportError:
             return res
+        
         cal = vobject.iCalendar()
         event = cal.add('vevent')
         if not event_obj.date_deadline or not event_obj.date:
@@ -258,9 +248,6 @@ class calendar_attendee(osv.osv):
 
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
-            attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
-            #attendee_add.params['ROLE'] = [str(attendee.role)]
-            attendee_add.params['RSVP'] = [str(False)]
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
         res = cal.serialize()
         return res
@@ -269,7 +256,6 @@ class calendar_attendee(osv.osv):
         """
         Send mail for event invitation to event attendees.
         @param email_from: email address for user sending the mail
-        @return: True
         """
         mail_id = []
         data_pool = self.pool.get('ir.model.data')
@@ -280,31 +266,32 @@ class calendar_attendee(osv.osv):
                  'needs-action' : 'grey',
                  'accepted' :'green',
                  'tentative' :'#FFFF00',
-                 'declined':'red',
-                 'delegated':'grey'
+                 'declined':'red'                 
         }
+        
         for attendee in self.browse(cr, uid, ids, context=context):
             res_obj = attendee.ref
             if res_obj:
-                model,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "crm_email_template_meeting_invitation")
-                model,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")
-                action_id = self.pool.get('ir.actions.act_window').search(cr, uid, [('view_id','=',act_id)], context=context)
-                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
+                dummy,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "crm_email_template_meeting_invitation")
+                dummy,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")                
                 body = template_pool.browse(cr, uid, template_id, context=context).body_html
                 if attendee.email and email_from:
                     ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
                     local_context['att_obj'] = attendee
                     local_context['color'] = color
-                    local_context['action_id'] = action_id[0]
+                    local_context['action_id'] = self.pool.get('ir.actions.act_window').search(cr, uid, [('view_id','=',act_id)], context=context)[0]
                     local_context['dbname'] = cr.dbname
-                    local_context['base_url'] = base_url
+                    local_context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
                     vals = template_pool.generate_email(cr, uid, template_id, res_obj.id, context=local_context)
                     if ics_file:
                         vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
                                                     'datas_fname': 'invitation.ics',
                                                     'datas': str(ics_file).encode('base64')})]
+                    vals['auto_delete'] = True #We don't want to have the mail of everybody in the tchatter !
+                                        
                     if not attendee.partner_id.opt_out:
                         mail_id.append(mail_pool.create(cr, uid, vals, context=context))
+        
         if mail_id:
             return mail_pool.send(cr, uid, mail_id, context=context)
         return False
@@ -312,49 +299,42 @@ class calendar_attendee(osv.osv):
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         """
         Make entry on email and availbility on change of user_id field.
-        @param ids: list of calendar attendee's IDs
+        @param ids: list of attendee's IDs
         @param user_id: changed value of User id
         @return: dictionary of values which put value in email and availability fields
         """
-
         if not user_id:
             return {'value': {'email': ''}}
-        usr_obj = self.pool.get('res.users')
-        user = usr_obj.browse(cr, uid, user_id, *args)
+        
+        usr_obj = self.pool.get('res.users').browse(cr, uid, user_id, *args)
         return {'value': {'email': user.email, 'availability':user.availability}}
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
         """
         Makes event invitation as Tentative.
-        @param ids: list of calendar attendee's IDs
-        @param *args: get Tupple value
-        @param context: a standard dictionary for contextual values
+        @param ids: list of attendee's IDs
         """
         return self.write(cr, uid, ids, {'state': 'tentative'}, context)
 
     def do_accept(self, cr, uid, ids, context=None, *args):
         """
         Marks event invitation as Accepted.
-        @param ids: list of calendar attendee's IDs
-        @param context: a standard dictionary for contextual values
-        @return: True
+        @param ids: list of attendee's IDs
         """
         if context is None:
             context = {}
         meeting_obj =  self.pool.get('crm.meeting')
         res = self.write(cr, uid, ids, {'state': 'accepted'}, context)
-        for attandee in self.browse(cr, uid, ids, context=context):
-            meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attandee.id)], context=context)
+        for attendee in self.browse(cr, uid, ids, context=context):
+            meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attendee.id)], context=context)
             if meeting_ids:
-                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has accepted invitation") % (attandee.cn)), context=context)
+                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has accepted invitation") % (attendee.cn)), context=context)
         return res
-        
+    
     def do_decline(self, cr, uid, ids, context=None, *args):
         """
         Marks event invitation as Declined.
         @param ids: list of calendar attendee's IDs
-        @param *args: get Tupple value
-        @param context: a standard dictionary for contextual values
         """
         if context is None:
             context = {}
@@ -652,6 +632,22 @@ class res_partner(osv.osv):
             self.write(cr, uid, [alarm.id], update_vals)
         return True
 
+class calendar_friendly(osv.osv):
+    _name = 'calendar.friendly'    
+
+    _columns = {
+        'description':fields.char('Description'),
+        'user_id': fields.many2one('res.users','Me'),
+        'partner_id': fields.many2one('res.partner','My friend'),
+        'name':fields.char('Name'),
+        'color':fields.char('Color'),
+        'active':fields.boolean('active'),        
+     }
+    _defaults = {
+        'user_id': lambda self, cr, uid, ctx: uid,
+        'active' : True,        
+    }    
+    
 
 class calendar_alarm(osv.osv):
     _name = 'calendar.alarm'

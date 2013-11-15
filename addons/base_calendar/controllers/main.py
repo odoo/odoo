@@ -69,13 +69,13 @@ class meetting_invitation(http.Controller):
         if attendee:
             attendee_data['current_attendee'] = attendee[0]
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in webmain.manifest_list('js', db=db))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list('css',db=db))
-        import ipdb; ipdb.set_trace()
+        css = "\n       ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list('css',db=db))
+
         return webmain.html_template % {
             'js': js,
             'css': css,
             'modules': simplejson.dumps(webmain.module_boot(db)),
-            'init': "s.base_calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, view, json.dumps(attendee_data)),
+            'init': "s.base_calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)),
         }
 
 
