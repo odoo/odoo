@@ -24,7 +24,9 @@ from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 
 import werkzeug
+import json
 import logging
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -57,7 +59,7 @@ class WebsiteSurvey(http.Controller):
         if survey_obj.exists(cr, uid, survey.id, context=context) == []:
             return werkzeug.utils.redirect("/survey/")
 
-        _logger.debug('Post request data: %s', post)
+        _logger.debug('Post data: %s', post)
 
         # Store answer data
         # (/!\ assumes JavaScript validation of answers has succeeded!)
@@ -96,14 +98,25 @@ class WebsiteSurvey(http.Controller):
     #     return {'valid': True, 'errors': None}
 
     @website.route(['/survey/submit/<model("survey.survey"):survey>'],
-                    type='json', auth='public', multilang=True)
-    def submit(self, survey=None, **post):
-        _logger.debug("Incoming json data: " + post.__str__())
+                    type='http', auth='public', multilang=True)
+    def submit(self, survey, **post):
+        _logger.debug("Incoming data: " + post.__str__())
+        page_nr = int(post['current'])
+        questions = survey.page_ids[page_nr].question_ids
 
-        # transform post data into dictionary
-        # for each {K:V} in post, check
+        errors = {}
+        for question in questions:
+            answer_tag = "%s_%s_%s" % (survey.id, page_nr, question.id)
+            errors.update(self.validate_question(survey.id, page_nr, question, post, answer_tag))
 
-        return {'redirect': '/survey/'}
+        ret = {}
+        if (len(errors) != 0):
+            ret['errors'] = errors
+        else:
+            cr, uid, context = request.cr, request.uid, request.context
+            # Store here data if allowed
+            ret['redirect'] = "nexturl"
+        return json.dumps(ret)
 
     # Printing routes
     @website.route(['/survey/print/<model("survey.survey"):survey>/'],
@@ -114,3 +127,130 @@ class WebsiteSurvey(http.Controller):
         return request.website.render('survey.survey_print',
                                     {'survey': survey,
                                     'pagination': pagination})
+
+    # Validation methods
+
+    def validate_question(self, survey_id, page_nr, question, post, answer_tag):
+        ''' Routing to the right question valider, depending on question type '''
+        try:
+            checker = getattr(self, 'validate_' + question.type)
+        except AttributeError:
+            _logger.warning(question.type + ": This type of question has no validation method")
+            return {}
+        else:
+            return checker(survey_id, page_nr, question, post, answer_tag)
+
+    def validate_free_text(self, survey_id, page_nr, question, post, answer_tag):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        return errors
+
+    def validate_textbox(self, survey_id, page_nr, question, post, answer_tag):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Answer validation (if properly defined)
+        if answer and question.validation_required and question.validation_type:
+            # Length of the answer must be in a range
+            if question.validation_type == "has_length":
+                if not (question.validation_length_min <= len(answer) <= question.validation_length_max):
+                    errors.update({answer_tag: question.validation_error_msg})
+
+            # Answer must be an integer in a particular range
+            elif question.validation_type == "is_integer":
+                try:
+                    intanswer = int(answer)
+                # Answer is not an integer
+                except ValueError:
+                    errors.update({answer_tag: question.validation_error_msg})
+                else:
+                    # Answer is not in the right range
+                    if not (question.validation_min_int_value <= intanswer <= question.validation_max_int_value):
+                        errors.update({answer_tag: question.validation_error_msg})
+            # Answer must be a float in a particular range
+            elif question.validation_type == "is_decimal":
+                try:
+                    floatanswer = float(answer)
+                # Answer is not an integer
+                except ValueError:
+                    errors.update({answer_tag: question.validation_error_msg})
+                else:
+                    # Answer is not in the right range
+                    if not (question.validation_min_float_value <= floatanswer <= question.validation_max_float_value):
+                        errors.update({answer_tag: question.validation_error_msg})
+
+            # Answer must be a date in a particular range
+            elif question.validation_type == "is_date":
+                raise Exception("Not implemented")
+            # Answer must be an email address
+            # Note: this validation is very basic:
+            #       all the strings of the form
+            #       <something>@<anything>.<extension>
+            #       will be accepted
+            elif question.validation_type == "is_email":
+                if not re.match(r"[^@]+@[^@]+\.[^@]+", answer):
+                    errors.update({answer_tag: question.validation_error_msg})
+            else:
+                pass
+        return errors
+
+    def validate_numerical_box(self, survey_id, page_nr, question, post, answer_tag):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Checks if user input is a number
+        if answer:
+            try:
+                float(answer)
+            except ValueError:
+                errors.update({answer_tag: question.constr_error_msg})
+        return errors
+
+    def validate_datetime(self, survey_id, page_nr, question, post, answer_tag):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Checks if user input is a datetime
+        # TODO when datepicker will be available
+        return errors
+
+    # def validate_simple_choice_scale(self, survey_id, page_nr, question, post, answer_tag):
+    #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
+    #     problems = []
+    #     if question.constr_mandatory:
+    #         problems = problems + self.__has_empty_input(question, post, answer_tag)
+    #     return problems
+
+    # def validate_simple_choice_dropdown(self, survey_id, page_nr, question, post, answer_tag):
+    #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
+    #     problems = []
+    #     if question.constr_mandatory:
+    #         problems = problems + self.__has_empty_input(question, post, answer_tag)
+    #     return problems
+
+    # def validate_multiple_choice(self, survey_id, page_nr, question, post, answer_tag):
+    #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
+    #     problems = []
+    #     return problems
+
+    # def validate_matrix(self, survey_id, page_nr, question, post, answer_tag):
+    #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
+    #     problems = []
+    #     return problems
+
+def dict_keys_startswith(self, dictionary, string):
+    '''Returns a dictionary containing the elements of <dict> whose keys start
+    with <string>.
+
+    .. note::
+        This function uses dictionary comprehensions (Python >= 2.7)'''
+    return {k: dictionary[k] for k in filter(lambda key: key.startswith(string), dictionary.keys())}

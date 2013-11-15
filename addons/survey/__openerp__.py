@@ -38,8 +38,8 @@ sent mails with user name and password for the invitation of the survey.
     'website': 'https://www.openerp.com/',
     'depends': ['email_template', 'mail', 'website'],
     'data': [
-        #'security/survey_security.xml',
-        #'security/ir.model.access.csv',
+        'security/survey_security.xml',
+        'security/ir.model.access.csv',
         'survey_view.xml',
         'views/survey_templates.xml',
         #'wizard/survey_answer.xml',

@@ -402,14 +402,14 @@
                                 <field name="description" />
                             </group>
 
-                            <!-- Suggestions -->
-                            <group colspan="2" string="Choice of answers" attrs="{'invisible':[('type','not in',['simple_choice_dropdown',
-                                'multiple_choice','simple_choice_scale'])]}">
-                                <field name="suggested_answers_ids" nolabel="1" context="{'default_question_id': active_id}">
+                            <!-- Labels -->
+                            <group colspan="2" string="Choice of answers" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
+                                <field colspan="2" name="labels_ids" nolabel="1" context="{'default_question_id': active_id}">
                                     <tree string="Suggested answers" editable="bottom">
                                         <field name="value" />
                                     </tree>
                                 </field>
+                                <field colspan="2"  name="simple_choice_display" string="Display mode"/>
                             </group>
 
                             <!-- Sub-questions -->
@@ -422,7 +422,7 @@
                             <group colspan="2" string="Question required">
                                 <field name="constr_mandatory" string="Is this question mandatory?"/>
                                 <group attrs="{'invisible':[('constr_mandatory','=',False)]}">
-                                    <group attrs="{'invisible':[('type','not in',['numerical_box'])]}">
+                                    <group attrs="{'invisible':[('type','not in',['matrix'])]}">
                                         <field name="constr_type" string="Users must answer..."/>
                                         <group attrs="{'invisible':[('constr_type','not in',['at least','a range'])]}">
                                             <field name="constr_minimum_req_ans" nolabel="1" />
@@ -436,7 +436,7 @@
                             </group>
 
                             <!-- Answer validation -->
-                            <group colspan="1" string="Answer Validation" attrs="{'invisible':[('type','not in',['textbox','numerical_box','datetime'])]}">
+                            <group colspan="1" string="Answer Validation" attrs="{'invisible':[('type','not in',['textbox'])]}">
                                 <group>
                                     <field name="validation_required"/>
 
@@ -464,7 +464,7 @@
                             </group>
 
                             <!-- Comments -->
-                            <group colspan="2" string="Comments" attrs="{'invisible':[('type','in',['free_text','textbox'])]}">
+                            <group colspan="2" string="Comments" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice'])]}">
                                 <field name='comments_allowed' />
                                 <group attrs="{'invisible':[('comments_allowed','=',False)]}">
                                     <field name='comment_count_as_answer' />
@@ -518,9 +518,9 @@
             <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_page': True}</field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_survey_suggestion_form">
-            <field name="name">Survey Suggestions</field>
-            <field name="res_model">survey.suggestion</field>
+        <record model="ir.actions.act_window" id="action_survey_label_form">
+            <field name="name">Survey labels</field>
+            <field name="res_model">survey.label</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <!--<field name="view_id" ref="survey_question_tree"></field>
@@ -666,7 +666,7 @@
                     <act_window domain="[('question_id', '=', active_id)]"
                         id="act_survey_answer"
                         name="Answers"
-                        res_model="survey.suggestion"
+                        res_model="survey.label"
                         src_model="survey.question"/>
 
         <!--
@@ -702,8 +702,8 @@
                     action="action_survey_question_form" parent="menu_surveys_configuration"
                     sequence="2"/>
 
-                    <menuitem name="Survey Suggestions" id="menu_survey_suggestion_form1"
-                        action="action_survey_suggestion_form" parent="menu_surveys_configuration"
+                    <menuitem name="Survey labels" id="menu_survey_label_form1"
+                        action="action_survey_label_form" parent="menu_surveys_configuration"
                         sequence="3"/>
 
                         <!-- web -->

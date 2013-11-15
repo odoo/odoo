@@ -345,24 +345,31 @@ class survey_question(osv.osv):
             oldname='descriptive_text'),
 
         # Answer
-        'type': fields.selection([('free_text', 'Free Text'),
+        'type': fields.selection([('free_text', 'Long text zone'),
                 ('textbox', 'Text box'),
                 ('numerical_box', 'Numerical box'),
                 ('datetime', 'Date and Time'),
-                ('simple_choice_scale', 'One choice on a scale'),
-                ('simple_choice_dropdown', 'One choice in a menu'),
-                ('multiple_choice', 'Some choices in checkboxes'),
+                ('simple_choice', 'Multiple choice (one answer)'),
+                ('multiple_choice', 'Multiple choice (multiple answers)'),
                 ('matrix', 'Matrix')], 'Question Type', required=1),
-        'suggested_answers_ids': fields.one2many('survey.suggestion',
+        'labels_ids': fields.one2many('survey.label',
             'question_id', 'Suggested answers', oldname='answer_choice_ids'),
+
+        # Display options
+        'simple_choice_display' : fields.selection([('1col', 'Buttons (1 column)'),
+                ('2col', 'Buttons (2 columns)'),
+                ('3col', 'Buttons (3 columns)'),
+                ('horizontal', 'Buttons (horizontal)'),
+                ('dropdown', 'Dropdown menu'),],
+                'Display mode', ),
 
         # Comments
         'comments_allowed': fields.boolean('Allow comments',
             oldname="allow_comment"),
-        'comment_children_ids': fields.one2many('survey.question_id',
-            'parent_id', 'Comment question'),  # one2one in fact
-        'comment_count_as_answer': fields.boolean('Make Comment Field an \
-            Answer Choice', oldname='make_comment_field'),
+        #'comment_children_ids': fields.one2many('survey.question_id',
+        #    'parent_id', 'Comment question'),  # one2one in fact
+        'comment_count_as_answer': fields.boolean('Comment field is an answer choice',
+            oldname='make_comment_field'),
 
         # Validation
         'validation_required': fields.boolean('Validate entry',
@@ -371,7 +378,7 @@ class survey_question(osv.osv):
             ('has_length', 'Must have a specific length'),
             ('is_integer', 'Must be an integer'),
             ('is_decimal', 'Must be a decimal number'),
-            ('is_date', 'Must be a date'),
+            #('is_date', 'Must be a date'),
             ('is_email', 'Must be an email address')
             ], 'Validation type'),
         'validation_length_min': fields.integer('Minimum length'),
@@ -382,8 +389,7 @@ class survey_question(osv.osv):
         'validation_max_int_value': fields.integer('Maximum value'),
         'validation_min_date': fields.date('Start date range'),
         'validation_max_date': fields.date('End date range'),
-        'validation_error_msg': fields.char("Error message if validation \
-            fails", oldname='validation_valid_err_msg'),
+        'validation_error_msg': fields.char("Error message", oldname='validation_valid_err_msg'),
 
         # Constraints on number of answers
         'constr_mandatory': fields.boolean('Mandatory question',
@@ -398,23 +404,28 @@ class survey_question(osv.osv):
             oldname='maximum_req_ans'),
         'constr_minimum_req_ans': fields.integer('Minimum Required Answer',
             oldname='minimum_req_ans'),
-        'constr_error_msg': fields.char("Error message if constraints fails",
+        'constr_error_msg': fields.char("Error message",
             oldname='req_error_msg'),
     }
     _defaults = {
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
-        'sequence': 1,
         'type': 'free_text',
-        'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
+        'simple_choice_display': '1col',
         'constr_type': 'at least',
         'constr_minimum_req_ans': 1,
         'constr_error_msg': lambda s, cr, uid, c:
                 _('This question requires an answer.'),
+        'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
         'validation_required': 'False',
-        'validation_length_min': 0,
-        'validation_length_max': 5000,
     }
-    _sql_constraints = [('validation_length', 'CHECK (validation_length_min <= validation_length_max)',  'Max length cannot be smaller than min length!')]
+    _sql_constraints = [
+        ('positive_len_min', 'CHECK (validation_length_min >= 0)', 'A length must be positive!'),
+        ('positive_len_max', 'CHECK (validation_length_max >= 0)', 'A length must be positive!'),
+        ('validation_length', 'CHECK (validation_length_min <= validation_length_max)', 'Max length cannot be smaller than min length!'),
+        ('validation_float', 'CHECK (validation_min_float_value <= validation_max_float_value)', 'Max value cannot be smaller than min value!'),
+        ('validation_int', 'CHECK (validation_min_int_value <= validation_max_int_value)', 'Max value cannot be smaller than min value!'),
+        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!')
+    ]
 
     def on_change_page_id(self, cr, uid, ids, page_id, context=None):
         if page_id:
@@ -527,9 +538,9 @@ class survey_question(osv.osv):
         }
 
 
-class survey_suggestion(osv.osv):
+class survey_label(osv.osv):
     ''' A suggested answer for a question '''
-    _name = 'survey.suggestion'
+    _name = 'survey.label'
     _rec_name = 'value'
 
     _columns = {
@@ -678,7 +689,7 @@ class survey_user_input_line(osv.osv):
         'value_number': fields.float("Numerical answer"),
         'value_date': fields.datetime("Date answer"),
         'value_free_text': fields.text("Free Text answer"),
-        'value_suggested': fields.many2one('survey.suggestion'),
+        'value_suggested': fields.many2one('survey.label'),
     }
     _defaults = {
         'skipped': False,
