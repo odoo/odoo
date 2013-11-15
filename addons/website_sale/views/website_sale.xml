@@ -282,13 +282,13 @@
                       <h1 t-field="product.name">Product Name</h1>
 
                       <form action="./add_cart/" class="js_add_cart_json">
-                          <input type="hidden" t-if="len(product.product_variant_ids) &lt;= 1" name="product_id" t-att-value="product.id"/>
+                          <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                           <t t-if="len(product.product_variant_ids) &gt; 1">
-                              <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
-                                  <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None"/>
-                                  <t t-esc="product.variants or ''">Standard</t>
-                                  <span class="badge" t-if="product.price_extra">
-                                      <t t-esc="product.price_extra > 0 and '+' or ''"/><span t-field="product.price_extra" t-field-options='{
+                              <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
+                                  <input type="radio" name="product_id" t-att-value="variant_id.id" t-att-checked="variant_id == product.product_variant_ids[0] or None"/>
+                                  <t t-esc="variant_id.variants or ''">Standard</t>
+                                  <span class="badge" t-if="variant_id.price_extra">
+                                      <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" t-field-options='{
                                                    "widget": "monetary",
                                                    "display_currency": "website.pricelist_id.currency_id"
                                                }'/>
