@@ -56,7 +56,7 @@ class WebsiteCustomer(http.Controller):
         partner_ids = partner_obj.search(
             cr, uid, domain,
             limit=self._references_per_page, offset=pager['offset'], context=context)
-        partners = partner_obj.browse(request.cr, openerp.SUPERUSER_ID,
+        partners = partner_obj.browse(request.cr, request.uid,
                                       partner_ids, request.context)
 
         values = {

@@ -74,10 +74,10 @@ class WebsiteBlog(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         blog_post_obj = request.registry['blog.post']
-        category_obj = request.registry['blog.category']
 
         blog_posts = None
 
+        category_obj = request.registry['blog.category']
         category_ids = category_obj.search(cr, uid, [], context=context)
         categories = category_obj.browse(cr, uid, category_ids, context=context)
 
@@ -117,7 +117,7 @@ class WebsiteBlog(http.Controller):
         elif category:
             values['main_object'] = category
 
-        return request.website.render("website_blog.index", values)
+        return request.website.render("website_blog.blog_post_short", values)
 
     @website.route([
         '/blog/<model("blog.post"):blog_post>/',
@@ -154,15 +154,20 @@ class WebsiteBlog(http.Controller):
         pager_end = page * self._post_comment_per_page
         blog_post.website_message_ids = blog_post.website_message_ids[pager_begin:pager_end]
 
+        cr, uid, context = request.cr, request.uid, request.context
+        category_obj = request.registry['blog.category']
+        category_ids = category_obj.search(cr, uid, [], context=context)
+        categories = category_obj.browse(cr, uid, category_ids, context=context)
+
         values = {
             'category': blog_post.category_id,
+            'categories': categories,
             'blog_post': blog_post,
             'pager': pager,
             'nav_list': self.nav_list(),
             'enable_editor': enable_editor,
         }
-
-        return request.website.render("website_blog.index", values)
+        return request.website.render("website_blog.blog_post_complete", values)
 
     # TODO: Refactor (used in website_blog.js for archive links)
     # => the archive links should be generated server side

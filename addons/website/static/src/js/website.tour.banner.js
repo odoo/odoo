@@ -28,7 +28,7 @@
                     content: "Every page of your website can be modified through the <i>Edit</i> button.",
                     template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('rte:snippets_ready', editor, function() {
+                        editor.on('tour:editor_bar_loaded', editor, function() {
                             self.movetoStep('add-block');
                         });
                     },
@@ -143,12 +143,15 @@
             var bannerTour = new website.EditorBannerTour(this);
             var $menuItem = $($.parseHTML('<li><a href="#">'+bannerTour.name+'</a></li>'));
             $menuItem.click(function () {
+                if (url.pathname !== '/' && url.pathname !== '/page/website.homepage') {
+                    window.location.replace('/page/website.homepage?banner-tutorial=true');
+                }
                 bannerTour.reset();
                 bannerTour.start();
             });
             menu.append($menuItem);
             var url = new website.UrlParser(window.location.href);
-            if (url.search.indexOf('?tutorial=true') === 0 || bannerTour.startOfPart2()) {
+            if (url.search.indexOf('?banner-tutorial=true') === 0 || bannerTour.startOfPart2()) {
                 bannerTour.start();
             }
             return this._super();
