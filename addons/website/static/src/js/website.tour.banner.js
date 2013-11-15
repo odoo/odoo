@@ -106,7 +106,6 @@
                     onHide: function () {
                         self.saveStep('part-2');
                     },
-
                 },
                 {
                     stepId: 'part-2',
@@ -119,6 +118,7 @@
                     stepId: 'show-tutorials',
                     element: '#help-menu-button',
                     placement: 'left',
+                    reflex: true,
                     title: "Help is always available",
                     content: "You can always click here if you want more helps or continue to build and get more tips about your website contents like page menu, ...",
                     template: render('website.tour_popover', { end: "Close" }),
