@@ -222,15 +222,22 @@ var PivotTable = BasicDataView.extend({
             if (row.expanded) {
                 this.fold_row(row_id);
             } else {
-                var dropdown_options = {
-                    fields: _.map(this.important_fields, function (field) {
-                        return {id: field, value: self.get_descr(field)};
-                    }),
-                    row_id: row_id,
-                };
-                this.dropdown = $(QWeb.render('field_selection', dropdown_options));
-                $(event.target).after(this.dropdown);
-                $('.field-selection').next('.dropdown-menu').toggle();
+                if (row.path.length < this.row_groupby.length) {
+                    var field_to_expand = this.row_groupby[row.path.length];
+                    this.expand_row(row_id, field_to_expand);
+                } else {
+                    var already_grouped = self.row_groupby.concat(self.col_groupby);
+                    var possible_groups = _.difference(self.important_fields, already_grouped);
+                    var dropdown_options = {
+                        fields: _.map(possible_groups, function (field) {
+                            return {id: field, value: self.get_descr(field)};
+                        }),
+                        row_id: row_id,
+                    };
+                    this.dropdown = $(QWeb.render('field_selection', dropdown_options));
+                    $(event.target).after(this.dropdown);
+                    $('.field-selection').next('.dropdown-menu').toggle();
+                }
             }
 
     
@@ -334,7 +341,10 @@ var PivotTable = BasicDataView.extend({
     expand_row: function (row_id, field_id) {
         var self = this;
         var row = this.get_row(row_id);
-        this.row_groupby.push(field_id);
+
+        if (row.path.length == this.row_groupby.length) {
+            this.row_groupby.push(field_id);
+        }
 
         var visible_fields = this.row_groupby.concat(this.col_groupby, this.measure);
 
