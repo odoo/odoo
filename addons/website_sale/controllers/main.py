@@ -63,6 +63,37 @@ class Website(osv.osv):
         return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
 
+class CheckoutInfo:
+    mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
+    optional_billing_fields = ["company", "state_id"]
+    string_billing_fields = ["name", "phone", "email", "street", "city", "zip"]
+    mandatory_shipping_fields = ["shipping_name", "shipping_phone", "shipping_street", "shipping_city", "shipping_country_id", "shipping_zip"]
+    string_shipping_fields = ["shipping_name", "shipping_phone", "shipping_street", "shipping_city", "shipping_zip"]
+    optional_shipping_field = ["shipping_state_id"]
+
+    def mandatory_fields(self):
+        return self.mandatory_billing_fields + self.mandatory_shipping_fields
+
+    def optional_fields(self):
+        return self.optional_billing_fields + self.optional_shipping_field
+
+    def all_fields(self):
+        return self.mandatory_fields() + self.optional_fields()
+
+    def empty(self):
+        return dict((field_name, '') for field_name in self.all_fields())
+
+    def from_partner(self, partner):
+        result = dict((field_name, getattr(partner, field_name)) for field_name in self.string_billing_fields if getattr(partner, field_name))
+        result['state_id'] = partner.state_id and partner.state_id.id or ''
+        result['country_id'] = partner.country_id and partner.country_id.id or ''
+        result['company'] = partner.parent_id and partner.parent_id.name or ''
+        return result
+
+    def from_post(self, post):
+        return dict((field_name, post[field_name]) for field_name in self.all_fields() if post[field_name])
+
+
 class Ecommerce(http.Controller):
 
     _order = 'website_sequence desc, website_published desc'
@@ -298,6 +329,15 @@ class Ecommerce(http.Controller):
 
         domain = [("sale_ok", "=", True)]
 
+        try:
+            product_obj.check_access_rights(request.cr, request.uid, 'write')
+        except:
+            domain += [('website_published', '=', True)]
+
+        # remove product_product_consultant from ecommerce editable mode, this product never be publish
+        ref = request.registry.get('ir.model.data').get_object_reference(request.cr, SUPERUSER_ID, 'product', 'product_product_consultant')
+        domain += [("id", "!=", ref[1])]
+
         if post.get("search"):
             domain += ['|', '|', '|',
                 ('name', 'ilike', "%%%s%%" % post.get("search")),
@@ -346,7 +386,7 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.products", values)
 
     @website.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", multilang=True)
-    def product(self, product, search='', category='', filter='', promo=None):
+    def product(self, product, search='', category='', filter='', promo=None, **kwargs):
 
         if promo:
             self.change_pricelist(promo)
@@ -376,11 +416,8 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.product", values)
 
-    @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="public", multilang=True)
+    @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="user", multilang=True, methods=['POST'])
     def add_product(self, cat_id=0, **post):
-        if request.httprequest.method != 'POST':
-            return werkzeug.exceptions.MethodNotAllowed(valid_methods=['POST'])
-
         Product = request.registry.get('product.product')
         product_id = Product.create(request.cr, request.uid, {
             'name': 'New Product', 'public_categ_id': cat_id
@@ -522,99 +559,113 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/checkout/'], type='http', auth="public", multilang=True)
     def checkout(self, **post):
-        classic_fields = ["name", "phone", "email", "street", "city", "state_id", "zip"]
-        rel_fields = ['country_id', 'state_id']
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         order = get_current_order()
 
         if not order or order.state != 'draft' or not order.order_line:
             return self.mycart(**post)
 
-        partner_obj = request.registry.get('res.partner')
-        user_obj = request.registry.get('res.users')
-        country_obj = request.registry.get('res.country')
-        country_state_obj = request.registry.get('res.country.state')
+        orm_partner = registry.get('res.partner')
+        orm_user = registry.get('res.users')
+        orm_country = registry.get('res.country')
+        country_ids = orm_country.search(cr, SUPERUSER_ID, [(1, "=", 1)], context=context)
+        countries = orm_country.browse(cr, SUPERUSER_ID, country_ids, context)
+        state_orm = registry.get('res.country.state')
+        states_ids = state_orm.search(cr, SUPERUSER_ID, [(1, "=", 1)], context=context)
+        states = state_orm.browse(cr, SUPERUSER_ID, states_ids, context)
 
+        info = CheckoutInfo()
         values = {
-            'shipping': post.get("shipping"),
-            'error': post.get("error") and dict.fromkeys(post.get("error").split(","), 'error') or {}
+            'countries': countries,
+            'states': states,
+            'checkout': info.empty(),
+            'shipping': post.get("shipping_different"),
+            'error': {},
         }
+        checkout = values['checkout']
+        error = values['error']
 
-        checkout = dict((field_name, '') for field_name in classic_fields + rel_fields)
-        if not request.context['is_public_user']:
-            partner = user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id
-            checkout.update(dict((field_name, getattr(partner, field_name)) for field_name in classic_fields if getattr(partner, field_name)))
-            checkout['state_id'] = partner.state_id and partner.state_id.id or ''
-            checkout['country_id'] = partner.country_id and partner.country_id.id or ''
-            checkout['company'] = partner.parent_id and partner.parent_id.name or ''
-
-            shipping_ids = partner_obj.search(request.cr, request.uid, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=request.context)
+        if not context['is_public_user']:
+            partner = orm_user.browse(cr, uid, uid, context).partner_id
+            partner_info = info.from_partner(partner)
+            checkout.update(partner_info)
+            shipping_ids = orm_partner.search(cr, uid, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
             if shipping_ids:
-                for k, v in partner_obj.read(request.cr, request.uid, shipping_ids[0], request.context).items():
-                    checkout['shipping_'+k] = v or ''
+                values['shipping'] = "true"
+                shipping_partner = orm_partner.browse(cr, uid, shipping_ids[0], context)
+                checkout['shipping_name'] = getattr(shipping_partner, 'name')
+                checkout['shipping_phone'] = getattr(shipping_partner, 'phone')
+                checkout['shipping_street'] = getattr(shipping_partner, 'street')
+                checkout['shipping_zip'] = getattr(shipping_partner, 'zip')
+                checkout['shipping_city'] = getattr(shipping_partner, 'city')
+                checkout['shipping_country_id'] = getattr(shipping_partner, 'country_id')
+                checkout['shipping_state_id'] = getattr(shipping_partner, 'state_id')
 
-        values['checkout'] = checkout
-        countries_ids = country_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)], context=request.context)
-        values['countries'] = country_obj.browse(request.cr, SUPERUSER_ID, countries_ids, request.context)
-        states_ids = country_state_obj.search(request.cr, SUPERUSER_ID, [(1, "=", 1)], context=request.context)
-        values['states'] = country_state_obj.browse(request.cr, SUPERUSER_ID, states_ids, request.context)
+        for field_name in info.mandatory_fields():
+            if not checkout[field_name]:
+                error[field_name] = 'missing'
 
         return request.website.render("website_sale.checkout", values)
 
     @website.route(['/shop/confirm_order/'], type='http', auth="public", multilang=True)
     def confirm_order(self, **post):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+
         order = get_current_order()
 
-        error = []
-        partner_obj = request.registry.get('res.partner')
-        user_obj = request.registry.get('res.users')
+        if not order or order.state != 'draft' or not order.order_line:
+            return self.mycart(**post)
 
-        if order.state != 'draft':
-            return request.redirect("/shop/checkout/")
-        if not order.order_line:
-            error.append("empty_cart")
-            return request.redirect("/shop/checkout/")
+        orm_parter = registry.get('res.partner')
+        orm_user = registry.get('res.users')
+        orm_country = registry.get('res.country')
+        country_ids = orm_country.search(cr, SUPERUSER_ID, [(1, "=", 1)], context=context)
+        countries = orm_country.browse(cr, SUPERUSER_ID, country_ids, context)
+        orm_state = registry.get('res.country.state')
+        states_ids = orm_state.search(cr, SUPERUSER_ID, [(1, "=", 1)], context=context)
+        states = orm_state.browse(cr, SUPERUSER_ID, states_ids, context)
 
-        # check values
-        request.session['checkout'] = post
-        required_field = ['phone', 'zip', 'email', 'street', 'city', 'name', 'country_id']
-        for key in required_field:
-            if not post.get(key):
-                error.append(key)
-            if post.get('shipping_different') and key != 'email' and not post.get("shipping_%s" % key):
-                error.append("shipping_%s" % key)
+        info = CheckoutInfo()
+        values = {
+            'countries': countries,
+            'states': states,
+            'checkout': info.empty(),
+            'shipping': post.get("shipping_different"),
+            'error': {},
+        }
+        checkout = values['checkout']
+        checkout.update(post)
+        error = values['error']
+
+        for field_name in info.mandatory_billing_fields:
+            if not checkout[field_name]:
+                error[field_name] = 'missing'
+        if post.get("shipping_different"):
+            for field_name in info.mandatory_shipping_fields:
+                if not checkout[field_name]:
+                    error[field_name] = 'missing'
         if error:
-            return request.redirect("/shop/checkout/?error=%s&shipping=%s" % (",".join(error), post.get('shipping_different') and 'on' or ''))
+            return request.website.render("website_sale.checkout", values)
 
-        # search or create company
+        company_name = checkout['company']
         company_id = None
         if post['company']:
-            company_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("name", "ilike", post['company']), ('is_company', '=', True)], context=request.context)
-            company_id = company_ids and company_ids[0] or None
-            if not company_id:
-                company_id = partner_obj.create(request.cr, SUPERUSER_ID, {'name': post['company'], 'is_company': True}, request.context)
+            company_ids = orm_parter.search(cr, SUPERUSER_ID, [("name", "ilike", company_name), ('is_company', '=', True)], context=context)
+            company_id = (company_ids and company_ids[0]) or orm_parter.create(cr, SUPERUSER_ID, {'name': company_name, 'is_company': True}, context)
 
-        partner_value = {
-            'phone': post['phone'],
-            'zip': post['zip'],
-            'email': post['email'],
-            'street': post['street'],
-            'city': post['city'],
-            'name': post['name'],
-            'parent_id': company_id,
-            'country_id': post['country_id'],
-            'state_id': post['state_id'],
-        }
-        if not request.context['is_public_user']:
-            partner_id = user_obj.browse(request.cr, request.uid, request.uid, context=request.context).partner_id.id
-            partner_obj.write(request.cr, request.uid, [partner_id], partner_value, context=request.context)
+        billing_info = dict(checkout)
+        billing_info['parent_id'] = company_id;
+
+        if not context['is_public_user']:
+            partner_id = orm_user.browse(cr, uid, uid, context=context).partner_id.id
+            orm_parter.write(cr, uid, [partner_id], billing_info, context=context)
         else:
-            partner_id = partner_obj.create(request.cr, SUPERUSER_ID, partner_value, context=request.context)
-
+            partner_id = orm_parter.create(cr, SUPERUSER_ID, billing_info, context=context)
 
         shipping_id = None
         if post.get('shipping_different'):
-            shipping_value = {
+            shipping_info = {
                 'phone': post['shipping_phone'],
                 'zip': post['shipping_zip'],
                 'street': post['shipping_street'],
@@ -627,23 +678,23 @@ class Ecommerce(http.Controller):
                 'state_id': post['shipping_state_id'],
             }
             domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and value and int(value) or False)
-                for key, value in shipping_value.items() if key in required_field + ["type", "parent_id"]]
+                for key, value in shipping_info.items() if key in info.mandatory_billing_fields + ["type", "parent_id"]]
 
-            shipping_ids = partner_obj.search(request.cr, SUPERUSER_ID, domain, context=request.context)
+            shipping_ids = orm_parter.search(cr, SUPERUSER_ID, domain, context=context)
             if shipping_ids:
                 shipping_id = shipping_ids[0]
-                partner_obj.write(request.cr, SUPERUSER_ID, [shipping_id], shipping_value, request.context)
+                orm_parter.write(cr, SUPERUSER_ID, [shipping_id], shipping_info, context)
             else:
-                shipping_id = partner_obj.create(request.cr, SUPERUSER_ID, shipping_value, request.context)
+                shipping_id = orm_parter.create(cr, SUPERUSER_ID, shipping_info, context)
 
-        order_value = {
+        order_info = {
             'partner_id': partner_id,
             'message_follower_ids': [(4, partner_id)],
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
-        order_value.update(request.registry.get('sale.order').onchange_partner_id(request.cr, SUPERUSER_ID, [], order.partner_id.id, context=request.context)['value'])
-        order.write(order_value)
+        order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], order.partner_id.id, context=context)['value'])
+        order.write(order_info)
 
         return request.redirect("/shop/payment/")
 

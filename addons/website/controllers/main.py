@@ -22,16 +22,9 @@ from openerp.addons.website.models import website
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
+from ..utils import slugify
+
 logger = logging.getLogger(__name__)
-
-
-def auth_method_public():
-    registry = openerp.modules.registry.RegistryManager.get(request.db)
-    if not request.session.uid:
-        request.uid = registry['website'].get_public_user(request.cr, openerp.SUPERUSER_ID, request.context).id
-    else:
-        request.uid = request.session.uid
-http.auth_methods['public'] = auth_method_public
 
 NOPE = object()
 # Completely arbitrary limits
@@ -57,7 +50,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=NOPE):
         module = 'website'
         # completely arbitrary max_length
-        idname = http.slugify(path, max_length=50)
+        idname = slugify(path, max_length=50)
 
         request.cr.execute('SAVEPOINT pagenew')
         imd = request.registry['ir.model.data']

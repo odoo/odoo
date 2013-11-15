@@ -38,19 +38,19 @@ class WebsiteCrmPartnerAssign(http.Controller):
 
         # format pager
         partner_ids = partner_obj.search(
-            request.cr, openerp.SUPERUSER_ID, partner_domain,
+            request.cr, request.uid, partner_domain,
             context=request.context)
         pager = request.website.pager(url="/partners/", total=len(partner_ids), page=page, step=self._references_per_page, scope=7, url_args=post)
 
         # search for partners to display
         partner_ids = partner_obj.search(
-            request.cr, openerp.SUPERUSER_ID, partner_domain,
+            request.cr, request.uid, partner_domain,
             context=request.context,
             limit=self._references_per_page, offset=pager['offset'],
             order="grade_id ASC,partner_weight DESC")
         google_map_partner_ids = ",".join([str(p) for p in partner_ids])
         partners = partner_obj.browse(
-            request.cr, openerp.SUPERUSER_ID, partner_ids, request.context)
+            request.cr, request.uid, partner_ids, request.context)
 
         # group by country
         countries = partner_obj.read_group(
@@ -94,7 +94,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
     def partners_ref(self, partner_id=0, **post):
         partner_obj = request.registry['res.partner']
         if request.context['is_public_user']:
-            partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', partner_id)], context=request.context)
+            partner_ids = partner_obj.search(request.cr, request.uid, [('website_published', '=', True), ('id', '=', partner_id)], context=request.context)
         else:
             partner_ids = partner_obj.search(request.cr, request.uid, [('id', '=', partner_id)], context=request.context)
         if not partner_ids:
@@ -102,7 +102,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
 
         values = {
             'partner_id': partner_obj.browse(
-                request.cr, openerp.SUPERUSER_ID, partner_ids[0],
+                request.cr, request.uid, partner_ids[0],
                 context=dict(request.context, show_address=True)),
         }
         return request.website.render("website_crm_partner_assign.partner", values)

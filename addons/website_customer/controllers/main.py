@@ -20,7 +20,7 @@ class WebsiteCustomer(http.Controller):
         partner_obj = request.registry['res.partner']
         partner_name = post.get('search', '')
 
-        base_domain = [('customer', '=', True), ('is_company', '=', True)]
+        base_domain = [('website_published','=',True)]
         domain = list(base_domain)
         if partner_name:
             domain += [
@@ -56,12 +56,12 @@ class WebsiteCustomer(http.Controller):
         partner_ids = partner_obj.search(
             cr, uid, domain,
             limit=self._references_per_page, offset=pager['offset'], context=context)
-        partners = partner_obj.browse(request.cr, openerp.SUPERUSER_ID,
+        partners = partner_obj.browse(request.cr, request.uid,
                                       partner_ids, request.context)
 
         values = {
             'countries': countries,
-            'current_country_id': country_id,
+            'current_country_id': country_id or 0,
             'partner_ids': partners,
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
@@ -70,29 +70,10 @@ class WebsiteCustomer(http.Controller):
         }
         return request.website.render("website_customer.index", values)
 
-    @website.route(['/customers/<int:partner_id>/'], type='http', auth="public", multilang=True)
-    def customer(self, partner_id=None, **post):
-        """ Route for displaying a single partner / customer.
-
-        :param integer partner_id: partner to display. If not set or not valid
-                                   call basic references method.
-        """
-        partner_obj = request.registry['res.partner']
-        if request.context['is_public_user']:
-            partner_ids = partner_obj.search(
-                request.cr, openerp.SUPERUSER_ID, [
-                    ('website_published', '=', True),
-                    ('id', '=', partner_id)
-                ], context=request.context)
-            partner_id = partner_ids and partner_ids[0] or None
-
-        if not partner_id:
-            return self.references(post=post)
-
+    @website.route(['/customers/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
+    def customer(self, partner=None, **post):
+        """ Route for displaying a single partner / customer. """
         values = {
-            'partner_id': partner_obj.browse(
-                request.cr, openerp.SUPERUSER_ID, partner_id,
-                dict(request.context, show_address=True)),
+            'partner': partner
         }
-
         return request.website.render("website_customer.details", values)

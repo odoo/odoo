@@ -97,6 +97,9 @@
 .point-of-sale .pos-right-align {
     text-align: right;
 }
+.point-of-sale .pos-center-align {
+    text-align: center;
+}
 .point-of-sale .pos-right-align input {
     text-align: right;
     border: 1px solid #cecbcb;
@@ -815,6 +818,9 @@
 }
 
 @media print {
+    .point-of-sale{
+        background: white !important;
+    }
     .point-of-sale #topheader, .point-of-sale #leftpane {
         display: none !important;
     }
@@ -834,9 +840,6 @@
     .pos-actionbar {
         display: none !important;
     }
-    .pos-sale-ticket {
-        margin: 0;
-    }
     .debug-widget{
         display: none !important;
     }
@@ -846,9 +849,12 @@
         background: transparent !important;
     }
     .point-of-sale .pos-sale-ticket{
+        margin: 0;
         margin-left: auto !important;
         margin-right: auto !important;
-        border: solid 1px black !important;
+        border: none !important;
+        font-size: 13px !important;
+        width: 266px !important;
     }
 }
 

@@ -29,7 +29,7 @@ from openerp.addons.website.controllers.main import Website as controllers
 controllers = controllers()
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
@@ -240,3 +240,15 @@ class website_event(http.Controller):
                 event.address_id.write({'website_published': True})
 
         return controllers.publish(id, object)
+
+    @website.route('/event/add_event/', type='http', auth="user", multilang=True, methods=['POST'])
+    def add_event(self, **kwargs):
+        Event = request.registry.get('event.event')
+        date_begin = datetime.today() + timedelta(days=(15)) # FIXME: better defaults
+        event_id = Event.create(request.cr, request.uid, {
+            'name': 'New Event',
+            'date_begin': date_begin.strftime('%Y-%m-%d'),
+            'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
+        }, context=request.context)
+
+        return request.redirect("/event/%s/?enable_editor=1" % event_id)

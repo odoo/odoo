@@ -14,6 +14,11 @@
                 </a>
             </li>
         </xpath>
+        <xpath expr="//head" position="inside">
+            <t t-if="editable">
+                <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js"></script>
+            </t>
+        </xpath>
     </template>
 
     <!-- List of categories -->
