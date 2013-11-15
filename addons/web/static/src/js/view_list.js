@@ -1474,14 +1474,13 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 
         var view = this.view,
            limit = view.limit(),
-               d = new $.Deferred(),
             page = this.datagroup.openable ? this.page : view.page;
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name');
         var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
-        $.async_when().done(function() {
-            dataset.read_slice(fields, options).done(function (records) {
+        return $.async_when().then(function() {
+            return dataset.read_slice(fields, options).then(function (records) {
                 // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
                 if (self.records.length) {
                     self.records.reset(null, {silent: true});
@@ -1513,13 +1512,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 
                 self.records.add(records, {silent: true});
                 list.render();
-                d.resolve(list);
                 if (_.isEmpty(records)) {
                     view.no_result();
                 }
+                return list;
             });
         });
-        return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {
         // drag and drop enabled if list is not sorted and there is a
@@ -1600,11 +1598,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     self.render_groups(groups));
                 if (post_render) { post_render(); }
             }, function (dataset) {
-                self.render_dataset(dataset).done(function (list) {
+                self.render_dataset(dataset).then(function (list) {
                     self.children[null] = list;
                     self.elements =
                         [list.$current.replaceAll($el)[0]];
                     self.setup_resequence_rows(list, dataset);
+                }).always(function() {
                     if (post_render) { post_render(); }
                 });
             });
