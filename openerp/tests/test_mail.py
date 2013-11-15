@@ -26,7 +26,6 @@ import unittest2
 from . import test_mail_examples
 from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html
 
-
 class TestSanitizer(unittest2.TestCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
@@ -76,14 +75,18 @@ class TestSanitizer(unittest2.TestCase):
             ("<META HTTP-EQUIV=\"Link\" Content=\"<http://ha.ckers.org/xss.css>; REL=stylesheet\">"),  # remote style sheet 3
             ("<STYLE>BODY{-moz-binding:url(\"http://ha.ckers.org/xssmoz.xml#xss\")}</STYLE>"),  # remote style sheet 4
             ("<IMG STYLE=\"xss:expr/*XSS*/ession(alert('XSS'))\">"),  # style attribute using a comment to break up expression
-            #("""<!--[if gte IE 4]>
-            #    <SCRIPT>alert('XSS');</SCRIPT>
-            #    <![endif]-->"""),  # down-level hidden block
         ]
         for content in cases:
             html = html_sanitize(content)
             self.assertNotIn('javascript', html, 'html_sanitize did not remove a malicious javascript')
             self.assertTrue('ha.ckers.org' not in html or 'http://ha.ckers.org/xss.css' in html, 'html_sanitize did not remove a malicious code in %s (%s)' % (content, html))
+
+        # Raise an exception if the node is an empty string without any root tag
+        with self.assertRaises(etree.ParserError):
+            content = "<!--[if gte IE 4]><SCRIPT>alert('XSS');</SCRIPT><![endif]-->"  # down-level hidden block
+            html = html_sanitize(content, silent=False)
+
+
 
     def test_html(self):
         sanitized_html = html_sanitize(test_mail_examples.MISC_HTML_SOURCE)

@@ -250,8 +250,8 @@ class res_currency_rate(osv.osv):
     _description = "Currency Rate"
 
     _columns = {
-        'name': fields.date('Date', required=True, select=True),
-        'rate': fields.float('Rate', digits=(12,6), help='The rate of the currency to the currency of rate 1'),
+        'name': fields.datetime('Date', required=True, select=True),
+        'rate': fields.float('Rate', digits=(12, 6), help='The rate of the currency to the currency of rate 1'),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'currency_rate_type_id': fields.many2one('res.currency.rate.type', 'Currency Rate Type', help="Allow you to define your own currency rate types, like 'Average' or 'Year to Date'. Leave empty if you simply want to use the normal 'spot' rate type"),
     }

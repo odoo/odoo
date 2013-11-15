@@ -1407,7 +1407,7 @@ class dummy(function):
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=None, **args)
+        super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=self._fnct_search, **args)
 
 # ---------------------------------------------------------
 # Serialized fields
