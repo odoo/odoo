@@ -161,41 +161,16 @@ class PaymentTxOgone(osv.Model):
         'ogone_feedback_model': fields.char(),
         'ogone_feedback_eval': fields.char(),
         'ogone_complus': fields.char('Complus'),
+        'ogone_payid': fields.char()
     }
 
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
 
-    def _ogone_form_get_tx_from_shasign_out(self, cr, uid, data, context=None):
-        reference, pay_id, shasign = data.get('orderID'), data.get('PAYID'), data.get('SHASIGN')
-        if not reference or not pay_id or not shasign:
-            error_msg = 'Ogone: received data with missing reference (%s) or pay_id (%s) or shashign (%s)' % (reference, pay_id, shasign)
-            _logger.error(error_msg)
-            raise ValidationError(error_msg)
-
-        # find tx -> @TDENOTE use paytid ?
-        tx_ids = self.pool['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
-        if not tx_ids or len(tx_ids) > 1:
-            error_msg = 'Ogone: received data for reference' % (reference)
-            if not tx_ids:
-                error_msg += '; no order found'
-            else:
-                error_msg += '; multiple order found'
-            _logger.error(error_msg)
-            raise ValidationError(error_msg)
-        tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
-
-        # verify shasign
-        shasign_check = self.pool['payment.acquirer']._ogone_generate_shasign(tx.acquirer_id, 'out', data)
-        if shasign_check.upper() != shasign.upper():
-            error_msg = 'Ogone: invalid shasign, received %s, computed %s, for data %s' % (shasign, shasign_check, data)
-            _logger.error(error_msg)
-            raise ValidationError(error_msg)
-
-        return tx
-
     def ogone_form_generate_values(self, cr, uid, id, tx_custom_values=None, context=None):
+        """ Ogone-specific value generation for rendering a transaction-based
+        form button. """
         tx = self.browse(cr, uid, id, context=context)
 
         tx_data = {
@@ -217,16 +192,51 @@ class PaymentTxOgone(osv.Model):
             context=context
         )
 
+    def _ogone_form_get_tx_from_shasign_out(self, cr, uid, data, context=None):
+        """ Given a data dict coming from ogone, verify it and find the related
+        transaction record. """
+        reference, pay_id, shasign = data.get('orderID'), data.get('PAYID'), data.get('SHASIGN')
+        if not reference or not pay_id or not shasign:
+            error_msg = 'Ogone: received data with missing reference (%s) or pay_id (%s) or shashign (%s)' % (reference, pay_id, shasign)
+            _logger.error(error_msg)
+            raise ValidationError(error_msg)
+
+        # find tx -> @TDENOTE use paytid ?
+        tx_ids = self.pool['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
+        if not tx_ids or len(tx_ids) > 1:
+            error_msg = 'Ogone: received data for reference %s' % (reference)
+            if not tx_ids:
+                error_msg += '; no order found'
+            else:
+                error_msg += '; multiple order found'
+            _logger.error(error_msg)
+            raise ValidationError(error_msg)
+        tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
+
+        # verify shasign
+        shasign_check = self.pool['payment.acquirer']._ogone_generate_shasign(tx.acquirer_id, 'out', data)
+        if shasign_check.upper() != shasign.upper():
+            error_msg = 'Ogone: invalid shasign, received %s, computed %s, for data %s' % (shasign, shasign_check, data)
+            _logger.error(error_msg)
+            raise ValidationError(error_msg)
+
+        return tx
+
     def ogone_form_feedback(self, cr, uid, data, context=None):
-        print '-- ogone: ogone_form_feedback'
         tx = self._ogone_form_get_tx_from_shasign_out(cr, uid, data, context)
         if not tx:
             raise ValidationError('Ogone: feedback: tx not found')
+        if tx.state == 'done':
+            _logger.warning('Ogone: trying to validate an already validated tx (ref %s' % tx.reference)
+            return False
 
         status = int(data.get('STATUS', '0'))
-        print '\togone: statuts %s' % status
         if status in [5, 9]:
-            tx.write({'state': 'done'})
+            tx.write({
+                'state': 'done',
+                'date_validate': data['TRXDATE'],
+                'ogone_payid': data['PAYID'],
+            })
             return True
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
@@ -324,6 +334,9 @@ class PaymentTxOgone(osv.Model):
         tx_data['SHASIGN'] = shasign
         return tx_data
 
+    def ogone_s2s_feedback(self, cr, uid, data, context=None):
+        pass
+
     def ogone_s2s_execute(self, cr, uid, id, values, context=None):
         tx = self.browse(cr, uid, id, context=context)
 
@@ -400,4 +413,4 @@ class PaymentTxOgone(osv.Model):
         if not tx_done and tries == 0:
             raise Exception('Cannot get transaction status...')
 
-        return (tx_status, orderid, payid)
+        return tx_status
