@@ -143,6 +143,9 @@
             var bannerTour = new website.EditorBannerTour(this);
             var $menuItem = $($.parseHTML('<li><a href="#">'+bannerTour.name+'</a></li>'));
             $menuItem.click(function () {
+                if (url.pathname !== '/' && url.pathname !== '/page/website.homepage') {
+                    window.location.replace('/page/website.homepage?banner-tutorial=true');
+                }
                 bannerTour.reset();
                 bannerTour.start();
             });
