@@ -9,6 +9,7 @@
             <field name="zip">121006</field>
             <field name="country_id" ref="base.in"/>
             <field name="email">openerp.editor@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
         <record id="res_partner_oerp_us" model="res.partner">
             <field name="name">OpenERP US</field>
@@ -16,6 +17,7 @@
             <field name="street2">Arlington Heights</field>
             <field name="country_id" ref="base.us"/>
             <field name="email">openerp.us@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
         <record id="res_partner_oerp_in" model="res.partner">
             <field name="name">OpenERP IN</field>
@@ -25,6 +27,7 @@
             <field name="zip">400004</field>
             <field name="country_id" ref="base.in"/>
             <field name="email">openerp.in@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
         <record id="res_partner_oerp_be" model="res.partner">
             <field name="name">OpenERP BE</field>
@@ -33,6 +36,7 @@
             <field name="zip">1420</field>
             <field name="country_id" ref="base.be"/>
             <field name="email">openerp.be@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
         <record id="res_partner_odoo" model="res.partner">
             <field name="name">Odoo</field>
@@ -42,6 +46,7 @@
             <field name="zip">201</field>
             <field name="country_id" ref="base.cn"/>
             <field name="email">odoo@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
         </record>
 
 <!--                      Company                        -->
@@ -50,28 +55,24 @@
             <field name="parent_id" ref="base.main_company"/>
             <field name="currency_id" ref="base.EUR"/>
             <field name="name">OpenERP Editor</field>
-            <field name="is_company" eval="1" />
         </record>
         <record id="res_company_oerp_us" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_us"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
             <field name="currency_id" ref="base.EUR"/>
             <field name="name">OpenERP US</field>
-            <field name="is_company" eval="1" />
         </record>
         <record id="res_company_oerp_be" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_be"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
             <field name="currency_id" ref="base.EUR"/>
             <field name="name">OpenERP BE</field>
-            <field name="is_company" eval="1" />
         </record>
         <record id="res_company_oerp_in" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_in"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
             <field name="currency_id" ref="base.EUR"/>
             <field name="name">OpenERP IN</field>
-            <field name="is_company" eval="1" />
         </record>
         <record id="res_company_odoo" model="res.company">
             <field name="partner_id" ref="res_partner_odoo"/>
