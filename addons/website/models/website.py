@@ -285,16 +285,19 @@ class website(osv.osv):
         """
         endpoint = rule.endpoint
         methods = rule.methods or ['GET']
+        converters = rule._converters.values()
 
         return (
                 'GET' in methods
             and endpoint.exposed == 'http'
             and endpoint.auth in ('none', 'public')
             and getattr(endpoint, 'cms', False)
+            # preclude combinatorial explosion by only allowing a single converter
+            and len(converters) <= 1
             # ensure all converters on the rule are able to generate values for
             # themselves
             and all(hasattr(converter, 'generate')
-                    for converter in rule._converters.itervalues())
+                    for converter in converters)
         ) and self.endpoint_is_enumerable(rule)
 
     def endpoint_is_enumerable(self, rule):
@@ -345,30 +348,22 @@ class website(osv.osv):
                   of the same.
         :rtype: list({name: str, url: str})
         """
-        # FIXME: possibility to add custom converters without editing server
-        #        would allow the creation of a pages converter generating page
-        #        urls on its own
-        View = self.pool['ir.ui.view']
-        views = View.search_read(cr, uid, [['page', '=', True]],
-                                 fields=['name'], order='name', context=context)
-        xids = View.get_external_id(cr, uid, [view['id'] for view in views], context=context)
-        for view in views:
-            if xids[view['id']]:
-                yield {
-                    'name': view['name'],
-                    'url': '/page/' + xids[view['id']],
-                }
-
         router = request.httprequest.app.get_db_router(request.db)
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
 
-            generated = map(dict, itertools.product(*(
-                # generate w/ pattern using name_search
-                itertools.izip(itertools.repeat(name), converter.generate())
-                for name, converter in rule._converters.iteritems()
-            )))
+            converters = rule._converters
+            if converters:
+                # allow single converter as decided by fp, checked by
+                # rule_is_enumerable
+                [(name, converter)] = converters.items()
+                generated = ({k: v} for k, v in itertools.izip(
+                                        itertools.repeat(name),
+                                        converter.generate()))
+            else:
+                # force single iteration for literal urls
+                generated = [{}]
 
             for values in generated:
                 domain_part, url = rule.build(values, append_unknown=False)
