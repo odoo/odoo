@@ -91,8 +91,7 @@ class survey_survey(osv.osv):
         'date_open': fields.datetime('Opening date'),
         'date_close': fields.datetime('Closing date'),
         'user_input_limit': fields.integer('Automatic closing limit',
-            help="Limits the number of instances of this survey that can be \
-            completed (if set to 0, no limit is applied",
+            help="Limits the number of instances of this survey that can be completed (if set to 0, no limit is applied",
             oldname='max_response_limit'),
         'state': fields.selection(
             [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
@@ -106,8 +105,8 @@ class survey_survey(osv.osv):
             string="Number of started surveys", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey,
             string="Number of completed surveys", type="integer"),
-        'description': fields.text('Description', size=128, translate=True,
-            oldname="description"),
+        'description': fields.html('Description', translate=True,
+            oldname="description", help="A long description of the purpose of the survey"),
         'color': fields.integer('Color Index'),
         'user_input_ids': fields.one2many('survey.user_input', 'survey_id',
             'User responses', readonly=1,),
@@ -115,9 +114,11 @@ class survey_survey(osv.osv):
             string="Public link", searchable=True, type="char"),  # store=True),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
+        'thank_you_message': fields.html('Thank you message', translate=True,
+            help="This message will be displayed when survey is completed")
     }
     _defaults = {
-        'category': 'Uncategorized',
+        'category': lambda x: _('Uncategorized'),
         'user_input_limit': 0,
         'state': 'draft',
         'visible_to_user': True,
@@ -279,9 +280,13 @@ class survey_page(osv.osv):
         'question_ids': fields.one2many('survey.question', 'page_id',
             'Questions'),
         'sequence': fields.integer('Page number'),
-        'description': fields.text('Description',
+        'description': fields.html('Description',
             help="An introductory text to your page", translate=True,
             oldname="note"),
+    }
+
+    _defaults = {
+        'sequence': 1
     }
 
     # Public methods #
@@ -335,7 +340,7 @@ class survey_question(osv.osv):
 
         # Question
         'question': fields.char('Question', required=1, translate=True),
-        'description': fields.text('Description', help="Use this field to add \
+        'description': fields.char('Description', help="Use this field to add \
             additional explanations about your question", translate=True,
             oldname='descriptive_text'),
 
@@ -347,9 +352,7 @@ class survey_question(osv.osv):
                 ('simple_choice_scale', 'One choice on a scale'),
                 ('simple_choice_dropdown', 'One choice in a menu'),
                 ('multiple_choice', 'Some choices in checkboxes'),
-                ('vector', 'Multi-questions'),
-                ('matrix', 'Matrix')
-            ], 'Question Type', required=1),
+                ('matrix', 'Matrix')], 'Question Type', required=1),
         'suggested_answers_ids': fields.one2many('survey.suggestion',
             'question_id', 'Suggested answers', oldname='answer_choice_ids'),
 
@@ -368,10 +371,11 @@ class survey_question(osv.osv):
             ('has_length', 'Must have a specific length'),
             ('is_integer', 'Must be an integer'),
             ('is_decimal', 'Must be a decimal number'),
-            #('is_date', 'Must be a date'),
+            ('is_date', 'Must be a date'),
             ('is_email', 'Must be an email address')
             ], 'Validation type'),
-        'validation_length': fields.integer('Specific length'),
+        'validation_length_min': fields.integer('Minimum length'),
+        'validation_length_max': fields.integer('Maximum length'),
         'validation_min_float_value': fields.float('Minimum value'),
         'validation_max_float_value': fields.float('Maximum value'),
         'validation_min_int_value': fields.integer('Minimum value'),
@@ -399,15 +403,18 @@ class survey_question(osv.osv):
     }
     _defaults = {
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
+        'sequence': 1,
         'type': 'free_text',
-
         'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
         'constr_type': 'at least',
         'constr_minimum_req_ans': 1,
         'constr_error_msg': lambda s, cr, uid, c:
                 _('This question requires an answer.'),
         'validation_required': 'False',
+        'validation_length_min': 0,
+        'validation_length_max': 5000,
     }
+    _sql_constraints = [('validation_length', 'CHECK (validation_length_min <= validation_length_max)',  'Max length cannot be smaller than min length!')]
 
     def on_change_page_id(self, cr, uid, ids, page_id, context=None):
         if page_id:

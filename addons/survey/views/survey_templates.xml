@@ -9,13 +9,12 @@
                         <h1>Open surveys</h1>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                <tr><th>Title</th><th>Category</th><th>Description</th><th>Public URL</th></tr>
+                                <tr><th>Title</th><th>Description</th><th>Category</th></tr>
                                 <t t-foreach="surveys" t-as="survey">
                                     <tr>
-                                        <td><span t-field="survey.title" /></td>
+                                        <td><a t-att-href="survey.public_url"><span t-field="survey.title" /></a></td>
+                                        <td><t t-if="survey.description"><span t-field="survey.description"/></t></td>
                                         <td><span t-field="survey.category"/></td>
-                                        <td><t t-if="survey.description is not False"><span t-field="survey.description"/></t></td>
-                                        <td><a t-att-href="survey.public_url"><t t-esc="survey.id" /></a></td>
                                     </tr>
                                 </t>
                             </table>
@@ -25,14 +24,14 @@
             </t>
         </template>
 
-        <!-- List of all the surveys -->
+        <!-- Thank you message when the survey is completed -->
         <template id="finished" name="Survey Finished">
             <t t-call="website.layout">
                 <div class="wrap">
                     <div class="container">
                         <div class="jumbotron">
                             <h1>Thank you!</h1>
-                            <p>Your answers have been recorded.</p>
+                            <div t-field="survey.thank_you_message" />
                         </div>
                     </div>
                 </div>
@@ -53,7 +52,7 @@
                                 <t t-if="pagination['current'] == -1">
                                     <div class='jumbotron'>
                                         <h1><span t-field='survey.title'/></h1>
-                                        <t t-if="survey.description"><p><span t-field='survey.description'/></p></t>
+                                        <div t-field='survey.description' />
                                         <form role="form" method="post" t-att-name="survey.id.__str__() + '_-1'" t-att-action="'/survey/fill/' + survey.id.__str__()" target="">
                                             <input type="hidden" name="current" t-att-value="pagination['current'].__str__()" />
                                             <input type="hidden" name="next" t-att-value="pagination['next'].__str__()" />
@@ -85,11 +84,11 @@
         <!-- A page -->
         <template id="page" name="Page">
             <div class="page-header">
-                <h2><span t-field='page.title' /></h2>
-                <p><t t-if="page.description"><span t-field='page.description'/></t></p>
+                <h1><span t-field='page.title' /></h1>
+                <div t-field='page.description'/>
             </div>
 
-            <form role="form" method="post" t-att-name="survey.id.__str__() + '_' + pagination['current'].__str__()" t-att-action="'/survey/fill/' + survey.id.__str__()" t-att-data-prefill="'/survey/prefill/' + survey.id.__str__()" t-att-data-validate="'/survey/validate/' + survey.id.__str__()" t-att-data-submit="'/survey/submit/' + survey.id.__str__()">
+            <form role="form" method="post" class="js_surveyform" t-att-name="survey.id.__str__() + '_' + pagination['current'].__str__()" t-att-action="'/survey/fill/' + survey.id.__str__()" t-att-data-prefill="'/survey/prefill/' + survey.id.__str__()" t-att-data-validate="'/survey/validate/' + survey.id.__str__()" t-att-data-submit="'/survey/submit/' + survey.id.__str__()">
                 <input type="hidden" name="current" t-att-value="pagination['current'].__str__()" />
                 <input type="hidden" name="next" t-att-value="pagination['next'].__str__()" />
                 <t t-foreach='page.question_ids' t-as='question'>
@@ -106,90 +105,94 @@
         <template id='question' name='Question'>
 
             <!-- Detection of matrix/vector elements and creating flags for easy use -->
-            <t t-if="question.parent_id and question.children_ids"><t t-set="is_matrix_vector" t-value="True" /></t>
+<!--             <t t-if="question.parent_id and question.children_ids"><t t-set="is_matrix_vector" t-value="True" /></t>
             <t t-if="question.parent_id"><t t-set="is_vector_element" t-value="True" /></t>
-
+ -->
             <div class="question-wrapper" t-att-id="prefix">
 
-            <t t-if="not is_vector_element"> <!-- if -->
-                <h3><span t-field='question.question' /> <t t-if="question.constr_mandatory"><abbr title="This question is mandatory." class="text-danger">*</abbr></t></h3>
-                <p class="text-muted"><t t-if="question.description"><span t-field='question.description'/></t></p>
-            </t>
-            <t t-if="is_vector_element"> <!-- else -->
-                <t t-if="question.type == 'simple_choice_scale'">
-                    <span t-field='question.question' t-att-id="prefix"/><t t-raw="'&lt;/td&gt;&lt;td&gt;'" />
+            <t t-if="question.type in ['free_text']"><t t-call="survey.free_text"/></t>
+            <t t-if="question.type in ['textbox']"><t t-call="survey.textbox"/></t>
+
+  <!--                   <h2><span t-field='question.question' /> <t t-if="question.constr_mandatory"><abbr title="This question is mandatory." class="text-danger">*</abbr></t></h2>
+                    <p class="text-muted"><t t-if="question.description"><span t-field='question.description'/></t></p> -->
+
+
+                <!-- instanciating different types of questions -->
+  <!--
+
+                <t t-if="question.type in ['numerical_box']">
+                    <input type="number" step=".1" class="form-control" t-att-name="prefix"/>
                 </t>
-            </t> <!-- endif -->
 
-            <!-- instanciating different types of questions -->
-            <t t-if="question.type in ['free_text']">
-                <textarea class="form-control" rows="3" t-att-name="prefix"></textarea>
-            </t>
-
-            <t t-if="question.type in ['textbox']">
-                <input type="text" class="form-control" t-att-name="prefix"/>
-            </t>
-
-            <t t-if="question.type in ['numerical_box']">
-                <input type="number" step=".1" class="form-control" t-att-name="prefix"/>
-            </t>
-
-            <t t-if="question.type in ['datetime']" >
-                <input type="datetime-local" class="form-control" t-att-name="prefix" placeholder="jj-mm-aaaaThh:mm" />
-                TODO: replace html5 datetime widget by OpenERP-CMS datetime widget
-            </t>
-
-            <t t-if="question.type in ['simple_choice_scale']">
-                <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" t-att-name="prefix" t-att-value='suggestion.value' />
-                            <span t-field='suggestion.value'/>
-                        </label>
-                    </div>
+                <t t-if="question.type in ['datetime']" >
+                    <input type="datetime-local" class="form-control" t-att-name="prefix" placeholder="jj-mm-aaaaThh:mm" />
+                    TODO: replace html5 datetime widget by OpenERP-CMS datetime widget
                 </t>
-            </t>
 
-            <t t-if="question.type in ['simple_choice_dropdown']">
-                <select class="form-control" t-att-name="prefix">
-                    <option disabled="1" selected="1">Choose...</option>
+                <t t-if="question.type in ['simple_choice_scale']">
                     <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
-                        <option><t t-esc='suggestion.value'/></option>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" t-att-name="prefix" t-att-value='suggestion.value' />
+                                <span t-field='suggestion.value'/>
+                            </label>
+                        </div>
                     </t>
-                </select>
-            </t>
-
-            <t t-if="question.type in ['multiple_choice']">
-                <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" t-att-name="prefix + '_' + suggestion.id.__str__()" t-att-value='suggestion.value' />
-                            <span t-field='suggestion.value'/>
-                        </label>
-                    </div>
                 </t>
-            </t>
 
-            <t t-if="question.type in ['matrix']">
-                <table class="table table-responsive">
-                    <t t-foreach='question.children_ids' t-as='question'>
-                        <t t-call='survey.question' />
+                <t t-if="question.type in ['simple_choice_dropdown']">
+                    <select class="form-control" t-att-name="prefix">
+                        <option disabled="1" selected="1">Choose...</option>
+                        <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
+                            <option><t t-esc='suggestion.value'/></option>
+                        </t>
+                    </select>
+                </t>
+
+                <t t-if="question.type in ['multiple_choice']">
+                    <t t-foreach='question.suggested_answers_ids' t-as='suggestion'>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" t-att-name="prefix + '_' + suggestion.id.__str__()" t-att-value='suggestion.value' />
+                                <span t-field='suggestion.value'/>
+                            </label>
+                        </div>
                     </t>
-                </table>
-            </t>
+                </t>
 
-            <!-- Comments -->
-            <t t-if="question.comments_allowed">
-                Other: <input type="text" class="form-control" />
-            </t>
+                <t t-if="question.type in ['matrix']">
+                    <table class="table table-responsive">
+                        <t t-foreach='question.children_ids' t-as='question'>
+                            <t t-call='survey.question' />
+                        </t>
+                    </table>
+                </t> -->
+
+                <!-- Comments -->
+<!--                 <t t-if="question.comments_allowed">
+                    Other: <input type="text" class="form-control" />
+                </t> -->
 
 
-            <div class="js_errzone alert alert-danger" style="display:none;"></div>
+                <div class="js_errzone alert alert-danger" style="display:none;"></div>
             </div>
 
 
         </template>
 
+
+        <!-- Question widgets -->
+        <template id="free_text" name="Free text box">
+            <h2><span t-field='question.question' /><t t-if="question.constr_mandatory"><abbr title="This question is mandatory." class="text-danger">*</abbr></t></h2>
+            <p class="text-muted"><t t-if="question.description"><span t-field='question.description'/></t></p>
+            <textarea class="form-control" rows="3" t-att-name="prefix"></textarea>
+        </template>
+
+        <template id="textbox" name="Text box">
+            <h2><span t-field='question.question' /><t t-if="question.constr_mandatory"><abbr title="This question is mandatory." class="text-danger">*</abbr></t></h2>
+            <p class="text-muted"><t t-if="question.description"><span t-field='question.description'/></t></p>
+            <input type="text" class="form-control" t-att-name="prefix"/>
+        </template>
 
         <!-- Printable view of a survey (all pages) -->
         <template id="survey_print" name="Survey">
