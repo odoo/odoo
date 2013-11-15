@@ -129,7 +129,9 @@ div.oe_menu_buttons
     top: -8px
     right: -8px
 ul.oe_menu_editor
-    > li:first-child > div > i:before
+    .icon-home:before
+        content: " "
+    > li:first-child > div > i.icon-home:before
         content: "\f015"
     &, & ul
         list-style-type: none

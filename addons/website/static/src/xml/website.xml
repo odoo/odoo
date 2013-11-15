@@ -23,7 +23,7 @@
                         <li class="divider-vertical"></li>
                         <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
                         <li class="dropdown js_hide_on_translate">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Content <span class="caret"></span></a>
+                            <a id="content-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Content <span class="caret"></span></a>
                             <ul class="dropdown-menu oe_content_menu" role="menu">
                                 <li><a data-action="edit-structure" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
                                 <li class="divider"> </li>
@@ -101,22 +101,27 @@
         <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" t-if="window_title">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         <h3 class="modal-title"><t t-esc="window_title"/></h3>
                     </div>
                     <div class="modal-body">
-                        <h4 class="list-group-item-heading">
-                            <label for="page-name" class="control-label">
-                                <t t-esc="field_name"/>
+                        <form class="form-horizontal" role="form">
+                        <div class="form-group mb0">
+                            <label for="page-name" class="col-sm-3 control-label">
+                                <t t-esc="field_name"/>:
                             </label>
-                        </h4>
-                        <!-- TODO: support other types -->
-                        <input type="text" class="form-control" required="required" t-att-placeholder="field_name"/>
+                            <div class="col-sm-9">
+                                <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
+                                <textarea t-if="field_type == 'textarea'" class="form-control" required="required" rows="5"></textarea>
+                                <select t-if="field_type == 'select'" class="form-control"></select>
+                            </div>
+                        </div>
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                        <button type="button" class="btn btn-primary">Ok</button>
+                        <button type="button" class="btn btn-primary">Continue</button>
                     </div>
                 </div>
             </div>

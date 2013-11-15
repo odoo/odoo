@@ -431,7 +431,7 @@ class product_template(osv.osv):
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Product Variants'),
+        'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Product Variants', required=True),
     }
 
     def _get_uom_id(self, cr, uid, *args):

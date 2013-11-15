@@ -99,7 +99,8 @@
                             <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.basic.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.tour.builder.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
                             <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
@@ -399,9 +400,10 @@
                         <h1 class="container mt32">500: Internal Server Error!</h1>
                     </div>
                     <t t-if="editable">
-                        <h3>Exception in template: <span id="exception_template" t-esc="template"/></h3>
+                        <h3 t-if="template">Exception in template: <span id="exception_template" t-esc="template"/></h3>
+                        <h3 t-if="controller">Exception in controller: <span id="exception_controller" t-esc="controller[1]"/> <small>(Module: <span id="exception_module" t-esc="controller[0]"/>)</small> </h3>
                         <h4 t-if="expr">Expression: <t t-esc="expr"/></h4>
-                        <pre id="exception_node" t-esc="node"/>
+                        <t t-if="node"><pre id="exception_node" t-esc="node"/></t>
                         <pre id="exception_traceback" t-esc="traceback"/>
                     </t>
                 </div>
@@ -416,11 +418,14 @@
                     <p>
                         The page you were looking for could not be
                         authorized.
-                    </p><p>
+                    </p>
+                    <t t-if="error and editable">
+                        <pre t-esc="error"/>
+                    </t>
+                    <p>
                         Maybe you were looking for one of these
                         popular pages ?
                     </p>
-                    <pre t-if="editable" t-esc="error"/>
                     <ul>
                         <li><a href="/">Homepage</a></li>
                         <li><a href="/page/website.contactus/">Contact Us</a></li>

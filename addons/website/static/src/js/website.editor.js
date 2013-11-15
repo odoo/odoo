@@ -544,7 +544,10 @@
         },
         new_page: function (ev) {
             ev.preventDefault();
-            website.prompt('Create a new page', 'Page name').then(function (val) {
+            website.prompt({
+                window_title: "New Page",
+                input: "Page Title",
+            }).then(function (val) {
                 document.location = '/pagenew/' + encodeURI(val);
             });
         },

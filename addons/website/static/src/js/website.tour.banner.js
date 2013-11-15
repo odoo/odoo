@@ -5,7 +5,7 @@
 
     var render = website.tour.render;
 
-    website.EditorBasicTour = website.EditorTour.extend({
+    website.EditorBannerTour = website.EditorTour.extend({
         id: 'add_banner_tour',
         name: "Insert a banner",
         init: function (editor) {
@@ -17,7 +17,7 @@
                     orphan: true,
                     backdrop: true,
                     title: "Welcome to your website!",
-                    content: "This tutorial will guide you to build your first page. We will start by adding a banner.",
+                    content: "This tutorial will guide you to build your home page. We will start by adding a banner.",
                     template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
                 },
                 {
@@ -71,7 +71,7 @@
                 {
                     stepId: 'edit-title',
                     element: '#wrap [data-snippet-id=carousel]:first .carousel-caption',
-                    placement: 'left',
+                    placement: 'top',
                     title: "Customize banner's text",
                     content: "Click in the text and start editing it. Click continue once it's done.",
                     template: render('website.tour_popover', { next: "Continue" }),
@@ -87,7 +87,7 @@
                     element: '.oe_overlay_options .oe_options',
                     placement: 'left',
                     title: "Customize the banner",
-                    content: "You can customize components of your page through the <em>Customize</em> menu. Try to change the background of your banner.",
+                    content: "You can customize characteristic of any blocks through the Customize menu. For instance, change the background of the banner.",
                     template: render('website.tour_popover', { next: "Continue" }),
                     onShow: function () {
                         $('.dropdown-menu [name=carousel-background]').click(function () {
@@ -120,7 +120,7 @@
                     element: '#help-menu-button',
                     placement: 'left',
                     title: "Help is always available",
-                    content: "But you can always click here if you want more tutorials.",
+                    content: "You can always click here if you want more helps or continue to build and get more tips about your website contents like page menu, ...",
                     template: render('website.tour_popover', { end: "Close" }),
                 }
             ];
@@ -140,21 +140,17 @@
     website.EditorBar.include({
         start: function () {
             var menu = $('#help-menu');
-            var basicTour = new website.EditorBasicTour(this);
-            var $menuItem = $($.parseHTML('<li><a href="#">'+basicTour.name+'</a></li>'));
+            var bannerTour = new website.EditorBannerTour(this);
+            var $menuItem = $($.parseHTML('<li><a href="#">'+bannerTour.name+'</a></li>'));
             $menuItem.click(function () {
-                basicTour.reset();
-                basicTour.start();
+                bannerTour.reset();
+                bannerTour.start();
             });
             menu.append($menuItem);
             var url = new website.UrlParser(window.location.href);
-            if (url.search.indexOf('?tutorial=true') === 0 || basicTour.startOfPart2()) {
-                basicTour.start();
+            if (url.search.indexOf('?tutorial=true') === 0 || bannerTour.startOfPart2()) {
+                bannerTour.start();
             }
-            $('.tour-backdrop').click(function (e) {
-                e.stopImmediatePropagation();
-                e.preventDefault();
-            });
             return this._super();
         },
     });

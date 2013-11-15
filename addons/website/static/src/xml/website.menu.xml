@@ -12,6 +12,7 @@
                     <i class="icon-trash"/>
                 </button>
             </div>
+            <i class="icon-home pull-right"/>
         </div>
         <t t-set="children" t-value="submenu.children"/>
         <ul t-if="children">
@@ -29,11 +30,16 @@
                 <t t-call="website.menu.dialog.submenu"/>
             </t>
         </ul>
-        <p class="mt32">
-            <a href="#" class="js_add_menu">
-                <i class="icon-plus-sign"/> Add Menu Entry
-            </a>
-        </p>
+        <div class="mt16">
+            <div class="pull-right text-muted">
+                <span class="icon-indent-right"/> right indent for multi-level menus
+            </div>
+            <div>
+                <a href="#" class="js_add_menu">
+                    <i class="icon-plus-sign"/> Add Menu Entry
+                </a>
+            </div>
+        </div>
     </t>
 </t>
 <t t-name="website.menu.dialog.add" t-extend="website.editor.dialog.link">
