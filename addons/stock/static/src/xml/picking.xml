@@ -59,7 +59,7 @@
                     <col class='oe_pick_col_small'></col>
                     <col class='oe_pick_col_small'></col>
                     <col class='oe_pick_col_expand'></col>
-                    <col class='oe_pick_col_expand'></col>
+                    <col class='oe_pick_col_small'></col>
                 </colgroup>
 
                 <thead>
@@ -69,7 +69,7 @@
                         <th class='oe_centeralign'>Rem</th> 
                         <th class='oe_centeralign'>UoM</th> 
                         <th>Location</th> 
-                        <th>Status</th>
+                        <th>Scan</th>
                     </tr>
                 </thead>
 
@@ -81,7 +81,7 @@
                             <td class='oe_centeralign'> <t t-esc="row.cols.rem" /> </td>
                             <td class='oe_centeralign'> <t t-esc="row.cols.uom" /> </td>
                             <td> <t t-esc="row.cols.loc" /> </td>
-                            <td> <t t-esc="row.cols.stat" /> </td>
+                            <td><span class='oe_row_button oe_expanded js_pack_scan' t-att-op-id='row.cols.id'>➔</span></td>
                         </tr>
                     </t>
                 </tbody>
@@ -111,7 +111,7 @@
 
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
-                        <tr t-att-class="row.classes">
+                        <tr t-att-class="row.classes" t-att-op-id="row.att_op_id">
                             <td> <t t-esc="row.cols.product" /> </td>
                             <td class='oe_centeralign'> <t t-esc="row.cols.qty" /> </td>
                             <td class='oe_centeralign'> <t t-esc="row.cols.uom" /> </td>
