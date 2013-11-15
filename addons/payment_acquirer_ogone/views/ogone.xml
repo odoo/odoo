@@ -31,12 +31,17 @@
                 <input type='hidden' name='BUTTONTXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
                 <input type='hidden' name='LOGO' t-att-value='tx_dict["currency_name"]'/>
                 <input type='hidden' name='FONTTYPE' t-att-value='tx_dict["currency_name"]'/> -->
+                <!-- after payment parameters -->
+                <t t-if='tx_values.get("PARAMPLUS")'>
+                    <input type='hidden' name="PARAMPLUS" t-att-value='tx_values["PARAMPLUS"]'/>
+                </t>
                 <!-- redirection -->
                 <input type='hidden' name='ACCEPTURL' t-att-value='tx_values["ACCEPTURL"]'/>
                 <input type='hidden' name='DECLINEURL' t-att-value='tx_values["DECLINEURL"]'/>
                 <input type='hidden' name='EXCEPTIONURL' t-att-value='tx_values["EXCEPTIONURL"]'/>
                 <input type='hidden' name='CANCELURL' t-att-value='tx_values["CANCELURL"]'/>
-                <input type="image" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
+                <input type="image" name="submit" id="payment_submit"
+                    src="/payment_acquirer_ogone/static/src/img/ogone_logo_plain.gif"/>
             </form>
         </template>
 

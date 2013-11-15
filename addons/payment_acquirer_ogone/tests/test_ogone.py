@@ -25,7 +25,7 @@ from openerp.addons.payment_acquirer_ogone.controllers.main import OgoneControll
 
 from lxml import objectify
 # import requests
-# import urlparse
+import urlparse
 
 
 class BasicPayment(PaymentAcquirerCommon):
@@ -68,11 +68,11 @@ class BasicPayment(PaymentAcquirerCommon):
             'OWNERCTY': 'Belgium',
             'OWNERTOWN': 'Sin City',
             'OWNERTELNO': '0032 12 34 56 78',
-            'SHASIGN': 'ea74bb42d4f25746279cdd44a737aaddc71e7f9f',
-            'ACCEPTURL': '%s/%s' % (base_url, OgoneController._accept_url),
-            'DECLINEURL': '%s/%s' % (base_url, OgoneController._decline_url),
-            'EXCEPTIONURL': '%s/%s' % (base_url, OgoneController._exception_url),
-            'CANCELURL': '%s/%s' % (base_url, OgoneController._cancel_url),
+            'SHASIGN': '815f67b8ff70d234ffcf437c13a9fa7f807044cc',
+            'ACCEPTURL': '%s' % urlparse.urljoin(base_url, OgoneController._accept_url),
+            'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),
+            'EXCEPTIONURL': '%s' % urlparse.urljoin(base_url, OgoneController._exception_url),
+            'CANCELURL': '%s' % urlparse.urljoin(base_url, OgoneController._cancel_url),
         }
 
         # render the button

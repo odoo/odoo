@@ -27,7 +27,7 @@ from pprint import pformat
 import time
 from urllib import urlencode
 import urllib2
-# import urlparse
+import urlparse
 
 from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
 from openerp.addons.payment_acquirer_ogone.controllers.main import OgoneController
@@ -130,20 +130,26 @@ class PaymentAcquirerOgone(osv.Model):
             'CN': partner and partner.name or partner_values.get('name', ''),
             'EMAIL': partner and partner.email or partner_values.get('email', ''),
             'OWNERZIP': partner and partner.zip or partner_values.get('zip', ''),
-            'OWNERADDRESS': partner and ' '.join((partner.street, partner.street2)).strip() or ' '.join((partner_values.get('street', ''), partner_values.get('street2', ''))).strip(),
+            'OWNERADDRESS': partner and ' '.join((partner.street or '', partner.street2 or '')).strip() or ' '.join((partner_values.get('street', ''), partner_values.get('street2', ''))).strip(),
             'OWNERTOWN': partner and partner.city or partner_values.get('city', ''),
             'OWNERCTY': partner and partner.country_id and partner.country_id.name or partner_values.get('country_name', ''),
             'OWNERTELNO': partner and partner.phone or partner_values.get('phone', ''),
-            'ACCEPTURL': '%s/%s' % (base_url, OgoneController._accept_url),
-            'DECLINEURL': '%s/%s' % (base_url, OgoneController._decline_url),
-            'EXCEPTIONURL': '%s/%s' % (base_url, OgoneController._exception_url),
-            'CANCELURL': '%s/%s' % (base_url, OgoneController._cancel_url),
+            'ACCEPTURL': '%s' % urlparse.urljoin(base_url, OgoneController._accept_url),
+            'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),
+            'EXCEPTIONURL': '%s' % urlparse.urljoin(base_url, OgoneController._exception_url),
+            'CANCELURL': '%s' % urlparse.urljoin(base_url, OgoneController._cancel_url),
         }
+        if tx_custom_values and tx_custom_values.get('return_url'):
+            tx_values['PARAMPLUS'] = 'return_url=%s' % tx_custom_values.pop('return_url')
         if tx_custom_values:
             tx_values.update(tx_custom_values)
         shasign = self._ogone_generate_shasign(acquirer, 'in', tx_values)
         tx_values['SHASIGN'] = shasign
         return tx_values
+
+    def ogone_get_form_action_url(self, cr, uid, id, context=None):
+        acquirer = self.browse(cr, uid, id, context=context)
+        return acquirer.ogone_standard_order_url
 
 
 class PaymentTxOgone(osv.Model):
@@ -181,7 +187,7 @@ class PaymentTxOgone(osv.Model):
         tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
         # verify shasign
-        shasign_check = self.pool['payment.acquirer']._generate_ogone_shasign(tx.acquirer_id, 'out', data)
+        shasign_check = self.pool['payment.acquirer']._ogone_generate_shasign(tx.acquirer_id, 'out', data)
         if shasign_check.upper() != shasign.upper():
             error_msg = 'Ogone: invalid shasign, received %s, computed %s, for data %s' % (shasign, shasign_check, data)
             _logger.error(error_msg)
@@ -213,7 +219,7 @@ class PaymentTxOgone(osv.Model):
 
     def ogone_form_feedback(self, cr, uid, data, context=None):
         print '-- ogone: ogone_form_feedback'
-        tx = self._ogone_get_tx_from_shasign_out(cr, uid, data, context)
+        tx = self._ogone_form_get_tx_from_shasign_out(cr, uid, data, context)
         if not tx:
             raise ValidationError('Ogone: feedback: tx not found')
 
