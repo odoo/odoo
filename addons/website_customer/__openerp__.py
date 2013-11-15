@@ -33,6 +33,9 @@ OpenERP Customer References
         'website_partner',
         'website_google_map'
     ],
+    'demo': [
+        'website_customer_demo.xml',
+    ],
     'data': [
         'views/website_customer.xml',
     ],

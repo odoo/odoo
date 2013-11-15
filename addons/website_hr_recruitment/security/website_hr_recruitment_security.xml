@@ -5,7 +5,15 @@
         <field name="name">Job Positions: Public</field>
         <field name="model_id" ref="hr.model_hr_job"/>
         <field name="domain_force">[('website_published', '=', True)]</field>
-        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="hr_department_public" model="ir.rule">
+        <field name="name">Job department: Public</field>
+        <field name="model_id" ref="hr.model_hr_department"/>
+        <field name="domain_force">[('department_ids.website_published', '=', True)]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -13,3 +21,4 @@
     </record>
 </data>
 </openerp>
+

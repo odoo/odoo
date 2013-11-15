@@ -26,7 +26,7 @@
                 self.snippets.$button.removeClass("hidden");
                 website.snippet.stop_animation();
                 website.snippet.start_animation();
-                self.trigger('rte:snippets_ready');
+                self.trigger('tour:editor_bar_loaded');
             });
 
             return this._super.apply(this, arguments);

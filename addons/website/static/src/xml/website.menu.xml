@@ -1,17 +1,20 @@
 <templates id="template" xml:space="preserve">
 <t t-name="website.menu.dialog.submenu">
     <li t-att-data-menu-id="submenu.id">
-        <div>
-            <i class="icon-reorder"/>
-            <span><t t-esc="submenu.name"/></span>
-            <div class="btn-group btn-group-xs pull-right oe_menu_buttons">
-                <button type="button" class="btn js_edit_menu">
+        <div class="input-group">
+            <span class="input-group-addon icon-reorder"/>
+            <span type="text" class="form-control">
+                <t t-esc="submenu.name"/>
+                <i class="pull-right icon-home" style="margin-top: 3px"/>
+            </span>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-primary js_edit_menu">
                     <i class="icon-edit"/>
                 </button>
-                <button type="button" class="btn js_delete_menu">
+                <button type="button" class="btn btn-danger js_delete_menu">
                     <i class="icon-trash"/>
                 </button>
-            </div>
+            </span>
         </div>
         <t t-set="children" t-value="submenu.children"/>
         <ul t-if="children">
@@ -24,16 +27,21 @@
 <t t-name="website.menu.dialog.edit">
     <t t-call="website.editor.dialog">
         <t t-set="title">Edit Menu</t>
-        <ul class="oe_menu_editor">
+        <ul class="oe_menu_editor list-unstyled">
             <t t-foreach="widget.menu.children" t-as="submenu">
                 <t t-call="website.menu.dialog.submenu"/>
             </t>
         </ul>
-        <p class="mt32">
-            <a href="#" class="js_add_menu">
-                <i class="icon-plus-sign"/> Add Menu Entry
-            </a>
-        </p>
+        <div class="mt16">
+            <div class="pull-right text-muted">
+                <span class="icon-indent-right"/> right indent for multi-level menus
+            </div>
+            <div>
+                <a href="#" class="js_add_menu">
+                    <i class="icon-plus-sign"/> Add Menu Entry
+                </a>
+            </div>
+        </div>
     </t>
 </t>
 <t t-name="website.menu.dialog.add" t-extend="website.editor.dialog.link">

@@ -40,7 +40,10 @@
 
     var all_ready = null;
     var dom_ready = website.dom_ready = $.Deferred();
-    $(dom_ready.resolve);
+    $(document).ready(function () {
+        website.is_editable = $('html').data('editable');
+        dom_ready.resolve();
+    });
 
     website.init_kanban = function ($kanban) {
         $('.js_kanban_col', $kanban).each(function () {
@@ -105,8 +108,10 @@
      */
     website.ready = function() {
         if (!all_ready) {
-            all_ready = $.when(dom_ready, templates_def).then(function () {
-                if ($('html').data('editable')) {
+            all_ready = dom_ready.then(function () {
+                return templates_def;
+            }).then(function () {
+                if (website.is_editable) {
                     website.id = $('html').data('website-id');
                     website.session = new openerp.Session();
                     var modules = ['website'];
@@ -125,6 +130,92 @@
         }));
         $error.appendTo("body");
         $error.modal('show');
+    };
+
+    website.prompt = function (options) {
+        /**
+         * A bootstrapped version of prompt() albeit asynchronous
+         * This was built to quickly prompt the user with a single field.
+         * For anything more complex, please use editor.Dialog class
+         *
+         * Usage Ex:
+         *
+         * website.prompt("What... is your quest ?").then(function (answer) {
+         *     arthur.reply(answer || "To seek the Holy Grail.");
+         * });
+         *
+         * website.prompt({
+         *     select: "Please choose your destiny",
+         *     init: function() {
+         *         return [ [0, "Sub-Zero"], [1, "Robo-Ky"] ];
+         *     }
+         * }).then(function (answer) {
+         *     mame_station.loadCharacter(answer);
+         * });
+         *
+         * @param {Object|String} options A set of options used to configure the prompt or the text field name if string
+         * @param {String} [options.window_title=''] title of the prompt modal
+         * @param {String} [options.input] tell the modal to use an input text field, the given value will be the field title
+         * @param {String} [options.textarea] tell the modal to use a textarea field, the given value will be the field title
+         * @param {String} [options.select] tell the modal to use a select box, the given value will be the field title
+         * @param {Object} [options.default=''] default value of the field
+         * @param {Function} [options.init] optional function that takes the `field` (enhanced with a fillWith() method) and the `dialog` as parameters [can return a deferred]
+         */
+        if (typeof options === 'string') {
+            options = {
+                text: options
+            };
+        }
+        options = _.extend({
+            window_title: '',
+            field_name: '',
+            default: '',
+            init: function() {}
+        }, options || {});
+
+        var type = _.intersect(Object.keys(options), ['input', 'textarea', 'select']);
+        type = type.length ? type[0] : 'text';
+        options.field_type = type;
+        options.field_name = options.field_name || options[type];
+
+        var def = $.Deferred();
+        var dialog = $(openerp.qweb.render('website.prompt', options)).appendTo("body");
+        var field = dialog.find(options.field_type).first();
+        field.val(options.default);
+        field.fillWith = function (data) {
+            if (field.is('select')) {
+                var select = field[0];
+                data.forEach(function (item) {
+                    select.options[select.options.length] = new Option(item[1], item[0]);
+                });
+            } else {
+                field.val(data);
+            }
+        };
+        var init = options.init(field, dialog);
+        $.when(init).then(function (fill) {
+            if (fill) {
+                field.fillWith(fill);
+            }
+            dialog.modal('show');
+            field.focus();
+            dialog.on('click', '.btn-primary', function () {
+                def.resolve(field.val(), field);
+                dialog.remove();
+            });
+        });
+        dialog.on('hidden.bs.modal', function () {
+            def.reject();
+            dialog.remove();
+        });
+        if (field.is('input[type="text"], select')) {
+            field.keypress(function (e) {
+                if (e.which == 13) {
+                    dialog.find('.btn-primary').trigger('click');
+                }
+            });
+        }
+        return def;
     };
 
     dom_ready.then(function () {

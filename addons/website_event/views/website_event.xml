@@ -2,6 +2,12 @@
 <openerp>
 <data>
 
+    <template id="website_event_script" inherit_id="website.layout" name="Website Event script">
+        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+            <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js" t-ignore="true"></script>
+        </xpath>
+    </template>
+
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout" name="Footer Events Link">
         <xpath expr="//footer//ul[@name='products']" position="inside">
@@ -247,8 +253,8 @@
                                 <a t-att-href="event_id.google_map_link()" target="_BLANK">
                                     <img t-att-src="event_id.google_map_img()" width="100%%"/>
                                 </a>
-                                <address class="mt16 mb8">
-                                    <strong t-field="event_id.address_id.name"/>
+                                <address class="mt16 mb8" t-field="event_id.address_id"> <!-- TODO: use widget contact -->
+                                   <!--  <strong t-field="event_id.address_id"/>
                                     <p t-field="event_id.address_id"/>
                                     <div t-if="event_id.address_id.phone">
                                         <span class="icon-phone"/> <span t-field="event_id.address_id.phone"/>
@@ -258,12 +264,12 @@
                                         <a t-att-href="'mailto:'+event_id.address_id.email">
                                           <span t-field="event_id.address_id.email"/>
                                         </a>
-                                    </div>
+                                    </div> -->
                                 </address>
                             </div>
                         </div>
 
-                        <div class="panel panel-default" t-if="event_id.address_id">
+                        <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>When</h4>
                             </div>
@@ -277,14 +283,14 @@
                             <div class="panel-heading">
                                 <h4>Organizer</h4>
                             </div>
-                            <div class="panel-body">
-                                <p><strong t-field="event_id.organizer_id.display_name"/></p>
+                            <div class="panel-body" t-field="event_id.organizer_id">  <!-- TODO: use widget contact -->
+                              <!--   <p><strong t-field="event_id.organizer_id.display_name"/></p>
                                 <div t-if="event_id.phone">
                                     <span class="icon-phone"/> <span t-field="event_id.phone"/>
                                 </div>
                                 <div t-if="event_id.email">
                                     <i class="icon-envelope"/> <span t-field="event_id.email"/>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 

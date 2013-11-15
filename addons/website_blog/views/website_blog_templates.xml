@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+    <template id="website_blog_script" inherit_id="website.layout" name="Website Blog script">
+        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+            <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js" t-ignore="true"></script>
+        </xpath>
+    </template>
+
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
@@ -10,21 +16,18 @@
 
     <!-- Blog Post Summary -->
     <template id="blog_post_short" name="Blog Post Summary">
-        <div>
-            <div class="pull-right">
-                <t t-call="website.publish_management">
-                    <t t-set="object" t-value="blog_post"/>
-                    <t t-set="publish_edit" t-value="True"/>
-                    <li>
-                        <a href="#" t-attf-data-href="/blog/#{blog_post.id}/duplicate">Duplicate</a>
-                        <script>
-                            var $a=$("[data-href$='/duplicate']");
-                            $a.attr("href", $a.data('href')).removeAttr('data-href');
-                            $a.next("script").remove();
-                        </script>
-                    </li>
-                </t>
-            </div>
+        <t t-call="website_blog.index">
+        <div t-if="not blog_posts">
+            <h1>
+                No blog post yet!
+            </h1>
+            <p t-if="editable">
+                To create a new blog post, use the top-right menu <em>Content</em>
+                and select the menuitem <em>New Blog Post</em>.
+            </p>
+
+        </div>
+        <div t-foreach="blog_posts" t-as="blog_post" data-publish="">
             <h2 class="text-center">
                 <a t-href="/blog/#{blog_post.id}" t-field="blog_post.name"></a>
             </h2>
@@ -42,6 +45,7 @@
             <hr/>
 
         </div>
+        </t>
     </template>
 
     <!-- Options: Blog Post Summary: hide author -->
@@ -75,6 +79,7 @@
 
     <!-- Blog Post Complete -->
     <template id="blog_post_complete" name="Blog Post">
+        <t t-call="website_blog.index">
         <div>
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
@@ -107,15 +112,7 @@
         <hr class="mb32"/>
 
         <a id="comments"/>
-        <h4 t-if="len(blog_post.website_message_ids)" class="mb16">
-            <t t-if="len(blog_post.website_message_ids) &lt;= 1">
-                1 Comment
-            </t>
-            <t t-if="len(blog_post.website_message_ids) > 1">
-                <t t-esc="len(blog_post.website_message_ids)"/> Comments
-            </t>
-        </h4>
-        <ul class="media-list">
+        <ul class="media-list" id="comments-list">
             <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
                 <div class="media-body">
                     <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
@@ -131,15 +128,15 @@
                 </div>
             </li>
         </ul>
+        </t>
     </template>
 
     <!-- Options: Blog Post: user can reply -->
-    <template id="opt_blog_post_complete_comment" name="Comment Form"
+    <template id="opt_blog_post_complete_comment" name="Allow Comments"
             inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete">
-        <xpath expr="//ul[last()]" position="after">
+        <xpath expr="//ul[@id='comments-list']" position="after">
             <t t-if="not is_public_user">
                 <section groups="group_website_blog_reply" class="mb32">
-                    <h4>Leave a Comment</h4>
                     <form id="comment" t-attf-action="/blog/#{blog_post.id}/comment"
                             method="POST">
                         <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
@@ -183,7 +180,7 @@
     </template>
 
     <!-- Page -->
-    <template id="index" name="Blog">
+    <template id="index" name="Blog Navigation">
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"></script>
@@ -192,48 +189,24 @@
             <div id="wrap">
                 <div class="container mt16 js_website_blog">
                     <div class="row">
-                        <div class="col-lg-12 col-sm-12" t-if="not blog_post" id="blog_post">
-                            <t t-if="category and editable">
-                                <div class="row hidden-xs">
-                                    <a t-href="/blog/#{category.id}/new" class="btn btn-primary pull-right">New Blog Post</a>
-                                </div>
-                            </t>
-                            <t t-foreach="blog_posts" t-as="blog_post" data-publish="">
-                                <t t-call="website_blog.blog_post_short"/>
-                            </t>
-                            <div class="pull-right" t-call="website.pager"/>
+                        <div class="col-lg-12 col-sm-12" id="blog_left_column">
+                            <t t-raw="0"/>
                         </div>
-                        <div class="col-lg-12 col-sm-12" t-if="blog_post" id="blog_posts_summary">
-                            <t t-call="website_blog.blog_post_complete">
-                                <t t-set="blog_post" t-value="blog_post"/>
-                            </t>
-                        </div>
+                        <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
                     </div>
                 </div>
             </div>
         </t>
     </template>
 
-    <!-- Option: Blog: Right Column -->
-    <template id="blog_right_column" name="Right Column"
-             inherit_option_id="website_blog.index" inherit_id="website_blog.index">
-        <xpath expr="//div[@class='row']" position="inside">
-            <div class="col-lg-3 col-sm-3 hidden-xs col-lg-offset-1 mb32" id="right_column">
-            </div>
-        </xpath>
-        <xpath expr="//div[@id='blog_post']" position="attributes">
-            <attribute name="class">col-lg-8 col-sm-8</attribute>
-        </xpath>
-        <xpath expr="//div[@id='blog_posts_summary']" position="attributes">
-            <attribute name="class">col-lg-8 col-sm-8</attribute>
-        </xpath>
-    </template>
-
     <!-- Option: Right Column: archives -->
     <template id="opt_blog_rc_history" name="Archives"
-            inherit_option_id="website_blog.blog_right_column" inherit_id="website_blog.blog_right_column">
-        <xpath expr="//div[@id='right_column']" position="inside">
-            <section>
+            inherit_option_id="website_blog.index" inherit_id="website_blog.index">
+        <xpath expr="//div[@id='blog_left_column']" position="attributes">
+            <attribute name="class">col-lg-8 col-sm-8</attribute>
+        </xpath>
+        <xpath expr="//div[@id='blog_right_column']" position="inside">
+            <section class="mt32">
             <h4>Archives</h4>
             <ul class="nav nav-pills nav-stacked">
                 <li t-foreach="nav_list" t-as="year" class="js_nav_year">
@@ -254,9 +227,12 @@
 
     <!-- Option: Right Column: about us -->
     <template id="opt_blog_rc_about_us" name="About Us" priority="4"
-            inherit_option_id="website_blog.blog_right_column" inherit_id="website_blog.blog_right_column">
-        <xpath expr="//div[@id='right_column']" position="inside">
-            <section class="mb16">
+            inherit_option_id="website_blog.index" inherit_id="website_blog.index">
+        <xpath expr="//div[@id='blog_left_column']" position="attributes">
+            <attribute name="class">col-lg-8 col-sm-8</attribute>
+        </xpath>
+        <xpath expr="//div[@id='blog_right_column']" position="inside">
+            <section class="mt32">
             <h4>About us</h4>
             <p>
                 Write here a small text for <b>new visitors</b> finding your website
@@ -271,23 +247,26 @@
 
     <!-- Option: Right Column: follow us -->
     <template id="opt_blog_rc_follow_us" name="Follow us" priority="2"
-            inherit_option_id="website_blog.blog_right_column" inherit_id="website_blog.blog_right_column">
-        <xpath expr="//div[@id='right_column']" position="inside">
-            <section class="mb16">
+            inherit_option_id="website_blog.index" inherit_id="website_blog.index">
+        <xpath expr="//div[@id='blog_left_column']" position="attributes">
+            <attribute name="class">col-lg-8 col-sm-8</attribute>
+        </xpath>
+        <xpath expr="//div[@id='blog_right_column']" position="inside">
+            <section class="mt32">
                 <h4>Follow us</h4>
                 <t t-if="category">
                     <p class="text-muted">
-                        Be notified of new blog posts in <t t-esc="category.name"/>
+                        Subscribe to: <t t-esc="category.name"/>
                     </p>
                     <t t-call="website_mail.follow">
                         <t t-set="email" t-value="user_id.email"/>
                         <t t-set="object" t-value="category"/>
                     </t>
                 </t>
-                <p class="text-muted">
+                <p class="text-muted mb0 mt16">
                     Participate on our social stream.
                 </p>
-                <h2>
+                <h2 class="mt4">
                     <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="icon-facebook-sign"/></a>
                     <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="icon-twitter-sign"/></a>
                     <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="icon-linkedin-sign"/></a>
@@ -300,15 +279,18 @@
     </template>
 
     <!-- Option: Right Column: categories -->
-    <template id="opt_blog_rc_categories" name="Other Blogs" priority="6"
-            inherit_option_id="website_blog.blog_right_column">
-        <xpath expr="//div[@id='right_column']" position="inside">
-            <section class="mb16">
-            <h4>Other Blogs</h4>
-            <ul class="nav nav-pills nav-stacked">
+    <template id="opt_blog_rc_categories" name="Our Blogs" priority="6"
+            inherit_option_id="website_blog.index">
+        <xpath expr="//div[@id='blog_left_column']" position="attributes">
+            <attribute name="class">col-lg-8 col-sm-8</attribute>
+        </xpath>
+        <xpath expr="//div[@id='blog_right_column']" position="inside">
+            <section class="mt32 mb32">
+            <h4>Our Blogs</h4>
+            <ul class="list-unstyled">
                 <t t-foreach="categories" t-as="nav_category">
                     <li>
-                        <a t-href="/blog/#{nav_category.id}">
+                        <a t-href="/blog/cat/#{nav_category.id}">
                             <span t-field="nav_category.name"/>
                         </a>
                     </li>
