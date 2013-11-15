@@ -26,6 +26,7 @@ from openerp.tools.translate import _
 from openerp.addons import website_sale
 from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
+from openerp.addons.website_sale.controllers.main import Ecommerce as Ecommerce
 controllers = controllers()
 
 
@@ -33,6 +34,9 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
+
+
+Ecommerce.domain += [('product_variant_ids.event_ticket_ids', '=', False), ('event_ok', '=', False)]
 
 
 class website_event(http.Controller):
