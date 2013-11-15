@@ -220,7 +220,7 @@ var PivotTable = BasicDataView.extend({
 
             var row = this.get_row(row_id);
             if (row.expanded) {
-                this.fold_row(row_id)
+                this.fold_row(row_id);
             } else {
                 var dropdown_options = {
                     fields: _.map(this.important_fields, function (field) {
@@ -326,7 +326,7 @@ var PivotTable = BasicDataView.extend({
             row.domain = this.domain;
         }
         if (has_parent) {
-            parent.children.push(row);
+            parent.children.push(row.id);
         }
         return row;
     },
@@ -360,14 +360,37 @@ var PivotTable = BasicDataView.extend({
                     }
                 });
                 if (row.remove_when_expanded) {
-                    row.html_tr.remove();            
+                    row.html_tr.remove();
                 }
         });
 
     },
 
     fold_row: function (row_id) {
+        var self = this;
+        var row = this.get_row(row_id);
 
+        _.each(row.children, function (child_row) {
+            self.remove_row(child_row);            
+        });
+        row.children = [];
+
+        row.expanded = false;
+        row.html_tr.find('.icon-minus-sign')
+            .removeClass('icon-minus-sign')
+            .addClass('icon-plus-sign');;
+
+    },
+
+    remove_row: function (row_id) {
+        var self = this;
+        var row = this.get_row(row_id);
+
+        _.each(row.children, function (child_row) {
+            self.remove_row(child_row);
+        });
+
+        row.html_tr.remove();
     },
 
     draw: function () {
