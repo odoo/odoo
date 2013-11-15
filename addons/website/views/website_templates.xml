@@ -107,7 +107,7 @@
 
                         <t t-raw="head or ''"/>
                     </head>
-                    <body>
+                    <body t-att-class="has_access_write and 'has_access_write' or ''">
                         <div id="wrapwrap">
                             <header>
                                 <div class="navbar navbar-default navbar-static-top">
@@ -265,7 +265,7 @@
         </template>
 
         <template id="publish_management">
-            <div t-if="editable" t-ignore="true" class="pull-right hidden-xs" t-att-style="style or ''">
+            <div t-if="has_access_write" t-ignore="true" class="pull-right hidden-xs" t-att-style="style or ''">
                 <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
                     <a t-attf-class="btn btn-sm btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
@@ -284,7 +284,7 @@
         </template>
 
         <template id="publish_short">
-            <t t-if="editable" t-ignore="true">
+            <t t-if="has_access_write" t-ignore="true">
                 <a href="#" t-att-data-id="object.id" t-att-data-object="object._name"
                         t-att-data-publish="object.id and object.website_published and 'on' or 'off'"
                         class="pull-right js_publish">
