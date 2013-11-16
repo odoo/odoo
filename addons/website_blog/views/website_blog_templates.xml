@@ -61,7 +61,7 @@
     <!-- Options: Blog Post Summary: show category -->
     <template id="opt_blog_post_short_category" name="Category"
             inherit_option_id="website_blog.blog_post_short">
-        <xpath expr="//span[@class='icon-user']" position="after">
+        <xpath expr="//span[@class='icon-calendar']" position="after">
             <span class="icon-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
         </xpath>
     </template>
@@ -154,7 +154,7 @@
     <!-- Options: Blog Post: hide author -->
     <template id="opt_blog_post_complete_author" name="Authors"
             inherit_option_id="website_blog.blog_post_complete">
-        <xpath expr="//span[@class='icon-user']" position="after">
+        <xpath expr="//span[@class='icon-calendar']" position="after">
             <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
         </xpath>
     </template>
@@ -162,7 +162,7 @@
     <!-- Options: Blog Post: show category -->
     <template id="opt_blog_post_complete_category" name="Blog Name"
             inherit_option_id="website_blog.blog_post_complete">
-        <xpath expr="//span[@class='icon-user']" position="after">
+        <xpath expr="//span[@class='icon-calendar']" position="after">
             <span class="icon-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
         </xpath>
     </template>
