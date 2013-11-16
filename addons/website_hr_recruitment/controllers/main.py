@@ -45,11 +45,7 @@ class website_hr_recruitment(http.Controller):
 
     @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
     def detail(self, job, **kwargs):
-        values = {
-            'job': job,
-            'vals_date': job.write_date.split(' ')[0],
-        }
-        return request.website.render("website_hr_recruitment.detail", values)
+        return request.website.render("website_hr_recruitment.detail", {'job': job})
 
     @website.route(['/job/success'], type='http', auth="admin", multilang=True)
     def success(self, **post):

@@ -288,14 +288,12 @@
 
         <template id="publish_short">
             <t t-if="has_access_write" t-ignore="true">
-                <a href="#" t-att-data-id="object.id" t-att-data-object="object._name"
-                        t-att-data-publish="object.id and object.website_published and 'on' or 'off'"
-                        class="pull-right js_publish">
-                    <span t-attf-class="text-success css_publish glyphicon glyphicon-ok"></span>
-                    <span t-attf-class="text-danger css_unpublish glyphicon glyphicon-remove-circle"></span>
-                    <span t-attf-class="text-muted css_published glyphicon glyphicon-ok"></span>
-                    <span t-attf-class="text-muted css_unpublished glyphicon glyphicon-remove-circle"></span>
-                </a>
+                <div t-attf-class="btn-group pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+                    <button t-attf-class="btn btn-sm btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
+                        <span class="css_publish">Not Published</span>
+                        <span class="css_unpublish">Published</span>
+                    </button>
+                </div>
             </t>
         </template>
 

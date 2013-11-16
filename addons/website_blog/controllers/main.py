@@ -195,12 +195,13 @@ class WebsiteBlog(http.Controller):
     @website.route(['/blog/<int:blog_post_id>/comment'], type='http', auth="public")
     def blog_post_comment(self, blog_post_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['blog.post'].message_post(
-            cr, uid, blog_post_id,
-            body=post.get('comment'),
-            type='comment',
-            subtype='mt_comment',
-            context=dict(context, mail_create_nosubcribe=True))
+        if post.get('comment'):
+            request.registry['blog.post'].message_post(
+                cr, uid, blog_post_id,
+                body=post.get('comment'),
+                type='comment',
+                subtype='mt_comment',
+                context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
     @website.route(['/blog/<int:category_id>/new'], type='http', auth="public", multilang=True)

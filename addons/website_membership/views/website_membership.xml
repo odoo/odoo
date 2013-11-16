@@ -60,7 +60,7 @@
                                 <h3 class="text-center"><span t-field="membership_line_id.membership_id"/></h3>
                             </t>
                             <t t-set="partner" t-value="membership_line_id.partner"/>
-                            <div class="media" data-publish="">
+                            <div class="media">
                                 <t t-call="website.publish_management">
                                     <t t-set="object" t-value="partner"/>
                                 </t>
