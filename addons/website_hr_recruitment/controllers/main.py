@@ -14,7 +14,7 @@ class website_hr_recruitment(http.Controller):
     def jobs(self, department=None, office=None, page=0):
         hr_job_obj = request.registry['hr.job']
         domain = []
-        jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published,no_of_recruitment", context=request.context)
+        jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published desc,no_of_recruitment", context=request.context)
         jobs = hr_job_obj.browse(request.cr, request.uid, jobpost_ids, request.context)
 
         departments = set()
