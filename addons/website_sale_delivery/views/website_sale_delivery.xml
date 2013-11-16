@@ -8,17 +8,19 @@
         </xpath>
         <xpath expr="//div[@id='js_payment']" position="before">
 
-            <p>Choose Your Delivery method:</p>
-            <ul class="list-unstyled">
-                <li t-foreach="deliveries" t-as="delivery">
-                    <label>
-                        <input t-att-value="delivery.id" type="radio" name="delivery_type"/>
-                        <span t-field="delivery.name"/>
-                        <span class="badge" t-field="delivery.price"/>
-                        <!-- TODO: add monetary widget -->
-                    </label>
-                </li>
-            </ul>
+            <t t-if="len(deliveries)">
+                <p>Choose Your Delivery method:</p>
+                <ul class="list-unstyled">
+                    <li t-foreach="deliveries" t-as="delivery">
+                        <label>
+                            <input t-att-value="delivery.id" type="radio" name="delivery_type"/>
+                            <span t-field="delivery.name"/>
+                            <span class="badge" t-field="delivery.price"/>
+                            <!-- TODO: add monetary widget -->
+                        </label>
+                    </li>
+                </ul>
+            </t>
 
         </xpath>
     </template>
