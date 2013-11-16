@@ -389,54 +389,19 @@ ul.nav-stacked > li > a {
 }
 
 /* ---- PUBLISH ---- */
-a[data-publish] {
-  text-decoration: none !important;
-}
-a[data-publish] .css_unpublish, a[data-publish] .css_publish, a[data-publish] .css_unpublished, a[data-publish] .css_published {
-  display: none;
-}
-a[data-publish][data-publish='off'] .css_unpublished, a[data-publish][data-publish='off']:hover .css_publish {
-  display: inline;
-}
-a[data-publish][data-publish='off']:hover .css_unpublished {
-  display: none;
-}
-a[data-publish][data-publish='on'] .css_published, a[data-publish][data-publish='on']:hover .css_unpublish {
-  display: inline;
-}
-a[data-publish][data-publish='on']:hover .css_published {
+.css_unpublish, .css_publish {
   display: none;
 }
 
-.dropdown .css_unpublish, .dropdown .css_publish {
-  display: none;
-}
-
-.dropdown.css_publish .css_unpublish, .dropdown.css_unpublish .css_publish {
+.css_published .css_unpublish, .css_unpublished .css_publish {
   display: block;
 }
 
-.unpublish {
+[data-publish='off'] {
   opacity: 0.5;
 }
 
-[data-publish='off']:not(a) > :not(.js_publish) {
-  opacity: 0.5;
-}
-
-[data-publish]:not(a) {
-  position: relative;
-  overflow: visible;
-  /*&:hover .js_publish */
-  /*     display: block */
-}
-[data-publish]:not(a) .js_publish {
-  position: absolute;
-  right: -6px;
-  top: -10px;
-  display: none;
-}
-
+/* ---- END of PUBLISH ---- */
 ::selection {
   background: rgba(150, 150, 220, 0.3);
 }

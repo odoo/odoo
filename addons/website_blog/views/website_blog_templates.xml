@@ -253,11 +253,8 @@
         </xpath>
         <xpath expr="//div[@id='blog_right_column']" position="inside">
             <section class="mt32">
-                <h4>Follow us</h4>
+                <h4>Follow us<small t-if="category">: <t t-esc="category.name"/></small></h4>
                 <t t-if="category">
-                    <p class="text-muted">
-                        Subscribe to: <t t-esc="category.name"/>
-                    </p>
                     <t t-call="website_mail.follow">
                         <t t-set="email" t-value="user_id.email"/>
                         <t t-set="object" t-value="category"/>
