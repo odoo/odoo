@@ -33,8 +33,7 @@
                 <a t-href="/blog/#{blog_post.id}" t-field="blog_post.name"></a>
             </h2>
             <p class="post-meta text-muted text-center" name='blog_post_data'>
-                <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
-                <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
+                <span class="icon-calendar"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
                 <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment">
                     <a t-href="/blog/#{blog_post.id}/#comment">
                         <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
@@ -52,15 +51,15 @@
     </template>
 
     <!-- Options: Blog Post Summary: hide author -->
-    <template id="opt_blog_post_short_author" name="Hide Authors"
+    <template id="opt_blog_post_short_author" name="Author"
             inherit_option_id="website_blog.blog_post_short">
-        <xpath expr="//span[@class='icon-user']" position="attributes">
-            <attribute name="class">hidden</attribute>
+        <xpath expr="//span[@class='icon-calendar']" position="after">
+            <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
         </xpath>
     </template>
 
     <!-- Options: Blog Post Summary: show category -->
-    <template id="opt_blog_post_short_category" name="Blog Name"
+    <template id="opt_blog_post_short_category" name="Category"
             inherit_option_id="website_blog.blog_post_short">
         <xpath expr="//span[@class='icon-user']" position="after">
             <span class="icon-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
@@ -101,8 +100,7 @@
 
         <h1 class="text-center" t-field="blog_post.name"/>
         <p class="post-meta text-muted text-center" name="blog_post_data">
-            <span class="icon-calendar"> <span t-field="blog_post.create_date"/></span> &amp;nbsp;
-            <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
+            <span class="icon-calendar"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
             <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment"> With
                 <a t-attf-href="#comments">
                     <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
@@ -154,10 +152,10 @@
     </template>
 
     <!-- Options: Blog Post: hide author -->
-    <template id="opt_blog_post_complete_author" name="Hide Authors"
+    <template id="opt_blog_post_complete_author" name="Authors"
             inherit_option_id="website_blog.blog_post_complete">
-        <xpath expr="//span[@class='icon-user']" position="attributes">
-            <attribute name="class">hidden</attribute>
+        <xpath expr="//span[@class='icon-user']" position="after">
+            <span class="icon-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
         </xpath>
     </template>
 
