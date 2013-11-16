@@ -12,7 +12,7 @@
                        placeholder="your email..."/>
                 <span class="input-group-btn">
                     <button href="#"
-                       class="btn btn-default js_follow_btn">
+                       t-attf-class="btn btn-#{object.message_is_follower and 'default' or 'primary'} js_follow_btn">
                        <t t-if="object.message_is_follower">Unsubscribe</t>
                        <t t-if="not object.message_is_follower">Subscribe</t>
                     </button>
