@@ -57,7 +57,7 @@
                             </p>
                         </t>
                         <ul class="media-list">
-                            <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
+                            <li t-foreach="event_ids" t-as="event" class="media">
                                 <div class="media-body">
                                     <t t-if="event.event_ticket_ids">
                                         <span t-if="not event.register_avail" class="label label-danger pull-right">Sold Out</span>
@@ -65,7 +65,10 @@
                                             Only <t t-esc="event.register_avail"/> Remaining
                                         </span>
                                     </t>
-                                    <h4 class="media-heading"><a t-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a></h4>
+                                    <h4 class="media-heading">
+                                        <a t-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a>
+                                        <small t-if="not event.website_published" class="label label-danger">not published</small>
+                                    </h4>
                                     <div>
                                         <t t-if="event.organizer_id">
                                             Organized by: <span t-field="event.organizer_id"> </span>

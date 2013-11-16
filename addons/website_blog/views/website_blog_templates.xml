@@ -27,7 +27,8 @@
             </p>
 
         </div>
-        <div t-foreach="blog_posts" t-as="blog_post" data-publish="">
+        <t t-foreach="blog_posts" t-as="blog_post">
+          <div t-att-data-publish="blog_post.website_published and 'on' or 'off'">
             <h2 class="text-center">
                 <a t-href="/blog/#{blog_post.id}" t-field="blog_post.name"></a>
             </h2>
@@ -40,11 +41,13 @@
                         <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
                     </a>
                 </span>
+                <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
             </p>
             <div t-field="blog_post.shortened_content" class="blog_content"/>
             <hr/>
+          </div>
 
-        </div>
+        </t>
         </t>
     </template>
 
