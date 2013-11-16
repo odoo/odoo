@@ -347,6 +347,7 @@ class Ecommerce(http.Controller):
                 domain = [('id', 'in', ids or [0] )] + domain
 
         step = 20
+        print '**', domain
         product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
         pager = request.website.pager(url="/shop/", total=product_count, page=page, step=step, scope=7, url_args=post)
 
@@ -711,8 +712,9 @@ class Ecommerce(http.Controller):
 
         values = {
             'partner': False,
-            'order': order
+            'order': order,
         }
+        values.update( request.registry.get('sale.order')._get_website_data(request.cr, request.uid, order, request.context) )
 
         payment_obj = request.registry.get('portal.payment.acquirer')
         payment_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('visible', '=', True)], context=request.context)

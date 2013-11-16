@@ -380,7 +380,7 @@
                 </ul>
                 <h1 class="mb32">Shopping Cart</h1>
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-1 oe_mycart">
+                    <div class="col-md-8 col-sm-9 oe_mycart">
                         <div t-if="not website_sale_order or not website_sale_order.order_line" class="well well-lg">
                             Your cart is empty!
                         </div>
@@ -473,7 +473,7 @@
                         <a t-if="website_sale_order and website_sale_order.order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
                         <div class="oe_structure"/>
                     </div>
-                    <div class="col-md-3 text-muted" id="right_column">
+                    <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
                         <h4>Policies</h4>
                         <ul class="list-unstyled mb32">
                             <li>&#9745; 30-days money-back guarantee</li>
@@ -804,7 +804,7 @@
                 </ul>
                 <h1 class="mb32">Validate Order</h1>
                 <div class="row">
-                <div class="col-md-8 oe_mycart">
+                <div class="col-lg-8 col-sm-9 oe_mycart">
                     <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.order_line">
                         <colgroup>
                             <col width="80"/>
@@ -857,7 +857,7 @@
                                 }'/></h3></th>
                             </tr>
                             <tr class="text-muted">
-                                <td><abbr title="Taxes may be updated after providing shipping address">Incl. Taxes:</abbr></td>
+                                <td>Incl. Taxes:</td>
                                 <td class="text-right"><span t-field="website_sale_order.amount_tax" t-field-options='{
                                     "widget": "monetary",
                                     "display_currency": "website.pricelist_id.currency_id"
@@ -868,7 +868,7 @@
                     <div class="clearfix"/>
                     <div class="oe_structure"/>
                   </div>
-                  <div class="col-md-3 col-md-offset-1 text-muted" id="right_column">
+                  <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
                       <h4>Bill To:</h4>
                       <div t-field="website_sale_order.partner_invoice_id"/>
                       <div>
@@ -884,12 +884,12 @@
                   </div>
                 </div>
 
-                <div class="js_payment mb64">
-                    <p>Select your payment method:</p>
+                <div class="js_payment mb64" id="js_payment">
+                    <p>Payment method:</p>
                     <div>
                         <t t-foreach="payments or []" t-as="payment">
                             <label>
-                                <input t-att-value="payment.id" type="radio" name="payment_type"/> <t t-esc="payment.name"/>
+                                <input t-att-value="payment.id" type="radio" name="payment_type"/> <span t-field="payment.name"/>
                             </label>
                         </t>
                     </div>

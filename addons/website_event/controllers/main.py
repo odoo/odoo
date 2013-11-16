@@ -35,10 +35,6 @@ from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
 
-
-Ecommerce.domain += [('product_variant_ids.event_ticket_ids', '=', False), ('event_ok', '=', False)]
-
-
 class website_event(http.Controller):
     @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public", multilang=True)
     def events(self, page=1, **searches):
