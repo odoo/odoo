@@ -47,8 +47,28 @@ class WebsiteBlog(http.Controller):
         return nav
 
     @website.route([
-        '/blog/',
+        '/blog',
         '/blog/page/<int:page>/',
+    ], type='http', auth="public", multilang=True)
+    def blogs(self, page=1):
+        BYPAGE = 60
+        cr, uid, context = request.cr, request.uid, request.context
+        blog_obj = request.registry['blog.post']
+        total = blog_obj.search(cr, uid, [], count=True, context=context)
+        pager = request.website.pager(
+            url='/blog/',
+            total=total,
+            page=page,
+            step=BYPAGE,
+        )
+        bids = blog_obj.search(cr, uid, [], offset=(page-1)*BYPAGE, limit=BYPAGE, context=context)
+        blogs = blog_obj.browse(cr, uid, bids, context=context)
+        return request.website.render("website_blog.blogs", {
+            'blogs': blogs,
+            'pager': pager
+        })
+
+    @website.route([
         '/blog/cat/<model("blog.category"):category>/',
         '/blog/cat/<model("blog.category"):category>/page/<int:page>/',
         '/blog/tag/<model("blog.tag"):tag>/',
