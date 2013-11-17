@@ -90,7 +90,7 @@
 }
 .oe_pick_widget .oe_pick_right_toolbar{
     float: right;
-    border-left: solid 1px black;
+    border-left: solid 1px rgba(0,0,0,0.3);
     padding-left:  8px;
     padding-right: 8px;
     margin-left:  8px;
@@ -122,6 +122,8 @@
     margin-left: 4px;
     opacity: 0.5;
 }
+
+
 
 /* ----------------------- *
  *      PICKING TABLES     *
@@ -234,3 +236,56 @@
     border-radius: 3px;
     color: rgb(119, 77, 77);
 }
+
+/* ----------------------- *
+ *     RESPONSIVENESS      *
+ * ----------------------- */
+
+@media screen and (max-width:642px){
+    .oe_pick_widget .oe_pick_body{
+        background: white;
+        background-image: none;
+        box-shadow: none;
+    }
+    .oe_pick_widget .oe_pick_app{
+        width: auto;
+        max-width: 600px;
+        margin: 0 auto;
+        border: none;
+        box-shadow: none;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .oe_pick_widget .oe_pick_toolbar{
+        width: auto;
+    }
+    .oe_pick_widget .oe_pick_right_toolbar{
+        float: none;
+        text-align: center;
+        border-left: none;
+        margin-left: 0px;
+    }
+    .oe_pick_widget .oe_pick_button{
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
+}
+
+@media screen and (max-width:450px){
+    .oe_pick_widget .oe_pick_list_header{
+        font-size: 16px;
+    }
+    .oe_pick_widget .oe_pick_list_table{
+        font-size: 12px;
+    }
+    .oe_pick_widget .oe_pick_col_small{
+        width: 50px;
+    }
+}
+
+@media screen and (max-width:326px){
+    .oe_pick_widget .oe_pick_toolbar{
+        width: 326px;
+    }
+}
+
