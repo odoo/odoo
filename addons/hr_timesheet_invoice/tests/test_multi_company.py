@@ -94,10 +94,8 @@ class test_multi_company(common.TransactionCase):
                 'company_id': self.company_b_id,
                 'chart_template_id': self.ref('account.conf_chart0'),
                 'code_digits': 2,
-                # 'sale_tax': config.sale_tax.id,
-                # 'purchase_tax': config.purchase_tax.id,
-                'sale_tax_rate': 0.10,
-                'purchase_tax_rate': 0.10,
+                'sale_tax': self.ref('account.itaxs'),
+                'purchase_tax': self.ref('account.otaxs'),
                 # 'complete_tax_set': config.complete_tax_set,
                 'currency_id': self.company_b.currency_id.id,
             })
