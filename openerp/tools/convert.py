@@ -869,7 +869,7 @@ form: module.record_id""" % (xml_id,)
             'id': tpl_id,
             'model': 'ir.ui.view',
         }
-        for att in ['forcecreate', 'context', 'priority']:
+        for att in ['forcecreate', 'context']:
             if att in el.keys():
                 record_attrs[att] = el.attrib.pop(att)
 
@@ -879,6 +879,7 @@ form: module.record_id""" % (xml_id,)
         record = etree.Element('record', attrib=record_attrs)
         record.append(Field(name, name='name'))
         record.append(Field("qweb", name='type'))
+        record.append(Field(el.get('priority', "16"), name='priority'))
         record.append(Field(el, name="arch", type="xml"))
         for field_name in ('inherit_id','inherit_option_id'):
             value = el.attrib.pop(field_name, None)
