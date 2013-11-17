@@ -8,14 +8,28 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:35+0000\n"
-"PO-Revision-Date: 2013-10-28 12:24+0000\n"
+"PO-Revision-Date: 2013-11-15 13:04+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-10-29 05:14+0000\n"
-"X-Generator: Launchpad (build 16818)\n"
+"X-Launchpad-Export-Date: 2013-11-16 06:25+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
+
+#. module: base
+#: help:ir.actions.act_window,res_id:0
+msgid ""
+"Database ID of record to open in form view, when ``view_mode`` is set to "
+"'form' only"
+msgstr ""
+"Id. de la base de datos del registro para abrir en el formulario de vista, "
+"cuando se establece el modo de vista únicamente a 'formulario'"
+
+#. module: base
+#: view:ir.rule:0
+msgid "Create Access Right"
+msgstr "Otorgue derecho de acceso"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -392,15 +406,6 @@ msgid "Max. Size"
 msgstr "Tamaño máx."
 
 #. module: base
-#: help:ir.actions.act_window,res_id:0
-msgid ""
-"Database ID of record to open in form view, when ``view_mode`` is set to "
-"'form' only"
-msgstr ""
-"Id. de la base datos del registro para abrir en el formulario de vista, "
-"cuando se establece el modo de visto únicamente a 'formulario'"
-
-#. module: base
 #: help:ir.values,key2:0
 msgid ""
 "For actions, one of the possible action slots: \n"
@@ -588,11 +593,6 @@ msgstr ""
 #: field:ir.model.relation,name:0
 msgid "Relation Name"
 msgstr "Nombre de relación"
-
-#. module: base
-#: view:ir.rule:0
-msgid "Create Access Right"
-msgstr "Otorge derecho de acceso"
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -1167,7 +1167,7 @@ msgstr "Preferencias de email"
 #: code:addons/base/ir/ir_fields.py:195
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
-msgstr "'%s' no parece ser una fecha valida para el campo '%%(field)s'"
+msgstr "'%s' no parece ser una fecha válida para el campo '%%(field)s'"
 
 #. module: base
 #: view:res.partner:0
@@ -1754,7 +1754,7 @@ msgstr "Haití"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
 msgid "French Payroll"
-msgstr "Nomina de Francia"
+msgstr "Nómina de Francia"
 
 #. module: base
 #: view:ir.ui.view:0
@@ -3287,6 +3287,31 @@ msgid ""
 "and\n"
 "directly integrated in the core accounting. \n"
 msgstr ""
+"\n"
+"Añadir información de la empresa  a las facturas para mejorar el análisis "
+"consolidado de la facturación.\n"
+"=========================================================================\n"
+"Por defecto, las facturas de clientes y proveedores se vinculan a una "
+"persona de contacto de la empresa, pero no mantienen en la estructura de la "
+"base de datos una referencia directa con la empresa. Por contra, las "
+"anotaciones en los diarios contables sí están vinculadas a la empresa en "
+"lugar de a contactos personales de la misma, por lo que las cuentas de "
+"ingresos y gastos siempre se consolidan a nivel de empresa y no de "
+"contacto.\n"
+"\n"
+"Esto se convierte en un problema cuando es necesario facturar a varios "
+"contactos/departamentos dentro de la misma empresa del grupo, ya que los "
+"informes sobre la facturación se complican: los informes están basados "
+"directamente en la estructura de la base de datos y podrían no facilitar la "
+"información agrupada por compañía.\n"
+"\n"
+"Este módulo soluciona el problema añadiendo una referencia explícita a la "
+"empresa en las facturas. Esta referencia se obtiene automáticamente a partir "
+"del contacto referenciado en la factura, y permite agrupar las facturas por "
+"empresa.\n"
+"\n"
+"Nota: este módulo probablemente será eliminado en la siguiente versión mayor "
+"de OpenERP, integrándose directamente en el núcleo de contabilidad. \n"
 
 #. module: base
 #: model:res.country,name:base.ai
@@ -5127,6 +5152,26 @@ msgid ""
 "      and iban account numbers\n"
 "    "
 msgstr ""
+"\n"
+"Módulo que extiende el objeto estándar account_bank_statement_line para un "
+"mejor soporte de banca electrónica.\n"
+"============================================================================="
+"======================\n"
+"\n"
+"Este módulo añade:\n"
+"-----------------\n"
+"    - fecha de cambio de divisa\n"
+"    - pagos por lotes\n"
+"    - trazabilidad de los cambios en las líneas de extractos bancarios\n"
+"    - vistas de líneas de extractos bancarios\n"
+"    - informe de saldos de extractos bancarios\n"
+"    - mejoras en el rendimiento para la importación digital de extractos "
+"bancarios \n"
+"      (mediante el flag de contexto 'ebanking_import')\n"
+"    - name_search en res.partner.bank mejorada para permitir buscar tanto en "
+"el código de cuenta bancaria \n"
+"      como en el código IBAN.\n"
+"    "
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -7363,7 +7408,7 @@ msgstr "El nombre del grupo no puede empezar con \"-\""
 #: view:ir.module.module:0
 #: model:ir.ui.menu,name:base.module_mi
 msgid "Apps"
-msgstr "Tienda de aplicaciones"
+msgstr "Aplicaciones en línea"
 
 #. module: base
 #: view:ir.ui.view_sc:0
