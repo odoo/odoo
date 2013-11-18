@@ -133,9 +133,14 @@ class WebsiteBlog(http.Controller):
         pager_end = page * self._category_post_per_page
         blog_posts = blog_posts[pager_begin:pager_end]
 
+        tag_obj = request.registry['blog.tag']
+        tag_ids = tag_obj.search(cr, uid, [], context=context)
+        tags = tag_obj.browse(cr, uid, tag_ids, context=context)
+
         values = {
             'category': category,
             'categories': categories,
+            'tags': tags,
             'tag': tag,
             'blog_posts': blog_posts,
             'pager': pager,
@@ -191,9 +196,14 @@ class WebsiteBlog(http.Controller):
         category_ids = category_obj.search(cr, uid, [], context=context)
         categories = category_obj.browse(cr, uid, category_ids, context=context)
 
+        tag_obj = request.registry['blog.tag']
+        tag_ids = tag_obj.search(cr, uid, [], context=context)
+        tags = tag_obj.browse(cr, uid, tag_ids, context=context)
+
         values = {
             'category': blog_post.category_id,
             'categories': categories,
+            'tags': tags,
             'tag': tag and request.registry['blog.tag'].browse(cr, uid, int(tag), context=context) or None,
             'blog_post': blog_post,
             'pager': pager,

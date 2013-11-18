@@ -282,6 +282,23 @@
         </t>
     </template>
 
+    <!-- Option: Right Column: tags -->
+    <template id="opt_blog_rc_tags" name="Tags"
+            inherit_option_id="website_blog.index" inherit_id="website_blog.index">
+        <xpath expr="//div[@id='blog_right_column']" position="inside">
+            <section class="mt32">
+            <h4>Tags</h4>
+            <ul class="nav nav-pills nav-stacked">
+                <t t-foreach="tags" t-as="tag_id">
+                <li t-att-class="tag and tag_id.id == tag.id and 'active' or None" style="display: inline-block;">
+                    <a t-href="/blog/cat/#{ category.id }/tag/#{ tag_id.id }"><span t-field="tag_id.name"/></a>
+                </li>
+                </t>
+            </ul>
+            </section>
+        </xpath>
+    </template>
+
     <!-- Option: Right Column: archives -->
     <template id="opt_blog_rc_history" name="Archives"
             inherit_option_id="website_blog.index" inherit_id="website_blog.index">
