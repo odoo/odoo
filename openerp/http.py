@@ -4,6 +4,7 @@
 #----------------------------------------------------------
 import ast
 import cgi
+import collections
 import contextlib
 import errno
 import functools
@@ -99,6 +100,7 @@ class WebRequest(object):
         self.disable_db = False
         self.uid = None
         self.func = None
+        self.func_arguments = {}
         self.auth_method = None
         self._cr_cm = None
         self._cr = None
@@ -142,7 +144,8 @@ class WebRequest(object):
 
     def set_handler(self, func, arguments, auth):
         # is this needed ?
-        arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
+        arguments = dict((k, v) for k, v in arguments.iteritems()
+                         if not k.startswith("_ignored_"))
 
         self.func = func
         self.func_request_type = func.exposed
@@ -166,6 +169,9 @@ class WebRequest(object):
                 if self.func_request_type != self._request_type:
                     raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
                         % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
+
+                kwargs.update(self.func_arguments)
+
                 # Backward for 7.0
                 if getattr(self.func, '_first_arg_is_req', False):
                     args = (request,) + args
@@ -467,7 +473,7 @@ def set_request(req):
 #----------------------------------------------------------
 addons_module = {}
 addons_manifest = {}
-controllers_per_module = {}
+controllers_per_module = collections.defaultdict(list)
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
@@ -492,7 +498,7 @@ class ControllerType(type):
         # but we only store controllers directly inheriting from Controller
         if not "Controller" in globals() or not Controller in bases:
             return
-        controllers_per_module.setdefault(module, []).append(name_class)
+        controllers_per_module[module].append(name_class)
 
 class Controller(object):
     __metaclass__ = ControllerType
@@ -502,9 +508,8 @@ def routing_map(modules, nodb_only, converters=None):
     for module in modules:
         if module not in controllers_per_module:
             continue
-        for v in controllers_per_module[module]:
-            cls = v[1]
 
+        for _, cls in controllers_per_module[module]:
             subclasses = cls.__subclasses__()
             subclasses = [c for c in subclasses if c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules]
             if subclasses:
@@ -867,7 +872,7 @@ class Root(object):
         self.load_addons()
 
         _logger.info("Generating nondb routing")
-        self.routing_map = routing_map(['', "web"], True)
+        self.nodb_routing_map = routing_map(['', "web"], True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
@@ -938,8 +943,7 @@ class Root(object):
 
     def get_response(self, httprequest, result, explicit_session):
         if isinstance(result, basestring):
-            headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
-            response = werkzeug.wrappers.Response(result, headers=headers)
+            response = werkzeug.wrappers.Response(result, mimetype='text/html')
         else:
             response = result
 
@@ -979,8 +983,7 @@ class Root(object):
                     openerp.modules.registry.RegistryManager.signal_caches_change(db)
                 else:
                     # fallback to non-db handlers
-                    urls = self.routing_map.bind_to_environ(request.httprequest.environ)
-                    func, arguments = urls.match(request.httprequest.path)
+                    func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
                     request.set_handler(func, arguments, "none")
                     result = request.dispatch()
             response =  self.get_response(httprequest, result, explicit_session)
@@ -988,6 +991,11 @@ class Root(object):
 
         except werkzeug.exceptions.HTTPException, e:
             return e(environ, start_response)
+
+    def get_db_router(self, db):
+        if not db:
+            return self.nodb_routing_map
+        return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
     httprequest = httprequest or request.httprequest
@@ -1027,7 +1035,7 @@ def db_monodb(httprequest=None):
     return None
 
 #----------------------------------------------------------
-# RPC controlller
+# RPC controller
 #----------------------------------------------------------
 class CommonController(Controller):
 
