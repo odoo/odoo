@@ -73,7 +73,7 @@ class BasicPayment(PaymentAcquirerCommon):
             partner_id=None,
             partner_values=self.buyer_values,
             context=context)
-        print res
+        # print res
 
     #     # check some basic paypal methods
     #     res = self.payment_transaction.validate_paypal_notification(
@@ -110,3 +110,46 @@ class BasicPayment(PaymentAcquirerCommon):
         # print resp.text
 
         # self.payment_transaction.validate(cr, uid, [tx_id], context=context)
+
+# {
+#     'protection_eligibility': u'Ineligible',
+#     'last_name': u'Poilu',
+#     'txn_id': u'08D73520KX778924N',
+#     'receiver_email': u'tde+paypal-facilitator@openerp.com',
+#     'payment_status': u'Pending',
+#     'payment_gross': u'',
+#     'tax': u'0.00',
+#     'residence_country': u'FR',
+#     'address_state': u'Alsace',
+#     'payer_status': u'verified',
+#     'txn_type': u'web_accept',
+#     'address_street': u'Av. de la Pelouse, 87648672 Mayet',
+#     'handling_amount': u'0.00',
+#     'payment_date': u'03:21:19 Nov 18, 2013 PST',
+#     'first_name': u'Norbert',
+#     'item_name': u'test_ref_0',
+#     'address_country': u'France',
+#     'charset': u'windows-1252',
+#     'custom': u'',
+#     'notify_version': u'3.7',
+#     'address_name': u'Norbert Poilu',
+#     'pending_reason': u'multi_currency',
+#     'item_number': u'test_ref_0',
+#     'receiver_id': u'DEG7Z7MYGT6QA',
+#     'transaction_subject': u'',
+#     'business': u'tde+paypal-facilitator@openerp.com',
+#     'test_ipn': u'1',
+#     'payer_id': u'VTDKRZQSAHYPS',
+#     'verify_sign': u'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AVoiUf-3478q3vrSmqh08IouiYpM',
+#     'address_zip': u'75002',
+#     'address_country_code': u'FR',
+#     'address_city': u'Paris',
+#     'address_status': u'unconfirmed',
+#     'mc_currency': u'EUR',
+#     'shipping': u'0.00',
+#     'payer_email': u'tde+buyer@openerp.com',
+#     'payment_type': u'instant',
+#     'mc_gross': u'1.95',
+#     'ipn_track_id': u'866df2ccd444b',
+#     'quantity': u'1'
+# }

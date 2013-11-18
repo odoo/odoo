@@ -192,7 +192,7 @@ class PaymentTxOgone(osv.Model):
             context=context
         )
 
-    def _ogone_form_get_tx_from_shasign_out(self, cr, uid, data, context=None):
+    def _ogone_form_get_tx_from_data(self, cr, uid, data, context=None):
         """ Given a data dict coming from ogone, verify it and find the related
         transaction record. """
         reference, pay_id, shasign = data.get('orderID'), data.get('PAYID'), data.get('SHASIGN')
@@ -223,7 +223,7 @@ class PaymentTxOgone(osv.Model):
         return tx
 
     def ogone_form_feedback(self, cr, uid, data, context=None):
-        tx = self._ogone_form_get_tx_from_shasign_out(cr, uid, data, context)
+        tx = self._ogone_form_get_tx_from_data(cr, uid, data, context)
         if not tx:
             raise ValidationError('Ogone: feedback: tx not found')
         if tx.state == 'done':

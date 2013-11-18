@@ -37,9 +37,8 @@ class PaypalController(http.Controller):
     _cancel_url = '/payment/paypal/cancel/'
 
     @website.route([
-        '/payment/paypal/test/ipn/'
         '/payment/paypal/ipn/',
-    ], type='http', auth='admin')
+    ], type='http', auth='public')
     def paypal_ipn(self, **post):
         print 'Entering paypal_ipn with post', post
         # step 1: return an empty HTTP 200 response -> will be done at the end by returning ''
@@ -52,21 +51,19 @@ class PaypalController(http.Controller):
 
         # step 3: paypal send either VERIFIED or INVALID (single word)
         if resp.text == 'VERIFIED':
-            # _logger.warning('')
+            _logger.info('Paypal: received verified IPN')
             cr, uid, context = request.cr, request.uid, request.context
-            # payment_transaction = request.registry['payment.transaction']
-            # payment_transaction.validate()
+            payment_transaction = request.registry['payment.transaction']
+            res = payment_transaction.paypal_form_feedback(cr, uid, post, context=context)
+            print '\tValidation result', res
         elif resp.text == 'INVALID':
-            # _logger.warning('')
-            pass
+            _logger.warning('Paypal: received invalid IPN with post %s' % post)
         else:
-            # _logger.warning('') -> something went wrong
-            pass
+            _logger.warning('Paypal: received unrecognized IPN with post %s' % post)
 
         return ''
 
     @website.route([
-        '/payment/paypal/test/dpn',
         '/payment/paypal/dpn',
     ], type='http', auth="public")
     def paypal_dpn(self, **post):
@@ -74,10 +71,9 @@ class PaypalController(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         print 'Entering paypal_dpn with post', post
-        return ''
+        return request.redirect('/')
 
     @website.route([
-        '/payment/paypal/test/cancel',
         '/payment/paypal/cancel',
     ], type='http', auth="public")
     def paypal_cancel(self, **post):

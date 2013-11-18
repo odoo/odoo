@@ -18,6 +18,10 @@
                 <input type="hidden" name="first_name" t-att-value="tx_values['first_name']"/>
                 <input type="hidden" name="last_name" t-att-value="tx_values['last_name']"/>
                 <input type="hidden" name="zip" t-att-value="tx_values['zip']"/>
+                <!-- after payment parameters -->
+                <t t-if='tx_values.get("custom")'>
+                    <input type='hidden' name="custom" t-att-value='tx_values["custom"]'/>
+                </t>
                 <!-- URLs -->
                 <input t-if="acquirer.paypal_use_dpn" type='hidden' name='return'
                     t-att-value="tx_values['return']"/>

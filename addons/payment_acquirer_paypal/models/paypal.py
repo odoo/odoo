@@ -22,6 +22,7 @@
 from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
 from openerp.addons.payment_acquirer_paypal.controllers.main import PaypalController
 from openerp.osv import osv, fields
+from openerp.tools.float_utils import float_compare
 
 import logging
 import requests
@@ -75,6 +76,8 @@ class AcquirerPaypal(osv.Model):
             'notify_url': '%s' % urlparse.urljoin(base_url, PaypalController._notify_url),
             'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
         }
+        if tx_custom_values and tx_custom_values.get('return_url'):
+            tx_values['custom'] = 'return_url=%s' % tx_custom_values.pop('return_url')
         if tx_custom_values:
             tx_values.update(tx_custom_values)
         return tx_values
@@ -85,6 +88,7 @@ class TxPaypal(osv.Model):
 
     _columns = {
         'paypal_txn_id': fields.char('Transaction ID'),
+        'paypal_txn_type': fields.char('Transaction type'),
     }
 
     # --------------------------------------------------
@@ -113,48 +117,46 @@ class TxPaypal(osv.Model):
             context=context
         )
 
+    def _paypal_get_tx_from_data(self, cr, uid, data, context=None):
+        reference, txn_id = data.get('item_number'), data.get('txn_id')
+        if not reference or not txn_id:
+            error_msg = 'Paypal: received data with missing reference (%s) or txn_id (%s)' % (reference, txn_id)
+            _logger.error(error_msg)
+            raise ValidationError(error_msg)
 
+        # find tx -> @TDENOTE use txn_id ?
+        tx_ids = self.pool['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
+        if not tx_ids or len(tx_ids) > 1:
+            error_msg = 'Paypal: received data for reference %s' % (reference)
+            if not tx_ids:
+                error_msg += '; no order found'
+            else:
+                error_msg += '; multiple order found'
+            _logger.error(error_msg)
+            raise ValidationError(error_msg)
+        tx = self.pool['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
 
-    def validate_paypal_notification(self, cr, uid, url, context=None):
-        parsed_url = urlparse.urlparse(url)
-        query_parameters = parsed_url.query
-        parameters = urlparse.parse_qs(query_parameters)
+        return tx
 
+    def paypal_form_feedback(self, cr, uid, data, context=None):
         invalid_parameters = []
 
-        # check tx effectively exists
-        txn_id = parameters.get('txn_id')[0]
-        tx_ids = self.search(cr, uid, [('paypal_txn_id', '=', txn_id)], context=context)
-        if not tx_ids:
-            _logger.warning(
-                'Received a notification from Paypal for a tx %s that does not exists in database.' %
-                txn_id
-            )
-            return False
-        elif len(tx_ids) > 1:
-            _logger.warning(
-                'Received a notification from Paypal for a tx %s that is duplicated in database.' %
-                txn_id
-            )
+        # get tx
+        tx = self._paypal_get_tx_from_data(cr, uid, data, context=context)
 
-        tx = self.browse(cr, uid, tx_ids[0], context=context)
-
-        if parameters.get('notify_version')[0] != '2.6':
+        if data.get('notify_version')[0] != '2.6':
             _logger.warning(
                 'Received a notification from Paypal with version %s instead of 2.6. This could lead to issues when managing it.' %
-                parameters.get('notify_version')
+                data.get('notify_version')
             )
-        if parameters.get('test_ipn')[0]:
+        if data.get('test_ipn'):
             _logger.warning(
                 'Received a notification from Paypal using sandbox'
             ),
-        # check transaction
-        if parameters.get('payment_status')[0] != 'Completed':
-            invalid_parameters.append(('payment_status', 'Completed'))
         # check what is buyed
-        if parameters.get('mc_gross')[0] != tx.amount:
+        if float_compare(float(data.get('mc_gross', '0.0')), tx.amount, 2) != 0:
             invalid_parameters.append(('mc_gross', tx.amount))
-        if parameters.get('mc_currency')[0] != tx.currency_id.name:
+        if data.get('mc_currency') != tx.currency_id.name:
             invalid_parameters.append(('mc_currency',  tx.currency_id.name))
         # if parameters.get('payment_fee') != tx.payment_fee:
             # invalid_parameters.append(('payment_fee',  tx.payment_fee))
@@ -173,65 +175,33 @@ class TxPaypal(osv.Model):
         # if parameters.get('receiver_id') != tx.receiver_id:
             # invalid_parameters.append(('receiver_id', tx.receiver_id))
 
-        if not invalid_parameters:
-            self.write(cr, uid, [tx.id], {
-                'payment_type': parameters.get('payment_type')[0],
-                'date_validate': parameters.get('payment_date', [fields.datetime.now()])[0],
-                'txn_type': parameters.get('express_checkout')[0],
-            }, context=context)
-            return tx.id
-        else:
+        if invalid_parameters:
             _warn_message = 'The following transaction parameters are incorrect:\n'
             for item in invalid_parameters:
-                _warn_message += '\t%s: received %s instead of %s\n' % (item[0], parameters.get(item[0])[0], item[1])
+                _warn_message += '\t%s: received %s instead of %s\n' % (item, data.get(item[0]), item[1])
             _logger.warning(_warn_message)
+            return False
 
-        return False
-
-    def create_paypal_command(self, cr, uid, cmd, parameters):
-        parameters.update(cmd=cmd)
-        return requests.post(self._paypal_url, data=parameters)
-
-    def _validate_paypal(self, cr, uid, ids, context=None):
-        res = []
-        for tx in self.browse(cr, uid, ids, context=context):
-            parameters = {}
-            parameters.update(
-                cmd='_notify-validate',
-                business='tdelavallee-facilitator@gmail.com',
-                item_name="%s %s" % ('cacapoutch', tx.reference),
-                item_number=tx.reference,
-                amount=tx.amount,
-                currency_code=tx.currency_id.name,
-            )
-            print '\t', parameters
-            # paypal_url = "https://www.paypal.com/cgi-bin/webscr"
-            paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr"
-            resp = requests.post(paypal_url, data=parameters)
-            print resp
-            print resp.url
-            print resp.text
-            response = urlparse.parse_qsl(resp)
-            print response
-            # transaction's unique id
-            # response["txn_id"]
-
-            # "Failed", "Reversed", "Refunded", "Canceled_Reversal", "Denied"
-            status = "refused"
-            retry_time = False
-
-            if response["payment_status"] == "Voided":
-                status = "refused"
-            elif response["payment_status"] in ("Completed", "Processed") and response["item_number"] == tx.reference and response["mc_gross"] == tx.amount:
-                status = "validated"
-            elif response["payment_status"] in ("Expired", "Pending"):
-                status = "pending"
-                retry_time = 60
-
-            res.append(
-                (status, retry_time, "payment_status=%s&pending_reason=%s&reason_code=%s" % (
-                    response["payment_status"],
-                    response.get("pending_reason"),
-                    response.get("reason_code")))
-            )
-        return response
+        status = data.get('payment_status', 'Pending')
+        if status in ['Completed', 'Processed']:
+            tx.write({
+                'state': 'done',
+                'txn_id': data['txn_id'],
+                'date_validate': data.get('payment_date', fields.datetime.now()),
+                'paypal_txn_type': data.get('express_checkout')
+            })
+            return True
+        elif status in ['Pending', 'Expired']:
+            tx.write({
+                'state': 'pending',
+                'txn_id': data['txn_id'],
+            })
+            return True
+        else:
+            error = 'Paypal: feedback error'
+            _logger.info(error)
+            tx.write({
+                'state': 'error',
+                'state_message': error
+            })
+            return False
