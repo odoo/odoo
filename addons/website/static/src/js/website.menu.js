@@ -104,7 +104,7 @@
                         new_window: link[1],
                     });
                     var $menu = self.$('[data-menu-id="' + id + '"]');
-                    $menu.find('> div > span').text(menu_obj.name);
+                    $menu.find('.js_menu_label').first().text(menu_obj.name);
                 });
                 dialog.appendTo(document.body);
             } else {
