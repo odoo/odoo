@@ -397,19 +397,20 @@
 
                             <!-- The question -->
                             <group colspan="2">
-                                <field name="type"/>
+                                <field name="type" readonly="context.get('is_comment_question', False)"/>
                                 <field name="question" />
                                 <field name="description" />
                             </group>
 
                             <!-- Labels -->
                             <group colspan="2" string="Choice of answers" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
+                                <field colspan="2"  name="simple_choice_display" string="Display mode" />
                                 <field colspan="2" name="labels_ids" nolabel="1" context="{'default_question_id': active_id}">
                                     <tree string="Suggested answers" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
                                         <field name="value" />
                                     </tree>
                                 </field>
-                                <field colspan="2"  name="simple_choice_display" string="Display mode"/>
                             </group>
 
                             <!-- Sub-questions -->
@@ -419,7 +420,7 @@
 
 
                             <!-- Question validation -->
-                            <group colspan="2" string="Question required">
+                            <group colspan="2" string="Question required" invisible="context.get('is_comment_question', False)">
                                 <field name="constr_mandatory" string="Is this question mandatory?"/>
                                 <group attrs="{'invisible':[('constr_mandatory','=',False)]}">
                                     <group attrs="{'invisible':[('type','not in',['matrix'])]}">
@@ -444,15 +445,15 @@
                                         <field name="validation_type" />
                                         <group colspan="2" attrs="{'invisible':[('validation_type','!=','has_length')]}">
                                             <field name="validation_length_min" string="between"/>
-                                            <field  name="validation_length_max" string="and"/>
+                                            <field name="validation_length_max" string="and"/>
                                         </group>
                                         <group colspan="2" attrs="{'invisible':[('validation_type','!=','is_decimal')]}">
                                             <field name="validation_min_float_value" string="between"/>
-                                            <field  name="validation_max_float_value" string="and"/>
+                                            <field name="validation_max_float_value" string="and"/>
                                         </group>
                                         <group colspan="2" attrs="{'invisible':[('validation_type','!=','is_integer')]}">
                                             <field name="validation_min_int_value" string="between"/>
-                                            <field  name="validation_max_int_value" string="and"/>
+                                            <field name="validation_max_int_value" string="and"/>
                                         </group>
                                         <group colspan="2" attrs="{'invisible':[('validation_type','!=','is_date')]}">
                                             <field name="validation_min_date" string="between"/>
@@ -468,9 +469,13 @@
                                 <field name='comments_allowed' />
                                 <group attrs="{'invisible':[('comments_allowed','=',False)]}">
                                     <field name='comment_count_as_answer' />
+                                    <field colspan="2" nolabel="1" name="comment_children_ids" context="{'default_parent_id': active_id, 'default_type': 'textbox', 'is_comment_question': True}">
+                                        <tree>
+                                            <field name="question" string="Comment question (only one question allowed, others will be ignored)"/>
+                                        </tree>
+                                    </field>
                                 </group>
                             </group>
-
                         </group>
                     </sheet>
                 </form>

@@ -333,7 +333,8 @@ class survey_question(osv.osv):
             ondelete='cascade'),
         'survey_id': fields.related('page_id', 'survey_id', type='many2one',
             relation='survey.survey', string='Survey', store=True),
-        'parent_id': fields.many2one('survey.question', 'Parent question'),
+        'parent_id': fields.many2one('survey.question', 'Parent question',
+            ondelete='cascade'),
         'children_ids': fields.one2many('survey.question', 'parent_id',
             'Children questions'),
         'sequence': fields.integer(string='Sequence'),
@@ -356,18 +357,17 @@ class survey_question(osv.osv):
             'question_id', 'Suggested answers', oldname='answer_choice_ids'),
 
         # Display options
-        'simple_choice_display' : fields.selection([('1col', 'Buttons (1 column)'),
-                ('2col', 'Buttons (2 columns)'),
-                ('3col', 'Buttons (3 columns)'),
-                ('horizontal', 'Buttons (horizontal)'),
-                ('dropdown', 'Dropdown menu'),],
-                'Display mode', ),
+        'simple_choice_display': fields.selection([('1col', '1 column choices'),
+                ('2col', '2 columns choices'),
+                ('3col', '3 columns choices'),
+                ('horizontal', 'Horizontal choices'),
+                ('dropdown', 'Dropdown menu')], 'Display mode'),
 
         # Comments
         'comments_allowed': fields.boolean('Allow comments',
             oldname="allow_comment"),
-        #'comment_children_ids': fields.one2many('survey.question_id',
-        #    'parent_id', 'Comment question'),  # one2one in fact
+        'comment_children_ids': fields.one2many('survey.question',
+            'parent_id', 'Comment question'),  # one2one in fact
         'comment_count_as_answer': fields.boolean('Comment field is an answer choice',
             oldname='make_comment_field'),
 
@@ -416,7 +416,7 @@ class survey_question(osv.osv):
         'constr_error_msg': lambda s, cr, uid, c:
                 _('This question requires an answer.'),
         'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
-        'validation_required': 'False',
+        'validation_required': False,
     }
     _sql_constraints = [
         ('positive_len_min', 'CHECK (validation_length_min >= 0)', 'A length must be positive!'),
@@ -542,12 +542,12 @@ class survey_label(osv.osv):
     ''' A suggested answer for a question '''
     _name = 'survey.label'
     _rec_name = 'value'
+    _order = 'sequence'
 
     _columns = {
-        #'survey_id': fields.related('page_id', 'survey_id', type='many2one',
-        #    relation='survey.survey', string='Survey', store=True),
         'question_id': fields.many2one('survey.question', 'Question',
             required=True, ondelete='cascade'),
+        'sequence': fields.integer('Page number'),
         'value': fields.char("Suggested value", length=128, translate=True,
             required=True)
     }
