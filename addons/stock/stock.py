@@ -1141,14 +1141,17 @@ class stock_picking(osv.osv):
         '''
         move_obj = self.pool.get('stock.move')
         for op in picking.pack_operation_ids:
-            for op_remaining_product_id, op_remaing_qty in package_obj._get_remaining_prod_quantities().items():
-                #TODO continue MEMO
-                if op_remaining_qty > 0:
+            for product_id, remaining_qty in package_obj._get_remaining_prod_quantities(cr, uid, op, context=context).items():
+                if remaining_qty < 0:
+                    product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
                     vals = {
                         'picking_id': picking.id,
                         'location_id': picking.location_id.id,
                         'location_dest_id': picking.location_dest_id.id,
-                        'product_id': op.
+                        'product_id': product_id,
+                        'product_uom': product.uom_id.id,
+                        'product_uom_qty': remaining_qty,
+                        'name': _('Extra Move: ') + product.name,
                     }
                     move_obj.create(cr, uid, vals, context=context)
 
@@ -1196,6 +1199,14 @@ class stock_picking(osv.osv):
                 self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
+                    #Packing:
+                    for ops in picking.pack_operation_ids:
+                        if ops.result_package_id:
+                            if ops.package_id:
+                                pack_obj.write(cr, uid, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
+                            else:
+                                for record in ops.linked_move_operation_ids:
+                                    quant_obj.write(cr, uid, [q.id for q in record.move_id.quant_ids], {'package_id': ops.result_package_id.id}, context=context)
                 elif context.get('do_only_split'):
                     context.update({'split': todo_move_ids})
             picking.refresh()
@@ -1896,16 +1907,6 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
         return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
 
-    #def _get_quants_from_pack(self, cr, uid, ids, context=None):
-    #    """
-    #    Suppose for the moment we don't have any packaging
-    #    """
-    #    res = {}
-    #    for move in self.browse(cr, uid, ids, context=context):
-    #        #Split according to pack wizard if necessary
-    #        res[move.id] = [x.id for x in move.reserved_quant_ids]
-    #    return res
-
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
         It assumes that quants are already assigned to stock moves.
@@ -1923,11 +1924,6 @@ class stock_move(osv.osv):
         pickings = set()
         procurement_ids = []
         for move in self.browse(cr, uid, ids, context=context):
-#             if negatives and negatives[move.id]:
-#                 for ops in negatives[move.id].keys():
-#                 quants_to_move = [(None, negatives[move.id, x) for x in negatives]
-#                 quant_obj.quants_move(cr, uid, quants_to_move, move, context=context)
-
             if move.picking_id:
                 pickings.add(move.picking_id.id)
             qty = move.product_qty
@@ -1939,23 +1935,6 @@ class stock_move(osv.osv):
             dom = [('qty', '>', 0)]
             prefered_domain = [('reservation_id', '=', move.id)]
             fallback_domain = [('reservation_id', '=', False)]
-            if move.picking_id and move.picking_id.pack_operation_ids:
-                #if negatives and move.id in negatives:
-                #    for negative_op in negatives[move.id].keys():
-                #        ops = ops_obj.browse(cr, uid, negative_op, context=context)
-                #        negatives[move.id][negative_op] = quant_obj.quants_move(cr, uid, [(None, negatives[move.id][negative_op])], move, 
-                #                                                                lot_id = ops.lot_id and ops.lot_id.id or False, 
-                #                                                                owner_id = ops.owner_id and ops.owner_id.id or False, 
-                #                                                                package_id = ops.package_id and ops.package_id.id or False, context=context)
-                #Packing:
-                #TODO: decide if this has to be moved in do_transfer or not
-                #WARNING: in any ways, this code isn't good and must be revised
-                reserved_ops = list(set([x.reservation_op_id.id for x in move.reserved_quant_ids]))
-                for ops in ops_obj.browse(cr, uid, reserved_ops, context=context):
-                    if ops.product_id:
-                        quant_obj.write(cr, uid, [x.id for x in ops.reserved_quant_ids], {'package_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
-                    else:
-                        pack_obj.write(cr, uid, [ops.package_id.id], {'parent_id': ops.result_package_id and ops.result_package_id.id or False}, context=context)
             quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=dom, prefered_domain=prefered_domain, fallback_domain=fallback_domain, context=context)
             #Will move all quants_get and as such create negative quants
             quant_obj.quants_move(cr, uid, quants, move, context=context)
@@ -3306,16 +3285,18 @@ class stock_pack_operation(osv.osv):
     _description = "Packing Operation"
 
     def _get_remaining_prod_quantities(cr, uid, operation, context=None):
-        res = {}
-        #total found per product included in the operation
+        '''Get the remaining quantities per product on an operation with a package. This function returns a dictionary'''
+        #if the operation doesn't concern a package, it's not relevant to call this function
+        if not operation.package_id:
+            return
+        #get the total of products the package contains
+        res = self.pool.get('stock.quant.package')._get_all_products_quantities(cr, uid operation.package_id.id, context=context)
+        #reduce by the quantities linked to a move
         for record in operation.linked_move_operation_ids:
             if record.product_id.id not in res:
                 res[record.product_id.id] = 0
-            res[record.product_id.id] += record.qty
-        #if the operation concerns a package (this function could work only for this case => TODO: decide
-        if operation.package_id:
-            reference_dict = self.pool.get('stock.quant.package')._get_all_products_quantities(cr, uid operation.package_id.id, context=context)
-        #compare the 2 dicts to know what's the difference
+            res[record.product_id.id] -= record.qty
+        return res
 
     def _get_remaining_qty(self, cr, uid, ids, name, args, context=None):
         res = {}
