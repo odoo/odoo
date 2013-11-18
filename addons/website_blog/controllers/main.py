@@ -27,6 +27,11 @@ from openerp.tools.translate import _
 import werkzeug
 
 
+MONTHS = [None, _('January'), _('February'), _('March'), _('April'),
+    _('May'), _('June'), _('July'), _('August'), _('September'),
+    _('October'), _('November'), _('December')]
+
+
 class WebsiteBlog(http.Controller):
     _category_post_per_page = 6
     _post_comment_per_page = 6
@@ -62,17 +67,16 @@ class WebsiteBlog(http.Controller):
         })
 
     @website.route([
-        '/blog',
-        '/blog/page/<int:page>/',
         '/blog/cat/<model("blog.category"):category>/',
         '/blog/cat/<model("blog.category"):category>/page/<int:page>/',
-        '/blog/tag/<model("blog.tag"):tag>/',
-        '/blog/tag/<model("blog.tag"):tag>/page/<int:page>/',
+        '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/',
+        '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/page/<int:page>/',
         '/blog/cat/<model("blog.category"):category>/date/<string(length=21):date>/',
-        '/blog/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/',
-        '/blog/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>/',
+        '/blog/cat/<model("blog.category"):category>/date/<string(length=21):date>/page/<int:page>/',
+        '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/',
+        '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>/',
     ], type='http', auth="public", multilang=True)
-    def blog(self, category=None, tag=None, page=1, date=None):
+    def blog(self, category=None, tag=None, date=None, page=1):
         """ Prepare all values to display the blog.
 
         :param category: category currently browsed.
@@ -113,8 +117,7 @@ class WebsiteBlog(http.Controller):
             domain += [("id", "=", [blog.id for blog in tag.blog_post_ids])]
         if date:
             path_filter += "date/%s/" % date
-            date = date.split("_")
-            domain = [("create_date", ">=", date[0]), ("create_date", "<=", date[1])]
+            domain = [("create_date", ">=", date.split("_")[0]), ("create_date", "<=", date.split("_")[1])]
 
         blog_post_ids = blog_post_obj.search(cr, uid, domain, context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
@@ -138,26 +141,14 @@ class WebsiteBlog(http.Controller):
             'pager': pager,
             'nav_list': self.nav_list(),
             'path_filter': path_filter,
+            'date': date,
         }
-
-        if tag:
-            values['main_object'] = tag
-        elif category:
-            values['main_object'] = category
-
         return request.website.render("website_blog.blog_post_short", values)
 
     @website.route([
-        '/blog/<model("blog.post"):blog_post>/page/<int:page>/',
-        '/blog/<model("blog.post"):blog_post>/cat/<model("blog.category"):category>/',
-        '/blog/<model("blog.post"):blog_post>/cat/<model("blog.category"):category>/page/<int:page>/',
-        '/blog/<model("blog.post"):blog_post>/tag/<model("blog.tag"):tag>/',
-        '/blog/<model("blog.post"):blog_post>/tag/<model("blog.tag"):tag>/page/<int:page>/',
-        '/blog/<model("blog.post"):blog_post>/cat/<model("blog.category"):category>/date/<string(length=21):date>/',
-        '/blog/<model("blog.post"):blog_post>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/',
-        '/blog/<model("blog.post"):blog_post>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>/',
+        '/blog/<model("blog.post"):blog_post>/',
     ], type='http', auth="public", multilang=True)
-    def blog_post(self, blog_post=None, category=None, tag=None, page=1, date=None, enable_editor=None, path_filter=''):
+    def blog_post(self, blog_post=None, tag=None, date=None, page=1, enable_editor=None):
         """ Prepare all values to display the blog.
 
         :param blog_post: blog post currently browsed. If not set, the user is
@@ -184,9 +175,6 @@ class WebsiteBlog(http.Controller):
 
         pager_url = "/blog/%s" % blog_post.id
 
-        if path_filter:
-            pager_url += path_filter
-
         pager = request.website.pager(
             url=pager_url,
             total=len(blog_post.website_message_ids),
@@ -204,14 +192,15 @@ class WebsiteBlog(http.Controller):
         categories = category_obj.browse(cr, uid, category_ids, context=context)
 
         values = {
-            'category': category,
+            'category': blog_post.category_id,
             'categories': categories,
-            'tag': tag,
+            'tag': tag and request.registry['blog.tag'].browse(cr, uid, int(tag), context=context) or None,
             'blog_post': blog_post,
             'pager': pager,
             'nav_list': self.nav_list(),
             'enable_editor': enable_editor,
-            'path_filter': path_filter,
+            'date': date,
+            'date_name': date and "%s %s" % (MONTHS[int(date.split("-")[1])], date.split("-")[0]) or None
         }
         return request.website.render("website_blog.blog_post_complete", values)
 
@@ -227,8 +216,8 @@ class WebsiteBlog(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
-    @website.route(['/blog/<int:category_id><path:path_filter>/new'], type='http', auth="public", multilang=True)
-    def blog_post_create(self, category_id=None, path_filter='', **post):
+    @website.route(['/blog/new'], type='http', auth="public", multilang=True)
+    def blog_post_create(self, category_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].create(
@@ -238,11 +227,17 @@ class WebsiteBlog(http.Controller):
                 'content': '',
                 'website_published': False,
             }, context=create_context)
-        return werkzeug.utils.redirect("/blog/%s%s/?enable_editor=1" % (new_blog_post_id, path_filter))
+        return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % new_blog_post_id)
 
-    @website.route(['/blog/<int:blog_post_id><path:path_filter>/duplicate'], type='http', auth="public")
-    def blog_post_copy(self, blog_post_id=None, path_filter='', **post):
+    @website.route(['/blog/duplicate'], type='http', auth="public")
+    def blog_post_copy(self, blog_post_id=None, **post):
+        """ Duplicate a blog.
+
+        :param blog_post_id: id of the blog post currently browsed.
+
+        :return redirect to the new blog created
+        """
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
-        return werkzeug.utils.redirect("/blog/%s%s/?enable_editor=1" % (new_blog_post_id, path_filter))
+        return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % new_blog_post_id)

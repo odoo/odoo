@@ -51,7 +51,7 @@
                         <t t-foreach="blogs" t-as="blog">
                           <div class="col-md-4">
                             <h4>
-                                <a t-href="/blog/#{blog.id}/#{ path_filter }" t-field="blog.name"></a>
+                                <a t-href="/blog/#{blog.id}?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog.name"></a>
                                 <span t-if="not blog.website_published" class="text-warning">
                                     &amp;nbsp;
                                     <span class="icon-warning-sign" title="Not published"/>
@@ -73,7 +73,7 @@
                             </div>
                             <div class="text-muted" t-if="len(blog.message_ids) &gt; 0">
                                 <span class="icon-comment">
-                                    <a t-href="/blog/#{blog.id}/#{ path_filter }/#comment">
+                                    <a t-href="/blog/#{blog.id}/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comment">
                                         <t t-if="len(blog.message_ids) &lt;= 1" ><t t-esc="len(blog.message_ids)"/> comment</t>
                                         <t t-if="len(blog.message_ids) > 1"><t t-esc="len(blog.message_ids)"/> comments</t>
                                     </a>
@@ -108,12 +108,12 @@
         <t t-foreach="blog_posts" t-as="blog_post">
           <div t-att-data-publish="blog_post.website_published and 'on' or 'off'">
             <h2 class="text-center">
-                <a t-href="/blog/#{blog_post.id}/#{ path_filter }" t-field="blog_post.name"></a>
+                <a t-href="/blog/#{blog_post.id}/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
             </h2>
             <p class="post-meta text-muted text-center" name='blog_post_data'>
                 <span class="icon-calendar"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
                 <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment">
-                    <a t-href="/blog/#{blog_post.id}/#{ path_filter }/#comment">
+                    <a t-href="/blog/#{blog_post.id}/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comment">
                         <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
                         <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
                     </a>
@@ -151,7 +151,7 @@
             <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                 <span class="icon-tags"/>
                 <t t-foreach="blog_post.tag_ids" t-as="tag">
-                    <a t-href="/blog/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
+                    <a t-href="/blog/cat/#{ category.id }/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
                 </t>
             </p>
         </xpath>
@@ -160,12 +160,22 @@
     <!-- Blog Post Complete -->
     <template id="blog_post_complete" name="Blog Post">
         <t t-call="website_blog.index">
-        <div>
+
+        <div class="row">
+          <div class="col-sm-9">
+              <ol class="breadcrumb">
+                  <li><a t-href="/blog/cat/#{category.id}"><span t-field="category.name"/></a></li>
+                  <li t-if="tag"><a t-href="/blog/cat/#{ category.id }/tag/#{tag.id}"><span t-field="tag.name"/></a></li>
+                  <li t-if="tag and date"><a t-href="/blog/cat/#{ category.id }/tag/#{tag.id}/date/#{ date }" t-esc="date_name"/></li>
+                  <li t-if="not tag and date"><a t-href="/blog/cat/#{ category.id }/date/#{ date }" t-esc="date_name"/></li>
+                  <li class="active"><span t-field="blog_post.name"/></li>
+              </ol>
+          </div><div class="col-sm-3">
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>
                 <li>
-                    <a href="#" t-attf-data-href="/blog/#{blog_post.id}/#{ path_filter }/duplicate">Duplicate</a>
+                    <a href="#" t-attf-data-href="/blog/duplicate?blog_post_id=#{blog_post.id}">Duplicate</a>
                     <script>
                         var $a=$("[data-href$='/duplicate']");
                         $a.attr("href", $a.data('href')).removeAttr('data-href');
@@ -173,7 +183,9 @@
                     </script>
                 </li>
             </t>
+          </div>
         </div>
+
         <div class="clearfix"/>
 
         <h1 class="text-center" t-field="blog_post.name"/>
@@ -253,7 +265,7 @@
             <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                 <span class="icon-tags"/>
                 <t t-foreach="blog_post.tag_ids" t-as="tag">
-                    <a t-href="/blog/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
+                    <a t-href="/blog/cat/#{ category.id }/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
                 </t>
             </p>
         </xpath>
@@ -287,11 +299,12 @@
         <xpath expr="//div[@id='blog_right_column']" position="inside">
             <section class="mt32">
             <h4>Archives</h4>
-            <ul class="list-unstyled">
-                <li t-foreach="nav_list" t-as="months">
-                    <a t-ignore="True" t-href="/blog/#{ category and 'cat/%s/' % category.id or '' }#{ tag and 'tag/%s/' % tag.id or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/></a>
-                    <span class="pull-right badge" t-esc="months['create_date_count']"/>
+            <ul class="nav nav-pills nav-stacked">
+                <t t-foreach="nav_list" t-as="months">
+                <li t-att-class="months['date'] == date and 'active' or None">
+                    <a t-ignore="True" t-href="/blog/cat/#{ category.id }/#{ tag and 'tag/%s/' % tag.id or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
                 </li>
+                </t>
             </ul>
             </section>
         </xpath>
