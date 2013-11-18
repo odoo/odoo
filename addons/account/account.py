@@ -1458,7 +1458,7 @@ class account_move(osv.osv):
             context = {}
         toremove = []
         obj_move_line = self.pool.get('account.move.line')
-        for move in self.browse(cr, uid, ids, context=context):
+        for move in self.browse(cr, uid, (ids if hasattr(ids, '__iter__') else [ids]), context=context):
             if move['state'] != 'draft':
                 raise osv.except_osv(_('User Error!'),
                         _('You cannot delete a posted journal entry "%s".') % \
