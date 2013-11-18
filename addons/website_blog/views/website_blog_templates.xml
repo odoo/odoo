@@ -51,7 +51,7 @@
                         <t t-foreach="blogs" t-as="blog">
                           <div class="col-md-4">
                             <h4>
-                                <a t-href="/blog/#{blog.id}" t-field="blog.name"></a>
+                                <a t-href="/blog/#{blog.id}/#{ path_filter }" t-field="blog.name"></a>
                                 <span t-if="not blog.website_published" class="text-warning">
                                     &amp;nbsp;
                                     <span class="icon-warning-sign" title="Not published"/>
@@ -73,7 +73,7 @@
                             </div>
                             <div class="text-muted" t-if="len(blog.message_ids) &gt; 0">
                                 <span class="icon-comment">
-                                    <a t-href="/blog/#{blog.id}/#comment">
+                                    <a t-href="/blog/#{blog.id}/#{ path_filter }/#comment">
                                         <t t-if="len(blog.message_ids) &lt;= 1" ><t t-esc="len(blog.message_ids)"/> comment</t>
                                         <t t-if="len(blog.message_ids) > 1"><t t-esc="len(blog.message_ids)"/> comments</t>
                                     </a>
@@ -108,12 +108,12 @@
         <t t-foreach="blog_posts" t-as="blog_post">
           <div t-att-data-publish="blog_post.website_published and 'on' or 'off'">
             <h2 class="text-center">
-                <a t-href="/blog/#{blog_post.id}" t-field="blog_post.name"></a>
+                <a t-href="/blog/#{blog_post.id}/#{ path_filter }" t-field="blog_post.name"></a>
             </h2>
             <p class="post-meta text-muted text-center" name='blog_post_data'>
                 <span class="icon-calendar"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
                 <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment">
-                    <a t-href="/blog/#{blog_post.id}/#comment">
+                    <a t-href="/blog/#{blog_post.id}/#{ path_filter }/#comment">
                         <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
                         <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
                     </a>
@@ -165,7 +165,7 @@
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>
                 <li>
-                    <a href="#" t-attf-data-href="/blog/#{blog_post.id}/duplicate">Duplicate</a>
+                    <a href="#" t-attf-data-href="/blog/#{blog_post.id}/#{ path_filter }/duplicate">Duplicate</a>
                     <script>
                         var $a=$("[data-href$='/duplicate']");
                         $a.attr("href", $a.data('href')).removeAttr('data-href');
@@ -216,7 +216,7 @@
         <xpath expr="//ul[@id='comments-list']" position="after">
             <t t-if="not is_public_user">
                 <section groups="group_website_blog_reply" class="mb32">
-                    <form id="comment" t-attf-action="/blog/#{blog_post.id}/comment"
+                    <form id="comment" t-attf-action="/blog/#{blog_post.id}/#{ path_filter }/comment"
                             method="POST">
                         <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
                         <div class="pull-left mb32" style="width: 75%%">
@@ -289,7 +289,7 @@
             <h4>Archives</h4>
             <ul class="list-unstyled">
                 <li t-foreach="nav_list" t-as="months">
-                    <a t-href="/blog/#{ category and 'cat/%s/' % category.id or '' }#{ tag and 'tag/%s/' % tag.id or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/></a>
+                    <a t-ignore="True" t-href="/blog/#{ category and 'cat/%s/' % category.id or '' }#{ tag and 'tag/%s/' % tag.id or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/></a>
                     <span class="pull-right badge" t-esc="months['create_date_count']"/>
                 </li>
             </ul>
