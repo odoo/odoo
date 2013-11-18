@@ -136,14 +136,6 @@
         </xpath>
     </template>
 
-    <!-- Options: Blog Post Summary: show category -->
-    <template id="opt_blog_post_short_category" name="Category"
-            inherit_option_id="website_blog.blog_post_short">
-        <xpath expr="//span[@class='icon-calendar']" position="after">
-            <span class="icon-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
-        </xpath>
-    </template>
-
     <!-- Option: Blog Post Summary: show tags -->
     <template id="opt_blog_post_short_tags" name="Tags"
             inherit_option_id="website_blog.blog_post_short" inherit_id="website_blog.blog_post_short">
