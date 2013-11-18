@@ -510,7 +510,11 @@ instance.web.ActionManager = instance.web.Widget.extend({
         });
     },
     ir_actions_act_url: function (action) {
-        window.open(action.url, action.target === 'self' ? '_self' : '_blank');
+        if (action.target === 'self') {
+            instance.web.redirect(action.url);
+        } else {
+            window.open(action.url, '_blank');
+        }
         return $.when();
     },
 });
