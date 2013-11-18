@@ -143,26 +143,18 @@ var PivotTable = instance.web.Widget.extend({
     headers: [],
     rows: [],
     cols: [],
-    current_row_id : 0,
+    id_seed : 0,
 
     events: {
         'click .web_graph_click' : function (event) {
-            var row_id = event.target.attributes['data-row-id'].nodeValue,
-                row = this.get_row(row_id);
-
             event.preventDefault();
 
-            if (row.expanded) {
-                this.fold_row(row_id);
-            } else {
-                if (row.path.length < this.data.row_groupby.length) {
-                    var field_to_expand = this.data.row_groupby[row.path.length];
-                    this.expand_row(row_id, field_to_expand);
-                } else {
-                    this.display_dropdown(row_id, $(event.target), event.pageY, event.pageY);
-                }
+            if (event.target.attributes['data-row-id'] !== undefined) {
+                this.handle_row_event(event);
             }
-
+            if (event.target.attributes['data-col-id'] !== undefined) {
+                this.handle_col_event(event);
+            }
         },
 
         'click a.field-selection' : function (event) {
@@ -172,6 +164,39 @@ var PivotTable = instance.web.Widget.extend({
             var field_id = event.target.attributes['data-field-id'].nodeValue;
             this.expand_row(row_id, field_id);
         },
+    },
+
+    handle_row_event: function (event) {
+        var row_id = event.target.attributes['data-row-id'].nodeValue,
+            row = this.get_row(row_id);
+
+        if (row.expanded) {
+            this.fold_row(row_id);
+        } else {
+            if (row.path.length < this.data.row_groupby.length) {
+                var field_to_expand = this.data.row_groupby[row.path.length];
+                this.expand_row(row_id, field_to_expand);
+            } else {
+                this.display_dropdown(row_id, $(event.target), event.pageY, event.pageY);
+            }
+        }
+    },
+
+    handle_col_event: function (event) {
+        console.log("col expand", this.cols);
+        // var col_id = event.target.attributes['data-col-id'].nodeValue,
+        //     col = this.get_row(col_id);
+
+        // if (col.expanded) {
+        //     this.fold_row(row_id);
+        // } else {
+        //     if (col.path.length < this.data.col_groupby.length) {
+        //         var field_to_expand = this.data.col_groupby[col.path.length];
+        //         this.expand_col(col_id, field_to_expand);
+        //     } else {
+        //         this.display_dropdown(col_id, $(event.target), event.pageY, event.pageY);
+        //     }
+        // }
     },
 
     init: function (data) {
@@ -237,11 +262,23 @@ var PivotTable = instance.web.Widget.extend({
     build_table: function () {
         var self = this;
 
+        var col_id = this.generate_id();
+
         var header = $('<tr></tr>');
         header.append(this.make_cell(' ', {is_border:true}));
         header.append(this.make_cell(this.data.measure_label,
-                                     {is_border:true, foldable: true}));
+                                     {is_border:true, foldable: true, col_id:col_id}));
         this.headers = [header];
+
+        this.cols= [{
+            path: [],
+            value: this.data.measure_label,
+            expanded: false,
+            parent: null,
+            children: [],
+            cells: [],    // a cell is {td:<jquery td>, row_id:<some id>}
+            domain: this.data.domain,
+        }];
 
         var main_row = this.make_row(this.data.total[0]);
 
@@ -286,8 +323,14 @@ var PivotTable = instance.web.Widget.extend({
         var jquery_row = $('<tr></tr>');
 
         var header = this.make_cell(value, {is_border:true, indent: path.length, foldable:true, row_id: row_id});
+        var cell = this.make_cell(group.attributes.aggregates[this.data.measure]);
         jquery_row.html(header);
-        jquery_row.append(this.make_cell(group.attributes.aggregates[this.data.measure]));
+        jquery_row.append(cell);
+
+        _.each(this.cols, function (col) {
+            col.cells.push({row_id: row_id, td: cell });
+            // insert cells into corresponding col
+        });
 
         var row = {
             id: row_id,
@@ -304,8 +347,8 @@ var PivotTable = instance.web.Widget.extend({
     },
 
     generate_id: function () {
-        this.current_row_id += 1;
-        return this.current_row_id - 1;
+        this.id_seed += 1;
+        return this.id_seed - 1;
     },
 
     get_row: function (id) {
@@ -314,9 +357,15 @@ var PivotTable = instance.web.Widget.extend({
         });
     },
 
+    get_col: function (id) {
+        return _.find(this.cols, function(col) {
+            return (col.id == id);
+        });
+    },
+
     make_cell: function (content, options) {
         options = _.extend({is_border: false, indent:0, foldable:false}, options);
-        content = (content) ? content : 'Undefined';
+        content = (content !== undefined) ? content : 'Undefined';
 
         var cell = $('<td></td>');
         if (options.is_border) cell.addClass('graph_border');
@@ -325,9 +374,10 @@ var PivotTable = instance.web.Widget.extend({
         });
 
         if (options.foldable) {
-            var plus = $('<span/>', {'data-row-id':options.row_id,
-                                     class:'icon-plus-sign web_graph_click',
-                                     href:'#'});
+            var attrs = {class:'icon-plus-sign web_graph_click', href:'#'};
+            if (options.row_id !== undefined) attrs['data-row-id'] = options.row_id;
+            if (options.col_id !== undefined) attrs['data-col-id'] = options.col_id;
+            var plus = $('<span/>', attrs);
             plus.append(' ');
             plus.append(content);
             cell.append(plus);
@@ -355,7 +405,6 @@ var PivotTable = instance.web.Widget.extend({
                 _.each(data.reverse(), function (datapt) {
                     var new_row = self.make_row(datapt, row_id);
                     row.html.after(new_row.html);
-                    
                 });
         });
 
@@ -393,6 +442,12 @@ var PivotTable = instance.web.Widget.extend({
 
         row.html.remove();
         removeFromArray(this.rows, row);
+
+        _.each(this.cols, function (col) {
+            col.cells = _.filter(col.cells, function (cell) {
+                return cell.row_id !== row_id;
+            });
+        });
     },
 
 });
