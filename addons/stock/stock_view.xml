@@ -1241,7 +1241,7 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group name="origin_grp" string="Origin">
-                            <field name="origin"/>
+                            <field name="origin" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                             <field name="picking_id" domain="[('type','=',type)]"/>
                              <field name="type" on_change="onchange_move_type(type)"/>
                             <field name="location_id" groups="stock.group_locations"/>
