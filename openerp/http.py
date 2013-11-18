@@ -4,6 +4,7 @@
 #----------------------------------------------------------
 import ast
 import cgi
+import collections
 import contextlib
 import errno
 import functools
@@ -27,9 +28,10 @@ import simplejson
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
 import werkzeug.exceptions
+import werkzeug.local
+import werkzeug.routing
 import werkzeug.wrappers
 import werkzeug.wsgi
-import werkzeug.routing as routing
 
 import openerp
 from openerp.service import security, model as service_model
@@ -98,6 +100,7 @@ class WebRequest(object):
         self.disable_db = False
         self.uid = None
         self.func = None
+        self.func_arguments = {}
         self.auth_method = None
         self._cr_cm = None
         self._cr = None
@@ -111,14 +114,6 @@ class WebRequest(object):
         self.context = dict(self.session.context)
         self.lang = self.context["lang"]
 
-    def _authenticate(self):
-        if self.session.uid:
-            try:
-                self.session.check_security()
-            except SessionExpiredException, e:
-                self.session.logout()
-                raise SessionExpiredException("Session expired for request %s" % self.httprequest)
-        auth_methods[self.auth_method]()
     @property
     def registry(self):
         """
@@ -147,8 +142,17 @@ class WebRequest(object):
             self._cr = self._cr_cm.__enter__()
         return self._cr
 
+    def set_handler(self, func, arguments, auth):
+        # is this needed ?
+        arguments = dict((k, v) for k, v in arguments.iteritems()
+                         if not k.startswith("_ignored_"))
+
+        self.func = func
+        self.func_request_type = func.exposed
+        self.func_arguments = arguments
+        self.auth_method = auth
+
     def _call_function(self, *args, **kwargs):
-        self._authenticate()
         try:
             # ugly syntax only to get the __exit__ arguments to pass to self._cr
             request = self
@@ -165,6 +169,18 @@ class WebRequest(object):
                 if self.func_request_type != self._request_type:
                     raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
                         % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
+
+                kwargs.update(self.func_arguments)
+
+                # Backward for 7.0
+                if getattr(self.func, '_first_arg_is_req', False):
+                    args = (request,) + args
+                # Correct exception handling and concurency retry
+                @service_model.check
+                def checked_call(dbname, *a, **kw):
+                    return self.func(*a, **kw)
+                if self.db:
+                    return checked_call(self.db, *args, **kwargs)
                 return self.func(*args, **kwargs)
         finally:
             # just to be sure no one tries to re-use the request
@@ -179,26 +195,6 @@ class WebRequest(object):
     def registry_cr(self):
         warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
         yield (self.registry, self.cr)
-
-def auth_method_user():
-    request.uid = request.session.uid
-    if not request.uid:
-        raise SessionExpiredException("Session expired")
-
-def auth_method_admin():
-    if not request.db:
-        raise SessionExpiredException("No valid database for request %s" % request.httprequest)
-    request.uid = openerp.SUPERUSER_ID
-
-def auth_method_none():
-    request.disable_db = True
-    request.uid = None
-
-auth_methods = {
-    "user": auth_method_user,
-    "admin": auth_method_admin,
-    "none": auth_method_none,
-}
 
 def route(route, type="http", auth="user"):
     """
@@ -219,7 +215,6 @@ def route(route, type="http", auth="user"):
         configuration indicating the current database nor the current user.
     """
     assert type in ["http", "json"]
-    assert auth in auth_methods.keys()
     def decorator(f):
         if isinstance(route, list):
             f.routes = route
@@ -230,12 +225,6 @@ def route(route, type="http", auth="user"):
             f.auth = auth
         return f
     return decorator
-
-def reject_nonliteral(dct):
-    if '__ref' in dct:
-        raise ValueError(
-            "Non literal contexts can not be sent to the server anymore (%r)" % (dct,))
-    return dct
 
 class JsonRequest(WebRequest):
     """ JSON-RPC2 over HTTP.
@@ -302,7 +291,7 @@ class JsonRequest(WebRequest):
             request = self.httprequest.stream.read()
 
         # Read POST content or POST Form Data named "request"
-        self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
+        self.jsonrequest = simplejson.loads(request)
         self.params = dict(self.jsonrequest.get("params", {}))
         self.context = self.params.pop('context', self.session.context)
 
@@ -464,9 +453,7 @@ def httprequest(f):
 #----------------------------------------------------------
 # Thread local global request object
 #----------------------------------------------------------
-from werkzeug.local import LocalStack
-
-_request_stack = LocalStack()
+_request_stack = werkzeug.local.LocalStack()
 
 request = _request_stack()
 """
@@ -482,11 +469,11 @@ def set_request(req):
         _request_stack.pop()
 
 #----------------------------------------------------------
-# Controller metaclass registration
+# Controller and route registration
 #----------------------------------------------------------
 addons_module = {}
 addons_manifest = {}
-controllers_per_module = {}
+controllers_per_module = collections.defaultdict(list)
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
@@ -511,10 +498,35 @@ class ControllerType(type):
         # but we only store controllers directly inheriting from Controller
         if not "Controller" in globals() or not Controller in bases:
             return
-        controllers_per_module.setdefault(module, []).append(name_class)
+        controllers_per_module[module].append(name_class)
 
 class Controller(object):
     __metaclass__ = ControllerType
+
+def routing_map(modules, nodb_only, converters=None):
+    routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
+    for module in modules:
+        if module not in controllers_per_module:
+            continue
+
+        for _, cls in controllers_per_module[module]:
+            subclasses = cls.__subclasses__()
+            subclasses = [c for c in subclasses if c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules]
+            if subclasses:
+                name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
+                cls = type(name, tuple(reversed(subclasses)), {})
+
+            o = cls()
+            members = inspect.getmembers(o)
+            for mk, mv in members:
+                if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and (not nodb_only or nodb_only == (mv.auth == "none")):
+                    for url in mv.routes:
+                        if getattr(mv, "combine", False):
+                            url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
+                            if url.endswith("/") and len(url) > 1:
+                                url = url[: -1]
+                        routing_map.add(werkzeug.routing.Rule(url, endpoint=mv))
+    return routing_map
 
 #----------------------------------------------------------
 # HTTP Sessions
@@ -679,6 +691,8 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         context['lang'] = lang or 'en_US'
 
+    # Deprecated to be removed in 9
+
     """
         Damn properties for retro-compatibility. All of that is deprecated, all
         of that.
@@ -794,7 +808,7 @@ def session_gc(session_store):
                 pass
 
 #----------------------------------------------------------
-# WSGI Application
+# WSGI Layer
 #----------------------------------------------------------
 # Add potentially missing (older ubuntu) font mime types
 mimetypes.add_type('application/font-woff', '.woff')
@@ -848,106 +862,27 @@ class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
     def __init__(self):
-        self.addons = {}
-        self.statics = {}
-
-        self.no_db_router = None
-
-        self.load_addons()
-
         # Setup http sessions
         path = session_path()
-        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
         _logger.debug('HTTP sessions stored in: %s', path)
+        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
 
+        # TODO should we move this to ir.http so that only configured modules are served ?
+        _logger.info("HTTP Configuring static files")
+        self.load_addons()
+
+        _logger.info("Generating nondb routing")
+        self.nodb_routing_map = routing_map(['', "web"], True)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
         """
         return self.dispatch(environ, start_response)
 
-    def dispatch(self, environ, start_response):
-        """
-        Performs the actual WSGI dispatching for the application.
-        """
-        try:
-            httprequest = werkzeug.wrappers.Request(environ)
-            httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableDict
-            httprequest.app = self
-
-            session_gc(self.session_store)
-
-            sid = httprequest.args.get('session_id')
-            explicit_session = True
-            if not sid:
-                sid =  httprequest.headers.get("X-Openerp-Session-Id")
-            if not sid:
-                sid = httprequest.cookies.get('session_id')
-                explicit_session = False
-            if sid is None:
-                httprequest.session = self.session_store.new()
-            else:
-                httprequest.session = self.session_store.get(sid)
-
-            self._find_db(httprequest)
-
-            if not "lang" in httprequest.session.context:
-                lang = httprequest.accept_languages.best or "en_US"
-                lang = babel.core.LOCALE_ALIASES.get(lang, lang).replace('-', '_')
-                httprequest.session.context["lang"] = lang
-
-            request = self._build_request(httprequest)
-            db = request.db
-
-            if db:
-                openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-
-            with set_request(request):
-                self.find_handler()
-                result = request.dispatch()
-
-            if db:
-                openerp.modules.registry.RegistryManager.signal_caches_change(db)
-
-            if isinstance(result, basestring):
-                headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
-                response = werkzeug.wrappers.Response(result, headers=headers)
-            else:
-                response = result
-
-            if httprequest.session.should_save:
-                self.session_store.save(httprequest.session)
-            # We must not set the cookie if the session id was specified using a http header or a GET parameter.
-            # There are two reasons to this:
-            # - When using one of those two means we consider that we are overriding the cookie, which means creating a new
-            #   session on top of an already existing session and we don't want to create a mess with the 'normal' session
-            #   (the one using the cookie). That is a special feature of the Session Javascript class.
-            # - It could allow session fixation attacks.
-            if not explicit_session and hasattr(response, 'set_cookie'):
-                response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
-
-            return response(environ, start_response)
-        except werkzeug.exceptions.HTTPException, e:
-            return e(environ, start_response)
-
-    def _find_db(self, httprequest):
-        db = db_monodb(httprequest)
-        if db != httprequest.session.db:
-            httprequest.session.logout()
-            httprequest.session.db = db
-
-    def _build_request(self, httprequest):
-        if httprequest.args.get('jsonp'):
-            return JsonRequest(httprequest)
-
-        if httprequest.mimetype == "application/json":
-            return JsonRequest(httprequest)
-        else:
-            return HttpRequest(httprequest)
-
     def load_addons(self):
         """ Load all addons from addons patch containg static files and
         controllers and configure them.  """
+        statics = {}
 
         for addons_path in openerp.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
@@ -960,99 +895,107 @@ class Root(object):
                         _logger.debug("Loading %s", module)
                         if 'openerp.addons' in sys.modules:
                             m = __import__('openerp.addons.' + module)
-                        else:
-                            m = __import__(module)
                         addons_module[module] = m
                         addons_manifest[module] = manifest
-                        self.statics['/%s/static' % module] = path_static
+                        statics['/%s/static' % module] = path_static
 
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
+        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics)
         self.dispatch = DisableCacheMiddleware(app)
 
-    def _build_router(self, db):
-        _logger.info("Generating routing configuration for database %s" % db)
-        routing_map = routing.Map(strict_slashes=False)
+    def setup_session(self, httprequest):
+        # recover or create session
+        session_gc(self.session_store)
 
-        def gen(modules, nodb_only):
-            for module in modules:
-                for v in controllers_per_module[module]:
-                    cls = v[1]
+        sid = httprequest.args.get('session_id')
+        explicit_session = True
+        if not sid:
+            sid =  httprequest.headers.get("X-Openerp-Session-Id")
+        if not sid:
+            sid = httprequest.cookies.get('session_id')
+            explicit_session = False
+        if sid is None:
+            httprequest.session = self.session_store.new()
+        else:
+            httprequest.session = self.session_store.get(sid)
+        return explicit_session
 
-                    subclasses = cls.__subclasses__()
-                    subclasses = [c for c in subclasses if c.__module__.startswith('openerp.addons.') and
-                                  c.__module__.split(".")[2] in modules]
-                    if subclasses:
-                        name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
-                        cls = type(name, tuple(reversed(subclasses)), {})
+    def setup_db(self, httprequest):
+        # if no db is found on the session try to deduce it from the domain
+        db = db_monodb(httprequest)
+        if db != httprequest.session.db:
+            httprequest.session.logout()
+            httprequest.session.db = db
 
-                    o = cls()
-                    members = inspect.getmembers(o)
-                    for mk, mv in members:
-                        if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and \
-                                nodb_only == (getattr(mv, "auth", "none") == "none"):
-                            for url in mv.routes:
-                                if getattr(mv, "combine", False):
-                                    url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
-                                    if url.endswith("/") and len(url) > 1:
-                                        url = url[: -1]
-                                routing_map.add(routing.Rule(url, endpoint=mv))
+    def setup_lang(self, httprequest):
+        if not "lang" in httprequest.session.context:
+            lang = httprequest.accept_languages.best or "en_US"
+            lang = babel.core.LOCALE_ALIASES.get(lang, lang).replace('-', '_')
+            httprequest.session.context["lang"] = lang
 
-        modules_set = set(controllers_per_module.keys()) - set(['', 'web'])
-        # building all none methods
-        gen(['', "web"] + sorted(modules_set), True)
-        if not db:
-            return routing_map
+    def get_request(self, httprequest):
+        # deduce type of request
+        if httprequest.args.get('jsonp'):
+            return JsonRequest(httprequest)
+        if httprequest.mimetype == "application/json":
+            return JsonRequest(httprequest)
+        else:
+            return HttpRequest(httprequest)
 
-        registry = openerp.modules.registry.RegistryManager.get(db)
-        with registry.cursor() as cr:
-            m = registry.get('ir.module.module')
-            ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')])
-            installed = set(x['name'] for x in m.read(cr, 1, ids, ['name']))
-            modules_set = modules_set & installed
+    def get_response(self, httprequest, result, explicit_session):
+        if isinstance(result, basestring):
+            response = werkzeug.wrappers.Response(result, mimetype='text/html')
+        else:
+            response = result
 
-        # building all other methods
-        gen(['', "web"] + sorted(modules_set), False)
+        if httprequest.session.should_save:
+            self.session_store.save(httprequest.session)
+        # We must not set the cookie if the session id was specified using a http header or a GET parameter.
+        # There are two reasons to this:
+        # - When using one of those two means we consider that we are overriding the cookie, which means creating a new
+        #   session on top of an already existing session and we don't want to create a mess with the 'normal' session
+        #   (the one using the cookie). That is a special feature of the Session Javascript class.
+        # - It could allow session fixation attacks.
+        if not explicit_session and hasattr(response, 'set_cookie'):
+            response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
 
-        return routing_map
+        return response
+
+    def dispatch(self, environ, start_response):
+        """
+        Performs the actual WSGI dispatching for the application.
+        """
+        try:
+            httprequest = werkzeug.wrappers.Request(environ)
+            httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableDict
+            httprequest.app = self
+
+            explicit_session = self.setup_session(httprequest)
+            self.setup_db(httprequest)
+            self.setup_lang(httprequest)
+
+            request = self.get_request(httprequest)
+
+            with set_request(request):
+                db = request.session.db 
+                if db:
+                    openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+                    result = request.registry['ir.http']._dispatch()
+                    openerp.modules.registry.RegistryManager.signal_caches_change(db)
+                else:
+                    # fallback to non-db handlers
+                    func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+                    request.set_handler(func, arguments, "none")
+                    result = request.dispatch()
+            response =  self.get_response(httprequest, result, explicit_session)
+            return response(environ, start_response)
+
+        except werkzeug.exceptions.HTTPException, e:
+            return e(environ, start_response)
 
     def get_db_router(self, db):
-        if db is None:
-            router = self.no_db_router
-        else:
-            router = getattr(openerp.modules.registry.RegistryManager.get(db), "werkzeug_http_router", None)
-        if not router:
-            router = self._build_router(db)
-            if db is None:
-                self.no_db_router = router
-            else:
-                openerp.modules.registry.RegistryManager.get(db).werkzeug_http_router = router
-        return router
-
-    def find_handler(self):
-        """
-        Tries to discover the controller handling the request for the path specified in the request.
-        """
-        path = request.httprequest.path
-        urls = self.get_db_router(request.db).bind_to_environ(request.httprequest.environ)
-        func, arguments = urls.match(path)
-        arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
-
-        @service_model.check
-        def checked_call(dbname, *a, **kw):
-            return func(*a, **kw)
-
-        def nfunc(*args, **kwargs):
-            kwargs.update(arguments)
-            if getattr(func, '_first_arg_is_req', False):
-                args = (request,) + args
-
-            if request.db:
-                return checked_call(request.db, *args, **kwargs)
-            return func(*args, **kwargs)
-
-        request.func = nfunc
-        request.auth_method = getattr(func, "auth", "user")
-        request.func_request_type = func.exposed
+        if not db:
+            return self.nodb_routing_map
+        return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
     httprequest = httprequest or request.httprequest
@@ -1091,6 +1034,9 @@ def db_monodb(httprequest=None):
         return dbs[0]
     return None
 
+#----------------------------------------------------------
+# RPC controller
+#----------------------------------------------------------
 class CommonController(Controller):
 
     @route('/jsonrpc', type='json', auth="none")
