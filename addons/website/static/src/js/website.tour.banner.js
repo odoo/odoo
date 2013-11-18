@@ -51,7 +51,7 @@
                     element: '#website-top-navbar [data-snippet-id=carousel].ui-draggable',
                     placement: 'bottom',
                     title: "Drag & Drop a Banner",
-                    content: "Drag the <em>Banner</em> block and drop it in your page. <p class='text-muted'>Tip: release the mouse button when you are in a valid zone, with a preview of the banner.</p>",
+                    content: "Drag the Banner block and drop it in your page.",
                     template: render('website.tour_popover'),
                     onShow: function () {
                         function beginDrag () {
@@ -106,7 +106,6 @@
                     onHide: function () {
                         self.saveStep('part-2');
                     },
-
                 },
                 {
                     stepId: 'part-2',
@@ -119,6 +118,7 @@
                     stepId: 'show-tutorials',
                     element: '#help-menu-button',
                     placement: 'left',
+                    reflex: true,
                     title: "Help is always available",
                     content: "You can always click here if you want more helps or continue to build and get more tips about your website contents like page menu, ...",
                     template: render('website.tour_popover', { end: "Close" }),

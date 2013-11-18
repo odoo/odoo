@@ -336,10 +336,10 @@
                     });
                 },
                 stop: function(ev, ui){
-                    if (action === 'insert' && ! dropped) {
-                        var $el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
-                        if ($el) {
-                            $el.after($toInsert);
+                    if (action === 'insert' && ! dropped && $('.oe_drop_zone')) {
+                        var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
+                        if (el.length) {
+                            el.after($toInsert);
                             dropped = true;
                         }
                     }

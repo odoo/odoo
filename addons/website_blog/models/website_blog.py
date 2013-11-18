@@ -146,6 +146,9 @@ class BlogPost(osv.Model):
             select=True, readonly=True,
         ),
     }
+    _defaults = {
+        'website_published': False
+    }
 
     def create_history(self, cr, uid, ids, vals, context=None):
         for i in ids:

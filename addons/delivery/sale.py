@@ -23,7 +23,15 @@ import time
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 
-# Overloaded sale_order to manage carriers :
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+    _columns = {
+        'is_delivery':fields.boolean("Is a Delivery"),
+    }
+    _defaults = {
+        'is_delivery': False
+    }
+
 class sale_order(osv.osv):
     _inherit = 'sale.order'
     _columns = {
@@ -42,12 +50,20 @@ class sale_order(osv.osv):
         result.update(carrier_id=order.carrier_id.id)
         return result
 
+    def _delivery_unset(self, cr, uid, order, context=None):
+        for line in order.order_line:
+            if line.is_delivery:
+                self.pool.get('sale.order.line').unlink(cr, uid, [line.id], context=context)
+        return True
+
     def delivery_set(self, cr, uid, ids, context=None):
         order_obj = self.pool.get('sale.order')
         line_obj = self.pool.get('sale.order.line')
         grid_obj = self.pool.get('delivery.grid')
         carrier_obj = self.pool.get('delivery.carrier')
         acc_fp_obj = self.pool.get('account.fiscal.position')
+        for order in self.browse(cr, uid, ids, context=context):
+            self._delivery_unset(cr, uid, order, context=context)
         for order in self.browse(cr, uid, ids, context=context):
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
@@ -70,7 +86,8 @@ class sale_order(osv.osv):
                 'product_id': grid.carrier_id.product_id.id,
                 'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
                 'tax_id': [(6,0,taxes_ids)],
-                'type': 'make_to_stock'
+                'type': 'make_to_stock',
+                'is_delivery': True
             })
         #remove the value of the carrier_id field on the sale order
         return self.write(cr, uid, ids, {'carrier_id': False}, context=context)

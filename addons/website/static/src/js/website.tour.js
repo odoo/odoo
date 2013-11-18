@@ -24,7 +24,8 @@
                step.title = website.tour.render('website.tour_popover_title', { title: step.title });
                return step;
             }));
-            this.monkeyPatchTour();
+            // TODO: Disabled until properly implemented
+            // this.monkeyPatchTour();
         },
         monkeyPatchTour: function () {
             var self = this;
