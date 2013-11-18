@@ -39,12 +39,6 @@ openerp.auth_signup = function(instance) {
                     delete self.params.error_message;
                 }
 
-                // in case of a signup, retrieve the user information from the token
-                if (dbname && self.params.token) {
-                    self.rpc("/auth_signup/retrieve", {dbname: dbname, token: self.params.token})
-                        .done(self.on_token_loaded)
-                        .fail(self.on_token_failed);
-                }
                 if (dbname && self.params.login) {
                     self.$("form input[name=login]").val(self.params.login);
                 }
@@ -53,7 +47,7 @@ openerp.auth_signup = function(instance) {
                 self.$('a.oe_signup_reset_password').click(self.do_reset_password);
 
                 if (dbname) {
-                    self.rpc("/auth_signup/get_config", {dbname: dbname}).done(function(result) {
+                    self.rpc("/auth_signup/get_config", {dbname: dbname}).then(function(result) {
                         self.signup_enabled = result.signup;
                         self.reset_password_enabled = result.reset_password;
                         if (!self.signup_enabled || self.$("form input[name=login]").val()){
@@ -61,6 +55,13 @@ openerp.auth_signup = function(instance) {
                         } else {
                             self.set('login_mode', 'signup');
                         }
+
+                        // in case of a signup, retrieve the user information from the token
+                        if (self.params.token) {
+                            self.rpc("/auth_signup/retrieve", {dbname: dbname, token: self.params.token})
+                                .then(self.on_token_loaded, self.on_token_failed);
+                        }
+
                     });
                 } else {
                     // TODO: support multiple database mode
