@@ -147,11 +147,11 @@ var PivotTable = instance.web.Widget.extend({
 
     events: {
         'click .web_graph_click' : function (event) {
-            var self = this;
-            event.preventDefault();
-            var row_id = event.target.attributes['data-row-id'].nodeValue;
+            var row_id = event.target.attributes['data-row-id'].nodeValue,
+                row = this.get_row(row_id);
 
-            var row = this.get_row(row_id);
+            event.preventDefault();
+
             if (row.expanded) {
                 this.fold_row(row_id);
             } else {
@@ -159,24 +159,12 @@ var PivotTable = instance.web.Widget.extend({
                     var field_to_expand = this.data.row_groupby[row.path.length];
                     this.expand_row(row_id, field_to_expand);
                 } else {
-                    var already_grouped = self.data.row_groupby.concat(self.data.col_groupby);
-                    var possible_groups = _.difference(self.data.important_fields, already_grouped);
-                    var dropdown_options = {
-                        fields: _.map(possible_groups, function (field) {
-                            return {id: field, value: self.get_descr(field)};
-                        }),
-                        row_id: row_id,
-                    };
-                    this.dropdown = $(QWeb.render('field_selection', dropdown_options));
-                    $(event.target).after(this.dropdown);
-                    this.dropdown.css({position:'absolute',
-                                       left:event.pageX,
-                                       top:event.pageY});
-                    $('.field-selection').next('.dropdown-menu').toggle();
+                    this.display_dropdown(row_id, $(event.target), event.pageY, event.pageY);
                 }
             }
 
         },
+
         'click a.field-selection' : function (event) {
             event.preventDefault();
             this.dropdown.remove();
@@ -228,13 +216,32 @@ var PivotTable = instance.web.Widget.extend({
         this.$el.css('display', 'none');
     },
 
+    display_dropdown: function (row_id, target, x, y) {
+        var self = this,
+            already_grouped = self.data.row_groupby.concat(self.data.col_groupby),
+            possible_groups = _.difference(self.data.important_fields, already_grouped),
+            dropdown_options = {
+                fields: _.map(possible_groups, function (field) {
+                    return {id: field, value: self.get_descr(field)};
+                }),
+                row_id: row_id,
+            };
+        this.dropdown = $(QWeb.render('field_selection', dropdown_options));
+        target.after(this.dropdown);
+        this.dropdown.css({position:'absolute',
+                           left:x,
+                           top:y});
+        $('.field-selection').next('.dropdown-menu').toggle();
+    },
+
     build_table: function () {
         var self = this;
 
-        this.headers.push('<tr class="graph_table_header"><td class="graph_border">' +
-                    '</td><td class="graph_border">' +
-                    this.data.measure_label +
-                    '</td></tr>');
+        var header = $('<tr></tr>');
+        header.append(this.make_cell(' ', {is_border:true}));
+        header.append(this.make_cell(this.data.measure_label,
+                                     {is_border:true, foldable: true}));
+        this.headers = [header];
 
         var main_row = this.make_row(this.data.total[0]);
 
