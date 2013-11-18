@@ -143,7 +143,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
             this.$el.click(function(){
-                self.order.selectLine(this.model);
+                self.order.selectLine(self.model);
                 self.trigger('order_line_selected');
             });
             if(this.model.is_selected()){
@@ -516,7 +516,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     var cat = self.pos.db.get_category_by_id(id);
                     self.set_category(cat);
                     self.renderElement();
-                    self.search_and_categories(cat);
                 });
             });
             // breadcrumb click actions
@@ -525,12 +524,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 var category = self.pos.db.get_category_by_id(id);
                 self.set_category(category);
                 self.renderElement();
-                self.search_and_categories(category);
             });
+
+            this.search_and_categories();
+
             if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
                 this.pos_widget.onscreen_keyboard.connect(this.$('.searchbox input'));
             }
-            this.search_and_categories();
         },
         
         set_product_type: function(type){       // 'all' | 'weightable'
@@ -542,7 +542,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         reset_category: function(){
             this.set_category();
             this.renderElement();
-            this.search_and_categories();
+        },
+
+        // empties the content of the search box
+        clear_search: function(){
+            var products = this.pos.db.get_product_by_category(this.category.id);
+            this.pos.get('products').reset(products);
+            this.$('.searchbox input').val('').focus();
+            this.$('.search-clear').fadeOut();
         },
 
         // filters the products, and sets up the search callbacks
@@ -553,28 +560,37 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var products = this.pos.db.get_product_by_category(this.category.id);
             self.pos.get('products').reset(products);
 
-            // filter the products according to the search string
-            this.$('.searchbox input').keyup(function(){
-                query = $(this).val().toLowerCase();
-                if(query){
-                    var products = self.pos.db.search_product_in_category(self.category.id, query);
-                    self.pos.get('products').reset(products);
-                    self.$('.search-clear').fadeIn();
-                }else{
-                    var products = self.pos.db.get_product_by_category(self.category.id);
-                    self.pos.get('products').reset(products);
-                    self.$('.search-clear').fadeOut();
-                }
-            });
 
-            this.$('.searchbox input').click(function(){}); //Why ???
+            var searchtimeout = null;
+            // filter the products according to the search string
+            this.$('.searchbox input').keyup(function(event){
+                clearTimeout(searchtimeout);
+
+                var query = $(this).val().toLowerCase();
+                
+                searchtimeout = setTimeout(function(){
+                    if(query){
+                        if(event.which === 13){
+                            if( self.pos.get('products').size() === 1 ){
+                                self.pos.get('selectedOrder').addProduct(self.pos.get('products').at(0));
+                                self.clear_search();
+                            }
+                        }else{
+                            var products = self.pos.db.search_product_in_category(self.category.id, query);
+                            self.pos.get('products').reset(products);
+                            self.$('.search-clear').fadeIn();
+                        }
+                    }else{
+                        var products = self.pos.db.get_product_by_category(self.category.id);
+                        self.pos.get('products').reset(products);
+                        self.$('.search-clear').fadeOut();
+                    }
+                },200);
+            });
 
             //reset the search when clicking on reset
             this.$('.search-clear').click(function(){
-                var products = self.pos.db.get_product_by_category(self.category.id);
-                self.pos.get('products').reset(products);
-                self.$('.searchbox input').val('').focus();
-                self.$('.search-clear').fadeOut();
+                self.clear_search();
             });
         },
     });
@@ -668,7 +684,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
             if(this.action){
-                this.$el.click(function(){ self.action(); });
+                this.$el.click(function(){
+                    self.action();
+                });
             }
         },
         show: function(){ this.$el.removeClass('oe_hidden'); },
@@ -732,12 +750,15 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.$('.button.custom_ean').click(function(){
                 var ean = self.pos.barcode_reader.sanitize_ean(self.$('input.ean').val() || '0');
                 self.$('input.ean').val(ean);
-                self.pos.barcode_reader.on_ean(ean);
+                self.pos.barcode_reader.scan('ean13',ean);
+            });
+            this.$('.button.reference').click(function(){
+                self.pos.barcode_reader.scan('reference',self.$('input.ean').val());
             });
             _.each(this.eans, function(ean, name){
                 self.$('.button.'+name).click(function(){
                     self.$('input.ean').val(ean);
-                    self.pos.barcode_reader.on_ean(ean);
+                    self.pos.barcode_reader.scan('ean13',ean);
                 });
             });
             _.each(this.events, function(name){
@@ -1082,15 +1103,29 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         close: function() {
             var self = this;
-            return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
-                    _.bind(function(res) {
-                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
-                    var action = result;
-                    action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
-                    //self.destroy();
-                    this.do_action(action);
-                }, this));
-            }, this));
+
+            function close(){
+                return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
+                        _.bind(function(res) {
+                    return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                        var action = result;
+                        action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
+                        //self.destroy();
+                        this.do_action(action);
+                    }, this));
+                }, self));
+            }
+
+            var draft_order = _.find( self.pos.get('orders').models, function(order){
+                return order.get('orderLines').length !== 0 && order.get('paymentLines').length === 0;
+            });
+            if(draft_order){
+                if (confirm(_t("Pending orders will be lost.\nAre you sure you want to leave this session?"))) {
+                    return close();
+                }
+            }else{
+                return close();
+            }
         },
         destroy: function() {
             this.pos.destroy();

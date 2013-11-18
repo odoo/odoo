@@ -160,29 +160,29 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // what happens when a product is scanned : 
         // it will add the product to the order and go to barcode_product_screen. Or show barcode_product_error_popup if 
         // there's an error.
-        barcode_product_action: function(ean){
+        barcode_product_action: function(code){
             var self = this;
-            if(self.pos.scan_product(ean)){
-                self.pos.proxy.scan_item_success(ean);
+            if(self.pos.scan_product(code)){
+                self.pos.proxy.scan_item_success(code);
                 if(self.barcode_product_screen){ 
                     self.pos_widget.screen_selector.set_current_screen(self.barcode_product_screen);
                 }
             }else{
-                self.pos.proxy.scan_item_error_unrecognized(ean);
+                self.pos.proxy.scan_item_error_unrecognized(code);
                 if(self.barcode_product_error_popup && self.pos_widget.screen_selector.get_user_mode() !== 'cashier'){
                     self.pos_widget.screen_selector.show_popup(self.barcode_product_error_popup);
                 }
             }
         },
-        
+
         // what happens when a cashier id barcode is scanned.
         // the default behavior is the following : 
         // - if there's a user with a matching ean, put it as the active 'cashier', go to cashier mode, and return true
         // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
-        barcode_cashier_action: function(ean){
+        barcode_cashier_action: function(code){
             var users = this.pos.get('user_list');
             for(var i = 0, len = users.length; i < len; i++){
-                if(users[i].ean13 === ean.ean){
+                if(users[i].ean13 === code.code){
                     this.pos.set('cashier',users[i]);
                     this.pos_widget.username.refresh();
                     this.pos.proxy.cashier_mode_activated();
@@ -190,7 +190,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     return true;
                 }
             }
-            this.pos.proxy.scan_item_error_unrecognized(ean);
+            this.pos.proxy.scan_item_error_unrecognized(code);
             return false;
         },
         
@@ -198,28 +198,28 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // the default behavior is the following : 
         // - if there's a user with a matching ean, put it as the active 'client' and return true
         // - else : return false. 
-        barcode_client_action: function(ean){
+        barcode_client_action: function(code){
             var partners = this.pos.get('partner_list');
             for(var i = 0, len = partners.length; i < len; i++){
-                if(partners[i].ean13 === ean.ean){
+                if(partners[i].ean13 === code.code){
                     this.pos.get('selectedOrder').set_client(partners[i]);
                     this.pos_widget.username.refresh();
-                    this.pos.proxy.scan_item_success(ean);
+                    this.pos.proxy.scan_item_success(code);
                     return true;
                 }
             }
-            this.pos.proxy.scan_item_error_unrecognized(ean);
+            this.pos.proxy.scan_item_error_unrecognized(code);
             return false;
             //TODO start the transaction
         },
         
         // what happens when a discount barcode is scanned : the default behavior
         // is to set the discount on the last order.
-        barcode_discount_action: function(ean){
-            this.pos.proxy.scan_item_success(ean);
+        barcode_discount_action: function(code){
+            this.pos.proxy.scan_item_success(code);
             var last_orderline = this.pos.get('selectedOrder').getLastOrderline();
             if(last_orderline){
-                last_orderline.set_discount(ean.value)
+                last_orderline.set_discount(code.value)
             }
         },
 
@@ -292,10 +292,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.username.set_user_mode(this.pos_widget.screen_selector.get_user_mode());
 
             this.pos.barcode_reader.set_action_callback({
-                'cashier': self.barcode_cashier_action ? function(ean){ self.barcode_cashier_action(ean); } : undefined ,
-                'product': self.barcode_product_action ? function(ean){ self.barcode_product_action(ean); } : undefined ,
-                'client' : self.barcode_client_action ?  function(ean){ self.barcode_client_action(ean);  } : undefined ,
-                'discount': self.barcode_discount_action ? function(ean){ self.barcode_discount_action(ean); } : undefined,
+                'cashier': self.barcode_cashier_action ? function(code){ self.barcode_cashier_action(code); } : undefined ,
+                'product': self.barcode_product_action ? function(code){ self.barcode_product_action(code); } : undefined ,
+                'client' : self.barcode_client_action ?  function(code){ self.barcode_client_action(code);  } : undefined ,
+                'discount': self.barcode_discount_action ? function(code){ self.barcode_discount_action(code); } : undefined,
             });
         },
 
@@ -405,7 +405,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos.barcode_reader.save_callbacks();
             this.pos.barcode_reader.reset_action_callbacks();
             this.pos.barcode_reader.set_action_callback({
-                'cashier': function(ean){
+                'cashier': function(code){
                     clearInterval(this.intervalID);
                     self.pos.proxy.cashier_mode_activated();
                     self.pos_widget.screen_selector.set_user_mode('cashier');
@@ -683,14 +683,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         show_numpad:     false,
         show_leftpane:   false,
-        barcode_product_action: function(ean){
+        barcode_product_action: function(code){
             this.pos.proxy.transaction_start();
-            this._super(ean);
+            this._super(code);
         },
 
-        barcode_client_action: function(ean){
+        barcode_client_action: function(code){
             this.pos.proxy.transaction_start();
-            this._super(ean);
+            this._super(code);
             $('.goodbye-message').addClass('oe_hidden');
             this.pos_widget.screen_selector.show_popup('choose-receipt');
         },
@@ -873,8 +873,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
-            if(this.pos.iface_cashdrawer){
-                this.pos.proxy.open_cashbox();
+            if( this.pos.iface_cashdrawer && this.pos.get('selectedOrder').get('paymentLines').find(                function(pl){ return pl.cashregister.get('journal').type === 'cash'; })){
+                    this.pos.proxy.open_cashbox();
             }
 
             this.set_numpad_state(this.pos_widget.numpad.state);
@@ -883,6 +883,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     label: _t('Back'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
+                        _.each(self.paymentlinewidgets, function(widget){
+                            if( widget.payment_line.get_amount() === 0 ){
+                                widget.payment_line.destroy();
+                            }
+                        });
                         self.pos_widget.screen_selector.set_current_screen(self.back_screen);
                     },
                 });
@@ -903,6 +908,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
                         click: function(){
                             self.validateCurrentOrder({invoice: true});
+                        },
+                    });
+            }
+
+            if( this.pos.iface_cashdrawer ){
+                this.add_action_button({
+                        label: _t('Cash'),
+                        name: 'cashbox',
+                        icon: '/point_of_sale/static/src/img/open-cashbox.png',
+                        click: function(){
+                            self.pos.proxy.open_cashbox();
                         },
                     });
             }
