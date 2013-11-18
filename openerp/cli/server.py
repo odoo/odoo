@@ -94,11 +94,11 @@ def preload_registry(dbname):
     """ Preload a registry, and start the cron."""
     try:
         update_module = True if openerp.tools.config['init'] or openerp.tools.config['update'] else False
-        openerp.modules.registry.RegistryManager.new(dbname, update_module=update_module)
+        registry = openerp.modules.registry.RegistryManager.new(dbname, update_module=update_module)
     except Exception:
         _logger.exception('Failed to initialize database `%s`.', dbname)
         return False
-    return True
+    return registry._assertion_report.failures == 0
 
 def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
