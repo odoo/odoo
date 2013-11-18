@@ -289,7 +289,7 @@
             <h4>Archives</h4>
             <ul class="list-unstyled">
                 <li t-foreach="nav_list" t-as="months">
-                    <a t-href="/blog/#{ category and 'cat/%s' % category.id or '' }/date/#{ months['date'] }"><t t-esc="months['create_date']"/></a>
+                    <a t-href="/blog/#{ category and 'cat/%s/' % category.id or '' }#{ tag and 'tag/%s/' % tag.id or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/></a>
                     <span class="pull-right badge" t-esc="months['create_date_count']"/>
                 </li>
             </ul>
