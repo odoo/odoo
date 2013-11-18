@@ -147,6 +147,19 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_action = last_widget.action;
         }
     },
+    add_breadcrumb_url: function (url, label) {
+        // Add a pseudo breadcrumb that will redirect to an url
+        this.push_breadcrumb({
+            show: function(index) {
+                instance.web.redirect(url);
+            },
+            hide: function() {},
+            destroy: function() {},
+            get_title: function() {
+                return label;
+            }
+        });
+    },
     get_title: function() {
         var titles = [];
         for (var i = 0; i < this.breadcrumbs.length; i += 1) {
@@ -217,6 +230,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
     do_load_state: function(state, warm) {
         var self = this,
             action_loaded;
+        if (!warm && 'return_label' in state) {
+            var return_url = state.return_url || document.referrer;
+            if (return_url) {
+                this.add_breadcrumb_url(return_url, state.return_label);
+            }
+        }
         if (state.action) {
             if (_.isString(state.action) && instance.web.client_actions.contains(state.action)) {
                 var action_client = {
@@ -225,7 +244,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     params: state,
                     _push_me: state._push_me,
                 };
-                this.null_action();
+                if (warm) {
+                    this.null_action();
+                }
                 action_loaded = this.do_action(action_client);
             } else {
                 var run_action = (!this.inner_widget || !this.inner_widget.action) || this.inner_widget.action.id !== state.action;
@@ -245,7 +266,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         add_context.active_ids = [state.active_id];
                     }
                     add_context.params = state;
-                    this.null_action();
+                    if (warm) {
+                        this.null_action();
+                    }
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
                         instance.webclient.menu.has_been_loaded.done(function() {
@@ -258,7 +281,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
         } else if (state.model && state.id) {
             // TODO handle context & domain ?
-            this.null_action();
+            if (warm) {
+                this.null_action();
+            }
             var action = {
                 res_model: state.model,
                 res_id: state.id,
@@ -268,7 +293,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_loaded = this.do_action(action);
         } else if (state.sa) {
             // load session action
-            this.null_action();
+            if (warm) {
+                this.null_action();
+            }
             action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).then(function(action) {
                 if (action) {
                     return self.do_action(action);
