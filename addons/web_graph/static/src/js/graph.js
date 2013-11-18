@@ -117,7 +117,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.data.domain = new instance.web.CompoundDomain(domain);
 
         if (this.pivot_table) {
-            this.pivot_table.draw();
+            this.pivot_table.draw(true);
         } else {
             this.pivot_table = new PivotTable(this.data);
             this.pivot_table.appendTo('.graph_main_content');
@@ -131,7 +131,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
 });
-
 
 
  /**
@@ -186,35 +185,39 @@ var PivotTable = instance.web.Widget.extend({
             this.expand_row(row_id, field_id);
         },
     },
-    
+
     init: function (data) {
         this.data = data;
     },
 
     start: function () {
-        var self = this;
-        this.get_groups(this.data.row_groupby)
-            .then(function (groups) {
-                self.data.groups = groups;
-                return self.get_groups([]);
-            }).then(function (total) {
-                self.data.total = total;
-                self.build_table();
-                self.draw();
-            });
+        this.draw(true);
     },
 
-    draw: function () {
+    draw: function (load_data) {
         var self = this;
-        this.$el.empty();
 
-        _.each(this.headers, function (header) {
-            self.$el.append(header);
-        });
+        if (load_data === true) {
+            this.get_groups(this.data.row_groupby)
+                .then(function (groups) {
+                    self.data.groups = groups;
+                    return self.get_groups([]);
+                }).then(function (total) {
+                    self.data.total = total;
+                    self.build_table();
+                    self.draw(false);
+                });
+        } else {
+            this.$el.empty();
 
-        _.each(this.rows, function (row) {
-            self.$el.append(row.html);
-        });
+            _.each(this.headers, function (header) {
+                self.$el.append(header);
+            });
+
+            _.each(this.rows, function (row) {
+                self.$el.append(row.html);
+            });
+        }
     },
 
     show: function () {
