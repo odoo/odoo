@@ -867,7 +867,7 @@ class Root(object):
         self.statics = {}
 
         self.db_routers = {}
-        self.db_routers_lock = threading.Lock()
+        self.db_routers_lock = threading.RLock()
 
         self.load_addons()
 
@@ -905,8 +905,6 @@ class Root(object):
             else:
                 httprequest.session = self.session_store.get(sid)
 
-            self._find_db(httprequest)
-
             if not "lang" in httprequest.session.context:
                 lang = httprequest.accept_languages.best or "en_US"
                 lang = babel.core.LOCALE_ALIASES.get(lang, lang).replace('-', '_')
@@ -919,7 +917,7 @@ class Root(object):
                 updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
                 if updated:
                     with self.db_routers_lock:
-                        del self.db_routers[db]
+                        self.db_routers.pop(db, None)
 
             with set_request(request):
                 self.find_handler()
@@ -942,12 +940,6 @@ class Root(object):
             return response(environ, start_response)
         except werkzeug.exceptions.HTTPException, e:
             return e(environ, start_response)
-
-    def _find_db(self, httprequest):
-        db = db_monodb(httprequest)
-        if db != httprequest.session.db:
-            httprequest.session.logout()
-            httprequest.session.db = db
 
     def _build_request(self, httprequest):
         if httprequest.args.get('jsonp'):
@@ -983,7 +975,7 @@ class Root(object):
         self.dispatch = DisableCacheMiddleware(app)
 
     def _build_router(self, db):
-        _logger.info("Generating routing configuration for database %s" % db)
+        _logger.info("Generating routing configuration for database %s", db)
         routing_map = routing.Map()
 
         def gen(modules, nodb_only):
@@ -1031,10 +1023,15 @@ class Root(object):
     def get_db_router(self, db):
         with self.db_routers_lock:
             router = self.db_routers.get(db)
-        if not router:
-            router = self._build_router(db)
-            with self.db_routers_lock:
-                self.db_routers[db] = router
+            if not router:
+                try:
+                    self.db_routers[db] = router = self._build_router(db)
+                except Exception:
+                    _logger.exception('Cannot build router for database %s', db)
+                    if not db:
+                        raise
+                    request.httprequest.session.logout()
+                    return self.get_db_router(None)
         return router
 
     def find_handler(self):
