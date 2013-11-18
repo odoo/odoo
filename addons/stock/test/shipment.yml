@@ -21,7 +21,7 @@
         'product_qty': 40
     })
     context.update({'active_model': 'stock.picking', 'active_id': ref('incomming_shipment'), 'active_ids': [ref('incomming_shipment')]})
-    pick.do_partial(context=context)
+    pick.do_transfer(context=context)
 -
   I check backorder shipment after received partial shipment and check remaining shipment.
 -
@@ -48,7 +48,7 @@
         'product_uom_id': ref('product.product_uom_kgm'),
         'product_qty': 10
     })
-    backorder.do_partial(context=context)
+    backorder.do_transfer(context=context)
 -
   I check incomming shipment after reception.
 -

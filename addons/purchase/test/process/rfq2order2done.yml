@@ -47,7 +47,7 @@
 -
   !python {model: stock.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_1")).picking_ids[0]
-    pick_ids.do_partial(context=context)
+    pick_ids.do_transfer(context=context)
 -
   I check that purchase order is shipped.
 -

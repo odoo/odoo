@@ -96,7 +96,7 @@
     for pick in order.picking_ids:
         data = pick.force_assign()
         if data == True:
-          pick.do_partial(context=context)
+          pick.do_transfer(context=context)
 -
   I run the scheduler.
 -

@@ -59,7 +59,7 @@
   !python {model: stock.partial.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_variable1")).picking_ids
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+    self.do_transfer(cr, uid, [partial_id])
 - 
   Check the standard price of the product (variable icecream). 
 - 
@@ -73,7 +73,7 @@
   !python {model: stock.partial.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_variable2")).picking_ids
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+    self.do_transfer(cr, uid, [partial_id])
 - 
   Check the standard price and change the product's cost method towards fifo
 - 
@@ -103,7 +103,7 @@
 - 
   !python {model: stock.partial.picking}: |
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_variable_shipment")], 'default_type':'out'})
-    self.do_partial(cr, uid, [partial_id])
+    self.do_transfer(cr, uid, [partial_id])
 - 
   Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
 - 
@@ -133,7 +133,7 @@
   !python {model: stock.partial.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_variable3")).picking_ids
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
+    self.do_transfer(cr, uid, [partial_id])
 - 
   Change the cost method back to average and check price on product changed back to 70.0 = (20*60 + 10*60 + 30*80) / 60
 - 

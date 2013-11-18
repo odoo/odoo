@@ -63,7 +63,7 @@
   Transfer the reception
 - 
   !python {model: stock.picking}: |
-    self.do_partial(cr, uid, [ref('pick1')], context=context)
+    self.do_transfer(cr, uid, [ref('pick1')], context=context)
 - 
   Check the system created 3 quants one with 120 pieces on pallet 1, one with 120 pieces on pallet 2 with lot A and 60 pieces on pallet 3
 - 
@@ -121,7 +121,7 @@
   Process this picking
 - 
   !python {model: stock.picking}: |
-    self.do_partial(cr, uid, [ref('delivery_order1')], context=context)
+    self.do_transfer(cr, uid, [ref('delivery_order1')], context=context)
 - 
   Check the quants that you have 120 pieces pallet 1 in customers, 100 pieces pallet 2 in stock and 20 with customers and 50 in stock, 10 in customers from pallet 3 
 - 
@@ -158,7 +158,7 @@
     backorder = self.search(cr, uid, [('backorder_id.id', '=', picking.id)], context=context)
     backorder_id = self.browse(cr, uid, backorder, context=context)
     self.rereserve(cr, uid, [backorder_id[0].id], context=context)
-    self.do_partial(cr, uid, [backorder_id[0].id], context=context)
+    self.do_transfer(cr, uid, [backorder_id[0].id], context=context)
 - 
   Check there are still 0 pieces in stock 
 - 

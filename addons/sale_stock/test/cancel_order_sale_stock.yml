@@ -22,7 +22,7 @@
         'product_uom_id': ref('product.product_uom_unit'),
         'product_qty': 1
     })
-    pick.do_partial(context=context)
+    pick.do_transfer(context=context)
 -
   I test that I have two pickings, one done and one backorder to do
 -

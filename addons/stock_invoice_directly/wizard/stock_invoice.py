@@ -24,12 +24,12 @@ from openerp.osv import fields, osv
 # class invoice_directly(osv.osv_memory):
 #     _inherit = 'stock.partial.picking'
 # 
-#     def do_partial(self, cr, uid, ids, context=None):
+#     def do_transfer(self, cr, uid, ids, context=None):
 #         """Launch Create invoice wizard if invoice state is To be Invoiced,
 #            after processing the partial picking.
 #         """
 #         if context is None: context = {}
-#         result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
+#         result = super(invoice_directly, self).do_transfer(cr, uid, ids, context)
 #         partial = self.browse(cr, uid, ids[0], context)
 #         context.update(active_model='stock.picking',
 #                        active_ids=[partial.picking_id.id])

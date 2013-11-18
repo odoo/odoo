@@ -55,7 +55,7 @@
   Transfer the reception
 - 
   !python {model: stock.picking}: |
-    self.do_partial(cr, uid, [ref('pick_neg')], context=context)
+    self.do_transfer(cr, uid, [ref('pick_neg')], context=context)
 - 
   Make a delivery order of 300 pieces to the customer
 - 
@@ -91,7 +91,7 @@
   Process this picking
 - 
   !python {model: stock.picking}: |
-    self.do_partial(cr, uid, [ref('delivery_order_neg')], context=context)
+    self.do_transfer(cr, uid, [ref('delivery_order_neg')], context=context)
 - 
   Check the quants that you have 120 pieces pallet 1 in customers, -20 pieces pallet 2 in stock and 120 and 20 with customers and 20/30 in stock, 10 in customers from pallet 3 
 - 
@@ -136,7 +136,7 @@
     lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product_neg')), ('name','=','Lot neg')])
     pack_ids = pack_obj.search(cr, uid, [('name', '=', 'Palneg 2')])
     ops_obj.write(cr, uid, [pick.pack_operation_ids[0].id], {'lot_id': lot_ids[0], 'result_package_id': pack_ids[0]})
-    self.do_partial(cr, uid, [ref("delivery_reconcile")])
+    self.do_transfer(cr, uid, [ref("delivery_reconcile")])
 - 
   Check the negative quant was reconciled and the 20 pieces of lot neg at customers have the incoming shipments in the history_ids
 - 
