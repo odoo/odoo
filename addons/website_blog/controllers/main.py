@@ -47,8 +47,28 @@ class WebsiteBlog(http.Controller):
         return nav
 
     @website.route([
-        '/blog/',
+        '/blog',
         '/blog/page/<int:page>/',
+    ], type='http', auth="public", multilang=True)
+    def blogs(self, page=1):
+        BYPAGE = 60
+        cr, uid, context = request.cr, request.uid, request.context
+        blog_obj = request.registry['blog.post']
+        total = blog_obj.search(cr, uid, [], count=True, context=context)
+        pager = request.website.pager(
+            url='/blog/',
+            total=total,
+            page=page,
+            step=BYPAGE,
+        )
+        bids = blog_obj.search(cr, uid, [], offset=(page-1)*BYPAGE, limit=BYPAGE, context=context)
+        blogs = blog_obj.browse(cr, uid, bids, context=context)
+        return request.website.render("website_blog.blogs", {
+            'blogs': blogs,
+            'pager': pager
+        })
+
+    @website.route([
         '/blog/cat/<model("blog.category"):category>/',
         '/blog/cat/<model("blog.category"):category>/page/<int:page>/',
         '/blog/tag/<model("blog.tag"):tag>/',
@@ -195,12 +215,13 @@ class WebsiteBlog(http.Controller):
     @website.route(['/blog/<int:blog_post_id>/comment'], type='http', auth="public")
     def blog_post_comment(self, blog_post_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['blog.post'].message_post(
-            cr, uid, blog_post_id,
-            body=post.get('comment'),
-            type='comment',
-            subtype='mt_comment',
-            context=dict(context, mail_create_nosubcribe=True))
+        if post.get('comment'):
+            request.registry['blog.post'].message_post(
+                cr, uid, blog_post_id,
+                body=post.get('comment'),
+                type='comment',
+                subtype='mt_comment',
+                context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
     @website.route(['/blog/<int:category_id>/new'], type='http', auth="public", multilang=True)

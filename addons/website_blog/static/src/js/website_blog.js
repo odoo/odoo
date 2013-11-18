@@ -1,9 +1,4 @@
 $(document).ready(function () {
-    $('.js_nav_year a:first').on('click', function (e) {
-        e.preventDefault();
-        $(this).next("ul").toggle();
-    });
-
     $('.js_nav_month a:first').on('click', function (e) {
         e.preventDefault();
         var $ul = $(this).next("ul");

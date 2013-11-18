@@ -57,7 +57,7 @@
                             </p>
                         </t>
                         <ul class="media-list">
-                            <li t-foreach="event_ids" t-as="event" class="media" data-publish="">
+                            <li t-foreach="event_ids" t-as="event" class="media">
                                 <div class="media-body">
                                     <t t-if="event.event_ticket_ids">
                                         <span t-if="not event.register_avail" class="label label-danger pull-right">Sold Out</span>
@@ -65,7 +65,10 @@
                                             Only <t t-esc="event.register_avail"/> Remaining
                                         </span>
                                     </t>
-                                    <h4 class="media-heading"><a t-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a></h4>
+                                    <h4 class="media-heading">
+                                        <a t-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a>
+                                        <small t-if="not event.website_published" class="label label-danger">not published</small>
+                                    </h4>
                                     <div>
                                         <t t-if="event.organizer_id">
                                             Organized by: <span t-field="event.organizer_id"> </span>
@@ -166,6 +169,28 @@
           <t t-set="additional_title">Events</t>
           <div id="wrap">
             <div class="container">
+                <div class="row mt8">
+                    <div class="col-sm-7">
+                        <ol class="breadcrumb mb0">
+                            <li t-if="not event_id.type"><a href="/event">All Events</a></li>
+                            <li t-if="event_id.type">
+                                <a t-href="/event?type=#{event_id.type.id}" t-esc="event_id.type.name"/>
+                            </li>
+                            <li t-if="event_id.country_id">
+                                <a t-href="/event?country=#{event_id.country_id.id}" t-esc="event_id.country_id.name"/>
+                            </li>
+                            <li class="active">
+                                <span t-field="event_id.name"/>
+                            </li>
+                        </ol>
+                    </div><div class="col-sm-5">
+                        <t t-call="website.publish_management">
+                            <t t-set="object" t-value="event_id"/>
+                            <t t-set="publish_edit" t-value="True"/>
+                            <t t-set="publish_controller">/event/publish</t>
+                        </t>
+                    </div>
+                </div>
 
                 <h1 class="text-center" t-field="event_id.name"></h1>
                 <h4 class="text-center text-muted">
@@ -241,12 +266,6 @@
 
                         <div class="panel panel-default" t-if="event_id.address_id">
                             <div class="panel-heading">
-                                <t t-call="website.publish_management">
-                                    <t t-set="object" t-value="event_id"/>
-                                    <t t-set="publish_edit" t-value="True"/>
-                                    <t t-set="publish_controller">/event/publish</t>
-                                    <t t-set="style">position: relative; top: -80px;</t>
-                                </t>
                                 <h4>Where</h4>
                             </div>
                             <div class="panel-body">
@@ -300,29 +319,20 @@
                             </div>
                             <div class="panel-body">
                                 <t t-call="website_mail.follow"><t t-set="object" t-value="event_id"/></t>
-                                <div t-if="event_id.twitter_hashtag">
-                                    <p><strong>Join the Experience</strong></p>
+                                <div t-if="event_id.twitter_hashtag" class="mt16">
+                                    <p><strong>Participate on Twitter</strong></p>
                                     <p class="text-muted">
                                         Find out what others are seeing and
                                         saying about this event, and join the
                                         conversation.
                                     </p>
                                     <p><strong>Use this tag:
-                                        <a t-att-href="'twitter.com/search?q=#'+event_id.twitter_hashtag" class="label label-primary">#<span t-field="event_id.twitter_hashtag"/></a>
+                                        <a t-att-href="'http://twitter.com/search?q=#'+event_id.twitter_hashtag" class="label label-primary">#<span t-field="event_id.twitter_hashtag"/></a>
                                     </strong></p>
                                 </div>
                             </div>
                         </div>
 
-                        <ul class="list-unstyled">
-                            <li t-if="event_id.type">
-                                <a t-href="/event?type=#{event_id.type.id}"><strong><span class="icon-double-angle-right"/> Other <t t-esc="event_id.type.name"/></strong></a>
-                            </li>
-                            <li t-if="event_id.country_id">
-                                <a t-href="/event?country=#{event_id.country_id.id}"><strong><span class="icon-double-angle-right"/> Other Events in <span t-esc="event_id.country_id.name"/></strong></a>
-                            </li>
-                            <li><a href="/event"><strong><span class="icon-double-angle-right"/> All Events</strong></a></li>
-                        </ul>
                     </div>
                 </div>
             </div>

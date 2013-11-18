@@ -97,6 +97,7 @@ class CheckoutInfo:
 class Ecommerce(http.Controller):
 
     _order = 'website_sequence desc, website_published desc'
+    domain = [("sale_ok", "=", True)]
 
     def get_attribute_ids(self):
         attributes_obj = request.registry.get('product.attribute')
@@ -327,12 +328,7 @@ class Ecommerce(http.Controller):
             self.change_pricelist(post.get('promo'))
         product_obj = request.registry.get('product.template')
 
-        domain = [("sale_ok", "=", True)]
-
-        try:
-            product_obj.check_access_rights(request.cr, request.uid, 'write')
-        except:
-            domain += [('website_published', '=', True)]
+        domain = list(self.domain)
 
         # remove product_product_consultant from ecommerce editable mode, this product never be publish
         ref = request.registry.get('ir.model.data').get_object_reference(request.cr, SUPERUSER_ID, 'product', 'product_product_consultant')
@@ -356,6 +352,7 @@ class Ecommerce(http.Controller):
                 domain = [('id', 'in', ids or [0] )] + domain
 
         step = 20
+        print '**', domain
         product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
         pager = request.website.pager(url="/shop/", total=product_count, page=page, step=step, scope=7, url_args=post)
 
@@ -370,7 +367,14 @@ class Ecommerce(http.Controller):
             style_ids = style_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
 
+        try:
+            product_obj.check_access_rights(request.cr, request.uid, 'write')
+            has_access_write = True
+        except:
+            has_access_write = False
+
         values = {
+            'has_access_write': has_access_write,
             'Ecommerce': self,
             'product_ids': product_ids,
             'product_ids_for_holes': fill_hole,
@@ -402,7 +406,14 @@ class Ecommerce(http.Controller):
 
         request.context['pricelist'] = self.get_pricelist()
 
+        try:
+            request.registry.get('product.template').check_access_rights(request.cr, request.uid, 'write')
+            has_access_write = True
+        except:
+            has_access_write = False
+
         values = {
+            'has_access_write': has_access_write,
             'Ecommerce': self,
             'category': category,
             'category_list': category_list,
@@ -717,6 +728,7 @@ class Ecommerce(http.Controller):
             'payment_acquirer_id': payment_acquirer_id,
             'order': order
         }
+        values.update( request.registry.get('sale.order')._get_website_data(request.cr, request.uid, order, request.context) )
 
         if payment_acquirer_id:
             values['validation'] = self.payment_validation(payment_acquirer_id)

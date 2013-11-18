@@ -45,8 +45,8 @@
     </template>
 
     <template id="products_cart" name="Shopping cart">
-      <div class="ribbon-wrapper">
-        <div class="ribbon">Promo</div>
+      <div class="ribbon-wrapper" contentEditable="false">
+        <div class="ribbon"><span contentEditable="true">Promo</span></div>
       </div>
       <div class="oe_product_description">
           <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,facettes">
@@ -89,13 +89,13 @@
               <div class="oe_structure"/>
               <div class="container oe_website_sale">
                 <div class="row">
-                    <div class="col-sm-6 pagination hidden-xs" style="padding-left: 15px;">
+                    <div class="col-sm-4 pagination hidden-xs" style="padding-left: 15px;">
                         <form t-if="editable" t-keep-query="category,search,facettes"
                               method="POST" t-action="/shop/add_product">
                             <button class="btn btn-primary">New Product</button>
                         </form>
                     </div>
-                    <div class="col-sm-6 products_pager">
+                    <div class="col-sm-8 products_pager">
                         <t t-call="website.pager">
                             <t t-set="classname">pull-right</t>
                             <t t-set="style">padding-left: 5px;</t>
@@ -124,7 +124,7 @@
 
                                 <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
 
-                                  <div class="css_options" t-ignore="true" t-if="editable">
+                                  <div class="css_options" t-ignore="true" t-if="has_access_write">
                                     <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
                                       <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                                       <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
@@ -282,13 +282,13 @@
                       <h1 t-field="product.name">Product Name</h1>
 
                       <form action="./add_cart/" class="js_add_cart_json">
-                          <input type="hidden" t-if="len(product.product_variant_ids) &lt;= 1" name="product_id" t-att-value="product.id"/>
+                          <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                           <t t-if="len(product.product_variant_ids) &gt; 1">
-                              <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="product">
-                                  <input type="radio" name="product_id" t-att-value="product.id" t-att-checked="product == product.product_variant_ids[0] or None"/>
-                                  <t t-esc="product.variants or ''">Standard</t>
-                                  <span class="badge" t-if="product.price_extra">
-                                      <t t-esc="product.price_extra > 0 and '+' or ''"/><span t-field="product.price_extra" t-field-options='{
+                              <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
+                                  <input type="radio" name="product_id" t-att-value="variant_id.id" t-att-checked="variant_id == product.product_variant_ids[0] or None"/>
+                                  <t t-esc="variant_id.variants or ''">Standard</t>
+                                  <span class="badge" t-if="variant_id.price_extra">
+                                      <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" t-field-options='{
                                                    "widget": "monetary",
                                                    "display_currency": "website.pricelist_id.currency_id"
                                                }'/>
@@ -388,7 +388,7 @@
                 </ul>
                 <h1 class="mb32">Shopping Cart</h1>
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-1 oe_mycart">
+                    <div class="col-md-8 col-sm-9 oe_mycart">
                         <div t-if="not website_sale_order or not website_sale_order.order_line" class="well well-lg">
                             Your cart is empty!
                         </div>
@@ -481,7 +481,7 @@
                         <a t-if="website_sale_order and website_sale_order.order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
                         <div class="oe_structure"/>
                     </div>
-                    <div class="col-md-3 text-muted" id="right_column">
+                    <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
                         <h4>Policies</h4>
                         <ul class="list-unstyled mb32">
                             <li>&#9745; 30-days money-back guarantee</li>
@@ -813,7 +813,7 @@
                 </ul>
                 <h1 class="mb32">Validate Order</h1>
                 <div class="row">
-                <div class="col-md-8 oe_mycart">
+                <div class="col-lg-8 col-sm-9 oe_mycart">
                     <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.order_line">
                         <colgroup>
                             <col width="80"/>
@@ -866,7 +866,7 @@
                                 }'/></h3></th>
                             </tr>
                             <tr class="text-muted">
-                                <td><abbr title="Taxes may be updated after providing shipping address">Incl. Taxes:</abbr></td>
+                                <td>Incl. Taxes:</td>
                                 <td class="text-right"><span t-field="website_sale_order.amount_tax" t-field-options='{
                                     "widget": "monetary",
                                     "display_currency": "website.pricelist_id.currency_id"
@@ -877,7 +877,7 @@
                     <div class="clearfix"/>
                     <div class="oe_structure"/>
                   </div>
-                  <div class="col-md-3 col-md-offset-1 text-muted" id="right_column">
+                  <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
                       <h4>Bill To:</h4>
                       <div t-field="website_sale_order.partner_invoice_id"/>
                       <div>
@@ -894,12 +894,11 @@
                 </div>
 
                 <div class="js_payment mb64" t-if="not payment_acquirer_id and payments">
-                    <p>Select your payment method:</p>
+                    <p>Payment method:</p>
                     <div>
-                        <t t-foreach="payments" t-as="payment">
+                        <t t-foreach="payments or []" t-as="payment">
                             <label t-if="payment._content">
-                                <input t-att-value="payment.id" type="radio" name="payment_type"/> <t t-esc="payment.name"/>
-                            </label>
+                                <input t-att-value="payment.id" type="radio" name="payment_type"/> <span t-field="payment.name"/>                            </label>
                         </t>
                     </div>
                     <t t-foreach="payments" t-as="payment">

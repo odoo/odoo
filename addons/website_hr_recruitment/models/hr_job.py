@@ -10,3 +10,6 @@ class hr_job(osv.osv):
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
     }
+    _defaults = {
+        'website_published': False
+    }

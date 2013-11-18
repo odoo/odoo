@@ -41,7 +41,7 @@
         <xpath expr="//div[@t-field='partner.website_description']" position="after">
             <h3 id="references">References</h3>
             <div>
-                <div t-foreach="partner.implemented_partner_ids" t-as="partner" class="media thumbnail" data-publish="">
+                <div t-foreach="partner.implemented_partner_ids" t-as="partner" class="media thumbnail">
                     <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
                     <a class="pull-left" t-attf-href="/customers/#{ partner.id }/">
                         <img class="media-object" t-att-src="partner.img('image_small')"/>

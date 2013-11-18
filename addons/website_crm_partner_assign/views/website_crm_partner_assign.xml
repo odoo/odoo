@@ -82,7 +82,7 @@
                                     <t t-if="current_country"> in <t t-esc="current_country.name"/></t>
                                 </h3>
                             </t>
-                            <div class="media thumbnail" data-publish="">
+                            <div class="media thumbnail">
                                 <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
                                 <a class="pull-left" t-href="/partners/#{ partner_id.id }/">
                                     <img class="media-object" t-att-src="partner_id.img('image_small')"/>

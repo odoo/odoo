@@ -99,7 +99,8 @@
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.builder.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.tour.menu-editor.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.tour.install-app.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
                             <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
@@ -107,7 +108,7 @@
 
                         <t t-raw="head or ''"/>
                     </head>
-                    <body>
+                    <body t-att-class="has_access_write and 'has_access_write' or ''">
                         <div id="wrapwrap">
                             <header>
                                 <div class="navbar navbar-default navbar-static-top">
@@ -265,15 +266,17 @@
         </template>
 
         <template id="publish_management">
-            <div t-if="editable" t-ignore="true" class="pull-right hidden-xs" t-att-style="style or ''">
-                <div t-attf-class="btn-group dropdown js_publish_management #{object.id and object.website_published and 'css_publish' or 'css_unpublish'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
-                    <a t-attf-class="btn btn-sm btn-#{object.id and object.website_published and 'success' or 'default'}" t-att-id="'dopprod-%s' % object.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
+            <div t-if="has_access_write" t-ignore="true" class="pull-right" t-att-style="style or ''">
+                <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+                    <button t-attf-class="btn btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
+                        <span class="css_publish">Not Published</span>
+                        <span class="css_unpublish">Published</span>
+                    </button>
+                    <button type="button" t-attf-class="btn btn-default dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
                     <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                         <t t-raw="0"/>
-                        <li>
-                            <a href="#" class="js_publish_btn css_unpublish">Unpublish</a>
-                            <a href="#" class="js_publish_btn css_publish">Publish</a>
-                        </li>
                         <li t-if="publish_edit">
                             <a t-att-href="'/web#model=%s&amp;id=%s' % (object._name, object.id)"
                             title='Edit in backend'>Edit</a>
@@ -284,15 +287,13 @@
         </template>
 
         <template id="publish_short">
-            <t t-if="editable" t-ignore="true">
-                <a href="#" t-att-data-id="object.id" t-att-data-object="object._name"
-                        t-att-data-publish="object.id and object.website_published and 'on' or 'off'"
-                        class="pull-right js_publish">
-                    <span t-attf-class="text-success css_publish glyphicon glyphicon-ok"></span>
-                    <span t-attf-class="text-danger css_unpublish glyphicon glyphicon-remove-circle"></span>
-                    <span t-attf-class="text-muted css_published glyphicon glyphicon-ok"></span>
-                    <span t-attf-class="text-muted css_unpublished glyphicon glyphicon-remove-circle"></span>
-                </a>
+            <t t-if="has_access_write" t-ignore="true">
+                <div t-attf-class="btn-group pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+                    <button t-attf-class="btn btn-sm btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
+                        <span class="css_publish">Not Published</span>
+                        <span class="css_unpublish">Published</span>
+                    </button>
+                </div>
             </t>
         </template>
 

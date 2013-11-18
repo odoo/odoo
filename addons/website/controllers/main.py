@@ -253,7 +253,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                       values, context=request.context)
 
         obj = _object.browse(request.cr, request.uid, _id)
-        return obj.website_published and True or False
+        return bool(obj.website_published)
 
     @website.route(['/website/kanban/'], type='http', auth="public")
     def kanban(self, **post):
