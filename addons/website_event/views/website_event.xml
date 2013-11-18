@@ -21,9 +21,19 @@
           <div id="wrap">
             <div class="oe_structure"/>
             <div class="container">
-                <h1 class="text-center">
-                    Next Events
-                </h1>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <ol class="breadcrumb mb0">
+                            <li class="active">
+                                Our Events
+                            </li>
+                        </ol>
+                    </div><div class="col-sm-7">
+                        <t t-call="website.pager" >
+                            <t t-set="classname">pull-right</t>
+                        </t>
+                    </div>
+                </div>
                 <h3 class="text-center text-muted">
                     <t t-esc="current_date or ''"/><span t-if="current_type"><t t-if="current_date">,</t>
                       <t t-esc="current_type.name"/></span><span t-if="current_country"><t t-if="current_type or current_date">,</t>
@@ -43,11 +53,6 @@
                         </ul>
                     </div>
                     <div class="col-sm-7 col-md-6" id="middle_column">
-                        <t t-call="website.pager" >
-                            <t t-set="classname">pull-left</t>
-                        </t>
-                        <div class="oe_structure">
-                        </div>
                         <t t-if="not event_ids">
                             <p t-if="current_date or current_country or current_type">
                                 No event found in this category, check <a href="/event">all events</a>.
@@ -88,11 +93,6 @@
                         </ul>
                     </div>
                     <div class="col-sm-2 col-md-3 oe_structure" id="right_column">
-
-
-                    </div>
-                    <div class="col-md-8 col-lg-offset-4 text-center">
-                        <t t-call="website.pager" />
                     </div>
                 </div>
             </div>
