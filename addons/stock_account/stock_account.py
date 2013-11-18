@@ -229,9 +229,9 @@ class stock_quant(osv.osv):
 class stock_move(osv.osv):
     _inherit = "stock.move"
 
-    def action_done(self, cr, uid, ids, negatives = False, context=None):
+    def action_done(self, cr, uid, ids, context=None):
         self.product_price_update_before_done(cr, uid, ids, context=context)
-        super(stock_move, self).action_done(cr, uid, ids, negatives=negatives, context=context)
+        super(stock_move, self).action_done(cr, uid, ids, context=context)
         self.product_price_update_after_done(cr, uid, ids, context=context)
 
     def _store_average_cost_price(self, cr, uid, move, context=None):
