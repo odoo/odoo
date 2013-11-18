@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-16 19:03+0000\n"
+"Last-Translator: Mirosław Bojanowicz <miroslaw.bojanowicz@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:59+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-17 05:44+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -59,6 +59,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Średniej wielkości fotografia pracownika. Jest automatycznie skalowana do "
+"obrazu 128x128px, z zachowaniem skali. Używaj tego pola w formie widoku lub "
+"niektórych widoków typu kanban."
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -84,7 +87,7 @@ msgstr "Liczba pracowników na tym stanowisku"
 #. module: hr
 #: field:hr.config.settings,module_hr_evaluation:0
 msgid "Organize employees periodic evaluation"
-msgstr ""
+msgstr "Organizuje okresową ocene pracowników"
 
 #. module: hr
 #: view:hr.department:0
@@ -107,11 +110,13 @@ msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr ""
+"Te pole przechowuje obraz używany jako fotografia pracownika, ograniczona do "
+"wielkości 1024x1024px."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
 msgid "This installs the module hr_holidays."
-msgstr ""
+msgstr "To instaluje moduł hr_holidays."
 
 #. module: hr
 #: view:hr.job:0
@@ -144,7 +149,7 @@ msgstr "Oczekiwany w rekrutacji"
 #. module: hr
 #: view:hr.employee:0
 msgid "Other Information ..."
-msgstr ""
+msgstr "Pozostale informacje ..."
 
 #. module: hr
 #: constraint:hr.employee.category:0
@@ -154,7 +159,7 @@ msgstr "Błąd! Nie możesz tworzyć rekurencyjnych kategorii."
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
 msgid "This installs the module hr_recruitment."
-msgstr ""
+msgstr "To instaluje moduł hr_recruitment."
 
 #. module: hr
 #: view:hr.employee:0
@@ -200,12 +205,12 @@ msgstr "Wiadomości"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Talent Management"
-msgstr ""
+msgstr "Zarządzanie talentami"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "This installs the module hr_timesheet_sheet."
-msgstr ""
+msgstr "To instaluje moduł hr_timesheet_sheet."
 
 #. module: hr
 #: view:hr.employee:0
@@ -239,7 +244,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,image_medium:0
 msgid "Medium-sized photo"
-msgstr ""
+msgstr "Zdjęcie średniej wielkości"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
@@ -280,7 +285,7 @@ msgstr "Położenia biura"
 #. module: hr
 #: field:hr.job,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Obserwatorzy"
 
 #. module: hr
 #: view:hr.employee:0
@@ -301,6 +306,8 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Mała fotografia pracownika. Jest automatycznie skalowana jako obraz 64x64px, "
+"z zachowaniem skali. Używane wszędzie gdzie jest potrzebny mały obraz."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -323,6 +330,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
+"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
+"kanban."
 
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
@@ -330,6 +340,8 @@ msgid ""
 "This installs the module account_analytic_analysis, which will install sales "
 "management too."
 msgstr ""
+"To instaluje moduł account_analytic_analysis, który również instaluje "
+"zarządzanie sprzedażą."
 
 #. module: hr
 #: view:board.board:0
@@ -371,7 +383,7 @@ msgstr "Wydatki pracownika"
 #. module: hr
 #: view:hr.employee:0
 msgid "Tel:"
-msgstr ""
+msgstr "Tel:"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -398,7 +410,7 @@ msgstr "Kontakt do pracownika"
 #. module: hr
 #: view:hr.employee:0
 msgid "e.g. Part Time"
-msgstr ""
+msgstr "np. W niepełnym wymiarze czasu"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -422,6 +434,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij aby zdefiniować nowe stanowisko pracy.\n"
+"              </p><p>\n"
+"                Stanowiska pracy są używane do definiowania prac i ich "
+"wymagań.\n"
+"                Możesz śledzić ilość pracowników przypisanych do wybranego\n"
+"                stanowiska pracy i śledzić rozwój w odniesieniu do tego co "
+"jest\n"
+"                zaplanowane na przyszłość.\n"
+"              </p><p>\n"
+"                Możesz dołączyć ankietę do stanowiska . Będzie dołączona w\n"
+"                procesie rekrutacyjnym do oszacowania aplikantów dla tego\n"
+"                stanowiska pracy.\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -438,22 +465,22 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
 msgid "This installs the module hr_evaluation."
-msgstr ""
+msgstr "To instaluje moduł hr_evaluation."
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "Błąd! Nie możesz utworzyć rekurencyjnej hierarchii pracownika(ów)."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
 msgid "This installs the module hr_attendance."
-msgstr ""
+msgstr "To instaluje moduł hr_attendance."
 
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Smal-sized photo"
-msgstr ""
+msgstr "Mała fotografia"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -469,7 +496,7 @@ msgstr "Tagi"
 #. module: hr
 #: help:hr.config.settings,module_hr_contract:0
 msgid "This installs the module hr_contract."
-msgstr ""
+msgstr "To instaluje moduł hr_contract."
 
 #. module: hr
 #: view:hr.employee:0
@@ -479,7 +506,7 @@ msgstr "Powiązany użytkownik"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -494,7 +521,7 @@ msgstr "Wstrzymaj rekrutację"
 #. module: hr
 #: field:hr.config.settings,module_hr_attendance:0
 msgid "Install attendances feature"
-msgstr ""
+msgstr "Instaluje funkcję frekwencji"
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
@@ -524,7 +551,7 @@ msgstr "Powiązani pracownicy"
 #. module: hr
 #: field:hr.config.settings,module_hr_holidays:0
 msgid "Manage holidays, leaves and allocation requests"
-msgstr ""
+msgstr "Zarządza urlopami, opuszczonymi dniami, zapotrzebowaniem przydziałów"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -566,7 +593,7 @@ msgstr "PESEL"
 #. module: hr
 #: field:hr.job,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jest obserwatorem"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_recruitment:0
@@ -609,6 +636,8 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"W formularzu Pracownik znajdują się rozmaite rodzaje informacji takich jak "
+"informacje kontaktowe."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -692,13 +721,14 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
 msgid "This installs the module hr_timesheet."
-msgstr ""
+msgstr "To instaluje moduł hr_timesheet."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr ""
+"Oczekiwana liczba pracowników dla tego stanowiska pracy po nowej rekrutacji."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -737,19 +767,21 @@ msgstr "Służbowy telefon komórkowy"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitement in Progress"
-msgstr ""
+msgstr "Rekrutacja w toku"
 
 #. module: hr
 #: field:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allow invoicing based on timesheets (the sale application will be installed)"
 msgstr ""
+"Zezwól na fakturowanie bazujące na ewidencji czasu pracy (aplikacja "
+"sprzedaży zostanie zainstalowana)"
 
 #. module: hr
 #: code:addons/hr/hr.py:221
 #, python-format
 msgid "Welcome to %s! Please help him/her take the first steps with OpenERP!"
-msgstr ""
+msgstr "Witamy %s! Proszę pomużcie jemu/jej w pierwszych krokach z OpenERP!"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -789,7 +821,7 @@ msgstr "Na stanowisku"
 #. module: hr
 #: help:hr.config.settings,module_hr_payroll:0
 msgid "This installs the module hr_payroll."
-msgstr ""
+msgstr "To instaluje moduł module hr_payroll."
 
 #. module: hr
 #: field:hr.config.settings,module_hr_contract:0
@@ -819,7 +851,7 @@ msgstr "Uwagi"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Subordinate Hierarchy"
-msgstr ""
+msgstr "Hierarchia podwładnych"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
@@ -898,7 +930,7 @@ msgstr "Logowanie"
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Total Forecasted Employees"
-msgstr ""
+msgstr "Całkowita przewidywana liczba pracowników"
 
 #. module: hr
 #: help:hr.job,state:0
@@ -951,7 +983,7 @@ msgstr "Nazwa stanowiska musi być unikalna w firmie!"
 #. module: hr
 #: help:hr.config.settings,module_hr_expense:0
 msgid "This installs the module hr_expense."
-msgstr ""
+msgstr "To instaluje moduł hr_expense."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_config_settings

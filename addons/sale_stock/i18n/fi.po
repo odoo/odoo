@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-11-08 18:19+0000\n"
+"PO-Revision-Date: 2013-11-17 21:31+0000\n"
 "Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-10 06:45+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2013-11-18 05:53+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -23,13 +23,13 @@ msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
 msgstr ""
-"Sallii myyjien tehdä suoraan toimitusmääräyksistä laskuja valinnalla "
+"Salli myyjien tehdä suoraan toimitusmääräyksistä laskuja valinnalla "
 "'Toimitusten laskutus'."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr "Toimitusmääräys"
+msgstr "Toimitustilaus"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
@@ -46,7 +46,7 @@ msgstr "Keräilytiedot ! : "
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_packinglist0
 msgid "Pick List"
-msgstr "Keräilylista"
+msgstr "Keräilyluettelo"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:565
@@ -57,11 +57,15 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Valiittu yksikkö %d ei ole yhteensopiva valitun pakkauksen kanssa.\n"
+"\n"
+"Valitun pakkaustavan kanssa ehdotettu määrä on:\n"
+"EAN: %s, Määrä: %s,  Toimitusyksikön tyyppi: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr "Dokumentti siirrosta kohdepaikkaan tai asiakkalle."
+msgstr "Dokumentti siirrosta kohdepaikkaan tai asiakkaalle."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
@@ -71,12 +75,12 @@ msgstr "Hallitse useita toimipaikkoja"
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_validate0
 msgid "Validate"
-msgstr "Vahvista"
+msgstr "Tarkista"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "Peruuta tilaus"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:209
@@ -84,7 +88,7 @@ msgstr ""
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
-"Peruuta ensin kaikki tähän myyntitilaukseen liittyvät toimitusmääräykset."
+"Peruuta ensin kaikki tähän myyntitilaukseen liittyvät toimitustilaukset."
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -108,7 +112,7 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr "Toimituskäytäntö"
+msgstr "Lähetyssäännöt"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
@@ -129,7 +133,7 @@ msgstr "Varastosiirto"
 #: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Virheellinen toiminto!"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
@@ -172,7 +176,7 @@ msgstr "Myyntitilaus"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr "Toimitusmääräykset"
+msgstr "Toimitustilaukset"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -188,14 +192,14 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
-"Keräilylistalomake luodaan heti, kun myyntitilaus on vahvistettu samaan "
-"aikaan hankintatilauksen kanssa. Lomake toimii myyntitilauksen  osien "
-"varauksena tilaukselle. Kullekin myyntitilausriville on yksi keräilylista."
+"Keräilylistalomake luodaan heti, kun myyntitilaus on vahvistettu yhdessä "
+"hankintatilauksen kanssa. Lomake toimii myyntitilauksen  osien varauksena "
+"tilaukselle. Kullekin myyntitilausriville on yksi keräilylista."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr "Keräilylista"
+msgstr "Keräilyluettelo"
 
 #. module: sale_stock
 #: field:sale.shop,warehouse_id:0
@@ -210,7 +214,7 @@ msgstr "Pakota luovutus"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr ""
+msgstr "Laskutuksen oletusmenettely on"
 
 #. module: sale_stock
 #: field:sale.order.line,delay:0
@@ -225,7 +229,7 @@ msgstr "Dokumentti siirrosta asiakkaalle"
 #. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
-msgstr "Näytä toimitusmääräys"
+msgstr "Näytä toimitustilaus"
 
 #. module: sale_stock
 #: field:sale.order.line,move_ids:0
@@ -262,13 +266,13 @@ msgstr "Hankinta"
 #: field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
-msgstr "Toimitettu"
+msgstr "Lähetetty"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:265
 #, python-format
 msgid "invalid mode for test_state"
-msgstr "virheellinen test_state tila"
+msgstr "virheellinen test_state -tila"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_saleprocurement0
@@ -285,7 +289,7 @@ msgstr ""
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr "Sallii myyntitilauksen rivien merkinnän ominaisuuksilla."
+msgstr "Salli ominaisuuksien merkintä myyntitilausriveille."
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
@@ -295,7 +299,7 @@ msgstr "Luodaan laskut perustuen toimitustilauksiiin."
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "Salli lähetyskulujen lisäys"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -313,6 +317,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Kansainväliset toimituslausekkeet eli Incoterms on sarja hyväksyttyjä "
+"kaupallisia ehtoja kansainväliseen kaupankäyntiin."
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -327,16 +333,18 @@ msgstr ""
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
 msgstr ""
+"Kaikki toimitetaan yhdellä kertaa, heti kun kaikki toimituksen tuoteet ovat "
+"saatavilla."
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Salli laskutus toimitustilauksilta"
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr "Varopäivät"
+msgstr "Ennakkopäivät"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
@@ -348,12 +356,14 @@ msgstr "Myydyn materiaalin hankinta"
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
 msgstr ""
+"Valitse \"Toimita osittaistoimituksina, kun tuote on saatavilla\", jos "
+"sallit osittaistoimitukset."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:208
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr ""
+msgstr "Myyntitilausta ei voi poistaa!"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
@@ -537,7 +547,7 @@ msgstr "Incoterm"
 #: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "Cannot cancel sales order line!"
-msgstr ""
+msgstr "Myyntitilausriviä ei voi poistaa!"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
@@ -562,7 +572,7 @@ msgstr "Liittyvä keräily"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale_stock
 #: help:sale.order,picking_ids:0
@@ -570,6 +580,7 @@ msgid ""
 "This is a list of delivery orders that has been generated for this sales "
 "order."
 msgstr ""
+"Tämä on luettelo toimitustilauksista, jotka on luotu tälle myyntitilaukselle."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleorderprocurement0
@@ -579,7 +590,7 @@ msgstr "Myyntitilausehdotus"
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr "Luo toimitusmääräin"
+msgstr "Luo toimitustilaus"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -599,7 +610,7 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Recreate Delivery Order"
-msgstr "Luo uudelleen toimitusmääräin"
+msgstr "Luo uudelleen toimitustilaus"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_multiple_shops:0
@@ -614,7 +625,7 @@ msgstr "Kerätty"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "Toimita jokainen tuote kun saaatavilla"
+msgstr "Toimita osittaistoimituksina, kun tuote on saatavilla"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_packing0

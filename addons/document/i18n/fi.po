@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-18 05:35+0000\n"
+"Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:56+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-18 05:52+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -50,7 +50,7 @@ msgstr "Ryhmittely.."
 #. module: document
 #: view:ir.attachment:0
 msgid "Modification"
-msgstr ""
+msgstr "Muokkaus"
 
 #. module: document
 #: view:document.directory:0
@@ -92,7 +92,7 @@ msgstr "Hakemiston sisältö"
 #. module: document
 #: view:ir.attachment:0
 msgid "My Document(s)"
-msgstr ""
+msgstr "Oma(t) dokumenttini"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -113,7 +113,7 @@ msgstr ""
 #. module: document
 #: help:document.directory.dctx,field:0
 msgid "The name of the field."
-msgstr ""
+msgstr "Kentän nimi"
 
 #. module: document
 #: code:addons/document/document.py:340
@@ -203,6 +203,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klikkaa luodaksesi uuden dokumentin.\n"
+"          </p><p>\n"
+"            Dokumenttiarkisto mahdollistaa sinulle pääsyn kaikkiin "
+"liitteisiin,\n"
+"            kuten sähköpostit, projektodokumentit, laskut jne.\n"
+"          </p>\n"
+"        "
 
 #. module: document
 #: code:addons/document/document.py:340
@@ -215,7 +223,7 @@ msgstr "Tarkistusvirhe"
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
@@ -250,14 +258,14 @@ msgstr "Tyyppi"
 #. module: document
 #: sql_constraint:ir.attachment:0
 msgid "The filename must be unique in a directory !"
-msgstr ""
+msgstr "Hakemistossa olevan tiedostonimen pitää olla yksilöllinen!"
 
 #. module: document
 #: code:addons/document/document.py:110
 #: code:addons/document/document.py:310
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopio)"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -278,7 +286,7 @@ msgstr ""
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You cannot create recursive directories."
-msgstr ""
+msgstr "Virhe! Ei saa luoda rekursiivista hakemistoa."
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -333,6 +341,8 @@ msgid ""
 "When executing this wizard, it will configure your directories automatically "
 "according to modules installed."
 msgstr ""
+"Tämä ohjattu toiminto konfiguroi sinulle hakemistot automaattisesti kaikille "
+"asennetuille moduuleille."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -360,12 +370,12 @@ msgstr "Viimeksi muuttanut käyttäjä"
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
 #: view:report.document.user:0
 msgid "Files by User"
-msgstr ""
+msgstr "Käyttäjän tiedostot"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "on"
-msgstr ""
+msgstr "käytössä"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -424,7 +434,7 @@ msgstr "Kiinteä"
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "tuntematon"
 
 #. module: document
 #: view:document.directory:0
@@ -501,7 +511,7 @@ msgstr ""
 #: code:addons/document/static/src/js/document.js:6
 #, python-format
 msgid "Attachment(s)"
-msgstr ""
+msgstr "Liite (liitteet)"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -588,7 +598,7 @@ msgstr "Hakemiston nimen tulee olla uniikki !"
 #. module: document
 #: view:ir.attachment:0
 msgid "Attachments"
-msgstr ""
+msgstr "Liitteet"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -669,12 +679,12 @@ msgstr ""
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: document
 #: view:report.document.user:0
 msgid "Users File"
-msgstr ""
+msgstr "Käyttäjän tiedosto"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -741,7 +751,7 @@ msgstr ""
 #: code:addons/document/static/src/js/document.js:17
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -766,7 +776,7 @@ msgstr "Puurakenne"
 #. module: document
 #: view:document.configuration:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree

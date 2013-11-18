@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-11-12 05:53+0000\n"
+"PO-Revision-Date: 2013-11-17 11:50+0000\n"
 "Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-13 06:08+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2013-11-18 05:52+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -81,7 +81,7 @@ msgstr "Taulukon rivi"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr "Kumppani joka toteuttaa toimituspalvelun"
+msgstr "Kumppani joka toteuttaa huolintapalvelun"
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -192,7 +192,7 @@ msgstr "Varastosiirto"
 #: field:stock.picking,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr "Kuljetusyhtiön seurantakoodi"
+msgstr "Huolitsijan seurantakoodi"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
@@ -449,6 +449,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikkaa määritelläksesi uuden toimitustavan. \n"
+"              </p><p>\n"
+"                Jokaisella huolintaliikkeellä voi olla useita "
+"logistiikkapalveluita, \n"
+"                joiden hinnoittelusääntöjen joukko on kytketty kuhunkin "
+"toimitustapaan.\n"
+"              </p><p>\n"
+"                Hinnoittelutavat sallivat toimitushinnan automaattisen "
+"laskennan\n"
+"                perustuen annettuihin sääntöihin: Myyntitilauksilla "
+"perustuen tarjouksiin\n"
+"                tai laskulla perustuen toimitustilauksiin.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -505,8 +520,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
-"Jos aktiivisen kentän tila on epätosi, voit piilottaa toimituksen jakelijan "
-"poistamatta sitä."
+"Jos aktiivisen kentän tila on epätosi, voit piilottaa toimituksen "
+"huoliitsijan poistamatta tätä."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -525,7 +540,7 @@ msgstr "Hinta"
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr "Tälle kuljetusliikkeelle ei ole määritelty kuljetustaulukkoa !"
+msgstr "Tälle huolitsijalle ei ole määritelty kuljetustaulukkoa !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -542,7 +557,7 @@ msgstr "Paino * Tilavuus"
 #: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "Kuljetusliikkeellä %s (tunnus: %d) ei ole kuljetustaulukkoa!"
+msgstr "Huolitsijalla %s (tunnus: %d) ei ole kuljetustaulukkoa!"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -562,7 +577,7 @@ msgstr "Edistyksellinen hinnoittelu kohteen mukaan"
 #: field:stock.picking,carrier_id:0
 #: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
-msgstr "Kuljetusliike"
+msgstr "Huolitsija"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
