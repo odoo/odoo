@@ -53,10 +53,19 @@ class account_invoice_refund(osv.osv_memory):
         journal = obj_journal.search(cr, uid, [('type', '=', type), ('company_id','=',company_id)], limit=1, context=context)
         return journal and journal[0] or False
 
+    def _get_reason(self, cr, uid, context=None):
+        active_id = context and context.get('active_id', False)
+        if active_id:
+            inv = self.pool.get('account.invoice').browse(cr, uid, active_id, context=context)
+            return inv.name
+        else:
+            return ''
+
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'journal_id': _get_journal,
         'filter_refund': 'refund',
+        'description': _get_reason,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -195,7 +204,7 @@ class account_invoice_refund(osv.osv_memory):
                             'invoice_line': invoice_lines,
                             'tax_line': tax_lines,
                             'period_id': period,
-                            'name': inv.name
+                            'name': description
                         })
                         for field in ('partner_id', 'account_id', 'currency_id',
                                          'payment_term', 'journal_id'):
