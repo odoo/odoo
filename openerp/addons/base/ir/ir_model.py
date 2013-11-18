@@ -1126,7 +1126,7 @@ class ir_model_data(osv.osv):
             return True
         to_unlink = []
         cr.execute("""SELECT id,name,model,res_id,module FROM ir_model_data
-                      WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s""",
+                      WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s ORDER BY id DESC""",
                       (tuple(modules), False))
         for (id, name, model, res_id, module) in cr.fetchall():
             if (module,name) not in self.loads:
