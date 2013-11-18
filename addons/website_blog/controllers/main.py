@@ -111,13 +111,13 @@ class WebsiteBlog(http.Controller):
 
         if category:
             path_filter += "cat/%s/" % category.id
-            domain += [("id", "=", [blog.id for blog in category.blog_post_ids])]
+            domain += [("id", "in", [blog.id for blog in category.blog_post_ids])]
         if tag:
             path_filter += 'tag/%s/' % tag.id
-            domain += [("id", "=", [blog.id for blog in tag.blog_post_ids])]
+            domain += [("id", "in", [blog.id for blog in tag.blog_post_ids])]
         if date:
             path_filter += "date/%s/" % date
-            domain = [("create_date", ">=", date.split("_")[0]), ("create_date", "<=", date.split("_")[1])]
+            domain += [("create_date", ">=", date.split("_")[0]), ("create_date", "<=", date.split("_")[1])]
 
         blog_post_ids = blog_post_obj.search(cr, uid, domain, context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
