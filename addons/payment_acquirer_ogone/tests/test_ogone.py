@@ -182,7 +182,6 @@ class OgonePayment(PaymentAcquirerCommon):
 
     def test_30_ogone_s2s(self):
         test_ref = 'test_ref_%.15f' % time.time()
-        print test_ref
         cr, uid, context = self.cr, self.uid, {}
 
         # create a new draft tx
@@ -197,19 +196,22 @@ class OgonePayment(PaymentAcquirerCommon):
             }, context=context
         )
 
+        # create an alias
         res = self.payment_transaction.ogone_s2s_create_alias(
             cr, uid, tx_id, {
                 'expiry_date_mm': '01',
                 'expiry_date_yy': '2015',
                 'holder_name': 'Norbert Poilu',
-                'number': '4000000000000006',
+                'number': '4000000000000002',
                 'brand': 'VISA',
             }, context=context)
-        print res
 
-        print '--------------------'
+        # check an alias is set, containing at least OPENERP
+        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
+        self.assertIn('OPENERP', tx.partner_reference, 'ogone: wrong partner reference after creating an alias')
+
         res = self.payment_transaction.ogone_s2s_execute(cr, uid, tx_id, {}, context=context)
-        print res
+        # print res
 
 
 # {

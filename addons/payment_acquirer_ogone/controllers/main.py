@@ -49,7 +49,6 @@ class OgoneController(http.Controller):
 
         res = Payment.ogone_form_feedback(cr, uid, post, context)
         print 'result after feedback', res
-        # return ''
         return request.redirect(return_url)
 
     @website.route([
@@ -60,4 +59,6 @@ class OgoneController(http.Controller):
     def ogone_form_feedback_other(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         print 'Entering ogone_form_feedback_other', post
-        return ''
+        return_url = post.pop('return_url', '/')
+        print 'return_url', return_url
+        return request.redirect(return_url)
