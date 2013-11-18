@@ -71,7 +71,30 @@ class PaypalController(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         print 'Entering paypal_dpn with post', post
-        return request.redirect('/')
+
+        # step 1: return an empty HTTP 200 response -> will be done at the end by returning ''
+
+        # step 2: POST the complete, unaltered message back to Paypal (preceded by cmd=_notify-validate), with same encoding
+        paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr"
+        post_url = '%s?cmd=_notify-validate&%s' % (paypal_url, urlencode(post))
+        resp = requests.post(post_url)
+        print '\tReceived response', resp, resp.text
+
+        # step 3: paypal send either VERIFIED or INVALID (single word)
+        if resp.text == 'VERIFIED':
+            _logger.info('Paypal: received verified IPN')
+            cr, uid, context = request.cr, request.uid, request.context
+            payment_transaction = request.registry['payment.transaction']
+            res = payment_transaction.paypal_form_feedback(cr, uid, post, context=context)
+            print '\tValidation result', res
+        elif resp.text == 'INVALID':
+            _logger.warning('Paypal: received invalid IPN with post %s' % post)
+        else:
+            _logger.warning('Paypal: received unrecognized IPN with post %s' % post)
+
+        return_url = post.pop('return_url', '/')
+        print 'return_url', return_url
+        return request.redirect(return_url)
 
     @website.route([
         '/payment/paypal/cancel',
@@ -81,4 +104,7 @@ class PaypalController(http.Controller):
         """
         cr, uid, context = request.cr, request.uid, request.context
         print 'Entering paypal_cancel with post', post
-        return ''
+
+        return_url = post.pop('return_url', '/')
+        print 'return_url', return_url
+        return request.redirect(return_url)
