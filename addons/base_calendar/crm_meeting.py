@@ -163,7 +163,7 @@ class crm_meeting(osv.Model):
     _columns = {
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Write Date', readonly=True),
-        #'state': fields.selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', size=16, readonly=True, track_visibility='onchange'),
+        'state': fields.selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', size=16, readonly=True, track_visibility='onchange'),
         
         # Meeting fields
         'name': fields.char('Meeting Subject', size=128, required=True, states={'done': [('readonly', True)]}),
@@ -186,7 +186,7 @@ class crm_meeting(osv.Model):
         'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),        
         
-        'state': fields.selection([('tentative', 'Uncertain'),('cancelled', 'Cancelled'),('confirmed', 'Confirmed'),],'Status', readonly=True, track_visibility='onchange'),
+        #'state': fields.selection([('tentative', 'Uncertain'),('cancelled', 'Cancelled'),('confirmed', 'Confirmed'),],'Status', readonly=True, track_visibility='onchange'),
         
         #FIELD FOR RECURRENCY
         'exdate': fields.text('Exception Date/Times', help="This property defines the list of date/time exceptions for a recurring calendar component."),
@@ -227,7 +227,7 @@ class crm_meeting(osv.Model):
         'end_type': 'count',
         'count': 1,
         'rrule_type': False,
-        'state': 'tentative',
+        'state': 'draft',
         'class': 'public',
         'show_as': 'busy',
         'month_by': 'date',
@@ -621,20 +621,14 @@ class crm_meeting(osv.Model):
     def do_meeting_uncertain(self, cr, uid, ids, context=None, *args):
           """ Makes event invitation as Tentative
           @param ids: List of Event IDs          """
-          return self.write(cr, uid, ids, {'state': 'tentative'}, context)
- 
-    def do_meeting_cancel(self, cr, uid, ids, context=None, *args):
-        """ Makes event invitation as cancelles
-        @param ids: List of Event IDs
-        """
-        return self.write(cr, uid, ids, {'state': 'cancelled'}, context)
+          return self.write(cr, uid, ids, {'state': 'draft'}, context)
  
     def do_meeting_confirm(self, cr, uid, ids, context=None, *args):
         """ Makes event invitation as Tentative
         @param ids: List of Event IDs
         @param context: A standard dictionary for contextual values
         """
-        return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
+        return self.write(cr, uid, ids, {'state': 'open'}, context)
 
 
 

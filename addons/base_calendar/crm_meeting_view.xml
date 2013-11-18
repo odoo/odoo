@@ -60,7 +60,7 @@
             <form string="Meetings" version="7.0">
                 <header>
                     <button name="do_meeting_confirm" type="object" string="Confirm Meeting" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','accepted')]}"/>
-                    <button name="do_meeting_cancel" type="object" string="Cancel Meeting" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','declined')]}"/>
+<!--                    <button name="do_meeting_cancel" type="object" string="Cancel Meeting" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','declined')]}"/> -->
                     <button name="do_meeting_uncertain" type="object" string="Uncertain Meeting" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','tentative')]}"/>
                     <field name="state" invisible="True"/>
                 </header>
