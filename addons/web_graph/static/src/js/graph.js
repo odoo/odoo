@@ -15,8 +15,8 @@ var QWeb = instance.web.qweb;
 instance.web.views.add('graph', 'instance.web_graph.GraphView');
 
  /**
-  * GraphView view.  It mostly contains two widgets (PivotTable and ChartView)
-  * and some data.
+  * GraphView view.  It mostly contains a widget (PivotTable), some data, and 
+  * calls to charts function.
   */
 instance.web_graph.GraphView = instance.web.View.extend({
     template: 'GraphView',
@@ -111,6 +111,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         content.find('svg').remove();
         var self = this;
         if (this.mode === 'pivot') {
+            this.pivot_table.draw();
             this.pivot_table.show();
 
         } else {
@@ -126,7 +127,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     do_search: function (domain, context, group_by) {
         this.data.domain = new instance.web.CompoundDomain(domain);
-        this.pivot_table.set_domain(domain);
+        this.pivot_table.set_domain(this.data.domain);
         this.display_data();
     },
 
@@ -147,7 +148,6 @@ var PivotTable = instance.web.Widget.extend({
     rows: [],
     cols: [],
     current_row_id : 0,
-    need_redraw: false,
 
     // Input parameters: 
     //      model: model to display
@@ -170,39 +170,16 @@ var PivotTable = instance.web.Widget.extend({
         this.measure = options.measure;
         this.measure_label = options.measure ? options.fields[options.measure].string : 'Quantity';
         this.data = [];
-        this.need_redraw = true;
         this.important_fields = options.important_fields;
     },
 
-    get_descr: function (field_id) {
-        return this.fields[field_id].string;
-    },
 
     set_domain: function (domain) {
         this.domain = domain;
-        this.need_redraw = true;
     },
 
-    set_row_groupby: function (row_groupby) {
-        this.groupby.row = row_groupby;
-        this.need_redraw = true;
-    },
-
-    set_col_groupby: function (col_groupby) {
-        this.groupby.col = col_groupby;
-        this.need_redraw = true;
-    },
-
-    set_measure: function (measure) {
-        this.measure = measure;
-        this.need_redraw = true;
-    },
 
     show: function () {
-        if (this.need_redraw) {
-            this.draw();
-            this.need_redraw = false;
-        }
         this.$el.css('display', 'block');
     },
 
@@ -210,6 +187,9 @@ var PivotTable = instance.web.Widget.extend({
         this.$el.css('display', 'none');
     },
 
+    get_descr: function (field_id) {
+        return this.fields[field_id].string;
+    },
 
     get_data: function (groupby) {
         var view_fields = this.groupby.row.concat(this.measure, this.groupby.col);
