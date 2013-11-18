@@ -4,7 +4,7 @@
 
         <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" inherit_option_id="website.contactus">
             <xpath expr="//div[@name='mail_button']" position="replace">
-                <form t-action="/crm/contactus" method="post" class="form-horizontal mt32" >
+                <form action="/crm/contactus" method="post" class="form-horizontal mt32" >
                     <div t-attf-class="form-group #{error and 'contact_name' in error and 'has-error' or ''}">
                         <label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
                         <div class="col-md-7 col-sm-8">

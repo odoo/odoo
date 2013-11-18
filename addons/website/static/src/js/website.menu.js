@@ -5,11 +5,15 @@
     website.menu = {};
     website.add_template_file('/website/static/src/xml/website.menu.xml');
 
+    var globalEditor;
+
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action="edit-structure"]': 'editStructure',
         }),
         editStructure: function () {
+            var self = this;
+            globalEditor = self;
             var context = website.get_context();
             openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website.menu',
@@ -19,7 +23,9 @@
                     context: context
                 },
             }).then(function (menu) {
-                return new website.menu.EditMenuDialog(menu).appendTo(document.body);
+                var result = new website.menu.EditMenuDialog(menu).appendTo(document.body);
+                self.trigger('tour:menu_editor_dialog_ready');
+                return result;
             });
         },
     });
@@ -27,7 +33,7 @@
     website.menu.EditMenuDialog = website.editor.Dialog.extend({
         template: 'website.menu.dialog.edit',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'click button.js_add_menu': 'add_menu',
+            'click a.js_add_menu': 'add_menu',
             'click button.js_edit_menu': 'edit_menu',
             'click button.js_delete_menu': 'delete_menu',
         }),
@@ -40,8 +46,6 @@
         },
         start: function () {
             var r = this._super.apply(this, arguments);
-            var button = openerp.qweb.render('website.menu.dialog.footer-button');
-            this.$('.modal-footer').prepend(button);
             this.$('.oe_menu_editor').nestedSortable({
                 listType: 'ul',
                 handle: 'div',
@@ -81,8 +85,7 @@
                 };
                 self.flat[new_menu.id] = new_menu;
                 self.$('.oe_menu_editor').append(
-                    openerp.qweb.render(
-                        'website.menu.dialog.submenu', { submenu: new_menu }));
+                    openerp.qweb.render('website.menu.dialog.submenu', { submenu: new_menu }));
             });
             dialog.appendTo(document.body);
         },
@@ -123,7 +126,7 @@
             var levels = [];
             var data = [];
             var context = website.get_context();
-            // Resquence, re-tree and remove useless data
+            // Resequence, re-tree and remove useless data
             new_menu.forEach(function (menu) {
                 if (menu.item_id) {
                     levels[menu.depth] = (levels[menu.depth] || 0) + 1;
@@ -157,7 +160,7 @@
         },
         start: function () {
             var self = this;
-            return $.when(this._super.apply(this, arguments)).then(function () {
+            var result = $.when(this._super.apply(this, arguments)).then(function () {
                 if (self.data) {
                     self.bind_data(self.data.name, self.data.url, self.data.new_window);
                 }
@@ -169,6 +172,8 @@
                     }
                 });
             });
+            globalEditor.trigger('tour:new_menu_entry_dialog_ready');
+            return result;
         },
         save: function () {
             var $e = this.$('#link-text');
@@ -186,6 +191,10 @@
             } else {
                 this.trigger('add-menu', [url, new_window, menu_label]);
             }
+        },
+        destroy: function () {
+            globalEditor.trigger('tour:new_menu_entry_dialog_closed');
+            this._super.apply(this, arguments);
         },
     });
 

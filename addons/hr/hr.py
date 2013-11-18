@@ -97,24 +97,20 @@ class hr_job(osv.osv):
     _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        # TO CLEAN: when doing a cleaning, we should change like this:
-        #   no_of_recruitment: a function field
-        #   expected_employees: float
-        # This would allow a clean update when creating new employees.
         'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
                 'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
-            },
+            }, type='integer',
             multi='no_of_employee'),
         'no_of_employee': fields.function(_no_of_employee, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
             store = {
                 'hr.employee': (_get_job_position, ['job_id'], 10),
-            },
+            }, type='integer',
             multi='no_of_employee'),
-        'no_of_recruitment': fields.float('Expected in Recruitment', help='Number of new employees you expect to recruit.'),
+        'no_of_recruitment': fields.integer('Expected in Recruitment', help='Number of new employees you expect to recruit.'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
@@ -126,6 +122,7 @@ class hr_job(osv.osv):
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
+        'no_of_recruitment': 0,
         'state': 'open',
     }
 

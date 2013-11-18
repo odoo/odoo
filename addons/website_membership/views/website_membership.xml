@@ -5,37 +5,33 @@
     <!-- Layout add nav and footer -->
     <template id="footer_custom" inherit_id="website.layout" name="Footer Associations Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/members/">Associations</a></li>
+            <li><a href="/members/">Members</a></li>
         </xpath>
     </template>
 
-    <!-- Page --> 
-    <template id="layout" name="Members Layout">
+    <template id="index" name="Members">
         <t t-call="website.layout">
-            <t t-set="additional_title">Associations</t>
+            <t t-set="additional_title">Members</t>
             <div id="wrap">
-                <div class="oe_structure"/>
+                <div class="oe_structure">
+                    <section data-snippet-id="title">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h1 class="text-center">Our Members Directory</h1>
+                                    <h3 class="text-muted text-center">Find a business partner</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
                 <div class="container">
                     <div class="row">
-                        <t t-raw="ref_content" />
-                    </div>
-                </div>
-                <div class="oe_structure"/>
-            </div>
-        </t>
-    </template>
 
-    <template id="index" name="Members">
-        <t t-call="website_membership.layout">
-            <t t-set="ref_content">
-                <h1 class="col-md-12 text-center">
-                    Looking for a partner ?<br/>
-                    <small>Find an association member</small>
-                </h1>
                 <div class="col-md-4" id="left_column">
                     <ul class="nav nav-pills nav-stacked mt16">
                         <li class="nav-header"><h3>Associations</h3></li>
-                        <li t-att-class="membership and '' or 'active'"><a t-href="/members/">All</a></li>
+                        <li t-att-class="membership and '' or 'active'"><a href="/members/">All</a></li>
                         <t t-foreach="memberships" t-as="membership_id">
                             <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
                                 <a t-href="/members/association/#{ membership_id.id }"><t t-esc="membership_id.name"/></a>
@@ -48,7 +44,7 @@
                         <t t-call="website.pager">
                            <t t-set="classname">pull-left</t>
                         </t>
-                        <form t-action="/members/" method="get" class="navbar-search pull-right pagination form-inline">
+                        <form action="/members/" method="get" class="navbar-search pull-right pagination form-inline">
                             <div class="form-group">
                                 <input type="text" name="name" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="post.get('name', '')"/>
                             </div>
@@ -64,7 +60,7 @@
                                 <h3 class="text-center"><span t-field="membership_line_id.membership_id"/></h3>
                             </t>
                             <t t-set="partner" t-value="membership_line_id.partner"/>
-                            <div class="media" data-publish="">
+                            <div class="media">
                                 <t t-call="website.publish_management">
                                     <t t-set="object" t-value="partner"/>
                                 </t>
@@ -79,11 +75,14 @@
                         </t>
                     </div>
                 </div>
-            </t>
+
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+            </div>
         </t>
     </template>
 
-    <!-- Option: index: Left Google Map -->
     <template id="opt_index_country" name="Location"
             inherit_option_id="website_membership.index" inherit_id="website_membership.index">
         <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
@@ -114,11 +113,17 @@
         </xpath>
     </template>
 
-    <template id="partner" name="Partner Detail">
-        <t t-call="website_membership.layout">
-            <t t-set="ref_content">
-                <t t-call="website_partner.partner_detail"/>
-            </t>
+    <template id="partner" name="Members">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <div class="row">
+                        <t t-call="website_partner.partner_detail"/>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+            </div>
         </t>
     </template>
 

@@ -47,15 +47,15 @@ class view(osv.osv):
         if options:
             todo += filter(lambda x: not x.inherit_id, view.inherited_option_ids)
         for child_view in todo:
-            result += self._views_get(cr, uid, child_view, options=options, context=context, root=False, stack_result=result)
+            for r in self._views_get(cr, uid, child_view, options=options, context=context, root=False, stack_result=result):
+                if r not in result:
+                    result.append(r)
         node = etree.fromstring(view.arch)
         for child in node.xpath("//t[@t-call]"):
             call_view = view_obj(child.get('t-call'))
-            if call_view not in stack_result:
+            if call_view not in result:
                 result += self._views_get(cr, uid, call_view, options=options, context=context, stack_result=result)
         return result
-
-
 
     def extract_embedded_fields(self, cr, uid, arch, context=None):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
@@ -100,25 +100,6 @@ class view(osv.osv):
 
         return arch
 
-    URL_ATTRS = {
-        'form': 'action',
-        'a': 'href',
-        'link': 'href',
-        'frame': 'src',
-        'iframe': 'src',
-        'script': 'src',
-    }
-    def _normalize_urls(self, root):
-        for element in root.iter():
-            attr = self.URL_ATTRS.get(element.tag)
-            if attr is None or attr not in element.attrib:
-                continue
-
-            value = element.get(attr)
-            if not urlparse(value).scheme:
-                element.attrib.pop(attr)
-                element.set('t-' + attr, value)
-
     def save(self, cr, uid, res_id, value, xpath=None, context=None):
         """ Update a view section. The view section may embed fields to write
 
@@ -130,10 +111,6 @@ class view(osv.osv):
 
         arch_section = html.fromstring(
             value, parser=html.HTMLParser(encoding='utf-8'))
-
-        # TODO fme: Temporary desactivated because this breaks most of the snippets
-        # Need to find another way to normalize multilang urls (postprocessing) ?
-        # self._normalize_urls(arch_section)
 
         if xpath is None:
             # value is an embedded field on its own, not a view section

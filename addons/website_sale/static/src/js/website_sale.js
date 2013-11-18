@@ -1,5 +1,9 @@
 $(document).ready(function () {
-    $(".oe_website_sale input[name='shipping_different']").change(function () {
+    var $shippingDifferent = $(".oe_website_sale input[name='shipping_different']");
+    if ($shippingDifferent.is(':checked')) {
+       $(".oe_website_sale .js_shipping").show();
+    }
+    $shippingDifferent.change(function () {
         $(".oe_website_sale .js_shipping").toggle();
     });
 
@@ -36,7 +40,7 @@ $(document).ready(function () {
                 }
             });
     });
-    
+
     // hack to add and rome from cart with json
     $('.oe_website_sale a.js_add_cart_json').on('click', function (ev) {
         ev.preventDefault();

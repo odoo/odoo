@@ -6,14 +6,14 @@
     <!-- Layout add nav and footer -->
     <template id="footer_custom" inherit_id="website.layout" name="Footer Partners Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/partners/">Partners</a></li>
+            <li><a href="/partners/">Resellers</a></li>
         </xpath>
     </template>
 
     <!-- Page --> 
     <template id="layout" name="Partners Layout">
         <t t-call="website.layout">
-            <t t-set="additional_title">Partners</t>
+            <t t-set="additional_title">Resellers</t>
             <div id="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
@@ -25,15 +25,18 @@
         </t>
     </template>
 
-    <template id="index" name="Find Partners">
+    <template id="index" name="Find Resellers">
         <t t-call="website_crm_partner_assign.layout">
             <t t-set="ref_content">
-                <h1 class="col-md-12 text-center">
-                    Want services on OpenERP?<br/>
-                    <small>Contact a local partner</small>
-                </h1>
+                <div class="col-md-12">
+                    <h1 class="text-center">
+                        Looking For a Local Store?
+                    </h1><h2 class="text-center text-muted">
+                        Contact a reseller
+                    </h2>
+                </div>
                 <div class="col-md-4" id="partner_left">
-                    <h3>Partners by Country</h3>
+                    <h3>Resellers by Country</h3>
                     <ul class="nav nav-pills nav-stacked mt16">
                         <t t-foreach="countries" t-as="country_dict">
                             <t t-if="country_dict['country_id']">
@@ -52,7 +55,7 @@
                             <t t-call="website.pager">
                                <t t-set="classname">pull-left</t>
                             </t>
-                            <form t-action="/partners/" method="get" class="navbar-search pull-right pagination form-inline">
+                            <form action="/partners/" method="get" class="navbar-search pull-right pagination form-inline">
                                 <div class="form-group">
                                     <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="name_search"/>
                                 </div>
@@ -79,7 +82,7 @@
                                     <t t-if="current_country"> in <t t-esc="current_country.name"/></t>
                                 </h3>
                             </t>
-                            <div class="media thumbnail" data-publish="">
+                            <div class="media thumbnail">
                                 <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
                                 <a class="pull-left" t-href="/partners/#{ partner_id.id }/">
                                     <img class="media-object" t-att-src="partner_id.img('image_small')"/>

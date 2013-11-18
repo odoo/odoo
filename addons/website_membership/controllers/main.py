@@ -27,15 +27,12 @@ class WebsiteMembership(http.Controller):
         post_country_id = int(post.get('country_id', '0'))
 
         # base domain for groupby / searches
-        if request.context['is_public_user']:
-            base_line_domain = [('partner.website_published', '=', True)]
-        else:
-            base_line_domain = [(1, '=', 1)]
+        base_line_domain = [(1, '=', 1)]
         if membership_id:
             base_line_domain += [('membership_id', '=', membership_id)]
-            membership = product_obj.browse(cr, openerp.SUPERUSER_ID, membership_id, context=context)
+            membership = product_obj.browse(cr, uid, membership_id, context=context)
         else:
-            membership = ''
+            membership = None
         if post_name:
             base_line_domain += ['|', ('partner.name', 'ilike', "%%%s%%" % post_name), ('partner.website_description', 'ilike', "%%%s%%" % post_name)]
 
@@ -62,8 +59,8 @@ class WebsiteMembership(http.Controller):
 
         # format domain for group_by and memberships
         membership_domain = [('membership', '=', True)]
-        membership_ids = product_obj.search(cr, openerp.SUPERUSER_ID, membership_domain, context=context)
-        memberships = product_obj.browse(cr, openerp.SUPERUSER_ID, membership_ids, context=context)
+        membership_ids = product_obj.search(cr, uid, membership_domain, context=context)
+        memberships = product_obj.browse(cr, uid, membership_ids, context=context)
 
         # request pager for lines
         pager = request.website.pager(url="/members/", total=len(membership_line_ids), page=page, step=self._references_per_page, scope=7, url_args=post)
@@ -83,16 +80,13 @@ class WebsiteMembership(http.Controller):
     @website.route(['/members/<int:partner_id>/'], type='http', auth="public", multilang=True)
     def partners_ref(self, partner_id=0, **post):
         partner_obj = request.registry['res.partner']
-        if request.context['is_public_user']:
-            partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, [('website_published', '=', True), ('id', '=', partner_id)], context=request.context)
-        else:
-            partner_ids = partner_obj.search(request.cr, request.uid, [('id', '=', partner_id)], context=request.context)
+        partner_ids = partner_obj.search(request.cr, request.uid, [('id', '=', partner_id)], context=request.context)
         if not partner_ids:
             return self.members(post)
 
         values = {
             'partner_id': partner_obj.browse(
-                request.cr, openerp.SUPERUSER_ID, partner_ids[0],
+                request.cr, request.uid, partner_ids[0],
                 context=dict(request.context, show_address=True)),
         }
         return request.website.render("website_membership.partner", values)

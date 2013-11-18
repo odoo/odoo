@@ -24,7 +24,8 @@
                step.title = website.tour.render('website.tour_popover_title', { title: step.title });
                return step;
             }));
-            this.monkeyPatchTour();
+            // TODO: Disabled until properly implemented
+            // this.monkeyPatchTour();
         },
         monkeyPatchTour: function () {
             var self = this;
@@ -95,6 +96,16 @@
             this.pathname = a.pathname;
             this.origin = a.origin;
             this.search = a.search;
+        },
+    });
+
+    website.EditorBar.include({
+        start: function () {
+            $('.tour-backdrop').click(function (e) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+            });
+            return this._super();
         },
     });
 

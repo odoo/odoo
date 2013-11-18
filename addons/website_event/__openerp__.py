@@ -11,7 +11,7 @@ Online Events
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'website_mail', 'event_sale', 'website_sale'],
+    'depends': ['website', 'website_partner', 'website_mail', 'event_sale', 'website_sale'],
     'data': [
         'data/event_data.xml',
         'views/website_event.xml',

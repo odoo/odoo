@@ -277,6 +277,7 @@ footer
 
 .parallax
     position: relative
+    background-size: 100%
     &.oe_small
         height: 200px
     &.oe_medium
@@ -295,41 +296,17 @@ ul.nav-stacked > li > a
     text-transform: uppercase
 
 /* ---- PUBLISH ---- */
-a[data-publish]
-    text-decoration: none !important
-    .css_unpublish, .css_publish, .css_unpublished, .css_published
-        display: none
-    &[data-publish='off']
-        .css_unpublished, &:hover .css_publish
-            display: inline
-        &:hover .css_unpublished
-            display: none
-    &[data-publish='on']
-        .css_published, &:hover .css_unpublish
-            display: inline
-        &:hover .css_published
-            display: none
-
-.dropdown .css_unpublish, .dropdown .css_publish
+.css_unpublish, .css_publish
     display: none
-.dropdown.css_publish .css_unpublish, .dropdown.css_unpublish .css_publish
+.css_published .css_unpublish, .css_unpublished .css_publish
     display: block
 
-.unpublish
+[data-publish='off']
     opacity: 0.5
-[data-publish='off']:not(a)
-    >:not(.js_publish)
-        opacity: 0.5
-[data-publish]:not(a)
-    position: relative
-    overflow: visible
-    .js_publish
-        position: absolute
-        right: -6px
-        top: -10px
-        display: none
-    /*&:hover .js_publish*/
-    /*     display: block*/
+
+/* ---- END of PUBLISH ---- */
+
+
 
 ::selection
     background: rgba(150, 150, 220, 0.3)

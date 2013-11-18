@@ -34,6 +34,14 @@ class product(osv.osv):
 class event(osv.osv):
     _name = 'event.event'
     _inherit = ['event.event','website.seo.metadata']
+
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, '')
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        for event in self.browse(cr, uid, ids, context=context):
+            res[event.id] = "%s/event/%s/" % (base_url, event.id)
+        return res
+
     _columns = {
         'twitter_hashtag': fields.char('Twitter Hashtag'),
         'website_published': fields.boolean('Available in the website'),
@@ -46,25 +54,11 @@ class event(osv.osv):
             string='Website Messages',
             help="Website communication history",
         ),
+        'website_url': fields.function(_website_url, string="Website url"),
     }
     _defaults = {
         'website_published': False,
     }
-
-    def _check_organizer_id_published(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.website_published and obj.organizer_id and not obj.organizer_id.website_published:
-                return False
-        return True
-    def _check_address_id_published(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.website_published and obj.address_id and not obj.address_id.website_published:
-                return False
-        return True
-    _constraints = [
-        (_check_organizer_id_published, "This event can't be published if the field Orginizer is not website published.", ['organizer_id','website_published']),
-        (_check_address_id_published, "This event can't be published if the field Location is not website published.", ['address_id','website_published']),
-    ]
 
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
@@ -75,7 +69,6 @@ class event(osv.osv):
         partner = self.browse(cr, uid, ids[0], context=context)
         if partner.address_id:
             return self.browse(cr, SUPERUSER_ID, ids[0], context=context).address_id.google_map_link()
-
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"

@@ -21,6 +21,7 @@ from PIL import Image as I
 
 from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.addons.web.http import request
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -31,6 +32,31 @@ class QWeb(orm.AbstractModel):
     """
     _name = 'website.qweb'
     _inherit = 'ir.qweb'
+
+    URL_ATTRS = {
+        'form': 'action',
+        'a': 'href',
+        'link': 'href',
+        'frame': 'src',
+        'iframe': 'src',
+        'script': 'src',
+    }
+
+    def add_template(self, into, name, node, context):
+        # preprocessing for multilang static urls
+        if request and 'url_for' in context:
+            router = request.httprequest.app.get_db_router(request.db).bind('')
+            for tag, attr in self.URL_ATTRS.items():
+                for e in node.getElementsByTagName(tag):
+                    url = e.getAttribute(attr)
+                    if url:
+                        try:
+                            func = router.match(url)[0]
+                            if func.multilang:
+                                e.setAttribute(attr, context['url_for'](url))
+                        except Exception, e:
+                            pass
+        super(QWeb, self).add_template(into, name, node, context)
 
     def get_converter_for(self, field_type):
         return self.pool.get(
