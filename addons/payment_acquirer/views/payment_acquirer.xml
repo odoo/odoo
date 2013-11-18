@@ -8,10 +8,11 @@
             parent='base.menu_administration'/>
 
         <record id="acquirer_form" model="ir.ui.view">
+            <field name="name">acquirer.form</field>
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <form string="Payment Acquirer" version="7.0">
-                    <group>
+                    <group name="acquirer_base">
                         <field name="name"/>
                         <field name="portal_published"/>
                         <field name="env"/>
@@ -60,7 +61,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_payment_acquirer">
+        <record id="action_payment_acquirer" model="ir.actions.act_window">
             <field name="name">Payment Acquirers</field>
             <field name="res_model">payment.acquirer</field>
             <field name='view_type'>form</field>
@@ -73,7 +74,7 @@
             parent='root_payment_menu'
             sequence='10' />
 
-        <record model="ir.ui.view" id="transaction_form">
+        <record id="transaction_form" model="ir.ui.view">
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <form string="Payment Transactions" version="7.0">
@@ -96,6 +97,8 @@
                                 <field name="state_message"/>
                             </group>
                         </group>
+                        <notebook>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -105,7 +108,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="transaction_list">
+        <record id="transaction_list" model="ir.ui.view">
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <tree string="Payment Transactions">
@@ -119,7 +122,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="transaction">
+        <record id="transaction" model="ir.ui.view">
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <search>
@@ -131,7 +134,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_payment_transaction">
+        <record id="action_payment_transaction" model="ir.actions.act_window">
             <field name="name">Payment Transactions</field>
             <field name="res_model">payment.transaction</field>
             <field name='view_type'>form</field>

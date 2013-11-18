@@ -32,7 +32,7 @@ class ValidationError(ValueError):
 
 class PaymentAcquirer(osv.Model):
     _name = 'payment.acquirer'
-    _description = 'Online Payment Acquirer'
+    _description = 'Payment Acquirer'
 
     _columns = {
         'name': fields.char('Name', required=True),
@@ -133,6 +133,7 @@ class PaymentAcquirer(osv.Model):
 
 class PaymentTransaction(osv.Model):
     _name = 'payment.transaction'
+    _description = 'Payment Transaction'
     _inherit = ['mail.thread']
     _order = 'id desc'
 
