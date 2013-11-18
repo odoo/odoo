@@ -489,6 +489,9 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
                 if (item.facet !== undefined) {
                     // regular completion item
+                    if (item.first) {
+                        $item.css('borderTop', '1px solid #cccccc');
+                    }
                     return $item.append(
                         (item.label)
                             ? $('<a>').html(item.label)
@@ -522,8 +525,18 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             .filter(function (input) { return input.visible(); })
             .invoke('complete', req.term)
             .value()).then(function () {
-                resp(_(_(arguments).compact()).flatten(true));
-        });
+                resp(_(arguments).chain()
+                    .compact()
+                    .map(function (completion) {
+                        console.log(completion);
+                        if (completion.length && completion[0].facet !== undefined) {
+                            completion[0].first = true;
+                        }
+                        return completion;
+                    })
+                    .flatten(true)
+                    .value());
+                });
     },
 
     /**
@@ -1535,6 +1548,9 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         this.model = new instance.web.Model(this.attrs.relation);
     },
     complete: function (needle) {
+        if (this.attrs.operator || this.attrs.filter_domain) {
+            return this._super(needle);
+        }
         var self = this;
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
         var context = instance.web.pyeval.eval(

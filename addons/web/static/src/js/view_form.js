@@ -399,9 +399,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     this.dataset.index = this.dataset.ids.length - 1;
                     break;
             }
-            this.reload();
+            var def = this.reload();
             this.trigger('pager_action_executed');
+            return def;
         }
+        return $.when();
     },
     init_pager: function() {
         var self = this;
@@ -416,8 +418,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.$el.find('.oe_form_pager').replaceWith(this.$pager);
         }
         this.$pager.on('click','a[data-pager-action]',function() {
-            var action = $(this).data('pager-action');
-            self.execute_pager_action(action);
+            var $el = $(this);
+            if ($el.attr("disabled"))
+                return;
+            var action = $el.data('pager-action');
+            var def = $.when(self.execute_pager_action(action));
+            $el.attr("disabled");
+            def.always(function() {
+                $el.removeAttr("disabled");
+            });
         });
         this.do_update_pager();
     },
