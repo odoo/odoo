@@ -378,7 +378,7 @@ class email_template(osv.osv):
                     # Ensure report is rendered using template's language
                     ctx = context.copy()
                     if template.lang:
-                        ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)  # take 0 ?
+                        ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)[res_id]  # take 0 ?
                     result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
                     result = base64.b64encode(result)
                     if not report_name:
