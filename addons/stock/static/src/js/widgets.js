@@ -5,6 +5,23 @@ function openerp_picking_widgets(instance){
     var _t     = instance.web._t;
     var QWeb   = instance.web.qweb;
 
+    // This widget makes sure that the scaling is disabled on mobile devices.
+    // Widgets that want to display fullscreen on mobile phone need to extend this
+    // widget.
+
+    module.MobileWidget = instance.web.Widget.extend({
+        start: function(){
+            if(!$('#oe-mobilewidget-viewport').length){
+                $('head').append('<meta id="oe-mobilewidget-viewport" name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">');
+            }
+            return this._super();
+        },
+        destroy: function(){
+            $('#oe-mobilewidget-viewport').remove();
+            return this._super();
+        },
+    });
+
     module.PickingEditorWidget = instance.web.Widget.extend({
         template: 'PickingEditorWidget',
         init: function(parent,options){
@@ -116,7 +133,7 @@ function openerp_picking_widgets(instance){
         },
     });
 
-    module.PickingMenuWidget = instance.web.Widget.extend({
+    module.PickingMenuWidget = module.MobileWidget.extend({
         template: 'PickingMenuWidget',
         init: function(parent, params){
             this._super(parent,params);
@@ -167,6 +184,7 @@ function openerp_picking_widgets(instance){
             });
         },
         start: function(){
+            this._super();
             var self = this;
             this.barcode_scanner.connect(function(barcode){
                 self.on_scan(barcode);
@@ -262,7 +280,7 @@ function openerp_picking_widgets(instance){
     });
     openerp.web.client_actions.add('stock.menu', 'instance.stock.PickingMenuWidget');
 
-    module.PickingMainWidget = instance.web.Widget.extend({
+    module.PickingMainWidget = module.MobileWidget.extend({
         template: 'PickingMainWidget',
         init: function(parent,params){
             this._super(parent,params);
@@ -284,7 +302,6 @@ function openerp_picking_widgets(instance){
                 this.loaded =  this.load();
             }
 
-            window.pickwidget = this;
         },
 
         // load the picking data from the server. If picking_id is undefined, it will take the first picking
@@ -371,6 +388,7 @@ function openerp_picking_widgets(instance){
 
         },
         start: function(){
+            this._super();
             var self = this;
             instance.webclient.set_content_full_screen(true);
             this.connect_numpad();
