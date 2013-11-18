@@ -15,7 +15,7 @@
     </template>
 
     <!-- Blog Post Summary -->
-    <template id="blogs" name="All Blogs">
+    <template id="latest_blogs" name="Latest Blogs">
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure"/>
@@ -263,7 +263,6 @@
     <template id="index" name="Blog Navigation">
         <t t-call="website.layout">
             <t t-set="head">
-                <script type="text/javascript" src="/website_blog/static/src/js/website_blog.js"></script>
                 <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
             </t>
             <div id="wrap">
@@ -289,20 +288,9 @@
             <section class="mt32">
             <h4>Archives</h4>
             <ul class="list-unstyled">
-                <li t-foreach="nav_list" t-as="year">
-                    <t t-set="year" t-value="nav_list[year]"/>
-                    <t t-esc="year['name']"/>
-                    <ul class="css_nav_month">
-                        <t t-foreach="year['months']">
-                            <li class="js_nav_month">
-                                <a href="#" t-att-data-domain="__domain">
-                                    <t t-esc="create_date"/>
-                                    <span class="pull-right badge" t-esc="create_date_count"/>
-                                </a>
-                                <ul class="list-unstyled"/>
-                            </li>
-                        </t>
-                    </ul>
+                <li t-foreach="nav_list" t-as="months">
+                    <a t-href="/blog/#{ category and 'cat/%s' % category.id or '' }/date/#{ months['date'] }"><t t-esc="months['create_date']"/></a>
+                    <span class="pull-right badge" t-esc="months['create_date_count']"/>
                 </li>
             </ul>
             </section>
@@ -379,12 +367,6 @@
             </ul>
             </section>
         </xpath>
-    </template>
-
-    <template id="blog_archive_link">
-        <li>
-            <a t-href="/blog/#{blog_post.id}"><t t-esc="blog_post.name"/></a>
-        </li>
     </template>
 
 </data>
