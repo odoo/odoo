@@ -403,10 +403,10 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.product", values)
 
     @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="user", multilang=True, methods=['POST'])
-    def add_product(self, cat_id=0, **post):
+    def add_product(self, name="New Product", cat_id=0, **post):
         Product = request.registry.get('product.product')
         product_id = Product.create(request.cr, request.uid, {
-            'name': 'New Product', 'public_categ_id': cat_id
+            'name': name, 'public_categ_id': cat_id
         }, context=request.context)
         product = Product.browse(request.cr, request.uid, product_id, context=request.context)
 
