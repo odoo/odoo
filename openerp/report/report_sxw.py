@@ -366,8 +366,13 @@ class report_sxw(report_rml, preprocess.report):
                 report_xml = a(title=title, report_type=report_type, report_rml_content=rml, name=title, attachment=False, header=self.header)
             finally:
                 report_file.close()
-        if report_xml.header:
-            setattr(report_xml, 'use_global_header', self.header)
+
+        # We add an attribute on the ir.actions.report.xml instance.
+        # This attribute 'use_global_header' will be used by
+        # the create_single_XXX function of the report engine.
+        # This change has been done to avoid a big change of the API.
+        setattr(report_xml, 'use_global_header', self.header if report_xml.header else False)
+
         report_type = report_xml.report_type
         if report_type in ['sxw','odt']:
             fnct = self.create_source_odt
