@@ -24,22 +24,6 @@
                step.title = website.tour.render('website.tour_popover_title', { title: step.title });
                return step;
             }));
-            // TODO: Disabled until properly implemented
-            // this.monkeyPatchTour();
-        },
-        monkeyPatchTour: function () {
-            var self = this;
-            // showStep should wait for 'element' to appear instead of moving to the next step
-            self.tour.showStep = function (i) {
-              var step = self.tour.getStep(i);
-              return (function proceed () {
-                  if (step.orphan || $(step.element).length > 0) {
-                      return Tour.prototype.showStep.call(self.tour, i);
-                  } else {
-                      setTimeout(proceed, 50);
-                  }
-              }());
-            };
         },
         reset: function () {
             this.tourStorage.removeItem(this.id+'_current_step');
@@ -82,16 +66,22 @@
         stop: function () {
             this.tour.end();
         },
-        continueTour: function () {
-            // Override if necessary
-            return this.currentStepIndex() === 0;
-        },
         redirect: function (url) {
             url = url || new website.UrlParser(window.location.href);
             if (this.startPath && url.pathname !== this.startPath) {
                 var newUrl = this.startPath + (url.search ? (url.search + "&") : "?") + this.id + "=true"
                 window.location.replace(newUrl);
             }
+        },
+        continueTour: function () {
+            // Override if necessary
+            return this.currentStepIndex() === 0;
+        },
+        isTriggerUrl: function (url) {
+            // Override if necessary
+            url = url || new website.UrlParser(window.location.href);
+            var urlTrigger = this.id + "=true";
+            return url.search.indexOf(urlTrigger) >= 0;
         },
     });
 
@@ -107,6 +97,7 @@
             this.pathname = a.pathname;
             this.origin = a.origin;
             this.search = a.search;
+            this.hash = a.hash;
         },
     });
 
@@ -127,8 +118,7 @@
                     tour.start();
                 });
                 menu.append($menuItem);
-                var urlTrigger = tour.id + "=true";
-                if (url.search.indexOf(urlTrigger) >= 0) {
+                if (tour.isTriggerUrl()) {
                     tour.start();
                 }
             });

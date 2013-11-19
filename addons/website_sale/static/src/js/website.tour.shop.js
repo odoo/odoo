@@ -38,10 +38,22 @@
                     content: "Select 'New Product' to create it and manage its properties to boost your sales.",
                     template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('tour:menu_editor_dialog_ready', editor, function () {
-                            self.movetoStep('add-menu-entry');
+                        $(document).one('shown.bs.modal', function () {
+                            $('.modal button.btn-primary').click(function () {
+                                self.movetoStep('product-page');
+                            });
+                            self.movetoStep('enter-name');
                         });
                     },
+                },
+                {
+                    stepId: 'enter-name',
+                    element: '.modal input[type=text]',
+                    placement: 'right',
+                    title: "Choose name",
+                    content: "Enter a name for your new product.",
+                    template: render('website.tour_popover'),
+
                 },
                 {
                     stepId: 'product-page',
@@ -63,6 +75,7 @@
                     stepId: 'add-block',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
+                    reflex: true,
                     title: "Describe the product for your audience",
                     content: "Insert blocks like text-image, or gallery to fully describe the product and make your visitors want to buy this product.",
                     template: render('website.tour_popover'),
@@ -77,6 +90,11 @@
         },
         continueTour: function () {
             return this.productPage();
+        },
+        isTriggerUrl: function (url) {
+            url = url || new website.UrlParser(window.location.href);
+            var addProductPattern = /^\/shop\/product\/[0-9]+\/\?enable_editor=1/;
+            return addProductPattern.test(url.pathname+url.search) || this._super();
         },
     });
 
