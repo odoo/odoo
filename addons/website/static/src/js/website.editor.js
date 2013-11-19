@@ -513,16 +513,23 @@
                     if (!_.isArray(failed)) { failed = [failed]; }
 
                     _(failed).each(function (failure) {
+                        var html = failure.error.exception_type === "except_osv";
+                        if (html) {
+                            var msg = $("<div/>").text(failure.error.message).html();
+                            var data = msg.substring(3,msg.length-2).split(/', u'/);
+                            failure.error.message = '<b>' + data[0] + '</b><br/>' + data[1];
+                        }
                         $(root).find('.' + failure.id)
                             .removeClass(failure.id)
                             .popover({
+                                html: html,
                                 trigger: 'hover',
                                 content: failure.error.message,
                                 placement: 'auto top',
                             })
                             // Force-show popovers so users will notice them.
                             .popover('show');
-                    })
+                    });
                 });
             });
         },
