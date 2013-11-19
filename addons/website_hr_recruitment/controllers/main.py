@@ -10,7 +10,12 @@ import base64
 
 
 class website_hr_recruitment(http.Controller):
-    @website.route(['/jobs', '/jobs/department/<model("hr.department"):department>/office/<model("res.partner"):office>', '/jobs/department/<model("hr.department"):department>', '/jobs/office/<model("res.partner"):office>'], type='http', auth="public", multilang=True)
+    @website.route([
+        '/jobs',
+        '/jobs/department/<model("hr.department"):department>/office/<model("res.partner"):office>',
+        '/jobs/department/<model("hr.department"):department>',
+        '/jobs/office/<model("res.partner"):office>'
+        ], type='http', auth="public", multilang=True)
     def jobs(self, department=None, office=None, page=0):
         hr_job_obj = request.registry['hr.job']
         domain = []
@@ -80,7 +85,7 @@ class website_hr_recruitment(http.Controller):
             request.registry['ir.attachment'].create(request.cr, request.uid, attachment_values, context=request.context)
         return request.website.render("website_hr_recruitment.thankyou", {})
 
-    @website.route(['/job/apply', '/job/apply/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
+    @website.route(['/job/apply'], type='http', auth="public", multilang=True)
     def applyjobpost(self, job=None):
         return request.website.render("website_hr_recruitment.applyjobpost", { 'job': job })
 
