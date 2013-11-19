@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:35+0000\n"
-"PO-Revision-Date: 2013-11-06 20:11+0000\n"
+"PO-Revision-Date: 2013-11-12 18:57+0000\n"
 "Last-Translator: Viktor P. <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-07 05:50+0000\n"
+"X-Launchpad-Export-Date: 2013-11-13 06:08+0000\n"
 "X-Generator: Launchpad (build 16820)\n"
 
 #. module: base
@@ -501,7 +501,7 @@ msgstr "Кредитный лимит"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_project_long_term
 msgid "Portal Project Long Term"
-msgstr ""
+msgstr "Портал: долгосрочные проекты"
 
 #. module: base
 #: field:ir.model.constraint,date_update:0
@@ -2811,6 +2811,25 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"Это базовый модуль для управления продуктами и прайс-листами в OpenERP.\n"
+"========================================================================\n"
+"\n"
+"Продукты поддерживают варианты, различные методы ценообразования, информацию "
+"о поставщиках,\n"
+"производство в запас / подзаказ, различные единицы мер, упаковки и свойств.\n"
+"Прайс-листы поддерживают:\n"
+"--------------------\n"
+"    * Многоуровневые скидки (по продуктам, категориям, количеству)\n"
+"    * Расчет базовой цены по различным критериям:\n"
+"        * другим прайс-листам\n"
+"        * себестоимости\n"
+"        * рыночной цене\n"
+"        * цене поставщиков\n"
+"\n"
+"Прайс-листы по продуктам или партнерам.\n"
+"Печать этикеток с штрих-кодом.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -3003,6 +3022,17 @@ msgid ""
 "        * Files by Partner (graph)\n"
 "        * Files Size by Month (graph)\n"
 msgstr ""
+"\n"
+"Система управления документооборотом.\n"
+"==============================================\n"
+"    * Авторизация пользователей\n"
+"    * Индексация документов: файлы .pptx и .docx не поддерживаются в ОС "
+"Windows\n"
+"    * Панель инструментов для документов, которая включает:\n"
+"        * Новые файлы (список)\n"
+"        * Файлы по типу (график)\n"
+"        * Файлы по партнерам (график)\n"
+"        * Размеры файлов по месяцам (график)\n"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -4147,7 +4177,7 @@ msgstr "Фильтры"
 #: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Can not create the module file: %s!"
-msgstr ""
+msgstr "Невозможно создать файл модуля: %s!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -4895,7 +4925,7 @@ msgstr "Код должен быть уникальным"
 #: code:addons/base/ir/workflow/workflow.py:99
 #, python-format
 msgid "Operation Forbidden"
-msgstr ""
+msgstr "Операция запрещена"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_knowledge
@@ -5247,6 +5277,9 @@ msgid ""
 "Next number that will be used. This number can be incremented frequently so "
 "the displayed value might already be obsolete"
 msgstr ""
+"Следующее число, которое будет использоваться. Это число может постоянно "
+"увеличиваться, таким образом, выведенное на экран значение может быть уже "
+"быть устаревшим."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing
@@ -7052,7 +7085,7 @@ msgstr "Анонимизация базы данных"
 #. module: base
 #: field:res.partner,commercial_partner_id:0
 msgid "Commercial Entity"
-msgstr ""
+msgstr "Коммерческая организация"
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
@@ -7115,7 +7148,7 @@ msgstr "ir.cron"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_sales_followup
 msgid "Payment Follow-up"
-msgstr ""
+msgstr "Напоминание об оплате"
 
 #. module: base
 #: model:res.country,name:base.cw
@@ -7209,6 +7242,8 @@ msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
 msgstr ""
+"Вы не можете удалить активный язык!\n"
+"Пожалуйста, сначала деактивируйте его."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -7925,7 +7960,7 @@ msgstr "Логин пользователя"
 #. module: base
 #: view:ir.filters:0
 msgid "Filters created by myself"
-msgstr ""
+msgstr "Фильтры созданные мною"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hn
@@ -8161,7 +8196,7 @@ msgstr "Следующее число в этой нумерации"
 #: view:res.partner:0
 #: view:res.users:0
 msgid "Tags..."
-msgstr ""
+msgstr "Теги..."
 
 #. module: base
 #: view:res.partner:0
@@ -8491,7 +8526,7 @@ msgstr "Финансовый и аналитический учет"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_project
 msgid "Portal Project"
-msgstr ""
+msgstr "Портал: проекты"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -8789,7 +8824,7 @@ msgstr "Действия клиента"
 #. module: base
 #: field:res.partner.bank.type,field_ids:0
 msgid "Type Fields"
-msgstr ""
+msgstr "Тип поля"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
@@ -8945,7 +8980,7 @@ msgstr "Управление напоминаниями о платежах"
 #: code:addons/orm.py:5334
 #, python-format
 msgid "The value for the field '%s' already exists."
-msgstr ""
+msgstr "Значение для поля '%s' уже существует."
 
 #. module: base
 #: field:workflow.workitem,inst_id:0
@@ -10604,6 +10639,7 @@ msgid ""
 "The `%s` module appears to be unavailable at the moment, please try again "
 "later."
 msgstr ""
+"Похоже, что модуль '%s' не доступен сейчас, пожалуйста, попробуйте позже."
 
 #. module: base
 #: view:ir.attachment:0
@@ -11011,7 +11047,7 @@ msgstr ""
 #: view:res.partner:0
 #: view:res.users:0
 msgid "Street..."
-msgstr ""
+msgstr "Улица..."
 
 #. module: base
 #: constraint:res.users:0
@@ -12290,7 +12326,7 @@ msgstr "Заказчик"
 #: view:res.partner:0
 #: view:res.users:0
 msgid "e.g. +32.81.81.37.00"
-msgstr ""
+msgstr "например, +38 (062) 123-45-67"
 
 #. module: base
 #: selection:base.language.install,lang:0

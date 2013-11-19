@@ -198,7 +198,7 @@ class ir_attachment(osv.osv):
                     continue
                 res_ids.setdefault(rmod,set()).add(rid)
         if values:
-            if values.get('res_model') and 'res_id' in values:
+            if values.get('res_model') and values.get('res_id'):
                 res_ids.setdefault(values['res_model'],set()).add(values['res_id'])
 
         ima = self.pool.get('ir.model.access')
