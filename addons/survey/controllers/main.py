@@ -223,14 +223,7 @@ class WebsiteSurvey(http.Controller):
         # TODO when datepicker will be available
         return errors
 
-    # def validate_simple_choice_scale(self, survey_id, page_nr, question, post, answer_tag):
-    #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
-    #     problems = []
-    #     if question.constr_mandatory:
-    #         problems = problems + self.__has_empty_input(question, post, answer_tag)
-    #     return problems
-
-    # def validate_simple_choice_dropdown(self, survey_id, page_nr, question, post, answer_tag):
+    # def validate_simple_choice(self, survey_id, page_nr, question, post, answer_tag):
     #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
     #     problems = []
     #     if question.constr_mandatory:
@@ -246,6 +239,7 @@ class WebsiteSurvey(http.Controller):
     #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
     #     problems = []
     #     return problems
+
 
 def dict_keys_startswith(self, dictionary, string):
     '''Returns a dictionary containing the elements of <dict> whose keys start
