@@ -212,7 +212,8 @@ class survey_survey(osv.osv):
     def action_send_survey(self, cr, uid, ids, context=None):
         ''' Open a window to compose an email, pre-filled with the survey
         message '''
-        self._empty_check(cr, uid, ids, context=context)
+        if not self._has_questions(cr, uid, ids, context=None):
+            raise osv.except_osv(_('Error!'), _('You can not send a survey that has no questions.'))
 
         survey_browse = self.pool.get('survey.survey').browse(cr, uid, ids,
             context=context)[0]
