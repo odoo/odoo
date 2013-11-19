@@ -16,14 +16,14 @@
 -
   !record {model: res.currency.rate, id: nov_usd}:
     currency_id: base.USD
-    name: !eval "'%s-11-01' %(datetime.now().year)"
+    name: !eval "'%s-11-01 00:00:00' %(datetime.now().year)"
     rate: 1.8
 -
   I create currency USD in OpenERP for December of 1.5 Rate
 -
   !record {model: res.currency.rate, id: dec_usd}:
     currency_id: base.USD
-    name: !eval "'%s-12-01' %(datetime.now().year)"
+    name: !eval "'%s-12-01 00:00:00' %(datetime.now().year)"
     rate: 1.5
 -
   I set the income and expense currency accounts on the main company
