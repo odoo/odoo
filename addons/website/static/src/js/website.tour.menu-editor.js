@@ -6,7 +6,7 @@
     var render = website.tour.render;
 
     website.EditorBuilderTour = website.EditorTour.extend({
-        id: 'menu_editor',
+        id: 'menu-editor',
         name: "Add a new page",
         init: function (editor) {
             var self = this;

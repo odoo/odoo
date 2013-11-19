@@ -53,7 +53,7 @@
             }
         },
         canResume: function () {
-            return (this.currentStepIndex() === 0) && !this.tour.ended();
+            return this.continueTour() || ((this.currentStepIndex() === 0) && !this.tour.ended());
         },
         currentStepIndex: function () {
             var index = this.tourStorage.getItem(this.id+'_current_step') || 0;
@@ -84,10 +84,14 @@
         },
         continueTour: function () {
             // Override if necessary
-            return true;
+            return this.currentStepIndex() === 0;
         },
-        redirect: function () {
-            // Override if necessary
+        redirect: function (url) {
+            url = url || new website.UrlParser(window.location.href);
+            if (this.startPath && url.pathname !== this.startPath) {
+                var newUrl = this.startPath + (url.search ? (url.search + "&") : "?") + this.id + "=true"
+                window.location.replace(newUrl);
+            }
         },
     });
 
@@ -123,7 +127,8 @@
                     tour.start();
                 });
                 menu.append($menuItem);
-                if (tour.urlTrigger && (url.search.indexOf(tour.urlTrigger) === 0 || tour.continueTour())) {
+                var urlTrigger = tour.id + "=true";
+                if (url.search.indexOf(urlTrigger) >= 0) {
                     tour.start();
                 }
             });

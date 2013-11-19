@@ -6,9 +6,9 @@
     var render = website.tour.render;
 
     website.EditorBannerTour = website.EditorTour.extend({
-        id: 'add_banner_tour',
+        id: 'banner-tutorial',
         name: "Insert a banner",
-        urlTrigger: '?banner-tutorial=true',
+        startPath: '/page/website.homepage',
         init: function (editor) {
             var self = this;
             var $body = $(document.body);
@@ -134,16 +134,7 @@
             return (currentStepIndex === secondPartIndex || currentStepIndex === showTutorialsIndex) && !this.tour.ended();
         },
         continueTour: function () {
-            return this.startOfPart2();
-        },
-        canResume: function () {
             return this.startOfPart2() || this._super();
-        },
-        redirect: function (url) {
-            url = url || new website.UrlParser(window.location.href);
-            if (url.pathname !== '/' && url.pathname !== '/page/website.homepage') {
-                window.location.replace('/page/website.homepage?banner-tutorial=true');
-            }
         },
     });
 

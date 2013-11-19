@@ -6,9 +6,9 @@
     var render = website.tour.render;
 
     website.EditorShopTour = website.EditorTour.extend({
-        id: 'shop_tour',
+        id: 'shop-tutorial',
         name: "Create a product",
-        urlTrigger: '?shop-tutorial=true',
+        startPath: '/shop',
         init: function (editor) {
             var self = this;
             var $body = $(document.body);
@@ -30,14 +30,53 @@
                     content: "Click here to add a new product.",
                     template: render('website.tour_popover'),
                 },
+                {
+                    stepId: 'edit-entry',
+                    element: '#create-new-product',
+                    placement: 'left',
+                    title: "Create a new product",
+                    content: "Select 'New Product' to create it and manage its properties to boost your sales.",
+                    template: render('website.tour_popover'),
+                    onShow: function () {
+                        editor.on('tour:menu_editor_dialog_ready', editor, function () {
+                            self.movetoStep('add-menu-entry');
+                        });
+                    },
+                },
+                {
+                    stepId: 'product-page',
+                    orphan: true,
+                    backdrop: true,
+                    title: "New product created",
+                    content: "This page contains all the information related to the new product.",
+                    template: render('website.tour_popover', { next: "OK" }),
+                },
+                {
+                    stepId: 'edit-price',
+                    element: '.product_price',
+                    placement: 'left',
+                    title: "Change the public price",
+                    content: "Edit the sale price of this product by clicking on the amount. The price is the sale price used in all sale order when selling this product.",
+                    template: render('website.tour_popover', { next: "OK" }),
+                },
+                {
+                    stepId: 'add-block',
+                    element: 'button[data-action=snippet]',
+                    placement: 'bottom',
+                    title: "Describe the product for your audience",
+                    content: "Insert blocks like text-image, or gallery to fully describe the product and make your visitors want to buy this product.",
+                    template: render('website.tour_popover'),
+                },
             ];
             return this._super();
         },
-        redirect: function (url) {
-            url = url || new website.UrlParser(window.location.href);
-            if (url.pathname !== '/shop') {
-                window.location.replace('/shop?shop-tutorial=true');
-            }
+        productPage: function () {
+            var currentStepIndex = this.currentStepIndex();
+            var productPageIndex = this.indexOfStep('product-page');
+            return (currentStepIndex === productPageIndex) && !this.tour.ended();
+        },
+        continueTour: function () {
+            return this.productPage();
         },
     });
 

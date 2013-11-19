@@ -6,7 +6,7 @@
     var render = website.tour.render;
 
     website.InstallAppTour = website.EditorTour.extend({
-        id: 'install_app',
+        id: 'install-app',
         name: "Install a new App",
         init: function (editor) {
             var self = this;
