@@ -168,6 +168,11 @@ def main(args):
         import_translation()
         sys.exit(0)
 
+    # This needs to be done now to ensure the use of the multiprocessing
+    # signaling mecanism for registries loaded with -d
+    if config['workers']:
+        openerp.multi_process = True
+
     # preload registryies, needed for -u --stop_after_init
     rc = 0
     if config['db_name']:

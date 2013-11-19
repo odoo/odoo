@@ -231,7 +231,7 @@
             <field name="model">res.users</field>
             <field name="arch" type="xml">
                 <search string="Users">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('login','ilike',self)]" string="User"/>
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('login','ilike',self), ('email,'ilike',self)]" string="User"/>
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -283,7 +283,7 @@
                         <field name="lang" readonly="0"/>
                         <field name="tz" readonly="0"/>
                         <field name="company_id" widget="selection" readonly="0"
-                            groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
+                            groups="base.group_multi_company"/>
                     </group>
                     <group string="Email Preferences">
                         <field name="email" widget="email" readonly="0"/>

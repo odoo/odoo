@@ -3,7 +3,6 @@
 #-----------------------------------------------------------
 import datetime
 import errno
-import fcntl
 import logging
 import os
 import os.path
@@ -21,6 +20,11 @@ import time
 import traceback
 
 import werkzeug.serving
+
+try:
+    import fcntl
+except ImportError:
+    pass
 try:
     from setproctitle import setproctitle
 except ImportError:
@@ -828,7 +832,6 @@ def start():
     global server
     load_server_wide_modules()
     if config['workers']:
-        openerp.multi_process = True
         server = PreforkServer(openerp.service.wsgi_server.application)
     elif openerp.evented:
         server = GeventServer(openerp.service.wsgi_server.application)
