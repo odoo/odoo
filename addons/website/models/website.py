@@ -136,11 +136,9 @@ class website(osv.osv):
 
         is_public_user = request.uid == self.get_public_user(cr, uid, context).id
 
-        try:
-            self.pool.get("ir.ui.view").check_access_rights(request.cr, request.uid, 'write')
-            editable = True
-        except:
-            editable = False
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        website_publisher_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_website_publisher')[1]
+        is_website_publisher = website_publisher_id in [g.id for g in user.groups_id]
 
         # Select current language
         if hasattr(request, 'route_lang'):
@@ -158,8 +156,7 @@ class website(osv.osv):
             'multilang': request.multilang,
             'is_public_user': is_public_user,
             'is_master_lang': is_master_lang,
-            'has_access_write': True,
-            'editable': editable,
+            'editable': is_website_publisher,
             'translatable': not is_public_user and not is_master_lang and request.multilang,
         })
 

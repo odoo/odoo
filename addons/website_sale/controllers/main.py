@@ -342,7 +342,6 @@ class Ecommerce(http.Controller):
                 domain = [('id', 'in', ids or [0] )] + domain
 
         step = 20
-        print '**', domain
         product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
         pager = request.website.pager(url="/shop/", total=product_count, page=page, step=step, scope=7, url_args=post)
 
@@ -357,14 +356,7 @@ class Ecommerce(http.Controller):
             style_ids = style_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
 
-        try:
-            product_obj.check_access_rights(request.cr, request.uid, 'write')
-            has_access_write = True
-        except:
-            has_access_write = False
-
         values = {
-            'has_access_write': has_access_write,
             'Ecommerce': self,
             'product_ids': product_ids,
             'product_ids_for_holes': fill_hole,
@@ -396,14 +388,7 @@ class Ecommerce(http.Controller):
 
         request.context['pricelist'] = self.get_pricelist()
 
-        try:
-            request.registry.get('product.template').check_access_rights(request.cr, request.uid, 'write')
-            has_access_write = True
-        except:
-            has_access_write = False
-
         values = {
-            'has_access_write': has_access_write,
             'Ecommerce': self,
             'category': category,
             'category_list': category_list,
