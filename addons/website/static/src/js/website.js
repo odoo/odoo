@@ -13,6 +13,31 @@
         }, dict);
     };
 
+    website.parseQS = function (qs) {
+        var match,
+            params = {},
+            pl     = /\+/g,  // Regex for replacing addition symbol with a space
+            search = /([^&=]+)=?([^&]*)/g;
+
+        while ((match = search.exec(qs))) {
+            var name = decodeURIComponent(match[1].replace(pl, " "));
+            var value = decodeURIComponent(match[2].replace(pl, " "));
+            params[name] = value;
+        }
+        return params;
+    };
+
+    var parsedSearch;
+    website.parseSearch = function () {
+        if (!parsedSearch) {
+            parsedSearch = website.parseQS(window.location.search.substring(1));
+        }
+        return parsedSearch;
+    };
+    website.parseHash = function () {
+        return website.parseQS(window.location.hash.substring(1));
+    };
+
     /* ----- TEMPLATE LOADING ---- */
     var templates_def = $.Deferred().resolve();
     website.add_template_file = function(template) {
