@@ -27,7 +27,7 @@ import uuid
 
 class survey_survey(osv.osv):
     '''Settings for a multi-page/multi-question survey.
-    Each survey can have one or more attached pages, and each page can present
+    Each survey can have one or more attached pages, and each page can display
     one or more questions.
     '''
 
@@ -38,15 +38,14 @@ class survey_survey(osv.osv):
 
     # Protected methods #
 
-    def _empty_check(self, cr, uid, ids, context=None):
+    def _has_questions(self, cr, uid, ids, context=None):
         """ Ensure that this survey has at least one page with at least one
         question. If not, raises an exception. """
         for survey in self.browse(cr, uid, ids, context=context):
             if not survey.page_ids or not [page.question_ids
                             for page in survey.page_ids if page.question_ids]:
-                raise osv.except_osv(_('Warning!'),
-                    _('This survey has no question defined or has no pages \
-                        defined.'))
+                return False
+        return True
 
     ## Function fields ##
 
@@ -117,6 +116,7 @@ class survey_survey(osv.osv):
         'thank_you_message': fields.html('Thank you message', translate=True,
             help="This message will be displayed when survey is completed")
     }
+
     _defaults = {
         'category': lambda x: _('Uncategorized'),
         'user_input_limit': 0,
@@ -133,8 +133,11 @@ class survey_survey(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft', 'date_open': None})
 
     def survey_open(self, cr, uid, ids, arg):
-        return self.write(cr, uid, ids, {'state': 'open',
-            'date_open': fields.datetime.now})
+        if self._has_questions(cr, uid, ids, context=None):
+            return self.write(cr, uid, ids, {'state': 'open',
+                                            'date_open': fields.datetime.now})
+        else:
+            raise osv.except_osv(_('Error!'), _('You can not open a survey that has no questions.'))
 
     def survey_close(self, cr, uid, ids, arg):
         return self.write(cr, uid, ids, {'state': 'close',
