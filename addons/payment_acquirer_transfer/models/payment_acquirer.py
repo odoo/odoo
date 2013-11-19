@@ -13,3 +13,6 @@ class TransferPaymentAcquirer(osv.Model):
 
 class TransferPaymentTransaction(osv.Model):
     _inherit = 'payment.transaction'
+
+    def transfer_form_feedback(self, cr, uid, data, context=None):
+        return True
