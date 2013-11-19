@@ -47,6 +47,7 @@ import itertools
 import logging
 import operator
 import pickle
+import functools
 import re
 import simplejson
 import time
@@ -1173,6 +1174,7 @@ class BaseModel(object):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
         return {'ids': ids, 'messages': messages}
+
     def _extract_records(self, cr, uid, fields_, data,
                          context=None, log=lambda a: None):
         """ Generates record dicts from the data sequence.
@@ -1250,6 +1252,7 @@ class BaseModel(object):
                 'to': index + len(record_span) - 1
             }}
             index += len(record_span)
+    
     def _convert_records(self, cr, uid, records,
                          context=None, log=lambda a: None):
         """ Converts records from the source iterable (recursive dicts of
@@ -3365,44 +3368,46 @@ class BaseModel(object):
         if context is None:
             context = {}
 
-        write_access = self.check_access_rights(cr, user, 'write', raise_exception=False) \
-            or self.check_access_rights(cr, user, 'create', raise_exception=False)
+        has_access = functools.partial(self.check_access_rights, cr, user, raise_exception=False)
+
+        write_access = has_access('write') or has_access('create')
 
         translation_obj = self.pool.get('ir.translation')
 
         res = {}
 
-        for f, field in self._fields.iteritems():
-            if allfields and f not in allfields:
+        def get_translation(fname, types, source=None):
+            return translation_obj._get_source(
+                cr, user, name='%s,%s' % (self._name, fname),
+                types=types, lang=context['lang'], source=source
+            )
+
+        for fname, field in self._fields.iteritems():
+            if allfields and fname not in allfields:
                 continue
+
             if field.groups and not self.user_has_groups(cr, user, field.groups, context=context):
                 continue
 
-            res[f] = field.get_description()
+            res[fname] = description = field.get_description()
 
             if not write_access:
-                res[f]['readonly'] = True
-                res[f]['states'] = {}
+                description.update(readonly=True, states=dict())
 
             if 'lang' in context:
-                if 'string' in res[f]:
-                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context['lang'])
-                    if res_trans:
-                        res[f]['string'] = res_trans
-                if 'help' in res[f]:
-                    help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context['lang'])
-                    if help_trans:
-                        res[f]['help'] = help_trans
-                if 'selection' in res[f]:
-                    if isinstance(field.selection, (tuple, list)):
-                        sel = field.selection
-                        sel2 = []
-                        for key, val in sel:
-                            val2 = None
-                            if val:
-                                val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection',  context['lang'], val)
-                            sel2.append((key, val2 or val))
-                        res[f]['selection'] = sel2
+                if 'string' in description:
+                    translation = get_translation(fname, 'field')
+                    if translation:
+                        description['string'] = translation
+                if 'help' in description:
+                    translaton = get_translation(fname, 'help')
+                    if translaton:
+                        description['help'] = translaton
+                if 'selection' in description and isinstance(field.selection, (tuple, list)):
+                    description['selection'] = [
+                        (key, get_translation(fname, 'selection', value))
+                        for key, value in field.selection
+                    ]
 
         return res
 
@@ -3732,6 +3737,8 @@ class BaseModel(object):
         """Verify the returned rows after applying record rules matches
            the length of `ids`, and raise an appropriate exception if it does not.
         """
+        if context is None:
+            context = {}
         ids, result_ids = set(ids), set(result_ids)
         missing_ids = ids - result_ids
         if missing_ids:
