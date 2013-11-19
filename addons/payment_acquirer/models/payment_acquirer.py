@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 
 
 class ValidationError(ValueError):
-    """ Used for value error when validatin coming from acquirers. """
+    """ Used for value error when validating transaction data coming from acquirers. """
     pass
 
 
