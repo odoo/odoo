@@ -84,9 +84,9 @@
     for rec in delivery_id.pack_operation_ids:
       if rec.package_id.name == 'Palneg 2':
         lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product_neg')), ('name','=','Lot neg')])
-        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product_neg'), 'product_qty': 140, 'lot_id': lot_ids[0]}, context=context)
+        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product_neg'), 'product_qty': 140, 'lot_id': lot_ids[0], 'product_uom_id': ref('product.product_uom_unit')}, context=context)
       if rec.package_id.name == 'Palneg 3':
-        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product_neg'),'product_qty': 10}, context=context)
+        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product_neg'),'product_qty': 10, 'product_uom_id': ref('product.product_uom_unit')}, context=context)
 - 
   Process this picking
 - 
