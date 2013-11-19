@@ -292,16 +292,19 @@ class website(osv.osv):
         """
         endpoint = rule.endpoint
         methods = rule.methods or ['GET']
+        converters = rule._converters.values()
 
         return (
                 'GET' in methods
             and endpoint.exposed == 'http'
             and endpoint.auth in ('none', 'public')
             and getattr(endpoint, 'cms', False)
+            # preclude combinatorial explosion by only allowing a single converter
+            and len(converters) <= 1
             # ensure all converters on the rule are able to generate values for
             # themselves
             and all(hasattr(converter, 'generate')
-                    for converter in rule._converters.itervalues())
+                    for converter in converters)
         ) and self.endpoint_is_enumerable(rule)
 
     def endpoint_is_enumerable(self, rule):
@@ -340,45 +343,76 @@ class website(osv.osv):
             (arg == 'self' or arg in rule._converters)
             for arg in args)
 
-    def list_pages(self, cr, uid, ids, context=None):
+    def enumerate_pages(self, cr, uid, ids, query_string=None, context=None):
         """ Available pages in the website/CMS. This is mostly used for links
         generation and can be overridden by modules setting up new HTML
         controllers for dynamic pages (e.g. blog).
 
         By default, returns template views marked as pages.
 
+        :param str query_string: a (user-provided) string, fetches pages
+                                 matching the string
         :returns: a list of mappings with two keys: ``name`` is the displayable
                   name of the resource (page), ``url`` is the absolute URL
                   of the same.
         :rtype: list({name: str, url: str})
         """
-        # FIXME: possibility to add custom converters without editing server
-        #        would allow the creation of a pages converter generating page
-        #        urls on its own
-        View = self.pool['ir.ui.view']
-        views = View.search_read(cr, uid, [['page', '=', True]],
-                                 fields=['name'], order='name', context=context)
-        xids = View.get_external_id(cr, uid, [view['id'] for view in views], context=context)
-        for view in views:
-            if xids[view['id']]:
-                yield {
-                    'name': view['name'],
-                    'url': '/page/' + xids[view['id']],
-                }
-
         router = request.httprequest.app.get_db_router(request.db)
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
 
-            generated = map(dict, itertools.product(*(
-                itertools.izip(itertools.repeat(name), converter.generate())
-                for name, converter in rule._converters.iteritems()
-            )))
+            converters = rule._converters
+            filtered = bool(converters)
+            if converters:
+                # allow single converter as decided by fp, checked by
+                # rule_is_enumerable
+                [(name, converter)] = converters.items()
+                generated = ({k: v} for k, v in itertools.izip(
+                                        itertools.repeat(name),
+                                        converter.generate(query=query_string)))
+            else:
+                # force single iteration for literal urls
+                generated = [{}]
 
             for values in generated:
                 domain_part, url = rule.build(values, append_unknown=False)
-                yield {'name': url, 'url': url }
+                page = {'name': url, 'url': url}
+
+                if not filtered and query_string and not self.page_matches(cr, uid, page, query_string, context=context):
+                    continue
+                yield page
+
+    def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
+        return list(itertools.islice(
+            self.enumerate_pages(cr, uid, ids, query_string=needle, context=context),
+            limit))
+
+    def page_matches(self, cr, uid, page, needle, context=None):
+        """ Checks that a "page" matches a user-provide search string.
+
+        The default implementation attempts to perform a non-contiguous
+        substring match of the page's name.
+
+        :param page: {'name': str, 'url': str}
+        :param needle: str
+        :rtype: bool
+        """
+        haystack = page['name'].lower()
+
+        needle = iter(needle.lower())
+        n = next(needle)
+        end = object()
+
+        for char in haystack:
+            if char != n: continue
+
+            n = next(needle, end)
+            # found all characters of needle in haystack in order
+            if n is end:
+                return True
+
+        return False
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
         step = step and int(step) or 10
