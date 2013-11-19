@@ -28,7 +28,7 @@
                     content: "Every page of your website can be modified through the <i>Edit</i> button.",
                     template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('tour:editor_bar_loaded', editor, function() {
+                        editor.on('tour:editor_bar_loaded', editor, function () {
                             self.movetoStep('add-block');
                         });
                     },
