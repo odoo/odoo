@@ -36,3 +36,19 @@ function query_groups (model, fields, domain, groupbys) {
         });
 }
 
+function query_groups_data(model, fields, domain, row_groupbys, col_groupby) {
+    return query_groups(model, fields, domain, [col_groupby].concat(row_groupbys)).then(function (groups) {
+        return _.map(groups, function (group) {
+            return format_group(group, []);
+        });
+    });
+}
+
+function format_group (group, path) {
+    group.path = path.concat(group.attributes.value[1]);
+    result = [group];
+    _.each(group.subgroups_data, function (subgroup) {
+        result = result.concat(format_group (subgroup, group.path));
+    });
+    return result;
+}

@@ -279,11 +279,11 @@ var PivotTable = instance.web.Widget.extend({
         var self = this;
 
         var col_id = this.generate_id();
-
+        var col_header = this.make_cell(this.data.measure_label,
+                                     {is_border:true, foldable: true, col_id:col_id});
         var header = $('<tr></tr>');
         header.append(this.make_cell(' ', {is_border:true}));
-        header.append(this.make_cell(this.data.measure_label,
-                                     {is_border:true, foldable: true, col_id:col_id}));
+        header.append(col_header);
         this.headers = [header];
 
         this.cols= [{
@@ -295,6 +295,7 @@ var PivotTable = instance.web.Widget.extend({
             children: [],
             cells: [],    // a cell is {td:<jquery td>, row_id:<some id>}
             domain: this.data.domain,
+            header: col_header
         }];
 
         var main_row = this.make_row(this.data.total[0]);
@@ -324,7 +325,7 @@ var PivotTable = instance.web.Widget.extend({
 
         if (has_parent) {
             parent = this.get_row(parent_id);
-            path = parent.path.concat(group.attributes.grouped_on);
+            path = parent.path.concat(group.attributes.value[1]);
             value = group.attributes.value[1];
             expanded = false;
             parent.children.push(row_id);
@@ -418,9 +419,9 @@ var PivotTable = instance.web.Widget.extend({
 
         var visible_fields = this.data.row_groupby.concat(this.data.col_groupby, this.data.measure);
         query_groups(this.data.model, visible_fields, row.domain, [field_id])
-            .then(function (data) {
-                _.each(data.reverse(), function (datapt) {
-                    var new_row = self.make_row(datapt, row_id);
+            .then(function (groups) {
+                _.each(groups.reverse(), function (group) {
+                    var new_row = self.make_row(group, row_id);
                     row.html.after(new_row.html);
                 });
         });
@@ -428,7 +429,69 @@ var PivotTable = instance.web.Widget.extend({
     },
 
     expand_col: function (col_id, field_id) {
-        console.log("expandidng col",col_id, field_id);
+        var self = this;
+        var col = this.get_col(col_id);
+
+        console.log("expanding col",col);
+        if (col.path.length == this.data.col_groupby.length) {
+            this.data.col_groupby.push(field_id);
+        }
+        col.expanded = true;
+        col.header.find('.icon-plus-sign')
+            .removeClass('icon-plus-sign')
+            .addClass('icon-minus-sign');
+
+
+        var visible_fields = this.data.row_groupby.concat(this.data.col_groupby, this.data.measure);
+        query_groups_data(this.data.model, visible_fields, col.domain, this.data.row_groupby, field_id)
+            .then(function (groups) {
+                console.log("inserting groups",groups);
+                console.log("this.rows",self.rows);
+                console.log("this.cols",self.cols);
+                _.each(groups, function (group) {
+                    var new_col = {
+                        id: self.generate_id(),
+                        path: col.path.concat(field_id),
+                        value: group[0].attributes.value[1],
+                        expanded: false,
+                        parent: col_id,
+                        children: [],
+                        cells: [],    // a cell is {td:<jquery td>, row_id:<some id>}
+                        domain: group[0].model._domain,
+                        // header: col_header                    
+                    };
+                    col.header.css('display','none');
+                    col.children.push(new_col.id);
+                    self.cols.push(new_col);
+                    _.each(col.cells, function (cell) {
+                        var col_path = self.get_row(cell.row_id).path;
+
+                        var datapt = _.find(group, function (g) {
+                            return _.isEqual(g.path.slice(1), col_path);
+                        });
+
+                        var value;
+                        if (datapt === undefined) {
+                            value = '';
+                        } else {
+                            value = datapt.attributes.aggregates[self.data.measure];
+                        }
+                        console.log("value", value);
+                        // make new cell
+                        var new_cell = {
+                            row_id: cell.row_id,
+                            td: self.make_cell(value)
+                        };
+                        // add cell to new_col cells ({row_id, td})
+                        new_col.cells.push(new_cell);
+                        // insert new cell (td) after cell.td
+                        cell.td.after(new_cell.td);
+                        cell.td.css('display','none');
+                    });
+
+                });
+        });
+
     },
 
     fold_row: function (row_id) {
