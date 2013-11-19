@@ -926,7 +926,6 @@ class stock_picking(osv.osv):
                     pack_operation_obj.create(cr, uid, {
                         'picking_id': picking.id,
                         'product_qty': qty,
-                        'quant_id': quant.id,
                         'product_id': quant.product_id.id,
                         'lot_id': quant.lot_id and quant.lot_id.id or False,
                         'product_uom_id': quant.product_id.uom_id.id,
@@ -1085,15 +1084,16 @@ class stock_picking(osv.osv):
                 stock_operation_obj.write(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
         return True
 
-    def _deal_with_quants(self, cr, uid, picking_id, quant_ids, context=None):
-        stock_operation_obj = self.pool.get('stock.pack.operation')
-        todo_on_moves = []
-        todo_on_operations = []
-        for quant in self.pool.get('stock.quant').browse(cr, uid, quant_ids, context=context):
-            tmp_moves, tmp_operations = stock_operation_obj._search_and_increment(cr, uid, picking_id, ('quant_id', '=', quant.id), context=context)
-            todo_on_moves += tmp_moves
-            todo_on_operations += tmp_operations
-        return todo_on_moves, todo_on_operations
+    #TODO: commented because quant_id has been removed from pack operation object
+    #def _deal_with_quants(self, cr, uid, picking_id, quant_ids, context=None):
+    #    stock_operation_obj = self.pool.get('stock.pack.operation')
+    #    todo_on_moves = []
+    #    todo_on_operations = []
+    #    for quant in self.pool.get('stock.quant').browse(cr, uid, quant_ids, context=context):
+    #        tmp_moves, tmp_operations = stock_operation_obj._search_and_increment(cr, uid, picking_id, ('quant_id', '=', quant.id), context=context)
+    #        todo_on_moves += tmp_moves
+    #        todo_on_operations += tmp_operations
+    #    return todo_on_moves, todo_on_operations
 
     def get_barcode_and_return_todo_stuff(self, cr, uid, picking_id, barcode_str, context=None):
         '''This function is called each time there barcode scanner reads an input'''
@@ -1110,10 +1110,11 @@ class stock_picking(osv.osv):
         if matching_product_ids:
             todo_on_moves, todo_on_operations = stock_operation_obj._search_and_increment(cr, uid, picking_id, ('product_id', '=', matching_product_ids[0]), context=context)
 
-        #check if the barcode correspond to a quant
-        matching_quant_ids = quant_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)  # TODO need the location clause
-        if matching_quant_ids:
-            todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, [matching_quant_ids[0]], context=context)
+        #TODO: if barcode is a lot instead of a quant => replace next lines
+        ##check if the barcode correspond to a quant
+        #matching_quant_ids = quant_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)  # TODO need the location clause
+        #if matching_quant_ids:
+        #    todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, [matching_quant_ids[0]], context=context)
 
         #check if the barcode correspond to a package
         matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
@@ -3145,7 +3146,6 @@ class stock_pack_operation(osv.osv):
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
-        'quant_id': fields.many2one('stock.quant', 'Quant'),  # 3
         'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
         'result_package_id': fields.many2one('stock.quant.package', 'Container Package', help="If set, the operations are packed into this package", required=False, ondelete='cascade'),
         'date': fields.datetime('Date', required=True),
@@ -3246,8 +3246,6 @@ class stock_move_operation_link(osv.osv):
         domain = []
         if op.package_id:
             domain.append(('id', 'in', package_obj.get_content(cr, uid, [op.package_id.id], context=context)))
-        if op.quant_id:
-            domain.append(('id', '=', op.quant_id.id))
         if op.lot_id:
             domain.append(('lot_id', '=', op.lot_id.id))
         if op.owner_id:
