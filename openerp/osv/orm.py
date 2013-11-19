@@ -5556,7 +5556,8 @@ class BaseModel(object):
             raise except_orm("ValueError", "Mixing apples and oranges: %s - %s" % (self, other))
         scope = scope_proxy.current
         self, other = self.scoped(scope), other.scoped(scope)
-        caches = tuple(cache for cache in self._caches if cache not in other._caches)
+        id_caches = map(id, other._caches)
+        caches = tuple(cache for cache in self._caches if id(cache) not in id_caches)
         return self._instance(scope, caches)
 
     def __and__(self, other):
@@ -5565,7 +5566,8 @@ class BaseModel(object):
             raise except_orm("ValueError", "Mixing apples and oranges: %s & %s" % (self, other))
         scope = scope_proxy.current
         self, other = self.scoped(scope), other.scoped(scope)
-        caches = tuple(cache for cache in self._caches if cache in other._caches)
+        id_caches = map(id, other._caches)
+        caches = tuple(cache for cache in self._caches if id(cache) in id_caches)
         return self._instance(scope, caches)
 
     def __or__(self, other):
