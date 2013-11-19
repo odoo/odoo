@@ -1,29 +1,9 @@
 # -*- coding: utf-'8' "-*-"
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from hashlib import sha1
 import logging
 from lxml import etree, objectify
 from pprint import pformat
-# import requests
 import time
 from urllib import urlencode
 import urllib2
@@ -362,7 +342,6 @@ class PaymentTxOgone(osv.Model):
 
         tree = objectify.fromstring(result)
         payid = tree.get('PAYID')
-        print 'payid', payid
 
         query_direct_data = dict(
             PSPID=tx.acquirer_id.ogone_pspid,

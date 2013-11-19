@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+import logging
+import pprint
+
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
+
+_logger = logging.getLogger(__name__)
 
 
 class OgoneController(http.Controller):
@@ -17,12 +22,7 @@ class OgoneController(http.Controller):
         '/payment/ogone/cancel', '/payment/ogone/test/cancel',
     ], type='http', auth='admin')
     def ogone_form_feedback(self, **post):
+        _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         cr, uid, context = request.cr, request.uid, request.context
-        Payment = request.registry['payment.transaction']
-        print 'Entering ogone feedback with', post
-        return_url = post.pop('return_url', '/')
-        print 'return_url', return_url
-
-        res = Payment.ogone_form_feedback(cr, uid, post, context)
-        print 'result after feedback', res
-        return request.redirect(return_url)
+        request.registry['payment.transaction'].ogone_form_feedback(cr, uid, post, context)
+        return request.redirect(post.pop('return_url', '/'))
