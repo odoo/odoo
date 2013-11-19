@@ -1063,13 +1063,14 @@
         on_add: function (e) {
             e.preventDefault();
             var cycle = this.$inner.find('.item').length;
-            var $active = this.$inner.find('.item.active');
+            var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
             var index = $active.index();
             this.$target.find('.carousel-control, .carousel-indicators').removeClass("hidden");
             this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
 
             var $clone = this.$el.find(".item.active").clone();
-            var bg = this.$editor.find('ul[name="carousel-background"] li:not([data-value="'+ $active.css("background-image").replace(/.*:\/\/[^\/]+|\)$/g, '') +'"]):first').data("value");
+            var avtive_bg = $active.css("background-image").replace(/.*:\/\/[^\/]+|\)$/g, '');
+            var bg = this.$editor.find('ul[name="carousel-background"] li:not([data-value="'+ avtive_bg +'"]):first').data("value");
             $clone.css("background-image", "url('"+ bg +"')");
             $clone.removeClass('active').insertAfter($active);
             this.$target.carousel().carousel(++index);
@@ -1077,21 +1078,29 @@
         },
         on_remove: function (e) {
             e.preventDefault();
+            if (this.remove_process) {
+                return;
+            }
             var self = this;
             var new_index = 0;
             var cycle = this.$inner.find('.item').length - 1;
             var index = this.$inner.find('.item.active').index();
+            
             if (cycle > 0) {
-                this.$inner.find('.item.active').fadeOut(1000, function () {
-                    $(this).remove();
-                    self.$indicators.find('[data-target]:last').remove();
-                    self.$indicators.find("[data-slide-to]").removeClass("active");
-                    self.$indicators.find("[data-slide-to='" + new_index + "']").addClass("active");
+                this.remove_process = true;
+                var $el = this.$inner.find('.item.active');
+                self.$target.on('slid.bs.carousel', function (event) {
+                    $el.remove();
+                    self.$indicators.find("li:last").remove();
+                    self.$target.off('slid.bs.carousel');
+                    self.rebind_event();
+                    self.remove_process = false;
+                    if (cycle == 1) {
+                        self.on_remove(e);
+                    }
                 });
                 setTimeout(function () {
-                    new_index = index % cycle;
-                    self.$target.carousel().carousel( new_index + 1 );
-                    self.rebind_event();
+                    self.$target.carousel( index > 0 ? --index : cycle );
                 }, 500);
             } else {
                 this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
