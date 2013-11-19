@@ -694,9 +694,11 @@
 
                 self.setup_editables(root);
 
-                // disable firefox's broken table resizing thing
-                document.execCommand("enableObjectResizing", false, "false");
-                document.execCommand("enableInlineTableEditing", false, "false");
+                try {
+                    // disable firefox's broken table resizing thing
+                    document.execCommand("enableObjectResizing", false, "false");
+                    document.execCommand("enableInlineTableEditing", false, "false");
+                } catch (e) {}
 
                 self.trigger('rte:ready');
                 def.resolve();
