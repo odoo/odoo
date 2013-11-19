@@ -318,9 +318,8 @@ class website(osv.osv):
         # If this is ever ported to py3, use signatures, it doesn't suck as much
         spec = inspect.getargspec(undecorated_func)
 
-        # if *args or **kwargs, just bail the fuck out, only dragons can
-        # live there
-        if spec.varargs or spec.keywords:
+        # if *args bail the fuck out, only dragons can live there
+        if spec.varargs:
             return False
 
         # remove all arguments with a default value from the list
