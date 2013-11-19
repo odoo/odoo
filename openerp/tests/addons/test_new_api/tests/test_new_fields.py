@@ -1,7 +1,7 @@
 #
 # test cases for new-style fields
 #
-
+import unittest2
 from datetime import date, datetime
 from collections import defaultdict
 
@@ -99,6 +99,7 @@ class TestNewFields(common.TransactionCase):
             for c in children:
                 self.assertEqual(c.has_sibling, c.parent_id.children_count >= 2)
 
+    @unittest2.skip("not implemented")
     def test_12_recursive(self):
         """ test recursively dependent fields """
         raise NotImplementedError()
