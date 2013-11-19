@@ -1534,7 +1534,7 @@ class account_invoice_line(osv.osv):
         if type in ('in_invoice', 'in_refund'):
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
-            result.update({'price_unit': res.lst_price, 'invoice_line_tax_id': tax_id})
+            result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
 
         result['uos_id'] = uom_id or res.uom_id.id
 

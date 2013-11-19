@@ -139,7 +139,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace" version="7.0">
-                    <label string="Cost Price of Template" for="standard_price" align="1.0" groups="base.group_user"/>
+                    <label for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
                         <button name="%(action_view_change_standard_price)d" string="- update"

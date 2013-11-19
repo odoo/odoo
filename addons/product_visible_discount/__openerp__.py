@@ -36,7 +36,7 @@ To this end, a new check box named 'Visible Discount' is added to the pricelist 
     Unit price=225, Discount=0,00, Net price=225.
     """,
     'depends': ["sale","purchase"],
-    'demo': ['product_visible_discount_data.xml'],
+    'demo': [],
     'data': ['product_visible_discount_view.xml'],
     'auto_install': False,
     'installable': True,

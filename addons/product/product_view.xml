@@ -103,7 +103,7 @@
                                 <group name="procurement">
                                     <group name="general">
                                         <field name="cost_method" groups="product.group_costing_method"/>
-                                        <field name="standard_price" string="Base Cost Price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
                                     <group name="procurement_uom" groups="product.group_uom" string="Purchase">
                                         <field name="uom_po_id"/>
