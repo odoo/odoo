@@ -336,13 +336,15 @@ class website(osv.osv):
             (arg == 'self' or arg in rule._converters)
             for arg in args)
 
-    def enumerate_pages(self, cr, uid, ids, context=None):
+    def enumerate_pages(self, cr, uid, ids, query_string=None, context=None):
         """ Available pages in the website/CMS. This is mostly used for links
         generation and can be overridden by modules setting up new HTML
         controllers for dynamic pages (e.g. blog).
 
         By default, returns template views marked as pages.
 
+        :param str query_string: a (user-provided) string, fetches pages
+                                 matching the string
         :returns: a list of mappings with two keys: ``name`` is the displayable
                   name of the resource (page), ``url`` is the absolute URL
                   of the same.
@@ -354,29 +356,30 @@ class website(osv.osv):
                 continue
 
             converters = rule._converters
+            filtered = bool(converters)
             if converters:
                 # allow single converter as decided by fp, checked by
                 # rule_is_enumerable
                 [(name, converter)] = converters.items()
                 generated = ({k: v} for k, v in itertools.izip(
                                         itertools.repeat(name),
-                                        converter.generate()))
+                                        converter.generate(query=query_string)))
             else:
                 # force single iteration for literal urls
                 generated = [{}]
 
             for values in generated:
                 domain_part, url = rule.build(values, append_unknown=False)
-                yield {'name': url, 'url': url }
+                page = {'name': url, 'url': url}
+
+                if not filtered and query_string and not self.page_matches(cr, uid, page, query_string, context=context):
+                    continue
+                yield page
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
-        pages = self.enumerate_pages(cr, uid, ids, context=context)
-
-        if needle:
-            pages = itertools.ifilter(lambda v: self.page_matches(
-                cr, uid, v, needle, context=None), pages)
-
-        return list(itertools.islice(pages, limit))
+        return list(itertools.islice(
+            self.enumerate_pages(cr, uid, ids, query_string=needle, context=context),
+            limit))
 
     def page_matches(self, cr, uid, page, needle, context=None):
         """ Checks that a "page" matches a user-provide search string.

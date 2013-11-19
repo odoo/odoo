@@ -31,19 +31,25 @@ class ModelConverter(ir.ir_http.ModelConverter):
         self.regex = r'[A-Za-z0-9-_]*?(\d+)'
 
     def to_url(self, value):
-        [(_, name)] = value.name_get()
-        return "%s-%d" % (slugify(name), value.id)
+        if isinstance(value, orm.browse_record):
+            [(id, name)] = value.name_get()
+        else:
+            # assume name_search result tuple
+            id, name = value
+        return "%s-%d" % (slugify(name), id)
 
-    def generate(self):
-        for id in request.registry[self.model].search(request.cr, request.uid, [], context=request.context):
-            yield request.registry[self.model].browse(request.cr, request.uid, id, context=request.context)
+    def generate(self, query=None):
+        return request.registry[self.model].name_search(
+            request.cr, request.uid,
+            name=query or '',
+            context=request.context)
 
 class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic
 
     Sads got: no way to get the view's human-readable name even if one exists
     """
-    def generate(self):
+    def generate(self, query=None):
         View = request.registry['ir.ui.view']
         views = View.search_read(
             request.cr, request.uid, [['page', '=', True]],
@@ -54,5 +60,5 @@ class PageConverter(werkzeug.routing.PathConverter):
 
         for view in views:
             xid = xids[view['id']]
-            if xid:
+            if xid and (not query or query in xid):
                 yield xid
