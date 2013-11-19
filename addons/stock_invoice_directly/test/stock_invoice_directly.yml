@@ -35,7 +35,7 @@
 -
   !python {model: stock.picking}: |
     partial_id = ref("stock_picking_out0")
-    self.do_partial(cr, uid, [partial_id])
+    self.do_transfer(cr, uid, [partial_id])
 
 -
   As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
