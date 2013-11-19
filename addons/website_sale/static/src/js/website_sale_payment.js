@@ -11,9 +11,4 @@ $(document).ready(function () {
         console.log('cliking on submit for payment - redirecting from', form_action, 'to shop with acqurier_id', acquirer_id);
         $(this).closest("form").attr("action", '/shop/payment/transaction/' + acquirer_id + '/');
     });
-
-    // openerp.jsonRpc('/shop/payment/transaction', 'call', {
-    // }).then(function (result) {
-    //     console.log(result);
-    // });
 });

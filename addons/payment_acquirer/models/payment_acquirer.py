@@ -149,11 +149,16 @@ class PaymentTransaction(osv.Model):
             string='Type', required=True),
         'state': fields.selection(
             [('draft', 'Draft'), ('pending', 'Pending'),
-             ('done', 'Done'), ('error', 'Error')],
-            'Status', required=True,
+             ('done', 'Done'), ('error', 'Error'),
+             ('cancel', 'Canceled')
+             ], 'Status', required=True,
             track_visiblity='onchange'),
         'state_message': fields.text('Message',
                                      help='Field used to store error and/or validation messages for information'),
+        # link with a record e.g. sale order
+        # 'feedback_model': fields.char('Model'),
+        # 'feedback_res_id': fields.integer('Res Id'),
+        # 'feedback_method': fields.char('Method'),  # use a return url with a dedicated controler ?
         # payment
         'amount': fields.float('Amount', required=True,
                                help='Amount in cents',

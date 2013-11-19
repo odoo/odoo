@@ -154,6 +154,11 @@ class PaymentAcquirerOgone(osv.Model):
 
 class PaymentTxOgone(osv.Model):
     _inherit = 'payment.transaction'
+    # ogone status
+    _ogone_valid_tx_status = [5, 9]
+    _ogone_wait_tx_status = [41, 50, 51, 52, 55, 56, 91, 92, 99]
+    _ogone_pending_tx_status = [46]   # 3DS HTML response
+    _ogone_cancel_tx_status = [1]
 
     _columns = {
         'ogone_3ds': fields.dummy('3ds Activated'),
@@ -231,13 +236,21 @@ class PaymentTxOgone(osv.Model):
             return False
 
         status = int(data.get('STATUS', '0'))
-        if status in [5, 9]:
+        if status in self._ogone_valid_tx_status:
             tx.write({
                 'state': 'done',
                 'date_validate': data['TRXDATE'],
                 'ogone_payid': data['PAYID'],
             })
             return True
+        elif status in self._ogone_cancel_tx_status:
+            tx.write({
+                'state': 'cancel',
+            })
+        elif status in self._ogone_pending_tx_status:
+            tx.write({
+                'state': 'pending',
+            })
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
                 'error_str': data.get('NCERROR'),

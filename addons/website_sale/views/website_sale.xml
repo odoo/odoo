@@ -924,6 +924,7 @@
         <t t-call="website.layout">
             <t t-set="head">
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
                 <t t-raw="head or ''"/>
             </t>
             <t t-set="additional_title">Shop - Confirmed</t>
@@ -1011,8 +1012,9 @@
                   </div>
                 </div>
 
-                <h2>Tanks you for your order.</h2>
-                <a href="/shop/payment_validate/" class="btn btn-primary mt16">Validate &amp; Pay <span class="icon-long-arrow-right"/></a>
+                <div class="oe_website_sale_confirmation">
+                    <h2>Tanks you for your order.</h2>
+                </div>
 
               </div>
               <div class="oe_structure"/>

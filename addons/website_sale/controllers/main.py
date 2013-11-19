@@ -412,6 +412,8 @@ class Ecommerce(http.Controller):
         order_obj = request.registry.get('sale.order')
 
         order = request.registry.get('website').get_current_order(request.cr, request.uid, context=request.context)
+        if not order:
+            order = request.registry.get('website')._get_order(request.cr, request.uid, context=request.context)
 
         request.context = dict(request.context, pricelist=self.get_pricelist())
 
@@ -652,45 +654,50 @@ class Ecommerce(http.Controller):
     def payment(self, payment_acquirer_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
-        order = request.registry['website'].get_current_order(cr, uid, context=context)
 
+        # if no sale order at this stage: back to checkout beginning
+        order = context.get('website_sale_order')
         if not order or not order.order_line:
             return request.redirect("/shop/checkout/")
 
-        if 'website_sale_order' in context:
-            shipping_pid = context['website_sale_order'].partner_id.id
-        else:
-            shipping_pid = False
+        # alread a transaction: forward to confirmation
+        tx = context.get('website_sale_transaction')
+        if tx and not tx.state == 'draft':
+            return request.redirect('/shop/confirmation')
+
+        partner_id = False
+        shipping_partner_id = False
+        if order:
+            if order.partner_id.id:
+                partner_id = order.partner_id.id
+                shipping_partner_id = order.partner_id.id
+            if order.partner_shipping_id.id:
+                shipping_partner_id = order.partner_shipping_id.id
 
         values = {
-            'partner': shipping_pid,
+            'partner': partner_id,
             'payment_acquirer_id': payment_acquirer_id,
             'order': order
         }
         values.update(request.registry.get('sale.order')._get_website_data(cr, uid, order, context))
 
-        # if payment_acquirer_id:
-        #     values['validation'] = self.payment_validation(payment_acquirer_id)
-        #     if values['validation'][0] == "validated" or (values['validation'][0] == "pending" and values['validation'][1] == False):
-        #         return request.redirect("/shop/confirmation/")
-        #     elif values['validation'][0] == "refused":
-        #         values['payment_acquirer_id'] = None
-
         # fetch all registered payment means
-        if not values['payment_acquirer_id']:
-            payment_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('portal_published', '=', True)], context=request.context)
-            values['payments'] = payment_obj.browse(cr, uid, payment_ids, context=context)
-            for pay in values['payments']:
-                pay._content = payment_obj.render(
-                    cr, uid, pay.id,
-                    order.name,
-                    order.amount_total,
-                    order.pricelist_id.currency_id,
-                    partner_id=shipping_pid,
-                    tx_custom_values={
-                        'return_url': '/shop/payment',
-                    },
-                    context=context)
+        if tx:
+            payment_ids = [tx.acquirer_id.id]
+        else:
+            payment_ids = payment_obj.search(cr, SUPERUSER_ID, [('portal_published', '=', True)], context=context)
+        values['payments'] = payment_obj.browse(cr, uid, payment_ids, context=context)
+        for pay in values['payments']:
+            pay._content = payment_obj.render(
+                cr, uid, pay.id,
+                order.name,
+                order.amount_total,
+                order.pricelist_id.currency_id,
+                partner_id=shipping_partner_id,
+                tx_custom_values={
+                    'return_url': '/shop/confirmation',
+                },
+                context=context)
 
         return request.website.render("website_sale.payment", values)
 
@@ -701,7 +708,7 @@ class Ecommerce(http.Controller):
 
         :param int acquirer_id: id of a payment.acquirer record. If not set the
                                 user is redirected to the checkout page
-        :param dict post: should coutain only post data used by the acquirer
+        :param dict post: should coutain all post data for the acquirer
         """
         # @TDEFIXME: don't know why we received those data, but should not be send to the acquirer
         post.pop('submit.x', None)
@@ -715,11 +722,9 @@ class Ecommerce(http.Controller):
             return request.redirect("/shop/checkout/")
 
         # find an already existing transaction
-        tx_ids = transaction_obj.search(cr, uid, [
-            ('reference', '=', order.name), ('acquirer_id', '=', acquirer_id)
-        ], context=context)
-        if not tx_ids:
-            transaction_obj.create(cr, uid, {
+        tx = context.get('website_sale_transaction')
+        if not tx:
+            tx_id = transaction_obj.create(cr, uid, {
                 'acquirer_id': acquirer_id,
                 'type': 'form',
                 'amount': order.amount_total,
@@ -727,32 +732,48 @@ class Ecommerce(http.Controller):
                 'partner_id': order.partner_id.id,
                 'reference': order.name,
             }, context=context)
+            request.httprequest.session['website_sale_transaction_id'] = tx_id
+        elif tx and tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+            tx.write({
+                'acquirer_id': acquirer_id,
+            })
 
         acquirer_form_post_url = payment_obj.get_form_action_url(cr, uid, acquirer_id, context=context)
         acquirer_total_url = '%s?%s' % (acquirer_form_post_url, urllib.urlencode(post))
         return request.redirect(acquirer_total_url)
 
-    # @website.route(['/shop/payment_validation/'], type='json', auth="public", multilang=True)
-    # def payment_validation(self, payment_acquirer_id=None, **post):
-    #     payment_obj = request.registry.get('payment.acquirer')
-    #     order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
-    #     return payment_obj.validate_payement(request.cr, request.uid, int(payment_acquirer_id),
-    #         object=order,
-    #         reference=order.name,
-    #         currency=order.pricelist_id.currency_id,
-    #         amount=order.amount_total,
-    #         context=request.context)
+    @website.route([
+        '/shop/payment/transaction/get_status',
+        '/shop/payment/transaction/get_status/<int:transaction_>'
+    ], type='json', auth="public", multilang=True)
+    def payment_validation(self, transaction_id=None, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        payment_obj = request.registry.get('payment.transaction')
+        if transaction_id:
+            tx = payment_obj.browse(cr, uid, transaction_id, context=context)
+        else:
+            tx = context.get('website_sale_transaction')
+        return {
+            'state': tx.state,
+        }
 
     @website.route(['/shop/confirmation/'], type='http', auth="public", multilang=True)
     def payment_confirmation(self, **post):
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        context = request.context
 
+        # if no sale order at this stage: back to shop
+        order = context.get('website_sale_order')
         if not order or not order.order_line:
             return request.redirect("/shop/")
 
+        # no transaction: back to payment
+        tx = context.get('website_sale_transaction')
+        if not tx:
+            return request.redirect('/shop/payment')
+
         res = request.website.render("website_sale.confirmation", {'order': order})
-        request.httprequest.session['ecommerce_order_id'] = False
-        request.httprequest.session['ecommerce_pricelist'] = False
+        # request.httprequest.session['ecommerce_order_id'] = False
+        # request.httprequest.session['ecommerce_pricelist'] = False
         return res
 
     @website.route(['/shop/change_sequence/'], type='json', auth="public")

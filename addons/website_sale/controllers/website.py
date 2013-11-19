@@ -13,9 +13,10 @@ class Website(osv.Model):
         order_obj = request.registry.get('sale.order')
         # check if order allready exists and have access
         if order_id:
+            if not order_id in order_obj.exists(cr, uid, [order_id], context=context):
+                return False
             try:
                 order = order_obj.browse(cr, uid, order_id, context=context)
-                order.pricelist_id
                 if order:
                     return order
             except:
@@ -48,11 +49,25 @@ class Website(osv.Model):
             return order
         return False
 
+    def _get_transaction(self, cr, uid, tx_id=None, context=None):
+        transaction_obj = request.registry['payment.transaction']
+        if tx_id:
+            tx_ids = transaction_obj.search(cr, uid, [('id', '=', tx_id), ('state', 'not in', ['cancel'])], context=context)
+            if tx_ids:
+                return transaction_obj.browse(cr, uid, tx_ids[0], context=context)
+        return False
+
     def get_current_transaction(self, cr, uid, context=None):
-        pass
+        if request.httprequest.session.get('website_sale_transaction_id'):
+            tx = self._get_transaction(cr, uid, tx_id=request.httprequest.session['website_sale_transaction_id'], context=context)
+            if not tx:
+                request.httprequest.session['website_sale_transaction_id'] = False
+            return tx
+        return False
 
     def preprocess_request(self, cr, uid, ids, request, context=None):
         request.context.update({
             'website_sale_order': self.get_current_order(cr, uid, context=context),
+            'website_sale_transaction': self.get_current_transaction(cr, uid, context=context)
         })
         return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
