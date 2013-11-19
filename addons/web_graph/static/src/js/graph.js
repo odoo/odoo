@@ -235,9 +235,7 @@ var PivotTable = instance.web.Widget.extend({
         } else {
             this.$el.empty();
 
-            _.each(this.headers, function (header) {
-                self.$el.append(header);
-            });
+            this.draw_top_headers();
 
             _.each(this.rows, function (row) {
                 self.$el.append(row.html);
@@ -279,12 +277,6 @@ var PivotTable = instance.web.Widget.extend({
         var self = this;
 
         var col_id = this.generate_id();
-        var col_header = this.make_cell(this.data.measure_label,
-                                     {is_border:true, foldable: true, col_id:col_id});
-        var header = $('<tr></tr>');
-        header.append(this.make_cell(' ', {is_border:true}));
-        header.append(col_header);
-        this.headers = [header];
 
         this.cols= [{
             id: col_id,
@@ -295,8 +287,10 @@ var PivotTable = instance.web.Widget.extend({
             children: [],
             cells: [],    // a cell is {td:<jquery td>, row_id:<some id>}
             domain: this.data.domain,
-            header: col_header
+            // header: col_header
         }];
+
+        self.make_top_headers();
 
         var main_row = this.make_row(this.data.total[0]);
 
@@ -312,6 +306,33 @@ var PivotTable = instance.web.Widget.extend({
     get_groups: function (groupby) {
         var view_fields = this.data.row_groupby.concat(this.data.measure, this.data.col_groupby);
         return query_groups(this.data.model, view_fields, this.data.domain, groupby);
+    },
+
+    make_top_headers : function () {
+        var self = this;
+
+        var height = maxInArray(_.map(self.rows, function(g) {return g.path.length;}),1);
+
+        var header = $('<tr></tr>');
+        header.append(this.make_cell('', {is_border:true, }).attr('colspan', height));
+
+        _.each(this.cols, function (col) {
+            if (col.children.length === 0) {
+                var options = {is_border: true, foldable:true, col_id: col.id};
+                header.append(self.make_cell(col.value, options));
+            }
+        });
+        header.addClass('graph_top');
+        this.headers = [header];
+    },
+
+    draw_top_headers: function () {
+        var self = this;
+        $("tr.graph_top").remove();
+        _.each(this.headers, function (header) {
+            self.$el.prepend(header);
+        });
+
     },
 
     make_row: function (group, parent_id) {
@@ -432,22 +453,18 @@ var PivotTable = instance.web.Widget.extend({
         var self = this;
         var col = this.get_col(col_id);
 
-        console.log("expanding col",col);
         if (col.path.length == this.data.col_groupby.length) {
             this.data.col_groupby.push(field_id);
         }
         col.expanded = true;
-        col.header.find('.icon-plus-sign')
-            .removeClass('icon-plus-sign')
-            .addClass('icon-minus-sign');
+        // col.header.find('.icon-plus-sign')
+        //     .removeClass('icon-plus-sign')
+        //     .addClass('icon-minus-sign');
 
 
         var visible_fields = this.data.row_groupby.concat(this.data.col_groupby, this.data.measure);
         query_groups_data(this.data.model, visible_fields, col.domain, this.data.row_groupby, field_id)
             .then(function (groups) {
-                console.log("inserting groups",groups);
-                console.log("this.rows",self.rows);
-                console.log("this.cols",self.cols);
                 _.each(groups, function (group) {
                     var new_col = {
                         id: self.generate_id(),
@@ -460,7 +477,7 @@ var PivotTable = instance.web.Widget.extend({
                         domain: group[0].model._domain,
                         // header: col_header                    
                     };
-                    col.header.css('display','none');
+                    // col.header.css('display','none');
                     col.children.push(new_col.id);
                     self.cols.push(new_col);
                     _.each(col.cells, function (cell) {
@@ -476,22 +493,19 @@ var PivotTable = instance.web.Widget.extend({
                         } else {
                             value = datapt.attributes.aggregates[self.data.measure];
                         }
-                        console.log("value", value);
-                        // make new cell
                         var new_cell = {
                             row_id: cell.row_id,
                             td: self.make_cell(value)
                         };
-                        // add cell to new_col cells ({row_id, td})
                         new_col.cells.push(new_cell);
-                        // insert new cell (td) after cell.td
                         cell.td.after(new_cell.td);
                         cell.td.css('display','none');
                     });
 
                 });
+            self.make_top_headers();
+            self.draw_top_headers();
         });
-
     },
 
     fold_row: function (row_id) {
@@ -509,9 +523,7 @@ var PivotTable = instance.web.Widget.extend({
             .addClass('icon-plus-sign');
 
         var fold_levels = _.map(self.rows, function(g) {return g.path.length;});
-        var new_groupby_length = _.reduce(fold_levels, function (x, y) {
-            return Math.max(x,y);
-        }, 0);
+        var new_groupby_length = maxInArray(fold_levels);
 
         this.data.row_groupby.splice(new_groupby_length);
     },
