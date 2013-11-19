@@ -37,7 +37,7 @@
                     content: "Click here to create a new menu entry and manage options.",
                     template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('tour:menu_editor_dialog_ready', editor, function() {
+                        editor.on('tour:menu_editor_dialog_ready', editor, function () {
                             self.movetoStep('add-menu-entry');
                         });
                     },
@@ -50,7 +50,7 @@
                     content: "Click here to create a new menu entry.",
                     template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('tour:new_menu_entry_dialog_ready', editor, function() {
+                        editor.on('tour:new_menu_entry_dialog_ready', editor, function () {
                             self.movetoStep('enter-entry-name');
                         });
                     },

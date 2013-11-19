@@ -28,7 +28,7 @@
                     content: "Add new apps by customizing your website.",
                     template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('rte:customize_menu_ready', editor, function() {
+                        editor.on('rte:customize_menu_ready', editor, function () {
                             self.movetoStep('install-app');
                         });
                     },
