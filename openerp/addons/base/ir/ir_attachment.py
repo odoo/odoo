@@ -264,7 +264,7 @@ class ir_attachment(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         self.check(cr, uid, ids, 'read', context=context)
-        return super(ir_attachment, self).read(cr, uid, ids, fields_to_read, context, load)
+        return super(ir_attachment, self).read(cr, uid, ids, fields_to_read, context=context, load=load)
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):

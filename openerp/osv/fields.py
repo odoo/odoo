@@ -356,7 +356,8 @@ class date(_column):
         if context and context.get('tz'):
             tz_name = context['tz']  
         else:
-            tz_name = model.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+            user = model.pool['res.users'].browse(cr, SUPERUSER_ID, uid)
+            tz_name = user.tz
         if tz_name:
             try:
                 utc = pytz.timezone('UTC')
@@ -420,7 +421,8 @@ class datetime(_column):
             tz_name = context['tz']  
         else:
             registry = openerp.modules.registry.RegistryManager.get(cr.dbname)
-            tz_name = registry.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+            user = registry['res.users'].browse(cr, SUPERUSER_ID, uid)
+            tz_name = user.tz
         if tz_name:
             try:
                 utc = pytz.timezone('UTC')

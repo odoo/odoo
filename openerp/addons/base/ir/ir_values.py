@@ -426,7 +426,7 @@ class ir_values(osv.osv):
                     if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = self.pool[action_model].read(cr, uid, int(id), fields, context)
+                action_def = self.pool[action_model].read(cr, uid, [int(id)], fields, context)[0]
                 if action_def:
                     if action_model in ('ir.actions.report.xml','ir.actions.act_window',
                                         'ir.actions.wizard'):

@@ -204,9 +204,8 @@ class res_users(osv.osv):
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
-        user = self.pool['res.users'].read(cr, uid, uid2, ['company_id'], context)
-        company_id = user.get('company_id', False)
-        return company_id and company_id[0] or False
+        user = self.pool['res.users'].browse(cr, uid, uid2, context)
+        return user.company_id.id
 
     def _get_companies(self, cr, uid, context=None):
         c = self._get_company(cr, uid, context)
@@ -293,7 +292,8 @@ class res_users(osv.osv):
                     break
             else:
                 if 'company_id' in values:
-                    if not (values['company_id'] in self.read(cr, SUPERUSER_ID, uid, ['company_ids'], context=context)['company_ids']):
+                    user = self.browse(cr, SUPERUSER_ID, uid, context=context)
+                    if not (values['company_id'] in user.company_ids.unbrowse()):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 

@@ -863,7 +863,7 @@ class ir_model_data(osv.osv):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
         data_id = self._get_id(cr, uid, module, xml_id)
         #assuming data_id is not False, as it was checked upstream
-        res = self.read(cr, uid, data_id, ['model', 'res_id'])
+        res = self.read(cr, uid, [data_id], ['model', 'res_id'])[0]
         if not res['res_id']:
             raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
         return res['model'], res['res_id']
@@ -990,8 +990,8 @@ class ir_model_data(osv.osv):
         if xml_id and res_id:
             self.loads[(module, xml_id)] = (model, res_id)
             for table, inherit_field in model_obj._inherits.iteritems():
-                inherit_id = model_obj.read(cr, uid, res_id,
-                        [inherit_field])[inherit_field]
+                inherit_id = model_obj.read(cr, uid, [res_id],
+                        [inherit_field])[0][inherit_field]
                 self.loads[(module, xml_id + '_' + table.replace('.', '_'))] = (table, inherit_id)
         return res_id
 

@@ -26,7 +26,7 @@ def run(args):
         # ignore --field
         field_names = ['name']
     try:
-        xs = model.read(cr, 1, args.id, field_names, {})
+        xs = model.read(cr, 1, [args.id], field_names)
     finally:
         cr.close()
 

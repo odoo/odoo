@@ -127,7 +127,7 @@ class ir_rule(osv.osv):
             group_domains = {}                  # map: group -> list of domains
             for rule in self.browse(cr, SUPERUSER_ID, rule_ids):
                 # read 'domain' as UID to have the correct eval context for the rule.
-                rule_domain = self.read(cr, uid, rule.id, ['domain'])['domain']
+                rule_domain = self.read(cr, uid, [rule.id], ['domain'])[0]['domain']
                 dom = expression.normalize_domain(rule_domain)
                 for group in rule.groups:
                     if group in user.groups_id:

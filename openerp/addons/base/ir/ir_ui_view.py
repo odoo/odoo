@@ -258,7 +258,7 @@ class view(osv.osv):
                                     _Destination_Field=node_key
                                     flag = True
 
-        datas = _Model_Obj.read(cr, uid, id, [],context)
+        datas = _Model_Obj.read(cr, uid, [id], context=context)[0]
         for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
             if a[_Source_Field] or a[_Destination_Field]:
                 nodes_name.append((a['id'],a['name']))
