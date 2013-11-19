@@ -42,7 +42,7 @@
 
         <record id="base.group_website_publisher" model="res.groups">
             <field name="name">Display Editor Bar on Website</field>
-            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="category_id" ref="base.module_category_website"/>
         </record>
 
         <!-- Access rules to edit ir.ui.view with qWeb type -->
@@ -50,6 +50,7 @@
             <field name="name">Manage Website and qWeb view</field>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
             <field name="implied_ids" eval="[(4, ref('base.group_website_publisher'))]"/>
+            <field name="category_id" ref="base.module_category_website"/>
         </record>
 
         <record id="action_module_website" model="ir.actions.act_window">
