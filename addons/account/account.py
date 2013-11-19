@@ -630,16 +630,16 @@ class account_account(osv.osv):
 
     def _check_moves(self, cr, uid, ids, method, context=None):
         line_obj = self.pool.get('account.move.line')
-        account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
+        account_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
 
-        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
             if method == 'write':
                 raise osv.except_osv(_('Error!'), _('You cannot deactivate an account that contains journal items.'))
             elif method == 'unlink':
                 raise osv.except_osv(_('Error!'), _('You cannot remove an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
-        value = 'account.account,' + str(ids[0])
-        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
+        values = ['account.account,%s' % (account_id,) for account_id in ids]
+        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','in', values)], context=context)
         if partner_prop_acc:
             raise osv.except_osv(_('Warning!'), _('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return True
@@ -681,10 +681,10 @@ class account_account(osv.osv):
 
         # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)])
+            move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)], context=context)
             if move_lines:
                 # Allow the write if the value is the same
-                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
+                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'], context=context)]:
                     if vals['company_id']!=i:
                         raise osv.except_osv(_('Warning!'), _('You cannot change the owner company of an account that already contains journal items.'))
         if 'active' in vals and not vals['active']:
