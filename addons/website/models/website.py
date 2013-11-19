@@ -300,8 +300,7 @@ class website(osv.osv):
             and len(converters) <= 1
             # ensure all converters on the rule are able to generate values for
             # themselves
-            and all(hasattr(converter, 'generate')
-                    for converter in converters)
+            and all(hasattr(converter, 'generate') for converter in converters)
         ) and self.endpoint_is_enumerable(rule)
 
     def endpoint_is_enumerable(self, rule):
@@ -365,6 +364,7 @@ class website(osv.osv):
                 # allow single converter as decided by fp, checked by
                 # rule_is_enumerable
                 [(name, converter)] = converters.items()
+                # FIXME: perform generation as public user
                 generated = ({k: v} for k, v in itertools.izip(
                                         itertools.repeat(name),
                                         converter.generate(query=query_string)))
