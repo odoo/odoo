@@ -905,6 +905,10 @@ class Root(object):
             else:
                 httprequest.session = self.session_store.get(sid)
 
+            if not httprequest.session.db:
+                # allow "admin" routes to works without being logged in when in monodb.
+                httprequest.session.db = db_monodb(httprequest)
+
             if not "lang" in httprequest.session.context:
                 lang = httprequest.accept_languages.best or "en_US"
                 lang = babel.core.LOCALE_ALIASES.get(lang, lang).replace('-', '_')
