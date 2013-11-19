@@ -31,7 +31,16 @@
 	        <ul class="dropdown-menu" role="menu">
     	    	<t t-foreach="fields" t-as="field">
 			        <li>
-			        	<a class="field-selection" t-att-data-field-id="field.id" t-att-data-row-id="row_id" href="#"><t t-esc="field.value"/></a>
+                        <t t-if="row_id">
+                            <a class="field-selection" t-att-data-field-id="field.id" t-att-data-row-id="row_id" href="#">
+                                <t t-esc="field.value"/>
+                            </a>
+                        </t>
+                        <t t-if="col_id">
+                            <a class="field-selection" t-att-data-field-id="field.id" t-att-data-col-id="col_id" href="#">
+                                <t t-esc="field.value"/>
+                            </a>
+                        </t>
 			        </li>
 		        </t>
                 <li class="divider"></li>

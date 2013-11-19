@@ -158,11 +158,18 @@ var PivotTable = instance.web.Widget.extend({
         },
 
         'click a.field-selection' : function (event) {
+            var id,
+                field_id = event.target.attributes['data-field-id'].nodeValue;
             event.preventDefault();
             this.dropdown.remove();
-            var row_id = event.target.attributes['data-row-id'].nodeValue;
-            var field_id = event.target.attributes['data-field-id'].nodeValue;
-            this.expand_row(row_id, field_id);
+            if (event.target.attributes['data-row-id'] !== undefined) {
+                var id = event.target.attributes['data-row-id'].nodeValue;
+                this.expand_row(id, field_id);
+            } 
+            if (event.target.attributes['data-col-id'] !== undefined) {
+                var id = event.target.attributes['data-col-id'].nodeValue;
+                this.expand_col(id, field_id);
+            } 
         },
     },
 
@@ -177,26 +184,31 @@ var PivotTable = instance.web.Widget.extend({
                 var field_to_expand = this.data.row_groupby[row.path.length];
                 this.expand_row(row_id, field_to_expand);
             } else {
-                this.display_dropdown(row_id, $(event.target), event.pageY, event.pageY);
+                this.display_dropdown({row_id:row_id, 
+                                       target: $(event.target), 
+                                       x: event.pageY, 
+                                       y: event.pageY});
             }
         }
     },
 
     handle_col_event: function (event) {
-        console.log("col expand", this.cols);
-        // var col_id = event.target.attributes['data-col-id'].nodeValue,
-        //     col = this.get_row(col_id);
+        var col_id = event.target.attributes['data-col-id'].nodeValue,
+            col = this.get_col(col_id);
 
-        // if (col.expanded) {
-        //     this.fold_row(row_id);
-        // } else {
-        //     if (col.path.length < this.data.col_groupby.length) {
-        //         var field_to_expand = this.data.col_groupby[col.path.length];
-        //         this.expand_col(col_id, field_to_expand);
-        //     } else {
-        //         this.display_dropdown(col_id, $(event.target), event.pageY, event.pageY);
-        //     }
-        // }
+        if (col.expanded) {
+            this.fold_col(col_id);
+        } else {
+            if (col.path.length < this.data.col_groupby.length) {
+                var field_to_expand = this.data.col_groupby[col.path.length];
+                this.expand_col(col_id, field_to_expand);
+            } else {
+                this.display_dropdown({col_id: col_id, 
+                                       target: $(event.target), 
+                                       x: event.pageX, 
+                                       y: event.pageY});
+            }
+        }
     },
 
     init: function (data) {
@@ -241,21 +253,25 @@ var PivotTable = instance.web.Widget.extend({
         this.$el.css('display', 'none');
     },
 
-    display_dropdown: function (row_id, target, x, y) {
+    display_dropdown: function (options) {
         var self = this,
             already_grouped = self.data.row_groupby.concat(self.data.col_groupby),
             possible_groups = _.difference(self.data.important_fields, already_grouped),
             dropdown_options = {
                 fields: _.map(possible_groups, function (field) {
                     return {id: field, value: self.get_descr(field)};
-                }),
-                row_id: row_id,
-            };
+            })};
+        if (options.row_id) {
+            dropdown_options.row_id= options.row_id;
+        } else {
+            dropdown_options.col_id = options.col_id;
+        }
+
         this.dropdown = $(QWeb.render('field_selection', dropdown_options));
-        target.after(this.dropdown);
+        options.target.after(this.dropdown);
         this.dropdown.css({position:'absolute',
-                           left:x,
-                           top:y});
+                           left:options.x,
+                           top:options.y});
         $('.field-selection').next('.dropdown-menu').toggle();
     },
 
@@ -271,6 +287,7 @@ var PivotTable = instance.web.Widget.extend({
         this.headers = [header];
 
         this.cols= [{
+            id: col_id,
             path: [],
             value: this.data.measure_label,
             expanded: false,
@@ -408,6 +425,10 @@ var PivotTable = instance.web.Widget.extend({
                 });
         });
 
+    },
+
+    expand_col: function (col_id, field_id) {
+        console.log("expandidng col",col_id, field_id);
     },
 
     fold_row: function (row_id) {
