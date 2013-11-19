@@ -14,6 +14,7 @@ OpenERP Website CMS
     'data': [
         'data/website_data.xml',
         'security/ir.model.access.csv',
+        'security/ir_ui_view.xml',
         'views/website_templates.xml',
         'views/website_views.xml',
         'views/snippets.xml',
