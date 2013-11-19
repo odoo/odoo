@@ -24,7 +24,8 @@
                step.title = website.tour.render('website.tour_popover_title', { title: step.title });
                return step;
             }));
-            this.monkeyPatchTour();
+            // TODO: Disabled until properly implemented
+            // this.monkeyPatchTour();
         },
         monkeyPatchTour: function () {
             var self = this;
@@ -81,6 +82,13 @@
         stop: function () {
             this.tour.end();
         },
+        continueTour: function () {
+            // Override if necessary
+            return true;
+        },
+        redirect: function () {
+            // Override if necessary
+        },
     });
 
     website.UrlParser = openerp.Class.extend({
@@ -99,12 +107,30 @@
     });
 
     website.EditorBar.include({
+        tours: [],
         start: function () {
             $('.tour-backdrop').click(function (e) {
                 e.stopImmediatePropagation();
                 e.preventDefault();
             });
+            var url = new website.UrlParser(window.location.href);
+            var menu = $('#help-menu');
+            _.each(this.tours, function (tour) {
+                var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
+                $menuItem.click(function () {
+                    tour.redirect(url);
+                    tour.reset();
+                    tour.start();
+                });
+                menu.append($menuItem);
+                if (tour.urlTrigger && (url.search.indexOf(tour.urlTrigger) === 0 || tour.continueTour())) {
+                    tour.start();
+                }
+            });
             return this._super();
+        },
+        registerTour: function (tour) {
+            this.tours.push(tour);
         },
     });
 

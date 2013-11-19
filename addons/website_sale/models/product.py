@@ -31,7 +31,7 @@ class product_pricelist(osv.Model):
 
 class product_template(osv.Model):
     _inherit = ["product.template", "website.seo.metadata"]
-    _order = 'website_sequence desc, website_published, name'
+    _order = 'website_published desc, website_sequence desc, name'
     _name = 'product.template'
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):

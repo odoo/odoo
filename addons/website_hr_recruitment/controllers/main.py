@@ -14,7 +14,7 @@ class website_hr_recruitment(http.Controller):
     def jobs(self, department=None, office=None, page=0):
         hr_job_obj = request.registry['hr.job']
         domain = []
-        jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published,no_of_recruitment", context=request.context)
+        jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published desc,no_of_recruitment desc", context=request.context)
         jobs = hr_job_obj.browse(request.cr, request.uid, jobpost_ids, request.context)
 
         departments = set()
@@ -32,7 +32,7 @@ class website_hr_recruitment(http.Controller):
                 domain += [('address_id','=', office.id)]
             if department:
                 domain += [('department_id','=', department.id)]
-            jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published,no_of_recruitment", context=request.context)
+            jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published desc,no_of_recruitment desc", context=request.context)
             jobs = hr_job_obj.browse(request.cr, request.uid, jobpost_ids, request.context)
 
         return request.website.render("website_hr_recruitment.index", {
@@ -45,11 +45,7 @@ class website_hr_recruitment(http.Controller):
 
     @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
     def detail(self, job, **kwargs):
-        values = {
-            'job': job,
-            'vals_date': job.write_date.split(' ')[0],
-        }
-        return request.website.render("website_hr_recruitment.detail", values)
+        return request.website.render("website_hr_recruitment.detail", {'job': job})
 
     @website.route(['/job/success'], type='http', auth="admin", multilang=True)
     def success(self, **post):

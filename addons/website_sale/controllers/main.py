@@ -92,6 +92,7 @@ class CheckoutInfo:
 class Ecommerce(http.Controller):
 
     _order = 'website_sequence desc, website_published desc'
+    domain = [("sale_ok", "=", True)]
 
     def get_attribute_ids(self):
         attributes_obj = request.registry.get('product.attribute')
@@ -263,13 +264,9 @@ class Ecommerce(http.Controller):
         return False
 
     @website.route(['/shop/filter/'], type='http', auth="public", multilang=True)
-    def filter(self, add_filter="", **post):
+    def filter(self, **post):
         index = []
         filter = []
-        if add_filter:
-            filter = simplejson.loads(add_filter)
-            for filt in filter:
-                index.append(filt[0])
         for key, val in post.items():
             cat = key.split("-")
             if len(cat) < 3 or cat[2] in ('max','minmem','maxmem'):
@@ -294,7 +291,6 @@ class Ecommerce(http.Controller):
 
         return request.redirect("/shop/?filter=%s%s%s%s" % (
                 simplejson.dumps(filter),
-                add_filter and "&add_filter=%s" % add_filter or "",
                 post.get("search") and "&search=%s" % post.get("search") or "",
                 post.get("category") and "&category=%s" % post.get("category") or ""
             ))
@@ -322,12 +318,7 @@ class Ecommerce(http.Controller):
             self.change_pricelist(post.get('promo'))
         product_obj = request.registry.get('product.template')
 
-        domain = [("sale_ok", "=", True)]
-
-        try:
-            product_obj.check_access_rights(request.cr, request.uid, 'write')
-        except:
-            domain += [('website_published', '=', True)]
+        domain = list(self.domain)
 
         # remove product_product_consultant from ecommerce editable mode, this product never be publish
         ref = request.registry.get('ir.model.data').get_object_reference(request.cr, SUPERUSER_ID, 'product', 'product_product_consultant')
@@ -351,6 +342,7 @@ class Ecommerce(http.Controller):
                 domain = [('id', 'in', ids or [0] )] + domain
 
         step = 20
+        print '**', domain
         product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
         pager = request.website.pager(url="/shop/", total=product_count, page=page, step=step, scope=7, url_args=post)
 
@@ -365,7 +357,14 @@ class Ecommerce(http.Controller):
             style_ids = style_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
 
+        try:
+            product_obj.check_access_rights(request.cr, request.uid, 'write')
+            has_access_write = True
+        except:
+            has_access_write = False
+
         values = {
+            'has_access_write': has_access_write,
             'Ecommerce': self,
             'product_ids': product_ids,
             'product_ids_for_holes': fill_hole,
@@ -397,7 +396,14 @@ class Ecommerce(http.Controller):
 
         request.context['pricelist'] = self.get_pricelist()
 
+        try:
+            request.registry.get('product.template').check_access_rights(request.cr, request.uid, 'write')
+            has_access_write = True
+        except:
+            has_access_write = False
+
         values = {
+            'has_access_write': has_access_write,
             'Ecommerce': self,
             'category': category,
             'category_list': category_list,
@@ -701,8 +707,9 @@ class Ecommerce(http.Controller):
 
         values = {
             'partner': False,
-            'order': order
+            'order': order,
         }
+        values.update( request.registry.get('sale.order')._get_website_data(request.cr, request.uid, order, request.context) )
 
         payment_obj = request.registry.get('portal.payment.acquirer')
         payment_ids = payment_obj.search(request.cr, SUPERUSER_ID, [('visible', '=', True)], context=request.context)

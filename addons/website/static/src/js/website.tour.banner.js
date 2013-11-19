@@ -8,6 +8,7 @@
     website.EditorBannerTour = website.EditorTour.extend({
         id: 'add_banner_tour',
         name: "Insert a banner",
+        urlTrigger: '?banner-tutorial=true',
         init: function (editor) {
             var self = this;
             var $body = $(document.body);
@@ -28,7 +29,7 @@
                     content: "Every page of your website can be modified through the <i>Edit</i> button.",
                     template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('tour:editor_bar_loaded', editor, function() {
+                        editor.on('tour:editor_bar_loaded', editor, function () {
                             self.movetoStep('add-block');
                         });
                     },
@@ -51,7 +52,7 @@
                     element: '#website-top-navbar [data-snippet-id=carousel].ui-draggable',
                     placement: 'bottom',
                     title: "Drag & Drop a Banner",
-                    content: "Drag the <em>Banner</em> block and drop it in your page. <p class='text-muted'>Tip: release the mouse button when you are in a valid zone, with a preview of the banner.</p>",
+                    content: "Drag the Banner block and drop it in your page.",
                     template: render('website.tour_popover'),
                     onShow: function () {
                         function beginDrag () {
@@ -106,7 +107,6 @@
                     onHide: function () {
                         self.saveStep('part-2');
                     },
-
                 },
                 {
                     stepId: 'part-2',
@@ -119,6 +119,7 @@
                     stepId: 'show-tutorials',
                     element: '#help-menu-button',
                     placement: 'left',
+                    reflex: true,
                     title: "Help is always available",
                     content: "You can always click here if you want more helps or continue to build and get more tips about your website contents like page menu, ...",
                     template: render('website.tour_popover', { end: "Close" }),
@@ -132,28 +133,23 @@
             var showTutorialsIndex = this.indexOfStep('show-tutorials');
             return (currentStepIndex === secondPartIndex || currentStepIndex === showTutorialsIndex) && !this.tour.ended();
         },
+        continueTour: function () {
+            return this.startOfPart2();
+        },
         canResume: function () {
             return this.startOfPart2() || this._super();
+        },
+        redirect: function (url) {
+            url = url || new website.UrlParser(window.location.href);
+            if (url.pathname !== '/' && url.pathname !== '/page/website.homepage') {
+                window.location.replace('/page/website.homepage?banner-tutorial=true');
+            }
         },
     });
 
     website.EditorBar.include({
         start: function () {
-            var menu = $('#help-menu');
-            var bannerTour = new website.EditorBannerTour(this);
-            var $menuItem = $($.parseHTML('<li><a href="#">'+bannerTour.name+'</a></li>'));
-            $menuItem.click(function () {
-                if (url.pathname !== '/' && url.pathname !== '/page/website.homepage') {
-                    window.location.replace('/page/website.homepage?banner-tutorial=true');
-                }
-                bannerTour.reset();
-                bannerTour.start();
-            });
-            menu.append($menuItem);
-            var url = new website.UrlParser(window.location.href);
-            if (url.search.indexOf('?banner-tutorial=true') === 0 || bannerTour.startOfPart2()) {
-                bannerTour.start();
-            }
+            this.registerTour(new website.EditorBannerTour(this));
             return this._super();
         },
     });

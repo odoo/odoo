@@ -3,17 +3,15 @@
     <li t-att-data-menu-id="submenu.id">
         <div class="input-group">
             <span class="input-group-addon icon-reorder"/>
-            <span type="text" class="form-control">
-                <t t-esc="submenu.name"/>
+            <span class="form-control" style="padding-top: 0; padding-bottom: 0;">
+                <span class="js_menu_label">
+                    <t t-esc="submenu.name"/>
+                </span>
                 <i class="pull-right icon-home" style="margin-top: 3px"/>
             </span>
             <span class="input-group-btn">
-                <button type="button" class="btn btn-primary js_edit_menu">
-                    <i class="icon-edit"/>
-                </button>
-                <button type="button" class="btn btn-danger js_delete_menu">
-                    <i class="icon-trash"/>
-                </button>
+                <button type="button" class="btn btn-primary js_edit_menu icon-edit"/>
+                <button type="button" class="btn btn-danger js_delete_menu icon-trash"/>
             </span>
         </div>
         <t t-set="children" t-value="submenu.children"/>

@@ -224,47 +224,16 @@
         $('.js_tooltip').bstooltip();
 
         /* ----- PUBLISHING STUFF ---- */
-        $('[data-publish]:has(.js_publish)').each(function () {
-            var $pub = $("[data-publish]", this);
-            if($pub.size())
-                $(this).attr("data-publish", $pub.attr("data-publish"));
-            else
-                $(this).removeAttr("data-publish");
-        });
-
-        $('[data-publish]:has(.js_publish_management)').each(function () {
-            $(this).attr("data-publish", $(".js_publish_management .btn-success", this).size() ? "on" : 'off');
-            $(this).attr("data-publish", $(".js_publish_management .btn-success", this).size() ? "on" : 'off');
-        });
-
-        $(document).on('click', '.js_publish', function (e) {
-            e.preventDefault();
-            var $a = $(this);
-            var $data = $a.find(":first").parents("[data-publish]");
-            openerp.jsonRpc($a.data('controller') || '/website/publish', 'call', {'id': +$a.data('id'), 'object': $a.data('object')})
-                .then(function (result) {
-                    $data.attr("data-publish", +result ? 'on' : 'off');
-                }).fail(function (err, data) {
-                    website.error(data, '/web#model='+$a.data('object')+'&id='+$a.data('id'));
-                });
-            return false;
-        });
-
         $(document).on('click', '.js_publish_management .js_publish_btn', function () {
-            var $data = $(this).parents(".js_publish_management:first");
-            var $btn = $data.find('.btn:first');
-            var publish = $btn.hasClass("btn-success");
-
-            $data.toggleClass("css_unpublish css_publish");
-            $btn.removeClass("btn-default btn-success");
-
+            var $data = $(this).parent(".js_publish_management");
+        var self=this;
             openerp.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
                 .then(function (result) {
-                    $btn.toggleClass("btn-default", !result).toggleClass("btn-success", result);
-                    $data.toggleClass("css_unpublish", !result).toggleClass("css_publish", result);
+                    $data.toggleClass("css_unpublished css_published");
+                    $(self).toggleClass("btn-success btn-danger");
                     $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
                 }).fail(function (err, data) {
-                    website.error(data, '/web#model='+$data.data('object')+'&id='+$data.data('id'));
+                    website.error(data, '/web#return_label=Website&model='+$data.data('object')+'&id='+$data.data('id'));
                 });
         });
 

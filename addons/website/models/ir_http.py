@@ -28,7 +28,7 @@ class ir_http(orm.AbstractModel):
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False):
         super(ModelConverter, self).__init__(url_map, model)
-        self.regex = r'[A-Za-z0-9-_]*?(\d+)'
+        self.regex = r'(?:[A-Za-z0-9-_]+?-)(\d+)$'
 
     def to_url(self, value):
         if isinstance(value, orm.browse_record):

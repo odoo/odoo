@@ -110,7 +110,7 @@ class hr_job(osv.osv):
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             }, type='integer',
             multi='no_of_employee'),
-        'no_of_recruitment': fields.float('Expected in Recruitment', help='Number of new employees you expect to recruit.'),
+        'no_of_recruitment': fields.integer('Expected in Recruitment', help='Number of new employees you expect to recruit.'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
@@ -122,6 +122,7 @@ class hr_job(osv.osv):
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
+        'no_of_recruitment': 0,
         'state': 'open',
     }
 
