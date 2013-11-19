@@ -112,7 +112,7 @@
                     stepId: 'part-2',
                     orphan: true,
                     title: "Congratulation!",
-                    content: "Your homepage have been updated. Now, we suggest you to insert others building blocks like texts and images to structure your page.",
+                    content: "Your homepage have been updated. Now, we suggest you insert another snippet to overview possible customization.",
                     template: render('website.tour_popover', { next: "Continue" }),
                 },
                 {
