@@ -8,6 +8,7 @@
     website.EditorBannerTour = website.EditorTour.extend({
         id: 'add_banner_tour',
         name: "Insert a banner",
+        urlTrigger: '?banner-tutorial=true',
         init: function (editor) {
             var self = this;
             var $body = $(document.body);
@@ -132,28 +133,23 @@
             var showTutorialsIndex = this.indexOfStep('show-tutorials');
             return (currentStepIndex === secondPartIndex || currentStepIndex === showTutorialsIndex) && !this.tour.ended();
         },
+        continueTour: function () {
+            return this.startOfPart2();
+        },
         canResume: function () {
             return this.startOfPart2() || this._super();
+        },
+        redirect: function (url) {
+            url = url || new website.UrlParser(window.location.href);
+            if (url.pathname !== '/' && url.pathname !== '/page/website.homepage') {
+                window.location.replace('/page/website.homepage?banner-tutorial=true');
+            }
         },
     });
 
     website.EditorBar.include({
         start: function () {
-            var menu = $('#help-menu');
-            var bannerTour = new website.EditorBannerTour(this);
-            var $menuItem = $($.parseHTML('<li><a href="#">'+bannerTour.name+'</a></li>'));
-            $menuItem.click(function () {
-                if (url.pathname !== '/' && url.pathname !== '/page/website.homepage') {
-                    window.location.replace('/page/website.homepage?banner-tutorial=true');
-                }
-                bannerTour.reset();
-                bannerTour.start();
-            });
-            menu.append($menuItem);
-            var url = new website.UrlParser(window.location.href);
-            if (url.search.indexOf('?banner-tutorial=true') === 0 || bannerTour.startOfPart2()) {
-                bannerTour.start();
-            }
+            this.registerTour(new website.EditorBannerTour(this));
             return this._super();
         },
     });

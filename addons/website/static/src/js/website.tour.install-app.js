@@ -49,14 +49,7 @@
 
     website.EditorBar.include({
         start: function () {
-            var menu = $('#help-menu');
-            var installAppTour = new website.InstallAppTour(this);
-            var $menuItem = $($.parseHTML('<li><a href="#">'+installAppTour.name+'</a></li>'));
-            $menuItem.click(function () {
-                installAppTour.reset();
-                installAppTour.start();
-            });
-            menu.append($menuItem);
+            this.registerTour(new website.InstallAppTour(this));
             return this._super();
         },
     });

@@ -8,6 +8,7 @@
     website.EditorShopTour = website.EditorTour.extend({
         id: 'shop_tour',
         name: "Create a product",
+        urlTrigger: '?shop-tutorial=true',
         init: function (editor) {
             var self = this;
             var $body = $(document.body);
@@ -16,32 +17,33 @@
                     stepId: 'welcome-shop',
                     orphan: true,
                     backdrop: true,
-                    title: "e-commerce",
-                    content: "Welcome to the e-commerce. This tutorial will help you to create a product.",
+                    title: "Welcome to your shop",
+                    content: "You successfully installed the e-commerce. This guide will help you to create your product and promote your sales.",
                     template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
+                },
+                {
+                    stepId: 'content-menu',
+                    element: '#content-menu-button',
+                    placement: 'left',
+                    reflex: true,
+                    title: "Create your first product",
+                    content: "Click here to add a new product.",
+                    template: render('website.tour_popover'),
                 },
             ];
             return this._super();
+        },
+        redirect: function (url) {
+            url = url || new website.UrlParser(window.location.href);
+            if (url.pathname !== '/shop') {
+                window.location.replace('/shop?shop-tutorial=true');
+            }
         },
     });
 
     website.EditorBar.include({
         start: function () {
-            var menu = $('#help-menu');
-            var shopTour = new website.EditorShopTour(this);
-            var $menuItem = $($.parseHTML('<li><a href="#">'+shopTour.name+'</a></li>'));
-            var url = new website.UrlParser(window.location.href);
-            $menuItem.click(function () {
-                shopTour.reset();
-                shopTour.start();
-                if (url.pathname !== '/shop') {
-                    window.location.replace('/shop?shop-tutorial=true');
-                }
-            });
-            if (url.search.indexOf('?shop-tutorial=true') === 0) {
-                shopTour.start();
-            }
-            menu.append($menuItem);
+            this.registerTour(new website.EditorShopTour(this));
             return this._super();
         },
     });
