@@ -193,3 +193,6 @@ class InheritsChild(Model):
     _name = 'test_new_api.inherits_child'
     parent = fields.Many2one('test_new_api.inherits_parent', delegate=True)
 
+
+class mock_model(Model):
+    _name = 'test_new_api.mock_model'
