@@ -6,7 +6,7 @@
     var render = website.tour.render;
 
     website.InstallAppTour = website.EditorTour.extend({
-        id: 'install_app',
+        id: 'install-app',
         name: "Install a new App",
         init: function (editor) {
             var self = this;
@@ -49,14 +49,7 @@
 
     website.EditorBar.include({
         start: function () {
-            var menu = $('#help-menu');
-            var installAppTour = new website.InstallAppTour(this);
-            var $menuItem = $($.parseHTML('<li><a href="#">'+installAppTour.name+'</a></li>'));
-            $menuItem.click(function () {
-                installAppTour.reset();
-                installAppTour.start();
-            });
-            menu.append($menuItem);
+            this.registerTour(new website.InstallAppTour(this));
             return this._super();
         },
     });

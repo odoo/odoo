@@ -6,7 +6,7 @@
     var render = website.tour.render;
 
     website.EditorBuilderTour = website.EditorTour.extend({
-        id: 'menu_editor',
+        id: 'menu-editor',
         name: "Add a new page",
         init: function (editor) {
             var self = this;
@@ -100,14 +100,7 @@
 
     website.EditorBar.include({
         start: function () {
-            var menu = $('#help-menu');
-            var builderTour = new website.EditorBuilderTour(this);
-            var $menuItem = $($.parseHTML('<li><a href="#">'+builderTour.name+'</a></li>'));
-            $menuItem.click(function () {
-                builderTour.reset();
-                builderTour.start();
-            });
-            menu.append($menuItem);
+            this.registerTour(new website.EditorBuilderTour(this));
             return this._super();
         },
     });

@@ -242,11 +242,11 @@ class website_event(http.Controller):
         return controllers.publish(id, object)
 
     @website.route('/event/add_event/', type='http', auth="user", multilang=True, methods=['POST'])
-    def add_event(self, **kwargs):
+    def add_event(self, event_name="New Event", **kwargs):
         Event = request.registry.get('event.event')
         date_begin = datetime.today() + timedelta(days=(15)) # FIXME: better defaults
         event_id = Event.create(request.cr, request.uid, {
-            'name': 'New Event',
+            'name': event_name,
             'date_begin': date_begin.strftime('%Y-%m-%d'),
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
         }, context=request.context)

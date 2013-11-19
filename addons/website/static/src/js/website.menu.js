@@ -155,7 +155,6 @@
         template: 'website.menu.dialog.add',
         init: function (editor, data) {
             this.data = data;
-            this.update_mode = !!this.data;
             return this._super.apply(this, arguments);
         },
         start: function () {
@@ -165,11 +164,11 @@
                     self.bind_data(self.data.name, self.data.url, self.data.new_window);
                 }
                 var $link_text = self.$('#link-text').focus();
-                self.$('#link-existing').change(function () {
-                    if (!$link_text.val()) {
-                        $link_text.val($(this).find('option:selected').text());
-                        $link_text.focus();
-                    }
+                self.$('#link-page').change(function (e) {
+                    if ($link_text.val()) { return; }
+                    var data = $(this).select2('data');
+                    $link_text.val(data.create ? data.id : data.text);
+                    $link_text.focus();
                 });
             });
             globalEditor.trigger('tour:new_menu_entry_dialog_ready');

@@ -293,7 +293,6 @@ class Ecommerce(http.Controller):
                 domain = [('id', 'in', ids or [0] )] + domain
 
         step = 20
-        print '**', domain
         product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
         pager = request.website.pager(url="/shop/", total=product_count, page=page, step=step, scope=7, url_args=post)
 
@@ -308,14 +307,7 @@ class Ecommerce(http.Controller):
             style_ids = style_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
 
-        try:
-            product_obj.check_access_rights(request.cr, request.uid, 'write')
-            has_access_write = True
-        except:
-            has_access_write = False
-
         values = {
-            'has_access_write': has_access_write,
             'Ecommerce': self,
             'product_ids': product_ids,
             'product_ids_for_holes': fill_hole,
@@ -347,14 +339,7 @@ class Ecommerce(http.Controller):
 
         request.context['pricelist'] = self.get_pricelist()
 
-        try:
-            request.registry.get('product.template').check_access_rights(request.cr, request.uid, 'write')
-            has_access_write = True
-        except:
-            has_access_write = False
-
         values = {
-            'has_access_write': has_access_write,
             'Ecommerce': self,
             'category': category,
             'category_list': category_list,
@@ -369,10 +354,10 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.product", values)
 
     @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="user", multilang=True, methods=['POST'])
-    def add_product(self, cat_id=0, **post):
+    def add_product(self, name="New Product", cat_id=0, **post):
         Product = request.registry.get('product.product')
         product_id = Product.create(request.cr, request.uid, {
-            'name': 'New Product', 'public_categ_id': cat_id
+            'name': name, 'public_categ_id': cat_id
         }, context=request.context)
         product = Product.browse(request.cr, request.uid, product_id, context=request.context)
 
