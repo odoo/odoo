@@ -99,7 +99,7 @@ class survey_survey(osv.osv):
         'visible_to_user': fields.boolean('Visible in the Surveys menu'),
         'auth_required': fields.boolean('Login required',
             help="Users with a public link will be requested to login before \
-            takin part to the survey", oldname="authenticate"),
+            taking part to the survey", oldname="authenticate"),
         'tot_start_survey': fields.function(_get_tot_start_survey,
             string="Number of started surveys", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey,
@@ -325,7 +325,7 @@ class survey_question(osv.osv):
     Each question can have one of more suggested answers (eg. in case of
     dropdown choices, multi-answer checkboxes, radio buttons...).'''
     _name = 'survey.question'
-    _description = 'Question'
+    _description = 'Survey Question'
     _rec_name = 'question'
     _order = 'sequence'
 
@@ -547,6 +547,7 @@ class survey_label(osv.osv):
     _name = 'survey.label'
     _rec_name = 'value'
     _order = 'sequence'
+    _description = 'Survey Label'
 
     _columns = {
         'question_id': fields.many2one('survey.question', 'Question',
@@ -561,6 +562,7 @@ class survey_user_input(osv.osv):
     ''' Metadata for a set of one user's answers to a particular survey '''
     _name = "survey.user_input"
     _rec_name = 'date_create'
+    _description = 'Survey User Input'
 
     _columns = {
         'survey_id': fields.many2one('survey.survey', 'Survey', required=True,
@@ -672,7 +674,7 @@ class survey_user_input(osv.osv):
 
 class survey_user_input_line(osv.osv):
     _name = 'survey.user_input.line'
-    _description = 'User input line'
+    _description = 'Survey User Input Line'
     _rec_name = 'date_create'
     _columns = {
         'survey_id': fields.many2one('survey.survey', 'Survey', required=1,
