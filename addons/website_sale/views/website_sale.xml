@@ -89,12 +89,6 @@
               <div class="oe_structure"/>
               <div class="container oe_website_sale">
                 <div class="row">
-                    <div class="col-sm-4 pagination hidden-xs" style="padding-left: 15px;">
-                        <form t-if="editable" t-keep-query="category,search,facettes"
-                              method="POST" t-action="/shop/add_product">
-                            <button class="btn btn-primary">New Product</button>
-                        </form>
-                    </div>
                     <div class="col-sm-8 products_pager">
                         <t t-call="website.pager">
                             <t t-set="classname">pull-right</t>
