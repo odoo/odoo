@@ -1,23 +1,4 @@
 # -*- coding: utf-'8' "-*-"
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp.osv import osv, fields
 
@@ -27,10 +8,33 @@ _logger = logging.getLogger(__name__)
 
 
 class ValidationError(ValueError):
+    """ Used for value error when validatin coming from acquirers. """
     pass
 
 
 class PaymentAcquirer(osv.Model):
+    """ Acquirer Model. Each specific acquirer can extend the model by adding
+    its own fields. Using the required_if_provider='<name>' attribute on fields
+    it is possible to have required fields that depend on a specific acquirer.
+
+    Each acquirer has a link to an ir.ui.view record that is a template of
+    a button used to display the payment form. See examples in ``payment_acquirer_ogone``
+    and ``payment_acquirer_paypal`` modules.
+
+    Methods that should be added in an acquirer-specific implementation:
+
+     - ``<name>_form_generate_values(self, cr, uid, id, reference, amount, currency,
+       partner_id=False, partner_values=None, tx_custom_values=None, context=None)``:
+       method that generates the values used to render the form button template.
+     - ``<name>_get_form_action_url(self, cr, uid, id, context=None):``: method
+       that returns the url of the button form. It is used for example in
+       ecommerce application, if you want to repost some data to the acquirer.
+
+    Each acquirer should also define controllers to handle communication between
+    OpenERP and the acquirer. It generally consists in return urls given to the
+    button form and that the acquirer uses to send the customer back after the
+    transaction, with transaction details given as a POST request.
+    """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
 
@@ -50,6 +54,8 @@ class PaymentAcquirer(osv.Model):
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
+        """ If the field has 'required_if_provider="<name>"' attribute, then it
+        required if record.name is <name>. """
         for acquirer in self.browse(cr, uid, ids, context=context):
             if any(c for c, f in self._all_columns.items() if getattr(f.column, 'required_if_provider', None) == acquirer.name and not acquirer[c]):
                 return False
@@ -132,6 +138,27 @@ class PaymentAcquirer(osv.Model):
 
 
 class PaymentTransaction(osv.Model):
+    """ Transaction Model. Each specific acquirer can extend the model by adding
+    its own fields.
+
+    Methods that should be added in an acquirer-specific implementation:
+
+     - ``<name>_form_generate_values(self, cr, uid, id, tx_custom_values=None,
+       context=None)``: method that generates the values used to render the
+       form button template.
+
+    Methods that can be added in an acquirer-specific implementation:
+
+     - ``<name>_create``: method receiving values used when creating a new
+       transaction and that returns a dictionary that will update those values.
+       This method can be used to tweak some transaction values.
+
+    Methods defined for convention, depending on your controllers:
+
+     - ``<name>_form_feedback(self, cr, uid, data, context=None)``: method that
+       handles the data coming from the acquirer after the transaction. It will
+       generally receives data posted by the acquirer after the transaction.
+    """
     _name = 'payment.transaction'
     _description = 'Payment Transaction'
     _inherit = ['mail.thread']
