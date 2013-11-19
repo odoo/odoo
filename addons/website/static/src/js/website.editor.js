@@ -85,7 +85,7 @@
 
                     // display button
                     var $el = $(previousSelection = selected.$);
-                    var $btn = $('<button type="button" class="btn btn-primary" contenteditable="false">Edit</button>')
+                    var $btn = $('<button type="button" class="btn btn-primary image-edit-button" contenteditable="false">Edit</button>')
                         .insertAfter($el)
                         .click(function (e) {
                             e.preventDefault();
@@ -99,6 +99,11 @@
                         top: $el.height() / 2 + position.top - $btn.outerHeight() / 2,
                         left: $el.width() / 2 + position.left - $btn.outerWidth() / 2,
                     });
+                });
+                editor.on('destroy', function (evt) {
+                    if (previousSelection) {
+                        $('.image-edit-button').remove();
+                    }
                 });
 
                 //noinspection JSValidateTypes
