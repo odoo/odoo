@@ -50,7 +50,7 @@
 }
 
 .oe_import .oe_import_options p {
-    margin: 0;
+    margin: 0 0 -7px 0; /* Customize margin-bottom of <p> according bootstrap3 */
     padding: 0;
 }
 .oe_import .oe_import_options label {
@@ -79,6 +79,14 @@
 .oe_import .oe_import_report_more {
     display: none;
 }
+/* Customize dd and label according bootstrap3 */ 
+.oe_import dd {
+    -webkit-margin-start: 40px;
+}
+.oe_import .oe_import_with_file label {
+    font-weight: normal;
+}
+/* End of customize */
 
 .oe_import.oe_import_preview .oe_import_grid {
     display: table;
