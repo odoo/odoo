@@ -40,6 +40,7 @@ class PaymentAcquirer(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True),
+        'message': fields.html('Message', help='Message displayed to help payment and validation'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
         'env': fields.selection(
             [('test', 'Test'), ('prod', 'Production')],
