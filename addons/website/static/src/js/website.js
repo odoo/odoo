@@ -211,6 +211,7 @@
         if (field.is('input[type="text"], select')) {
             field.keypress(function (e) {
                 if (e.which == 13) {
+                    e.preventDefault();
                     dialog.find('.btn-primary').trigger('click');
                 }
             });
