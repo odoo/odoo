@@ -194,7 +194,7 @@ class WebRequest(object):
         warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
         yield (self.registry, self.cr)
 
-def route(route, type="http", auth="user"):
+def route(route, type="http", auth="user", methods=None):
     """
     Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
     of ``Controller``.
@@ -211,6 +211,7 @@ def route(route, type="http", auth="user"):
         * ``none``: The method is always active, even if there is no database. Mainly used by the framework and
         authentication modules. There request code will not have any facilities to access the database nor have any
         configuration indicating the current database nor the current user.
+    :param methods: A sequence of http methods this route applies to. If not specified, all methods are allowed.
     """
     assert type in ["http", "json"]
     def decorator(f):
@@ -218,6 +219,7 @@ def route(route, type="http", auth="user"):
             f.routes = route
         else:
             f.routes = [route]
+        f.methods = methods
         f.exposed = type
         if getattr(f, "auth", None) is None:
             f.auth = auth
@@ -523,7 +525,7 @@ def routing_map(modules, nodb_only, converters=None):
                             url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
                             if url.endswith("/") and len(url) > 1:
                                 url = url[: -1]
-                        routing_map.add(werkzeug.routing.Rule(url, endpoint=mv))
+                        routing_map.add(werkzeug.routing.Rule(url, endpoint=mv, methods=mv.methods))
     return routing_map
 
 #----------------------------------------------------------
