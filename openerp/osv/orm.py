@@ -742,8 +742,13 @@ class BaseModel(object):
         }
         cls = type(cls._name, (cls,), attrs)
 
-        # link the class to the registry
+        # link the class to the registry, and update the registry
         cls.pool = pool
+        # Note: we have to insert an instance into the registry now, because it
+        # can trigger some stuff on other models which expect this new instance
+        # (like method _inherits_reload_src())
+        instance = cls.browse()
+        pool.add(name, instance)
 
         # determine description, table, sequence and log_access
         if not cls._description:
@@ -805,9 +810,7 @@ class BaseModel(object):
         # prepare ormcache, which must be shared by all instances of the model
         cls._ormcache = {}
 
-        # insert an instance of the model in the pool
-        instance = cls.browse()
-        pool.add(name, instance)
+        # complete the initialization of instance
         instance.__init__(pool, cr)
         return instance
 
