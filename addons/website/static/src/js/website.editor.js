@@ -14,12 +14,7 @@
 
         $(document).on('click', 'a.js_link2post', function (ev) {
             ev.preventDefault();
-            var form = document.createElement('form');
-            form.action = this.pathname; // restrict to same origin
-            form.method = 'POST';
-            // TODO: support this.search as form input fields
-            $(this).append(form);
-            form.submit();
+            website.form(this.pathname, 'POST');
         });
 
         $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
