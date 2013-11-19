@@ -1195,6 +1195,7 @@
             if (!(element = this.element)) {
                 element = editor.document.createElement('img');
                 element.addClass('img');
+                element.addClass('img-responsive');
                 // focus event handler interactions between bootstrap (modal)
                 // and ckeditor (RTE) lead to blowing the stack in Safari and
                 // Chrome (but not FF) when this is done synchronously =>
