@@ -219,6 +219,21 @@
         return def;
     };
 
+    website.form = function (url, method, params) {
+        var form = document.createElement('form');
+        form.action = url;
+        form.method = method;
+        _.each(params, function (v, k) {
+            var param = document.createElement('input');
+            param.type = 'hidden';
+            param.name = k;
+            param.value = v;
+            form.appendChild(param);
+        });
+        document.body.appendChild(form);
+        form.submit();
+    };
+
     dom_ready.then(function () {
 
         /* ----- BOOTSTRAP  STUFF ---- */
