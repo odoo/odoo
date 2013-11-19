@@ -1,66 +1,12 @@
 # -*- coding: utf-8 -*-
 import random
-import uuid
 import simplejson
 import urllib
 
-import werkzeug.exceptions
-
 from openerp import SUPERUSER_ID
-from openerp.osv import osv
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
-
-def get_order(order_id=None):
-    order_obj = request.registry.get('sale.order')
-    # check if order allready exists and have access
-    if order_id:
-        try:
-            order = order_obj.browse(request.cr, request.uid, order_id, context=request.context)
-            order.pricelist_id
-            if order:
-                return order
-        except:
-            return False
-
-    fields = [k for k, v in order_obj._columns.items()]
-    order_value = order_obj.default_get(request.cr, SUPERUSER_ID, fields, context=request.context)
-    if request.httprequest.session.get('ecommerce_pricelist'):
-        order_value['pricelist_id'] = request.httprequest.session['ecommerce_pricelist']
-    order_value['partner_id'] = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, context=request.context).partner_id.id
-    order_value.update(order_obj.onchange_partner_id(request.cr, SUPERUSER_ID, [], order_value['partner_id'], context=request.context)['value'])
-
-    # add website_session_id key for access rules
-    if not request.httprequest.session.get('website_session_id'):
-        request.httprequest.session['website_session_id'] = str(uuid.uuid4())
-
-    order_value["website_session_id"] = request.httprequest.session['website_session_id']
-    order_id = order_obj.create(request.cr, SUPERUSER_ID, order_value, context=request.context)
-    order = order_obj.browse(request.cr, SUPERUSER_ID, order_id, context=request.context)
-    request.httprequest.session['ecommerce_order_id'] = order.id
-
-    return order_obj.browse(request.cr, request.uid, order_id,
-                            context=dict(request.context, pricelist=order.pricelist_id.id))
-
-def get_current_order():
-    if request.httprequest.session.get('ecommerce_order_id'):
-        order = get_order(request.httprequest.session.get('ecommerce_order_id'))
-        if not order:
-            request.httprequest.session['ecommerce_order_id'] = False
-        return order
-    else:
-        return False
-
-
-class Website(osv.osv):
-    _inherit = "website"
-
-    def preprocess_request(self, cr, uid, ids, request, context=None):
-        request.context.update({
-            'website_sale_order': get_current_order(),
-        })
-        return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
 
 class CheckoutInfo:
@@ -453,7 +399,7 @@ class Ecommerce(http.Controller):
 
         request.httprequest.session['ecommerce_pricelist'] = pricelist_id
 
-        order = get_current_order()
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         if order:
             values = {'pricelist_id': pricelist_id}
             values.update(order.onchange_pricelist_id(pricelist_id, None)['value'])
@@ -465,9 +411,7 @@ class Ecommerce(http.Controller):
         order_line_obj = request.registry.get('sale.order.line')
         order_obj = request.registry.get('sale.order')
 
-        order = get_current_order()
-        if not order:
-            order = get_order()
+        order = request.registry.get('website').get_current_order(request.cr, request.uid, context=request.context)
 
         request.context = dict(request.context, pricelist=self.get_pricelist())
 
@@ -517,7 +461,7 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/mycart/'], type='http', auth="public", multilang=True)
     def mycart(self, **post):
-        order = get_current_order()
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         prod_obj = request.registry.get('product.product')
 
         if 'promo' in post:
@@ -554,7 +498,7 @@ class Ecommerce(http.Controller):
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
         quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
-        order = get_current_order()
+        order = self.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         return [quantity, order.get_total_quantity(), order.amount_total, request.website.render("website_sale.total", {
                 'website_sale_order': order
             }).strip()]
@@ -567,7 +511,7 @@ class Ecommerce(http.Controller):
     def checkout(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
-        order = get_current_order()
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
 
         if not order or order.state != 'draft' or not order.order_line:
             return self.mycart(**post)
@@ -618,7 +562,7 @@ class Ecommerce(http.Controller):
     def confirm_order(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
-        order = get_current_order()
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
 
         if not order or order.state != 'draft' or not order.order_line:
             return self.mycart(**post)
@@ -661,7 +605,7 @@ class Ecommerce(http.Controller):
             company_id = (company_ids and company_ids[0]) or orm_parter.create(cr, SUPERUSER_ID, {'name': company_name, 'is_company': True}, context)
 
         billing_info = dict(checkout)
-        billing_info['parent_id'] = company_id;
+        billing_info['parent_id'] = company_id
 
         if not context['is_public_user']:
             partner_id = orm_user.browse(cr, uid, uid, context=context).partner_id.id
@@ -708,7 +652,7 @@ class Ecommerce(http.Controller):
     def payment(self, payment_acquirer_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
-        order = get_current_order()
+        order = request.registry['website'].get_current_order(cr, uid, context=context)
 
         if not order or not order.order_line:
             return request.redirect("/shop/checkout/")
@@ -723,14 +667,14 @@ class Ecommerce(http.Controller):
             'payment_acquirer_id': payment_acquirer_id,
             'order': order
         }
-        values.update( request.registry.get('sale.order')._get_website_data(request.cr, request.uid, order, request.context) )
+        values.update(request.registry.get('sale.order')._get_website_data(cr, uid, order, context))
 
-        if payment_acquirer_id:
-            values['validation'] = self.payment_validation(payment_acquirer_id)
-            if values['validation'][0] == "validated" or (values['validation'][0] == "pending" and values['validation'][1] == False):
-                return request.redirect("/shop/confirmation/")
-            elif values['validation'][0] == "refused":
-                values['payment_acquirer_id'] = None
+        # if payment_acquirer_id:
+        #     values['validation'] = self.payment_validation(payment_acquirer_id)
+        #     if values['validation'][0] == "validated" or (values['validation'][0] == "pending" and values['validation'][1] == False):
+        #         return request.redirect("/shop/confirmation/")
+        #     elif values['validation'][0] == "refused":
+        #         values['payment_acquirer_id'] = None
 
         # fetch all registered payment means
         if not values['payment_acquirer_id']:
@@ -765,7 +709,7 @@ class Ecommerce(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
-        order = get_current_order()
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
 
         if not order or not order.order_line or not acquirer_id:
             return request.redirect("/shop/checkout/")
@@ -788,20 +732,20 @@ class Ecommerce(http.Controller):
         acquirer_total_url = '%s?%s' % (acquirer_form_post_url, urllib.urlencode(post))
         return request.redirect(acquirer_total_url)
 
-    @website.route(['/shop/payment_validation/'], type='json', auth="public", multilang=True)
-    def payment_validation(self, payment_acquirer_id=None, **post):
-        payment_obj = request.registry.get('payment.acquirer')
-        order = get_current_order()
-        return payment_obj.validate_payement(request.cr, request.uid, int(payment_acquirer_id), 
-            object=order,
-            reference=order.name,
-            currency=order.pricelist_id.currency_id,
-            amount=order.amount_total,
-            context=request.context)
+    # @website.route(['/shop/payment_validation/'], type='json', auth="public", multilang=True)
+    # def payment_validation(self, payment_acquirer_id=None, **post):
+    #     payment_obj = request.registry.get('payment.acquirer')
+    #     order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+    #     return payment_obj.validate_payement(request.cr, request.uid, int(payment_acquirer_id),
+    #         object=order,
+    #         reference=order.name,
+    #         currency=order.pricelist_id.currency_id,
+    #         amount=order.amount_total,
+    #         context=request.context)
 
     @website.route(['/shop/confirmation/'], type='http', auth="public", multilang=True)
     def payment_confirmation(self, **post):
-        order = get_current_order()
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
 
         if not order or not order.order_line:
             return request.redirect("/shop/")
