@@ -94,7 +94,7 @@
         isTriggerUrl: function (url) {
             url = url || new website.UrlParser(window.location.href);
             var addProductPattern = /^\/shop\/product\/[0-9]+\/\?enable_editor=1/;
-            return addProductPattern.test(url.pathname+url.search) || this._super();
+            return (this.productPage() && addProductPattern.test(url.pathname+url.search)) || this._super();
         },
     });
 
