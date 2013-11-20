@@ -2608,7 +2608,7 @@ class stock_warehouse(osv.osv):
         in_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receptions'),
             'warehouse_id': new_id,
-            'code_id': 'incoming',
+            'code': 'incoming',
             'auto_force_assign': True,
             'sequence_id': in_seq_id,
             'default_location_src_id': supplier_loc.id,
@@ -2617,7 +2617,7 @@ class stock_warehouse(osv.osv):
         out_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Delivery Orders'),
             'warehouse_id': new_id,
-            'code_id': 'outgoing',
+            'code': 'outgoing',
             'sequence_id': out_seq_id,
             'delivery': True,
             'default_location_src_id': output_loc.id,
@@ -2626,7 +2626,7 @@ class stock_warehouse(osv.osv):
         int_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Internal Transfers'),
             'warehouse_id': new_id,
-            'code_id': 'internal',
+            'code': 'internal',
             'sequence_id': int_seq_id,
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_stock_loc.id,
@@ -2636,7 +2636,7 @@ class stock_warehouse(osv.osv):
         pack_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Pack'),
             'warehouse_id': new_id,
-            'code_id': 'internal',
+            'code': 'internal',
             'sequence_id': pack_seq_id,
             'default_location_src_id': wh_pack_stock_loc.id,
             'default_location_dest_id': output_loc.id,
@@ -2646,7 +2646,7 @@ class stock_warehouse(osv.osv):
         pick_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Pick'),
             'warehouse_id': new_id,
-            'code_id': 'internal',
+            'code': 'internal',
             'sequence_id': pick_seq_id,
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_pack_stock_loc.id,
@@ -3513,7 +3513,7 @@ class stock_picking_type(osv.osv):
         'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
         #TODO: change field name to "code" as it's not a many2one anymore
-        'code_id': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Picking type code', required=True),
+        'code': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Picking type code', required=True),
         'return_picking_type_id': fields.many2one('stock.picking.type', 'Picking Type for Returns'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', ondelete='cascade'),
         'active': fields.boolean('Active'),

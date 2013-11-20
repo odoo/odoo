@@ -1286,7 +1286,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain" eval="['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.picking_type_id.code_id','=','outgoing')]"/>
+            <field name="domain" eval="['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.picking_type_id.code','=','outgoing')]"/>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
@@ -1397,7 +1397,7 @@
                                 <field name="pack"/>
                             </group>
                             <group>
-                                <field name="code_id" on_change="onchange_picking_code(code_id)"/>
+                                <field name="code" on_change="onchange_picking_code(code)"/>
                                 <field name="return_picking_type_id"/>
                                 <field name="auto_force_assign"/>
                                 <field name="delivery"/>
@@ -1405,8 +1405,8 @@
                         </group>
                         <separator string="Locations"/>
                         <group>
-                            <field name="default_location_src_id" attrs="{'required': [('code_id', '=', 'internal')]}"/>
-                            <field name="default_location_dest_id" attrs="{'required': [('code_id', 'in', ('internal', 'incoming'))]}"/>
+                            <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
+                            <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
                         </group>
                     </sheet>
                 </form>
