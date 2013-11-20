@@ -331,8 +331,9 @@ class Recomputation(object):
     def __nonzero__(self):
         return bool(self._todo)
 
-    def __iter__(self):
-        return self._todo.iteritems()
+    def next(self):
+        """ Return the next pair `field, records` to recompute. """
+        return next(self._todo.iteritems())
 
     def todo(self, field, records=None):
         """ Add or return records to recompute for `field`. """

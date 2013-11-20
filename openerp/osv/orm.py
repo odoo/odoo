@@ -5716,16 +5716,15 @@ class BaseModel(object):
         """
         with scope_proxy.recomputation as recomputation:
             while recomputation:
-                field, recs = next(iter(recomputation))
-                # To recompute the field, simply evaluate it on the records; the
-                # method _get_field() does the right thing, including removing
-                # it from the recomputation manager.
+                field, recs = recomputation.next()
+                # To recompute field, simply evaluate it on recs.
                 failed = recs.browse()
                 for rec in recs:
                     try:
                         rec[field.name]
                     except Exception:
                         failed += rec
+                recomputation.done(field, recs)
                 # check whether recomputation failed for some existing records
                 failed = failed.exists()
                 if failed:

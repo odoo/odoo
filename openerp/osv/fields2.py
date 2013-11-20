@@ -353,8 +353,10 @@ class Field(object):
             if record in recs_todo:
                 # execute the compute method in NON-DRAFT mode, so that assigned
                 # fields are written to the database
-                self.compute_value(recs_todo, check_exists=True)
-                scope.recomputation.done(self, recs_todo)
+                if self._compute_one:
+                    self.compute_value(record, check_exists=True)
+                else:
+                    self.compute_value(recs_todo, check_exists=True)
             else:
                 self.read_value(record)
         else:
