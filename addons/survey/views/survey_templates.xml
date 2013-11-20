@@ -74,6 +74,7 @@
         <!-- Navigation & Submission -->
         <template id="navsub" name="Footer for navigation and submission">
             <div class="text-center">
+                <t t-if="pagination['current'] != -1 and survey.users_can_go_back"><input type="button" class="btn active survey-btn" value="Previous page"/></t>
                 <t t-if="pagination['current'] != -1 and pagination['next'] != 'finished'"><input type="submit" class="btn btn-primary active survey-btn" value="Next page"/></t>
                 <t t-if="pagination['next'] == 'finished'"><input type="submit" class="btn btn-success active survey-btn" value="Submit survey"/></t>
             </div>
@@ -85,6 +86,7 @@
             <div class="page-header">
                 <h1><span t-field='page.title' /></h1>
                 <div t-field='page.description'/>
+                <progress t-att-value="pagination['current']+1" t-att-max="len(survey.page_ids)"><t t-raw='"Page %s on %s" % (pagination["current"]+1, len(survey.page_ids))' /></progress>
             </div>
 
             <form role="form" method="post" class="js_surveyform" t-att-name="survey.id.__str__() + '_' + pagination['current'].__str__()" t-att-action="'/survey/fill/' + survey.id.__str__()" t-att-data-prefill="'/survey/prefill/' + survey.id.__str__()" t-att-data-validate="'/survey/validate/' + survey.id.__str__()" t-att-data-submit="'/survey/submit/' + survey.id.__str__()">
