@@ -892,19 +892,13 @@
                     <div>
                         <t t-foreach="payments or []" t-as="payment">
                             <label t-if="payment._content">
-                                <input t-att-value="payment.id" type="radio" name="payment_type"/> <span t-field="payment.name"/>                            </label>
+                                <input t-att-value="payment.id" type="radio" name="payment_type"/> <span t-field="payment.name"/>
+                            </label>
                         </t>
                     </div>
                     <t t-foreach="payments" t-as="payment">
-                        <div t-att-data-id="payment.id" t-raw="payment._content" class="hidden"/>
+                        <div t-att-data-id="payment.id" t-raw="payment._content" class="oe_payment_acquirer hidden"/>
                     </t>
-                </div>
-
-                <div class="js_payment_validation mb64" t-if="payment_acquirer_id">
-                    Please wait, we validate your payment.
-                    <div>
-                      <t t-esc="validation"/>
-                    </div>
                 </div>
 
               </div>

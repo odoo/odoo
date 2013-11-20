@@ -686,7 +686,8 @@ class Ecommerce(http.Controller):
 
         return request.website.render("website_sale.payment", values)
 
-    @website.route(['/shop/payment/transaction/<int:acquirer_id>/'], type='http', auth="public")
+    @website.route(['/shop/payment/transaction/<int:acquirer_id>'],
+                   type='http', methods=['POST'], auth="public")
     def payment_transaction(self, acquirer_id=None, **post):
         """ Hook method that creates a payment.transaction and redirect to the
         acquirer, using post values to re-create the post action.
@@ -703,7 +704,7 @@ class Ecommerce(http.Controller):
         transaction_obj = request.registry.get('payment.transaction')
         order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
 
-        if not order or not order.order_line or not acquirer_id:
+        if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/shop/checkout/")
 
         # find an already existing transaction
@@ -727,20 +728,49 @@ class Ecommerce(http.Controller):
         acquirer_total_url = '%s?%s' % (acquirer_form_post_url, urllib.urlencode(post))
         return request.redirect(acquirer_total_url)
 
-    @website.route([
-        '/shop/payment/transaction/get_status',
-        '/shop/payment/transaction/get_status/<int:transaction_>'
-    ], type='json', auth="public", multilang=True)
-    def payment_validation(self, transaction_id=None, **post):
+    @website.route('/shop/payment/confirm', type='json', auth="public", multilang=True)
+    def payment_confirm(self, transaction_id=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.transaction')
         if transaction_id:
             tx = payment_obj.browse(cr, uid, transaction_id, context=context)
         else:
             tx = context.get('website_sale_transaction')
+
         return {
             'state': tx.state,
         }
+
+    @website.route('/shop/payment/validate', type='json', auth="public", multilang=True)
+    def payment_validate(self):
+        cr, uid, context = request.cr, request.uid, request.context
+        email_act = None
+        sale_order_obj = request.registry['sale.order']
+
+        order = context.get('website_sale_order')
+        tx = context.get('website_sale_transaction')
+
+        if not order or not tx:
+            return request.redirect("/shop/checkout/")
+
+        if tx.state == 'done':
+            # confirm the quotation
+            sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
+            # send by email
+            email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
+        elif tx.state == 'pending':
+            # send by email
+            email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
+        elif tx.state == 'cancel':
+            # cancel the quotation
+            sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
+
+        if email_act:
+            create_ctx = email_act.get('context', context)
+            compose_id = request.registry['mail.compose.message'].create(cr, uid, {}, context=create_ctx)
+            request.registry['mail.compose.message'].send_mail(cr, uid, [compose_id], context=create_ctx)
+
+        return True
 
     @website.route(['/shop/confirmation/'], type='http', auth="public", multilang=True)
     def payment_confirmation(self, **post):
