@@ -91,12 +91,10 @@
             return this._super();
         },
         continueTour: function () {
-            return (this.currentStepIndex() === this.indexOfStep('product-page')) && !this.tour.ended();
+            return this.isCurrentStep('product-page') && !this.tour.ended();
         },
         isTriggerUrl: function (url) {
-            url = url || new website.UrlParser(window.location.href);
-            var addProductPattern = /^\/shop\/product\/[0-9]+\/\?enable_editor=1/;
-            return (this.continueTour() && addProductPattern.test(url.pathname+url.search)) || this._super();
+            return (this.continueTour() && this.testUrl(/^\/shop\/product\/[0-9]+\/\?enable_editor=1/)) || this._super();
         },
     });
 

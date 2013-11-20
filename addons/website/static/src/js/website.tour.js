@@ -52,6 +52,9 @@
             });
             return index;
         },
+        isCurrentStep: function (stepId) {
+            return this.currentStepIndex() === this.indexOfStep(stepId);
+        },
         movetoStep: function (stepId) {
             $('.popover.tour').remove();
             var index = this.indexOfStep(stepId);
@@ -82,6 +85,10 @@
             url = url || new website.UrlParser(window.location.href);
             var urlTrigger = this.id + "=true";
             return url.search.indexOf(urlTrigger) >= 0;
+        },
+        testUrl: function (pattern) {
+            var url = new website.UrlParser(window.location.href);
+            return pattern.test(url.pathname+url.search);
         },
     });
 

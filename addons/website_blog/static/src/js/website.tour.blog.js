@@ -82,12 +82,10 @@
             return this._super();
         },
         continueTour: function () {
-            return (this.currentStepIndex() === this.indexOfStep('post-page')) && !this.tour.ended();
+            return this.isCurrentStep('post-page') && !this.tour.ended();
         },
-        isTriggerUrl: function (url) {
-            url = url || new website.UrlParser(window.location.href);
-            var addPostPattern = /^\/blog\/[0-9]+\/\?enable_editor=1/;
-            return (this.continueTour() && addPostPattern.test(url.pathname+url.search)) || this._super();
+        isTriggerUrl: function () {
+            return (this.continueTour() && this.testUrl(/^\/blog\/[0-9]+\/\?enable_editor=1/)) || this._super();
         },
     });
 
