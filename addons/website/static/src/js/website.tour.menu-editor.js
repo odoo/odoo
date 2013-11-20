@@ -5,7 +5,14 @@
 
     var render = website.tour.render;
 
-    website.EditorBuilderTour = website.EditorTour.extend({
+    website.EditorBar.include({
+        start: function () {
+            this.registerTour(new website.EditorBuilderTour(this));
+            return this._super();
+        },
+    });
+
+    website.EditorBuilderTour = website.Tour.extend({
         id: 'menu-editor',
         name: "Add a new page",
         init: function (editor) {
@@ -94,13 +101,6 @@
                     template: render('website.tour_popover'),
                 },
             ];
-            return this._super();
-        },
-    });
-
-    website.EditorBar.include({
-        start: function () {
-            this.registerTour(new website.EditorBuilderTour(this));
             return this._super();
         },
     });

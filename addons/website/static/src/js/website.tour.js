@@ -10,7 +10,7 @@
         }
     };
 
-    website.EditorTour = openerp.Class.extend({
+    website.Tour = openerp.Class.extend({
         tour: undefined,
         steps: [],
         tourStorage: window.localStorage,

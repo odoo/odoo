@@ -5,7 +5,14 @@
 
     var render = website.tour.render;
 
-    website.EditorBannerTour = website.EditorTour.extend({
+    website.EditorBar.include({
+        start: function () {
+            this.registerTour(new website.AddBannerTour(this));
+            return this._super();
+        },
+    });
+
+    website.AddBannerTour = website.Tour.extend({
         id: 'banner-tutorial',
         name: "Insert a banner",
         startPath: '/page/website.homepage',
@@ -127,21 +134,8 @@
             ];
             return this._super();
         },
-        startOfPart2: function () {
-            var currentStepIndex = this.currentStepIndex();
-            var secondPartIndex = this.indexOfStep('part-2');
-            var showTutorialsIndex = this.indexOfStep('show-tutorials');
-            return (currentStepIndex === secondPartIndex || currentStepIndex === showTutorialsIndex) && !this.tour.ended();
-        },
         continueTour: function () {
-            return this.startOfPart2() || this._super();
-        },
-    });
-
-    website.EditorBar.include({
-        start: function () {
-            this.registerTour(new website.EditorBannerTour(this));
-            return this._super();
+            return (this.isCurrentStep('part-2') || this.isCurrentStep('show-tutorials')) && !this.tour.ended();
         },
     });
 

@@ -5,7 +5,14 @@
 
     var render = website.tour.render;
 
-    website.InstallAppTour = website.EditorTour.extend({
+    website.EditorBar.include({
+        start: function () {
+            this.registerTour(new website.InstallAppTour(this));
+            return this._super();
+        },
+    });
+
+    website.InstallAppTour = website.Tour.extend({
         id: 'install-app',
         name: "Install a new App",
         init: function (editor) {
@@ -43,13 +50,6 @@
                     template: render('website.tour_popover'),
                 },
             ];
-            return this._super();
-        },
-    });
-
-    website.EditorBar.include({
-        start: function () {
-            this.registerTour(new website.InstallAppTour(this));
             return this._super();
         },
     });

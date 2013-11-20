@@ -12,7 +12,7 @@
         },
     });
 
-    website.EditorShopTour = website.EditorTour.extend({
+    website.EditorShopTour = website.Tour.extend({
         id: 'shop-tutorial',
         name: "Create a product",
         startPath: '/shop',

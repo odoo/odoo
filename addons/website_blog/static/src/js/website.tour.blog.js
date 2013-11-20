@@ -12,7 +12,7 @@
         },
     });
 
-    website.BlogTour = website.EditorTour.extend({
+    website.BlogTour = website.Tour.extend({
         id: 'blog-tutorial',
         name: "Create a blog post",
         startPath: '/blog/cat/1/',
