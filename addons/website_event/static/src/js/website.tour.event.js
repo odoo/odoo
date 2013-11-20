@@ -80,6 +80,12 @@
             ];
             return this._super();
         },
+        continueTour: function () {
+            return this.isCurrentStep('event-page') && !this.tour.ended();
+        },
+        isTriggerUrl: function () {
+            return (this.continueTour() && this.testUrl(/^\/event\/[0-9]+\/\?enable_editor=1/)) || this._super();
+        },
     });
 
 }());
