@@ -32,12 +32,9 @@
             $('.popover.tour').remove();
         },
         start: function () {
-            if (this.canResume()) {
+            if (this.continueTour() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
                 this.tour.start();
             }
-        },
-        canResume: function () {
-            return this.continueTour() || ((this.currentStepIndex() === 0) && !this.tour.ended());
         },
         currentStepIndex: function () {
             var index = this.tourStorage.getItem(this.id+'_current_step') || 0;
