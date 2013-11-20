@@ -1,4 +1,3 @@
-@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -192,6 +191,8 @@ h1.text-muted, h2.text-muted, h3.text-muted {
 
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 html, body, #wrapwrap {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
 }
@@ -257,6 +258,78 @@ footer {
   margin-bottom: 0px;
 }
 
+/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
+.nav-hierarchy {
+  padding-left: 16px;
+}
+
+#themes-list .well {
+  padding: 0 0 20px 0;
+}
+
+/* -- Hack for removing double scrollbar from mobile preview -- */
+div#mobile-preview.modal {
+  overflow: hidden;
+  overflow-y: hidden;
+}
+
+ul.nav-stacked > li > a {
+  padding: 2px 15px;
+}
+
+#customize-menu .dropdown-header {
+  text-transform: uppercase;
+}
+
+/* ---- PUBLISH ---- */
+.css_unpublish, .css_publish {
+  display: none;
+}
+
+.css_published .css_unpublish, .css_unpublished .css_publish {
+  display: block;
+}
+
+[data-publish='off'] {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  opacity: 0.5;
+}
+
+/* ---- END of PUBLISH ---- */
+::-moz-selection {
+  background: rgba(150, 150, 220, 0.3);
+}
+
+::selection {
+  background: rgba(150, 150, 220, 0.3);
+}
+
+.logo-img {
+  width: 220px;
+}
+
+.oe_demo {
+  position: relative;
+}
+.oe_demo img {
+  width: 100%;
+}
+.oe_demo div {
+  position: absolute;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 0.85;
+  bottom: 0px;
+  width: 100%;
+  padding: 7px;
+  color: white;
+  font-weight: bold;
+}
+.oe_demo div a {
+  color: white;
+}
+
+/* ---- SNIPPETS --- */
 .carousel-inner .item {
   height: 100%;
   background-size: 100%;
@@ -331,23 +404,6 @@ footer {
   right: 10px;
 }
 
-/* ---- HOMEPAGE THEME CUSTOMIZATION ---- */
-.dark {
-  background: #eff8f8;
-  background: rgba(100, 200, 200, 0.14);
-  -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
-  -moz-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
-  box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
-}
-
-.nav-hierarchy {
-  padding-left: 16px;
-}
-
-#themes-list .well {
-  padding: 0 0 20px 0;
-}
-
 /* Parallax Theme */
 .parallax_quote {
   background: url("/website/static/src/img/parallax/quote.png") center center no-repeat fixed;
@@ -374,59 +430,32 @@ footer {
   height: 450px;
 }
 
-/* -- Hack for removing double scrollbar from mobile preview -- */
-div#mobile-preview.modal {
-  overflow: hidden;
-  overflow-y: hidden;
+/* Background */
+.oe_dark {
+  background: #eff8f8;
+  background: rgba(100, 200, 200, 0.14);
+  background-image: none !important;
+  -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
+  -moz-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
+  box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
 }
 
-ul.nav-stacked > li > a {
-  padding: 2px 15px;
+.oe_black {
+  background-color: rgba(0, 0, 0, 0.9);
+  background-image: none !important;
 }
 
-#customize-menu .dropdown-header {
-  text-transform: uppercase;
+.oe_green {
+  background-color: rgba(0, 128, 0, 0.8);
+  background-image: none !important;
 }
 
-/* ---- PUBLISH ---- */
-.css_unpublish, .css_publish {
-  display: none;
+.oe_red {
+  background-color: rgba(255, 0, 0, 0.8);
+  background-image: none !important;
 }
 
-.css_published .css_unpublish, .css_unpublished .css_publish {
-  display: block;
-}
-
-[data-publish='off'] {
-  opacity: 0.5;
-}
-
-/* ---- END of PUBLISH ---- */
-::selection {
-  background: rgba(150, 150, 220, 0.3);
-}
-
-.logo-img {
-  width: 220px;
-}
-
-.oe_demo {
-  position: relative;
-}
-.oe_demo img {
-  width: 100%;
-}
-.oe_demo div {
-  position: absolute;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  opacity: 0.85;
-  bottom: 0px;
-  width: 100%;
-  padding: 7px;
-  color: white;
-  font-weight: bold;
-}
-.oe_demo div a {
-  color: white;
+.oe_custom_bg {
+  height: 100%;
+  background-size: 100%;
 }

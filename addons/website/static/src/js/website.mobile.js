@@ -20,5 +20,9 @@
             document.getElementById("mobile-viewport").src = window.location.origin + window.location.pathname + "#mobile-preview";
             this.$el.modal();
         },
+        destroy: function () {
+            $('.modal-backdrop').remove();
+            this._super();
+        },
     });
 })();

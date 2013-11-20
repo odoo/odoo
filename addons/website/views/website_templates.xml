@@ -81,13 +81,16 @@
                         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
 
                         <t t-if="editable" id="editable_scripts_hook">
-                            <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
+                            <link rel="stylesheet" href="/select2/static/lib/select2/select2.css"/>
+                            <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+                            <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
+
+                            <script type="text/javascript" src="/select2/static/lib/select2/select2.js"></script>
+                            <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
                             <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-                            <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
                             <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
                             <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
                             <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
@@ -100,8 +103,8 @@
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.menu-editor.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.install-app.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.tour.page.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.tour.app.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
                             <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
@@ -109,7 +112,7 @@
 
                         <t t-raw="head or ''"/>
                     </head>
-                    <body t-att-class="has_access_write and 'has_access_write' or ''">
+                    <body>
                         <div id="wrapwrap">
                             <header>
                                 <div class="navbar navbar-default navbar-static-top">
@@ -267,7 +270,7 @@
         </template>
 
         <template id="publish_management">
-            <div t-if="has_access_write" t-ignore="true" class="pull-right" t-att-style="style or ''">
+            <div t-if="editable" t-ignore="true" class="pull-right" t-att-style="style or ''">
                 <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
                     <button t-attf-class="btn btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
                         <span class="css_publish">Not Published</span>
@@ -288,7 +291,7 @@
         </template>
 
         <template id="publish_short">
-            <t t-if="has_access_write" t-ignore="true">
+            <t t-if="editable" t-ignore="true">
                 <div t-attf-class="btn-group pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
                     <button t-attf-class="btn btn-sm btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
                         <span class="css_publish">Not Published</span>

@@ -10,7 +10,7 @@
         }
     };
 
-    website.EditorTour = openerp.Class.extend({
+    website.Tour = openerp.Class.extend({
         tour: undefined,
         steps: [],
         tourStorage: window.localStorage,
@@ -24,22 +24,6 @@
                step.title = website.tour.render('website.tour_popover_title', { title: step.title });
                return step;
             }));
-            // TODO: Disabled until properly implemented
-            // this.monkeyPatchTour();
-        },
-        monkeyPatchTour: function () {
-            var self = this;
-            // showStep should wait for 'element' to appear instead of moving to the next step
-            self.tour.showStep = function (i) {
-              var step = self.tour.getStep(i);
-              return (function proceed () {
-                  if (step.orphan || $(step.element).length > 0) {
-                      return Tour.prototype.showStep.call(self.tour, i);
-                  } else {
-                      setTimeout(proceed, 50);
-                  }
-              }());
-            };
         },
         reset: function () {
             this.tourStorage.removeItem(this.id+'_current_step');
@@ -48,12 +32,9 @@
             $('.popover.tour').remove();
         },
         start: function () {
-            if (this.canResume()) {
+            if (this.continueTour() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
                 this.tour.start();
             }
-        },
-        canResume: function () {
-            return (this.currentStepIndex() === 0) && !this.tour.ended();
         },
         currentStepIndex: function () {
             var index = this.tourStorage.getItem(this.id+'_current_step') || 0;
@@ -67,6 +48,9 @@
                }
             });
             return index;
+        },
+        isCurrentStep: function (stepId) {
+            return this.currentStepIndex() === this.indexOfStep(stepId);
         },
         movetoStep: function (stepId) {
             $('.popover.tour').remove();
@@ -82,6 +66,27 @@
         stop: function () {
             this.tour.end();
         },
+        redirect: function (url) {
+            url = url || new website.UrlParser(window.location.href);
+            if (this.startPath && url.pathname !== this.startPath) {
+                var newUrl = this.startPath + (url.search ? (url.search + "&") : "?") + this.id + "=true"
+                window.location.replace(newUrl);
+            }
+        },
+        continueTour: function () {
+            // Override if necessary
+            return this.currentStepIndex() === 0;
+        },
+        isTriggerUrl: function (url) {
+            // Override if necessary
+            url = url || new website.UrlParser(window.location.href);
+            var urlTrigger = this.id + "=true";
+            return url.search.indexOf(urlTrigger) >= 0;
+        },
+        testUrl: function (pattern) {
+            var url = new website.UrlParser(window.location.href);
+            return pattern.test(url.pathname+url.search);
+        },
     });
 
     website.UrlParser = openerp.Class.extend({
@@ -96,16 +101,35 @@
             this.pathname = a.pathname;
             this.origin = a.origin;
             this.search = a.search;
+            this.hash = a.hash;
         },
     });
 
     website.EditorBar.include({
+        tours: [],
         start: function () {
             $('.tour-backdrop').click(function (e) {
                 e.stopImmediatePropagation();
                 e.preventDefault();
             });
+            var url = new website.UrlParser(window.location.href);
+            var menu = $('#help-menu');
+            _.each(this.tours, function (tour) {
+                var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
+                $menuItem.click(function () {
+                    tour.redirect(url);
+                    tour.reset();
+                    tour.start();
+                });
+                menu.append($menuItem);
+                if (tour.isTriggerUrl()) {
+                    tour.start();
+                }
+            });
             return this._super();
+        },
+        registerTour: function (tour) {
+            this.tours.push(tour);
         },
     });
 

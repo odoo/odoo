@@ -2,7 +2,7 @@
     'use strict';
 
     var website = openerp.website;
-    // $.fn.data automatically parses value, '0'|'1' -> 0|1
+    var _t = openerp._t;
 
     website.add_template_file('/website/static/src/xml/website.editor.xml');
     website.dom_ready.done(function () {
@@ -14,12 +14,7 @@
 
         $(document).on('click', 'a.js_link2post', function (ev) {
             ev.preventDefault();
-            var form = document.createElement('form');
-            form.action = this.pathname; // restrict to same origin
-            form.method = 'POST';
-            // TODO: support this.search as form input fields
-            $(this).append(form);
-            form.submit();
+            website.form(this.pathname, 'POST');
         });
 
         $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
@@ -90,7 +85,7 @@
 
                     // display button
                     var $el = $(previousSelection = selected.$);
-                    var $btn = $('<button type="button" class="btn btn-primary" contenteditable="false">Edit</button>')
+                    var $btn = $('<button type="button" class="btn btn-primary image-edit-button" contenteditable="false">Edit</button>')
                         .insertAfter($el)
                         .click(function (e) {
                             e.preventDefault();
@@ -104,6 +99,11 @@
                         top: $el.height() / 2 + position.top - $btn.outerHeight() / 2,
                         left: $el.width() / 2 + position.left - $btn.outerWidth() / 2,
                     });
+                });
+                editor.on('destroy', function (evt) {
+                    if (previousSelection) {
+                        $('.image-edit-button').remove();
+                    }
                 });
 
                 //noinspection JSValidateTypes
@@ -129,13 +129,11 @@
                     label: 'Link',
                     command: 'link',
                     toolbar: 'links,10',
-                    icon: '/website/static/lib/ckeditor/plugins/link/icons/link.png',
                 });
                 editor.ui.addButton('Image', {
                     label: 'Image',
                     command: 'image',
                     toolbar: 'insert,10',
-                    icon: '/website/static/lib/ckeditor/plugins/image/icons/image.png',
                 });
 
                 editor.setKeystroke(CKEDITOR.CTRL + 76 /*L*/, 'link');
@@ -513,16 +511,23 @@
                     if (!_.isArray(failed)) { failed = [failed]; }
 
                     _(failed).each(function (failure) {
+                        var html = failure.error.exception_type === "except_osv";
+                        if (html) {
+                            var msg = $("<div/>").text(failure.error.message).html();
+                            var data = msg.substring(3,msg.length-2).split(/', u'/);
+                            failure.error.message = '<b>' + data[0] + '</b><br/>' + data[1];
+                        }
                         $(root).find('.' + failure.id)
                             .removeClass(failure.id)
                             .popover({
+                                html: html,
                                 trigger: 'hover',
                                 content: failure.error.message,
                                 placement: 'auto top',
                             })
                             // Force-show popovers so users will notice them.
                             .popover('show');
-                    })
+                    });
                 });
             });
         },
@@ -694,9 +699,11 @@
 
                 self.setup_editables(root);
 
-                // disable firefox's broken table resizing thing
-                document.execCommand("enableObjectResizing", false, "false");
-                document.execCommand("enableInlineTableEditing", false, "false");
+                try {
+                    // disable firefox's broken table resizing thing
+                    document.execCommand("enableObjectResizing", false, "false");
+                    document.execCommand("enableInlineTableEditing", false, "false");
+                } catch (e) {}
 
                 self.trigger('rte:ready');
                 def.resolve();
@@ -827,6 +834,7 @@
         events: {
             'hidden.bs.modal': 'destroy',
             'click button.save': 'save',
+            'click button[data-dismiss="modal"]': 'cancel',
         },
         init: function (editor) {
             this._super();
@@ -840,6 +848,8 @@
         save: function () {
             this.close();
         },
+        cancel: function () {
+        },
         close: function () {
             this.$el.modal('hide');
         },
@@ -848,7 +858,7 @@
     website.editor.LinkDialog = website.editor.Dialog.extend({
         template: 'website.editor.dialog.link',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
-            'change .url-source': function (e) { this.changed($(e.target)); },
+            'change :input.url-source': function (e) { this.changed($(e.target)); },
             'mousedown': function (e) {
                 var $target = $(e.target).closest('.list-group-item');
                 if (!$target.length || $target.hasClass('active')) {
@@ -856,7 +866,7 @@
                     return;
                 }
 
-                this.changed($target.find('.url-source'));
+                this.changed($target.find('.url-source').filter(':input'));
             },
             'click button.remove': 'remove_link',
             'change input#link-text': function (e) {
@@ -865,22 +875,38 @@
         }),
         init: function (editor) {
             this._super(editor);
-            // url -> name mapping for existing pages
-            this.pages = Object.create(null);
             this.text = null;
+            // Store last-performed request to be able to cancel/abort it.
+            this.req = null;
         },
         start: function () {
             var self = this;
-            return $.when(
-                this.fetch_pages().done(this.proxy('fill_pages')),
-                this._super()
-            ).done(function () {
-                self.bind_data();
+            this.$('#link-page').select2({
+                minimumInputLength: 3,
+                placeholder: _t("New or existing page"),
+                query: function (q) {
+                    // FIXME: out-of-order, abort
+                    self.fetch_pages(q.term).then(function (results) {
+                        var rs = _.map(results, function (r) {
+                            return { id: r.url, text: r.name, };
+                        });
+                        rs.push({
+                            create: true,
+                            id: q.term,
+                            text: _.str.sprintf(_t("Create page '%s'"), q.term),
+                        });
+                        q.callback({
+                            more: false,
+                            results: rs
+                        });
+                    });
+                },
             });
+            return this._super().then(this.proxy('bind_data'));
         },
         save: function () {
             var self = this, _super = this._super.bind(this);
-            var $e = this.$('.list-group-item.active .url-source');
+            var $e = this.$('.list-group-item.active .url-source').filter(':input');
             var val = $e.val();
             if (!val || !$e[0].checkValidity()) {
                 // FIXME: error message
@@ -892,15 +918,18 @@
             var done = $.when();
             if ($e.hasClass('email-address')) {
                 this.make_link('mailto:' + val, false, val);
-            } else if ($e.hasClass('existing')) {
-                self.make_link(val, false, this.pages[val]);
-            } else if ($e.hasClass('pages')) {
-                // Create the page, get the URL back
-                done = $.get(_.str.sprintf(
-                        '/pagenew/%s?noredirect', encodeURI(val)))
-                    .then(function (response) {
-                        self.make_link(response, false, val);
-                    });
+            } else if ($e.hasClass('page')) {
+                var data = $e.select2('data');
+                if (!data.create) {
+                    self.make_link(data.id, false, data.text);
+                } else {
+                    // Create the page, get the URL back
+                    done = $.get(_.str.sprintf(
+                            '/pagenew/%s?noredirect', encodeURI(data.id)))
+                        .then(function (response) {
+                            self.make_link(response, false, data.id);
+                        });
+                }
             } else {
                 this.make_link(val, this.$('input.window-new').prop('checked'));
             }
@@ -923,13 +952,6 @@
             var match, $control;
             if ((match = /mailto:(.+)/.exec(href))) {
                 $control = this.$('input.email-address').val(match[1]);
-            } else if (href in this.pages) {
-                $control = this.$('select.existing').val(href);
-            } else if ((match = /\/page\/(.+)/.exec(href))) {
-                var actual_href = '/page/website.' + match[1];
-                if (actual_href in this.pages) {
-                    $control = this.$('select.existing').val(actual_href);
-                }
             }
             if (!$control) {
                 $control = this.$('input.url').val(href);
@@ -941,30 +963,28 @@
             this.$('input.window-new').prop('checked', new_window);
         },
         changed: function ($e) {
-            this.$('.url-source').not($e).val('');
+            this.$('.url-source').filter(':input').not($e).val('')
+                    .filter(function () { return !!$(this).data('select2'); })
+                    .select2('data', null);
             $e.closest('.list-group-item')
                 .addClass('active')
                 .siblings().removeClass('active')
                 .addBack().removeClass('has-error');
         },
-        fetch_pages: function () {
-            return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+        fetch_pages: function (term) {
+            var self = this;
+            if (this.req) { this.req.abort(); }
+            return this.req = openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website',
-                method: 'list_pages',
-                args: [null],
+                method: 'search_pages',
+                args: [null, term],
                 kwargs: {
+                    limit: 9,
                     context: website.get_context()
                 },
-            });
-        },
-        fill_pages: function (results) {
-            var self = this;
-            var pages = this.$('select.existing')[0];
-            _(results).each(function (result) {
-                self.pages[result.url] = result.name;
-
-                pages.options[pages.options.length] =
-                        new Option(result.name, result.url);
+            }).done(function () {
+                // request completed successfully -> unstore it
+                self.req = null;
             });
         },
     });
@@ -1110,6 +1130,9 @@
             });
             return this._super();
         },
+        cancel: function () {
+            this.trigger('cancel');
+        },
 
         /**
          * Sets the provided image url as the dialog's value-to-save and
@@ -1185,6 +1208,7 @@
             if (!(element = this.element)) {
                 element = editor.document.createElement('img');
                 element.addClass('img');
+                element.addClass('img-responsive');
                 // focus event handler interactions between bootstrap (modal)
                 // and ckeditor (RTE) lead to blowing the stack in Safari and
                 // Chrome (but not FF) when this is done synchronously =>

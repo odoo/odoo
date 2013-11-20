@@ -236,7 +236,7 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_big_picture.png"/>
             <span class="oe_snippet_thumbnail_title">Big Picture</span>          
         </div>
-        <section class="oe_snippet_body dark mt16 mb16">
+        <section class="oe_snippet_body oe_dark mt16 mb16">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center mt32 mb32">
@@ -555,7 +555,7 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_button.png"/>
             <span class="oe_snippet_thumbnail_title">Button</span>   
         </div>
-        <section class="oe_snippet_body oe_snippet_darken dark">
+        <section class="oe_snippet_body oe_snippet_darken oe_dark">
             <div class="container">
               <div class="row">
                 <div class="col-md-12 text-center mt16 mb16">
@@ -792,12 +792,26 @@
 </div>
 
 <div id="snippet_styles" class="hidden">
-
-    <div data-snippet-id='darken' data-selector='section'>
-        <div class='oe_snippet_label'>Enlight Background</div>
-        <div class='oe_snippet_class'>dark</div>
+    <div data-snippet-id='darken' data-selector='section' data-class="oe_dark">
+        <div class='oe_snippet_label'>Darken</div>
+        <div class='oe_snippet_group'>Background</div>
     </div>
-
+    <div data-snippet-id='green' data-selector='section' data-class="oe_green">
+        <div class='oe_snippet_label'>Green</div>
+        <div class='oe_snippet_group'>Background</div>
+    </div>
+    <div data-snippet-id='red' data-selector='section' data-class="oe_red">
+        <div class='oe_snippet_label'>Red</div>
+        <div class='oe_snippet_group'>Background</div>
+    </div>
+    <div data-snippet-id='black' data-selector='section' data-class="oe_black">
+        <div class='oe_snippet_label'>Black</div>
+        <div class='oe_snippet_group'>Background</div>
+    </div>
+    <div data-snippet-id='custom_background' data-selector='section' data-class="oe_custom_bg">
+        <div class='oe_snippet_label'>Custom Picture...</div>
+        <div class='oe_snippet_group'>Background</div>
+    </div>
 </div>
 
     </div>

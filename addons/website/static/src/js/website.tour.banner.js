@@ -5,12 +5,19 @@
 
     var render = website.tour.render;
 
-    website.EditorBannerTour = website.EditorTour.extend({
-        id: 'add_banner_tour',
+    website.EditorBar.include({
+        start: function () {
+            this.registerTour(new website.BannerTour(this));
+            return this._super();
+        },
+    });
+
+    website.BannerTour = website.Tour.extend({
+        id: 'banner-tutorial',
         name: "Insert a banner",
+        startPath: '/page/website.homepage',
         init: function (editor) {
             var self = this;
-            var $body = $(document.body);
             self.steps = [
                 {
                     stepId: 'welcome',
@@ -28,7 +35,7 @@
                     content: "Every page of your website can be modified through the <i>Edit</i> button.",
                     template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('tour:editor_bar_loaded', editor, function() {
+                        editor.on('tour:editor_bar_loaded', editor, function () {
                             self.movetoStep('add-block');
                         });
                     },
@@ -54,6 +61,7 @@
                     content: "Drag the Banner block and drop it in your page.",
                     template: render('website.tour_popover'),
                     onShow: function () {
+                        var $body = $(document.body);
                         function beginDrag () {
                             $('.popover.tour').remove();
                             function goToNextStep () {
@@ -64,7 +72,6 @@
                             $body.off('mousedown', beginDrag);
                             $body.on('mouseup', goToNextStep);
                         }
-
                         $body.on('mousedown', beginDrag);
                     },
                 },
@@ -111,7 +118,7 @@
                     stepId: 'part-2',
                     orphan: true,
                     title: "Congratulation!",
-                    content: "Your homepage have been updated. Now, we suggest you to insert others building blocks like texts and images to structure your page.",
+                    content: "Your homepage have been updated. Now, we suggest you insert another snippet to overview possible customization.",
                     template: render('website.tour_popover', { next: "Continue" }),
                 },
                 {
@@ -126,35 +133,8 @@
             ];
             return this._super();
         },
-        startOfPart2: function () {
-            var currentStepIndex = this.currentStepIndex();
-            var secondPartIndex = this.indexOfStep('part-2');
-            var showTutorialsIndex = this.indexOfStep('show-tutorials');
-            return (currentStepIndex === secondPartIndex || currentStepIndex === showTutorialsIndex) && !this.tour.ended();
-        },
-        canResume: function () {
-            return this.startOfPart2() || this._super();
-        },
-    });
-
-    website.EditorBar.include({
-        start: function () {
-            var menu = $('#help-menu');
-            var bannerTour = new website.EditorBannerTour(this);
-            var $menuItem = $($.parseHTML('<li><a href="#">'+bannerTour.name+'</a></li>'));
-            $menuItem.click(function () {
-                if (url.pathname !== '/' && url.pathname !== '/page/website.homepage') {
-                    window.location.replace('/page/website.homepage?banner-tutorial=true');
-                }
-                bannerTour.reset();
-                bannerTour.start();
-            });
-            menu.append($menuItem);
-            var url = new website.UrlParser(window.location.href);
-            if (url.search.indexOf('?banner-tutorial=true') === 0 || bannerTour.startOfPart2()) {
-                bannerTour.start();
-            }
-            return this._super();
+        continueTour: function () {
+            return (this.isCurrentStep('part-2') || this.isCurrentStep('show-tutorials')) && !this.tour.ended();
         },
     });
 

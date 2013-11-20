@@ -114,13 +114,13 @@ class Website(openerp.addons.web.controllers.main.Home):
     def snippets(self):
         return request.website.render('website.snippets')
 
-    @website.route('/page/<path:path>', type='http', auth="public", multilang=True)
-    def page(self, path, **kwargs):
+    @website.route('/page/<page:page>', type='http', auth="public", multilang=True)
+    def page(self, page, **opt):
         values = {
-            'path': path,
+            'path': page,
         }
 
-        return request.website.render(path, values)
+        return request.website.render(page, values)
 
     @website.route('/website/customize_template_toggle', type='json', auth='user')
     def customize_template_set(self, view_id):
@@ -266,12 +266,12 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route('/sitemap', type='http', auth='public', multilang=True)
     def sitemap(self):
-        return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
+        return request.website.render('website.sitemap', {'pages': request.website.enumerate_pages()})
 
     @website.route('/sitemap.xml', type='http', auth="public")
     def sitemap_xml(self):
         body = request.website.render('website.sitemap_xml', {
-            'pages': request.website.list_pages()
+            'pages': request.website.enumerate_pages()
         })
 
         return request.make_response(body, [
