@@ -101,7 +101,7 @@
                         function beginDrag () {
                             $('.popover.tour').remove();
                             function goToNextStep () {
-                                $('#oe_snippets').hide();
+                                $('#snippets').toggle();
                                 self.stop();
                                 $body.off('mouseup', goToNextStep);
                             }

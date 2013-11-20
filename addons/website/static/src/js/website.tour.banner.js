@@ -65,7 +65,7 @@
                         function beginDrag () {
                             $('.popover.tour').remove();
                             function goToNextStep () {
-                                $('#oe_snippets').hide();
+                                $('#snippets').toggle();
                                 self.movetoStep('edit-title');
                                 $body.off('mouseup', goToNextStep);
                             }
