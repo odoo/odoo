@@ -152,16 +152,16 @@
     </blockTable>
   </pto_header>
     <para style="terp_default_8">[[repeatIn(objects,'picking')]] </para>
-    <para style="terp_default_8">[[picking.type == 'out' and picking.partner_id and setLang(picking.partner_id.lang) or '']]</para>
+    <para style="terp_default_8">[[picking.picking_type_id.code == 'outgoing' and picking.partner_id and setLang(picking.partner_id.lang) or '']]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="269.0,269.0" style="Table_Address_detail">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Supplier Address : [[ (picking.type == 'in' or removeParentNode('para')) and '' ]]</para>
-          <para style="terp_default_Bold_9">Customer Address : [[ (picking.type == 'out' or removeParentNode('para')) and '' ]]</para>
-          <para style="terp_default_Bold_9">Warehouse Address : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_Bold_9">Supplier Address : [[ (picking.picking_type_id.code == 'incoming' or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_Bold_9">Customer Address : [[ (picking.picking_type_id.code == 'outgoing' or removeParentNode('para')) and '' ]]</para>
+          <para style="terp_default_Bold_9">Warehouse Address : [[ (picking.picking_type_id.code == 'internal' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_9">[[ (picking.partner_id and picking.partner_id.id and picking.partner_id.title.name) or '' ]] [[ picking.partner_id and picking.partner_id.id and picking.partner_id.name ]]</para>
           <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id) ]]</para>
           <para style="terp_default_9">[[ picking.partner_id.phone or picking.partner_id.email or removeParentNode('para')]]</para>
@@ -183,9 +183,9 @@
     <blockTable colWidths="538.0" style="Table_Title_String">
       <tr>
         <td>
-          <para style="terp_header">Delivery Order : [[ (picking.type == 'out' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
-          <para style="terp_header">Incoming Shipment : [[ (picking.type == 'in' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
-          <para style="terp_header">Internal Shipment : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Delivery Order : [[ (picking.picking_type_id.code == 'outgoing' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Incoming Shipment : [[ (picking.picking_type_id.code == 'incoming' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Internal Shipment : [[ (picking.picking_type_id.code == 'internal' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -211,7 +211,7 @@
     <blockTable colWidths="100.0,154.0,162.0,109.0" style="Content_Order_Reference_Table">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ picking.stock_journal_id.name]]</para>
+          <para style="terp_default_Centre_8">[[ picking.picking_type_id.name]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ picking.origin or '']]</para>
@@ -255,7 +255,7 @@
             <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (move_lines.lot_id and move_lines.lot_id.name) or '' ]]</para>
+            <para style="terp_default_Centre_9">[[ move_lines.quant_ids and ','.join(map(str, [q.lot_id.name for q in move_lines.quant_ids if q.lot_id])) or '' ]]</para>
           </td>
           <td>
             <para style="terp_default_9">Waiting Availability[[ move_lines.state == 'confirmed' and ' ' or removeParentNode('para') ]]</para>
@@ -282,12 +282,12 @@
             <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (move_lines.lot_id and move_lines.lot_id.name) or '' ]]</para>
+            <para style="terp_default_Centre_9">[[ move_lines.quant_ids and ','.join(map(str, [q.lot_id.name for q in move_lines.quant_ids if q.lot_id])) or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ (picking.type == 'in' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Received' or move_lines.state]]</para>
-            <para style="terp_default_9">[[ (picking.type == 'out' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Delivered' or move_lines.state]]</para>
-            <para style="terp_default_9">[[ (picking.type == 'internal' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Transferred' or move_lines.state]]</para>
+            <para style="terp_default_9">[[ (picking.picking_type_id.code == 'incoming' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Received' or move_lines.state]]</para>
+            <para style="terp_default_9">[[ (picking.picking_type_id.code == 'outgoing' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Delivered' or move_lines.state]]</para>
+            <para style="terp_default_9">[[ (picking.picking_type_id.code == 'internal' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Transferred' or move_lines.state]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]] </para>
