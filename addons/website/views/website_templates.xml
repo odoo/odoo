@@ -363,6 +363,26 @@
             </t>
         </template>
 
+        <template id="403">
+            <t t-call="website.layout">
+              <div id="wrap">
+                <div class="oe_structure oe_empty">
+                    <div class="container">
+                        <h1 class="mt32">403: Forbidden!</h1>
+                        <p>
+                            Access Denied.
+                        </p>
+                        <p>Maybe you were looking for one of these popular pages ?</p>
+                        <ul>
+                            <li><a href="/">Homepage</a></li>
+                            <li><a href="/page/website.contactus/">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+              </div>
+            </t>
+        </template>
+
         <template id="404">
             <t t-call="website.layout">
               <div id="wrap">
