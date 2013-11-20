@@ -40,6 +40,14 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # RequestHandler
 #----------------------------------------------------------
+# Thread local global request object
+_request_stack = werkzeug.local.LocalStack()
+
+request = _request_stack()
+"""
+    A global proxy that always redirect to the current request object.
+"""
+
 class WebRequest(object):
     """ Parent class for all OpenERP Web request types, mostly deals with
     initialization and setup of the request object (the dispatching itself has
@@ -135,10 +143,23 @@ class WebRequest(object):
         trying to access this property will raise an exception.
         """
         # some magic to lazy create the cr
-        if not self._cr_cm:
-            self._cr_cm = self.registry.cursor()
-            self._cr = self._cr_cm.__enter__()
+        if not self._cr:
+            self._cr = self.registry.db.cursor()
         return self._cr
+
+    def __enter__(self):
+        _request_stack.push(self)
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        _request_stack.pop()
+        if self._cr:
+            if exc_type is None:
+                self._cr.commit()
+            self._cr.close()
+        # just to be sure no one tries to re-use the request
+        self.disable_db = True
+        self.uid = None
 
     def set_handler(self, func, arguments, auth):
         # is this needed ?
@@ -151,39 +172,23 @@ class WebRequest(object):
         self.auth_method = auth
 
     def _call_function(self, *args, **kwargs):
-        try:
-            # ugly syntax only to get the __exit__ arguments to pass to self._cr
-            request = self
-            class with_obj(object):
-                def __enter__(self):
-                    pass
-                def __exit__(self, *args):
-                    if request._cr_cm:
-                        request._cr_cm.__exit__(*args)
-                        request._cr_cm = None
-                        request._cr = None
+        request = self
+        if self.func_request_type != self._request_type:
+            raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
+                % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
 
-            with with_obj():
-                if self.func_request_type != self._request_type:
-                    raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
-                        % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
+        kwargs.update(self.func_arguments)
 
-                kwargs.update(self.func_arguments)
-
-                # Backward for 7.0
-                if getattr(self.func, '_first_arg_is_req', False):
-                    args = (request,) + args
-                # Correct exception handling and concurency retry
-                @service_model.check
-                def checked_call(dbname, *a, **kw):
-                    return self.func(*a, **kw)
-                if self.db:
-                    return checked_call(self.db, *args, **kwargs)
-                return self.func(*args, **kwargs)
-        finally:
-            # just to be sure no one tries to re-use the request
-            self.disable_db = True
-            self.uid = None
+        # Backward for 7.0
+        if getattr(self.func, '_first_arg_is_req', False):
+            args = (request,) + args
+        # Correct exception handling and concurency retry
+        @service_model.check
+        def checked_call(dbname, *a, **kw):
+            return self.func(*a, **kw)
+        if self.db:
+            return checked_call(self.db, *args, **kwargs)
+        return self.func(*args, **kwargs)
 
     @property
     def debug(self):
@@ -449,24 +454,6 @@ def httprequest(f):
     if f.__name__ == "index":
         base = ""
     return route([base, base + "/<path:_ignored_path>"], type="http", auth="user")(f)
-
-#----------------------------------------------------------
-# Thread local global request object
-#----------------------------------------------------------
-_request_stack = werkzeug.local.LocalStack()
-
-request = _request_stack()
-"""
-    A global proxy that always redirect to the current request object.
-"""
-
-@contextlib.contextmanager
-def set_request(req):
-    _request_stack.push(req)
-    try:
-        yield
-    finally:
-        _request_stack.pop()
 
 #----------------------------------------------------------
 # Controller and route registration
@@ -975,8 +962,8 @@ class Root(object):
 
             request = self.get_request(httprequest)
 
-            with set_request(request):
-                db = request.session.db 
+            with request:
+                db = request.session.db
                 if db:
                     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
                     result = request.registry['ir.http']._dispatch()
@@ -986,7 +973,7 @@ class Root(object):
                     func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
                     request.set_handler(func, arguments, "none")
                     result = request.dispatch()
-            response =  self.get_response(httprequest, result, explicit_session)
+                response = self.get_response(httprequest, result, explicit_session)
             return response(environ, start_response)
 
         except werkzeug.exceptions.HTTPException, e:
