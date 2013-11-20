@@ -5,6 +5,13 @@
 
     var render = website.tour.render;
 
+    website.EditorBar.include({
+        start: function () {
+            this.registerTour(new website.BlogTour(this));
+            return this._super();
+        },
+    });
+
     website.BlogTour = website.EditorTour.extend({
         id: 'blog-tutorial',
         name: "Create a blog post",
@@ -74,25 +81,13 @@
             ];
             return this._super();
         },
-        postPage: function () {
-            var currentStepIndex = this.currentStepIndex();
-            var postPageIndex = this.indexOfStep('post-page');
-            return (currentStepIndex === postPageIndex) && !this.tour.ended();
-        },
         continueTour: function () {
-            return this.postPage();
+            return (this.currentStepIndex() === this.indexOfStep('post-page')) && !this.tour.ended();
         },
         isTriggerUrl: function (url) {
             url = url || new website.UrlParser(window.location.href);
             var addPostPattern = /^\/blog\/[0-9]+\/\?enable_editor=1/;
-            return (this.postPage && addPostPattern.test(url.pathname+url.search)) || this._super();
-        },
-    });
-
-    website.EditorBar.include({
-        start: function () {
-            this.registerTour(new website.BlogTour(this));
-            return this._super();
+            return (this.continueTour() && addPostPattern.test(url.pathname+url.search)) || this._super();
         },
     });
 
