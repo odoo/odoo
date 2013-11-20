@@ -7,13 +7,13 @@
 
     website.EditorBar.include({
         start: function () {
-            this.registerTour(new website.EditorBuilderTour(this));
+            this.registerTour(new website.PageTour(this));
             return this._super();
         },
     });
 
-    website.EditorBuilderTour = website.Tour.extend({
-        id: 'menu-editor',
+    website.PageTour = website.Tour.extend({
+        id: 'page-tutorial',
         name: "Add a new page",
         init: function (editor) {
             var self = this;
@@ -71,7 +71,7 @@
                 },
                 {
                     stepId: 'enter-page-name',
-                    element: '#link-new',
+                    element: '.modal .select2-container',
                     placement: 'left',
                     title: "Link your menu to a 'gallery' page",
                     content: "This page does not exist. Create it by filling the name here. For instance, 'gallery'.",

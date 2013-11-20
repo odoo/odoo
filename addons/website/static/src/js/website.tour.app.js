@@ -7,14 +7,14 @@
 
     website.EditorBar.include({
         start: function () {
-            this.registerTour(new website.InstallAppTour(this));
+            this.registerTour(new website.AppTour(this));
             return this._super();
         },
     });
 
-    website.InstallAppTour = website.Tour.extend({
-        id: 'install-app',
-        name: "Install a new App",
+    website.AppTour = website.Tour.extend({
+        id: 'app-tutorial',
+        name: "Install a new application",
         init: function (editor) {
             var self = this;
             self.steps = [

@@ -7,12 +7,12 @@
 
     website.EditorBar.include({
         start: function () {
-            this.registerTour(new website.AddBannerTour(this));
+            this.registerTour(new website.BannerTour(this));
             return this._super();
         },
     });
 
-    website.AddBannerTour = website.Tour.extend({
+    website.BannerTour = website.Tour.extend({
         id: 'banner-tutorial',
         name: "Insert a banner",
         startPath: '/page/website.homepage',
