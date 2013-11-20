@@ -311,10 +311,10 @@ class test_translation(common.TransactionCase):
         self.res_category = self.registry('res.partner.category')
         self.ir_translation = self.registry('ir.translation')
         cr, uid = self.cr, self.uid
-        self.registry('ir.translation').load(cr, ['base'], ['fr_BE'])
+        self.registry('ir.translation').load(cr, ['base'], ['fr_FR'])
         self.cat_id = self.res_category.create(cr, uid, {'name': 'Customers'})
         self.ir_translation.create(cr, uid, {'name': 'res.partner.category,name', 'module':'base', 
-            'value': 'Clients', 'res_id': self.cat_id, 'lang':'fr_BE', 'state':'translated', 'type': 'model'})
+            'value': 'Clients', 'res_id': self.cat_id, 'lang':'fr_FR', 'state':'translated', 'type': 'model'})
 
     def test_101_create_translated_record(self):
         cr, uid = self.cr, self.uid
@@ -322,27 +322,27 @@ class test_translation(common.TransactionCase):
         no_context_cat = self.res_category.browse(cr, uid, self.cat_id)
         self.assertEqual(no_context_cat.name, 'Customers', "Error in basic name_get")
 
-        fr_context_cat = self.res_category.browse(cr, uid, self.cat_id, context={'lang':'fr_BE'})
+        fr_context_cat = self.res_category.browse(cr, uid, self.cat_id, context={'lang':'fr_FR'})
         self.assertEqual(fr_context_cat.name, 'Clients', "Translation not found")
 
     def test_102_duplicate_record(self):
         cr, uid = self.cr, self.uid
-        self.new_cat_id = self.res_category.copy(cr, uid, self.cat_id, context={'lang':'fr_BE'})
+        self.new_cat_id = self.res_category.copy(cr, uid, self.cat_id, context={'lang':'fr_FR'})
 
         no_context_cat = self.res_category.browse(cr, uid, self.new_cat_id)
         self.assertEqual(no_context_cat.name, 'Customers', "Duplication did not set untranslated value")
 
-        fr_context_cat = self.res_category.browse(cr, uid, self.new_cat_id, context={'lang':'fr_BE'})
+        fr_context_cat = self.res_category.browse(cr, uid, self.new_cat_id, context={'lang':'fr_FR'})
         self.assertEqual(fr_context_cat.name, 'Clients', "Did not found translation for initial value")
 
     def test_103_duplicate_record_fr(self):
         cr, uid = self.cr, self.uid
-        self.new_fr_cat_id = self.res_category.copy(cr, uid, self.cat_id, default={'name': 'Clients (copie)'}, context={'lang':'fr_BE'})
+        self.new_fr_cat_id = self.res_category.copy(cr, uid, self.cat_id, default={'name': 'Clients (copie)'}, context={'lang':'fr_FR'})
 
         no_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id)
         self.assertEqual(no_context_cat.name, 'Clients (copie)', "Duplication with default value not applied")
 
-        fr_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id, context={'lang':'fr_BE'})
+        fr_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id, context={'lang':'fr_FR'})
         self.assertEqual(fr_context_cat.name, 'Clients', "Did not found translation for initial value")
 
 
