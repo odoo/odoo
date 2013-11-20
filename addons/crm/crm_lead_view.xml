@@ -334,10 +334,10 @@
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]"
                             help="No salesperson"/>
-                    <filter string="Assigned to Me"
+                    <filter string="My Leads"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
                             help="Leads that are assigned to me"/>
-                    <filter string="Assigned to My Team(s)" groups="base.group_multi_salesteams"
+                    <filter string="My Team(s)" groups="base.group_multi_salesteams"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                             help="Leads that are assigned to any sales teams I am member of"/>
                     <filter string="Dead" name="dead"
