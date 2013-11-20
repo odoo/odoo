@@ -38,7 +38,7 @@ class WebsiteBlog(http.Controller):
 
     def nav_list(self):
         blog_post_obj = request.registry['blog.post']
-        groups = blog_post_obj.read_group(request.cr, request.uid, [], ['name', 'create_date'], 
+        groups = blog_post_obj.read_group(request.cr, request.uid, [], ['name', 'create_date'],
             groupby="create_date", orderby="create_date asc", context=request.context)
         for group in groups:
             group['date'] = "%s_%s" % (group['__domain'][0][2], group['__domain'][1][2])
@@ -76,7 +76,7 @@ class WebsiteBlog(http.Controller):
         '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/',
         '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>/',
     ], type='http', auth="public", multilang=True)
-    def blog(self, category=None, tag=None, date=None, page=1):
+    def blog(self, category=None, tag=None, date=None, page=1, **opt):
         """ Prepare all values to display the blog.
 
         :param category: category currently browsed.
