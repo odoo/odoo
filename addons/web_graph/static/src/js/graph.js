@@ -339,6 +339,11 @@ var PivotTable = instance.web.Widget.extend({
                 col_id: col.id,
             };
             var result = self.make_cell(col.value, options);
+            if (col.expanded) {
+                result.find('.icon-plus-sign')
+                    .removeClass('icon-plus-sign')
+                    .addClass('icon-minus-sign');
+            }
             return result;
         }
 
@@ -432,8 +437,13 @@ var PivotTable = instance.web.Widget.extend({
 
         _.each(this.cols, function (col) {
             col.cells.push({row_id: row_id, td: cell });
-            // insert cells into corresponding col
         });
+
+        if (!has_parent) {
+            header.find('.icon-plus-sign')
+                .removeClass('icon-plus-sign')
+                .addClass('icon-minus-sign');            
+        }
 
         var row = {
             id: row_id,
@@ -523,10 +533,6 @@ var PivotTable = instance.web.Widget.extend({
             this.data.col_groupby.push(field_id);
         }
         col.expanded = true;
-        // col.header.find('.icon-plus-sign')
-        //     .removeClass('icon-plus-sign')
-        //     .addClass('icon-minus-sign');
-
 
         var visible_fields = this.data.row_groupby.concat(this.data.col_groupby, this.data.measure);
         query_groups_data(this.data.model, visible_fields, col.domain, this.data.row_groupby, field_id)
