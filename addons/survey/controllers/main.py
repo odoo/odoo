@@ -22,6 +22,7 @@
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
+from openerp import SUPERUSER_ID
 
 import werkzeug
 import json
@@ -47,23 +48,51 @@ class WebsiteSurvey(http.Controller):
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
         return request.website.render('survey.list', {'surveys': surveys})
 
-    # Survey filling, validation and storage
-    @website.route(['/survey/fill/<model("survey.survey"):survey>'],
+    # Survey displaying
+    @website.route(['/survey/fill/<model("survey.survey"):survey>',
+        '/survey/fill/<model("survey.survey"):survey>/<string:token>'],
         type='http', auth='public', multilang=True)
-    def fill_survey(self, survey=None, **post):
+    def fill_survey(self, survey, token=None, **post):
         '''Display and validates a survey'''
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
+        user_input_obj = request.registry['survey.user_input']
 
         # In case of bad survey, redirect to surveys list
         if survey_obj.exists(cr, uid, survey.id, context=context) == []:
             return werkzeug.utils.redirect("/survey/")
 
-        _logger.debug('Post data: %s', post)
+        # In case of auth required, block public user
+        if survey.auth_required and uid == request.registry['website'].get_public_user(request.cr, SUPERUSER_ID, request.context).id:
+            return request.website.render("website.401")
 
-        # Store answer data
-        # (/!\ assumes JavaScript validation of answers has succeeded!)
-        # TODO
+        # In case of non open surveys
+        if survey.state != 'open':
+                return request.website.render("survey.notopen")
+
+        # If enough surveys completed
+        if survey.user_input_limit > 0:
+            completed = user_input_obj.search(cr, SUPERUSER_ID, [('state', '=', 'done')], count=True)
+            if completed >= survey.user_input_limit:
+                return request.website.render("survey.notopen")
+
+        # Manual surveying
+        if not token:
+            if survey.visible_to_user:
+                user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id})
+                user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+            else:  # An user cannot open hidden surveys without token
+                return request.website.render("website.403")
+
+        # if not auth_required and not token:
+        #   create un token et un user input
+        #   page = précédente + 1
+        # if token:
+        #   calculer la prochaine page à visiter
+
+
+
+        _logger.debug('Incoming data: %s', post)
 
         # Display success message if totally succeeded
         if post and post['next'] == "finished":
@@ -100,7 +129,7 @@ class WebsiteSurvey(http.Controller):
     @website.route(['/survey/submit/<model("survey.survey"):survey>'],
                     type='http', auth='public', multilang=True)
     def submit(self, survey, **post):
-        _logger.debug("Incoming data: " + post.__str__())
+        _logger.debug('Incoming data: %s', post)
         page_nr = int(post['current'])
         questions = survey.page_ids[page_nr].question_ids
 

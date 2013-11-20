@@ -18,7 +18,7 @@
         <record id="survey_public_access" model="ir.rule">
             <field name="name">Public access to surveys</field>
             <field name="model_id" ref="survey.model_survey_survey"/>
-            <field name="domain_force">[('state', '=', 'open'), ('visible_to_user', '=', True), ('auth_required', '=', False)]</field>
+            <field name="domain_force">[('state', '=', 'open'), ('auth_required', '=', False)]</field>
             <field name="groups" eval="[(4, ref('base.group_public'))]"/>
             <field eval="0" name="perm_unlink"/>
             <field eval="0" name="perm_write"/>

@@ -37,6 +37,19 @@
             </t>
         </template>
 
+        <!-- Message when the survey is not open  -->
+        <template id="notopen" name="Survey not open">
+            <t t-call="website.layout">
+                <div class="wrap">
+                    <div class="container">
+                        <div class="jumbotron">
+                            <h1>Not open</h1>
+                            <p>This survey is not open. Thank you for your interest!</p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
 
         <!-- A survey -->
         <template id="survey" name="Survey">

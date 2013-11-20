@@ -19,15 +19,15 @@
                     <filter string="New" domain="[('state','=', 'new')]"/>
                     <filter string="Test" domain="[('state','=', 'test')]"/>
                     <group expand="0" string="Group By...">
-                     <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by':'survey_id'}"/>
-                     <filter string="Email" domain="[]" context="{'group_by':'email'}"/>
-                     <filter string="Partner" domain="[]" context="{'group_by':['partner_id']}"/>
-                 </group>
-             </search>
-         </field>
-     </record>
+                       <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by':'survey_id'}"/>
+                       <filter string="Email" domain="[]" context="{'group_by':'email'}"/>
+                       <filter string="Partner" domain="[]" context="{'group_by':['partner_id']}"/>
+                   </group>
+               </search>
+           </field>
+       </record>
 
-     <record model="ir.ui.view" id="survey_user_input_form">
+       <record model="ir.ui.view" id="survey_user_input_form">
         <field name="name">survey_user_input_form</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
@@ -118,38 +118,59 @@
                     <!-- <button name="action_edit_survey" states="draft" string="Edit Survey" type="object" class="oe_highlight"/>
                     <button name="survey_cancel" string="Cancel" states="draft" type="object"/>
                     <button name="action_send_survey" string="Invite people" states="open" type="object" class="oe_highlight"/> -->
-                    <field name="state" widget="statusbar" nolabel="1" clickable="false" statusbar_visible="draft,open,close,cancelled"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,close,cancelled" clickable="True"/>
                 </header>
                 <sheet class="oe_survey">
-                    <div class="oe_button_box oe_right" groups="base.group_survey_manager">
-                        <button name="action_test_survey" string="Test Survey" type="object"/>
-                        <button name="action_print_survey" string="Print Survey" type="object"/>
-                    </div>
-                    <div class="oe_title">
-                        <label for="title" class="oe_edit_only"/>
-                        <h1>
-                            <field name="title" attrs="{'readonly':[('state','in',['close','cancel'])]}"/>
-                        </h1>
-                    </div>
-                    <field name="description" attrs="{'readonly': True}"/>
-                    <group string="Pages">
-                        <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}" context="{'default_survey_id': active_id}" nolabel="1">
-                            <tree>
-                                <field name="sequence" widget="handle"/>
-                                <field name="title"/>
-                                <field name="question_ids"/>
-                            </tree>
-                        </field>
-                    </group>
-                    <group string="Survey options">
-                        <field name="category" attrs="{'readonly':[('state','in',['close','cancel'])]}"/>
-                        <field name="user_input_limit" attrs="{'readonly':[('state','=','close')]}"/>
-                        <field name="visible_to_user"/>
-                        <field name="auth_required" />
-                        <field name="public_url" widget="url"/>
-                    </group>
-                    <label for="thank_you_message" class="oe_edit_only"/>
-                    <field name="thank_you_message" attrs="{'readonly': True}"/>
+                    <notebook colspan="4">
+                        <page string="Configuration">
+                            <div class="oe_button_box oe_right" groups="base.group_survey_manager">
+                                <button name="action_test_survey" string="Test Survey" type="object"/>
+                                <button name="action_print_survey" string="Print Survey" type="object"/>
+                            </div>
+                            <div class="oe_title">
+                                <label for="title" class="oe_edit_only"/>
+                                <h1>
+                                    <field name="title" attrs="{'readonly':[('state','in',['close','cancel'])]}"/>
+                                </h1>
+                            </div>
+                            <field name="description" attrs="{'readonly': True}"/>
+                        </page>
+                        <page string="Pages">
+                            <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}" context="{'default_survey_id': active_id}" nolabel="1">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="title"/>
+                                    <field name="question_ids"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Survey options">
+                            <group nolabel="1" colspan="4">
+                                <field name="category" attrs="{'readonly':[('state','in',['close','cancel'])]}"/>
+                                <field name="user_input_limit" attrs="{'readonly':[('state','=','close')]}"/>
+                                <field name="visible_to_user"/>
+                                <field name="auth_required" />
+                                <field name="users_can_go_back" />
+                                <field name="public_url" widget="url"/>
+                                <field name="thank_you_message" attrs="{'readonly': True}"/>
+                            </group>
+                        </page>
+                        <page string="User inputs">
+                            <field name="user_input_ids" colspan="4" mode="tree">
+                                <tree>
+                                    <field name="date_create"/>
+                                    <field name="deadline"/>
+                                    <field name="type"/>
+                                    <field name="state"/>
+                                    <field name="token"/>
+                                    <field name="partner_id"/>
+                                    <field name="email"/>
+                                    <field name="user_input_line_ids"/>
+                                </tree>
+                            </field>
+
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -195,14 +216,14 @@
                     <separator/>
                     <filter string="Not completed yet" name="unread_message" domain="['&amp;', ('response_ids.state', 'in', ['new', 'skip']), ('response_ids.partner_id.user_id', '=', uid)]"/>
                     <group expand="1" string="Group by...">
-                     <filter string="Category" name="group_category" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'category'}"/>
-                     <filter string="Status" name="group_status" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
-                 </group>
-             </search>
-         </field>
-     </record>
+                       <filter string="Category" name="group_category" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'category'}"/>
+                       <filter string="Status" name="group_status" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
+                   </group>
+               </search>
+           </field>
+       </record>
 
-     <record model="ir.ui.view" id="view_survey_kanban">
+       <record model="ir.ui.view" id="view_survey_kanban">
         <field name="name">event.survey.kanban</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
@@ -364,8 +385,6 @@
             <field name="context">{'search_default_group_by_survey': True}</field>
         </record>
 
-
-
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
             <field name="model">survey.page</field>
@@ -524,16 +543,14 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_survey_label_form">
-            <field name="name">Survey labels</field>
+            <field name="name">Survey Labels</field>
             <field name="res_model">survey.label</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <!--<field name="view_id" ref="survey_question_tree"></field>
-             <field name="search_view_id" ref="survey_question_search"/>
-             <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_page': True}</field> -->
-         </record>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'default_group_by_question': True}</field>
+        </record>
 
-         <record model="ir.ui.view" id="survey_question_wizard_test">
+        <record model="ir.ui.view" id="survey_question_wizard_test">
             <field name="name">survey_question_wizard_test</field>
             <field name="model">survey.question</field>
             <field name="priority">20</field>
@@ -689,34 +706,23 @@
     <menuitem name="Configuration" id="menu_surveys_configuration" parent="survey_main" sequence="30" groups="base.group_survey_manager"/>
 
     <!-- Left menu elements: Survey -->
-    <menuitem name="Surveys" id="menu_survey_form"
-        action="action_survey_form" parent="menu_surveys"
-        sequence="1"/>
+    <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
 
-        <!-- Left menu elements: Statistics -->
-        <menuitem name="Surveys User inputs" id="menu_survey_type_form1"
-            action="action_survey_user_input" parent="menu_statistics"
-            sequence="1"/>
+    <!-- Left menu elements: Statistics -->
+    <menuitem name="Surveys User inputs" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_statistics" sequence="1"/>
 
-            <!-- Left menu elements: Configuration -->
-            <menuitem name="Survey Pages" id="menu_survey_page_form1"
-                action="action_survey_page_form" parent="menu_surveys_configuration"
-                sequence="1"/>
+    <!-- Left menu elements: Configuration -->
+    <menuitem name="Survey Pages" id="menu_survey_page_form1" action="action_survey_page_form" parent="menu_surveys_configuration" sequence="1"/>
 
-                <menuitem name="Survey Questions" id="menu_survey_question_form1"
-                    action="action_survey_question_form" parent="menu_surveys_configuration"
-                    sequence="2"/>
+    <menuitem name="Survey Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
 
-                    <menuitem name="Survey labels" id="menu_survey_label_form1"
-                        action="action_survey_label_form" parent="menu_surveys_configuration"
-                        sequence="3"/>
+    <menuitem name="Survey labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
 
-                        <!-- web -->
-                        <record id="action_survey_fill2" model="ir.actions.client">
-                            <field name="res_model">survey.survey</field>
-                            <field name="tag">survey.fill2</field>
-                        </record>
-                        <menuitem id="menu_survey_fill2" name="Survey Fill" parent="menu_surveys"
-                            action="action_survey_fill2"/>
-                        </data>
-                    </openerp>
+    <!-- web -->
+    <record id="action_survey_fill2" model="ir.actions.client">
+        <field name="res_model">survey.survey</field>
+        <field name="tag">survey.fill2</field>
+    </record>
+    <menuitem id="menu_survey_fill2" name="Survey Fill" parent="menu_surveys" action="action_survey_fill2"/>
+    </data>
+</openerp>

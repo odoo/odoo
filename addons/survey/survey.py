@@ -40,7 +40,7 @@ class survey_survey(osv.osv):
 
     def _has_questions(self, cr, uid, ids, context=None):
         """ Ensure that this survey has at least one page with at least one
-        question. If not, raises an exception. """
+        question. """
         for survey in self.browse(cr, uid, ids, context=context):
             if not survey.page_ids or not [page.question_ids
                             for page in survey.page_ids if page.question_ids]:
@@ -85,21 +85,24 @@ class survey_survey(osv.osv):
     _columns = {
         'title': fields.char('Title', size=128, required=1,
             translate=True),
-        'category': fields.char('Category', size=128),
+        'category': fields.char('Category'),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
         'date_open': fields.datetime('Opening date'),
         'date_close': fields.datetime('Closing date'),
         'user_input_limit': fields.integer('Automatic closing limit',
-            help="Limits the number of instances of this survey that can be completed (if set to 0, no limit is applied",
+            help="Limits the number of instances of this survey that can be completed (if set to 0, no limit is applied)",
             oldname='max_response_limit'),
         'state': fields.selection(
             [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
             ('cancel', 'Cancelled')], 'Status', required=1, readonly=1,
             translate=1),
-        'visible_to_user': fields.boolean('Visible in the Surveys menu'),
+        'visible_to_user': fields.boolean('Visible in the Surveys menu',
+            help="If unchecked, only invited users will be able to open the survey."),
         'auth_required': fields.boolean('Login required',
-            help="Users with a public link will be requested to login before \
-            taking part to the survey", oldname="authenticate"),
+            help="Users with a public link will be requested to login before taking part to the survey",
+            oldname="authenticate"),
+        'users_can_go_back': fields.boolean('Users can go back',
+            help="If checked, users can go back to previous pages."),
         'tot_start_survey': fields.function(_get_tot_start_survey,
             string="Number of started surveys", type="integer"),
         'tot_comp_survey': fields.function(_get_tot_comp_survey,
@@ -110,7 +113,7 @@ class survey_survey(osv.osv):
         'user_input_ids': fields.one2many('survey.user_input', 'survey_id',
             'User responses', readonly=1,),
         'public_url': fields.function(_get_public_url,
-            string="Public link", searchable=True, type="char"),  # store=True),
+            string="Public link", searchable=True, type="char", store=True),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
         'thank_you_message': fields.html('Thank you message', translate=True,
@@ -118,36 +121,19 @@ class survey_survey(osv.osv):
     }
 
     _defaults = {
-        'category': lambda x: _('Uncategorized'),
+        'category': lambda s, cr, uid, c: _('Uncategorized'),
         'user_input_limit': 0,
         'state': 'draft',
         'visible_to_user': True,
         'auth_required': True,
+        'users_can_go_back': False
+    }
+
+    _sql_constraints = {
+        ('positive_user_input_limit', 'CHECK (user_input_limit >= 0)', 'Automatic closing limit must be positive')
     }
 
     # Public methods #
-
-    ## Workflow transitions ##
-
-    def survey_draft(self, cr, uid, ids, arg):
-        return self.write(cr, uid, ids, {'state': 'draft', 'date_open': None})
-
-    def survey_open(self, cr, uid, ids, arg):
-        if self._has_questions(cr, uid, ids, context=None):
-            return self.write(cr, uid, ids, {'state': 'open',
-                                            'date_open': fields.datetime.now})
-        else:
-            raise osv.except_osv(_('Error!'), _('You can not open a survey that has no questions.'))
-
-    def survey_close(self, cr, uid, ids, arg):
-        return self.write(cr, uid, ids, {'state': 'close',
-            'date_close': fields.datetime.now})
-
-    def survey_cancel(self, cr, uid, ids, arg):
-        return self.write(cr, uid, ids, {'state': 'cancel',
-            'date_close': fields.datetime.now})
-
-    ## Actions ##
 
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
@@ -249,6 +235,22 @@ class survey_survey(osv.osv):
             'context': ctx,
         }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        new_state = vals.get('state')
+        if new_state == 'draft':
+            vals.update({'date_open': None})
+            vals.update({'date_close': None})
+        elif new_state == 'open':
+            if self._has_questions(cr, uid, ids, context=None):
+                vals.update({'date_open': fields.datetime.now(), 'date_close': None})
+            else:
+                raise osv.except_osv(_('Error!'), _('You can not open a survey that has no questions.'))
+        elif new_state == 'close':
+            vals.update({'date_close': fields.datetime.now()})
+        else:
+            pass
+        return super(survey_survey, self).write(cr, uid, ids, vals, context=None)
+
     # def unlink(self, cr, uid, ids, context=None):
     #     ''' Delete survey and linked email templates (if any) '''
     #     email_template_ids = list()
@@ -295,20 +297,20 @@ class survey_page(osv.osv):
 
     # Public methods #
 
-    def survey_save(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        surv_name_wiz = self.pool.get('survey.question.wiz')
-        surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)],
-            {'transfer': True, 'page_no': context.get('page_number', 0)})
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': context
-        }
+    # def survey_save(self, cr, uid, ids, context=None):
+    #     if context is None:
+    #         context = {}
+    #     surv_name_wiz = self.pool.get('survey.question.wiz')
+    #     surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)],
+    #         {'transfer': True, 'page_no': context.get('page_number', 0)})
+    #     return {
+    #         'view_type': 'form',
+    #         'view_mode': 'form',
+    #         'res_model': 'survey.question.wiz',
+    #         'type': 'ir.actions.act_window',
+    #         'target': 'new',
+    #         'context': context
+    #     }
 
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
@@ -383,8 +385,8 @@ class survey_question(osv.osv):
             ('is_integer', 'Must be an integer'),
             ('is_decimal', 'Must be a decimal number'),
             #('is_date', 'Must be a date'),
-            ('is_email', 'Must be an email address')
-            ], 'Validation type'),
+            ('is_email', 'Must be an email address')],
+            'Validation type'),
         'validation_length_min': fields.integer('Minimum length'),
         'validation_length_max': fields.integer('Maximum length'),
         'validation_min_float_value': fields.float('Minimum value'),
@@ -582,7 +584,7 @@ class survey_user_input(osv.osv):
             readonly=True),
 
         # Optional Identification data
-        'token': fields.char("Indentification token", readonly=1, size=36),
+        'token': fields.char("Identification token", readonly=1, size=36),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
         'email': fields.char("E-mail", size=64, readonly=1),
 
