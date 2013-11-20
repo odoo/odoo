@@ -129,13 +129,11 @@
                     label: 'Link',
                     command: 'link',
                     toolbar: 'links,10',
-                    icon: '/website/static/lib/ckeditor/plugins/link/icons/link.png',
                 });
                 editor.ui.addButton('Image', {
                     label: 'Image',
                     command: 'image',
                     toolbar: 'insert,10',
-                    icon: '/website/static/lib/ckeditor/plugins/image/icons/image.png',
                 });
 
                 editor.setKeystroke(CKEDITOR.CTRL + 76 /*L*/, 'link');
