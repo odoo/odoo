@@ -80,16 +80,16 @@
                         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
 
                         <t t-if="editable" id="editable_scripts_hook">
-                            <script type="text/javascript" src="/select2/static/lib/select2/select2.js"></script>
                             <link rel="stylesheet" href="/select2/static/lib/select2/select2.css"/>
                             <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
-                            <script type="text/javascript" src="/website/static/lib/ckeditor/ckeditor.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/ckeditor.sharedspace/plugin.js"></script>
+                            <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
+
+                            <script type="text/javascript" src="/select2/static/lib/select2/select2.js"></script>
+                            <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
                             <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
                             <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
                             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-                            <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
                             <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
                             <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
                             <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
