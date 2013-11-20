@@ -519,39 +519,9 @@ class project_issue(osv.Model):
             'partner_id': msg.get('author_id', False),
             'user_id': False,
         }
-        if msg.get('priority'):
-            defaults['priority'] = msg.get('priority')
-
         defaults.update(custom_values)
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         return res_id
-
-    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
-        """ Overrides mail_thread message_update that is called by the mailgateway
-            through message_process.
-            This method updates the document according to the email.
-        """
-        if isinstance(ids, (str, int, long)):
-            ids = [ids]
-        if update_vals is None: update_vals = {}
-
-        # Update doc values according to the message
-        if msg.get('priority'):
-            update_vals['priority'] = msg.get('priority')
-        # Parse 'body' to find values to update
-        maps = {
-            'cost': 'planned_cost',
-            'revenue': 'planned_revenue',
-            'probability': 'probability',
-        }
-        for line in msg.get('body', '').split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res and maps.get(res.group(1).lower(), False):
-                key = maps.get(res.group(1).lower())
-                update_vals[key] = res.group(2).lower()
-
-        return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when

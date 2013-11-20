@@ -836,9 +836,11 @@ class crm_lead(format_address, osv.osv):
         model_data = self.pool.get('ir.model.data')
         phonecall_dict = {}
         if not categ_id:
-            res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
-            if res_id:
+            try:
+                res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
                 categ_id = model_data.browse(cr, uid, res_id, context=context).res_id
+            except ValueError:
+                pass
         for lead in self.browse(cr, uid, ids, context=context):
             if not section_id:
                 section_id = lead.section_id and lead.section_id.id or False
@@ -944,6 +946,23 @@ class crm_lead(format_address, osv.osv):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        if not context:
+            context = {}
+        lead = self.browse(cr, uid, id, context=context)
+        local_context = dict(context)
+        local_context.setdefault('default_type', lead.type)
+        local_context.setdefault('default_section_id', lead.section_id)
+        if lead.type == 'opportunity':
+            default['date_open'] = fields.datetime.now()
+        else:
+            default['date_open'] = False
+        default['date_closed'] = False
+        default['stage_id'] = self._get_default_stage_id(cr, uid, local_context)
+        return super(crm_lead, self).copy(cr, uid, id, default, context=context)
 
     # ----------------------------------------
     # Mail Gateway

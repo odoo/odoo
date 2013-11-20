@@ -1131,7 +1131,8 @@ class task(osv.osv):
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
-        if custom_values is None: custom_values = {}
+        if custom_values is None:
+            custom_values = {}
         defaults = {
             'name': msg.get('subject'),
             'planned_hours': 0.0,
@@ -1141,10 +1142,10 @@ class task(osv.osv):
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """
-        if update_vals is None: update_vals = {}
-        act = False
+        if update_vals is None:
+            update_vals = {}
         maps = {
-            'cost':'planned_hours',
+            'cost': 'planned_hours',
         }
         for line in msg['body'].split('\n'):
             line = line.strip()
@@ -1157,9 +1158,7 @@ class task(osv.osv):
                         update_vals[field] = float(res.group(2).lower())
                     except (ValueError, TypeError):
                         pass
-        if act:
-            getattr(self,act)(cr, uid, ids, context=context)
-        return super(task,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+        return super(task, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
 class project_work(osv.osv):
     _name = "project.task.work"

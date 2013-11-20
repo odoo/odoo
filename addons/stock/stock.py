@@ -243,6 +243,9 @@ class stock_location(osv.osv):
         if location.chained_location_type == 'customer':
             if partner:
                 result = partner.property_stock_customer
+            else:
+                loc_id = self.pool['res.partner'].default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
+                result = self.pool['stock.location'].browse(cr, uid, loc_id, context=context)
         elif location.chained_location_type == 'fixed':
             result = location.chained_location_id
         if result:
@@ -1267,17 +1270,17 @@ class stock_picking(osv.osv):
                     context['currency_id'] = move_currency_id
                     qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
 
-                    if product.id in product_avail:
-                        product_avail[product.id] += qty
-                    else:
+                    if product.id not in product_avail:
+                        # keep track of stock on hand including processed lines not yet marked as done
                         product_avail[product.id] = product.qty_available
 
                     if qty > 0:
                         new_price = currency_obj.compute(cr, uid, product_currency,
-                                move_currency_id, product_price)
+                                move_currency_id, product_price, round=False)
                         new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
                                 product.uom_id.id)
-                        if product.qty_available <= 0:
+                        if product_avail[product.id] <= 0:
+                            product_avail[product.id] = 0
                             new_std_price = new_price
                         else:
                             # Get the standard price
@@ -1292,6 +1295,9 @@ class stock_picking(osv.osv):
                         move_obj.write(cr, uid, [move.id],
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
+
+                        product_avail[product.id] += qty
+
 
 
             for move in too_few:
@@ -2359,7 +2365,7 @@ class stock_move(osv.osv):
                         {
                          'journal_id': j_id,
                          'line_id': move_lines,
-                         'ref': move.picking_id and move.picking_id.name})
+                         'ref': move.picking_id and move.picking_id.name}, context=context)
 
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
@@ -2697,7 +2703,7 @@ class stock_move(osv.osv):
                 qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
                 if qty > 0:
                     new_price = currency_obj.compute(cr, uid, product_currency,
-                            move_currency_id, product_price)
+                            move_currency_id, product_price, round=False)
                     new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
                             product.uom_id.id)
                     if product.qty_available <= 0:
@@ -3031,6 +3037,13 @@ class stock_picking_in(osv.osv):
         """Send the unsubscribe action on stock.picking model to match with subscribe"""
         return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
 
+    def default_get(self, cr, uid, fields_list, context=None):
+        # merge defaults from stock.picking with possible defaults defined on stock.picking.in
+        defaults = self.pool['stock.picking'].default_get(cr, uid, fields_list, context=context)
+        out_defaults = super(stock_picking_in, self).default_get(cr, uid, fields_list, context=context)
+        defaults.update(in_defaults)
+        return defaults
+
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'state': fields.selection(
@@ -3103,6 +3116,13 @@ class stock_picking_out(osv.osv):
     def message_unsubscribe(self, *args, **kwargs):
         """Send the unsubscribe action on stock.picking model to match with subscribe"""
         return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        # merge defaults from stock.picking with possible defaults defined on stock.picking.out
+        defaults = self.pool['stock.picking'].default_get(cr, uid, fields_list, context=context)
+        out_defaults = super(stock_picking_out, self).default_get(cr, uid, fields_list, context=context)
+        defaults.update(out_defaults)
+        return defaults
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
