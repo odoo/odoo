@@ -151,11 +151,12 @@
                         self.style_templates[snipped_id] = {
                             'snipped-id' : snipped_id,
                             'selector': $style.data('selector'),
-                            'class': $style.find(".oe_snippet_class").text(),
-                            'label': $style.find(".oe_snippet_label").text()
+                            'class': $style.data("class"),
+                            'label': $style.find(".oe_snippet_label").text(),
+                            'group': $style.find(".oe_snippet_group").text()
                         };
                     });
-                    $styles.remove();
+                    $styles.addClass("hidden");
 
                     self.$snippets = $html.find(".tab-content > div > div").addClass("oe_snippet");
                     self.$el.append($html);
@@ -530,11 +531,11 @@
 
     website.snippet.editorRegistry = {};
     website.snippet.Editor = openerp.Class.extend({
-        init: function (parent, dom) {
+        init: function (parent, dom, force_snippet_id) {
             this.parent = parent;
             this.$target = $(dom);
             this.$overlay = this.$target.data('overlay');
-            this.snippet_id = this.$target.data("snippet-id");
+            this.snippet_id = force_snippet_id || this.$target.data("snippet-id");
             this._readXMLData();
             this.load_style_options();
             this.get_parent_block();
@@ -651,6 +652,10 @@
         },
 
         load_style_options: function () {
+            if (this.$target.data('snippetStyles')) {
+                return;
+            }
+
             var self = this;
             var $styles = this.$overlay.find('.oe_options');
             var $ul = $styles.find('ul:first');
@@ -660,30 +665,77 @@
                 }
                 var $li = $("<li class='oe_style'/>").data(val);
                 $li.append($('<a/>').text(val.label));
-                $ul.append($li);
-                if (self.$target.hasClass( "oe_snippet_" + $li.data("snipped-id") )) {
+                if (self.$target.hasClass( val.class )) {
                     $li.addClass("active");
                 }
-                $styles.removeClass("hidden");
-            });
-            $styles.on('click', 'li.oe_style a', _.bind(this.change_style, this));
-        },
-        change_style: function (event) {
-            var $li = $(event.currentTarget).parent();
-            var snipped_id = $li.data("snipped-id");
-            var active = $li.hasClass("active");
 
-            if (website.snippet.editorRegistry[snipped_id]) {
-                var snippet = new website.snippet.editorRegistry[snipped_id](this, this.$target);
-                snippet.drop_and_build_snippet(this.$target);
+                if (val.group.length) {
+                    var $group = $ul.find("li.dropdown-submenu").filter(function () {
+                        return $("a:first", this).text() === val.group;
+                    });
+                    if (!$group.length) {
+                        $group = $('<li class="dropdown-submenu"><a href="#" tabindex="-1"/><ul class="dropdown-menu"/></li>');
+                        $group.find("a").text(val.group);
+                        $ul.append($group);
+                    }
+                    $group.find("ul").append($li);
+                } else {
+                    $ul.append($li);
+                }
+            });
+            
+            if ($ul.find("li").length) {
+                $styles.removeClass("hidden");
+                // il they are only one group, display in flat mode
+                var $groups = $ul.find("li.dropdown-submenu");
+                if ($groups.length === 1) {
+                    $ul.append($groups.find("ul li"));
+                    $groups.remove();
+                }
             }
-            var _class = "oe_snippet_" + snipped_id + " " + ($li.data("class") || "");
-            if (active) {
-                this.$target.removeClass(_class);
-            } else {
-                this.$target.addClass(_class);
-            }
-            $li.toggleClass("active");
+
+            this.$target.data('snippetStyles', $styles);
+            this.change_style();
+        },
+        change_style: function () {
+            var self = this;
+
+            this.$overlay.find('.oe_options li.oe_style a')
+                .on('click', function (event) {
+                    var $li = $(event.currentTarget).parent();
+                    var active = $li.hasClass("active");
+
+                    if ($li.hasClass("active")) {
+                        self.$target.removeClass($li.data('class'));
+                    } else {
+                        var $prev = $li.parent("ul").find("li.active").removeClass("active");
+                        if ($prev.length) {
+                            self.$target.removeClass($prev.data('class'));
+                            // active snippet after remove class
+                            if (website.snippet.editorRegistry[$prev.data("snipped-id")]) {
+                                new website.snippet.editorRegistry[$prev.data("snipped-id")](self.parent, self.$target, $prev.data("snipped-id"))
+                                    .drop_and_build_snippet(self.$target);
+                            }
+                        }
+                        self.$target.addClass($li.data('class'));
+                    }
+
+                    // active snippet after add or remove class
+                    if (website.snippet.editorRegistry[$li.data("snipped-id")]) {
+                        new website.snippet.editorRegistry[$li.data("snipped-id")](self.parent, self.$target, $li.data("snipped-id"))
+                            .drop_and_build_snippet(self.$target);
+                    }
+                    
+                    $li.toggleClass("active");
+                })
+                .on('mouseover', function (event) {
+                    self.$target.removeClass(self.$overlay.find('.oe_options li.oe_style.active').data('class') || "");
+                    self.$target.addClass($(event.currentTarget).parent().data('class') || "");
+                })
+                .on('mouseout', function (event) {
+                    self.$target.removeClass($(event.currentTarget).parent().data('class') || "");
+                    self.$target.addClass(self.$overlay.find('.oe_options li.oe_style.active').data('class') || "");
+                });
         },
 
         get_parent_block: function () {
@@ -792,7 +844,7 @@
 
         set_options_background: function (bg, ul_options) {
             var $ul = this.$editor.find(ul_options);
-            var bg_value = (typeof bg === 'string' ? this.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
+            var bg_value = (typeof bg === 'string' ? this.$target.find(bg) : $(bg)).css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
 
             // select in ul options
             $ul.find("li").removeClass("active");
@@ -1228,6 +1280,32 @@
                     self.$target.removeClass('oe_big oe_small oe_medium');
                     self.$target.addClass($ul.find('li.active').data("value"));
                 });
+        }
+    });
+
+    website.snippet.editorRegistry.custom_background = website.snippet.Editor.extend({
+        drop_and_build_snippet: function() {
+            var self = this;
+            var active = this.$target.hasClass(this.$el.data("class"));
+            if (active) {
+                var bg_value = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
+                var editor = new website.editor.ImageDialog();
+                editor.on('start', self, function (o) {o.url = bg_value;});
+                editor.on('save', self, function (o) {
+                    self.$target.css("background-image", "url(" + o.url + ")");
+                });
+                editor.on('cancel', self, function () {
+                    if (bg_value === "") {
+                        self.$target.data("snippetStyles").find(".oe_style").filter(function () {
+                            return $(this).data('snipped-id') === 'custom_background';
+                        }).removeClass('active');
+                        self.$target.removeClass(self.$el.data("class"));
+                    }
+                });
+                editor.appendTo($('body'));
+            } else {
+                this.$target.css("background-image", "");
+            }
         }
     });
 
