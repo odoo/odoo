@@ -72,7 +72,7 @@ class WebsiteSurvey(http.Controller):
 
         # If enough surveys completed
         if survey.user_input_limit > 0:
-            completed = user_input_obj.search(cr, SUPERUSER_ID, [('state', '=', 'done')], count=True)
+            completed = user_input_obj.search(cr, uid, [('state', '=', 'done')], count=True)
             if completed >= survey.user_input_limit:
                 return request.website.render("survey.notopen")
 
@@ -83,16 +83,15 @@ class WebsiteSurvey(http.Controller):
                 user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
             else:  # An user cannot open hidden surveys without token
                 return request.website.render("website.403")
-
-        # if not auth_required and not token:
-        #   create un token et un user input
-        #   page = précédente + 1
-        # if token:
-        #   calculer la prochaine page à visiter
-
-
+        else:
+            user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
+            user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
 
         _logger.debug('Incoming data: %s', post)
+
+        # if user input.state = new => page -1
+        # sinon, chercher la dernière page sur laquelle on a des infos enregistrées
+        # si c'est la dernière, afficher la page de conclusion
 
         # Display success message if totally succeeded
         if post and post['next'] == "finished":
@@ -115,7 +114,8 @@ class WebsiteSurvey(http.Controller):
 
         return request.website.render('survey.survey',
                                     {'survey': survey,
-                                    'pagination': pagination})
+                                    'pagination': pagination,
+                                    'token': user_input.token})
 
     # @website.route(['/survey/prefill/<model("survey.survey"):survey>'], type='json', auth='public', multilang=True):
 
