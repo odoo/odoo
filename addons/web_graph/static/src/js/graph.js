@@ -163,11 +163,11 @@ var PivotTable = instance.web.Widget.extend({
             event.preventDefault();
             this.dropdown.remove();
             if (event.target.attributes['data-row-id'] !== undefined) {
-                var id = event.target.attributes['data-row-id'].nodeValue;
+                id = event.target.attributes['data-row-id'].nodeValue;
                 this.expand_row(id, field_id);
             } 
             if (event.target.attributes['data-col-id'] !== undefined) {
-                var id = event.target.attributes['data-col-id'].nodeValue;
+                id = event.target.attributes['data-col-id'].nodeValue;
                 this.expand_col(id, field_id);
             } 
         },
@@ -309,27 +309,106 @@ var PivotTable = instance.web.Widget.extend({
     },
 
     make_top_headers : function () {
-        var self = this;
+        var self = this,
+            header;
 
-        var height = maxInArray(_.map(self.rows, function(g) {return g.path.length;}),1);
+        function partition (columns) {
+            return _.reduce(columns, function (partial, col) {
+                if (partial.length === 0) return [[col]];
+                if (col.path.length > _.first(_.last(partial)).path.length) {
+                    _.last(partial).push(col);
+                } else {
+                    partial.push([col]);
+                }
+                return partial;
+            }, []);
+        }
 
-        var header = $('<tr></tr>');
-        header.append(this.make_cell('', {is_border:true, }).attr('colspan', height));
+        function side_by_side(blocks) {
+            var result = _.zip.apply(_,blocks);
+            result = _.map(result, function(line) {return _.compact(_.flatten(line))});
+            return result;
+        }
 
-        _.each(this.cols, function (col) {
-            if (col.children.length === 0) {
-                var options = {is_border: true, foldable:true, col_id: col.id};
-                header.append(self.make_cell(col.value, options));
+        function make_header_cell(col, span) {
+            var options = {
+                is_border:true,
+                foldable:true,
+                row_span: (span === undefined) ? 1 : span,
+                col_id: col.id,
+            };
+            var result = self.make_cell(col.value, options);
+            return result;
+        }
+
+        function calculate_width(cols) {
+            if (cols.length === 1) {
+                return 1;
             }
-        });
-        header.addClass('graph_top');
-        this.headers = [header];
+            var p = partition(_.rest(cols));
+            return _.reduce(p, function(x, y){ return x + calculate_width(y); }, 0);
+        }
+
+        function make_header_cells(cols, height) {
+            var p = partition(cols);
+            if ((p.length === 1) && (p[0].length === 1)) {
+                var result = [[make_header_cell(cols[0], height)]];
+                return result;
+            }
+            if ((p.length === 1) && (p[0].length > 1)) {
+                var cell = make_header_cell(p[0][0]);
+                cell.attr('colspan', calculate_width(cols));
+                return [[cell]].concat(make_header_cells(_.rest(cols), height - 1));
+            }
+            if (p.length > 1) {
+                return side_by_side(_.map(p, function (group) {
+                    return make_header_cells(group, height);
+                }));
+            }
+        }
+
+        if (this.cols.length === 1) {
+            header = $('<tr></tr>');
+            header.append(this.make_cell('', {is_border:true}));
+            header.append(this.make_cell(this.cols[0].value, 
+                {is_border:true, foldable:true, col_id:this.cols[0].id}));
+            header.addClass('graph_top');
+            this.headers = [header];
+        } else {
+            console.log("cols",this.cols);
+            var height = _.max(_.map(self.cols, function(g) {return g.path.length;}));
+            console.log("height",height);
+            var header_rows = make_header_cells(_.rest(this.cols), height);
+
+            header_rows[0].splice(0,0,self.make_cell('', {is_border:true, }).attr('rowspan', height))
+            console.log("header rows",header_rows);
+            self.headers = [];
+            _.each(header_rows, function (cells) {
+                header = $('<tr></tr>');
+                console.log("cells",cells);
+                header.append(cells);
+                header.addClass('graph_top');
+                self.headers.push(header);
+            });
+
+            // header = 
+            // header.append(this.make_cell('', {is_border:true, }).attr('rowspan', height));
+
+            // _.each(this.cols, function (col) {
+            //     if (col.children.length === 0) {
+            //         var options = {is_border: true, foldable:true, col_id: col.id};
+            //         header.append(self.make_cell(col.value, options));
+            //     }
+            // });
+            // header.addClass('graph_top');
+            // this.headers = [header];
+        }
     },
 
     draw_top_headers: function () {
         var self = this;
         $("tr.graph_top").remove();
-        _.each(this.headers, function (header) {
+        _.each(this.headers.reverse(), function (header) {
             self.$el.prepend(header);
         });
 
@@ -408,6 +487,8 @@ var PivotTable = instance.web.Widget.extend({
 
         var cell = $('<td></td>');
         if (options.is_border) cell.addClass('graph_border');
+        if (options.row_span) cell.attr('rowspan', options.row_span);
+        if (options.col_span) cell.attr('rowspan', options.col_span);
         _.each(_.range(options.indent), function () {
             cell.prepend($('<span/>', {class:'web_graph_indent'}));
         });
@@ -468,7 +549,7 @@ var PivotTable = instance.web.Widget.extend({
                 _.each(groups, function (group) {
                     var new_col = {
                         id: self.generate_id(),
-                        path: col.path.concat(field_id),
+                        path: col.path.concat(group[0].attributes.value[1]),
                         value: group[0].attributes.value[1],
                         expanded: false,
                         parent: col_id,
@@ -479,7 +560,8 @@ var PivotTable = instance.web.Widget.extend({
                     };
                     // col.header.css('display','none');
                     col.children.push(new_col.id);
-                    self.cols.push(new_col);
+                    insertAfter(self.cols, col, new_col)
+                    // self.cols.push(new_col);
                     _.each(col.cells, function (cell) {
                         var col_path = self.get_row(cell.row_id).path;
 
@@ -523,7 +605,7 @@ var PivotTable = instance.web.Widget.extend({
             .addClass('icon-plus-sign');
 
         var fold_levels = _.map(self.rows, function(g) {return g.path.length;});
-        var new_groupby_length = maxInArray(fold_levels);
+        var new_groupby_length = _.max(fold_levels); 
 
         this.data.row_groupby.splice(new_groupby_length);
     },

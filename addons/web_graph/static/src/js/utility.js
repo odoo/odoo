@@ -6,17 +6,10 @@ function removeFromArray(array, element) {
     }
 }
 
-function maxInArray(array, def_val) {
-    if (def_val === undefined ) {def_val = 0;}
-    
-    if (array.length === 0) {
-        return def_val;
-    } else {
-        return _.reduce(array, function (x, y) {
-            return Math.max(x,y);
-        }, def_val);
-    }
+function insertAfter(array, after, elem) {
+    array.splice(array.indexOf(after) + 1, 0, elem);
 }
+
 /**
  * Query the server and return a deferred which will return the data
  * with all the groupbys applied (this is done for now, but the goal
