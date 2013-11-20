@@ -65,6 +65,9 @@
                             domain="[]" context="{'group_by':'date_assign'}"/>
 
                 </filter>
+                <filter string="My Team(s)" position="after">
+                    <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
+                </filter>
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
                 </field>
@@ -130,6 +133,9 @@
             <field name="arch" type="xml">
                 <filter string="Team" position="after">
                     <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                </filter>
+                <filter string="My Team(s)" position="after">
+                    <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
                 </filter>
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
