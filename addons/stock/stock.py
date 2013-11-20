@@ -797,13 +797,13 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').force_assign(cr, uid, move_ids, context=context)
         return True
 
-    def cancel_assign(self, cr, uid, ids, *args):
+    def cancel_assign(self, cr, uid, ids, context=None):
         """ Cancels picking and moves.
         @return: True
         """
-        for pick in self.browse(cr, uid, ids):
+        for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines]
-            self.pool.get('stock.move').cancel_assign(cr, uid, move_ids)
+            self.pool.get('stock.move').cancel_assign(cr, uid, move_ids, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -832,23 +832,24 @@ class stock_picking(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
+        #on picking deletion, cancel its move then unlink them too
         move_obj = self.pool.get('stock.move')
         context = context or {}
         for pick in self.browse(cr, uid, ids, context=context):
-            ids2 = [move.id for move in pick.move_lines]
-            move_obj.action_cancel(cr, uid, ids2, context=context)
-            move_obj.unlink(cr, uid, ids2, context=context)
+            move_ids = [move.id for move in pick.move_lines]
+            move_obj.action_cancel(cr, uid, move_ids, context=context)
+            move_obj.unlink(cr, uid, move_ids, context=context)
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(stock_picking, self).write(cr, uid, ids, vals, context=context)
+        #if we changed the move lines or the pack operations, we need to recompute the remaining quantities of both
         if 'move_lines' in vals or 'pack_operation_ids' in vals:
             self.do_recompute_remaining_quantities(cr, uid, ids, context=context)
         return res
 
     def _create_backorder(self, cr, uid, picking, backorder_moves=[], context=None):
-        """
-            Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
+        """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
         """
         if not backorder_moves:
             backorder_moves = picking.move_lines
@@ -874,6 +875,7 @@ class stock_picking(osv.osv):
         return False
 
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
+        #TODO refactore me
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
         pack_obj = self.pool.get("stock.quant.package")
@@ -979,7 +981,8 @@ class stock_picking(osv.osv):
                         _create_link_for_product(product_id, qty)
 
     def _create_extra_moves(self, cr, uid, picking, context=None):
-        '''This function creates move lines on a picking, at the time of do_transfer, based on unexpected product transfers (or exceeding quantities) found in the pack operations
+        '''This function creates move lines on a picking, at the time of do_transfer, based on
+        unexpected product transfers (or exceeding quantities) found in the pack operations.
         '''
         move_obj = self.pool.get('stock.move')
         operation_obj = self.pool.get('stock.pack.operation')
@@ -1001,6 +1004,7 @@ class stock_picking(osv.osv):
         self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
 
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
+        """ Unreserve quants then try to reassign quants."""
         stock_move_obj = self.pool.get('stock.move')
         if not move_ids:
             self.do_unreserve(cr, uid, [picking.id], context=context)
@@ -1055,26 +1059,31 @@ class stock_picking(osv.osv):
         return True
 
     def do_split(self, cr, uid, picking_ids, context=None):
-        """
-            just split the picking without making it 'done'
-        """
+        """ just split the picking (create a backorder) without making it 'done' """
         if context is None:
             context = {}
         ctx = context.copy()
         ctx['do_only_split'] = True
-        self.do_transfer(cr, uid, picking_ids, context=ctx)
-        return True
+        return self.do_transfer(cr, uid, picking_ids, context=ctx)
 
-    # Methods for the barcode UI
-    def get_picking_for_packing_ui(self, cr, uid, context=None):
-        return self.search(cr, uid, [('state', 'in', ('confirmed', 'assigned')), ('picking_type_id', '=', context.get('default_picking_type_id'))], context=context)
+    def get_next_picking_for_ui(self, cr, uid, context=None):
+        """ returns the next pickings to process. Used in the barcode scanner UI"""
+        if context is None:
+            context = {}
+        domain = [('state', 'in', ('confirmed', 'assigned'))]
+        if context.get('default_picking_type_id'):
+            domain.append(('picking_type_id', '=', context['default_picking_type_id']))
+        return self.search(cr, uid, domain, context=context)
 
-    def action_done_from_packing_ui(self, cr, uid, picking_id, only_split_lines=False, context=None):
-        self.do_transfer(cr, uid, picking_id, only_split_lines, context=context)
+    def action_done_from_ui(self, cr, uid, picking_id, context=None):
+        """ called when button 'done' in pused in the barcode scanner UI """
+        self.do_transfer(cr, uid, [picking_id], context=context)
         #return id of next picking to work on
-        return self.get_picking_for_packing_ui(cr, uid, context=context)
+        return self.get_next_picking_for_ui(cr, uid, context=context)
 
     def action_pack(self, cr, uid, picking_ids, context=None):
+        """ Create a package with the current pack_operation_ids of the picking that aren't yet in a pack.
+        Used in the barcode scanner UI and the normal interface as well. """
         stock_operation_obj = self.pool.get('stock.pack.operation')
         package_obj = self.pool.get('stock.quant.package')
         for picking_id in picking_ids:
@@ -1084,51 +1093,30 @@ class stock_picking(osv.osv):
                 stock_operation_obj.write(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
         return True
 
-    #TODO: commented because quant_id has been removed from pack operation object
-    #def _deal_with_quants(self, cr, uid, picking_id, quant_ids, context=None):
-    #    stock_operation_obj = self.pool.get('stock.pack.operation')
-    #    todo_on_moves = []
-    #    todo_on_operations = []
-    #    for quant in self.pool.get('stock.quant').browse(cr, uid, quant_ids, context=context):
-    #        tmp_moves, tmp_operations = stock_operation_obj._search_and_increment(cr, uid, picking_id, ('quant_id', '=', quant.id), context=context)
-    #        todo_on_moves += tmp_moves
-    #        todo_on_operations += tmp_operations
-    #    return todo_on_moves, todo_on_operations
+    def process_product_id_from_ui(self, cr, uid, picking_id, product_id, context=None):
+        return self.pool.get('stock.pack.operation')._search_and_increment(cr, uid, picking_id, [('product_id', '=', product_id)], context=context)
 
-    def get_barcode_and_return_todo_stuff(self, cr, uid, picking_id, barcode_str, context=None):
+    def process_barcode_from_ui(self, cr, uid, picking_id, barcode_str, context=None):
         '''This function is called each time there barcode scanner reads an input'''
-        #TODO: better error messages handling => why not real raised errors
-        quant_obj = self.pool.get('stock.quant')
+        lot_obj = self.pool.get('stock.production.lot')
         package_obj = self.pool.get('stock.quant.package')
         product_obj = self.pool.get('product.product')
         stock_operation_obj = self.pool.get('stock.pack.operation')
-        error_msg = ''
-        todo_on_moves = []
-        todo_on_operations = []
         #check if the barcode correspond to a product
         matching_product_ids = product_obj.search(cr, uid, [('ean13', '=', barcode_str)], context=context)
         if matching_product_ids:
-            todo_on_moves, todo_on_operations = stock_operation_obj._search_and_increment(cr, uid, picking_id, ('product_id', '=', matching_product_ids[0]), context=context)
+            self.process_product_id_from_ui(cr, uid, picking_id, matching_product_ids[0], context=context)
 
-        #TODO: if barcode is a lot instead of a quant => replace next lines
-        ##check if the barcode correspond to a quant
-        #matching_quant_ids = quant_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)  # TODO need the location clause
-        #if matching_quant_ids:
-        #    todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, [matching_quant_ids[0]], context=context)
+        #check if the barcode correspond to a lot
+        matching_lot_ids = lot_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
+        if matching_lot_ids:
+            lot = lot_obj.browse(cr, uid, matching_lot_ids[0], context=context)
+            stock_operation_obj._search_and_increment(cr, uid, picking_id, [('product_id', '=', lot.product_id.id), ('lot_id', '=', lot.id)], context=context)
 
         #check if the barcode correspond to a package
         matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_package_ids:
-            included_package_ids = package_obj.search(cr, uid, [('parent_id', 'child_of', matching_package_ids[0])], context=context)
-            included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
-            todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, included_quant_ids, context=context)
-        #write remaining qty on stock.move, to ease the treatment server side
-        for todo in todo_on_moves:
-            if todo[0] == 1:
-                self.pool.get('stock.move').write(cr, uid, todo[1], todo[2], context=context)
-            elif todo[0] == 0:
-                self.pool.get('stock.move').create(cr, uid, todo[2], context=context)
-        return {'warnings': error_msg, 'moves_to_update': todo_on_moves, 'operations_to_update': todo_on_operations}
+            stock_operation_obj._search_and_increment(cr, uid, picking_id, [('package_id', '=', matching_package_ids[0])], context=context)
 
 
 class stock_production_lot(osv.osv):
@@ -3179,10 +3167,10 @@ class stock_pack_operation(osv.osv):
 
 
     #TODO: this function can be refactored
-    def _search_and_increment(self, cr, uid, picking_id, key, context=None):
-        '''Search for an operation on an existing key in a picking, if it exists increment the qty (+1) otherwise create it
+    def _search_and_increment(self, cr, uid, picking_id, domain, context=None):
+        '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+1) otherwise create it
 
-        :param key: tuple directly reusable in a domain
+        :param domain: list of tuple directly reusable as a domain
         context can receive a key 'current_package_id' with the package to consider for this operation
         returns True
 
@@ -3191,35 +3179,33 @@ class stock_pack_operation(osv.osv):
                  (1, ID, { values })    update the linked record with id = ID (write *values* on it)
                  (2, ID)                remove and delete the linked record with id = ID (calls unlink on ID, that will delete the object completely, and the link to it as well)
         '''
-        quant_obj = self.pool.get('stock.quant')
         if context is None:
             context = {}
 
         #if current_package_id is given in the context, we increase the number of items in this package
         package_clause = [('result_package_id', '=', context.get('current_package_id', False))]
-        existing_operation_ids = self.search(cr, uid, [('picking_id', '=', picking_id), key] + package_clause, context=context)
+        existing_operation_ids = self.search(cr, uid, [('picking_id', '=', picking_id)] + domain + package_clause, context=context)
         if existing_operation_ids:
-            #existing operation found for the given key and picking => increment its quantity
+            #existing operation found for the given domain and picking => increment its quantity
             operation_id = existing_operation_ids[0]
             qty = self.browse(cr, uid, operation_id, context=context).product_qty + 1
             self.write(cr, uid, operation_id, {'product_qty': qty}, context=context)
         else:
-            #no existing operation found for the given key and picking => create a new one
-            var_name, dummy, value = key
-            uom_id = False
-            if var_name == 'product_id':
-                uom_id = self.pool.get('product.product').browse(cr, uid, value, context=context).uom_id.id
-            elif var_name == 'quant_id':
-                quant = quant_obj.browse(cr, uid, value, context=context)
-                uom_id = quant.product_id.uom_id.id
+            #no existing operation found for the given domain and picking => create a new one
             values = {
                 'picking_id': picking_id,
-                var_name: value,
                 'product_qty': 1,
-                'product_uom_id': uom_id,
             }
+            for key in domain:
+                var_name, dummy, value = key
+                uom_id = False
+                if var_name == 'product_id':
+                    uom_id = self.pool.get('product.product').browse(cr, uid, value, context=context).uom_id.id
+                update_dict = {var_name: value}
+                if uom_id:
+                    update_dict['product_uom_id'] = uom_id
+                values.update(update_dict)
             operation_id = self.create(cr, uid, values, context=context)
-            values.update({'id': operation_id})
         return True
 
 

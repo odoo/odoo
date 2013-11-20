@@ -314,7 +314,7 @@ function openerp_picking_widgets(instance){
                 var pickings = new $.Deferred();
 
                 new instance.web.Model('stock.picking')
-                    .call('get_picking_for_packing_ui',[{'default_picking_type_id':type_id}])
+                    .call('get_next_picking_for_ui',[{'default_picking_type_id':type_id}])
                     .then(function(picking_ids){
                         if(!picking_ids || picking_ids.length === 0){
                             (new instance.web.Dialog(self,{
@@ -487,7 +487,7 @@ function openerp_picking_widgets(instance){
         scan: function(ean){ //scans a barcode, sends it to the server, then reload the ui
             var self = this;
             new instance.web.Model('stock.picking')
-                .call('get_barcode_and_return_todo_stuff', [self.picking.id, ean])
+                .call('process_barcode_from_ui', [self.picking.id, ean])
                 .then(function(){
                     self.reset_selected_operation();
                     return self.refresh_ui(self.picking.id);
@@ -496,7 +496,7 @@ function openerp_picking_widgets(instance){
         scan_product_id: function(product_id){ //performs the same operation as a scan, but with product id instead
             var self = this;
             new instance.web.Model('stock.picking')
-                .call('get_product_id_and_return_todo_stuff', [self.picking.id, product_id])
+                .call('process_product_id_from_ui', [self.picking.id, product_id])
                 .then(function(){
                     self.reset_selected_operation();
                     return self.refresh_ui(self.picking.id);
@@ -515,7 +515,7 @@ function openerp_picking_widgets(instance){
         done: function(){
             var self = this;
             new instance.web.Model('stock.picking')
-                .call('action_done_from_packing_ui',[self.picking.id])
+                .call('action_done_from_ui',[self.picking.id])
                 .then(function(new_picking_id){
                     return self.refresh_ui(new_picking_id);
                 });
