@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="0">
 
-        <!-- templates -->
         <template id="transfer_acquirer_button">
-            <div>
-                <div t-field="acquirer.message"/>
-                <form t-if="acquirer" action="/payment/transfer/feedback" method="post" target="_self">
-                    <t t-if="tx_values.get('return_url')">
-                        <input type='hidden' name='return_url' t-att-value='tx_values["return_url"]'/>
-                    </t>
-                    <input type="image" name="submit" id="payment_submit"
-                        src="/payment_acquirer_ogone/static/src/img/ogone_logo_plain.gif"/>
+            <div t-field="acquirer.message"/>
+            <form t-if="acquirer" action="/payment/transfer/feedback" method="post" target="_self">
+                <t t-if="tx_values.get('return_url')">
+                    <input type='hidden' name='return_url' t-att-value='tx_values["return_url"]'/>
+                </t>
+                <input type='hidden' name='reference' t-att-value='reference'/>
+                <input type='hidden' name='amount' t-att-value='amount'/>
+                <input type='hidden' name='currency' t-att-value='currency.name'/>
+                <input type="submit" name="submit" id="payment_submit"
+                    class="btn btn-primary" value="Confirmer"/>
             </form>
-            </div>
         </template>
 
     </data>

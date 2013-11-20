@@ -110,13 +110,14 @@ class PaymentAcquirer(osv.Model):
         acquirer = self.browse(cr, uid, id, context=context)
         method_name = '%s_form_generate_values' % (acquirer.name)
 
-        tx_values = {}
         if tx_id and hasattr(self.pool['payment.transaction'], method_name):
             method = getattr(self.pool['payment.transaction'], method_name)
             tx_values = method(cr, uid, tx_id, tx_custom_values, context=context)
         elif hasattr(self, method_name):
             method = getattr(self, method_name)
             tx_values = method(cr, uid, id, reference, amount, currency, partner_id, partner_values, tx_custom_values, context=context)
+        else:
+            tx_values = tx_custom_values
 
         qweb_context = {
             'acquirer': acquirer,
@@ -258,6 +259,38 @@ class PaymentTransaction(osv.Model):
                 'partner_phone': False,
             }
         return {'values': values}
+
+    # --------------------------------------------------
+    # FORM RELATED METHODS
+    # --------------------------------------------------
+
+    def form_feedback(self, cr, uid, data, acquirer_name, context=None):
+        invalid_parameters, tx = None, None
+
+        tx_find_method_name = '_%s_form_get_tx_from_data' % acquirer_name
+        if hasattr(self, tx_find_method_name):
+            tx = getattr(self, tx_find_method_name)(cr, uid, data, context=context)
+
+        invalid_param_method_name = '_%s_form_get_invalid_parameters' % acquirer_name
+        if hasattr(self, invalid_param_method_name):
+            invalid_parameters = getattr(self, invalid_param_method_name)(cr, uid, tx, data, context=context)
+
+        if invalid_parameters:
+            _error_message = '%s: incorrect tx data:\n' % (acquirer_name)
+            for item in invalid_parameters:
+                _error_message += '\t%s: received %s instead of %s\n' % (item[0], item[1], item[2])
+            _logger.error(_error_message)
+            return False
+
+        feedback_method_name = '_%s_form_validate' % acquirer_name
+        if hasattr(self, feedback_method_name):
+            return getattr(self, feedback_method_name)(cr, uid, tx, data, context=context)
+
+        return True
+
+    # --------------------------------------------------
+    # SERVER2SERVER RELATED METHODS
+    # --------------------------------------------------
 
     def create_s2s(self, cr, uid, tx_values, cc_values, context=None):
         tx_id = self.create(cr, uid, tx_values, context=context)

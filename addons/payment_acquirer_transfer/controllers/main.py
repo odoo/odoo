@@ -16,7 +16,7 @@ class OgoneController(http.Controller):
         '/payment/transfer/feedback',
     ], type='http', auth='admin')
     def transfer_form_feedback(self, **post):
-        _logger.info('Transfer: entering form_feedback with post data %s', pprint.pformat(post))  # debug
+        _logger.info('entering form_feedback with post data %s', pprint.pformat(post))  # debug
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['payment.transaction'].transfer_form_feedback(cr, uid, post, context)
+        request.registry['payment.transaction'].form_feedback(cr, uid, post, 'transfer', context)
         return request.redirect(post.pop('return_url', '/'))
