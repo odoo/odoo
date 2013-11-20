@@ -275,6 +275,8 @@ var PivotTable = instance.web.Widget.extend({
 
     build_table: function () {
         var self = this;
+        this.rows = [];
+
 
         var col_id = this.generate_id();
 
@@ -287,7 +289,6 @@ var PivotTable = instance.web.Widget.extend({
             children: [],
             cells: [],    // a cell is {td:<jquery td>, row_id:<some id>}
             domain: this.data.domain,
-            // header: col_header
         }];
 
         self.make_top_headers();
@@ -375,33 +376,17 @@ var PivotTable = instance.web.Widget.extend({
             header.addClass('graph_top');
             this.headers = [header];
         } else {
-            console.log("cols",this.cols);
             var height = _.max(_.map(self.cols, function(g) {return g.path.length;}));
-            console.log("height",height);
             var header_rows = make_header_cells(_.rest(this.cols), height);
 
             header_rows[0].splice(0,0,self.make_cell('', {is_border:true, }).attr('rowspan', height))
-            console.log("header rows",header_rows);
             self.headers = [];
             _.each(header_rows, function (cells) {
                 header = $('<tr></tr>');
-                console.log("cells",cells);
                 header.append(cells);
                 header.addClass('graph_top');
                 self.headers.push(header);
             });
-
-            // header = 
-            // header.append(this.make_cell('', {is_border:true, }).attr('rowspan', height));
-
-            // _.each(this.cols, function (col) {
-            //     if (col.children.length === 0) {
-            //         var options = {is_border: true, foldable:true, col_id: col.id};
-            //         header.append(self.make_cell(col.value, options));
-            //     }
-            // });
-            // header.addClass('graph_top');
-            // this.headers = [header];
         }
     },
 
