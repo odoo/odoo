@@ -187,7 +187,7 @@ class PaymentTxOgone(osv.Model):
             raise ValidationError(error_msg)
 
         # find tx -> @TDENOTE use paytid ?
-        tx_ids = self.pool['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
+        tx_ids = self.search(cr, uid, [('reference', '=', reference)], context=context)
         if not tx_ids or len(tx_ids) > 1:
             error_msg = 'Ogone: received data for reference %s' % (reference)
             if not tx_ids:
