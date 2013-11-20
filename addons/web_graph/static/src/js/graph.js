@@ -613,6 +613,55 @@ var PivotTable = instance.web.Widget.extend({
         });
     },
 
+    fold_col: function (col_id) {
+        var self = this;
+        var col = this.get_col(col_id);
+
+        _.each(col.children, function (child_col) {
+            self.remove_col(child_col);
+        });
+        col.children = [];
+
+        _.each(col.cells, function (cell) {
+            cell.td.css('display','table-cell');
+        });
+        col.expanded = false;
+        // row.html.find('.icon-minus-sign')
+        //     .removeClass('icon-minus-sign')
+        //     .addClass('icon-plus-sign');
+
+        var fold_levels = _.map(self.cols, function(g) {return g.path.length;});
+        var new_groupby_length = _.max(fold_levels); 
+
+        this.data.col_groupby.splice(new_groupby_length);
+        this.make_top_headers();
+        this.draw_top_headers();
+
+            
+    },
+    
+    remove_col: function (col_id) {
+        var self = this;
+        var col = this.get_col(col_id);
+
+        _.each(col.children, function (child_col) {
+            self.remove_col(child_col);
+        });
+
+        _.each(col.cells, function (cell) {
+            cell.td.remove();
+        });
+        // row.html.remove();
+        removeFromArray(this.cols, col);
+
+        // _.each(this.cols, function (col) {
+        //     col.cells = _.filter(col.cells, function (cell) {
+        //         return cell.row_id !== row_id;
+        //     });
+        // });
+    },
+
+
 });
 
 };
