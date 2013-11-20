@@ -223,12 +223,13 @@ var PivotTable = instance.web.Widget.extend({
         var self = this;
 
         if (load_data === true) {
-            this.get_groups(this.data.row_groupby)
+            var view_fields = this.data.row_groupby.concat(this.data.measure, this.data.col_groupby);
+            query_groups_data(this.data.model, view_fields, this.data.domain, this.data.col_groupby, this.data.row_groupby[0])
                 .then(function (groups) {
                     self.data.groups = groups;
                     return self.get_groups([]);
                 }).then(function (total) {
-                    self.data.total = total;
+                    self.data.total = [total];
                     self.build_table();
                     self.draw(false);
                 });
@@ -405,6 +406,7 @@ var PivotTable = instance.web.Widget.extend({
     },
 
     make_row: function (group, parent_id) {
+        group = group[0];
         var path,
             value,
             expanded,
@@ -515,7 +517,7 @@ var PivotTable = instance.web.Widget.extend({
             .addClass('icon-minus-sign');
 
         var visible_fields = this.data.row_groupby.concat(this.data.col_groupby, this.data.measure);
-        query_groups(this.data.model, visible_fields, row.domain, [field_id])
+        query_groups_data(this.data.model, visible_fields, row.domain, this.data.col_groupby, field_id)
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
                     var new_row = self.make_row(group, row_id);
@@ -547,12 +549,9 @@ var PivotTable = instance.web.Widget.extend({
                         children: [],
                         cells: [],    // a cell is {td:<jquery td>, row_id:<some id>}
                         domain: group[0].model._domain,
-                        // header: col_header                    
                     };
-                    // col.header.css('display','none');
                     col.children.push(new_col.id);
                     insertAfter(self.cols, col, new_col)
-                    // self.cols.push(new_col);
                     _.each(col.cells, function (cell) {
                         var col_path = self.get_row(cell.row_id).path;
 
