@@ -1,5 +1,7 @@
 @charset "utf-8"
 
+@import "common"
+
 /*
  *       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
@@ -103,14 +105,8 @@
 /* Extra Styles */
 
 img.shadow
-    -webkit-border-radius: 3px
-    -moz-border-radius: 3px
-    -ms-border-radius: 3px
-    -o-border-radius: 3px
-    border-radius: 3px
-    -webkit-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2)
-    -moz-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2)
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2)
+    +border-radius(3px)
+    +box-shadow(0px 3px 8px rgba(0, 0, 0, 0.2))
     margin: 0 auto
 
 h1.text-muted, h2.text-muted, h3.text-muted
@@ -124,7 +120,7 @@ h1.text-muted, h2.text-muted, h3.text-muted
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 
 html,body, #wrapwrap
-    box-sizing: border-box
+    +box-sizing(border-box)
     height: 100%
 
 #wrapwrap
@@ -212,13 +208,11 @@ ul.nav-stacked > li > a
     display: block
 
 [data-publish='off']
-    opacity: 0.5
+    +opacity(0.5)
 
 /* ---- END of PUBLISH ---- */
 
-
-
-::selection
+@include selection
     background: rgba(150, 150, 220, 0.3)
 
 .logo-img
@@ -241,7 +235,6 @@ ul.nav-stacked > li > a
         font-weight: bold
         a
             color: white
-
 
 /* ---- SNIPPETS --- */
 
@@ -335,10 +328,8 @@ ul.nav-stacked > li > a
 .oe_dark
     background: #eff8f8
     background: rgba(100, 200, 200, 0.14)
-    -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset
-    -moz-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset
-    box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset
     background-image: none !important
+    +box-shadow(0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset)
 .oe_black
     background-color: rgba(0, 0, 0, 0.9)
     background-image: none !important
