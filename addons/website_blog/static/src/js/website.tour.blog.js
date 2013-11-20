@@ -69,13 +69,47 @@
                     template: render('website.tour_popover', { next: "OK" }),
                 },
                 {
+                    stepId: 'post-title',
+                    element: 'h1[data-oe-expression="blog_post.name"]',
+                    placement: 'top',
+                    title: "Pick a title",
+                    content: "Choose a catchy title for your blog post.",
+                    template: render('website.tour_popover', { next: "OK" }),
+                },
+                {
                     stepId: 'add-block',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
-                    reflex: true,
                     title: "Layout your blog post",
                     content: "Insert blocks like text-image to layout the body of your blog post.",
                     template: render('website.tour_popover'),
+                    onShow: function () {
+                        $('button[data-action=snippet]').click(function () {
+                            self.movetoStep('drag-image-text');
+                        });
+                    }
+                },
+                {
+                    stepId: 'drag-image-text',
+                    element: '#website-top-navbar [data-snippet-id=image-text].ui-draggable',
+                    placement: 'bottom',
+                    title: "Drag & Drop a block",
+                    content: "Drag the 'Image Text' block and drop it in your page.",
+                    template: render('website.tour_popover'),
+                    onShow: function () {
+                        var $body = $(document.body);
+                        function beginDrag () {
+                            $('.popover.tour').remove();
+                            function goToNextStep () {
+                                $('#oe_snippets').hide();
+                                self.stop();
+                                $body.off('mouseup', goToNextStep);
+                            }
+                            $body.off('mousedown', beginDrag);
+                            $body.on('mouseup', goToNextStep);
+                        }
+                        $body.on('mousedown', beginDrag);
+                    },
                 },
             ];
             return this._super();
