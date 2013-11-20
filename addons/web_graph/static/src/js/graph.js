@@ -186,7 +186,7 @@ var PivotTable = instance.web.Widget.extend({
             } else {
                 this.display_dropdown({row_id:row_id, 
                                        target: $(event.target), 
-                                       x: event.pageY, 
+                                       x: event.pageX, 
                                        y: event.pageY});
             }
         }
