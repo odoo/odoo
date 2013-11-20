@@ -39,25 +39,30 @@ $(document).ready(function () {
     // Parameters for form submission
     $('.js_surveyform').ajaxForm({
         url: submit_controller,
-        type: 'POST',
-        dataType: 'json',                 // answer expected type
-        beforeSubmit: function(){
+        type: 'POST',                       // submission type
+        dataType: 'json',                   // answer expected type
+        beforeSubmit: function(){           // hide previous errmsg before resubmitting
             $('.js_errzone').html("").hide();
         },
-        success: function(response, status, xhr, wfe){
-            if(_.has(response, 'errors')){
+        success: function(response, status, xhr, wfe){ // submission attempt
+            if(_.has(response, 'errors')){  // some questions have errors
                 _.each(_.keys(response.errors), function(key){
                     $("#" + key + '>.js_errzone').append('<p>' + response.errors[key] + '</p>').show();
                 });
                 return false;
             }
-            else if (_.has(response, 'redirect')){
+            else if (_.has(response, 'redirect')){      // form is ok
+                alert('here, it should redirect');
                 return true;
             }
-            else {
-                console.error("Something bad happened during AJAX request :(");
+            else {                                      // server sends bad data
+                console.error("Incorrect answer sent by server");
                 return false;
             }
+        },
+        timeout: 5000,
+        error: function(jqXHR, textStatus, errorThrown){ // failure of AJAX request
+            alert("Something went wrong while contacting survey server. Your answers have probably not been recorded. Try refreshing.");
         }
     });
 
