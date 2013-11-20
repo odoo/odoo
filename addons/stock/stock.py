@@ -2897,7 +2897,7 @@ class stock_move_putaway(osv.osv):
 # -------------------------
 
 from openerp.report import report_sxw
-report_sxw.report_sxw('report.stock.quant.package.barcode', 'stock.quant.package', 'addons/stock/report/picking_barcode.rml')
+report_sxw.report_sxw('report.stock.quant.package.barcode', 'stock.quant.package', 'addons/stock/report/package_barcode.rml')
 
 class stock_package(osv.osv):
     """
