@@ -23,6 +23,7 @@
 
 from copy import copy
 from datetime import date, datetime
+from functools import partial
 from operator import attrgetter
 import logging
 
@@ -248,7 +249,7 @@ class Field(object):
         with record._scope:
             if record._id:
                 # normal record -> read or compute value for this field
-                self.determine_value(record)
+                self.determine_value(record[0])
             elif record:
                 # new record -> compute default value for this field
                 record.add_default_value(self.name)
@@ -281,6 +282,22 @@ class Field(object):
     # Management of the computation of field values.
     #
 
+    @lazy_property
+    def _compute_function(self):
+        """ Return a function to call with records to compute this field. """
+        if isinstance(self.compute, basestring):
+            return getattr(type(self.model), self.compute)
+        elif callable(self.compute):
+            return partial(self.compute, self)
+        else:
+            raise Warning("No way to compute %s on %s" % (self, records))
+
+    @lazy_property
+    def _compute_one(self):
+        """ Test whether the compute function has the decorator ``@one``. """
+        from openerp import one
+        return getattr(self._compute_function, '_api', None) is one
+
     def compute_value(self, records, check_exists=False):
         """ Invoke the compute method on `records`. If `check` is ``True``, the
             method filters out non-existing records before computing them.
@@ -290,26 +307,19 @@ class Field(object):
             new_records = [rec for rec in records if not rec.id]
             records = sum(new_records, records.exists())
 
-        if isinstance(self.compute, basestring):
-            getattr(records, self.compute)()
-        elif callable(self.compute):
-            self.compute(self, records)
-        else:
-            raise Warning("No way to compute %s on %s" % (self, records))
+        self._compute_function(records)
 
     def read_value(self, records):
         """ Read the value of `self` for `records` from the database. """
         name = self.name
-        column = records._columns[name]
-        model_cache = records._model_cache
 
         # fetch the records of this model without name in their cache
-        fetch_ids = [id for id, cache in model_cache.iteritems() if name not in cache]
-        fetch_recs = records.browse(fetch_ids)
+        fetch_recs = records._in_cache_without(name)
 
         # prefetch all classic and many2one fields if column is one of them
         # Note: do not prefetch fields when records.pool._init is True, because
         # some columns may be missing from the database!
+        column = records._columns[name]
         if column._prefetch and not records.pool._init:
             fetch_fields = set(fname
                 for fname, fcolumn in records._columns.iteritems()
@@ -331,6 +341,7 @@ class Field(object):
 
         # method read is supposed to fetch the cache with the results
         if any(name not in record._record_cache for record in records):
+            model_cache = records._model_cache
             for data in result:
                 model_cache[data['id']][name] = self.convert_to_cache(data[name])
 
@@ -340,22 +351,21 @@ class Field(object):
             # recompute field on record if required
             recs_todo = scope.recomputation.todo(self)
             if record in recs_todo:
-                # execute the compute method in NON-draft mode, so that assigned
+                # execute the compute method in NON-DRAFT mode, so that assigned
                 # fields are written to the database
                 self.compute_value(recs_todo, check_exists=True)
                 scope.recomputation.done(self, recs_todo)
             else:
                 self.read_value(record)
         else:
-            # compute self for the records without value for self in their cache
-            name = self.name
-            model_cache = record._model_cache
-            ids = [id for id, cache in model_cache.iteritems() if name not in cache]
-            recs = record.browse(ids)
-            with recs._scope.draft():
-                # execute the compute method in draft mode, so that assigned
-                # fields are not written to the database
-                self.compute_value(recs, check_exists=True)
+            # execute the compute method in DRAFT mode, so that assigned fields
+            # are not written to the database
+            with record._scope.draft():
+                if self._compute_one:
+                    self.compute_value(record)
+                else:
+                    recs = record._in_cache_without(self.name)
+                    self.compute_value(recs, check_exists=True)
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """

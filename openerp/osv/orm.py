@@ -5665,6 +5665,15 @@ class BaseModel(object):
         """
         scope_proxy.invalidate_all()
 
+    @api.model
+    def _in_cache_without(self, fname):
+        """ Return the records of model `self` in cache (for the current scope)
+            that have no value for the field named `fname`.
+        """
+        model_cache = scope_proxy.cache[self._name]
+        return self.browse(id for id, cache in model_cache.iteritems()
+                              if fname not in cache)
+
     def invalidate_cache(self, fnames=None, ids=None):
         """ Invalidate the record caches after some records have been modified.
 
