@@ -802,6 +802,18 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
+class LazyResponse(werkzeug.wrappers.Response):
+    """ Lazy werkzeug response.
+    API not yet frozen"""
+
+    def __init__(self, callback, **kwargs):
+        super(LazyResponse, self).__init__(mimetype='text/html')
+        self.callback = callback
+        self.params = kwargs
+    def process(self):
+        response = self.callback(**self.params)
+        self.response.append(response)
+
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
@@ -932,6 +944,8 @@ class Root(object):
         if isinstance(result, basestring):
             response = werkzeug.wrappers.Response(result, mimetype='text/html')
         else:
+            if isinstance(result, LazyResponse):
+                result.process()
             response = result
 
         if httprequest.session.should_save:
