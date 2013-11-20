@@ -85,7 +85,7 @@ class res_company(osv.osv):
             if company.partner_id:
                 address_data = part_obj.address_get(cr, openerp.SUPERUSER_ID, [company.partner_id.id], adr_pref=['default'])
                 if address_data['default']:
-                    address = part_obj.read(cr, openerp.SUPERUSER_ID, address_data['default'], field_names, context=context)[0]
+                    address = part_obj.read(cr, openerp.SUPERUSER_ID, [address_data['default']], field_names, context=context)[0]
                     for field in field_names:
                         result[company.id][field] = address[field] or False
         return result
