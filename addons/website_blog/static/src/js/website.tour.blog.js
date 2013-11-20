@@ -18,7 +18,6 @@
         startPath: '/blog/cat/1/',
         init: function (editor) {
             var self = this;
-            var $body = $(document.body);
             self.steps = [
             {
                     stepId: 'welcome-blog',

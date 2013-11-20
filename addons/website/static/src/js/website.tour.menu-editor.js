@@ -17,7 +17,6 @@
         name: "Add a new page",
         init: function (editor) {
             var self = this;
-            var $body = $(document.body);
             self.steps = [
                 {
                     stepId: 'welcome-menu-editor',

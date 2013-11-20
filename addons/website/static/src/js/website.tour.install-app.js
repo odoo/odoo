@@ -17,7 +17,6 @@
         name: "Install a new App",
         init: function (editor) {
             var self = this;
-            var $body = $(document.body);
             self.steps = [
                 {
                     stepId: 'welcome-install-app',

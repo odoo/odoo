@@ -18,7 +18,6 @@
         startPath: '/page/website.homepage',
         init: function (editor) {
             var self = this;
-            var $body = $(document.body);
             self.steps = [
                 {
                     stepId: 'welcome',
@@ -62,6 +61,7 @@
                     content: "Drag the Banner block and drop it in your page.",
                     template: render('website.tour_popover'),
                     onShow: function () {
+                        var $body = $(document.body);
                         function beginDrag () {
                             $('.popover.tour').remove();
                             function goToNextStep () {
@@ -72,7 +72,6 @@
                             $body.off('mousedown', beginDrag);
                             $body.on('mouseup', goToNextStep);
                         }
-
                         $body.on('mousedown', beginDrag);
                     },
                 },

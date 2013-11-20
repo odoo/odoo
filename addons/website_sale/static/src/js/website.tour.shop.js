@@ -18,7 +18,6 @@
         startPath: '/shop',
         init: function (editor) {
             var self = this;
-            var $body = $(document.body);
             self.steps = [
                 {
                     stepId: 'welcome-shop',
