@@ -561,7 +561,7 @@
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to me"/>
-                    <filter string="Assigned to My Team(s)"
+                    <filter string="My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to any sales teams I am member of"/>
                     <separator/>
