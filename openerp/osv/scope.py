@@ -265,9 +265,12 @@ class Scope(object):
                 records = self[model_name].browse(model_dump)
                 for record, record_dump in zip(records, model_dump.itervalues()):
                     for field, value in record_dump.iteritems():
-                        if record[field] != value:
-                            info = {'cached': value, 'fetched': record[field]}
-                            invalids.append((record, field, info))
+                        try:
+                            if record[field] != value:
+                                info = {'cached': value, 'fetched': record[field]}
+                                invalids.append((record, field, info))
+                        except (AccessError, MissingError):
+                            pass
 
             if invalids:
                 raise Warning('Invalid cache for records\n' + pformat(invalids))
@@ -363,6 +366,6 @@ class Recomputation(object):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning, AccessError, MissingError
 from openerp.osv.orm import BaseModel
 from openerp.modules.registry import RegistryManager

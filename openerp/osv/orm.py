@@ -62,7 +62,8 @@ from scope import proxy as scope_proxy
 import fields
 import openerp
 import openerp.tools as tools
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.exceptions import AccessError, MissingError
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, FailedValue
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
@@ -3450,218 +3451,201 @@ class BaseModel(object):
                     (self._description, operation))
         return fields
 
-    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        """ Read records with given ids with the given fields.
-            As a side-effect, the result is stored in the corresponding records' cache.
+    @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        """ Read the given fields for the records in `self`.
 
-        :param cr: database cursor
-        :param user: current user id
-        :param ids: id or list of the ids of the records to read
-        :param fields: optional list of field names to return (default: all fields would be returned)
-        :type fields: list (example ['field_name_1', ...])
-        :param context: optional context dictionary - it may contains keys for specifying certain options
-                        like ``context_lang``, ``context_tz`` to alter the results of the call.
-                        A special ``bin_size`` boolean flag may also be passed in the context to request the
-                        value of all fields.binary columns to be returned as the size of the binary instead of its
-                        contents. This can also be selectively overriden by passing a field-specific flag
-                        in the form ``bin_size_XXX: True/False`` where ``XXX`` is the name of the field.
-                        Note: The ``bin_size_XXX`` form is new in OpenERP v6.0.
-        :return: list of dictionaries((dictionary per record asked)) with requested field values
-        :rtype: [{‘name_of_the_field’: value, ...}, ...]
-        :raise AccessError: * if user has no read rights on the requested object
-                            * if user tries to bypass access rules for read on the requested object
-
+            :param fields: optional list of field names to return (default is
+                    all fields)
+            :param load: deprecated, this argument is ignored
+            :return: a list of dictionaries mapping field names to their values,
+                    with one dictionary per record
+            :raise AccessError: if user has no read rights on some of the given
+                    records
         """
-        # first check access rights
-        self.check_access_rights(cr, user, 'read')
-        fields = self.check_field_access_rights(cr, user, 'read', fields)
-
+        self_fields = self._fields
         if fields is None:
-            fields = self._fields.keys()
+            names = self_fields.keys()
+        elif all(name in self_fields for name in fields):
+            names = set(fields)
+        else:
+            # there are unknown fields, log them, and do not read them!
+            names = set(fields) & set(self_fields)
+            _logger.warning("%s.read() with unknown fields: %s", self._name,
+                            ', '.join(sorted(set(fields) - names)))
 
-        # split up fields into old-style and pure new-style ones
-        old_fields, new_fields, unknown = [], [], []
-        for key in fields:
-            if key in self._columns:
-                old_fields.append(key)
-            elif key in self._fields:
-                new_fields.append(key)
-            else:
-                unknown.append(key)
+        result = []
+        for record in self:
+            try:
+                values = {'id': record.id}
+                for name in names:
+                    field = self_fields[name]
+                    values[name] = field.convert_to_read(record[name])
+                result.append(values)
+            except MissingError:
+                pass
 
-        if unknown:
-            _logger.warning("%s.read() with unknown fields: %s", self._name, ', '.join(sorted(unknown)))
+        return result
 
-        # read old-style fields with (low-level) method _read_flat
-        select = self.browse(ids)
-        result = select._read_flat(old_fields, load=load)
+    @api.multi
+    def _prefetch_field(self, field_name):
+        """ Read from the database in order to fetch the given field for `self`
+            in the cache.
+        """
+        # fetch the records of this model without field_name in their cache
+        records = self._in_cache_without(field_name)
 
-        # update record caches with old-style fields
-        for values in result:
-            record = self.browse(values['id'])
-            record._update_cache(dict((name, values[name]) for name in old_fields))
+        # prefetch all classic and many2one fields if column is one of them
+        # Note: do not prefetch fields when self.pool._init is True, because
+        # some columns may be missing from the database!
+        column = self._columns[field_name]
+        if column._prefetch and not self.pool._init:
+            fnames = set(fname
+                for fname, fcolumn in self._columns.iteritems()
+                if fcolumn._prefetch)
+        else:
+            fnames = set((field_name,))
 
-        # read new-style fields on records
-        for values in result:
-            record = self.browse(values['id'])
-            for name in new_fields:
-                values[name] = self._fields[name].convert_to_read(record[name])
+        # do not fetch the records/fields that have to be recomputed
+        if scope_proxy.recomputation:
+            for fname in list(fnames):
+                recomp = scope_proxy.recomputation.todo(self._fields[fname])
+                if self & recomp:
+                    fnames.discard(fname)       # do not fetch that field
+                else:
+                    records -= recomp           # do not fetch those records
 
-        return result if isinstance(ids, list) else (bool(result) and result[0])
+        # fetch records
+        assert self in records and field_name in fnames
+        records._read_into_cache(list(fnames))
 
-    def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
-        if not context:
-            context = {}
-        if not ids:
-            return []
-        if fields_to_read is None:
-            fields_to_read = self._columns.keys()
+    @api.multi
+    def _read_into_cache(self, field_names):
+        """ Read the given fields of the records in `self` from the database. """
+        # first check access rights
+        try:
+            self.check_access_rights('read')
+            self.check_field_access_rights('read', field_names)
+        except (except_orm, AccessError) as e:
+            # store a failed value for all records in self
+            return self._mark_failed(e, field_names)
 
         # Construct a clause for the security rules.
-        # 'tables' hold the list of tables necessary for the SELECT including the ir.rule clauses,
-        # or will at least contain self._table.
-        rule_clause, rule_params, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
+        # 'tables' holds the list of tables necessary for the SELECT, including
+        # the ir.rule clauses, and contains at least self._table.
+        rule_clause, rule_params, tables = self.pool['ir.rule'].domain_get(self._name, 'read')
 
-        # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-        fields_pre = [f for f in fields_to_read
-                      if getattr(self._columns.get(f), '_classic_write', False)
-                     ] + self._inherits.values()
+        # determine the fields that are stored as columns in self._table
+        fields_pre = [f for f in field_names if self._columns[f]._classic_write]
 
-        res = []
+        # read them from the database
+        cr, user, context = scope_proxy.args
+
+        result = []
         if fields_pre or rule_clause:
-            def convert_field(f):
-                f_qual = '%s."%s"' % (self._table, f) # need fully-qualified references in case len(tables) > 1
-                if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
-                    return 'length(%s) as "%s"' % (f_qual, f)
-                return f_qual
+            def qualify(f):
+                # we need fully-qualified column names in case len(tables) > 1
+                qualified = '%s."%s"' % (self._table, f)
+                if isinstance(self._columns[f], fields.binary) and context.get('bin_size'):
+                    return 'length(%s) as "%s"' % (qualified, f)
+                return qualified
 
-            fields_pre2 = map(convert_field, fields_pre)
-            order_by = self._parent_order or self._order
-            select_fields = ','.join(fields_pre2 + ['%s.id' % self._table])
-            query = 'SELECT %s FROM %s WHERE %s.id IN %%s' % (select_fields, ','.join(tables), self._table)
-            if rule_clause:
-                query += " AND " + (' OR '.join(rule_clause))
-            query += " ORDER BY " + order_by
-            for sub_ids in cr.split_for_in_conditions(ids):
+            qual_names = map(qualify, fields_pre) + ['%s.id' % self._table]
+            query = "SELECT %s FROM %s WHERE %s.id IN %%s %s ORDER BY %s" % (
+                ",".join(qual_names),
+                ",".join(tables),
+                self._table,
+                "AND (%s)" % (" OR ".join(rule_clause)) if rule_clause else "",
+                self._parent_order or self._order,
+            )
+            for sub_ids in cr.split_for_in_conditions(self.unbrowse()):
                 cr.execute(query, [tuple(sub_ids)] + rule_params)
-                results = cr.dictfetchall()
-                result_ids = [x['id'] for x in results]
-                self._check_record_rules_result_count(cr, user, sub_ids, result_ids, 'read', context=context)
-                res.extend(results)
+                result.extend(cr.dictfetchall())
         else:
-            res = map(lambda x: {'id': x}, ids)
+            # at least filter out non-existing records
+            result = [{'id': id} for id in self.exists().unbrowse()]
 
+        ids = [vals['id'] for vals in result]
+
+        # translate the fields if necessary
         if context.get('lang'):
+            ir_translation = self.pool['ir.translation']
             for f in fields_pre:
                 if self._columns[f].translate:
-                    ids = [x['id'] for x in res]
                     #TODO: optimize out of this loop
-                    res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context['lang'], ids)
-                    for r in res:
-                        r[f] = res_trans.get(r['id'], False) or r[f]
+                    res_trans = ir_translation._get_ids(
+                        '%s,%s' % (self._name, f), 'model', context['lang'], ids)
+                    for vals in result:
+                        vals[f] = res_trans.get(vals['id'], False) or vals[f]
 
-        for table in self._inherits:
-            col = self._inherits[table]
-            cols = [x for x in intersect(self._inherit_fields.keys(), fields_to_read) if x not in self._columns.keys()]
-            if not cols:
-                continue
-            res2 = self.pool[table].read(cr, user, [x[col] for x in res], cols, context, load)
+        # apply the symbol_get functions of the fields we just read
+        for f in fields_pre:
+            symbol_get = self._columns[f]._symbol_get
+            if symbol_get:
+                for vals in result:
+                    vals[f] = symbol_get(vals[f])
 
-            res3 = {}
-            for r in res2:
-                res3[r['id']] = r
-                del r['id']
+        # store result in cache for POST fields
+        for vals in result:
+            record = self.browse(vals['id'])
+            record._update_cache(vals)
 
-            for record in res:
-                if not record[col]: # if the record is deleted from _inherits table?
-                    continue
-                record.update(res3[record[col]])
-                if col not in fields_to_read:
-                    del record[col]
+        # determine the fields that must be processed now
+        fields_post = [f for f in field_names if not self._columns[f]._classic_write]
 
-        # all fields which need to be post-processed by a simple function (symbol_get)
-        fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields_to_read)
-        if fields_post:
-            for r in res:
-                for f in fields_post:
-                    r[f] = self._columns[f]._symbol_get(r[f])
-        ids = [x['id'] for x in res]
-
-        # all non inherited fields for which the attribute whose name is in load is False
-        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields_to_read)
-
-        # Compute POST fields
-        todo = {}
+        # Compute POST fields, grouped by multi
+        by_multi = defaultdict(list)
         for f in fields_post:
-            todo.setdefault(self._columns[f]._multi, [])
-            todo[self._columns[f]._multi].append(f)
-        for key, val in todo.items():
-            if key:
-                res2 = self._columns[val[0]].get(cr, self, ids, val, user, context=context, values=res)
+            by_multi[self._columns[f]._multi].append(f)
+
+        for multi, fs in by_multi.iteritems():
+            if multi:
+                res2 = self._columns[fs[0]].get(cr, self, ids, fs, user, context=context, values=result)
                 assert res2 is not None, \
                     'The function field "%s" on the "%s" model returned None\n' \
-                    '(a dictionary was expected).' % (val[0], self._name)
-                for pos in val:
-                    for record in res:
-                        if isinstance(res2[record['id']], str): res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
-                        multi_fields = res2.get(record['id'],{})
-                        if multi_fields:
-                            record[pos] = multi_fields.get(pos,[])
+                    '(a dictionary was expected).' % (fs[0], self._name)
+                for vals in result:
+                    # TOCHECK : why got string instend of dict in python2.6
+                    # if isinstance(res2[vals['id']], str): res2[vals['id']] = eval(res2[vals['id']])
+                    multi_fields = res2.get(vals['id'], {})
+                    if multi_fields:
+                        for f in fs:
+                            vals[f] = multi_fields.get(f, [])
             else:
-                for f in val:
-                    res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
-                    for record in res:
+                for f in fs:
+                    res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=result)
+                    for vals in result:
                         if res2:
-                            record[f] = res2[record['id']]
+                            vals[f] = res2[vals['id']]
                         else:
-                            record[f] = []
+                            vals[f] = []
 
         # Warn about deprecated fields now that fields_pre and fields_post are computed
-        # Explicitly use list() because we may receive tuples
-        for f in list(fields_pre) + list(fields_post):
-            field_column = self._all_columns.get(f) and self._all_columns.get(f).column
-            if field_column and field_column.deprecated:
-                _logger.warning('Field %s.%s is deprecated: %s', self._name, f, field_column.deprecated)
+        for f in field_names:
+            column = self._columns[f]
+            if column.deprecated:
+                _logger.warning('Field %s.%s is deprecated: %s', self._name, f, column.deprecated)
 
-        readonly = None
-        for vals in res:
-            for field in vals.keys():
-                fobj = None
-                if field in self._columns:
-                    fobj = self._columns[field]
+        # store result in cache
+        for vals in result:
+            record = self.browse(vals['id'])
+            record._update_cache(vals)
 
-                if fobj:
-                    groups = fobj.read
-                    if groups:
-                        edit = False
-                        for group in groups:
-                            module = group.split(".")[0]
-                            grp = group.split(".")[1]
-                            cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s",  \
-                                       (grp, module, 'res.groups', user))
-                            readonly = cr.fetchall()
-                            if readonly[0][0] >= 1:
-                                edit = True
-                                break
-                            elif readonly[0][0] == 0:
-                                edit = False
-                            else:
-                                edit = False
+        # store failed values in cache for the records that could not be read
+        missing = self - self.browse(ids)
+        if missing:
+            # store an access error exception in existing records
+            forbidden = missing.exists()
+            forbidden._mark_failed(AccessError(
+                _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                (self._name, 'read')
+            ))
+            # store a missing error exception in non-existing records
+            (missing - forbidden)._mark_failed(MissingError(
+                _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
+            ))
 
-                        if not edit:
-                            if type(vals[field]) == type([]):
-                                vals[field] = []
-                            elif type(vals[field]) == type(0.0):
-                                vals[field] = 0
-                            elif type(vals[field]) == type(''):
-                                vals[field] = '=No Permission='
-                            else:
-                                vals[field] = False
-
-                if vals[field] is None:
-                    vals[field] = False
-
-        return res
+        return result
 
     # TODO check READ access
     def perm_read(self, cr, user, ids, context=None, details=True):
@@ -5475,7 +5459,7 @@ class BaseModel(object):
     #
 
     def _read_cache(self):
-        """ Return the cache of `self` as a dictionary mapping field names to
+        """ Return the cache of `self[0]` as a dictionary mapping field names to
             values.
         """
         return dict(item
@@ -5492,6 +5476,17 @@ class BaseModel(object):
             for name, value in values.iteritems():
                 field = self._fields[name]
                 cache[name] = field.convert_to_cache(value)
+
+    def _mark_failed(self, exception, fnames=None):
+        """ Update the caches of all records in `self` in order to raise the
+            given `exception` when accessing a field among `fnames`.
+        """
+        if self:
+            if fnames is None:
+                fnames = set(self._fields) - set(MAGIC_COLUMNS)
+            vals = dict.fromkeys(fnames, FailedValue(exception))
+            for cache in self._caches:
+                cache.update(vals)
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
@@ -5722,11 +5717,12 @@ class BaseModel(object):
                 for rec in recs:
                     try:
                         rec[field.name]
+                    except MissingError:
+                        pass
                     except Exception:
                         failed += rec
                 recomputation.done(field, recs)
                 # check whether recomputation failed for some existing records
-                failed = failed.exists()
                 if failed:
                     raise except_orm("Error",
                         "Recomputation of %s failed for %s" % (field, failed))

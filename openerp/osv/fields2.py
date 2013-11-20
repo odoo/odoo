@@ -27,10 +27,11 @@ from functools import partial
 from operator import attrgetter
 import logging
 
-from openerp.tools import float_round, ustr, html_sanitize, lazy_property
+from openerp.tools import float_round, ustr, html_sanitize, lazy_property, FailedValue
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
+check_failed = FailedValue.check
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
@@ -241,7 +242,7 @@ class Field(object):
             return self         # the field is accessed through the owner class
 
         try:
-            return record._record_cache[self.name]
+            return check_failed(record._record_cache[self.name])
         except (KeyError, IndexError):
             pass
 
@@ -258,7 +259,7 @@ class Field(object):
                 return self.null()
 
         # the result should be in cache now
-        return record._record_cache[self.name]
+        return check_failed(record._record_cache[self.name])
 
     def __set__(self, record, value):
         """ set the value of field `self` on `record` """
@@ -304,46 +305,20 @@ class Field(object):
         """
         # if required, keep new and existing records only
         if check_exists:
-            new_records = [rec for rec in records if not rec.id]
-            records = sum(new_records, records.exists())
+            all_recs = records
+            new_recs = [rec for rec in records if not rec.id]
+            records = sum(new_recs, records.exists())
+
+            # mark non-existing records in cache
+            exc = MissingError("Computing a field on non-existing records.")
+            (all_recs - records)._mark_failed(exc)
+
+        # mark the field failed in cache, so that access before computation
+        # raises an exception
+        exc = Warning("Field %s is accessed before being computed." % self)
+        records._mark_failed(exc, [self.name])
 
         self._compute_function(records)
-
-    def read_value(self, records):
-        """ Read the value of `self` for `records` from the database. """
-        name = self.name
-
-        # fetch the records of this model without name in their cache
-        fetch_recs = records._in_cache_without(name)
-
-        # prefetch all classic and many2one fields if column is one of them
-        # Note: do not prefetch fields when records.pool._init is True, because
-        # some columns may be missing from the database!
-        column = records._columns[name]
-        if column._prefetch and not records.pool._init:
-            fetch_fields = set(fname
-                for fname, fcolumn in records._columns.iteritems()
-                if fcolumn._prefetch)
-        else:
-            fetch_fields = set((name,))
-
-        # do not fetch the records/fields that have to be recomputed
-        if scope.recomputation:
-            for fname in list(fetch_fields):
-                recs = scope.recomputation.todo(records._fields[fname])
-                if records & recs:
-                    fetch_fields.discard(fname)     # do not fetch that one
-                else:
-                    fetch_recs -= recs              # do not fetch recs
-
-        # fetch records
-        result = fetch_recs.read(list(fetch_fields), load='_classic_write')
-
-        # method read is supposed to fetch the cache with the results
-        if any(name not in record._record_cache for record in records):
-            model_cache = records._model_cache
-            for data in result:
-                model_cache[data['id']][name] = self.convert_to_cache(data[name])
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
@@ -358,7 +333,8 @@ class Field(object):
                 else:
                     self.compute_value(recs_todo, check_exists=True)
             else:
-                self.read_value(record)
+                record._prefetch_field(self.name)
+
         else:
             # execute the compute method in DRAFT mode, so that assigned fields
             # are not written to the database
@@ -978,7 +954,7 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning, MissingError
 from openerp.osv import fields
 from openerp.osv.orm import BaseModel
 from openerp.osv.scope import proxy as scope

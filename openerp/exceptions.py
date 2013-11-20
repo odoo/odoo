@@ -50,6 +50,9 @@ class AccessDenied(Exception):
 class AccessError(Exception):
     """ Access rights error. """
 
+class MissingError(Exception):
+    """ Missing record(s). """
+
 class DeferredException(Exception):
     """ Exception object holding a traceback for asynchronous reporting.
 

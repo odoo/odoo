@@ -607,25 +607,25 @@ class one2many(_column):
         return args
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if context is None:
-            context = {}
         if self._context:
-            context = context.copy()
-        context.update(self._context)
-        if values is None:
-            values = {}
+            context = dict(context or {})
+            context.update(self._context)
 
-        res = {}
-        for id in ids:
-            res[id] = []
+        with Scope(cr, user, context):
+            res = dict((id, []) for id in ids)
 
-        domain = self._domain(obj) if callable(self._domain) else self._domain
-        model = obj.pool[self._obj]
-        ids2 = model.search(cr, user, domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
-        for r in model._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            if r[self._fields_id] in res:
-                res[r[self._fields_id]].append(r['id'])
-        return res
+            comodel = obj.pool[self._obj]
+            inverse = self._fields_id
+            domain = self._domain
+            if callable(domain):
+                domain = domain(obj)
+            domain = domain + [(inverse, 'in', ids)]
+
+            for record in comodel.search(domain, limit=self._limit):
+                assert int(record[inverse]) in res
+                res[int(record[inverse])].append(record.id)
+
+            return res
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
         result = []
