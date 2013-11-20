@@ -566,43 +566,6 @@
             </field>
         </record>
 
-
-
-        <!--
-            Survey Answer
-        -->
-
-        <record model="ir.ui.view" id="survey_answer_form">
-            <field name="name">survey_answer_form</field>
-            <field name="model">survey.answer</field>
-            <field name="arch" type="xml">
-                <form string="Survey Answer">
-                    <field name="answer" colspan="4"/>
-                    <field name="in_visible_answer_type" invisible="1"/>
-                    <group colspan="4" attrs="{'invisible':[('in_visible_answer_type','=',True)]}">
-                        <field name="type" colspan="2"/>
-                        <group colspan="4" attrs="{'invisible':[('type','not in',['selection'])]}">
-                            <separator string="Menu Choices (each choice on separate by lines)" colspan="4"/>
-                            <field name="menu_choice" colspan="4" nolabel="1"/>
-                        </group>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-
-        <record model="ir.ui.view" id= "survey_answer_tree">
-            <field name="name">survey_answer_tree</field>
-            <field name="model">survey.answer</field>
-            <field name="arch" type="xml">
-                <tree editable="bottom" string="Survey Answer">
-                    <field name="sequence" widget="handle"/>
-                    <field name="answer"/>
-                    <field name="type"/>
-                </tree>
-            </field>
-        </record>
-
         <!--
             Survey Response Line
         -->
@@ -716,7 +679,7 @@
 
     <menuitem name="Survey Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
 
-    <menuitem name="Survey labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
+    <menuitem name="Survey Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
 
     <!-- web -->
     <record id="action_survey_fill2" model="ir.actions.client">

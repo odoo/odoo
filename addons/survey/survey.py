@@ -111,7 +111,7 @@ class survey_survey(osv.osv):
             oldname="description", help="A long description of the purpose of the survey"),
         'color': fields.integer('Color Index'),
         'user_input_ids': fields.one2many('survey.user_input', 'survey_id',
-            'User responses', readonly=1,),
+            'User responses', readonly=1),
         'public_url': fields.function(_get_public_url,
             string="Public link", searchable=True, type="char", store=True),
         'email_template_id': fields.many2one('email.template',
@@ -140,6 +140,7 @@ class survey_survey(osv.osv):
         current_rec = self.read(cr, uid, ids, context=context)
         title = _("%s (copy)") % (current_rec.get('title'))
         vals['title'] = title
+        vals['user_input_ids'] = []
         return super(survey_survey, self).copy(cr, uid, ids, vals,
             context=context)
 
@@ -598,6 +599,10 @@ class survey_user_input(osv.osv):
         'state': 'new',
         'token': lambda s, cr, uid, c: uuid.uuid4().__str__(),
     }
+
+    _sql_constraints = [
+        ('unique_token', 'UNIQUE (token)', 'A token must be unique!')
+    ]
 
     def action_survey_resent(self, cr, uid, ids, context=None):
         record = self.browse(cr, uid, ids[0], context=context)
