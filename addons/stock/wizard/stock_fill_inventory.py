@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
+from openerp.tools import mute_logger
 
 class stock_fill_inventory(osv.osv_memory):
     _name = "stock.fill.inventory"
@@ -29,7 +30,8 @@ class stock_fill_inventory(osv.osv_memory):
     def _default_location(self, cr, uid, ids, context=None):
         try:
             location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-            location.check_access_rule('read', context=context)
+            with mute_logger('openerp.osv.orm'):
+                location.check_access_rule('read', context=context)
             location_id = location.id
         except (ValueError, orm.except_orm), e:
             return False
