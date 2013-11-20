@@ -46,7 +46,7 @@ class crm_lead(osv.osv):
     def assign_salesman_of_assigned_partner(self, cr, uid, ids, context=None):
         salesmans_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):
-            if (lead.probability > 0 and lead.probability < 100) or lead.stage_id.sequence == 1: 
+            if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1: 
                 if lead.partner_assigned_id and lead.partner_assigned_id.user_id and lead.partner_assigned_id.user_id != lead.user_id:
                     salesman_id = lead.partner_assigned_id.user_id.id
                     if salesmans_leads.get(salesman_id):
