@@ -5,13 +5,19 @@
 
     var render = website.tour.render;
 
-    website.EditorBannerTour = website.EditorTour.extend({
+    website.EditorBar.include({
+        start: function () {
+            this.registerTour(new website.AddBannerTour(this));
+            return this._super();
+        },
+    });
+
+    website.AddBannerTour = website.Tour.extend({
         id: 'banner-tutorial',
         name: "Insert a banner",
         startPath: '/page/website.homepage',
         init: function (editor) {
             var self = this;
-            var $body = $(document.body);
             self.steps = [
                 {
                     stepId: 'welcome',
@@ -55,6 +61,7 @@
                     content: "Drag the Banner block and drop it in your page.",
                     template: render('website.tour_popover'),
                     onShow: function () {
+                        var $body = $(document.body);
                         function beginDrag () {
                             $('.popover.tour').remove();
                             function goToNextStep () {
@@ -65,7 +72,6 @@
                             $body.off('mousedown', beginDrag);
                             $body.on('mouseup', goToNextStep);
                         }
-
                         $body.on('mousedown', beginDrag);
                     },
                 },
@@ -127,21 +133,8 @@
             ];
             return this._super();
         },
-        startOfPart2: function () {
-            var currentStepIndex = this.currentStepIndex();
-            var secondPartIndex = this.indexOfStep('part-2');
-            var showTutorialsIndex = this.indexOfStep('show-tutorials');
-            return (currentStepIndex === secondPartIndex || currentStepIndex === showTutorialsIndex) && !this.tour.ended();
-        },
         continueTour: function () {
-            return this.startOfPart2() || this._super();
-        },
-    });
-
-    website.EditorBar.include({
-        start: function () {
-            this.registerTour(new website.EditorBannerTour(this));
-            return this._super();
+            return (this.isCurrentStep('part-2') || this.isCurrentStep('show-tutorials')) && !this.tour.ended();
         },
     });
 

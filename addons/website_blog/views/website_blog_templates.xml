@@ -4,6 +4,7 @@
     <template id="website_blog_script" inherit_id="website.layout" name="Website Blog script">
         <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
             <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js" t-ignore="true"></script>
+            <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js" t-ignore="true"></script>
         </xpath>
     </template>
 
@@ -59,7 +60,7 @@
                             </h4>
                             <div class="text-muted">
                                 <span class="icon-calendar"> <span t-field="blog.create_date"/> &amp;nbsp;</span>
-                                <span class="icon-folder-open"> In 
+                                <span class="icon-folder-open"> In
                                     <a t-href="/blog/cat/#{blog.category_id.id}">
                                     <span t-field="blog.category_id"/>
                                     </a> &amp;nbsp;

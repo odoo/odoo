@@ -10,7 +10,7 @@
         }
     };
 
-    website.EditorTour = openerp.Class.extend({
+    website.Tour = openerp.Class.extend({
         tour: undefined,
         steps: [],
         tourStorage: window.localStorage,
@@ -32,12 +32,9 @@
             $('.popover.tour').remove();
         },
         start: function () {
-            if (this.canResume()) {
+            if (this.continueTour() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
                 this.tour.start();
             }
-        },
-        canResume: function () {
-            return this.continueTour() || ((this.currentStepIndex() === 0) && !this.tour.ended());
         },
         currentStepIndex: function () {
             var index = this.tourStorage.getItem(this.id+'_current_step') || 0;
@@ -51,6 +48,9 @@
                }
             });
             return index;
+        },
+        isCurrentStep: function (stepId) {
+            return this.currentStepIndex() === this.indexOfStep(stepId);
         },
         movetoStep: function (stepId) {
             $('.popover.tour').remove();
@@ -82,6 +82,10 @@
             url = url || new website.UrlParser(window.location.href);
             var urlTrigger = this.id + "=true";
             return url.search.indexOf(urlTrigger) >= 0;
+        },
+        testUrl: function (pattern) {
+            var url = new website.UrlParser(window.location.href);
+            return pattern.test(url.pathname+url.search);
         },
     });
 

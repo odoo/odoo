@@ -834,6 +834,7 @@
         events: {
             'hidden.bs.modal': 'destroy',
             'click button.save': 'save',
+            'click button[data-dismiss="modal"]': 'cancel',
         },
         init: function (editor) {
             this._super();
@@ -846,6 +847,8 @@
         },
         save: function () {
             this.close();
+        },
+        cancel: function () {
         },
         close: function () {
             this.$el.modal('hide');
@@ -1126,6 +1129,9 @@
                 style: this.$('.image-style').val(),
             });
             return this._super();
+        },
+        cancel: function () {
+            this.trigger('cancel');
         },
 
         /**

@@ -5,13 +5,19 @@
 
     var render = website.tour.render;
 
-    website.EditorShopTour = website.EditorTour.extend({
+    website.EditorBar.include({
+        start: function () {
+            this.registerTour(new website.EditorShopTour(this));
+            return this._super();
+        },
+    });
+
+    website.EditorShopTour = website.Tour.extend({
         id: 'shop-tutorial',
         name: "Create a product",
         startPath: '/shop',
         init: function (editor) {
             var self = this;
-            var $body = $(document.body);
             self.steps = [
                 {
                     stepId: 'welcome-shop',
@@ -83,25 +89,11 @@
             ];
             return this._super();
         },
-        productPage: function () {
-            var currentStepIndex = this.currentStepIndex();
-            var productPageIndex = this.indexOfStep('product-page');
-            return (currentStepIndex === productPageIndex) && !this.tour.ended();
-        },
         continueTour: function () {
-            return this.productPage();
+            return this.isCurrentStep('product-page') && !this.tour.ended();
         },
         isTriggerUrl: function (url) {
-            url = url || new website.UrlParser(window.location.href);
-            var addProductPattern = /^\/shop\/product\/[0-9]+\/\?enable_editor=1/;
-            return (this.productPage() && addProductPattern.test(url.pathname+url.search)) || this._super();
-        },
-    });
-
-    website.EditorBar.include({
-        start: function () {
-            this.registerTour(new website.EditorShopTour(this));
-            return this._super();
+            return (this.continueTour() && this.testUrl(/^\/shop\/product\/[0-9]+\/\?enable_editor=1/)) || this._super();
         },
     });
 
