@@ -11,14 +11,14 @@
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Home</field>
             <field name="target">self</field>
-            <field name="url">/event</field>
+            <field name="url">/event?event-tutorial=true</field>
         </record>
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_open_website"/>
             <field name="state">open</field>
         </record>
 
-        
+
         <record id="view_event_twitter_form" model="ir.ui.view">
             <field name="name">view_event_twitter_form</field>
             <field name="model">event.event</field>
