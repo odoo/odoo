@@ -27,7 +27,7 @@
             $('.popover.tour').remove();
         },
         start: function () {
-            if (this.continue() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
+            if (this.resume() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
                 this.tour.start();
             }
         },
@@ -68,7 +68,7 @@
                 window.location.replace(newUrl);
             }
         },
-        continue: function () {
+        resume: function () {
             // Override if necessary
             return this.currentStepIndex() === 0;
         },

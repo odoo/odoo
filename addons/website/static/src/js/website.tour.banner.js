@@ -127,7 +127,7 @@
             ];
             return this._super();
         },
-        continue: function () {
+        resume: function () {
             return (this.isCurrentStep('part-2') || this.isCurrentStep('show-tutorials')) && !this.tour.ended();
         },
     });

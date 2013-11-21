@@ -107,11 +107,11 @@
             ];
             return this._super();
         },
-        continue: function () {
+        resume: function () {
             return this.isCurrentStep('post-page') && !this.tour.ended();
         },
         trigger: function () {
-            return (this.continue() && this.testUrl(/^\/blog\/[0-9]+\/\?enable_editor=1/)) || this._super();
+            return (this.resume() && this.testUrl(/^\/blog\/[0-9]+\/\?enable_editor=1/)) || this._super();
         },
     });
 

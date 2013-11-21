@@ -83,11 +83,11 @@
             ];
             return this._super();
         },
-        continue: function () {
+        resume: function () {
             return this.isCurrentStep('product-page') && !this.tour.ended();
         },
         trigger: function (url) {
-            return (this.continue() && this.testUrl(/^\/shop\/product\/[0-9]+\/\?enable_editor=1/)) || this._super();
+            return (this.resume() && this.testUrl(/^\/shop\/product\/[0-9]+\/\?enable_editor=1/)) || this._super();
         },
     });
 
