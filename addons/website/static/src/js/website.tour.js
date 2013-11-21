@@ -4,12 +4,6 @@
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.tour.xml');
 
-    website.tour = {
-        render: function render (template, dict)  {
-            return openerp.qweb.render(template, dict);
-        }
-    };
-
     website.Tour = openerp.Class.extend({
         tour: undefined,
         steps: [],
@@ -19,9 +13,10 @@
                 name: this.id,
                 storage: this.tourStorage,
                 keyboard: false,
+                template: this.popover(),
             });
             this.tour.addSteps(_.map(this.steps, function (step) {
-               step.title = website.tour.render('website.tour_popover_title', { title: step.title });
+               step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
                return step;
             }));
         },
@@ -86,6 +81,9 @@
         testUrl: function (pattern) {
             var url = new website.UrlParser(window.location.href);
             return pattern.test(url.pathname+url.search);
+        },
+        popover: function (options) {
+            return openerp.qweb.render('website.tour_popover', options);
         },
     });
 
