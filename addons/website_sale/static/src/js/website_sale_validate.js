@@ -2,46 +2,35 @@ $(document).ready(function () {
 
     var _poll_nbr = 0;
 
-    function payment_transaction_validate() {
-        return openerp.jsonRpc('/shop/payment/validate', 'call', {});
-    }
-
     function payment_transaction_poll_status() {
-        return openerp.jsonRpc('/shop/payment/confirm', 'call', {
-        }).done(function (result) {
-            // console.log('--done', result);
+        var order_node = $('div.oe_website_sale_tx_status');
+        if (! order_node || order_node.data('orderId') === undefined) {
+            return;
+        }
+        var order_id = order_node.data('orderId');
+        return openerp.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
+        }).then(function (result) {
+            var tx_node = $('div.oe_website_sale_tx_status');
+            var txt = '<h3>Your transaction is waiting confirmation.</h3>';
             _poll_nbr += 1;
-            if (result.state == 'done') {
-                $('div.oe_website_sale_confirmation').html(function() {
-                    return "<h2>Thanks for your order</h2>";
-                });
+            if (result.state == 'pending' && _poll_nbr <= 5) {
+                txt = "<h3>Your transaction is waiting confirmation.</h3>";
+                setTimeout(function () {
+                    payment_transaction_poll_status();
+                }, 1000);
+            }
+            else if (result.state == 'done') {
+                txt = "<h3>Your payment has been received.</h3>";
             }
             else if (result.state == 'pending') {
-                if (_poll_nbr <= 2) {
-                    $('div.oe_website_sale_confirmation').html(function() {
-                        return "<h2>Waiting validation ...</h2>";
-                    });
-                    setTimeout(function () {
-                        return inner_done = payment_transaction_poll_status();
-                    }, 1000);
-                    // return inner_done;
-                }
-                else {
-                    $('div.oe_website_sale_confirmation').html(function() {
-                        return "<h2>You payment is currently under review. Please come back later.</h2>";
-                    });
-                }
+                txt = "<h3>Your transaction is waiting confirmation. You may try to refresh this page.</h3>";
             }
             else if (result.state == 'cancel') {
-                $('div.oe_website_sale_confirmation').html(function() {
-                    return "<h2>The payment seems to have been canceled.</h2>";
-                });   
+                txt =  "<h3>The payment seems to have been canceled.</h3>";
             }
+            tx_node.html(txt);
         });
     }
 
-    payment_transaction_poll_status().done(function (result) {
-        // console.log('finished', result);
-        payment_transaction_validate();
-    });
+    payment_transaction_poll_status();
 });

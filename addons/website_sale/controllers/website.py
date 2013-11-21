@@ -65,6 +65,17 @@ class Website(osv.Model):
             return tx
         return False
 
+    def sale_reset_order(self, cr, uid, context=None):
+        request.httprequest.session.update({
+            'ecommerce_order_id': False,
+            'ecommerce_pricelist': False,
+            'website_sale_transaction_id': False,
+        })
+        request.context.update({
+            'website_sale_order': False,
+            'website_sale_transaction': False,
+        })
+
     def preprocess_request(self, cr, uid, ids, request, context=None):
         request.context.update({
             'website_sale_order': self.get_current_order(cr, uid, context=context),

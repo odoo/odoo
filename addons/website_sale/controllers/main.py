@@ -448,8 +448,14 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/mycart/'], type='http', auth="public", multilang=True)
     def mycart(self, **post):
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        cr, uid, context = request.cr, request.uid, request.context
         prod_obj = request.registry.get('product.product')
+
+        # must have a draft sale order with lines at this point, otherwise reset
+        order = context.get('website_sale_order')
+        if order and order.state != 'draft':
+            request.registry['website'].sale_reset_order(cr, uid, context=context)
+            return request.redirect('/shop/')
 
         if 'promo' in post:
             self.change_pricelist(post.get('promo'))
@@ -462,7 +468,7 @@ class Ecommerce(http.Controller):
                 product_ids.append(line.product_id.id)
         suggested_ids = list(set(suggested_ids) - set(product_ids))
         if suggested_ids:
-            suggested_ids = prod_obj.search(request.cr, request.uid, [('id', 'in', suggested_ids)], context=request.context)
+            suggested_ids = prod_obj.search(cr, uid, [('id', 'in', suggested_ids)], context=context)
 
         # select 3 random products
         suggested_products = []
@@ -473,7 +479,7 @@ class Ecommerce(http.Controller):
         values = {
             'int': int,
             'get_categories': self.get_categories,
-            'suggested_products': prod_obj.browse(request.cr, request.uid, suggested_products, request.context),
+            'suggested_products': prod_obj.browse(cr, uid, suggested_products, context),
         }
         return request.website.render("website_sale.mycart", values)
 
@@ -498,10 +504,15 @@ class Ecommerce(http.Controller):
     def checkout(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
-
+        # must have a draft sale order with lines at this point, otherwise reset
+        order = context.get('website_sale_order')
         if not order or order.state != 'draft' or not order.order_line:
-            return self.mycart(**post)
+            request.registry['website'].sale_reset_order(cr, uid, context=context)
+            return request.redirect('/shop/')
+        # if transaction pending / done: redirect to confirmation
+        tx = context.get('website_sale_transaction')
+        if tx and tx.state != 'draft':
+            return request.redirect('/shop/payment/confirmation/%s' % order.id)
 
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
@@ -549,10 +560,15 @@ class Ecommerce(http.Controller):
     def confirm_order(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
+        # must have a draft sale order with lines at this point, otherwise redirect to shop
         order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
-
         if not order or order.state != 'draft' or not order.order_line:
-            return self.mycart(**post)
+            request.registry['website'].sale_reset_order(cr, uid, context=context)
+            return request.redirect('/shop/')
+        # if transaction pending / done: redirect to confirmation
+        tx = context.get('website_sale_transaction')
+        if tx and tx.state != 'draft':
+            return request.redirect('/shop/payment/confirmation/%s' % order.id)
 
         orm_parter = registry.get('res.partner')
         orm_user = registry.get('res.users')
@@ -636,19 +652,29 @@ class Ecommerce(http.Controller):
         return request.redirect("/shop/payment/")
 
     @website.route(['/shop/payment/'], type='http', auth="public", multilang=True)
-    def payment(self, payment_acquirer_id=None, **post):
+    def payment(self, **post):
+        """ Payment step. This page proposes several payment means based on available
+        payment.acquirer. State at this point :
+
+         - a draft sale order with lines; otherwise, clean context / session and
+           back to the shop
+         - no transaction in context / session, or only a draft one, if the customer
+           did go to a payment.acquirer website but closed the tab without
+           paying / canceling
+        """
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
 
         # if no sale order at this stage: back to checkout beginning
         order = context.get('website_sale_order')
-        if not order or not order.order_line:
-            return request.redirect("/shop/checkout/")
-
+        if not order or not order.state == 'draft' or not order.order_line:
+            request.registry['website'].sale_reset_order(cr, uid, context=context)
+            return request.redirect("/shop/")
         # alread a transaction: forward to confirmation
         tx = context.get('website_sale_transaction')
         if tx and not tx.state == 'draft':
-            return request.redirect('/shop/confirmation')
+            print 'embetatn'
+            # return request.redirect('/shop/confirmation/%s' % order.id)
 
         partner_id = False
         shipping_partner_id = False
@@ -661,7 +687,6 @@ class Ecommerce(http.Controller):
 
         values = {
             'partner': partner_id,
-            'payment_acquirer_id': payment_acquirer_id,
             'order': order
         }
         values.update(request.registry.get('sale.order')._get_website_data(cr, uid, order, context))
@@ -680,7 +705,7 @@ class Ecommerce(http.Controller):
                 order.pricelist_id.currency_id,
                 partner_id=shipping_partner_id,
                 tx_custom_values={
-                    'return_url': '/shop/confirmation',
+                    'return_url': '/shop/payment/validate',
                 },
                 context=context)
 
@@ -688,7 +713,7 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/payment/transaction/<int:acquirer_id>'],
                    type='http', methods=['POST'], auth="public")
-    def payment_transaction(self, acquirer_id=None, **post):
+    def payment_transaction(self, acquirer_id, **post):
         """ Hook method that creates a payment.transaction and redirect to the
         acquirer, using post values to re-create the post action.
 
@@ -717,6 +742,7 @@ class Ecommerce(http.Controller):
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
                 'reference': order.name,
+                'sale_order_id': order.id,
             }, context=context)
             request.httprequest.session['website_sale_transaction_id'] = tx_id
         elif tx and tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
@@ -728,30 +754,47 @@ class Ecommerce(http.Controller):
         acquirer_total_url = '%s?%s' % (acquirer_form_post_url, urllib.urlencode(post))
         return request.redirect(acquirer_total_url)
 
-    @website.route('/shop/payment/confirm', type='json', auth="public", multilang=True)
-    def payment_confirm(self, transaction_id=None, **post):
+    @website.route('/shop/payment/get_status/<model("sale.order"):order>', type='json', auth="public", multilang=True)
+    def payment_get_status(self, order, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        payment_obj = request.registry.get('payment.transaction')
-        if transaction_id:
-            tx = payment_obj.browse(cr, uid, transaction_id, context=context)
-        else:
-            tx = context.get('website_sale_transaction')
+        if not order:
+            return {
+                'state': 'error',
+            }
 
+        tx_ids = request.registry['payment.transaction'].search(
+            cr, uid, [
+                '|', ('sale_order_id', '=', order.id), ('reference', '=', order.name)
+            ], context=context)
+        if not tx_ids:
+            return {
+                'state': 'error'
+            }
+        tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
         return {
             'state': tx.state,
         }
 
-    @website.route('/shop/payment/validate', type='json', auth="public", multilang=True)
-    def payment_validate(self):
+    @website.route('/shop/payment/validate/', type='http', auth="public", multilang=True)
+    def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
+        """ Method that should be called by the server when receiving an update
+        for a transaction. State at this point :
+
+         - UDPATE ME
+        """
         cr, uid, context = request.cr, request.uid, request.context
         email_act = None
         sale_order_obj = request.registry['sale.order']
 
-        order = context.get('website_sale_order')
-        tx = context.get('website_sale_transaction')
+        if transaction_id is None:
+            tx = context.get('website_sale_transaction')
+        else:
+            tx = request.registry['payment.transaction'].browse(cr, uid, transaction_id, context=context)
 
-        if not order or not tx:
-            return request.redirect("/shop/checkout/")
+        if sale_order_id is None:
+            order = context.get('website_sale_order')
+        else:
+            order = request.registry['sale.order'].browse(cr, uid, sale_order_id, context=context)
 
         if tx.state == 'done':
             # confirm the quotation
@@ -770,26 +813,23 @@ class Ecommerce(http.Controller):
             compose_id = request.registry['mail.compose.message'].create(cr, uid, {}, context=create_ctx)
             request.registry['mail.compose.message'].send_mail(cr, uid, [compose_id], context=create_ctx)
 
-        return True
+        # clean context and session, then redirect to the confirmation page
+        request.registry['website'].sale_reset_order(cr, uid, context=context)
 
-    @website.route(['/shop/confirmation/'], type='http', auth="public", multilang=True)
-    def payment_confirmation(self, **post):
-        context = request.context
+        return request.redirect('/shop/confirmation/%s' % order.id)
 
-        # if no sale order at this stage: back to shop
-        order = context.get('website_sale_order')
-        if not order or not order.order_line:
-            return request.redirect("/shop/")
+    @website.route(['/shop/confirmation/<model("sale.order"):order>'], type='http', auth="public", multilang=True)
+    def payment_confirmation(self, order, **post):
+        """ End of checkout process controller. Confirmation is basically seing
+        the status of a sale.order. State at this point :
 
-        # no transaction: back to payment
-        tx = context.get('website_sale_transaction')
-        if not tx:
-            return request.redirect('/shop/payment')
+         - should not have any context / session info: clean them
+         - take a sale.order id, because we request a sale.order and are not
+           session dependant anymore
+        """
+        cr, uid, context = request.cr, request.uid, request.context
 
-        res = request.website.render("website_sale.confirmation", {'order': order})
-        # request.httprequest.session['ecommerce_order_id'] = False
-        # request.httprequest.session['ecommerce_pricelist'] = False
-        return res
+        return request.website.render("website_sale.confirmation", {'order': order})
 
     @website.route(['/shop/change_sequence/'], type='json', auth="public")
     def change_sequence(self, id, top):
