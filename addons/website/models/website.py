@@ -473,7 +473,7 @@ class website(osv.osv):
             'range': range,
             'template': template,
         }
-        return request.website.render("website.kanban_contain", values)
+        return request.website._render("website.kanban_contain", values)
 
     def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby, context=None):
         html = ""
