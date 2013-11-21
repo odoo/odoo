@@ -197,7 +197,7 @@
                             <field name="date_order"/>
                             <field name="origin" attr="{'invisible': [('origin','=',False)]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code_id','=','incoming')]" widget="selection" context="{'special_shortened_wh_name': True}"/>
+                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" widget="selection" context="{'special_shortened_wh_name': True}"/>
                             <field name="related_location_id" invisible="1"/>
                             <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"
                                 attrs="{'invisible':['|', ('picking_type_id','=',False), ('related_location_id','!=', False)], 
