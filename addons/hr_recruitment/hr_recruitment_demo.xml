@@ -16,7 +16,7 @@
     </record>
     <record id="hr_case_traineemca0" model="hr.applicant">
         <field name="name">Trainee - MCA</field>
-        <field name="job_id" ref="hr.job_developer"/>
+        <field name="job_id" ref="hr.job_trainee"/>
         <field name="type_id" ref="degree_bac5"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
@@ -45,7 +45,7 @@
     </record>
     <record id="hr_case_yrsexperienceinphp0" model="hr.applicant">
         <field name="name">Marketing Job</field>
-        <field name="job_id" ref="hr.job_developer"/>
+        <field name="job_id" ref="hr.job_trainee"/>
         <field name="type_id" ref="degree_bac5"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field eval="time.strftime('%Y-%m-25 16:25:52')" name="date"/>
@@ -69,7 +69,7 @@
     </record>
     <record id="hr_case_financejob0" model="hr.applicant">
         <field name="name">Finance Job</field>
-        <field name="job_id" ref="hr.job_developer"/>
+        <field name="job_id" ref="hr.job_trainee"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
         <field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
@@ -96,7 +96,7 @@
     </record>
     <record id="hr_case_programmer" model="hr.applicant">
         <field name="name">Programmer</field>
-        <field name="job_id" ref="hr.job_developer"/>
+        <field name="job_id" ref="hr.job_trainee"/>
         <field name="type_id" ref="degree_bac5"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
@@ -133,6 +133,6 @@
         <field name="state">recruit</field>
         <field name="no_of_recruitment">5</field>
     </record>
- 
+
   </data>
 </openerp>
