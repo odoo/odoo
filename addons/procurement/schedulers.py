@@ -32,17 +32,17 @@ from openerp import tools
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
 
-    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, skip_exception=False, context=None):
         ''' Runs through scheduler.
         @param use_new_cursor: False or the dbname
         '''
         if use_new_cursor:
             use_new_cursor = cr.dbname
-        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
+        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, skip_exception=skip_exception, context=context)
         self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
                 use_new_cursor=use_new_cursor, context=context)
 
-    def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
+    def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, skip_exception=False, context=None):
         '''
         Call the scheduler to check the procurement order
 
@@ -51,6 +51,7 @@ class procurement_order(osv.osv):
         @param uid: The current user ID for security checks
         @param ids: List of selected IDs
         @param use_new_cursor: False or the dbname
+        @param skip_exception: boolean
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''
@@ -61,11 +62,12 @@ class procurement_order(osv.osv):
                 cr = openerp.registry(use_new_cursor).db.cursor()
 
             procurement_obj = self.pool.get('procurement.order')
-            if not ids:
-                ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order="date_planned")
-            self.signal_button_restart(cr, uid, ids)
-            if use_new_cursor:
-                cr.commit()
+            if not skip_exception:
+                if not ids:
+                    ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order="date_planned")
+                self.signal_button_restart(cr, uid, ids)
+                if use_new_cursor:
+                    cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
             start_date = fields.datetime.now()
