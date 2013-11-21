@@ -399,7 +399,15 @@ class browse_record(object):
             ids = filter(lambda id: name not in self._data[id], self._data.keys())
             # read the results
             field_names = map(lambda x: x[0], fields_to_fetch)
-            field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
+            try:
+                field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
+            except (openerp.exceptions.AccessError, except_orm):
+                if len(ids) == 1:
+                    raise
+                # prefetching attempt failed, perhaps we're violating ACL restrictions involuntarily
+                _logger.info('Prefetching attempt for fields %s on %s failed for ids %s, re-trying just for id %s', field_names, self._model._name, ids, self._id)
+                ids = [self._id]
+                field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
 
             # TODO: improve this, very slow for reports
             if self._fields_process:
