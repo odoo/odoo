@@ -25,7 +25,7 @@
 
     <template id="categories_recursive" name="Category list">
         <li t-att-class="str(category.id) == search.get('category') and 'active' or ''">
-            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/?category=#{ category.id }" t-field="category.name" t-keep-query="search,facettes"></a>
+            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
             <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-if="category.id in categ[1] or editable">
@@ -49,7 +49,7 @@
         <div class="ribbon"><span contentEditable="true">Promo</span></div>
       </div>
       <div class="oe_product_description">
-          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,facettes">
+          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filter">
               <b t-field="product.name"/>
           </a>
       </div>
@@ -69,7 +69,7 @@
           </b>
       </div>
       <div class="oe_product_image text-center">
-          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,facettes">
+          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filter">
               <span t-field="product.image" t-field-options='{"widget": "image"}'/>
           </a>
       </div>
@@ -245,7 +245,7 @@
                   <div class="col-sm-5">
                       <ol class="breadcrumb">
                           <li><a href="/shop">Products</a></li>
-                          <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,facettes"><span t-field="category.name"/></a></li>
+                          <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filter"><span t-field="category.name"/></a></li>
                           <li class="active"><span t-field="product.name"></span></li>
                       </ol>
                   </div><div class="col-sm-3">
@@ -509,7 +509,7 @@
 
     <template id="products_attributes" inherit_option_id="website_sale.products" name="Product Filters and Attributes">
         <xpath expr="//div[@id='products_grid_before']" position="inside">
-            <form t-action="/shop/filter/" method="post" t-keep-query="category,search,add_filter">
+            <form t-action="/shop/filter/" method="post" t-keep-query="category,search">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
                     <t t-foreach="attribute_ids" t-as="attribute_id">

@@ -289,10 +289,10 @@ class Ecommerce(http.Controller):
                     filter[index.index(cat_id)].append( cat[2] )
             post.pop(key)
 
-        return request.redirect("/shop/?filter=%s%s%s%s" % (
+        return request.redirect("/shop/?filter=%s%s%s" % (
                 simplejson.dumps(filter),
-                post.get("search") and "&search=%s" % post.get("search") or "",
-                post.get("category") and "&category=%s" % post.get("category") or ""
+                post.get("search") and ("&search=%s" % post.get("search")) or "",
+                post.get("category") and ("&category=%s" % post.get("category")) or ""
             ))
 
     def attributes_to_ids(self, attributes):
@@ -308,7 +308,12 @@ class Ecommerce(http.Controller):
         att = obj.read(request.cr, request.uid, att_ids, ["product_id"], context=request.context)
         return [r["product_id"][0] for r in att]
 
-    @website.route(['/shop/', '/shop/page/<int:page>/'], type='http', auth="public", multilang=True)
+    @website.route([
+        '/shop/',
+        '/shop/page/<int:page>/',
+        '/shop/category/<int:category>/',
+        '/shop/category/<int:category>/page/<int:page>/'
+    ], type='http', auth="public", multilang=True)
     def category(self, category=0, filter="", page=0, **post):
         # TDE-NOTE: shouldn't we do somethign about product_template without variants ???
         # TDE-NOTE: is there a reason to call a method category when the route is
@@ -332,8 +337,8 @@ class Ecommerce(http.Controller):
                 ('product_variant_ids.public_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
 
         if category:
-            cat_id = int(category)
-            domain = [('product_variant_ids.public_categ_id.id', 'child_of', cat_id)] + domain
+            category_id = int(category)
+            domain = [('product_variant_ids.public_categ_id.id', 'child_of', category_id)] + domain
 
         if filter:
             filter = simplejson.loads(filter)
