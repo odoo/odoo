@@ -20,8 +20,7 @@ from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
 
 from openerp.addons.web import http
-from openerp.addons.web.http import request
-
+from openerp.addons.web.http import request, LazyResponse
 
 logger = logging.getLogger(__name__)
 
@@ -157,7 +156,7 @@ class website(osv.osv):
             'translatable': not is_public_user and not is_master_lang and request.multilang,
         })
 
-    def render(self, cr, uid, ids, template, values=None, context=None):
+    def _render(self, cr, uid, ids, template, values=None, context=None):
         view = self.pool.get("ir.ui.view")
         IMD = self.pool.get("ir.model.data")
         user = self.pool.get("res.users")
@@ -220,6 +219,13 @@ class website(osv.osv):
             logger.exception("Website Rendering Error.\n%(template)s\n%(expr)s\n%(node)s" % qweb_context)
             return self.error(cr, uid, 500 if qweb_context['editable'] else 404,
                               qweb_context, context=context)
+
+    def render(self, cr, uid, ids, template, values=None, context=None):
+        def callback(template, values, context):
+            return self._render(cr, uid, ids, template, values, context)
+        if values is None:
+            values = {}
+        return LazyResponse(callback, template=template, values=values, context=context)
 
     def error(self, cr, uid, code, qweb_context, context=None):
         View = request.registry['ir.ui.view']
@@ -478,7 +484,7 @@ class website(osv.osv):
         object_ids = model_obj.search(cr, uid, domain, limit=step, offset=offset, order=orderby)
         object_ids = model_obj.browse(cr, uid, object_ids)
         for object_id in object_ids:
-            html += request.website.render(template, {'object_id': object_id})
+            html += request.website._render(template, {'object_id': object_id})
         return html
 
     def get_menu(self, cr, uid, ids, context=None):
