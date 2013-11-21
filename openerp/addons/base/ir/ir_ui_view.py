@@ -768,7 +768,7 @@ class view(osv.osv):
                 self.translate_qweb(cr, uid, id_, node, lang, context)
         return arch
 
-    def render(self, cr, uid, id_or_xml_id, values, engine='ir.qweb', context=None):
+    def render(self, cr, uid, id_or_xml_id, values={}, engine='ir.qweb', context=None):
         if not context:
             context = {}
 
