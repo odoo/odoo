@@ -367,6 +367,11 @@ class product_template(osv.osv):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
+        product = self.pool.get('product.product')
+        product_ids = product.search(cr, uid, [('product_tmpl_id','in',ids)], context=context)
+        for product_obj in product.browse(cr, uid, product_ids, context=context):
+            if not product_obj.image:
+                product.write(cr, uid, product_obj.id, {'image': product_obj.product_tmpl_id.image}, context=context)
         return result
 
     def _set_image(self, cr, uid, id, name, value, args, context=None):
@@ -389,7 +394,7 @@ class product_template(osv.osv):
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'public_categ_id': fields.many2one('product.public.category','Public Category', help="Those categories are used to group similar products for public sales (eg.: point of sale, e-commerce)."),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost', digits_compute=dp.get_precision('Product Price'), help="Cost price of the product used for standard stock valuation in accounting and used as a base price on purchase orders.", groups="base.group_user"),
+        'standard_price': fields.float('Cost Price', digits_compute=dp.get_precision('Product Price'), help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.", groups="base.group_user"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
@@ -418,7 +423,7 @@ class product_template(osv.osv):
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
             store={
-                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the product. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved, "\
@@ -426,7 +431,7 @@ class product_template(osv.osv):
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized image", type="binary", multi="_get_image",
             store={
-                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
@@ -465,6 +470,17 @@ class product_template(osv.osv):
                 if old_uom.category_id.id != new_uom.category_id.id:
                     raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        template = self.read(cr, uid, id, ['name', 'product_variant_ids'], context=context)
+        default = default.copy()
+        default.update(name=_("%s (copy)") % (template['name']))
+        id = super(product_template, self).copy(cr, uid, id, default=default, context=context)
+        if template['product_variant_ids']:
+            self.write(cr, uid, id, default, context)
+        return id
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
@@ -561,7 +577,7 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
-            res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
+            res[product.id] =  (res[product.id] + ((res[product.id] * (product.price_margin)) / 100)) + product.price_extra
         return res
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
@@ -623,6 +639,15 @@ class product_product(osv.osv):
         return result
 
 
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
+        return result
+
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
     def _get_name_template_ids(self, cr, uid, ids, context=None):
         result = set()
         template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
@@ -633,7 +658,7 @@ class product_product(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
-        'price_margin': lambda *a: 1.0,
+        'price_margin': lambda *a: 0.0,
         'color': 0,
     }
 
@@ -667,11 +692,40 @@ class product_product(osv.osv):
 
             }, select=True),
         'color': fields.integer('Color Index'),
+        # image: all image fields are base64 encoded and PIL-supported
+        'image': fields.binary("Image",
+            help="This field holds the image used as image for the product, limited to 1024x1024px."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized image", type="binary", multi="_get_image",
+            store={
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized image of the product. It is automatically "\
+                 "resized as a 128x128px image, with aspect ratio preserved, "\
+                 "only when the image exceeds one of those sizes. Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Small-sized image", type="binary", multi="_get_image",
+            store={
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized image of the product. It is automatically "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
         'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", string="Supplier Info", multi="seller_info"),
         'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
         'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
+        'description': fields.text('Description',translate=True,
+            help="A precise description of the Product, used only for internal information purposes."),
     }
+
+    def create(self, cr, uid, data, context=None):
+        if 'product_tmpl_id' in data:
+            template = self.pool.get('product.template').browse(cr, uid, data['product_tmpl_id'], context=context)
+            if template.image:
+                data['image'] = template.image
+        return super(product_product, self).create(cr, uid, data, context=context)
+
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []
@@ -685,7 +739,8 @@ class product_product(osv.osv):
         res = super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
         # delete templates after calling super, as deleting template could lead to deleting
         # products due to ondelete='cascade'
-        self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
+        #Deprecated code : As per new scenario no need to delete the 'product-template' while delete the product.
+        #self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
         return res
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
@@ -761,7 +816,7 @@ class product_product(osv.osv):
                 # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
                 # Performing a quick memory merge of ids in Python will give much better performance
                 ids = set()
-                ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
+                ids.update(self.search(cr, user, args + ['|',('default_code',operator,name),('variants',operator,name)], limit=limit, context=context))
                 if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
                     ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
@@ -793,7 +848,7 @@ class product_product(osv.osv):
         for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = product[ptype] or 0.0
             if ptype == 'list_price':
-                res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
+                res[product.id] = (res[product.id] + ((res[product.id] * (product.price_margin)) / 100)) + \
                         product.price_extra
             if 'uom' in context:
                 uom = product.uom_id or product.uos_id
@@ -819,9 +874,12 @@ class product_product(osv.osv):
         # will do the other languages).
         context_wo_lang = context.copy()
         context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name'], context=context_wo_lang)
+        product = self.read(cr, uid, id, ['name', 'list_price', 'standard_price', 'categ_id', 'variants', 'product_tmpl_id'], context=context_wo_lang)
         default = default.copy()
-        default.update(name=_("%s (copy)") % (product['name']))
+        if product['variants']:
+            default.update(variants=_("%s (copy)") % (product['variants']), product_tmpl_id=product['product_tmpl_id'][0])
+        else:
+            default.update(name=_("%s (copy)") % (product['name']), list_price=product['list_price'], standard_price=product['standard_price'], categ_id=product['categ_id'][0], product_tmpl_id=None)
 
         if context.get('variant',False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
@@ -837,6 +895,18 @@ class product_product(osv.osv):
         else:
             return super(product_product, self).copy(cr, uid, id, default=default,
                     context=context)
+
+    def copy_translations(self, cr, uid, old_id, new_id, context=None):
+        """ When we do not copy the template along the variant,
+          copy_translations sometimes receives 2 identical IDs.
+          That's because the ORM follows the o2m to copy the translations,
+          so in that case, it follows 'variant_ids' and for each variant,
+          it copy the translations. One of the variant is the 'new_id'.
+          Just skip the identical IDs.
+          """
+        if old_id == new_id:
+            return
+        super(product_product, self).copy_translations(cr, uid, old_id, new_id, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:

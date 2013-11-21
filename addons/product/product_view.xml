@@ -8,7 +8,7 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                   <field name="name" string="Product" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
+                   <field name="name" string="Product" filter_domain="['|','|',('name','ilike',self),('default_code','ilike',self),('variants','ilike',self)]"/>
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                    <separator/>
@@ -23,6 +23,7 @@
                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
+                       <filter string='Template' name="template_id" domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
                    </group>
                 </search>
             </field>
@@ -36,6 +37,7 @@
                 <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
+                    <field name="variants"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
@@ -46,6 +48,7 @@
                     <field name="standard_price" invisible="1"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                    <field name="product_tmpl_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -63,7 +66,9 @@
                                 <label for="name" string="Product Name"/>
                             </div>
                             <h1>
-                                <field name="name"/>
+                                <field name="name" class="oe_inline"/>
+                                <span attrs="{'invisible':[('variants','=',False)]}"> - </span>
+                                <field name="variants" class="oe_inline" readonly="1"/>
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>
@@ -82,7 +87,8 @@
                                     <group>
                                         <field name="type"/>
                                         <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                        <field name="list_price"/>
+                                        <field name="list_price" string="Base Sale Price"/>
+                                        <field name="lst_price" string="Public Sale Price"/>
                                     </group>
                                     <group>
                                         <field name="default_code"/>
@@ -189,7 +195,7 @@
                                 <div class="oe_kanban_details">
                                     <h4>
                                         <a type="open">
-                                             <t t-if="record.code.raw_value">[<field name="code"/>]</t> <field name="name"/>
+                                             <t t-if="record.code.raw_value">[<field name="code"/>]</t> <field name="name"/> <t t-if="record.variants.raw_value">(<field name="variants"/>)</t>
                                         </a>
                                     </h4>
                                     <div name="tags"/>
@@ -244,6 +250,30 @@
               </p>
             </field>
         </record>
+        
+        <record id="product_action_template" model="ir.actions.act_window">
+            <field name="name">Products by Templates</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_template_id":1, "search_default_filter_to_sell":1}</field>
+            <field name="view_id" ref="product_product_tree_view"/>
+            <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new product.
+              </p><p>
+                You must define a product for everything you sell, whether it's
+                a physical product, a consumable or a service you offer to
+                customers.
+              </p><p>
+                The product form contains information to simplify the sale
+                process: price, notes in the quotation, accounting data,
+                procurement methods, etc.
+              </p>
+            </field>
+        </record>
 
         <record id="open_view_product_tree1" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
@@ -268,6 +298,7 @@
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
         <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>
+        <menuitem action="product.product_action_template" id="product.menu_products_bytemplate" parent="base.menu_product" groups="product.group_product_variant"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -668,6 +699,18 @@
         </record>
 
         <!-- Variants -->
+        <record id="product_variant_search_form_view" model="ir.ui.view">
+            <field name="name">product.variant.search.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <search string="Product Variant">
+                   <field name="name" string="Product" filter_domain="['|','|',('name','ilike',self),('default_code','ilike',self),('variants','ilike',self)]"/>
+                   <group  expand='0' string='Group by...'>
+                       <filter string='Template' name="template_id" domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
+                   </group>
+                </search>
+            </field>
+        </record>
         <record id="product_variant_form_view" model="ir.ui.view">
             <field name="name">product.variant.form</field>
             <field name="model">product.product</field>
@@ -678,7 +721,10 @@
                         <field name="active"/>
                         <field name="variants" required="1"/>
                         <field name="default_code"/>
-                        <field name="price_margin"/>
+                        <label for="price_margin"/>
+                        <div>
+                            <field name="price_margin" class="oe_inline" style="vertical-align:baseline"/> %%
+                        </div>
                         <field name="price_extra"/>
                     </group>
                 </form>
@@ -704,12 +750,12 @@
         <record id="product_variant_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
             <field name="type">ir.actions.act_window</field>
-            <!--<field name="domain">[('variants','&lt;&gt;', False)]</field>-->
+            <field name="domain">[('variants','&lt;&gt;', False)]</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
             <field name="view_id" ref="product_variant_tree_view"/>
-            <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="search_view_id" ref="product_variant_search_form_view"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new variant of product.
@@ -728,9 +774,30 @@
             <field name="view_id" ref="product_variant_form_view"/>
             <field name="act_window_id" ref="product_variant_action"/>
         </record>
-        <menuitem action="product.product_variant_action" id="product.menu_variant_product" parent="base.menu_product" sequence="100" groups="product.group_product_variant"/>
+        <menuitem action="product.product_variant_action" id="product.menu_variant_product" parent="prod_config_main" sequence="100" groups="product.group_product_variant"/>
 
         <!-- templates -->
+
+        <record id="product_template_search_view" model="ir.ui.view">
+            <field name="name">product.template.search</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <search string="Product Template">
+                    <field name="name" string="Product"/>
+                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
+                    <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
+                    <separator/>
+                    <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                    <field name="categ_id"/>
+                    <group  expand='0' string='Group by...'>
+                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
+                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
+                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="product_template_tree_view" model="ir.ui.view">
             <field name="name">product.template.product.tree</field>
             <field name="model">product.template</field>
@@ -740,6 +807,7 @@
                     <field name="categ_id"/>
                     <field name="type"/>
                     <field name="state"/>
+                    <field name="uom_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -762,81 +830,85 @@
                             <h2><field name="categ_id"/></h2>
                             <label for="public_categ_id" class="oe_edit_only"/>
                             <h3><field name="public_categ_id"/></h3>
+                            <div name="options" groups="base.group_user">
+                                <field name="sale_ok"/>
+                                <label for="sale_ok"/>
+                            </div>
                         </div>
                         <notebook>
                             <page string="Information">
-                                <group>
-                                    <group string="Product Type">
-                                        <field name="sale_ok"/>
+                                <group  colspan="4">
+                                    <group>
+                                    <field name="type"/>
+                                    <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
+                                    <field name="list_price"/>
                                     </group>
-                                    <group string="Procurement">
-                                        <field name="type"/>
+                                    <group>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                     </group>
-
-                                    <group string="Base Prices">
-                                        <field name="list_price"/>
+                                </group>
+                                <group colspan="4" string="Product Variants">
+                                    <field colspan="4" name="product_variant_ids" nolabel="1">
+                                        <tree string="Product Variants" editable="bottom">
+                                            <field name="variants" required="1"/>
+                                            <field name="price_margin" string="Variant Price Margin(%%)"/>
+                                            <field name="price_extra"/>
+                                            <field name="lst_price" string="Sale Price"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <field name="description" placeholder="describe the product characteristics..."/>
+                            </page>
+                            <page string="Procurements" groups="base.group_user">
+                                <group name="procurement">
+                                    <group name="general">
+                                        <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                                        <field name="cost_method"/>
                                     </group>
-
-                                    <group string="Weights">
+                                    <group name="delay" string="Delays">
+                                        <label for="produce_delay"/>
+                                        <div>
+                                            <field name="produce_delay" class="oe_inline" style="vertical-align:baseline"/> days
+                                        </div>
+                                    </group>
+                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
+                                        <field name="uom_po_id"/>
+                                    </group>
+                                </group>
+                                <separator string="Suppliers"/>
+                                <field name="seller_ids"/>
+                                <separator string="Description for Suppliers"/>
+                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
+                            </page>
+                            <page string="Inventory">
+                                <group name="inventory">
+                                     <group name="status" string="Status">
+                                        <field name="state"/>
+                                        <field name="product_manager"/>
+                                    </group>
+                                    <group name ="weight" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
-                                    </group> 
-
-                                    <group name="status" string="Status">
-                                        <field name="categ_id"/>
-                                        <field name="state"/>
-                                        <field name="product_manager" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_manager']}"/>
                                     </group>
-
-                                    <group name="uom" string="Unit of Measure">
-                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                        <field name="uom_po_id"/>
+                                </group>
+                            </page>
+                            <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}">   
+                                <group name="sale">
+                                    <group name="sale_condition" string="Sale Conditions">
+                                        <label for="warranty"/>
+                                        <div>
+                                            <field name="warranty" class="oe_inline" style="vertical-align:baseline"/> months
+                                        </div>
                                     </group>
-
-                                    <group name="uos" groups="product.group_uom" string="Second Unit of Measure">
+                                    <group groups="product.group_uos" string="Unit of Measure">
                                         <field name="uos_id"/>
                                         <field name="uos_coeff"/>
                                         <field name="mes_type"/>
                                     </group>
-
-                                    <group colspan="4" string="Product Variants">
-                                        <field colspan="4" name="product_variant_ids" nolabel="1">
-                                            <tree string="Product Variants" editable="bottom">
-                                                <field name="active"/>
-                                                <field name="variants" required="1"/>
-                                                <field name="default_code"/>
-                                                <field name="price_margin"/>
-                                                <field name="price_extra"/>
-                                            </tree>
-                                        </field>
-                                    </group>
                                 </group>
-                            </page>
-                            <page string="Procurement &amp; Locations">
-                                <group>
-                                    <group name="delay" string="Delays">
-                                        <label for="produce_delay"/>
-                                        <div>
-                                            <field name="produce_delay" class="oe_inline"/> days
-                                        </div>
-                                        <field name="warranty"/>
-                                    </group>
-                                </group>
-
-                            </page>
-                            <page string="Suppliers">
-                                <field name="seller_ids"/>
-                            </page>
-                            <page string="Descriptions">
-                                <separator string="Internal Description"/>
-                                <field name="description"/>
-                                <separator string="Sale Description"/>
-                                <field name="description_sale"/>
-                                <separator string="Purchase Description"/>
-                                <field name="description_purchase"/>
+                                <separator string="Description for Quotations"/>
+                                <field name="description_sale" placeholder="note to be displayed on quotations..."/>
                             </page>
                         </notebook>
                     </sheet>
@@ -844,13 +916,48 @@
             </field>
         </record>
 
-        <record id="product_template_action_tree" model="ir.actions.act_window">
+        <record model="ir.ui.view" id="product_template_kanban_view">
+            <field name="name">Product Template Kanban</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="image_small"/>
+                    <field name="list_price"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open"><img t-att-src="kanban_image('product.template', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
+                                <div class="oe_kanban_details">
+                                    <h4>
+                                        <a type="open">
+                                             <field name="name"/> 
+                                        </a>
+                                    </h4>
+                                    <div name="tags"/>
+                                    <ul>
+                                        <li>Price: <field name="list_price"></field></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="product_template_action" model="ir.actions.act_window">
             <field name="name">Product Templates</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="product_template_tree_view"/>
+            <field name="view_id" ref="product_template_kanban_view"/>
         </record>
+
+        <menuitem action="product_template_action"
+            groups="product.group_product_variant"
+            id="menu_product_template_action"
+            parent="prod_config_main" sequence="3"/>
 
     </data>
 </openerp>

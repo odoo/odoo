@@ -291,14 +291,48 @@
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
 
+        <record id="product_template_search_view_procurment" model="ir.ui.view">
+            <field name="name">product.template.search.procurment</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <filter name="consumable" position="before">
+                    <filter string="Products" icon="terp-accessories-archiver" domain="[('type','=','product')]" help="Stockable products"/>
+                </filter>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="product_template_form_view_procurement">
             <field name="name">product.template.procurement</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='type']" position="after">
+                <xpath expr="//field[@name='cost_method']" position="before">
                     <field name="procure_method"/>
                     <field name="supply_method"/>
+                </xpath>
+                <xpath expr="//group[@name='general']" position="after" >
+                    <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
+                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                            When you sell this service, nothing special will be triggered
+                            to deliver the customer, as you set the procurement method as
+                            'Make to Stock'.
+                        </p>
+                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','product'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                            When you sell this product, OpenERP will <b>use the available
+                            inventory</b> for the delivery order.
+                            <br/><br/>
+                            If there are not enough quantities available, the delivery order
+                            will wait for new products. To fulfill the inventory, you should
+                            create others rules like orderpoints.
+                        </p>
+                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','consu'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                            When you sell this product, a delivery order will be created.
+                            OpenERP will consider that the <b>required quantities are always
+                            available</b> as it's a consumable (as a result of this, the quantity
+                            on hand may become negative).
+                        </p>
+                    </group>
                 </xpath>
             </field>
         </record>

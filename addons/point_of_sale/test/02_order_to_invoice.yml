@@ -20,7 +20,7 @@
 - 
   !record {model: pos.make.payment, id: pos_make_payment_2, context: '{"active_id": ref("pos_order_pos1"), "active_ids": [ref("pos_order_pos1")]}' }:
     amount: !eval >
-        (450*2 + 300*3*1.05)*0.95
+        (450*2 + 300*3*1.10)*0.95
 -
   I click on the validate button to register the payment.
 -
@@ -43,4 +43,4 @@
   I test that the total of the attached invoice is correct
 -
   !assert {model: pos.order, id: pos_order_pos1, string: Invoice not correct}:
-     - amount_total == (450*2 + 300*3*1.05)*0.95
+     - amount_total == (450*2 + 300*3*1.10)*0.95

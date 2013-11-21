@@ -79,7 +79,8 @@ Main Features
     'demo': [
         'point_of_sale_demo.xml',
         'account_statement_demo.xml',
-        'test/00_register_open.yml'
+        'test/00_register_open.yml',
+        'product_image_demo.xml'
     ],
     'test': [
         'test/01_order_to_payment.yml',

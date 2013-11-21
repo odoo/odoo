@@ -189,7 +189,7 @@ parameter) will see those record just disappear.
         <!--
         Product
         -->
-        <record id="product_product_consultant" model="product.product">
+        <record id="product_template_consultant" model="product.template">
             <field name="list_price">75.0</field>
             <field name="standard_price">30.0</field>
             <field name="uom_id" ref="product.product_uom_hour"/>
@@ -197,6 +197,9 @@ parameter) will see those record just disappear.
             <field name="name">Service</field>
             <field name="categ_id" ref="product.product_category_all"/>
             <field name="type">service</field>
+        </record>
+        <record id="product_product_consultant" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_consultant"/>
         </record>
 
         <!-- Product Public Categories -->

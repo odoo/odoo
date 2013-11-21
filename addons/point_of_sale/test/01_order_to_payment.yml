@@ -81,12 +81,12 @@
         discount: 0.0
         qty: 3.0
 - 
-  I check that the total of the order is equal to 450*2 + 300*3*1.05 and the tax of the order is equal to 900 -(450 * 2 / 1.1) + 300*0.05*3
+  I check that the total of the order is equal to 450*2 + 300*3*1.10 and the tax of the order is equal to 900 -(450 * 2) + 300*1.10*3
 - 
   !python {model: pos.order}: |
     order = self.browse(cr, uid, ref('pos_order_pos0'))
-    assert(abs(order.amount_total - (450*2 + 300*3*1.05)) < 0.01), "The order has a wrong amount, tax included"
-    assert(abs(order.amount_tax - (900-(450*2/1.1) + 300*0.05*3)) < 0.01), "The order has a wrong tax amount"
+    assert(abs(order.amount_total - (450*2 + 300*3*1.10)) < 0.01), "The order has a wrong amount, tax included"
+    assert(abs(order.amount_tax - (900-(450*2) + 300*0.10*3)) < 0.01), "The order has a wrong tax amount"
 - 
   I want to add a global discount of 5 percent using the wizard
 - 
@@ -99,11 +99,11 @@
     self.apply_discount(cr, uid, [ref("pos_discount_0")], {"active_model": "pos.order",
       "active_ids": [ref("pos_order_pos0")], "active_id": ref("pos_order_pos0"), })
 - 
-  I check that the total of the order is now equal to (450*2 + 300*3*1.05)*0.95
+  I check that the total of the order is now equal to (450*2 + 300*3*1.10)*0.95
 - 
   !python {model: pos.order}: |
     order = self.browse(cr, uid, ref('pos_order_pos0'))
-    assert(abs(order.amount_total - (450*2 + 300*3*1.05)*0.95) < 0.01), "The order has a wrong total including tax and discounts"
+    assert(abs(order.amount_total - (450*2 + 300*3*1.10)*0.95) < 0.01), "The order has a wrong total including tax and discounts"
 -
   I click on the "Make Payment" wizard to pay the PoS order with a partial amount of 100.0 EUR
 - 
@@ -124,13 +124,13 @@
 - 
   !python {model: pos.make.payment}: |
      defs = self.default_get(cr, uid, ['amount'], {'active_id': ref('pos_order_pos0')})
-     assert abs(defs['amount'] - ((450*2 + 300*3*1.05)*0.95-100.0)) < 0.01, "The remaining balance is incorrect"
+     assert abs(defs['amount'] - ((450*2 + 300*3*1.10)*0.95-100.0)) < 0.01, "The remaining balance is incorrect"
 -
   I pay the remaining balance.
 - 
   !record {model: pos.make.payment, id: pos_make_payment_1, context: '{"active_id": ref("pos_order_pos0"), "active_ids": [ref("pos_order_pos0")]}' }:
     amount: !eval >
-      (450*2 + 300*3*1.05)*0.95-100.0
+      (450*2 + 300*3*1.10)*0.95-100.0
 -
   I click on the validate button to register the payment.
 -

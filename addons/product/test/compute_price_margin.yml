@@ -1,0 +1,22 @@
+-
+  I create a Product Template "Tablate PC" with variant "2GB, Wi-Fi , 6in and set Variant Price Margin(%) = 10 and Variant Price Extra = 30."
+-
+  !record {model: product.template, id: product_template_test1}:
+    name: Tablate PC
+    type: service
+    categ_id: product_category_8
+    uom_id: product_uom_unit
+    uom_po_id: product_uom_unit
+    product_variant_ids:
+      - variants: 2GB, Wi-Fi , 6in
+        list_price: 20.0
+        price_margin: 10.0
+        price_extra: 30.0
+-
+  Now I check new sale price after setting price margins and price extra is equal to (20 + ((20 * 10) / 100)) + 30.
+-
+  !python {model: product.template}: |
+    template = self.browse(cr, uid, ref("product_template_test1"))
+    for variant_id in template.product_variant_ids:
+      product = self.pool.get('product.product').browse(cr,uid,variant_id.id,context=context)
+      assert product.lst_price == (20 + ((20 * 10) / 100)) + 30, "Sell price is not correspond."

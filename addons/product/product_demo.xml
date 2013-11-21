@@ -244,7 +244,7 @@
 
 
         <record id="product_template_3" model="product.template">
-            <field name="name">PC Assemble SC234</field>
+            <field name="name">PC Assemble</field>
             <field name="categ_id" ref="product_category_4"/>
             <field name="public_categ_id" ref="Computer_all_in_one"/>
             <field name="list_price">450.0</field>
@@ -252,16 +252,17 @@
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
-            <field name="description_sale">17" LCD Monitor
-Processor AMD 8-Core
-512MB RAM
-HDD SH-1</field>
         </record>
         <record id="product_product_3" model="product.product">
             <field name="product_tmpl_id" ref="product_template_3"/>
             <field name="default_code">PCSC234</field>
+            <field name="variants">SC234</field>
+            <field name="price_extra">0.0</field>
+            <field name="description">17" LCD Monitor
+Processor AMD 8-Core
+512MB RAM
+HDD SH-1</field>
         </record>
-
 
         <record id="product_template_4" model="product.template">
             <field name="name">iPad Retina Display</field>
@@ -294,6 +295,7 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="description">Custom computer assembled on order based on customer's requirement.</field>
             <field name="description_sale">Bose's smallest portable Bluetooth speaker</field>
         </record>
+
         <record id="product_product_5" model="product.product">
             <field name="product_tmpl_id" ref="product_template_5"/>
             <field name="default_code">B3423</field>
@@ -310,6 +312,7 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
         </record>
+
         <record id="product_product_6" model="product.product">
             <field name="product_tmpl_id" ref="product_template_6"/>
             <field name="default_code">A1232</field>
@@ -360,7 +363,7 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         </record>
 
         <record id="product_template_10" model="product.template">
-            <field name="name">Mouse, Optical</field>
+            <field name="name">Mouse</field>
             <field name="categ_id" ref="product_category_8"/>
             <field name="public_categ_id" ref="Keyboard_Mouse"/>
             <field name="standard_price">12.50</field>
@@ -372,6 +375,14 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         <record id="product_product_10" model="product.product">
             <field name="product_tmpl_id" ref="product_template_10"/>
             <field name="default_code">M-Opt</field>
+            <field name="variants">Optical</field>
+            <field name="price_extra">0.0</field>
+        </record>
+        <record id="product_product_12" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_10"/>
+            <field name="default_code">M-Wir</field>
+            <field name="variants">Wireless</field>
+            <field name="price_extra">1.50</field>
         </record>
 
         <record id="product_template_11" model="product.template">
@@ -404,23 +415,9 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="product_tmpl_id" ref="product_template_11"/>
         </record>
 
-        <record id="product_template_12" model="product.template">
-            <field name="name">Mouse, Wireless</field>
-            <field name="categ_id" ref="product_category_8"/>
-            <field name="public_categ_id" ref="Keyboard_Mouse"/>
-            <field name="standard_price">18</field>
-            <field name="list_price">12.50</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
-        </record>
-        <record id="product_product_12" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_12"/>
-            <field name="default_code">M-Wir</field>
-        </record>
 
         <record id="product_template_13" model="product.template">
-            <field name="name">RAM SR5</field>
+            <field name="name">RAM</field>
             <field name="categ_id" ref="product_category_8"/>
             <field name="public_categ_id" ref="Memory"/>
             <field name="standard_price">78.0</field>
@@ -432,36 +429,22 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         <record id="product_product_13" model="product.product">
             <field name="product_tmpl_id" ref="product_template_13"/>
             <field name="default_code">RAM-SR5</field>
+            <field name="variants">1GB-SR5</field>
+            <field name="price_extra">0.0</field>
         </record>
 
-        <record id="product_template_14" model="product.template">
-            <field name="name">RAM SR2</field>
-            <field name="categ_id" ref="product_category_8"/>
-            <field name="public_categ_id" ref="Memory"/>
-            <field name="standard_price">87.0</field>
-            <field name="list_price">95.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
-        </record>
         <record id="product_product_14" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_14"/>
+            <field name="product_tmpl_id" ref="product_template_13"/>
             <field name="default_code">RAM-SR2</field>
+            <field name="variants">2GB-SR2</field>
+            <field name="price_extra">10.0</field>
         </record>
 
-        <record id="product_template_15" model="product.template">
-            <field name="name">RAM SR3</field>
-            <field name="categ_id" ref="product_category_8"/>
-            <field name="public_categ_id" ref="Memory"/>
-            <field name="standard_price">80.0</field>
-            <field name="list_price">85.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
-        </record>
         <record id="product_product_15" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_15"/>
+            <field name="product_tmpl_id" ref="product_template_13"/>
             <field name="default_code">RAM-SR3</field>
+            <field name="variants">1GB-SR3</field>
+            <field name="price_extra">0.0</field>
         </record>
 
         <record id="product_template_16" model="product.template">
@@ -480,7 +463,7 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         </record>
 
         <record id="product_template_17" model="product.template">
-            <field name="name">HDD SH-1</field>
+            <field name="name">Hard Disk Drive</field>
             <field name="categ_id" ref="product_category_8"/>
             <field name="public_categ_id" ref="HDD"/>
             <field name="standard_price">860.0</field>
@@ -492,41 +475,27 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         <record id="product_product_17" model="product.product">
             <field name="product_tmpl_id" ref="product_template_17"/>
             <field name="default_code">HDD-SH1</field>
+            <field name="variants">180GB-SH1</field>
+            <field name="price_extra">0.0</field>
         </record>
 
-        <record id="product_template_18" model="product.template">
-            <field name="name">HDD SH-2</field>
-            <field name="categ_id" ref="product_category_8"/>
-            <field name="public_categ_id" ref="HDD"/>
-            <field name="standard_price">1020.0</field>
-            <field name="list_price">1150.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
-        </record>
         <record id="product_product_18" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_18"/>
+            <field name="product_tmpl_id" ref="product_template_17"/>
             <field name="default_code">HDD-SH2</field>
+            <field name="variants">180GB-SH2</field>
+            <field name="price_extra">175.0</field>
         </record>
 
-        <record id="product_template_19" model="product.template">
-            <field name="name">HDD on Demand</field>
-            <field name="categ_id" ref="product_category_8"/>
-            <field name="public_categ_id" ref="HDD"/>
-            <field name="standard_price">1100.0</field>
-            <field name="list_price">1250.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
-            <field name="description">On demand hard-disk having capacity based on requirement.</field>
-        </record>
         <record id="product_product_19" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_19"/>
+            <field name="product_tmpl_id" ref="product_template_17"/>
             <field name="default_code">HDD-DEM</field>
+            <field name="variants">On Demand</field>
+            <field name="price_extra">275.0</field>
+            <field name="description">On demand hard-disk having capacity based on requirement.</field>
         </record>
 
         <record id="product_template_20" model="product.template">
-            <field name="name">Motherboard I9P57</field>
+            <field name="name">Motherboard</field>
             <field name="categ_id" ref="product_category_8"/>
             <field name="public_categ_id" ref="motherboard"/>
             <field name="standard_price">1700.0</field>
@@ -538,21 +507,15 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         <record id="product_product_20" model="product.product">
             <field name="product_tmpl_id" ref="product_template_20"/>
             <field name="default_code">MBi9</field>
+            <field name="variants">I9P57</field>
+            <field name="price_extra">0.0</field>
         </record>
 
-        <record id="product_template_21" model="product.template">
-            <field name="name">Motherboard A20Z7</field>
-            <field name="categ_id" ref="product_category_8"/>
-            <field name="public_categ_id" ref="motherboard"/>
-            <field name="standard_price">1790.0</field>
-            <field name="list_price">2000.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
-        </record>
         <record id="product_product_21" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_21"/>
+            <field name="product_tmpl_id" ref="product_template_20"/>
             <field name="default_code">MBa20</field>
+            <field name="variants">A20Z7</field>
+            <field name="price_extra">50.0</field>
         </record>
 
         <record id="product_template_22" model="product.template">
@@ -601,7 +564,7 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         </record>
 
         <record id="product_template_25" model="product.template">
-            <field name="name">Laptop E5023</field>
+            <field name="name">Laptop</field>
             <field name="categ_id" ref="product_category_4"/>
             <field name="public_categ_id" ref="laptops"/>
             <field name="standard_price">2870.0</field>
@@ -609,49 +572,35 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
+        </record>
+        <record id="product_product_25" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_25"/>
+            <field name="default_code">LAP-E5</field>
+            <field name="variants">E5023</field>
+            <field name="price_extra">0.0</field>
             <field name="description">17" Monitor
 4GB RAM
 Standard-1294P Processor
 QWERTY keyboard</field>
         </record>
-        <record id="product_product_25" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_25"/>
-            <field name="default_code">LAP-E5</field>
-        </record>
 
-        <record id="product_template_26" model="product.template">
-            <field name="name">Laptop S3450</field>
-            <field name="categ_id" ref="product_category_4"/>
-            <field name="public_categ_id" ref="laptops"/>
-            <field name="standard_price">3000.0</field>
-            <field name="list_price">3245.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+        <record id="product_product_26" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_25"/>
+            <field name="default_code">LAP-S3</field>
+            <field name="variants">S3450</field>
+            <field name="price_extra">295.0</field>
             <field name="description">17" Monitor
 6GB RAM
 Hi-Speed 234Q Processor
 QWERTY keyboard</field>
         </record>
-        <record id="product_product_26" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_26"/>
-            <field name="default_code">LAP-S3</field>
-        </record>
 
-        <record id="product_template_27" model="product.template">
-            <field name="name">Laptop Customized</field>
-            <field name="categ_id" ref="product_category_4"/>
-            <field name="public_categ_id" ref="laptops"/>
-            <field name="standard_price">3300.0</field>
-            <field name="list_price">3645.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
-            <field name="description">Custom Laptop based on customer's requirement.</field>
-        </record>
         <record id="product_product_27" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_27"/>
+            <field name="product_tmpl_id" ref="product_template_25"/>
             <field name="default_code">LAP-CUS</field>
+            <field name="variants">Customized</field>
+            <field name="price_extra">695.0</field>
+            <field name="description">Custom Laptop based on customer's requirement.</field>
         </record>
 
         <record id="product_template_28" model="product.template">
@@ -671,7 +620,7 @@ QWERTY keyboard</field>
 
 
         <record id="product_template_29" model="product.template">
-            <field name="name">Pen drive, SP-2</field>
+            <field name="name">Pen Drive, SP-2</field>
             <field name="categ_id" ref="product_category_7"/>
             <field name="public_categ_id" ref="Pen_Drive"/>
             <field name="standard_price">90.0</field>
@@ -683,22 +632,16 @@ QWERTY keyboard</field>
         <record id="product_product_29" model="product.product">
             <field name="product_tmpl_id" ref="product_template_29"/>
             <field name="default_code">PD-SP2</field>
+            <field name="variants">4GB-SP2</field>
+            <field name="price_extra">0.0</field>
         </record>
 
 
-        <record id="product_template_30" model="product.template">
-            <field name="name">Pen drive, SP-4</field>
-            <field name="categ_id" ref="product_category_7"/>
-            <field name="public_categ_id" ref="Pen_Drive"/>
-            <field name="standard_price">126.0</field>
-            <field name="list_price">145.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
-        </record>
         <record id="product_product_30" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_30"/>
+            <field name="product_tmpl_id" ref="product_template_29"/>
             <field name="default_code">PD-SP4</field>
+            <field name="variants">8GB-SP4</field>
+            <field name="price_extra">45</field>
         </record>
 
         <record id="product_template_31" model="product.template">
@@ -718,7 +661,7 @@ QWERTY keyboard</field>
         </record>
 
         <record id="product_template_32" model="product.template">
-            <field name="name">Headset standard</field>
+            <field name="name">Headset</field>
             <field name="categ_id" ref="product_category_7"/>
             <field name="public_categ_id" ref="Headset"/>
             <field name="standard_price">57.0</field>
@@ -726,27 +669,22 @@ QWERTY keyboard</field>
             <field name="type">consu</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
-            <field name="description">Hands free headset for laptop PC with in-line microphone and headphone plug.</field>
         </record>
         <record id="product_product_32" model="product.product">
             <field name="product_tmpl_id" ref="product_template_32"/>
             <field name="default_code">HEAD</field>
+            <field name="variants">Standard</field>
+            <field name="price_extra">0.0</field>
+            <field name="description">Hands free headset for laptop PC with in-line microphone and headphone plug.</field>
         </record>
 
-        <record id="product_template_33" model="product.template">
-            <field name="name">Headset USB</field>
-            <field name="categ_id" ref="product_category_7"/>
-            <field name="public_categ_id" ref="Headset"/>
-            <field name="standard_price">60.0</field>
-            <field name="list_price">65.0</field>
-            <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
-            <field name="description">Headset for laptop PC with USB connector.</field>
-        </record>
+
         <record id="product_product_33" model="product.product">
-            <field name="product_tmpl_id" ref="product_template_33"/>
+            <field name="product_tmpl_id" ref="product_template_32"/>
             <field name="default_code">HEAD-USB</field>
+            <field name="variants">USB</field>
+            <field name="price_extra">30.0</field>
+            <field name="description">Headset for laptop PC with USB connector.</field>
         </record>
 
 
@@ -1022,6 +960,7 @@ QWERTY keyboard</field>
             <field name="min_qty">1</field>
         </record>
 
+
         <record id="product_supplierinfo_5" model="product.supplierinfo">
             <field name="product_id" ref="product_template_8"/>
             <field name="name" ref="base.res_partner_16"/>
@@ -1057,22 +996,8 @@ QWERTY keyboard</field>
             <field name="min_qty">1</field>
         </record>
 
-        <record id="product_supplierinfo_10" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_14"/>
-            <field name="name" ref="base.res_partner_4"/>
-            <field name="delay">5</field>
-            <field name="min_qty">1</field>
-        </record>
-
-        <record id="product_supplierinfo_11" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_15"/>
-            <field name="name" ref="base.res_partner_4"/>
-            <field name="delay">5</field>
-            <field name="min_qty">1</field>
-        </record>
-
         <record id="product_supplierinfo_12" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_15"/>
+            <field name="product_id" ref="product_template_13"/>
             <field name="name" ref="base.res_partner_1"/>
             <field name="delay">1</field>
             <field name="min_qty">1</field>
@@ -1106,20 +1031,6 @@ QWERTY keyboard</field>
             <field name="min_qty">5</field>
         </record>
 
-        <record id="product_supplierinfo_17" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_21"/>
-            <field name="name" ref="base.res_partner_4"/>
-            <field name="delay">3</field>
-            <field name="min_qty">1</field>
-        </record>
-
-        <record id="product_supplierinfo_18" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_21"/>
-            <field name="name" ref="base.res_partner_16"/>
-            <field name="delay">2</field>
-            <field name="min_qty">1</field>
-        </record>
-
         <record id="product_supplierinfo_19" model="product.supplierinfo">
             <field name="product_id" ref="product_template_22"/>
             <field name="name" ref="base.res_partner_19"/>
@@ -1148,13 +1059,6 @@ QWERTY keyboard</field>
             <field name="min_qty">1</field>
         </record>
 
-        <record id="product_supplierinfo_23" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_26"/>
-            <field name="name" ref="base.res_partner_1"/>
-            <field name="delay">8</field>
-            <field name="min_qty">1</field>
-        </record>
-
         <record id="product_supplierinfo_24" model="product.supplierinfo">
             <field name="product_id" ref="product_template_28"/>
             <field name="name" ref="base.res_partner_19"/>
@@ -1171,13 +1075,6 @@ QWERTY keyboard</field>
 
         <record id="product_supplierinfo_26" model="product.supplierinfo">
             <field name="product_id" ref="product_template_29"/>
-            <field name="name" ref="base.res_partner_3"/>
-            <field name="delay">2</field>
-            <field name="min_qty">12</field>
-        </record>
-
-        <record id="product_supplierinfo_27" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_30"/>
             <field name="name" ref="base.res_partner_3"/>
             <field name="delay">2</field>
             <field name="min_qty">12</field>
@@ -1260,52 +1157,24 @@ QWERTY keyboard</field>
             <field name="min_qty">1</field>
         </record-->
 
-        <record id="product_supplierinfo_39" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_18"/>
-            <field name="name" ref="base.res_partner_19"/>
-            <field name="delay">4</field>
-            <field name="min_qty">1</field>
-        </record>
-
         <record id="product_supplierinfo_40" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_19"/>
+            <field name="product_id" ref="product_template_17"/>
             <field name="name" ref="base.res_partner_1"/>
             <field name="delay">4</field>
             <field name="min_qty">0</field>
         </record>
 
         <record id="product_supplierinfo_41" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_19"/>
+            <field name="product_id" ref="product_template_17"/>
             <field name="name" ref="base.res_partner_8"/>
             <field name="delay">5</field>
             <field name="min_qty">0</field>
         </record>
 
-        <record id="product_supplierinfo_42" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_33"/>
-            <field name="name" ref="base.res_partner_3"/>
-            <field name="delay">2</field>
-            <field name="min_qty">0</field>
-        </record>
-
-        <record id="product_supplierinfo_43" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_9"/>
-            <field name="name" ref="base.res_partner_8"/>
-            <field name="delay">4</field>
-            <field name="min_qty">0</field>
-        </record>
-
         <record id="product_supplierinfo_44" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_27"/>
+            <field name="product_id" ref="product_template_25"/>
             <field name="name" ref="base.res_partner_1"/>
             <field name="delay">10</field>
-            <field name="min_qty">0</field>
-        </record>
-
-        <record id="product_supplierinfo_45" model="product.supplierinfo">
-            <field name="product_id" ref="product_template_12"/>
-            <field name="name" ref="base.res_partner_16"/>
-            <field name="delay">3</field>
             <field name="min_qty">0</field>
         </record>
 
