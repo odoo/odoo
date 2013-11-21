@@ -27,7 +27,7 @@
             $('.popover.tour').remove();
         },
         start: function () {
-            if (this.continueTour() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
+            if (this.continue() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
                 this.tour.start();
             }
         },
@@ -68,11 +68,11 @@
                 window.location.replace(newUrl);
             }
         },
-        continueTour: function () {
+        continue: function () {
             // Override if necessary
             return this.currentStepIndex() === 0;
         },
-        isTriggerUrl: function (url) {
+        trigger: function (url) {
             // Override if necessary
             url = url || new website.UrlParser(window.location.href);
             var urlTrigger = this.id + "=true";
@@ -120,7 +120,7 @@
                     tour.start();
                 });
                 menu.append($menuItem);
-                if (tour.isTriggerUrl()) {
+                if (tour.trigger()) {
                     tour.start();
                 }
             });
