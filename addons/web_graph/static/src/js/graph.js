@@ -222,13 +222,14 @@ var PivotTable = instance.web.Widget.extend({
     draw: function (load_data) {
         var self = this;
 
-        if (load_data === true) {
+        if (load_data) {
             var view_fields = this.data.row_groupby.concat(this.data.measure, this.data.col_groupby);
             query_groups_data(this.data.model, view_fields, this.data.domain, this.data.col_groupby, this.data.row_groupby[0])
                 .then(function (groups) {
                     self.data.groups = groups;
                     return self.get_groups([]);
                 }).then(function (total) {
+                    total[0].path = [];
                     self.data.total = [total];
                     self.build_table();
                     self.draw(false);
@@ -405,9 +406,9 @@ var PivotTable = instance.web.Widget.extend({
 
     },
 
-    make_row: function (group, parent_id) {
-        group = group[0];
-        var path,
+    make_row: function (groups, parent_id) {
+        var self = this,
+            path,
             value,
             expanded,
             domain,
@@ -417,11 +418,11 @@ var PivotTable = instance.web.Widget.extend({
 
         if (has_parent) {
             parent = this.get_row(parent_id);
-            path = parent.path.concat(group.attributes.value[1]);
-            value = group.attributes.value[1];
+            path = parent.path.concat(groups[0].attributes.value[1]);
+            value = groups[0].attributes.value[1];
             expanded = false;
             parent.children.push(row_id);
-            domain = group.model._domain;
+            domain = groups[0].model._domain;
         } else {
             parent = null;
             path = [];
@@ -432,13 +433,25 @@ var PivotTable = instance.web.Widget.extend({
 
         var jquery_row = $('<tr></tr>');
 
-        var header = this.make_cell(value, {is_border:true, indent: path.length, foldable:true, row_id: row_id});
-        var cell = this.make_cell(group.attributes.aggregates[this.data.measure]);
-        jquery_row.html(header);
-        jquery_row.append(cell);
+        var header = self.make_cell(value, {is_border:true, indent: path.length, foldable:true, row_id: row_id});
+        jquery_row.append(header);
+
+        var cell;
 
         _.each(this.cols, function (col) {
-            col.cells.push({row_id: row_id, td: cell });
+            var element = _.find(groups, function (group) {
+                return _.isEqual(_.rest(group.path), col.path);
+            });
+            if (element === undefined) {
+                cell = self.make_cell('');
+            } else {
+                cell = self.make_cell(element.attributes.aggregates[self.data.measure]);                
+            }
+            if (col.expanded) {
+                cell.css('display', 'none');
+            }
+            col.cells.push({td:cell, row_id:row_id});
+            jquery_row.append(cell);
         });
 
         if (!has_parent) {
