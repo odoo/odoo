@@ -76,16 +76,14 @@ class WebsiteMembership(http.Controller):
         }
         return request.website.render("website_membership.index", values)
 
-    @website.route(['/members/<int:partner_id>/'], type='http', auth="public", multilang=True)
-    def partners_ref(self, partner_id=0, **post):
-        partner_obj = request.registry['res.partner']
-        partner_ids = partner_obj.search(request.cr, request.uid, [('id', '=', partner_id)], context=request.context)
-        if not partner_ids:
+    @website.route(['/members/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
+    def partners_ref(self, partner, **post):
+        if not partner.exists():
             return self.members(post)
 
         values = {
-            'partner_id': partner_obj.browse(
-                request.cr, request.uid, partner_ids[0],
+            'partner_id': request.registry['res.partner'].browse(
+                request.cr, request.uid, partner.id,
                 context=dict(request.context, show_address=True)),
         }
         return request.website.render("website_membership.partner", values)
