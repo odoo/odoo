@@ -165,6 +165,7 @@ class PaymentTransaction(osv.Model):
     _description = 'Payment Transaction'
     _inherit = ['mail.thread']
     _order = 'id desc'
+    _rec_name = 'reference'
 
     _columns = {
         'date_create': fields.datetime('Creation Date', readonly=True, required=True),
@@ -184,17 +185,12 @@ class PaymentTransaction(osv.Model):
             track_visiblity='onchange'),
         'state_message': fields.text('Message',
                                      help='Field used to store error and/or validation messages for information'),
-        # link with a record e.g. sale order
-        # 'feedback_model': fields.char('Model'),
-        # 'feedback_res_id': fields.integer('Res Id'),
-        # 'feedback_method': fields.char('Method'),  # use a return url with a dedicated controler ?
         # payment
         'amount': fields.float('Amount', required=True,
                                help='Amount in cents',
                                track_visibility='always'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'reference': fields.char('Order Reference', required=True),
-        'name': fields.char('Item name'),
         # duplicate partner / transaction data to store the values at transaction time
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_name': fields.char('Partner Name'),
@@ -220,8 +216,6 @@ class PaymentTransaction(osv.Model):
     }
 
     def create(self, cr, uid, values, context=None):
-        if not 'name' in values and 'reference' in values:
-            values['name'] = values['reference']
         if values.get('partner_id'):  # @TDENOTE: not sure
             values.update(self.on_change_partner_id(cr, uid, None, values.get('partner_id'), context=context)['values'])
 
