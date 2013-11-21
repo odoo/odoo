@@ -84,8 +84,12 @@ class WebsiteSurvey(http.Controller):
             else:  # An user cannot open hidden surveys without token
                 return request.website.render("website.403")
         else:
-            user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
-            user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+            try:
+                user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
+            except IndexError:  # Invalid token
+                return request.website.render("website.403")
+            else:
+                user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
 
         _logger.debug('Incoming data: %s', post)
 

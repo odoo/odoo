@@ -134,10 +134,11 @@ class survey_mail_compose_message(osv.TransientModel):
             anonymous_id = None
 
         def create_response_and_send_mail(wizard, token, partner_id, email):
-            """ Create one mail by recipients and replace __URL__ by link with identification token
-            """
+            """ Create one mail by recipients and replace __URL__ by link with identification token """
             #set url
-            url = token and re.sub(r'params=[^&]+', 'params=%s' % token, wizard.survey_id.public_url) or wizard.survey_id.public_url
+            url = wizard.survey_id.public_url
+            if token:
+                url = url + token
             # post the message
             values = {
                 'model': None,
@@ -163,7 +164,7 @@ class survey_mail_compose_message(osv.TransientModel):
             if wizard.public != 'email_private':
                 return None
             else:
-                token = uuid.uuid4()
+                token = uuid.uuid4().__str__()
                 # create response with token
                 survey_response_obj.create(cr, uid, {
                         'survey_id': wizard.survey_id.id,

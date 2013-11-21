@@ -556,7 +556,7 @@ class survey_label(osv.osv):
         'question_id': fields.many2one('survey.question', 'Question',
             required=True, ondelete='cascade'),
         'sequence': fields.integer('Page number'),
-        'value': fields.char("Suggested value", length=128, translate=True,
+        'value': fields.char("Suggested value", translate=True,
             required=True)
     }
 
@@ -580,14 +580,13 @@ class survey_user_input(osv.osv):
         'state': fields.selection([('new', 'Not started yet'),
             ('skip', 'Partially completed'),
             ('done', 'Completed'),
-            ('cancel', 'Cancelled'),
             ('test', 'Test')], 'Status',
             readonly=True),
 
         # Optional Identification data
-        'token': fields.char("Identification token", readonly=1, size=36),
+        'token': fields.char("Identification token", readonly=1),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
-        'email': fields.char("E-mail", size=64, readonly=1),
+        'email': fields.char("E-mail", readonly=1),
 
         # The answers !
         'user_input_line_ids': fields.one2many('survey.user_input.line',
@@ -603,6 +602,13 @@ class survey_user_input(osv.osv):
     _sql_constraints = [
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!')
     ]
+
+    def do_clean_emptys(self, cr, uid, automatic=False, context=None):
+        ''' Remove empty user inputs that have been created manually '''
+        empty_user_input_ids = self.search(cr, uid,
+            [('type', '=', 'manually'), ('state', '=', 'new')], context=context)
+        if empty_user_input_ids:
+                self.unlink(cr, uid, empty_user_input_ids, context=context)
 
     def action_survey_resent(self, cr, uid, ids, context=None):
         record = self.browse(cr, uid, ids[0], context=context)
@@ -684,10 +690,11 @@ class survey_user_input_line(osv.osv):
     _description = 'Survey User Input Line'
     _rec_name = 'date_create'
     _columns = {
-        'survey_id': fields.many2one('survey.survey', 'Survey', required=1,
-            readonly=1, ondelete='cascade'),
         'user_input_id': fields.many2one('survey.user_input', 'User Input',
             ondelete='cascade', required=1),
+        'survey_id': fields.many2one('survey.survey', 'Survey', required=1,
+            readonly=1, ondelete='cascade'),
+
         'date_create': fields.datetime('Create Date', required=1),  # drop
         'skipped': fields.boolean('Skipped'),
         'question_id': fields.many2one('survey.question', 'Question',

@@ -15,13 +15,24 @@ $(document).ready(function () {
     // Custom code for right behavior of dropdown menu with comments
     $('.js_drop input[data-oe-survey-othert="1"]').hide();
     $('.js_drop select').change(function(){
-        if($(this).val() === "Other..."){
+        var other_val = $(this).find('.js_other_option').val();
+        if($(this).val() === other_val){
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').show().focus();
         }
         else{
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').val("").hide();
         }
     });
+    // Custom code for right behavior of checkboxes with comments box
+    $('.js_ck_comments>input[type="text"]').focusin(function(){
+        $(this).prev().find('>input').attr("checked","checked");
+    });
+    $('.js_ck_comments input[type="checkbox"]').change(function(){
+        if (! $(this).prop("checked")){
+            $(this).closest('.js_ck_comments').find('input[type="text"]').val("");
+        }
+    });
+
 
     var the_form = $('.js_surveyform');
     var prefill_controller = the_form.attr("data-prefill");
@@ -67,7 +78,7 @@ $(document).ready(function () {
     });
 
     // Handles the event when a question is focused out
-    $('.question-wrapper').focusout(
+    $('.js_question-wrapper').focusout(
         function(){
             console.debug("[survey] Focus lost on question " + $(this).attr("id"));
     });
