@@ -34,7 +34,7 @@ class invite_wizard(osv.osv_memory):
         result = super(invite_wizard, self).default_get(cr, uid, fields, context=context)
         if 'message' in fields and result.get('res_model') and result.get('res_id'):
             document_name = self.pool.get(result.get('res_model')).name_get(cr, uid, [result.get('res_id')], context=context)[0][1]
-            message = _('<div>You have been invited to follow %s.</div>' % document_name)
+            message = _('<div>You have been invited to follow %s.</div>') % document_name
             result['message'] = message
         elif 'message' in fields:
             result['message'] = _('<div>You have been invited to follow a new document.</div>')
