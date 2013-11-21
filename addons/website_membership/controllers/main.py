@@ -79,7 +79,7 @@ class WebsiteMembership(http.Controller):
     @website.route(['/members/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
     def partners_ref(self, partner, **post):
         if not partner.exists():
-            return self.members(post)
+            return self.members(**post)
 
         values = {
             'partner_id': request.registry['res.partner'].browse(
