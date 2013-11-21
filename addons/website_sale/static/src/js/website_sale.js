@@ -70,11 +70,11 @@ $(document).ready(function () {
     $('form.js_add_cart_json label').on('mouseup', function (ev) {
         ev.preventDefault();
         var $label = $(ev.currentTarget);
-        var $price = $label.parent("form").find(".oe_price");
+        var $price = $label.parent("form").find(".oe_price .oe_currency_value");
         if (!$price.data("price")) {
-            $price.data("price", parseFloat($price.html()));
+            $price.data("price", parseFloat($price.text()));
         }
-        $price.html($price.data("price")+parseFloat($label.find(".badge span").html() || 0));
+        $price.html($price.data("price")+parseFloat($label.find(".badge span").text() || 0));
     });
 
 
