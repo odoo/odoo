@@ -30,8 +30,8 @@
     function link_dialog(editor) {
         return new website.editor.RTELinkDialog(editor).appendTo(document.body);
     }
-    function image_dialog(editor) {
-        return new website.editor.RTEImageDialog(editor).appendTo(document.body);
+    function image_dialog(editor, image) {
+        return new website.editor.RTEImageDialog(editor, image).appendTo(document.body);
     }
 
     // only enable editors manually
@@ -53,7 +53,7 @@
                             && !element.data('cke-realelement')
                             && !element.isReadOnly()
                             && (element.data('oe-model') !== 'ir.ui.view')) {
-                        image_dialog(editor);
+                        image_dialog(editor, element);
                         return;
                     }
 
@@ -69,13 +69,9 @@
                 }, null, null, 500);
 
                 var previousSelection;
-                editor.on('selectionChange', function (evt) {
-                    var selected = evt.data.path.lastElement;
-                    if (previousSelection) {
-                        // cleanup previous selection
-                        $(previousSelection).next().remove();
-                        previousSelection = null;
-                    }
+                $(editor.element.$).on('mouseenter', 'img', function () {
+                    if (previousSelection) { return; }
+                    var selected = new CKEDITOR.dom.element(this);
                     if (!selected.is('img')
                             || selected.data('cke-realelement')
                             || selected.isReadOnly()
@@ -84,13 +80,13 @@
                     }
 
                     // display button
-                    var $el = $(previousSelection = selected.$);
+                    var $el = $((previousSelection = selected).$);
                     var $btn = $('<button type="button" class="btn btn-primary image-edit-button" contenteditable="false">Edit</button>')
                         .insertAfter($el)
                         .click(function (e) {
                             e.preventDefault();
                             e.stopPropagation();
-                            image_dialog(editor);
+                            image_dialog(editor, selected);
                         });
 
                     var position = $el.position();
@@ -99,6 +95,14 @@
                         top: $el.height() / 2 + position.top - $btn.outerHeight() / 2,
                         left: $el.width() / 2 + position.left - $btn.outerWidth() / 2,
                     });
+                }).on('mouseleave', 'img', function (e) {
+                    var $button = $(previousSelection.$).next('button');
+                    $button.css('visibility', 'hidden');
+                    var el = document.elementFromPoint(e.clientX, e.clientY);
+                    $button.css('visibility', '');
+                    if (el === this) { return; }
+                    $button.remove();
+                    previousSelection = null;
                 });
                 editor.on('destroy', function (evt) {
                     if (previousSelection) {
@@ -1182,26 +1186,30 @@
         },
     });
     website.editor.RTEImageDialog = website.editor.ImageDialog.extend({
-        init: function () {
-            this._super.apply(this, arguments);
+        init: function (editor, image) {
+            this._super(editor);
+
+            this.element = image;
 
             this.on('start', this, this.proxy('started'));
             this.on('save', this, this.proxy('saved'));
         },
         started: function (holder) {
-            var selection = this.editor.getSelection();
-            var el = selection && selection.getSelectedElement();
-            this.element = null;
-
-            if (el && el.is('img')) {
-                this.element = el;
-                _(this.image_styles).each(function (style) {
-                    if (el.hasClass(style)) {
-                        holder.style = style;
-                    }
-                });
-                holder.url = el.getAttribute('src');
+            if (!this.element) {
+                var selection = this.editor.getSelection();
+                this.element = selection && selection.getSelectedElement();
             }
+
+            var el = this.element;
+            if (!el || !el.is('img')) {
+                return;
+            }
+            _(this.image_styles).each(function (style) {
+                if (el.hasClass(style)) {
+                    holder.style = style;
+                }
+            });
+            holder.url = el.getAttribute('src');
         },
         saved: function (data) {
             var element, editor = this.editor;

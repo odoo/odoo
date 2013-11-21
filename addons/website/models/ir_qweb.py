@@ -227,7 +227,7 @@ class Image(orm.AbstractModel):
         url = element.find('img').get('src')
 
         url_object = urlparse.urlsplit(url)
-        query = urlparse.parse_qs(url_object.query)
+        query = dict(urlparse.parse_qsl(url_object.query))
         if url_object.path == '/website/image' and query['model'] == 'ir.attachment':
             attachment = self.pool['ir.attachment'].browse(
                 cr, uid, int(query['id']), context=context)
