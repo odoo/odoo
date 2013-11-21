@@ -1605,7 +1605,7 @@ class mail_thread(osv.AbstractModel):
             )
             for header_follower in follower_obj.browse(cr, SUPERUSER_ID, header_follower_ids, context=context):
                 for subtype in header_follower.subtype_ids:
-                    if subtype.res_model and subtype.parent_id:
+                    if subtype.parent_id and subtype.parent_id.res_model == self._name:
                         new_followers.setdefault(header_follower.partner_id.id, set()).add(subtype.parent_id.id)
                     elif subtype.res_model is False:
                         new_followers.setdefault(header_follower.partner_id.id, set()).add(subtype.id)

@@ -1715,7 +1715,8 @@ class stock_move(osv.osv):
             if location_xml_id:
                 try:
                     location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
-                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                    with tools.mute_logger('openerp.osv.orm'):
+                        self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
                 except (orm.except_orm, ValueError):
                     location_id = False
 
@@ -1749,7 +1750,8 @@ class stock_move(osv.osv):
             if location_xml_id:
                 try:
                     location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
-                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                    with tools.mute_logger('openerp.osv.orm'):
+                        self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
                 except (orm.except_orm, ValueError):
                     location_id = False
 
@@ -1973,12 +1975,14 @@ class stock_move(osv.osv):
             location_dest_id = 'stock_location_customers'
         try:
             source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
-            self.pool.get('stock.location').check_access_rule(cr, uid, [source_location[1]], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [source_location[1]], 'read', context=context)
         except (orm.except_orm, ValueError):
             source_location = False
         try:
             dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
-            self.pool.get('stock.location').check_access_rule(cr, uid, [dest_location[1]], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [dest_location[1]], 'read', context=context)
         except (orm.except_orm, ValueError):
             dest_location = False
         return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
@@ -2192,6 +2196,7 @@ class stock_move(osv.osv):
 
                     while res:
                         r = res.pop(0)
+                        product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, ids, move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
                         move_id = self.copy(cr, uid, move.id, {'product_uos_qty': product_uos_qty, 'product_qty': r[0], 'location_id': r[1]})
                         done.append(move_id)
         if done:
@@ -2915,7 +2920,8 @@ class stock_inventory_line(osv.osv):
     def _default_stock_location(self, cr, uid, context=None):
         try:
             location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
         except (orm.except_orm, ValueError):
             location_id = False
         return location_id
@@ -2958,7 +2964,8 @@ class stock_warehouse(osv.osv):
     def _default_lot_input_stock_id(self, cr, uid, context=None):
         try:
             lot_input_stock_model, lot_input_stock_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_input_stock_id], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [lot_input_stock_id], 'read', context=context)
         except (ValueError, orm.except_orm):
             # the user does not have read access on the location or it does not exists
             lot_input_stock_id = False
@@ -2967,7 +2974,8 @@ class stock_warehouse(osv.osv):
     def _default_lot_output_id(self, cr, uid, context=None):
         try:
             lot_output_model, lot_output_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_output')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_output_id], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [lot_output_id], 'read', context=context)
         except (ValueError, orm.except_orm):
             # the user does not have read access on the location or it does not exists
             lot_output_id = False
@@ -3040,7 +3048,7 @@ class stock_picking_in(osv.osv):
     def default_get(self, cr, uid, fields_list, context=None):
         # merge defaults from stock.picking with possible defaults defined on stock.picking.in
         defaults = self.pool['stock.picking'].default_get(cr, uid, fields_list, context=context)
-        out_defaults = super(stock_picking_in, self).default_get(cr, uid, fields_list, context=context)
+        in_defaults = super(stock_picking_in, self).default_get(cr, uid, fields_list, context=context)
         defaults.update(in_defaults)
         return defaults
 
