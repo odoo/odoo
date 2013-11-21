@@ -377,12 +377,12 @@ class purchase_order(osv.osv):
             pick_ids += [picking.id for picking in po.picking_ids]
 
         action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree4'))
-        action = self.pool[action_model].read(cr, uid, action_id, context=context)
+        action = self.pool[action_model].read(cr, uid, [action_id], context=context)[0]
         ctx = eval(action['context'])
         ctx.update({
             'search_default_purchase_id': ids[0]
         })
-        if pick_ids and len(pick_ids) == 1:
+        if len(pick_ids) == 1:
             form_view_ids = [view_id for view_id, view in action['views'] if view == 'form']
             view_id = form_view_ids and form_view_ids[0] or False
             action.update({
@@ -611,7 +611,7 @@ class purchase_order(osv.osv):
         if context and context.get('tz'):
             tz_name = context['tz']
         else:
-            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['tz'])[0]['tz']
         if tz_name:
             utc = pytz.timezone('UTC')
             context_tz = pytz.timezone(tz_name)

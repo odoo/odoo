@@ -743,14 +743,14 @@ class product_product(osv.osv):
         # will do the other languages).
         context_wo_lang = context.copy()
         context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name'], context=context_wo_lang)
+        product = self.read(cr, uid, [id], ['name'], context=context_wo_lang)[0]
         default = default.copy()
         default.update(name=_("%s (copy)") % (product['name']))
 
         if context.get('variant',False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
                     'price_margin', 'price_extra']
-            data = self.read(cr, uid, id, fields=fields, context=context)
+            data = self.read(cr, uid, [id], fields=fields, context=context)[0]
             for f in fields:
                 if f in default:
                     data[f] = default[f]

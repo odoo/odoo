@@ -51,7 +51,7 @@
             host = config.get('ftp_server_host', '127.0.0.1')
         port = config.get('ftp_server_port','8021')
         ftp.connect(host,port)
-        user = self.pool.get('res.users').read(cr, uid, uid, context)        
+        user = self.pool.get('res.users').read(cr, uid, [uid], context)[0]
         ftp.login(user.get('login',''),user.get('password',''))
         ftp.cwd("/" + cr.dbname+"/Documents/File/")
         ftp.mkd("New")
@@ -80,7 +80,7 @@
             host = config.get('ftp_server_host', '127.0.0.1')
         port = config.get('ftp_server_port','8021')
         ftp.connect(host,port)
-        user = self.pool.get('res.users').read(cr, uid, uid, context)        
+        user = self.pool.get('res.users').read(cr, uid, [uid], context)[0]
         ftp.login(user.get('login',''),user.get('password',''))
         ftp.cwd("/" + cr.dbname+"/Documents/Labels/")
 -

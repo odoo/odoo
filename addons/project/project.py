@@ -385,18 +385,18 @@ class project(osv.osv):
             result.append(new_id)
 
             child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
-            parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
+            parent_id = self.browse(cr, uid, new_id, context=context).analytic_account_id.id
             if child_ids:
                 self.duplicate_template(cr, uid, child_ids, context={'parent_id': parent_id})
 
         if result and len(result):
             res_id = result[0]
             form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
-            form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
+            form_view = data_obj.read(cr, uid, [form_view_id], ['res_id'])[0]
             tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
-            tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
+            tree_view = data_obj.read(cr, uid, [tree_view_id], ['res_id'])[0]
             search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
-            search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
+            search_view = data_obj.read(cr, uid, [search_view_id], ['res_id'])[0]
             return {
                 'name': _('Projects'),
                 'view_type': 'form',
@@ -625,7 +625,7 @@ class task(osv.osv):
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         access_rights_uid = access_rights_uid or uid
         if project_id:
-            ids += self.pool.get('project.project').read(cr, access_rights_uid, project_id, ['members'], context=context)['members']
+            ids += self.pool.get('project.project').read(cr, access_rights_uid, [project_id], ['members'], context=context)[0]['members']
             order = res_users._order
             # lame way to allow reverting search, should just work in the trivial case
             if read_group_order == 'user_id desc':
@@ -706,21 +706,30 @@ class task(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default = default or {}
-        default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
+        
+        default.update(
+            work_ids=[],
+            date_start=False,
+            date_end=False,
+            date_deadline=False
+        )
+
+        current = self.browse(cr, uid, id, context=context)
+        
         if not default.get('remaining_hours', False):
-            default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
+            default['remaining_hours'] = float(current.planned_hours)
+        
         default['active'] = True
+        
         if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name or ''
-            if not context.get('copy',False):
-                new_name = _("%s (copy)") % (default.get('name', ''))
-                default.update({'name':new_name})
+            default['name'] = current.name or ''
+            if not context.get('copy', False):
+                new_name = _("%s (copy)") % (default['name'])
+                default.update(name=new_name)
+        
         return super(task, self).copy_data(cr, uid, id, default, context)
     
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         stage = self._get_default_stage_id(cr, uid, context=context)

@@ -99,7 +99,7 @@ class survey_name_wiz(osv.osv_memory):
         """
         if not survey_id:
             return {}
-        notes = self.pool.get('survey').read(cr, uid, survey_id, ['note'])['note']
+        notes = self.pool.get('survey').read(cr, uid, [survey_id], ['note'])[0]['note']
         return {'value': {'note': notes}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

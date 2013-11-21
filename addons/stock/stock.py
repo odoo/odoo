@@ -1855,7 +1855,7 @@ class stock_move(osv.osv):
             return {'value': result}
 
         product_obj = self.pool.get('product.product')
-        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
+        uos_coeff = product_obj.read(cr, uid, [product_id], ['uos_coeff'])[0]
         
         # Warn if the quantity was decreased 
         if ids:
@@ -1894,7 +1894,7 @@ class stock_move(osv.osv):
             return {'value': result}
 
         product_obj = self.pool.get('product.product')
-        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
+        uos_coeff = product_obj.read(cr, uid, [product_id], ['uos_coeff'])[0]
         
         # Warn if the quantity was decreased 
         for move in self.read(cr, uid, ids, ['product_uos_qty']):

@@ -1909,10 +1909,9 @@ class account_tax(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        name = self.read(cr, uid, id, ['name'], context=context)['name']
-        default = default.copy()
-        default.update({'name': name + _(' (Copy)')})
-        return super(account_tax, self).copy_data(cr, uid, id, default=default, context=context)
+        this = self.browse(cr, uid, id, context=context)
+        tmp_default = dict(default, name=_("%s (Copy)") % this.name)
+        return super(account_tax, self).copy_data(cr, uid, id, default=tmp_default, context=context)
 
     _name = 'account.tax'
     _description = 'Tax'

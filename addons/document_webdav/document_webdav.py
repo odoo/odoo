@@ -52,7 +52,7 @@ class document_davdir(osv.osv):
         # that might be not worth preparing.
         nctx.extra_ctx['webdav_path'] = '/'+config.get_misc('webdav','vdir','webdav')
         usr_obj = self.pool.get('res.users')
-        res = usr_obj.read(cr, uid, uid, ['login','lang'])
+        res = usr_obj.read(cr, uid, [uid], ['login','lang'])[0]
         if res:
             nctx.extra_ctx['username'] = res['login']
             nctx.extra_ctx['lang'] = res['lang']

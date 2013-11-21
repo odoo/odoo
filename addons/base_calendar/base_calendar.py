@@ -289,8 +289,8 @@ class calendar_attendee(osv.osv):
 
             if name == 'language':
                 user_obj = self.pool.get('res.users')
-                lang = user_obj.read(cr, uid, uid, ['lang'], context=context)['lang']
-                result[id][name] = lang.replace('_', '-') if lang else False
+                user = user_obj.browse(cr, uid, uid, context=context)
+                result[id][name] = user.lang.replace('_', '-') if user.lang else False
 
         return result
 
@@ -439,14 +439,14 @@ property or property parameter."),
         if event_obj.alarm_id:
             # computes alarm data
             valarm = event.add('valarm')
-            alarm_object = self.pool.get('res.alarm')
-            alarm_data = alarm_object.read(cr, uid, event_obj.alarm_id.id, context=context)
+            
             # Compute trigger data
-            interval = alarm_data['trigger_interval']
-            occurs = alarm_data['trigger_occurs']
-            duration = (occurs == 'after' and alarm_data['trigger_duration']) \
-                                            or -(alarm_data['trigger_duration'])
-            related = alarm_data['trigger_related']
+            interval = event_obj.alarm_id.trigger_interval
+            occurs = event_obj.alarm_id.trigger_occurs
+            duration = event_obj.alarm_id.trigger_duration
+            if occurs != 'after':
+                duration = - duration
+            related = event_obj.alarm_id.trigger_related
             trigger = valarm.add('TRIGGER')
             trigger.params['related'] = [related.upper()]
             if interval == 'days':
@@ -975,12 +975,17 @@ class calendar_event(osv.osv):
 
         for id in ids:
             #read these fields as SUPERUSER because if the record is private a normal search could return False and raise an error
-            data = self.read(cr, SUPERUSER_ID, id, ['interval', 'count'], context=context)
+            data = self.read(cr, SUPERUSER_ID, [id], ['interval', 'count'], context=context)[0]
             if data.get('interval', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
             if data.get('count', 0) <= 0:
                 raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
-            data = self.read(cr, uid, id, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context)
+            fields = [
+                'id','byday','recurrency', 'month_list', 'end_date', 'rrule_type',
+                'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 
+                'fr', 'sa', 'su', 'exrule', 'day', 'week_list'
+            ]
+            data = self.read(cr, uid, [id], fields, context=context)[0]
             event = data['id']
             if data['recurrency']:
                 result[event] = self.compute_rule_string(data)
@@ -1364,7 +1369,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         return res
 
     def _get_data(self, cr, uid, id, context=None):
-        return self.read(cr, uid, id,['date', 'date_deadline'])
+        return self.read(cr, uid, [id], ['date', 'date_deadline'])[0]
 
     def need_to_update(self, event_id, vals):
         split_id = str(event_id).split("-")
@@ -1406,8 +1411,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 continue
 
             #if edit one instance of a reccurrent id
-            data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
-                                                'rrule', 'duration', 'exdate'])
+            fields = [
+                'date', 'date_deadline', 'rrule', 'duration', 'exdate'
+            ]
+            data = self.read(cr, uid, [event_id], fields)[0]
+
             if data.get('rrule'):
                 data.update(
                     vals,
@@ -1545,7 +1553,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 continue
 
             real_event_id = base_calendar_id2real_id(event_id)
-            data = self.read(cr, uid, real_event_id, ['exdate'], context=context)
+            data = self.read(cr, uid, [real_event_id], ['exdate'], context=context)[0]
             date_new = event_id.split('-')[1]
             date_new = time.strftime("%Y%m%dT%H%M%S", \
                          time.strptime(date_new, "%Y%m%d%H%M%S"))

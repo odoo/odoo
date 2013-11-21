@@ -79,7 +79,7 @@ class mail_compose_message(osv.TransientModel):
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
             fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids', 'mail_server_id']
-            template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
+            template_values = self.pool.get('email.template').read(cr, uid, [template_id], fields, context)[0]
             values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         elif template_id:
             values = self.generate_email_for_composer_batch(cr, uid, template_id, [res_id], context=context)[res_id]

@@ -50,8 +50,8 @@ def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, 
     if dept==0:
         count=0
         registry = openerp.registry(cr.dbname)
-        p_id = registry['hr.holidays'].search(cr, uid, [('employee_id','in',[empid,False]), ('type', '=', 'remove')])
-        ids_date = registry['hr.holidays'].read(cr, uid, p_id, ['date_from','date_to','holiday_status_id','state'])
+        holidays_ids = registry['hr.holidays'].search(cr, uid, [('employee_id','in',[empid,False]), ('type', '=', 'remove')])
+        ids_date = registry['hr.holidays'].read(cr, uid, holidays_ids, ['date_from','date_to','holiday_status_id','state'])
 
         for index in range(1,61):
             diff=index-1
@@ -213,18 +213,14 @@ class report_custom(report_rml):
         emp_xml=''
         row_id=1
         
-        if data['model']=='hr.employee':
-            for id in data['form']['emp']:
-                 items = obj_emp.read(cr, uid, id, ['id','name'])
-                 
-                 emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
-                 row_id = row_id +1
+        if data['model'] == 'hr.employee':
+            for items in obj_emp.read(cr, uid, data['form']['emp'], ['id', 'name']):
+                emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
+                row_id = row_id +1
 
         elif data['model']=='ir.ui.menu':
-            for id in data['form']['depts']:
-                dept = obj_dept.browse(cr, uid, id, context=context)
-                cr.execute("""SELECT id FROM hr_employee \
-                WHERE department_id = %s""", (id,))
+            for dept in obj_dept.browse(cr, uid, data['form']['depts'], context=context):
+                cr.execute("SELECT id FROM hr_employee WHERE department_id = %s", (dept.id,))
                 emp_ids = [x[0] for x in cr.fetchall()]
                 if emp_ids==[]:
                     continue

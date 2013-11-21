@@ -131,7 +131,7 @@ class audittrail_log(osv.osv):
             res_id = resname.res_id
             if model_object and res_id:
                 model_pool = self.pool[model_object.model]
-                res = model_pool.read(cr, uid, res_id, ['name'])
+                res = model_pool.read(cr, uid, [res_id], ['name'])[0]
                 data[resname.id] = res['name']
             else:
                  data[resname.id] = False

@@ -48,25 +48,25 @@ class crm_contact_us(osv.TransientModel):
 
         @return current user's name if the user isn't "anonymous", None otherwise
         """
-        user = self.pool.get('res.users').read(cr, uid, uid, ['login'], context)
+        user = self.pool.get('res.users').read(cr, uid, [uid], ['login'], context)[0]
 
-        if (user['login'] != 'anonymous'):
+        if user['login'] != 'anonymous':
             return self.pool.get('res.users').name_get(cr, uid, uid, context)[0][1]
         else:
             return None
 
     def _get_user_email(self, cr, uid, context=None):
-        user = self.pool.get('res.users').read(cr, uid, uid, ['login', 'email'], context)
+        user = self.pool.get('res.users').read(cr, uid, [uid], ['login', 'email'], context)[0]
 
-        if (user['login'] != 'anonymous' and user['email']):
+        if user['login'] != 'anonymous' and user['email']:
             return user['email']
         else:
             return None
 
     def _get_user_phone(self, cr, uid, context=None):
-        user = self.pool.get('res.users').read(cr, uid, uid, ['login', 'phone'], context)
+        user = self.pool.get('res.users').read(cr, uid, [uid], ['login', 'phone'], context)[0]
 
-        if (user['login'] != 'anonymous' and user['phone']):
+        if user['login'] != 'anonymous' and user['phone']:
             return user['phone']
         else:
             return None

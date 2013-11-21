@@ -130,7 +130,7 @@ class stock_invoice_onshipping(osv.osv_memory):
 
         if action_model:
             action_pool = self.pool[action_model]
-            action = action_pool.read(cr, uid, action_id, context=context)
+            action = action_pool.read(cr, uid, [action_id], context=context)[0]
             action['domain'] = "[('id','in', ["+','.join(map(str,invoice_ids))+"])]"
         return action
 

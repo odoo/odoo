@@ -574,7 +574,7 @@ class account_voucher(osv.osv):
         ctx.update({'date': date})
         #read the voucher rate with the right date in the context
         currency_id = currency_id or self.pool.get('res.company').browse(cr, uid, company_id, context=ctx).currency_id.id
-        voucher_rate = self.pool.get('res.currency').read(cr, uid, currency_id, ['rate'], context=ctx)['rate']
+        voucher_rate = self.pool.get('res.currency').read(cr, uid, [currency_id], ['rate'], context=ctx)[0]['rate']
         ctx.update({
             'voucher_special_currency': payment_rate_currency_id,
             'voucher_special_currency_rate': rate * voucher_rate})
@@ -616,7 +616,7 @@ class account_voucher(osv.osv):
             'payment_rate_currency_id': payment_rate_currency_id
         })
         #read the voucher rate with the right date in the context
-        voucher_rate = self.pool.get('res.currency').read(cr, uid, currency_id, ['rate'], context=ctx)['rate']
+        voucher_rate = self.pool.get('res.currency').read(cr, uid, [currency_id], ['rate'], context=ctx)[0]['rate']
         ctx.update({
             'voucher_special_currency_rate': payment_rate * voucher_rate,
             'voucher_special_currency': payment_rate_currency_id})
@@ -843,7 +843,7 @@ class account_voucher(osv.osv):
             ctx = context.copy()
             ctx.update({'date': date})
             #read the voucher rate with the right date in the context
-            voucher_rate = self.pool.get('res.currency').read(cr, uid, currency_id, ['rate'], context=ctx)['rate']
+            voucher_rate = self.pool.get('res.currency').read(cr, uid, [currency_id], ['rate'], context=ctx)[0]['rate']
             ctx.update({
                 'voucher_special_currency_rate': payment_rate * voucher_rate, 
                 'voucher_special_currency': payment_rate_currency_id})
@@ -1174,7 +1174,7 @@ class account_voucher(osv.osv):
         tot_line = line_total
         rec_lst_ids = []
 
-        date = self.read(cr, uid, voucher_id, ['date'], context=context)['date']
+        date = self.read(cr, uid, [voucher_id], ['date'], context=context)[0]['date']
         ctx = context.copy()
         ctx.update({'date': date})
         voucher = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context=ctx)
@@ -1439,7 +1439,7 @@ class account_voucher_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             ctx = context.copy()
             ctx.update({'date': line.voucher_id.date})
-            voucher_rate = self.pool.get('res.currency').read(cr, uid, line.voucher_id.currency_id.id, ['rate'], context=ctx)['rate']
+            voucher_rate = line.voucher_id.currency_id.rate
             ctx.update({
                 'voucher_special_currency': line.voucher_id.payment_rate_currency_id and line.voucher_id.payment_rate_currency_id.id or False,
                 'voucher_special_currency_rate': line.voucher_id.payment_rate * voucher_rate})

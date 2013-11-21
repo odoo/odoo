@@ -139,7 +139,7 @@ class mail_thread(osv.AbstractModel):
             - message_unread: has uid unread message for the document
             - message_summary: html snippet summarizing the Chatter for kanban views """
         res = dict((id, dict(message_unread=False, message_unread_count=0, message_summary=' ')) for id in ids)
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        user_pid = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
 
         # search for unread messages, directly in SQL to improve performances
         cr.execute("""  SELECT m.res_id FROM mail_message m
@@ -176,7 +176,7 @@ class mail_thread(osv.AbstractModel):
                 available, which are followed if any """
         res = dict((id, dict(message_subtype_data='')) for id in ids)
         if user_pid is None:
-            user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+            user_pid = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
 
         # find current model subtypes, add them to a dictionary
         subtype_obj = self.pool.get('mail.message.subtype')
@@ -207,7 +207,7 @@ class mail_thread(osv.AbstractModel):
         fol_obj = self.pool.get('mail.followers')
         fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
         res = dict((id, dict(message_follower_ids=[], message_is_follower=False)) for id in ids)
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        user_pid = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids):
             res[fol.res_id]['message_follower_ids'].append(fol.partner_id.id)
             if fol.partner_id.id == user_pid:
@@ -565,7 +565,7 @@ class mail_thread(osv.AbstractModel):
         # default action is the Inbox action
         self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, *self._get_inbox_action_xml_id(cr, uid, context=context))
-        action = self.pool.get(act_model).read(cr, uid, act_id, [])
+        action = self.pool.get(act_model).read(cr, uid, [act_id], [])[0]
         params = context.get('params')
         msg_id = model = res_id = None
 
@@ -1515,7 +1515,7 @@ class mail_thread(osv.AbstractModel):
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers. """
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        user_pid = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         if set(partner_ids) == set([user_pid]):
             self.check_access_rights(cr, uid, 'read')
         else:

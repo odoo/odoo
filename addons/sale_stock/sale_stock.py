@@ -252,7 +252,7 @@ class sale_order(osv.osv):
         if context and context.get('tz'):
             tz_name = context['tz']
         else:
-            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, [uid], ['tz'])[0]['tz']
         if tz_name:
             utc = pytz.timezone('UTC')
             context_tz = pytz.timezone(tz_name)

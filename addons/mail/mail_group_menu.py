@@ -42,7 +42,7 @@ class ir_ui_menu(osv.osv):
             following. Access are done using SUPERUSER_ID to avoid access
             rights issues for an internal back-end algorithm. """
         ids = super(ir_ui_menu, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
-        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        partner_id = self.pool.get('res.users').read(cr, uid, [uid], ['partner_id'], context=context)[0]['partner_id'][0]
         follower_obj = self.pool.get('mail.followers')
         for menu in self.browse(cr, uid, ids, context=context):
             if menu.mail_group_id:

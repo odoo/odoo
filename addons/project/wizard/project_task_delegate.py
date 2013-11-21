@@ -125,7 +125,7 @@ class project_task_delegate(osv.osv_memory):
         action_model, action_id = models_data.get_object_reference(cr, uid, 'project', 'action_view_task')
         view_model, task_view_form_id = models_data.get_object_reference(cr, uid, 'project', 'view_task_form2')
         view_model, task_view_tree_id = models_data.get_object_reference(cr, uid, 'project', 'view_task_tree2')
-        action = self.pool[action_model].read(cr, uid, action_id, context=context)         
+        action = self.pool[action_model].read(cr, uid, [action_id], context=context)[0]
         action['res_id'] = delegated_tasks[task_id]
         action['view_id'] = False
         action['views'] = [(task_view_form_id, 'form'), (task_view_tree_id, 'tree')]

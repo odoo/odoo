@@ -501,8 +501,8 @@ class account_invoice(osv.osv):
                         rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
-                    rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value_reference','res_id'])
-                    pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value_reference','res_id'])
+                    rec_line_data = property_obj.read(cr,uid,[rec_pro_id],['name','value_reference','res_id'])[0]
+                    pay_line_data = property_obj.read(cr,uid,[pay_pro_id],['name','value_reference','res_id'])[0]
                     rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
                     pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                     if not rec_res_id and not pay_res_id:
@@ -611,8 +611,8 @@ class account_invoice(osv.osv):
                     if not pay_pro_id:
                         pay_pro_id = property_obj.search(cr, uid, [('name','=','property_account_payable'),('company_id','=',company_id)])
 
-                    rec_line_data = property_obj.read(cr, uid, rec_pro_id, ['name','value_reference','res_id'])
-                    pay_line_data = property_obj.read(cr, uid, pay_pro_id, ['name','value_reference','res_id'])
+                    rec_line_data = property_obj.read(cr, uid, [rec_pro_id], ['name','value_reference','res_id'])[0]
+                    pay_line_data = property_obj.read(cr, uid, [pay_pro_id], ['name','value_reference','res_id'])[0]
                     rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
                     pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
 
@@ -627,24 +627,29 @@ class account_invoice(osv.osv):
                     val= {'account_id': acc_id}
             if ids:
                 if company_id:
-                    inv_obj = self.browse(cr,uid,ids)
+                    inv_obj = self.browse(cr, uid, ids, context=context)
                     for line in inv_obj[0].invoice_line:
-                        if line.account_id:
-                            if line.account_id.company_id.id != company_id:
-                                result_id = account_obj.search(cr, uid, [('name','=',line.account_id.name),('company_id','=',company_id)])
-                                if not result_id:
-                                    raise osv.except_osv(_('Configuration Error!'),
-                                        _('Cannot find a chart of account, you should create one from Settings\Configuration\Accounting menu.'))
-                                inv_line_obj.write(cr, uid, [line.id], {'account_id': result_id[-1]})
-            else:
-                if invoice_line:
-                    for inv_line in invoice_line:
-                        obj_l = account_obj.browse(cr, uid, inv_line[2]['account_id'])
-                        if obj_l.company_id.id != company_id:
-                            raise osv.except_osv(_('Configuration Error!'),
-                                _('Invoice line account\'s company and invoice\'s company does not match.'))
-                        else:
+                        if not line.account_id:
                             continue
+                        if line.account_id.company_id == company_id:
+                            continue
+
+                        result_id = account_obj.search(cr, uid, [('name','=',line.account_id.name),('company_id','=',company_id)])
+                        if not result_id:
+                            raise osv.except_osv(
+                                _('Configuration Error!'),
+                                _('Cannot find a chart of account, you should create one from Settings\Configuration\Accounting menu.')
+                            )
+                        line.write({'account_id': result_id[-1]})
+            else:
+                for inv_line in invoice_line or []:
+                    obj_l = account_obj.browse(cr, uid, inv_line[2]['account_id'])
+                    if obj_l.company_id.id != company_id:
+                        raise osv.except_osv(
+                            _('Configuration Error!'),
+                            _("Invoice line account's company and invoice's company does not match.")
+                        )
+
         if company_id and type:
             journal_mapping = {
                'out_invoice': 'sale',
@@ -667,7 +672,7 @@ class account_invoice(osv.osv):
                                                                              context.get('lang'),
                                                                              journal_type_map.get(journal_type))
                 raise osv.except_osv(_('Configuration Error!'),
-                                     _('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.') % ('"%s"' % journal_type_label))
+                                     _('Cannot find any account journal of "%s" type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.') % journal_type_label)
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
             journal_ids = obj_journal.search(cr, uid, [])
@@ -689,16 +694,14 @@ class account_invoice(osv.osv):
         """ Update form view id of action to open the invoice """
         action = super(account_invoice, self)._get_formview_action(cr, uid, id, context=context)
         obj = self.browse(cr, uid, id, context=context)
+        proxy = self.pool.get('ir.model.data')
+
         if obj.type == 'in_invoice':
-            model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
-            action.update({
-                'views': [(view_id, 'form')],
-                })
+            model, view_id = proxy.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
         else:
-            model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_form')
-            action.update({
-                'views': [(view_id, 'form')],
-                })
+            model, view_id = proxy.get_object_reference(cr, uid, 'account', 'invoice_form')
+
+        action.update(views=[(view_id, 'form')])
         return action
 
     # Workflow stuff
@@ -707,7 +710,8 @@ class account_invoice(osv.osv):
     # return the ids of the move lines which has the same account than the invoice
     # whose id is in ids
     def move_line_id_payment_get(self, cr, uid, ids, *args):
-        if not ids: return []
+        if not ids: 
+            return []
         result = self.move_line_id_payment_gets(cr, uid, ids, *args)
         return result.get(ids[0], [])
 
@@ -1191,12 +1195,15 @@ class account_invoice(osv.osv):
         if not ids:
             return []
         types = {
-                'out_invoice': _('Invoice'),
-                'in_invoice': _('Supplier Invoice'),
-                'out_refund': _('Refund'),
-                'in_refund': _('Supplier Refund'),
-                }
-        return [(r['id'], '%s %s' % (r['number'] or types[r['type']], r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
+            'out_invoice': _('Invoice'),
+            'in_invoice': _('Supplier Invoice'),
+            'out_refund': _('Refund'),
+            'in_refund': _('Supplier Refund'),
+        }
+        return [
+            (r['id'], '%s %s' % (r['number'] or types[r['type']], r['name'] or ''))
+            for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context=context, load='_classic_write')
+        ]
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -1328,9 +1335,9 @@ class account_invoice(osv.osv):
             amount_currency = False
             currency_id = False
 
-        pay_journal = self.pool.get('account.journal').read(cr, uid, pay_journal_id, ['type'], context=context)
+        pay_journal = self.pool.get('account.journal').browse(cr, uid, pay_journal_id, context=context)
         if invoice.type in ('in_invoice', 'out_invoice'):
-            if pay_journal['type'] == 'bank':
+            if pay_journal.type == 'bank':
                 entry_type = 'bank_pay_voucher' # Bank payment
             else:
                 entry_type = 'pay_voucher' # Cash payment
@@ -1407,7 +1414,7 @@ class account_invoice(osv.osv):
 
 class account_invoice_line(osv.osv):
 
-    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
+    def _amount_line(self, cr, uid, ids, fields, args, context=None):
         res = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -1423,11 +1430,11 @@ class account_invoice_line(osv.osv):
     def _price_unit_default(self, cr, uid, context=None):
         if context is None:
             context = {}
+        tax_obj = self.pool.get('account.tax')
         if context.get('check_total', False):
             t = context['check_total']
             for l in context.get('invoice_line', {}):
                 if isinstance(l, (list, tuple)) and len(l) >= 3 and l[2]:
-                    tax_obj = self.pool.get('account.tax')
                     p = l[2].get('price_unit', 0) * (1-l[2].get('discount', 0)/100.0)
                     t = t - (p * l[2].get('quantity'))
                     taxes = l[2].get('invoice_line_tax_id')

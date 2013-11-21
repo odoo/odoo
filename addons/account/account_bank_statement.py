@@ -462,43 +462,46 @@ class account_bank_statement(osv.osv):
             return {}
         balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
 
-        journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['company_id', 'currency'], context=context)
-        company_id = journal_data['company_id']
-        currency_id = journal_data['currency'] or self.pool.get('res.company').browse(cr, uid, company_id[0], context=context).currency_id.id
-        return {'value': {'balance_start': balance_start, 'company_id': company_id, 'currency': currency_id}}
+        proxy = self.pool.get('account.journal')
+        journal = proxy.browse(cr, uid, journal_id, context=context)
+
+        if journal.currency:
+            currency = journal.currency
+        else:
+            currency = journal.company_id.currency
+        return {
+            'value': {
+                'balance_start': balance_start,
+                'company_id': journal.company_id.id,
+                'currency_id': currency_id.id,
+            }
+        }
 
     def unlink(self, cr, uid, ids, context=None):
-        stat = self.read(cr, uid, ids, ['state'], context=context)
-        unlink_ids = []
-        for t in stat:
-            if t['state'] in ('draft'):
-                unlink_ids.append(t['id'])
-            else:
-                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
-        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
-        return True
+        for item in self.browse(cr, uid, ids, context=context):
+            if item.state != 'draft':
+                raise osv.except_osv(
+                    _('Invalid Action!'), 
+                    _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
+                )
+        return super(account_bank_statement, self).unlink(cr, uid, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        if context is None:
-            context = {}
-        default = default.copy()
-        default['move_line_ids'] = []
-        return super(account_bank_statement, self).copy(cr, uid, id, default, context=context)
+        default_values = dict(default or {}, move_line_ids=[])
+        return super(account_bank_statement, self).copy(cr, uid, id, default_values, context=context)
 
     def button_journal_entries(self, cr, uid, ids, context=None):
-      ctx = (context or {}).copy()
-      ctx['journal_id'] = self.browse(cr, uid, ids[0], context=context).journal_id.id
-      return {
-        'view_type':'form',
-        'view_mode':'tree',
-        'res_model':'account.move.line',
-        'view_id':False,
-        'type':'ir.actions.act_window',
-        'domain':[('statement_id','in',ids)],
-        'context':ctx,
-      }
+        ctx = (context or {}).copy()
+        ctx['journal_id'] = self.browse(cr, uid, ids[0], context=context).journal_id.id
+        return {
+            'view_type':'form',
+            'view_mode':'tree',
+            'res_model':'account.move.line',
+            'view_id':False,
+            'type':'ir.actions.act_window',
+            'domain':[('statement_id','in',ids)],
+            'context':ctx,
+        }
 
 
 class account_bank_statement_line(osv.osv):
@@ -510,15 +513,18 @@ class account_bank_statement_line(osv.osv):
         if not partner_id:
             return {}
         part = obj_partner.browse(cr, uid, partner_id, context=context)
-        if not part.supplier and not part.customer:
-            type = 'general'
-        elif part.supplier and part.customer:
-            type = 'general'
-        else:
-            if part.supplier == True:
+
+        if part.supplier:
+            if part.customer:
+                type = 'general'
+            else:
                 type = 'supplier'
-            if part.customer == True:
+        else:
+            if part.customer:
                 type = 'customer'
+            else:
+                type = 'general'
+
         res_type = self.onchange_type(cr, uid, ids, partner_id=partner_id, type=type, context=context)
         if res_type['value'] and res_type['value'].get('account_id', False):
             return {'value': {'type': type, 'account_id': res_type['value']['account_id']}}

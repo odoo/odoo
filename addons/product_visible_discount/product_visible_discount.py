@@ -55,7 +55,7 @@ class sale_order_line(osv.osv):
                     field_name = price_type_obj.browse(cr, uid, item_base).field
 
             product = product_obj.browse(cr, uid, product_id, context)
-            product_read = product_obj.read(cr, uid, product_id, [field_name], context=context)
+            product_read = product_obj.read(cr, uid, [product_id], [field_name], context=context)[0]
 
             factor = 1.0
             if uom and uom != product.uom_id.id:
@@ -116,7 +116,7 @@ class account_invoice_line(osv.osv):
                         field_name = price_type_obj.browse(cr, uid, item_base).field
 
             product = product_obj.browse(cr, uid, product_id, context)
-            product_read = product_obj.read(cr, uid, product_id, [field_name], context=context)
+            product_read = product_obj.read(cr, uid, [product_id], [field_name], context=context)[0]
 
             factor = 1.0
             if uom_id and uom_id != product.uom_id.id:

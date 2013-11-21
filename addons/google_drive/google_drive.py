@@ -39,7 +39,7 @@ class config(osv.Model):
         config = self.browse(cr, SUPERUSER_ID, config_id, context=context)
         model = config.model_id
         filter_name = config.filter_id and config.filter_id.name or False
-        record = self.pool.get(model.model).read(cr, uid, res_id, [], context=context)
+        record = self.pool.get(model.model).read(cr, uid, [res_id], [], context=context)[0]
         record.update({'model': model.name, 'filter': filter_name})
         name_gdocs = config.name_template
         try:
@@ -61,7 +61,7 @@ class config(osv.Model):
         ir_config = self.pool['ir.config_parameter']
         google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
         group_config = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
-        user = self.pool['res.users'].read(cr, uid, uid, "groups_id")
+        user = self.pool['res.users'].read(cr, uid, [uid], "groups_id")[0]
         if not google_drive_refresh_token:
             if group_config in user['groups_id']:
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)

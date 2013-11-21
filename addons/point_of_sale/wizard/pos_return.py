@@ -256,10 +256,10 @@ class add_product(osv.osv_memory):
         date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
         uom_obj = self.pool.get('product.uom')
         return_boj=self.pool.get('pos.return')
-        return_id = return_boj.search(cr,uid,[])
+        return_ids = return_boj.search(cr,uid,[])
         data = {}
         if return_id:
-            data = return_boj.read(cr,uid,return_id,[])[0]
+            data = return_boj.read(cr, uid, return_ids, [])[0]
 
         self_data = self.browse(cr, uid, ids, context=context)[0]
         order_obj.add_product(cr, uid, active_ids[0], self_data.product_id.id, self_data.quantity, context=context)
