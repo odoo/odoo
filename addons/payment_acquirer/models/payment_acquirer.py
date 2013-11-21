@@ -130,7 +130,8 @@ class PaymentAcquirer(osv.Model):
             'tx_values': tx_values,
             'context': context,
         }
-        return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.id, qweb_context, engine='ir.qweb', context=context)
+        # because render accepts view ids but not qweb -> need to find the xml_id
+        return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.xml_id, qweb_context, engine='ir.qweb', context=context)
 
     def get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
