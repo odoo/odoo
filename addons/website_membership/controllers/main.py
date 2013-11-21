@@ -27,9 +27,9 @@ class WebsiteMembership(http.Controller):
         post_country_id = int(post.get('country_id', '0'))
 
         # base domain for groupby / searches
-        base_line_domain = [(1, '=', 1)]
+        base_line_domain = []
         if membership_id:
-            base_line_domain += [('membership_id', '=', membership_id)]
+            base_line_domain.append(('membership_id', '=', membership_id))
             membership = product_obj.browse(cr, uid, membership_id, context=context)
         else:
             membership = None
@@ -41,7 +41,7 @@ class WebsiteMembership(http.Controller):
         countries = partner_obj.read_group(
             cr, uid, [('member_lines', 'in', membership_line_ids)], ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
-        countries_total = sum([country_dict['country_id_count'] for country_dict in countries])
+        countries_total = sum(country_dict['country_id_count'] for country_dict in countries)
         countries.insert(0, {
             'country_id_count': countries_total,
             'country_id': (0, _("All Countries"))
@@ -50,16 +50,15 @@ class WebsiteMembership(http.Controller):
         # displayed membership lines
         line_domain = list(base_line_domain)
         if post_country_id:
-            line_domain += [('partner.country_id', '=', post_country_id)]
+            line_domain.append(('partner.country_id', '=', post_country_id))
 
         membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
         membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
         partner_ids = [m.partner and m.partner.id for m in membership_lines]
-        google_map_partner_ids = ",".join([str(pid) for pid in partner_ids])
+        google_map_partner_ids = ",".join(map(str, partner_ids))
 
         # format domain for group_by and memberships
-        membership_domain = [('membership', '=', True)]
-        membership_ids = product_obj.search(cr, uid, membership_domain, context=context)
+        membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], context=context)
         memberships = product_obj.browse(cr, uid, membership_ids, context=context)
 
         # request pager for lines
