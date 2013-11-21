@@ -248,7 +248,7 @@ class res_currency_rate(osv.osv):
         'currency_rate_type_id': fields.many2one('res.currency.rate.type', 'Currency Rate Type', help="Allow you to define your own currency rate types, like 'Average' or 'Year to Date'. Leave empty if you simply want to use the normal 'spot' rate type"),
     }
     _defaults = {
-        'name': lambda *a: time.strftime('%Y-%m-%d'),
+        'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),
     }
     _order = "name desc"
 
