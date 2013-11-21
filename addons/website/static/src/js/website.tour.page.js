@@ -39,7 +39,7 @@
                     title: "Edit menu",
                     content: "Click here to create a new menu entry and manage options.",
                     onShow: function () {
-                        editor.on('tour:menu_editor_dialog_ready', editor, function () {
+                        $(document).one('shown.bs.modal', function () {
                             self.movetoStep('add-menu-entry');
                         });
                     },
@@ -51,7 +51,7 @@
                     title: "Add menu entry",
                     content: "Click here to create a new menu entry.",
                     onShow: function () {
-                        editor.on('tour:new_menu_entry_dialog_ready', editor, function () {
+                        $(document).one('shown.bs.modal', function () {
                             self.movetoStep('enter-entry-name');
                         });
                     },
@@ -79,7 +79,7 @@
                     title: "Save the page",
                     content: "Save your new page.",
                     onShow: function () {
-                        editor.on('tour:new_menu_entry_dialog_closed', editor, function () {
+                        $(document).one('hidden.bs.modal', function () {
                             self.movetoStep('save-menu');
                         });
                     },
