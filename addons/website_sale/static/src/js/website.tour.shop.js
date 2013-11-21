@@ -3,8 +3,6 @@
 
     var website = openerp.website;
 
-    var render = website.tour.render;
-
     website.EditorBar.include({
         start: function () {
             this.registerTour(new website.EditorShopTour(this));
@@ -25,7 +23,7 @@
                     backdrop: true,
                     title: "Welcome to your shop",
                     content: "You successfully installed the e-commerce. This guide will help you to create your product and promote your sales.",
-                    template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
+                    template: self.popover({ next: "Start Tutorial", end: "Skip It" }),
                 },
                 {
                     stepId: 'content-menu',
@@ -34,7 +32,6 @@
                     reflex: true,
                     title: "Create your first product",
                     content: "Click here to add a new product.",
-                    template: render('website.tour_popover'),
                 },
                 {
                     stepId: 'edit-entry',
@@ -42,7 +39,6 @@
                     placement: 'left',
                     title: "Create a new product",
                     content: "Select 'New Product' to create it and manage its properties to boost your sales.",
-                    template: render('website.tour_popover'),
                     onShow: function () {
                         $(document).one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').click(function () {
@@ -58,7 +54,6 @@
                     placement: 'right',
                     title: "Choose name",
                     content: "Enter a name for your new product.",
-                    template: render('website.tour_popover'),
 
                 },
                 {
@@ -67,7 +62,7 @@
                     backdrop: true,
                     title: "New product created",
                     content: "This page contains all the information related to the new product.",
-                    template: render('website.tour_popover', { next: "OK" }),
+                    template: self.popover({ next: "OK" }),
                 },
                 {
                     stepId: 'edit-price',
@@ -75,7 +70,7 @@
                     placement: 'left',
                     title: "Change the public price",
                     content: "Edit the sale price of this product by clicking on the amount. The price is the sale price used in all sale order when selling this product.",
-                    template: render('website.tour_popover', { next: "OK" }),
+                    template: self.popover({ next: "OK" }),
                 },
                 {
                     stepId: 'add-block',
@@ -84,16 +79,15 @@
                     reflex: true,
                     title: "Describe the product for your audience",
                     content: "Insert blocks like text-image, or gallery to fully describe the product and make your visitors want to buy this product.",
-                    template: render('website.tour_popover'),
                 },
             ];
             return this._super();
         },
-        continueTour: function () {
+        resume: function () {
             return this.isCurrentStep('product-page') && !this.tour.ended();
         },
-        isTriggerUrl: function (url) {
-            return (this.continueTour() && this.testUrl(/^\/shop\/product\/[0-9]+\/\?enable_editor=1/)) || this._super();
+        trigger: function (url) {
+            return (this.resume() && this.testUrl(/^\/shop\/product\/[0-9]+\/\?enable_editor=1/)) || this._super();
         },
     });
 

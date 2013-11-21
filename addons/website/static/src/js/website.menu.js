@@ -5,15 +5,12 @@
     website.menu = {};
     website.add_template_file('/website/static/src/xml/website.menu.xml');
 
-    var globalEditor;
-
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action="edit-structure"]': 'editStructure',
         }),
         editStructure: function () {
             var self = this;
-            globalEditor = self;
             var context = website.get_context();
             openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website.menu',
@@ -24,7 +21,6 @@
                 },
             }).then(function (menu) {
                 var result = new website.menu.EditMenuDialog(menu).appendTo(document.body);
-                self.trigger('tour:menu_editor_dialog_ready');
                 return result;
             });
         },
@@ -171,7 +167,6 @@
                     $link_text.focus();
                 });
             });
-            globalEditor.trigger('tour:new_menu_entry_dialog_ready');
             return result;
         },
         save: function () {
@@ -192,7 +187,6 @@
             }
         },
         destroy: function () {
-            globalEditor.trigger('tour:new_menu_entry_dialog_closed');
             this._super.apply(this, arguments);
         },
     });

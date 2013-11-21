@@ -3,17 +3,15 @@
 
     var website = openerp.website;
 
-    var render = website.tour.render;
-
     website.EditorBar.include({
         start: function () {
-            this.registerTour(new website.EditorBuilderTour(this));
+            this.registerTour(new website.PageTour(this));
             return this._super();
         },
     });
 
-    website.EditorBuilderTour = website.Tour.extend({
-        id: 'menu-editor',
+    website.PageTour = website.Tour.extend({
+        id: 'page-tutorial',
         name: "Add a new page",
         init: function (editor) {
             var self = this;
@@ -24,7 +22,7 @@
                     backdrop: true,
                     title: "Menu editor",
                     content: "We will show how to edit your website's menu.",
-                    template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
+                    template: self.popover({ next: "Start Tutorial", end: "Skip It" }),
                 },
                 {
                     stepId: 'content-menu',
@@ -33,7 +31,6 @@
                     reflex: true,
                     title: "Edit the content",
                     content: "Click here to edit the menu.",
-                    template: render('website.tour_popover'),
                 },
                 {
                     stepId: 'edit-entry',
@@ -41,9 +38,8 @@
                     placement: 'left',
                     title: "Edit menu",
                     content: "Click here to create a new menu entry and manage options.",
-                    template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('tour:menu_editor_dialog_ready', editor, function () {
+                        $(document).one('shown.bs.modal', function () {
                             self.movetoStep('add-menu-entry');
                         });
                     },
@@ -54,9 +50,8 @@
                     placement: 'left',
                     title: "Add menu entry",
                     content: "Click here to create a new menu entry.",
-                    template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('tour:new_menu_entry_dialog_ready', editor, function () {
+                        $(document).one('shown.bs.modal', function () {
                             self.movetoStep('enter-entry-name');
                         });
                     },
@@ -67,15 +62,15 @@
                     placement: 'left',
                     title: "Choose a label",
                     content: "This label will appear in the top menu and will be visible by all your audience.\nGive a meaningful name to help your visitors. For instance, 'Photos Gallery'.",
-                    template: render('website.tour_popover', { next: "Continue" }),
+                    template: self.popover({ next: "Continue" }),
                 },
                 {
                     stepId: 'enter-page-name',
-                    element: '#link-new',
+                    element: '.modal .select2-container',
                     placement: 'left',
                     title: "Link your menu to a 'gallery' page",
                     content: "This page does not exist. Create it by filling the name here. For instance, 'gallery'.",
-                    template: render('website.tour_popover', { next: "Continue" }),
+                    template: self.popover({ next: "Continue" }),
                 },
                 {
                     stepId: 'save-page',
@@ -83,9 +78,8 @@
                     placement: 'right',
                     title: "Save the page",
                     content: "Save your new page.",
-                    template: render('website.tour_popover'),
                     onShow: function () {
-                        editor.on('tour:new_menu_entry_dialog_closed', editor, function () {
+                        $(document).one('hidden.bs.modal', function () {
                             self.movetoStep('save-menu');
                         });
                     },
@@ -97,7 +91,6 @@
                     reflex: true,
                     title: "Save the menu",
                     content: "Save the menu to edit the Gallery content directly from the interface.",
-                    template: render('website.tour_popover'),
                 },
             ];
             return this._super();

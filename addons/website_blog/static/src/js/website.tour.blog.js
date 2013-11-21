@@ -3,8 +3,6 @@
 
     var website = openerp.website;
 
-    var render = website.tour.render;
-
     website.EditorBar.include({
         start: function () {
             this.registerTour(new website.BlogTour(this));
@@ -25,7 +23,7 @@
                     backdrop: true,
                     title: "Blog",
                     content: "We will show how to create a new blog post.",
-                    template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
+                    template: self.popover({ next: "Start Tutorial", end: "Skip It" }),
                 },
                 {
                     stepId: 'content-menu',
@@ -34,7 +32,6 @@
                     reflex: true,
                     title: "Edit the content",
                     content: "Click here to add content to your site.",
-                    template: render('website.tour_popover'),
                 },
                 {
                     stepId: 'new-post-entry',
@@ -42,7 +39,6 @@
                     placement: 'left',
                     title: "New blog post",
                     content: "Click here to create a blog post.",
-                    template: render('website.tour_popover'),
                     onShow: function () {
                         $(document).one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').click(function () {
@@ -58,7 +54,6 @@
                     placement: 'right',
                     title: "Choose the post category",
                     content: "Select the 'News' category and click 'Continue'.",
-                    template: render('website.tour_popover'),
                 },
                 {
                     stepId: 'post-page',
@@ -66,25 +61,57 @@
                     backdrop: true,
                     title: "New blog post created",
                     content: "You just created a new blog post. We are now going to edit it.",
-                    template: render('website.tour_popover', { next: "OK" }),
+                    template: self.popover({ next: "OK" }),
+                },
+                {
+                    stepId: 'post-title',
+                    element: 'h1[data-oe-expression="blog_post.name"]',
+                    placement: 'top',
+                    title: "Pick a title",
+                    content: "Choose a catchy title for your blog post.",
+                    template: self.popover({ next: "OK" }),
                 },
                 {
                     stepId: 'add-block',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
-                    reflex: true,
                     title: "Layout your blog post",
                     content: "Insert blocks like text-image to layout the body of your blog post.",
-                    template: render('website.tour_popover'),
+                    onShow: function () {
+                        $('button[data-action=snippet]').click(function () {
+                            self.movetoStep('drag-image-text');
+                        });
+                    }
+                },
+                {
+                    stepId: 'drag-image-text',
+                    element: '#website-top-navbar [data-snippet-id=image-text].ui-draggable',
+                    placement: 'bottom',
+                    title: "Drag & Drop a block",
+                    content: "Drag the 'Image Text' block and drop it in your page.",
+                    onShow: function () {
+                        var $body = $(document.body);
+                        function beginDrag () {
+                            $('.popover.tour').remove();
+                            function goToNextStep () {
+                                $('#snippets').toggle();
+                                self.stop();
+                                $body.off('mouseup', goToNextStep);
+                            }
+                            $body.off('mousedown', beginDrag);
+                            $body.on('mouseup', goToNextStep);
+                        }
+                        $body.on('mousedown', beginDrag);
+                    },
                 },
             ];
             return this._super();
         },
-        continueTour: function () {
+        resume: function () {
             return this.isCurrentStep('post-page') && !this.tour.ended();
         },
-        isTriggerUrl: function () {
-            return (this.continueTour() && this.testUrl(/^\/blog\/[0-9]+\/\?enable_editor=1/)) || this._super();
+        trigger: function () {
+            return (this.resume() && this.testUrl(/^\/blog\/[0-9]+\/\?enable_editor=1/)) || this._super();
         },
     });
 
