@@ -47,7 +47,7 @@ class Ecommerce(http.Controller):
 
     def get_attribute_ids(self):
         attributes_obj = request.registry.get('product.attribute')
-        attributes_ids = attributes_obj.search(request.cr, request.uid, [(1, "=", 1)], context=request.context)
+        attributes_ids = attributes_obj.search(request.cr, request.uid, [], context=request.context)
         return attributes_obj.browse(request.cr, request.uid, attributes_ids, context=request.context)
 
     def get_categories(self):
@@ -248,13 +248,14 @@ class Ecommerce(http.Controller):
 
     def attributes_to_ids(self, attributes):
         obj = request.registry.get('product.attribute.product')
-        domain = [(1, '=', 1)]
+        domain = []
         for key_val in attributes:
-            domain += [("attribute_id", "=", key_val[0])]
+            domain.append(("attribute_id", "=", key_val[0]))
             if isinstance(key_val[1], list):
-                domain += [("value", ">=", key_val[1][0]), ("value", "<=", key_val[1][1])]
+                domain.append(("value", ">=", key_val[1][0]))
+                domain.append(("value", "<=", key_val[1][1]))
             else:
-                domain += [("value_id", "in", key_val[1:])]
+                domain.append(("value_id", "in", key_val[1:]))
         att_ids = obj.search(request.cr, request.uid, domain, context=request.context)
         att = obj.read(request.cr, request.uid, att_ids, ["product_id"], context=request.context)
         return [r["product_id"][0] for r in att]
@@ -265,7 +266,7 @@ class Ecommerce(http.Controller):
         '/shop/category/<int:category>/',
         '/shop/category/<int:category>/page/<int:page>/'
     ], type='http', auth="public", multilang=True)
-    def category(self, category=0, filter="", page=0, **post):
+    def category(self, category=0, page=0, filter='', search='', **post):
         # TDE-NOTE: shouldn't we do somethign about product_template without variants ???
         # TDE-NOTE: is there a reason to call a method category when the route is
         # basically a shop without category_id speceified ?
@@ -278,27 +279,26 @@ class Ecommerce(http.Controller):
 
         # remove product_product_consultant from ecommerce editable mode, this product never be publish
         ref = request.registry.get('ir.model.data').get_object_reference(request.cr, SUPERUSER_ID, 'product', 'product_product_consultant')
-        domain += [("id", "!=", ref[1])]
+        domain.append(("id", "!=", ref[1]))
 
-        if post.get("search"):
+        if search:
             domain += ['|', '|', '|',
-                ('name', 'ilike', "%%%s%%" % post.get("search")),
-                ('description', 'ilike', "%%%s%%" % post.get("search")),
-                ('website_description', 'ilike', "%%%s%%" % post.get("search")),
-                ('product_variant_ids.public_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
+                ('name', 'ilike', "%%%s%%" % search),
+                ('description', 'ilike', "%%%s%%" % search),
+                ('website_description', 'ilike', "%%%s%%" % search),
+                ('product_variant_ids.public_categ_id.name', 'ilike', "%%%s%%" % search)]
 
         if category:
-            category_id = int(category)
-            domain = [('product_variant_ids.public_categ_id.id', 'child_of', category_id)] + domain
+            domain.append(('product_variant_ids.public_categ_id.id', 'child_of', category))
 
         if filter:
             filter = simplejson.loads(filter)
             if filter:
                 ids = self.attributes_to_ids(filter)
-                domain = [('id', 'in', ids or [0] )] + domain
+                domain.append(('id', 'in', ids or [0]))
 
         step = 20
-        product_count = len(product_obj.search(request.cr, request.uid, domain, context=request.context))
+        product_count = product_obj.search_count(request.cr, request.uid, domain, context=request.context)
         pager = request.website.pager(url="/shop/", total=product_count, page=page, step=step, scope=7, url_args=post)
 
         request.context['pricelist'] = self.get_pricelist()
@@ -309,7 +309,7 @@ class Ecommerce(http.Controller):
         styles = []
         if not request.context['is_public_user']:
             style_obj = request.registry.get('website.product.style')
-            style_ids = style_obj.search(request.cr, request.uid, [(1, '=', 1)], context=request.context)
+            style_ids = style_obj.search(request.cr, request.uid, [], context=request.context)
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
 
         values = {
@@ -317,9 +317,9 @@ class Ecommerce(http.Controller):
             'product_ids': product_ids,
             'product_ids_for_holes': fill_hole,
             'search': {
-                'search': post.get('search') or '',
+                'search': search,
                 'category': category,
-                'filter': filter or '',
+                'filter': filter,
             },
             'pager': pager,
             'styles': styles,
@@ -522,10 +522,10 @@ class Ecommerce(http.Controller):
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
         orm_country = registry.get('res.country')
-        country_ids = orm_country.search(cr, SUPERUSER_ID, [(1, "=", 1)], context=context)
+        country_ids = orm_country.search(cr, SUPERUSER_ID, [], context=context)
         countries = orm_country.browse(cr, SUPERUSER_ID, country_ids, context)
         state_orm = registry.get('res.country.state')
-        states_ids = state_orm.search(cr, SUPERUSER_ID, [(1, "=", 1)], context=context)
+        states_ids = state_orm.search(cr, SUPERUSER_ID, [], context=context)
         states = state_orm.browse(cr, SUPERUSER_ID, states_ids, context)
 
         info = CheckoutInfo()
@@ -578,10 +578,10 @@ class Ecommerce(http.Controller):
         orm_parter = registry.get('res.partner')
         orm_user = registry.get('res.users')
         orm_country = registry.get('res.country')
-        country_ids = orm_country.search(cr, SUPERUSER_ID, [(1, "=", 1)], context=context)
+        country_ids = orm_country.search(cr, SUPERUSER_ID, [], context=context)
         countries = orm_country.browse(cr, SUPERUSER_ID, country_ids, context)
         orm_state = registry.get('res.country.state')
-        states_ids = orm_state.search(cr, SUPERUSER_ID, [(1, "=", 1)], context=context)
+        states_ids = orm_state.search(cr, SUPERUSER_ID, [], context=context)
         states = orm_state.browse(cr, SUPERUSER_ID, states_ids, context)
 
         info = CheckoutInfo()
