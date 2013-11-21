@@ -112,7 +112,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route(['/website/snippets'], type='json', auth="public")
     def snippets(self):
-        return request.website.render('website.snippets')
+        return request.website._render('website.snippets')
 
     @website.route('/page/<page:page>', type='http', auth="public", multilang=True)
     def page(self, page, **opt):
