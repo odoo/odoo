@@ -3050,7 +3050,7 @@ class stock_picking_in(osv.osv):
     def default_get(self, cr, uid, fields_list, context=None):
         # merge defaults from stock.picking with possible defaults defined on stock.picking.in
         defaults = self.pool['stock.picking'].default_get(cr, uid, fields_list, context=context)
-        out_defaults = super(stock_picking_in, self).default_get(cr, uid, fields_list, context=context)
+        in_defaults = super(stock_picking_in, self).default_get(cr, uid, fields_list, context=context)
         defaults.update(in_defaults)
         return defaults
 
