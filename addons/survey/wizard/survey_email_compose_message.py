@@ -166,10 +166,10 @@ class survey_mail_compose_message(osv.TransientModel):
                 token = uuid.uuid4()
                 # create response with token
                 survey_response_obj.create(cr, uid, {
-                        'date_deadline': wizard.date_deadline,
                         'survey_id': wizard.survey_id.id,
+                        'deadline': wizard.date_deadline,
                         'date_create': datetime.now(),
-                        'response_type': 'link',
+                        'type': 'link',
                         'state': 'new',
                         'token': token,
                         'partner_id': partner_id,
