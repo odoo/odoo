@@ -14,10 +14,9 @@
                 </a>
             </li>
         </xpath>
-        <xpath expr="//head" position="inside">
-            <t t-if="editable">
-                <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js"></script>
-            </t>
+        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+              <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js" t-ignore="true"></script>
+              <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js" t-ignore="true"></script>
         </xpath>
     </template>
 
@@ -118,7 +117,7 @@
 
                                 <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
 
-                                  <div class="css_options" t-ignore="true" t-if="is_website_publisher">
+                                  <div class="css_options" t-ignore="true" t-if="editable">
                                     <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
                                       <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                                       <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
