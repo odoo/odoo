@@ -941,11 +941,15 @@ class Root(object):
             return HttpRequest(httprequest)
 
     def get_response(self, httprequest, result, explicit_session):
+        if isinstance(result, LazyResponse):
+            try:
+                result.process()
+            except(Exception), e:
+                result = request.registry['ir.http']._handle_exception(e)
+
         if isinstance(result, basestring):
             response = werkzeug.wrappers.Response(result, mimetype='text/html')
         else:
-            if isinstance(result, LazyResponse):
-                result.process()
             response = result
 
         if httprequest.session.should_save:
