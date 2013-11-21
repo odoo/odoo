@@ -70,12 +70,7 @@ class procurement_order(osv.osv):
                     cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            start_date = fields.datetime.now()
             offset = 0
-            report = []
-            report_total = 0
-            report_except = 0
-            report_later = 0
             while True:
                 ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], offset=offset, limit=500, order='priority, date_planned', context=context)
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
@@ -83,14 +78,7 @@ class procurement_order(osv.osv):
                         self.signal_button_check(cr, uid, [proc.id])
                     else:
                         offset += 1
-                        report_later += 1
 
-                    if proc.state == 'exception':
-                        report.append(_('PROC %d: on order - %3.2f %-5s - %s') % \
-                                (proc.id, proc.product_qty, proc.product_uom.name,
-                                    proc.product_id.name))
-                        report_except += 1
-                    report_total += 1
                 if use_new_cursor:
                     cr.commit()
                 if not ids:
@@ -104,22 +92,11 @@ class procurement_order(osv.osv):
                     if maxdate >= proc.date_planned:
                         self.signal_button_check(cr, uid, [proc.id])
                         report_ids.append(proc.id)
-                    else:
-                        report_later += 1
-                    report_total += 1
-
-                    if proc.state == 'exception':
-                        report.append(_('PROC %d: from stock - %3.2f %-5s - %s') % \
-                                (proc.id, proc.product_qty, proc.product_uom.name,
-                                    proc.product_id.name,))
-                        report_except += 1
-
 
                 if use_new_cursor:
                     cr.commit()
                 offset += len(ids)
                 if not ids: break
-            end_date = fields.datetime.now()
 
             if use_new_cursor:
                 cr.commit()
