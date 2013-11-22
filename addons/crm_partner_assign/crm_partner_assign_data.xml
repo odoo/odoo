@@ -20,7 +20,7 @@
             <field name="model_id" model="ir.model" search="[('name', '=', 'crm.lead.forward.to.partner')]"></field>
             <field name="auto_delete" eval="True"/>
             <field name="email_to">${ctx['partner_id'].email|safe}</field>
-            <field name="email_from">${user.email or ''|safe}</field>
+            <field name="email_from">${(user.email or '')|safe}</field>
             <field name="subject">Fwd: Lead: ${ctx['partner_id'].name}</field>
             <field name="body_html"><![CDATA[
             

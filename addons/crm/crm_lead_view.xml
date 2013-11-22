@@ -600,7 +600,7 @@
                 id="crm.action_lead_mass_mail"
                 context="{
                             'default_composition_mode': 'mass_mail',
-                            'default_email_to':'{$object.email or \'\'|safe}',
+                            'default_email_to':'{($object.email or \'\')|safe}',
                             'default_use_template': True,
                             'default_template_id': ref('crm.email_template_opportunity_mail'),
                         }"
