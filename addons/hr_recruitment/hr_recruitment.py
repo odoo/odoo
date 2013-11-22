@@ -490,7 +490,7 @@ class hr_job(osv.osv):
     }
 
     _defaults = {
-        'alias_name':'jobs@yourcompany.com',
+        'alias_name':lambda self,cr,uid,c: self.pool.get('hr.config.settings').get_default_alias_prefix(cr,uid,uid,c).get('alias_prefix')
     }
 
     def _auto_init(self, cr, context=None):

@@ -344,7 +344,7 @@
                 </div>
             </group>
             <xpath expr="//field[@name='department_id']" position="after">
-                    <label for="alias_name" string="Specific Email Address" attrs="{'invisible': [('alias_domain', '=', False)]}" help ="Define a specific contact address for this job position. If you keep it empty, the default email address will be used (jobs@yourcompany.com in human resources settings)"/>
+                    <label for="alias_name" string="Specific Email Address" attrs="{'invisible': [('alias_domain', '=', False)]}" help ="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                     <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                         <field name="alias_id" class="oe_read_only oe_inline"
                                 string="Email Alias" required="0"/>
@@ -353,7 +353,7 @@
                         </div>
                     </div>
             </xpath>
-            <xpath expr="//field[@name='department_id']" position="before">
+            <xpath expr="//field[@name='department_id']" position="after">
                 <field name="user_id" class="oe_inline"/>
             </xpath>
             <div name="buttons" position="inside">
