@@ -140,19 +140,34 @@
                         $('#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]').click(function () {
                             setTimeout(function () {
                                 self.movetoStep('remove-text-block-title');
-                            }, 0);
+                            }, 50);
                         });
                     },
                 },
                 {
                     stepId: 'remove-text-block-title',
-                    element: 'span.icon-remove',
+                    element: '.oe_snippet_remove:last',
                     placement: 'top',
                     reflex: true,
                     title: "Delete the title",
                     content: "Click on the cross to delete the title.",
                 },
-
+                {
+                    stepId: 'publish-post',
+                    element: 'button.js_publish_btn',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Publish your blog post",
+                    content: "Click to publish your blog post.",
+                },
+                {
+                    stepId: 'save-changes',
+                    element: 'button[data-action=save]',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Save your modifications",
+                    content: "Once you click on save, your post is updated.",
+                },
             ];
             return this._super();
         },
