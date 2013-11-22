@@ -13,7 +13,6 @@
     website.EditorShopTour = website.Tour.extend({
         id: 'shop-tutorial',
         name: "Create a product",
-        startPath: '/shop',
         init: function (editor) {
             var self = this;
             self.steps = [

@@ -13,7 +13,6 @@
     website.BlogTour = website.Tour.extend({
         id: 'blog-tutorial',
         name: "Create a blog post",
-        startPath: '/blog/cat/1/',
         init: function (editor) {
             var self = this;
             self.steps = [
@@ -57,9 +56,8 @@
                     onShow: function () {
                         $('.modal select').change(function () {
                             var $this = $(this);
-                            var selected = $this.val()
-                            var name = $this.find("[value="+selected+"]").text();
-                            if (name.toLowerCase() === 'news') {
+                            var selected = $this.find("[value="+$this.val()+"]").text();
+                            if (selected.toLowerCase() === 'news') {
                                 self.movetoStep('continue-category');
                             }
                         });
@@ -89,7 +87,7 @@
                     template: self.popover({ next: "OK" }),
                 },
                 {
-                    stepId: 'add-block',
+                    stepId: 'add-image-block',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
                     title: "Layout your blog post",
@@ -107,20 +105,54 @@
                     title: "Drag & Drop a block",
                     content: "Drag the 'Image Text' block and drop it in your page.",
                     onShow: function () {
-                        var $body = $(document.body);
-                        function beginDrag () {
-                            $('.popover.tour').remove();
-                            function goToNextStep () {
-                                $('#snippets').toggle();
-                                self.stop();
-                                $body.off('mouseup', goToNextStep);
-                            }
-                            $body.off('mousedown', beginDrag);
-                            $body.on('mouseup', goToNextStep);
-                        }
-                        $body.on('mousedown', beginDrag);
+                        self.onSnippetDraggedMoveTo('add-text-block');
                     },
                 },
+                {
+                    stepId: 'add-text-block',
+                    element: 'button[data-action=snippet]',
+                    placement: 'bottom',
+                    title: "Add another block",
+                    content: "Let's add another blog to your post.",
+                    onShow: function () {
+                        $('button[data-action=snippet]').click(function () {
+                            self.movetoStep('drag-text-block');
+                        });
+                    }
+                },
+                {
+                    stepId: 'drag-text-block',
+                    element: '#website-top-navbar [data-snippet-id=text-block].ui-draggable',
+                    placement: 'bottom',
+                    title: "Drag & Drop a block",
+                    content: "Drag the 'Text Block' block and drop it below the image block.",
+                    onShow: function () {
+                        self.onSnippetDraggedMoveTo('activate-text-block-title');
+                    },
+                },
+                {
+                    stepId: 'activate-text-block-title',
+                    element: '#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]',
+                    placement: 'top',
+                    title: "Activate on the title",
+                    content: "Click on the title to activate it.",
+                    onShow: function () {
+                        $('#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]').click(function () {
+                            setTimeout(function () {
+                                self.movetoStep('remove-text-block-title');
+                            }, 0);
+                        });
+                    },
+                },
+                {
+                    stepId: 'remove-text-block-title',
+                    element: 'span.icon-remove',
+                    placement: 'top',
+                    reflex: true,
+                    title: "Delete the title",
+                    content: "Click on the cross to delete the title.",
+                },
+
             ];
             return this._super();
         },

@@ -54,10 +54,6 @@
                 this.tour.goto(index);
             }
         },
-        saveStep: function (stepId) {
-            var index = this.indexOfStep(stepId);
-            this.tourStorage.setItem(this.id+'_current_step', index);
-        },
         stop: function () {
             this.tour.end();
         },
@@ -85,6 +81,25 @@
         popover: function (options) {
             return openerp.qweb.render('website.tour_popover', options);
         },
+        onSnippetDraggedMoveTo: function (stepId) {
+            var self = this;
+            var $body = $(document.body);
+            function beginDrag () {
+                $('.popover.tour').remove();
+                function goToNextStep () {
+                    $('#snippets').toggle();
+                    if (stepId) {
+                        self.movetoStep(stepId);
+                    } else {
+                        self.stop();
+                    }
+                    $body.off('mouseup', goToNextStep);
+                }
+                $body.off('mousedown', beginDrag);
+                $body.on('mouseup', goToNextStep);
+            }
+            $body.on('mousedown', beginDrag);
+        }
     });
 
     website.UrlParser = openerp.Class.extend({

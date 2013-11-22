@@ -56,18 +56,7 @@
                     title: "Drag & Drop a Banner",
                     content: "Drag the Banner block and drop it in your page.",
                     onShow: function () {
-                        var $body = $(document.body);
-                        function beginDrag () {
-                            $('.popover.tour').remove();
-                            function goToNextStep () {
-                                $('#snippets').toggle();
-                                self.movetoStep('edit-title');
-                                $body.off('mouseup', goToNextStep);
-                            }
-                            $body.off('mousedown', beginDrag);
-                            $body.on('mouseup', goToNextStep);
-                        }
-                        $body.on('mousedown', beginDrag);
+                        self.onSnippetDraggedMoveTo('edit-title');
                     },
                 },
                 {
@@ -104,9 +93,6 @@
                     reflex: true,
                     title: "Save your modifications",
                     content: "Once you click on save, your website page is updated.",
-                    onHide: function () {
-                        self.saveStep('part-2');
-                    },
                 },
                 {
                     stepId: 'part-2',

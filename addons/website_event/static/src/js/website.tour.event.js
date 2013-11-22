@@ -13,7 +13,6 @@
     website.EventTour = website.Tour.extend({
         id: 'event-tutorial',
         name: "Create an event",
-        startPath: '/event',
         init: function (editor) {
             var self = this;
             self.steps = [
