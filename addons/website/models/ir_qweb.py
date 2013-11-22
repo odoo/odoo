@@ -10,7 +10,6 @@ import cStringIO
 import datetime
 import itertools
 import logging
-import re
 import urllib2
 import urlparse
 
@@ -216,12 +215,13 @@ class Image(orm.AbstractModel):
             source_element, t_att, g_att, qweb_context, context=context)
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
-        cls = ''
-        if 'class' in options:
-            cls = ' class="%s"' % werkzeug.utils.escape(options['class'])
+        if options is None: options = {}
+        classes = ['img', 'img-responsive'] + options.get('class', '').split()
 
-        return '<img%s src="/website/image?model=%s&field=%s&id=%s"/>' % (
-            cls, record._model._name, field_name, record.id)
+        return '<img class="%s" src="/website/image?model=%s&field=%s&id=%s"/>' % (
+            ' '.join(itertools.imap(werkzeug.utils.escape, classes)),
+            record._model._name,
+            field_name, record.id)
 
     def from_html(self, cr, uid, model, column, element, context=None):
         url = element.find('img').get('src')
