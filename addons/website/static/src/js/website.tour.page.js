@@ -38,7 +38,7 @@
                     placement: 'left',
                     title: "Edit menu",
                     content: "Click here to create a new menu entry and manage options.",
-                    onShow: function () {
+                    triggers: function () {
                         $(document).one('shown.bs.modal', function () {
                             self.movetoStep('add-menu-entry');
                         });
@@ -50,7 +50,7 @@
                     placement: 'left',
                     title: "Add menu entry",
                     content: "Click here to create a new menu entry.",
-                    onShow: function () {
+                    triggers: function () {
                         $(document).one('shown.bs.modal', function () {
                             self.movetoStep('enter-entry-name');
                         });
@@ -78,7 +78,7 @@
                     placement: 'right',
                     title: "Save the page",
                     content: "Save your new page.",
-                    onShow: function () {
+                    triggers: function () {
                         $(document).one('hidden.bs.modal', function () {
                             self.movetoStep('save-menu');
                         });

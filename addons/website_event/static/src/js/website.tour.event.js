@@ -38,7 +38,7 @@
                     placement: 'left',
                     title: "New event",
                     content: "Click here to create an event.",
-                    onShow: function () {
+                    triggers: function () {
                         $(document).one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').click(function () {
                                 self.movetoStep('event-page');

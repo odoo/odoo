@@ -30,7 +30,7 @@
                     placement: 'left',
                     title: "Install an app",
                     content: "Add new apps by customizing your website.",
-                    onShow: function () {
+                    triggers: function () {
                         editor.on('rte:customize_menu_ready', editor, function () {
                             self.movetoStep('install-app');
                         });

@@ -31,7 +31,7 @@
                     placement: 'bottom',
                     title: "Edit this page",
                     content: "Every page of your website can be modified through the <i>Edit</i> button.",
-                    onShow: function () {
+                    triggers: function () {
                         editor.on('tour:editor_bar_loaded', editor, function () {
                             self.movetoStep('add-block');
                         });
@@ -43,7 +43,7 @@
                     placement: 'bottom',
                     title: "Insert building blocks",
                     content: "To add content in a page, you can insert building blocks.",
-                    onShow: function () {
+                    triggers: function () {
                         $('button[data-action=snippet]').click(function () {
                             self.movetoStep('drag-banner');
                         });
@@ -55,7 +55,7 @@
                     placement: 'bottom',
                     title: "Drag & Drop a Banner",
                     content: "Drag the Banner block and drop it in your page.",
-                    onShow: function () {
+                    triggers: function () {
                         self.onSnippetDraggedMoveTo('edit-title');
                     },
                 },
@@ -66,7 +66,7 @@
                     title: "Customize banner's text",
                     content: "Click in the text and start editing it. Click continue once it's done.",
                     template: self.popover({ next: "Continue" }),
-                    onHide: function () {
+                    triggers: function () {
                         var $banner = $("#wrap [data-snippet-id=carousel]:first");
                         if ($banner.length) {
                             $banner.click();
@@ -80,7 +80,7 @@
                     title: "Customize the banner",
                     content: "You can customize characteristic of any blocks through the Customize menu. For instance, change the background of the banner.",
                     template: self.popover({ next: "Continue" }),
-                    onShow: function () {
+                    triggers: function () {
                         $('.dropdown-menu [name=carousel-background]').click(function () {
                             self.movetoStep('save-changes');
                         });

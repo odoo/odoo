@@ -38,7 +38,7 @@
                     placement: 'left',
                     title: "Create a new product",
                     content: "Select 'New Product' to create it and manage its properties to boost your sales.",
-                    onShow: function () {
+                    triggers: function () {
                         $(document).one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').click(function () {
                                 self.movetoStep('product-page');

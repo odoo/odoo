@@ -17,6 +17,7 @@
             });
             this.tour.addSteps(_.map(this.steps, function (step) {
                step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
+               step.onShow = step.triggers;
                return step;
             }));
         },

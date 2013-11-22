@@ -38,7 +38,7 @@
                     placement: 'left',
                     title: "New blog post",
                     content: "Click here to create a blog post.",
-                    onShow: function () {
+                    triggers: function () {
                         $(document).one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').click(function () {
                                 self.movetoStep('post-page');
@@ -53,7 +53,7 @@
                     placement: 'right',
                     title: "Choose the post category",
                     content: "Select the 'News' category and click 'Continue'.",
-                    onShow: function () {
+                    triggers: function () {
                         $('.modal select').change(function () {
                             var $this = $(this);
                             var selected = $this.find("[value="+$this.val()+"]").text();
@@ -92,7 +92,7 @@
                     placement: 'bottom',
                     title: "Layout your blog post",
                     content: "Insert blocks like text-image to layout the body of your blog post.",
-                    onShow: function () {
+                    triggers: function () {
                         $('button[data-action=snippet]').click(function () {
                             self.movetoStep('drag-image-text');
                         });
@@ -104,7 +104,7 @@
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Image Text' block and drop it in your page.",
-                    onShow: function () {
+                    triggers: function () {
                         self.onSnippetDraggedMoveTo('add-text-block');
                     },
                 },
@@ -114,7 +114,7 @@
                     placement: 'bottom',
                     title: "Add another block",
                     content: "Let's add another blog to your post.",
-                    onShow: function () {
+                    triggers: function () {
                         $('button[data-action=snippet]').click(function () {
                             self.movetoStep('drag-text-block');
                         });
@@ -126,7 +126,7 @@
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Text Block' block and drop it below the image block.",
-                    onShow: function () {
+                    triggers: function () {
                         self.onSnippetDraggedMoveTo('activate-text-block-title');
                     },
                 },
@@ -136,11 +136,9 @@
                     placement: 'top',
                     title: "Activate on the title",
                     content: "Click on the title to activate it.",
-                    onShow: function () {
+                    triggers: function () {
                         $('#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]').click(function () {
-                            setTimeout(function () {
-                                self.movetoStep('remove-text-block-title');
-                            }, 50);
+                            self.movetoStep('remove-text-block-title');
                         });
                     },
                 },
