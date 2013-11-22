@@ -218,6 +218,154 @@
             }
         });
 
+        CKEDITOR.plugins.add('linkstyle', {
+            requires: 'panelbutton,floatpanel',
+            init: function (editor) {
+                var label = "Link Style";
+
+                editor.ui.add('LinkStyle', CKEDITOR.UI_PANELBUTTON, {
+                    label: label,
+                    title: label,
+                    icon: '/website/static/src/img/bglink.png',
+                    modes: { wysiwyg: true },
+                    editorFocus: true,
+                    panel: {
+                        css: '/website/static/lib/bootstrap/css/bootstrap.css',
+                        attributes: { 'role': 'listbox', 'aria-label': label },
+                    },
+
+                    types: {
+                        'btn-default': _t("Basic"),
+                        'btn-primary': _t("Primary"),
+                        'btn-success': _t("Success"),
+                        'btn-info': _t("Info"),
+                        'btn-warning': _t("Warning"),
+                        'btn-danger': _t("Danger"),
+                    },
+                    sizes: {
+                        'btn-xs': _t("Extra Small"),
+                        'btn-sm': _t("Small"),
+                        '': _t("Default"),
+                        'btn-lg': _t("Large")
+                    },
+
+                    onRender: function () {
+                        var self = this;
+                        editor.on('selectionChange', function (e) {
+                            var path = e.data.path, el;
+
+                            if (!(e = path.contains('a')) || e.isReadOnly()) {
+                                self.disable();
+                                return;
+                            }
+
+                            self.enable();
+                        });
+                        // no hook where button is available, so wait
+                        // "some time" after render.
+                        setTimeout(function () {
+                            self.disable();
+                        }, 0)
+                    },
+                    enable: function () {
+                        this.setState(CKEDITOR.TRISTATE_OFF);
+                    },
+                    disable: function () {
+                        this.setState(CKEDITOR.TRISTATE_DISABLED);
+                    },
+
+                    onOpen: function () {
+                        var link = get_selected_link(editor);
+                        var id = this._.id;
+                        var block = this._.panel._.panel._.blocks[id];
+                        var $root = $(block.element.$);
+                        $root.find('button').removeClass('active').removeProp('disabled');
+
+                        // enable buttons matching link state
+                        for (var type in this.types) {
+                            if (!this.types.hasOwnProperty(type)) { continue; }
+                            if (!link.hasClass(type)) { continue; }
+
+                            $root.find('button[data-type=types].' + type)
+                                 .addClass('active');
+                        }
+                        var found;
+                        for (var size in this.sizes) {
+                            if (!this.sizes.hasOwnProperty(size)) { continue; }
+                            if (!size || !link.hasClass(size)) { continue; }
+                            found = true;
+                            $root.find('button[data-type=sizes].' + size)
+                                 .addClass('active');
+                        }
+                        if (!found && link.hasClass('btn')) {
+                            $root.find('button[data-type="sizes"][data-set-class=""]')
+                                 .addClass('active');
+                        }
+                    },
+
+                    onBlock: function (panel, block) {
+                        var self = this;
+                        block.autoSize = true;
+
+                        var html = ['<div style="padding: 5px">'];
+                        html.push('<div style="white-space: nowrap">');
+                        _(this.types).each(function (label, key) {
+                            html.push(_.str.sprintf(
+                                '<button type="button" class="btn %s" ' +
+                                        'data-type="types" data-set-class="%s">%s</button>',
+                                key, key, label));
+                        });
+                        html.push('</div>');
+                        html.push('<div style="white-space: nowrap; margin: 5px 0; text-align: center">');
+                        _(this.sizes).each(function (label, key) {
+                            html.push(_.str.sprintf(
+                                '<button type="button" class="btn btn-default %s" ' +
+                                        'data-type="sizes" data-set-class="%s">%s</button>',
+                                key, key, label));
+                        });
+                        html.push('</div>');
+                        html.push('<button type="button" class="btn btn-link btn-block" ' +
+                                          'data-type="reset">Reset</button>');
+                        html.push('</div>');
+
+                        block.element.setHtml(html.join(' '));
+                        var $panel = $(block.element.$);
+                        $panel.on('click', 'button', function () {
+                            self.clicked(this);
+                        });
+                    },
+                    clicked: function (button) {
+                        editor.focus();
+                        editor.fire('saveSnapshot');
+
+                        var $button = $(button),
+                              $link = $(get_selected_link(editor).$);
+                        if (!$link.hasClass('btn')) {
+                            $link.addClass('btn btn-default');
+                        }
+                        switch($button.data('type')) {
+                        case 'reset':
+                            $link.removeClass('btn')
+                                 .removeClass(_.keys(this.types).join(' '))
+                                 .removeClass(_.keys(this.sizes).join(' '));
+                            break;
+                        case 'types':
+                            $link.removeClass(_.keys(this.types).join(' '))
+                                 .addClass($button.data('set-class'));
+                            break;
+                        case 'sizes':
+                            $link.removeClass(_.keys(this.sizes).join(' '))
+                                 .addClass($button.data('set-class'));
+                        }
+                        this._.panel.hide();
+
+                        editor.fire('saveSnapshot');
+                    },
+
+                });
+            }
+        });
+
         CKEDITOR.plugins.add('oeref', {
             requires: 'widget',
 
@@ -653,7 +801,7 @@
                 fillEmptyBlocks: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref',
+                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref,linkstyle',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [{
@@ -665,7 +813,7 @@
                         "Superscript", "TextColor", "BGColor", "RemoveFormat"
                     ]},{
                     name: 'span', items: [
-                        "Link", "Blockquote", "BulletedList",
+                        "Link", "LinkStyle", "Blockquote", "BulletedList",
                         "NumberedList", "Indent", "Outdent"
                     ]},{
                     name: 'justify', items: [
