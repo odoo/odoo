@@ -1246,6 +1246,8 @@ class account_analytic_account(osv.osv):
         return analytic_account_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         vals_for_project = vals.copy()
         for account in self.browse(cr, uid, ids, context=context):
             if not vals.get('name'):

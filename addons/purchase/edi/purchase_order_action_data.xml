@@ -19,7 +19,7 @@
         <!--Email template -->
         <record id="email_template_edi_purchase" model="email.template">
             <field name="name">Purchase Order - Send by mail</field>
-            <field name="email_from">${object.validator.email or ''|safe}</field>
+            <field name="email_from">${(object.validator.email or '')|safe}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
