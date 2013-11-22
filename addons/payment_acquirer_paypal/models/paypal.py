@@ -82,7 +82,7 @@ class AcquirerPaypal(osv.Model):
         for explanation why we use Authorization header instead of urllib2
         password manager
         """
-        res = dict()
+        res = dict.fromkeys(ids, False)
         parameters = urllib.urlencode({'grant_type': 'client_credentials'})
         request = urllib2.Request('https://api.sandbox.paypal.com/v1/oauth2/token', parameters)
         # add other headers (https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/)
@@ -226,7 +226,7 @@ class TxPaypal(osv.Model):
     # SERVER2SERVER RELATED METHODS
     # --------------------------------------------------
 
-    def paypal_s2s_create(self, cr, uid, values, context=None):
+    def _paypal_s2s_send(self, cr, uid, values, cc_values, context=None):
         tx_id = self.create(cr, uid, values, context=context)
         tx = self.browse(cr, uid, tx_id, context=context)
 
@@ -236,25 +236,96 @@ class TxPaypal(osv.Model):
         }
         data = {
             'intent': 'sale',
-            'redirect_urls': {
+            'transactions': [{
+                'amount': {
+                    'total': '%.2f' % tx.amount,
+                    'currency': tx.currency_id.name,
+                },
+                'description': tx.reference,
+            }]
+        }
+        if cc_values:
+            data['payer'] = {
+                'payment_method': 'credit_card',
+                'funding_instruments': [{
+                    'credit_card': {
+                        'number': cc_values['number'],
+                        'type': cc_values['brand'],
+                        'expire_month': cc_values['expiry_mm'],
+                        'expire_year': cc_values['expiry_yy'],
+                        'cvv2': cc_values['cvc'],
+                        'first_name': tx.partner_name,
+                        'last_name': tx.partner_name,
+                        'billing_address': {
+                            'line1': tx.partner_address,
+                            'city': tx.partner_city,
+                            'country_code': tx.partner_country_id.code,
+                            'postal_code': tx.partner_zip,
+                        }
+                    }
+                }]
+            }
+        else:
+            data['redirect_urls'] = {
                 'return_url': 'http://example.com/your_redirect_url/',
                 'cancel_url': 'http://example.com/your_cancel_url/',
             },
-            'payer': {
+            data['payer'] = {
                 'payment_method': 'paypal',
-            },
-            'transactions': [
-                {
-                    'amount': {
-                        'total': '7.47',
-                        'currency': 'USD',
-                    }
-                }
-            ]
-        }
+            }
         data = json.dumps(data)
 
         request = urllib2.Request('https://api.sandbox.paypal.com/v1/payments/payment', data, headers)
 
-        result = urllib2.urlopen(request).read()
-        return result
+        result = urllib2.urlopen(request)
+        print 'result', result
+
+        res2 = result.read()
+        print res2
+        return (tx_id, res2)
+
+    def _paypal_s2s_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+        invalid_parameters = []
+        return invalid_parameters
+
+    def _paypal_s2s_validate(self, cr, uid, tx, data, context=None):
+        values = json.loads(data)
+        status = values.get('state')
+        if status in ['approved']:
+            _logger.info('Validated Paypal s2s payment for tx %s: set as done' % (tx.reference))
+            tx.write({
+                'state': 'done',
+                'date_validate': values.get('udpate_time', fields.datetime.now()),
+                'paypal_txn_id': values['id'],
+            })
+            return True
+        elif status in ['pending', 'expired']:
+            _logger.info('Received notification for Paypal s2s payment %s: set as pending' % (tx.reference))
+            tx.write({
+                'state': 'pending',
+                # 'state_message': data.get('pending_reason', ''),
+                'paypal_txn_id': values['id'],
+            })
+            return True
+        else:
+            error = 'Received unrecognized status for Paypal s2s payment %s: %s, set as error' % (tx.reference, status)
+            _logger.info(error)
+            tx.write({
+                'state': 'error',
+                # 'state_message': error,
+                'paypal_txn_id': values['id'],
+            })
+            return False
+
+    def _paypal_s2s_get_tx_status(self, cr, uid, tx, context=None):
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer %s' % tx.acquirer_id._paypal_s2s_get_access_token()[tx.acquirer_id.id],
+        }
+        data = json.dumps({})
+        url = 'https://api.sandbox.paypal.com/v1/payments/payment/%s' % (tx.paypal_txn_id)
+        print url
+        request = urllib2.Request(url, data, headers)
+        result = urllib2.urlopen(request)
+        print result
+        return True

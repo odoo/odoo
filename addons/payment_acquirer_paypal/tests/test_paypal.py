@@ -7,10 +7,6 @@ from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 from lxml import objectify
-# import requests
-# import urlparse
-import urllib
-import urllib2
 import urlparse
 
 
@@ -37,6 +33,18 @@ class PaypalCommon(PaymentAcquirerCommon):
             })
         # tde+seller@openerp.com - tde+buyer@openerp.com - tde+buyer-it@openerp.com
 
+        # some CC
+        self.amex = (('378282246310005', '123'), ('371449635398431', '123'))
+        self.amex_corporate = (('378734493671000', '123'))
+        self.autralian_bankcard = (('5610591081018250', '123'))
+        self.dinersclub = (('30569309025904', '123'), ('38520000023237', '123'))
+        self.discover = (('6011111111111117', '123'), ('6011000990139424', '123'))
+        self.jcb = (('3530111333300000', '123'), ('3566002020360505', '123'))
+        self.mastercard = (('5555555555554444', '123'), ('5105105105105100', '123'))
+        self.visa = (('4111111111111111', '123'), ('4012888888881881', '123'), ('4222222222222', '123'))
+        self.dankord_pbs = (('76009244561', '123'), ('5019717010103742', '123'))
+        self.switch_polo = (('6331101999990016', '123'))
+
 
 class PaypalServer2Server(PaypalCommon):
 
@@ -44,18 +52,94 @@ class PaypalServer2Server(PaypalCommon):
         cr, uid, context = self.cr, self.uid, {}
 
         res = self.payment_acquirer._paypal_s2s_get_access_token(cr, uid, [self.paypal_id], context=context)
-        print res, res.get('access_token')
+        self.assertTrue(res[self.paypal_id] is not False, 'paypal: did not generate access token')
 
-        res = self.payment_transaction.paypal_s2s_create(
+        tx_id = self.payment_transaction.s2s_create(
             cr, uid, {
                 'amount': 0.01,
                 'acquirer_id': self.paypal_id,
                 'currency_id': self.currency_euro_id,
                 'reference': 'test_reference',
-                'paypal_txn_id': '61E67681CH3238416',
+                'partner_id': self.buyer_id,
+            }, {
+                'number': self.visa[0][0],
+                'cvc': self.visa[0][1],
+                'brand': 'visa',
+                'expiry_mm': 9,
+                'expiry_yy': 2015,
             }, context=context
         )
-        print res
+
+        tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
+        print tx.paypal_txn_id
+        self.payment_transaction.s2s_get_tx_status(cr, uid, tx_id, context=context)
+# {
+#     "id":"PAY-2LL14628DB722091TKKHXZHQ",
+#     "create_time":"2013-11-22T15:47:42Z",
+#     "update_time":"2013-11-22T15:48:05Z",
+#     "state":"pending",
+#     "intent":"sale",
+#     "payer": {
+#         "payment_method":"credit_card",
+#         "funding_instruments": [{
+#             "credit_card": {
+#                 "type":"visa",
+#                 "number":"xxxxxxxxxxxx1111",
+#                 "expire_month":"9",
+#                 "expire_year":"2015",
+#                 "first_name":"Norbert Buyer",
+#                 "last_name":"Norbert Buyer",
+#                 "billing_address": {
+#                     "line1":"Huge Street 2/543",
+#                     "city":"Sin City",
+#                     "postal_code":"1000",
+#                     "country_code":"BE"
+#                 }
+#             }
+#         }]
+#     },
+#     "transactions": [{
+#         "amount": {
+#             "total":"0.01",
+#             "currency":"EUR",
+#             "details": {
+#                 "subtotal":"0.01"
+#             }
+#         },
+#         "related_resources": [{
+#             "sale": {
+#                 "id":"4KU52719R3958614J",
+#                 "create_time":"2013-11-22T15:47:42Z",
+#                 "update_time":"2013-11-22T15:48:05Z",
+#                 "state":"pending",
+#                 "amount": {
+#                     "total":"0.01",
+#                     "currency":"EUR"
+#                 },
+#                 "pending_reason":"multicurrency",
+#                 "parent_payment":"PAY-2LL14628DB722091TKKHXZHQ",
+#                 "links": [{
+#                     "href":"https://api.sandbox.paypal.com/v1/payments/sale/4KU52719R3958614J",
+#                     "rel":"self",
+#                     "method":"GET"
+#                     },{
+#                     "href":"https://api.sandbox.paypal.com/v1/payments/sale/4KU52719R3958614J/refund",
+#                     "rel":"refund",
+#                     "method":"POST"
+#                     },{
+#                     "href":"https://api.sandbox.paypal.com/v1/payments/payment/PAY-2LL14628DB722091TKKHXZHQ",
+#                     "rel":"parent_payment",
+#                     "method":"GET"
+#                     }]
+#                 }
+#             }]
+#         }],
+#     "links": [{
+#         "href":"https://api.sandbox.paypal.com/v1/payments/payment/PAY-2LL14628DB722091TKKHXZHQ",
+#         "rel":"self",
+#         "method":"GET"
+#     }]
+# }
 
 
 class PaypalForm(PaypalCommon):
