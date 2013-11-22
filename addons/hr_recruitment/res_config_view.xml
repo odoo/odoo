@@ -27,7 +27,7 @@
                 </div>
                 <xpath expr="//div[@name='hr_recruitment']" position="after">
                     <div attrs="{'invisible': ['|',('module_hr_recruitment','=',False),('alias_domain', '=', False)]}">
-                        <label string="Your job email address"/>
+                        <label string="Default job email address"/>
                         <field name="alias_prefix" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
                         @
                         <field name="alias_domain" class="oe_inline" readonly="1"/>

@@ -485,7 +485,12 @@ class hr_job(osv.osv):
                                          "create new applicants for this job position."),
         'application_count': fields.function(_application_count, type='integer', string="Total Applications"),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
-        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
+        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int'),
+        'user_id': fields.many2one('hr.employee', 'Recruitment Responsible'),
+    }
+
+    _defaults = {
+        'alias_name':lambda self,cr,uid,c: self.pool.get('hr.config.settings').get_default_alias_prefix(cr,uid,uid,c)['alias_prefix']
     }
 
     def _auto_init(self, cr, context=None):

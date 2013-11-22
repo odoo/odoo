@@ -344,7 +344,7 @@
                 </div>
             </group>
             <xpath expr="//field[@name='department_id']" position="after">
-                    <label for="alias_name" string="Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                    <label for="alias_name" string="Specific Email Address" attrs="{'invisible': [('alias_domain', '=', False)]}" help ="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                     <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                         <field name="alias_id" class="oe_read_only oe_inline"
                                 string="Email Alias" required="0"/>
@@ -352,6 +352,9 @@
                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                         </div>
                     </div>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="user_id" class="oe_inline"/>
             </xpath>
             <div name="buttons" position="inside">
                 <button string="Applications" name="%(action_hr_job_applications)d" type="action"/>
@@ -391,10 +394,10 @@
                                     </ul>
                                 </div>
                                 <div class = "oe_kanban_content">
-                                    <t t-if="record.manager_id.raw_value">
-                                        <img t-att-src="kanban_image('hr.employee', 'image_medium', record.manager_id.raw_value[0])" t-att-title="record.manager_id.value" class="oe_kanban_avatar oe_job_avatar"/>
+                                    <t t-if="record.user_id.raw_value">
+                                        <img t-att-src="kanban_image('hr.employee', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
-                                    <t t-if="record.manager_id.raw_value === false">
+                                    <t t-if="record.user_id.raw_value === false">
                                         <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
                                     <div class="oe_job_detail">
@@ -402,7 +405,7 @@
                                             <field name="name"/>
                                         </div>
                                         <div class="oe_job oe_department oe_kanban_ellipsis">
-                                            <field name="department_id"/>
+                                            <field name="user_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
                                             </span>
