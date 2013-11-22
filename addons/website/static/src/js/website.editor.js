@@ -90,10 +90,18 @@
                         });
 
                     var position = $el.position();
+                    // http://bugs.jquery.com/ticket/5445#comment:6
+                    // if the image has margin: x auto for centering, FF & IE
+                    // will report top/left as the "correct" value and
+                    // marginTop/marginLeft at "0px", webkit browsers will
+                    // report top/left as 0-ish and set marginTop and
+                    // marginLeft
+                    var image_top = position.top + parseInt($el.css('marginTop'), 10);
+                    var image_left = position.left + parseInt($el.css('marginLeft'), 10);
                     $btn.css({
                         position: 'absolute',
-                        top: $el.height() / 2 + position.top - $btn.outerHeight() / 2,
-                        left: $el.width() / 2 + position.left - $btn.outerWidth() / 2,
+                        top: $el.height() / 2 + image_top - $btn.outerHeight() / 2,
+                        left: $el.width() / 2 + image_left - $btn.outerWidth() / 2,
                     });
                 }).on('mouseleave', 'img', function (e) {
                     var $button = $(previousSelection.$).next('button');
