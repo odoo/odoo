@@ -501,23 +501,38 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
-        this.$el.find('.oe_list_content').append(
-            this.groups.render(function () {
-                if (self.dataset.index == null) {
-                    if (self.records.length) {
+        
+        setTimeout(function() {
+            var $group;
+            try {
+                $group = self.groups.render(function () {
+                    // NOTE using == instead of === is wanted.
+                    if (self.dataset.index == null) {   // jshint ignore:line
+                        if (self.records.length) {
+                            self.dataset.index = 0;
+                        }
+                    } else if (self.dataset.index >= self.records.length) {
                         self.dataset.index = 0;
                     }
-                } else if (self.dataset.index >= self.records.length) {
-                    self.dataset.index = 0;
-                }
 
-                self.compute_aggregates();
-                reloaded.resolve();
-            }));
-        this.do_push_state({
-            page: this.page,
-            limit: this._limit
-        });
+                    self.compute_aggregates();
+                });
+            } finally {
+                // ensure that the deferred is always rejected/resolved to quit the 
+                // synchronized block properly.
+                if (_.isUndefined($group)) {
+                    reloaded.reject();
+                } else {
+                    reloaded.resolve();
+                    self.$el.find('.oe_list_content').append($group);
+                    self.do_push_state({
+                        page: self.page,
+                        limit: self._limit
+                    });
+                }
+            }
+
+        }, 0);
         return reloaded.promise();
     }),
     reload: function () {
