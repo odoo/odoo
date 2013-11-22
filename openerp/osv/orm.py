@@ -5006,30 +5006,29 @@ class BaseModel(object):
                     target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
             # and for translatable fields we keep them for copy
             elif field_def.get('translate'):
-
                 if field_name in self._columns:
                     trans_name = self._name + "," + field_name
-                    res_id = new_id
-                
+                    target_id = new_id
+                    source_id = old_id
                 elif field_name in self._inherit_fields:
                     trans_name = self._inherit_fields[field_name][0] + "," + field_name
                     # get the id of the parent record to set the translation
                     inherit_field_name = self._inherit_fields[field_name][1]
-                    res_id = self.read(cr, uid, [new_id], [inherit_field_name], context=context)[0][inherit_field_name][0]
-
+                    old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context)
+                    target_id = new_record[inherit_field_name].id
+                    source_id = old_record[inherit_field_name].id
                 else:
                     continue
 
                 trans_ids = trans_obj.search(cr, uid, [
                         ('name', '=', trans_name),
-                        ('res_id', '=', old_id)
+                        ('res_id', '=', source_id)
                 ])
-                records = trans_obj.read(cr, uid, trans_ids, context=context)
-                for record in records:
+                for record in trans_obj.read(cr, uid, trans_ids, context=context):
                     del record['id']
                     # remove source to avoid triggering _set_src
                     del record['source']
-                    record.update({'res_id': res_id})
+                    record.update({'res_id': target_id})
                     trans_obj.create(cr, uid, record, context=context)
 
 
