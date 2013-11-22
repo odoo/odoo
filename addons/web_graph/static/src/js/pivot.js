@@ -1,5 +1,4 @@
 
-
 var PivotTable = openerp.web.Class.extend({
 	init: function (options) {
 		this.rows = [];
@@ -198,7 +197,6 @@ var PivotTable = openerp.web.Class.extend({
                 });
                 col.is_expanded = true;
         });
-
 	},
 
 	make_col: function (groups, parent) {
@@ -216,6 +214,15 @@ var PivotTable = openerp.web.Class.extend({
 		return new_col.id;
 	},
 
+	get_chart_data: function () {
+		var self = this;
+		var values = _.map(this.rows[0].children, function (pt) {
+			var val = self.get_value(pt.id, 2);
+			return {x: pt.name, y: val};
+		});
+		return [{key: 'Bar chart', values: values}];
+
+	},
 
 });
 

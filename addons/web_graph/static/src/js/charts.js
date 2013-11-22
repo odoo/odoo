@@ -11,14 +11,9 @@ var formatter = function (measure) {
 
 
 var Charts = {
-    bar_chart : function (groups, measure) {
-        var formatted_data = [{
-                key: 'Bar chart',
-                values: _.map(groups, formatter(measure)),
-            }];
-
+    bar_chart : function (data) {
         nv.addGraph(function () {
-            var chart = nv.models.discreteBarChart()
+          var chart = nv.models.discreteBarChart()
                 .tooltips(false)
                 .showValues(true)
                 .staggerLabels(true)
@@ -26,7 +21,7 @@ var Charts = {
                 .height(400);
 
             d3.select('.graph_main_content svg')
-                .datum(formatted_data)
+                .datum(data)
                 .attr('width', 650)
                 .attr('height', 400)
                 .call(chart);
@@ -36,12 +31,7 @@ var Charts = {
         });
     },
 
-    line_chart: function (groups, measure, measure_label) {
-        var formatted_data = [{
-                key: measure_label,
-                values: _.map(groups, formatter(measure))
-            }];
-
+    line_chart: function (data) {
         nv.addGraph(function () {
             var chart = nv.models.lineChart()
                 .x(function (d,u) { return u; })
@@ -52,16 +42,14 @@ var Charts = {
             d3.select('.graph_main_content svg')
                 .attr('width', 600)
                 .attr('height', 300)
-                .datum(formatted_data)
+                .datum(data)
                 .call(chart);
 
             return chart;
           });
     },
 
-    pie_chart: function (groups, measure) {
-        var formatted_data = _.map(groups, formatter(measure));
-
+    pie_chart: function (data) {
         nv.addGraph(function () {
             var chart = nv.models.pieChart()
                 .color(d3.scale.category10().range())
@@ -69,7 +57,7 @@ var Charts = {
                 .height(400);
 
             d3.select('.graph_main_content svg')
-                .datum(formatted_data)
+                .datum(data[0].values)
                 .transition().duration(1200)
                 .attr('width', 650)
                 .attr('height', 400)
