@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-11-15 12:31+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
+"PO-Revision-Date: 2013-11-21 10:19+0000\n"
+"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:57+0000\n"
+"X-Launchpad-Export-Date: 2013-11-22 06:02+0000\n"
 "X-Generator: Launchpad (build 16831)\n"
 
 #. module: account_asset
@@ -328,7 +328,7 @@ msgstr "Kategorija Osnovnega sredstva"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in closed state"
-msgstr "Osnovno sredstvo v statusu \"zaprto\""
+msgstr "Osnovno sredstvo v statusu \"Izven uporabe\""
 
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
@@ -419,12 +419,12 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in running state"
-msgstr "Osnovna sredstva v upurabi"
+msgstr "Osnovna sredstva v uporabi"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Closed"
-msgstr "Zaprto"
+msgstr "Izven uporabe"
 
 #. module: account_asset
 #: help:account.asset.asset,state:0
@@ -435,8 +435,11 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
-"Ko kreirate osnovno sredstvo ima status \"Osnutek\".\n"
-"Ko ga potrdite ima status \"V uporabi\"."
+"Ko kreirate osnovno sredstvo ima status \"V pripravi\".\n"
+"Ko ga potrdite ima status \"V uporabi\".\n"
+"Osnovno sredstvo lahko ročno določite \"Izven uporabe\", ko je amortizacija "
+"zaključena. Ko je knjižena prva amortizacija, dobi osnovno sredstvo "
+"avtomatično status \"V uporabi\"."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
@@ -546,7 +549,7 @@ msgstr "Račun"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Set to Close"
-msgstr "Zapri"
+msgstr "Nastvi na \"Izven uporabe\""
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
@@ -621,7 +624,7 @@ msgstr "Naziv osnovnega sredstva"
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
 msgid "Skip Draft State"
-msgstr "Preskoči osnutek"
+msgstr "Preskoči status \"V pripravi\""
 
 #. module: account_asset
 #: view:account.asset.category:0
