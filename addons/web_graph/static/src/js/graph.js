@@ -197,9 +197,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     draw_table: function () {
+        console.log("cols",this.pivot_table.cols);
         this.table.empty();
         this.draw_top_headers();
-        _.each(this.pivot_table.rows_array(), this.proxy('draw_row'));
+        _.each(this.pivot_table.rows, this.proxy('draw_row'));
     },
 
     make_border_cell: function (colspan, rowspan) {
@@ -219,7 +220,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     draw_top_headers: function () {
         var self = this,
             pivot = this.pivot_table,
-            height = pivot.get_max_path_length(pivot.cols),
+            height = _.max(_.map(pivot.cols, function(g) {return g.path.length;})),
             header_cells = [[this.make_border_cell(1, height)]];
 
         function set_dim (cols) {
@@ -239,8 +240,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
 
         function make_cells (queue, level) {
-            var col = queue.shift();
-            queue = queue.concat(col.children);
+            var col = queue[0];
+            queue = _.rest(queue).concat(col.children);
             if (col.path.length == level) {
                 _.last(header_cells).push(make_col_header(col));
             } else {
@@ -252,12 +253,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
         }
 
-        set_dim(pivot.cols);  // add width and height info to columns headers
-
-        if (pivot.cols.children.length === 0) {
-            make_cells([pivot.cols], 0);
+        set_dim(pivot.cols[0]);  // add width and height info to columns headers
+        if (pivot.cols[0].children.length === 0) {
+            make_cells(pivot.cols, 0);
         } else {
-            make_cells(pivot.cols.children, 1);
+            make_cells(pivot.cols[0].children, 1);
         }
 
         _.each(header_cells, function (cells) {
@@ -278,9 +278,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         html_row.append(row_header);
 
-        _.each(pivot.cols_array(), function (col) {
-            var cell = $('<td></td>').append(pivot.get_value(row.id, col.id));
-            html_row.append(cell)
+        _.each(pivot.cols, function (col) {
+            if (col.children.length === 0) {
+                var cell = $('<td></td>').append(pivot.get_value(row.id, col.id));
+                html_row.append(cell);
+            }
         });
         this.table.append(html_row);
     }
