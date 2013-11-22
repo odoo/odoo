@@ -52,7 +52,8 @@ class hr_applicant_settings(osv.osv_memory):
     def set_default_alias_prefix(self, cr, uid, ids, context=None):
         mail_alias = self.pool.get('mail.alias')
         record = self.browse(cr, uid, ids[0], context=context)
-        if record.alias_prefix:
+        default_alias_prefix = self.get_default_alias_prefix(cr, uid, ids, context=context)['alias_prefix']
+        if record.alias_prefix != default_alias_prefix:
             try:
                 alias = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'mail_alias_jobs')
                 if alias:
