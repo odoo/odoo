@@ -27,7 +27,34 @@ instance.web_graph.GraphView = instance.web.View.extend({
         'click .graph_mode_selection li' : function (event) {
             event.preventDefault();
             this.mode = event.target.attributes['data-mode'].nodeValue;
-            console.log("change mode",this.mode);
+        },
+
+        'click .web_graph_click' : function (event) {
+            event.preventDefault();
+            if (event.target.attributes['data-row-id'] !== undefined) {
+                this.handle_header_event({type:'row', event:event});
+
+            }
+            if (event.target.attributes['data-col-id'] !== undefined) {
+                this.handle_header_event({type:'col', event:event});
+            }
+        },
+
+        'click a.field-selection' : function (event) {
+            var id,
+                field_id = event.target.attributes['data-field-id'].nodeValue;
+            event.preventDefault();
+            this.dropdown.remove();
+            if (event.target.attributes['data-row-id'] !== undefined) {
+                id = event.target.attributes['data-row-id'].nodeValue;
+                this.pivot_table.expand_row(id, field_id)
+                    .then(this.proxy('draw_table'));
+            } 
+            if (event.target.attributes['data-col-id'] !== undefined) {
+                id = event.target.attributes['data-col-id'].nodeValue;
+                this.pivot_table.expand_col(id, field_id)
+                    .then(this.proxy('draw_table'));
+            } 
         },
     },
 
@@ -123,9 +150,56 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return this._super();
     },
 
+
+    handle_header_event: function (options) {
+        var pivot = this.pivot_table,
+            id = options.event.target.attributes['data-' + options.type + '-id'].nodeValue,
+            header = pivot['get_' + options.type](id);
+
+        if (header.is_expanded) {
+            pivot['fold_' + options.type](header);
+            this.draw_table();
+        } else {
+            if (header.path.length < pivot[options.type + '_groupby'].length) {
+                // expand the corresponding header
+                var field = pivot[options.type + '_groupby'][header.path.length];
+                pivot['expand_' + options.type](id, field)
+                    .then(this.proxy('draw_table'));
+            } else {
+                // display dropdown to query field to expand
+                this.display_dropdown({id:header.id, 
+                                       type: options.type,
+                                       target: $(event.target), 
+                                       x: event.pageX, 
+                                       y: event.pageY});
+            }
+        }
+
+    },
+
+    display_dropdown: function (options) {
+        var self = this,
+            pivot = this.pivot_table,
+            already_grouped = pivot.row_groupby.concat(pivot.col_groupby),
+            possible_groups = _.difference(self.data.important_fields, already_grouped),
+            dropdown_options = {
+                fields: _.map(possible_groups, function (field) {
+                    return {id: field, value: self.data.fields[field].string};
+            })};
+        dropdown_options[options.type + '_id'] = options.id;
+
+        this.dropdown = $(QWeb.render('field_selection', dropdown_options));
+        options.target.after(this.dropdown);
+        this.dropdown.css({position:'absolute',
+                           left:options.x,
+                           top:options.y});
+        $('.field-selection').next('.dropdown-menu').toggle();
+    },
+
     draw_table: function () {
+        this.table.empty();
         this.draw_top_headers();
-        this.pivot_table.iterate(this.pivot_table.rows, this.proxy('draw_row'));
+        _.each(this.pivot_table.rows_array(), this.proxy('draw_row'));
     },
 
     make_border_cell: function (colspan, rowspan) {
@@ -148,16 +222,25 @@ instance.web_graph.GraphView = instance.web.View.extend({
             height = pivot.get_max_path_length(pivot.cols),
             header_cells = [[this.make_border_cell(1, height)]];
 
+        function set_dim (cols) {
+            _.each(cols.children, set_dim);
+            if (cols.children.length === 0) {
+                cols.height = height - cols.path.length + 1;
+                cols.width = 1;
+            } else {
+                cols.height = 1;
+                cols.width = _.reduce(cols.children, function (sum,c) { return sum + c.width;}, 0);
+            }
+        }
+
         function make_col_header (col) {
             var cell = self.make_border_cell(col.width, col.height);
-            return cell.append(self.make_header_title(col))
-                       .attr('data-col-id', col.id);
+            return cell.append(self.make_header_title(col).attr('data-col-id', col.id));
         }
 
         function make_cells (queue, level) {
             var col = queue.shift();
             queue = queue.concat(col.children);
-            console.log("col",col, level);
             if (col.path.length == level) {
                 _.last(header_cells).push(make_col_header(col));
             } else {
@@ -168,6 +251,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 make_cells(queue, level);
             }
         }
+
+        set_dim(pivot.cols);  // add width and height info to columns headers
 
         if (pivot.cols.children.length === 0) {
             make_cells([pivot.cols], 0);
@@ -183,8 +268,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
     draw_row: function (row) {
         var pivot = this.pivot_table,
             html_row = $('<tr></tr>'),
-            row_header = $('<td></td>')
-                .append(this.make_header_title(row))
+            row_header = this.make_border_cell(1,1)
+                .append(this.make_header_title(row).attr('data-row-id', row.id))
                 .addClass('graph_border');
 
         for (var i in _.range(row.path.length)) {
@@ -193,7 +278,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         html_row.append(row_header);
 
-        pivot.iterate(pivot.cols, function (col) {
+        _.each(pivot.cols_array(), function (col) {
             var cell = $('<td></td>').append(pivot.get_value(row.id, col.id));
             html_row.append(cell)
         });
