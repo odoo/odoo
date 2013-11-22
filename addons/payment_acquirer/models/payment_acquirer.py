@@ -7,6 +7,14 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+def _partner_format_address(address1=False, address2=False):
+    return ' '.join((address1 or '', address2 or ''))
+
+
+def _partner_split_name(partner_name):
+    return [' '.join(partner_name.split()[-1:]), ' '.join(partner_name.split()[:-1])]
+
+
 class ValidationError(ValueError):
     """ Used for value error when validating transaction data coming from acquirers. """
     pass
@@ -237,7 +245,7 @@ class PaymentTransaction(osv.Model):
                 'partner_lang': partner.lang,
                 'partner_email': partner.email,
                 'partner_zip': partner.zip,
-                'partner_address': ' '.join((partner.street or '', partner.street2 or '')).strip(),
+                'partner_address': _partner_format_address(partner.street, partner.street2),
                 'partner_city': partner.city,
                 'partner_country_id': partner.country_id.id,
                 'partner_phone': partner.phone,
