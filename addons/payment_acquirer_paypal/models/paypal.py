@@ -156,6 +156,7 @@ class TxPaypal(osv.Model):
         return self.browse(cr, uid, tx_ids[0], context=context)
 
     def _paypal_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
         invalid_parameters = []
         if data.get('notify_version')[0] != '2.6':
             _logger.warning(
@@ -205,6 +206,7 @@ class TxPaypal(osv.Model):
             _logger.info('Received notification for Paypal payment %s: set as pending' % (tx.reference))
             tx.write({
                 'state': 'pending',
+                'state_message': data.get('pending_reason', ''),
                 'paypal_txn_id': data['txn_id'],
                 'paypal_txn_type': data.get('express_checkout'),
             })
