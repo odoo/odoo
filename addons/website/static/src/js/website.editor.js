@@ -103,19 +103,23 @@
                         top: $el.height() / 2 + image_top - $btn.outerHeight() / 2,
                         left: $el.width() / 2 + image_left - $btn.outerWidth() / 2,
                     });
+                    $el.css('opacity', 0.75);
                 }).on('mouseleave', 'img', function (e) {
-                    var $button = $(previousSelection.$).next('button');
+                    var $previous = $(previousSelection.$);
+                    var $button = $previous.next('button');
                     $button.css('visibility', 'hidden');
                     var el = document.elementFromPoint(e.clientX, e.clientY);
                     $button.css('visibility', '');
                     if (el === this) { return; }
                     $button.remove();
+                    $previous.css('opacity', '');
                     previousSelection = null;
                 });
                 editor.on('destroy', function (evt) {
-                    if (previousSelection) {
-                        $('.image-edit-button').remove();
-                    }
+                    if (!previousSelection) { return; }
+                    $('.image-edit-button')
+                        .prev().css('opacity', '').end()
+                        .remove();
                 });
 
                 //noinspection JSValidateTypes
