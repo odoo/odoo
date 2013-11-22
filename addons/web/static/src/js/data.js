@@ -1090,6 +1090,157 @@ instance.web.DropMisordered = instance.web.Class.extend({
     }
 });
 
+instance.web.SimpleIndexedDB = instance.web.Class.extend({
+    /** 
+     * A simple wrapper around IndexedDB that provides an asynchronous 
+     * localStorage-like Key-Value api that persists between browser 
+     * restarts.
+     *
+     * It will not work if the browser doesn't support a recent version 
+     * of IndexedDB, and it may fail if the user refuses db access.
+     *
+     * All instances of SimpleIndexedDB will by default refer to the same
+     * IndexedDB database, if you want to pick another one, use the 'name'
+     * option on instanciation.
+     */
+    init: function(opts){
+        var self = this;
+        var opts = opts || {};
+
+        this.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+        this.db = undefined;
+        this._ready = new $.Deferred();
+
+        if(this.indexedDB && this.indexedDB.open){
+            var request = this.indexedDB.open( opts.name || "SimpleIndexedDB" ,1);
+
+            request.onerror = function(event){
+                self.db = null;
+                self._ready.reject(event.target.error);
+            };
+
+            request.onsuccess = function(event){
+                self.db = request.result;
+                self._ready.resolve();
+            };
+
+            request.onupgradeneeded = function(event){
+                self.db = event.target.result;
+
+                var objectStore = self.db.createObjectStore("keyvals", { keyPath:"key" });
+                self._ready.resolve();
+            };
+        }else{
+            this.db = null;
+            this._ready.reject({type:'UnknownError', message:'IndexedDB is not supported by your Browser'});
+        }
+    },
+
+    /**
+     * returns true if the browser supports the necessary IndexedDB API 
+     * (but doesn't tell if the db can be created, check ready() for that) 
+     */
+    isSupportedByBrowser: function(){
+        return this.indexedDB && this.indexedDB.open;
+    },
+
+    /**
+     * returns a deferred that resolves when the db has been successfully
+     * initialized. done/failed callbacks are optional.
+     */
+    ready: function(done,failed){
+        this._ready.then(done,failed);
+        return this._ready.promise();
+    },
+
+    /**
+     * fetches the value associated to 'key' in the db. if the key doesn't
+     * exists, it returns undefined. The returned value is provided as a 
+     * deferred, or as the first parameter of the optional 'done' callback.
+     */
+    getItem: function(key,done,failed){
+        var self = this;
+        var def = new $.Deferred();
+            def.then(done,failed);
+
+        this._ready.then(function(){
+                var request = self.db.transaction(["keyvals"],"readwrite")
+                                     .objectStore("keyvals")
+                                     .get(key);
+
+                request.onsuccess = function(){
+                    def.resolve(request.result ? request.result.value : undefined);
+                };
+
+                request.onerror = function(event){ 
+                    def.reject(event.target.error);
+                };
+            },function(){
+                def.reject({type:'UnknownError', message:'Could not initialize the IndexedDB database'});
+            });
+
+        return def.promise();
+    },
+    
+    /**
+     * Associates a value to 'key' in the db, overwriting previous value if
+     * necessary. Contrary to localStorage, the value is not limited to strings and
+     * can be any javascript object, even with cyclic references !
+     *
+     * Be sure to check for failure as the user may refuse to have data localy stored.
+     */
+    setItem: function(key,value,done,failed){
+        var self = this;
+        var def = new $.Deferred();
+            def.then(done,failed);
+
+        this._ready.then(function(){
+                var request = self.db.transaction(["keyvals"],"readwrite")
+                                     .objectStore("keyvals")
+                                     .put( {key:key, value:value} );
+
+                request.onsuccess = function(){
+                    def.resolve();
+                };
+
+                request.onerror = function(event){ 
+                    def.reject(event.target.error);
+                };
+            },function(){
+                def.reject({type:'UnknownError', message:'Could not initialize the IndexedDB database'});
+            });
+
+        return def.promise();
+    },
+
+    /**
+     * Removes the value associated with 'key' from the db. 
+     */
+    removeItem: function(key,done,failed){
+        var self = this;
+        var def = new $.Deferred();
+            def.then(done,failed);
+
+        this._ready.then(function(){
+                var request = self.db.transaction(["keyvals"],"readwrite")
+                                  .objectStore("keyvals")
+                                  .delete(key);
+
+                request.onsuccess = function(){
+                    def.resolve();
+                };
+
+                request.onerror = function(event){ 
+                    def.reject(event.target.error);
+                };
+            },function(){
+                def.reject({type:'UnknownError', message:'Could not initialize the IndexedDB database'});
+            });
+
+        return def.promise();
+    },
+});
+
 })();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
