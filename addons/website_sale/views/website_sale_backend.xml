@@ -60,10 +60,11 @@
                 </div>
             </xpath>
 
-            <xpath expr="//group[@string='Product Type']" position="inside">
-                    <field name="website_published"/>
+            <xpath expr="//div[@name='options']" position="inside">
+                <field name="website_published"/>
+                <label for="website_published"/>
             </xpath>
-            <xpath expr="//page[@string='Information']" position="inside">
+            <xpath expr="//field[@name='description']" position="before">
                 <group colspan="4" string="Website Options">
                     <field name="suggested_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>

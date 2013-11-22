@@ -19,10 +19,10 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='property_account_expense']" position="after">
+                <field name="property_account_expense" position="after">
                     <field name="property_account_creditor_price_difference" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
                     <newline/>
-                </xpath>
+                </field>
              </field>
         </record>
 
