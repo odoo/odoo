@@ -1223,6 +1223,26 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
 });
 
+instance.web.FullscreenWidget = instance.web.Widget.extend({
+    /**
+     * Widgets extending the FullscreenWidget will be displayed fullscreen,
+     * and will have a fixed 1:1 zoom level on mobile devices.
+     */
+    start: function(){
+        if(!$('#oe-fullscreenwidget-viewport').length){
+            $('head').append('<meta id="oe-fullscreenwidget-viewport" name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">');
+        }
+        instance.webclient.set_content_full_screen(true);
+        return this._super();
+    },
+    destroy: function(){
+        instance.webclient.set_content_full_screen(false);
+        $('#oe-fullscreenwidget-viewport').remove();
+        return this._super();
+    },
+
+});
+
 instance.web.Client = instance.web.Widget.extend({
     init: function(parent, origin) {
         instance.client = instance.webclient = this;
