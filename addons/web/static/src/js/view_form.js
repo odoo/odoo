@@ -722,12 +722,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.save().done(function(result) {
             self.trigger("save", result);
-            self.to_view_mode();
-        }).then(function(result) {
-            var parent = self.ViewManager.ActionManager.getParent();
-            if(parent){
-                parent.menu.do_reload_needaction();
-            }
+            self.reload().then(function() {
+                self.to_view_mode();
+                var parent = self.ViewManager.ActionManager.getParent();
+                if(parent){
+                    parent.menu.do_reload_needaction();
+                }
+            });
         });
     },
     on_button_cancel: function(event) {
@@ -891,17 +892,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @param {Object} r result of the write function.
      */
     record_saved: function(r) {
-        var self = this;
+        this.trigger('record_saved', r);
         if (!r) {
             // should not happen in the server, but may happen for internal purpose
-            this.trigger('record_saved', r);
             return $.Deferred().reject();
-        } else {
-            return $.when(this.reload()).then(function () {
-                self.trigger('record_saved', r);
-                return r;
-            });
         }
+        return r;
     },
     /**
      * Updates the form' dataset to contain the new record:
