@@ -12,7 +12,7 @@
 
     website.PageTour = website.Tour.extend({
         id: 'page-tutorial',
-        name: "Add a new page",
+        name: "Add a page",
         init: function (editor) {
             var self = this;
             self.steps = [

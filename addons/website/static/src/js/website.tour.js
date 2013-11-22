@@ -64,7 +64,7 @@
         redirect: function (url) {
             url = url || new website.UrlParser(window.location.href);
             if (this.startPath && url.pathname !== this.startPath) {
-                var newUrl = this.startPath + (url.search ? (url.search + "&") : "?") + this.id + "=true"
+                var newUrl = this.startPath + (url.search ? (url.search + "&") : "?") + this.id + "=true";
                 window.location.replace(newUrl);
             }
         },

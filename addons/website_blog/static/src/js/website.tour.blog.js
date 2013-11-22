@@ -54,6 +54,23 @@
                     placement: 'right',
                     title: "Choose the post category",
                     content: "Select the 'News' category and click 'Continue'.",
+                    onShow: function () {
+                        $('.modal select').change(function () {
+                            var $this = $(this);
+                            var selected = $this.val()
+                            var name = $this.find("[value="+selected+"]").text();
+                            if (name.toLowerCase() === 'news') {
+                                self.movetoStep('continue-category');
+                            }
+                        });
+                    },
+                },
+                {
+                    stepId: 'continue-category',
+                    element: '.modal button.btn-primary',
+                    placement: 'right',
+                    title: "Choose the post category",
+                    content: "Click 'Continue' to create the post.",
                 },
                 {
                     stepId: 'post-page',
