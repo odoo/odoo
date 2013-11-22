@@ -125,87 +125,66 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     draw_table: function () {
         this.draw_top_headers();
-        _.each(this.pivot_table.rows, this.proxy('draw_row'));
+        this.pivot_table.iterate(this.pivot_table.rows, this.proxy('draw_row'));
+    },
+
+    make_border_cell: function (colspan, rowspan) {
+        return $('<td></td>').addClass('graph_border')
+                             .attr('colspan', colspan)
+                             .attr('rowspan', rowspan);
+    },
+
+    make_header_title: function (header) {
+        return $('<span> </span>')
+            .addClass('web_graph_click')
+            .attr('href', '#')
+            .addClass((header.is_expanded) ? 'icon-minus-sign' : 'icon-plus-sign')
+            .append(header.name);
     },
 
     draw_top_headers: function () {
         var self = this,
-            pivot = this.pivot_table;
+            pivot = this.pivot_table,
+            height = pivot.get_max_path_length(pivot.cols),
+            header_cells = [[this.make_border_cell(1, height)]];
 
-        function get_column_tree(cols, level) {
-            var height, 
-                width, 
-                children = _.map(cols[0].children, function (child) {
-                    get_column_tree(child, level - 1);
-                });
-            if (children.length > 0) {
-                height = 1;
-                width = _.reduce(children, function (x,y) { return x + y;}, 0);
-            } else {
-                height = level;
-                width = 1;
-            }
-            return {level: level, 
-                    width: width,
-                    height: height,
-                    col:cols[0],
-                    children: children};
+        function make_col_header (col) {
+            var cell = self.make_border_cell(col.width, col.height);
+            return cell.append(self.make_header_title(col))
+                       .attr('data-col-id', col.id);
         }
-
-        function make_cell(elem) {
-            var title = $('<span> </span>')
-                .addClass('web_graph_click')
-                .attr('href', '#')
-                .attr('data-col-id', elem.col.id)
-                .addClass((elem.col.is_expanded) ? 'icon-minus-sign' : 'icon-plus-sign')
-                .append(elem.col.name);
-            return $('<td></td>').addClass('graph_border')
-                                 .append(title)
-                                 .attr('rowspan', elem.height)
-                                 .attr('colspan', elem.width);
-        }
-
-        var height = _.max(_.map(pivot.cols, function(g) {return g.path.length;}));
-        height = (height === 0) ? 1 : height;
-
-        var col_tree = get_column_tree(pivot.cols, height);
-
-        var header_cells = [[$('<td></td>')
-                            .attr('rowspan', height)
-                            .addClass('graph_border')]];
 
         function make_cells (queue, level) {
-            var tree = queue.shift();
-            queue = queue.concat(tree.children);
-            if (tree.level == level) {
-                _.last(header_cells).push(make_cell(tree));
+            var col = queue.shift();
+            queue = queue.concat(col.children);
+            console.log("col",col, level);
+            if (col.path.length == level) {
+                _.last(header_cells).push(make_col_header(col));
             } else {
-                level -=1;
-                header_cells.push([make_cell(tree)]);
+                level +=1;
+                header_cells.push([make_col_header(col)]);
             }
             if (queue.length !== 0) {
                 make_cells(queue, level);
             }
         }
 
-        make_cells([col_tree], height);
+        if (pivot.cols.children.length === 0) {
+            make_cells([pivot.cols], 0);
+        } else {
+            make_cells(pivot.cols.children, 1);
+        }
+
         _.each(header_cells, function (cells) {
-            var row = $("<tr></tr>").append(cells);
-            self.table.append(row);
+            self.table.append($("<tr></tr>").append(cells));
         });
     },
 
     draw_row: function (row) {
         var pivot = this.pivot_table,
             html_row = $('<tr></tr>'),
-            name = $('<span> </span>')
-                .addClass('web_graph_click')
-                .attr('href', '#')
-                .attr('data-row-id', row.id)
-                .addClass((row.is_expanded) ? 'icon-minus-sign' : 'icon-plus-sign')
-                .append(row.name),
             row_header = $('<td></td>')
-                .append(name)
+                .append(this.make_header_title(row))
                 .addClass('graph_border');
 
         for (var i in _.range(row.path.length)) {
@@ -214,7 +193,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         html_row.append(row_header);
 
-        _.each(pivot.cols, function (col) {
+        pivot.iterate(pivot.cols, function (col) {
             var cell = $('<td></td>').append(pivot.get_value(row.id, col.id));
             html_row.append(cell)
         });
