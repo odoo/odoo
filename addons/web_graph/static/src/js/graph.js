@@ -186,9 +186,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
             pivot['fold_' + options.type](header);
             this.draw_table();
         } else {
-            if (header.path.length < pivot[options.type + '_groupby'].length) {
+            if (header.path.length < pivot[options.type + 's'].groupby.length) {
                 // expand the corresponding header
-                var field = pivot[options.type + '_groupby'][header.path.length];
+                var field = pivot[options.type + 's'].groupby[header.path.length];
                 pivot['expand_' + options.type](id, field)
                     .then(this.proxy('draw_table'));
             } else {
@@ -205,7 +205,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     display_dropdown: function (options) {
         var self = this,
             pivot = this.pivot_table,
-            already_grouped = pivot.row_groupby.concat(pivot.col_groupby),
+            already_grouped = pivot.rows.groupby.concat(pivot.cols.groupby),
             possible_groups = _.difference(self.data.important_fields, already_grouped),
             dropdown_options = {
                 fields: _.map(possible_groups, function (field) {
@@ -224,7 +224,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     draw_table: function () {
         this.table.empty();
         this.draw_top_headers();
-        _.each(this.pivot_table.rows, this.proxy('draw_row'));
+        _.each(this.pivot_table.rows.headers, this.proxy('draw_row'));
     },
 
     make_border_cell: function (colspan, rowspan) {
@@ -244,7 +244,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     draw_top_headers: function () {
         var self = this,
             pivot = this.pivot_table,
-            height = _.max(_.map(pivot.cols, function(g) {return g.path.length;})),
+            height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})),
             header_cells = [[this.make_border_cell(1, height)]];
 
         function set_dim (cols) {
@@ -277,11 +277,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
         }
 
-        set_dim(pivot.cols[0]);  // add width and height info to columns headers
-        if (pivot.cols[0].children.length === 0) {
-            make_cells(pivot.cols, 0);
+        set_dim(pivot.cols.main);  // add width and height info to columns headers
+        if (pivot.cols.main.children.length === 0) {
+            make_cells(pivot.cols.headers, 0);
         } else {
-            make_cells(pivot.cols[0].children, 1);
+            make_cells(pivot.cols.main.children, 1);
         }
 
         _.each(header_cells, function (cells) {
@@ -302,7 +302,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         html_row.append(row_header);
 
-        _.each(pivot.cols, function (col) {
+        _.each(pivot.cols.headers, function (col) {
             if (col.children.length === 0) {
                 var cell = $('<td></td>').append(pivot.get_value(row.id, col.id));
                 html_row.append(cell);

@@ -1,6 +1,6 @@
 
 function format_chart_data (pivot) {
-    var values = _.map(pivot.rows[0].children.reverse(), function (pt) {
+    var values = _.map(pivot.rows.headers[0].children.reverse(), function (pt) {
         var val = pivot.get_value(pt.id, 2);
         return {x: pt.name, y: val};
     });
