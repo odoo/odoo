@@ -92,13 +92,14 @@
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
-        <record model="ir.ui.view" id="view_event_track_form">
+        <record model="ir.ui.view" id="view_event_form">
             <field name="name">Event Tracks</field>
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_title']" position="inside">
-                    <field name="tag_ids"/>
+                    <label for="tag_ids" class="oe_edit_only"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
                 </xpath>
                 <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
                     <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Tracks"/>

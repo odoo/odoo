@@ -52,8 +52,8 @@ class event_track(osv.osv):
     _columns = {
         'name': fields.char('Track Title', required=True),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'speaker_ids': fields.many2many('res.partner', 'Speakers'),
-        'tag_ids': fields.many2many('event.tag', 'Tags'),
+        'speaker_ids': fields.many2many('res.partner', string='Speakers'),
+        'tag_ids': fields.many2many('event.tag', string='Tags'),
         'stage_id': fields.many2one('event.track.stage'),
         'description': fields.html('Track Description'),
         'date': fields.datetime('Track Date'),
@@ -76,7 +76,7 @@ class event_track(osv.osv):
 class event_event(osv.osv):
     _inherit = "event.event"
     _columns = {
-        'tag_ids': fields.many2many('event.tag', 'Tags'),
+        'tag_ids': fields.many2many('event.tag', string='Tags'),
         'track_ids': fields.one2many('event.track', 'event_id', 'Tracks'),
         'blog_id': fields.many2one('blog.category', 'Event Blog'),
    }
