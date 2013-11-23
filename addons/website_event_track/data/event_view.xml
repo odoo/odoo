@@ -35,7 +35,7 @@
             <field name="res_model">event.track.location</field>
         </record>
         <menuitem name="Event Locations" id="menu_event_track_location"
-            action="action_event_track_location" parent="base.menu_marketing_config_root"
+            action="action_event_track_location" parent="event.event_configuration"
             groups="base.group_no_one"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT Stages -->
@@ -62,7 +62,7 @@
             <field name="res_model">event.track.stage</field>
         </record>
         <menuitem name="Event Stages" id="menu_event_track_stage"
-            action="action_event_track_stage" parent="base.menu_marketing_config_root"
+            action="action_event_track_stage" parent="event.event_configuration"
             groups="base.group_no_one"/>
 
         <!-- EVENTS/CONFIGURATION/EVENT Tags -->
@@ -88,7 +88,7 @@
             <field name="name">Event Tags</field>
             <field name="res_model">event.tag</field>
         </record>
-        <menuitem name="Event Tags" id="menu_event_tag" action="action_event_tag" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
+        <menuitem name="Event Tags" id="menu_event_tag" action="action_event_tag" parent="event.event_configuration" groups="base.group_no_one"/>
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
