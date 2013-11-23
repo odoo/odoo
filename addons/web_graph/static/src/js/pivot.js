@@ -179,16 +179,6 @@ var PivotTable = openerp.web.Class.extend({
         });
 	},
 
-	get_chart_data: function () {
-		var self = this;
-		var values = _.map(this.rows[0].children, function (pt) {
-			var val = self.get_value(pt.id, 2);
-			return {x: pt.name, y: val};
-		});
-		return [{key: 'Bar chart', values: values}];
-
-	},
-
 	swap_axis: function () {
 		var temp = this.rows;
 		this.rows = this.cols;

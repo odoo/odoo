@@ -172,7 +172,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.svg.remove();
             this.svg = $('<div><svg></svg></div>');
             this.$el.filter('.graph_main_content').append(this.svg);
-            Charts[mode](this.pivot_table.get_chart_data());
+            Charts[mode](this.pivot_table);
 
         }
     },

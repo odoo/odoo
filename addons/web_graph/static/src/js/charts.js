@@ -1,17 +1,16 @@
 
-var formatter = function (measure) {
-    return function (datapt) {
-        var val = datapt.attributes;
-        return {
-            x: datapt.attributes.value[1],
-            y: measure ? val.aggregates[measure] : val.length,
-        };        
-    };
+function format_chart_data (pivot) {
+    var values = _.map(pivot.rows[0].children.reverse(), function (pt) {
+        var val = pivot.get_value(pt.id, 2);
+        return {x: pt.name, y: val};
+    });
+    return [{key: 'Bar chart', values: values}];
+
 };
 
-
 var Charts = {
-    bar_chart : function (data) {
+    bar_chart : function (pivot) {
+        var data = format_chart_data(pivot);
         nv.addGraph(function () {
           var chart = nv.models.discreteBarChart()
                 .tooltips(false)
@@ -31,7 +30,8 @@ var Charts = {
         });
     },
 
-    line_chart: function (data) {
+    line_chart: function (pivot) {
+        data = format_chart_data(pivot);
         nv.addGraph(function () {
             var chart = nv.models.lineChart()
                 .x(function (d,u) { return u; })
@@ -49,7 +49,8 @@ var Charts = {
           });
     },
 
-    pie_chart: function (data) {
+    pie_chart: function (pivot) {
+        data = format_chart_data(pivot);
         nv.addGraph(function () {
             var chart = nv.models.pieChart()
                 .color(d3.scale.category10().range())
@@ -67,6 +68,4 @@ var Charts = {
             return chart;
         });
     },
-
-
 };
