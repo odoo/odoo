@@ -76,18 +76,18 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
-                            <field name="visibility"/>
                         </div>
                         <group>
                             <group>
                                 <field name="address_id" on_change="on_change_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True}'/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
                                 <field name="user_id"/>
                                 <field name="type" on_change="onchange_event_type(type,context)" />
                                 <field name="date_begin" on_change="onchange_start_date(date_begin,date_end)"/>
                                 <field name="date_end"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="visibility"/>
                             </group>
                         </group>
                         <notebook>
@@ -101,10 +101,6 @@
                                              <field name="register_prospect" class="oe_inline"/> (confirmed: <field name="register_current" class="oe_inline"/>)
                                         </div>
                                         <field name="register_attended"/>
-                                    </group>
-                                    <group>
-                                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
-                                        <field name="speaker_confirmed"/>
                                     </group>
                                 </group>
                                 <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
@@ -175,7 +171,6 @@
                     <field name="register_current"/>
                     <field name="register_min"/>
                     <field name="register_max" invisible="1"/>
-                    <field name="main_speaker_id" groups="base.group_no_one"/>
                     <field name="user_id"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>

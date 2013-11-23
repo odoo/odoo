@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="act_event_list_tracks" model="ir.actions.act_window">
+            <field name="res_model">event.track</field>
+            <field name="view_type">form</field>
+            <field name="name">Event Tracks</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+        </record>
+
+
+        <!-- EVENTS/CONFIGURATION/EVENT locations -->
+        <record model="ir.ui.view" id="view_event_location_form">
+            <field name="name">Event Locations</field>
+            <field name="model">event.location</field>
+            <field name="arch" type="xml">
+                <form string="Event Location" version="7.0">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_location_tree">
+            <field name="name">Event Location</field>
+            <field name="model">event.location</field>
+            <field name="arch" type="xml">
+                <tree string="Event Location">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_event_location">
+            <field name="name">Event Locations</field>
+            <field name="res_model">event.location</field>
+        </record>
+        <menuitem name="Event Locations" id="menu_event_location" action="action_event_location" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
+
+        <!-- EVENTS/CONFIGURATION/EVENT Stages -->
+        <record model="ir.ui.view" id="view_event_stage_form">
+            <field name="name">Event Stages</field>
+            <field name="model">event.stage</field>
+            <field name="arch" type="xml">
+                <form string="Event Stage" version="7.0">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_stage_tree">
+            <field name="name">Event Stage</field>
+            <field name="model">event.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Event Stage">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_event_stage">
+            <field name="name">Event Stages</field>
+            <field name="res_model">event.stage</field>
+        </record>
+        <menuitem name="Event Stages" id="menu_event_stage" action="action_event_stage" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
+
+        <!-- EVENTS/CONFIGURATION/EVENT Tags -->
+        <record model="ir.ui.view" id="view_event_tag_form">
+            <field name="name">Event Tags</field>
+            <field name="model">event.tag</field>
+            <field name="arch" type="xml">
+                <form string="Event Tag" version="7.0">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_tag_tree">
+            <field name="name">Event Tag</field>
+            <field name="model">event.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Event Tag">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_event_tag">
+            <field name="name">Event Tags</field>
+            <field name="res_model">event.tag</field>
+        </record>
+        <menuitem name="Event Tags" id="menu_event_tag" action="action_event_tag" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
+
+        <!-- Events Organisation/CONFIGURATION/EVENTS -->
+
+        <record model="ir.ui.view" id="view_event_track_form">
+            <field name="name">Event Tracks</field>
+            <field name="inherit_id" ref="event.view_event_from"/>
+            <field name="model">event.event</field>
+            <field name="arch" type="xml">
+                <xpath expr="div[@class='oe_title']" position="inside">
+                    <field name="tag_ids"/>
+                </xpath>
+                <xpath expr="div[@class='oe_button_box']" position="inside">
+                    <button name="%(event.act_event_list_tracks)d" type="action" string="Tracks"/>
+                    <button name="%(event.act_event_list_tracks)d" type="action" string="Activate Blog"/>
+                    <button name="%(event.act_event_list_tracks)d" type="action" string="Desactivate Blog"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Event Tracks -->
+
+        <record model="ir.ui.view" id="view_event_track_kanban">
+            <field name="name">event.track.kanban</field>
+            <field name="model">event.track</field>
+            <field name="arch" type="xml">
+                <kanban version="7.0" string="Tracks">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">View Track</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Track</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <h4><field name="name"/></h4>
+                                    <field name="tag_ids"/>
+                                    <div>
+                                        <field name="date"/>
+                                        <field name="duration"/> hours
+                                    </div>
+                                    <div class="oe_kanban_project_avatars">
+                                        <t t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
+                                            <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-speaker_id="speaker"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="view_event_track_calendar" model="ir.ui.view">
+            <field name="name">event.track.calendar</field>
+            <field name="model">event.track</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="type" date_start="date" date_duration="duration" string="Event Tracks">
+                    <field name="name"/>
+                    <field name="event_id"/>
+                </calendar>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_track_search">
+            <field name="name">Event Tracks</field>
+            <field name="model">event.track</field>
+            <field name="arch" type="xml">
+                <search string="Event Tracks">
+                    <field name="name"/>
+                    <field name="event_id"/>
+                    <field name="stage_id"/>
+                    <field name="speaker_ids"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Date" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_track_form">
+            <field name="name">event.track.form</field>
+            <field name="model">event.track</field>
+            <field name="arch" type="xml">
+                <form string="Event Track" version="7.0">
+                    <header>
+                        <button name="publish" string="Publish"/>
+                        <button name="unpublish" string="Publish"/>
+                        <field name="stage_id" widget="statusbar"/>
+                    </header>
+                    <sheet string="Track">
+                        <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="event_id" class="oe_edit_only"/>
+                            <h2>
+                                <field name="event_id"/>
+                            </h2>
+                            <label for="tag_ids" class="oe_edit_only"/>
+                            <h2>
+                                <field name="tag_ids"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="user_id"/>
+                                <field name="speaker_ids"/>
+                                <field name="location_id"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="duration"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_track_graph">
+            <field name="name">Tracks Graph</field>
+            <field name="model">event.track</field>
+            <field name="arch" type="xml">
+                <graph string="Tracks" type="bar" orientation="horizontal">
+                    <field name="location_id"/>
+                    <field name="duration" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+
+        <!-- Search view of event registration -->
+        <record model="ir.ui.view" id="view_registration_search">
+            <field name="name">Registrations</field>
+            <field name="model">event.registration</field>
+            <field name="arch" type="xml">
+                <search string="Event Registration">
+                    <field name="name" string="Participant" filter_domain="['|','|',('name','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <separator/>
+                    <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
+                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Registrations" help="My Registrations" domain="[('user_id','=',uid)]"/>
+                    <field name="event_id"/>
+                    <field name="user_id"/>
+                    <field name="partner_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Responsible"  icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Event" icon="terp-crm" domain="[]" context="{'group_by':'event_id'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_registration">
+          <field name="name">Registrations</field>
+          <field name="res_model">event.registration</field>
+          <field name="view_type">form</field>
+          <field name="domain"></field>
+          <field name="view_mode">tree,form,calendar,graph</field>
+          <field name="context">{}</field>
+          <field name="search_view_id" ref="view_registration_search"/>
+        </record>
+
+        <menuitem name="Registrations"
+            id="menu_action_registration" parent="base.menu_event_main"
+            action="action_registration" groups="event.group_event_manager,event.group_event_user"/>
+
+        <menuitem name="Reporting" id="base.menu_report_association" parent="event_main_menu" sequence="20"/>
+
+    </data>
+</openerp>
