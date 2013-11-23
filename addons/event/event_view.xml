@@ -9,13 +9,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
         </record>
-
-        <!-- Top menu item -->
-        <menuitem name="Events"
-            id="event_main_menu"
-            groups="base.group_user"
-            sequence="115"/>
-        <menuitem name="Events Organization" id="base.menu_event_main" parent="event_main_menu"/>
+        <menuitem name="Events" parent="base.marketing_menu" id="event_main_menu"/>
 
         <!-- EVENTS  -->
 
@@ -318,7 +312,7 @@
             context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
             view_type="form"/>
 
-        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
+        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="event.event_main_menu" />
 
         <!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
@@ -455,7 +449,7 @@
         </record>
 
         <menuitem name="Registrations"
-            id="menu_action_registration" parent="base.menu_event_main"
+            id="menu_action_registration" parent="event.event_main_menu"
             action="action_registration" groups="event.group_event_manager,event.group_event_user"/>
 
         <menuitem name="Reporting" id="base.menu_report_association" parent="event_main_menu" sequence="20"/>

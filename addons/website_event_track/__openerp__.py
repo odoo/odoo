@@ -15,9 +15,8 @@ Online Events
     'data': [
         'data/event_view.xml',
         'data/event_data.xml',
-        'views/website_event.xml',
         'security/ir.model.access.csv',
-        'security/website_event.xml',
+        'security/event.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'demo': [
