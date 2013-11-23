@@ -57,6 +57,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     .then(this.proxy('draw_table'));
             } 
         },
+
+        'click label.graph_swap_axis' : function (event) {
+            this.pivot_table.swap_axis();
+            this.draw_table();
+        },
+
+        'click label.graph_clear_all' : function (event) {
+            this.pivot_table.clear_all();
+            this.draw_table();
+        },
     },
 
     view_loading: function (fields_view_get) {
@@ -212,7 +222,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     draw_table: function () {
-        console.log("cols",this.pivot_table.cols);
         this.table.empty();
         this.draw_top_headers();
         _.each(this.pivot_table.rows, this.proxy('draw_row'));
