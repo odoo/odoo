@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_calendar_contacts" model="ir.ui.view">
+            <field name="name">My Contacts</field>
+            <field name="model">web_calendar.contacts</field>
+            <field name="arch" type="xml">
+                <tree string="contacts" editable="bottom">
+                    <field name="partner_id"/>
+                </tree>                
+            </field>
+        </record>    
+    
+        <record id="action_calendar_contacts" model="ir.actions.act_window">
+            <field name="name">Calendar Contacts</field>
+            <field name="res_model">web_calendar.contacts</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_calendar_contacts" />                       
+        </record>
+            
+    </data>
+</openerp>

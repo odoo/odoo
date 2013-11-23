@@ -8,9 +8,9 @@ OpenERP Web Calendar view.
 """,
     'version': '2.0',
     'depends': ['web'],
+    'data' : ['contacts_view.xml'],
     'js': [
         'static/lib/fullcalendar/js/fullcalendar.js',
-        #'static/lib/fullcalendar/js/gcal.js',
         'static/src/js/*.js'
     ],
     'css': [
