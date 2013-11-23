@@ -18,7 +18,6 @@ Graph Views for Web Client.
         'static/lib/nvd3/d3.v3.js',
         'static/lib/nvd3/nv.d3.js',
         'static/lib/bootstrap/bootstrap.js',
-        'static/src/js/utility.js',
         'static/src/js/pivot.js',
         'static/src/js/charts.js',
         'static/src/js/graph.js',
