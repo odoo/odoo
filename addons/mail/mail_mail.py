@@ -239,6 +239,7 @@ class mail_mail(osv.Model):
             :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
+                
         for mail in self.browse(cr, SUPERUSER_ID, ids, context=context):
             try:
                 # handle attachments
@@ -282,6 +283,7 @@ class mail_mail(osv.Model):
                     res = ir_mail_server.send_email(cr, uid, msg,
                                                     mail_server_id=mail.mail_server_id.id,
                                                     context=context)
+                    
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
                     mail_sent = True

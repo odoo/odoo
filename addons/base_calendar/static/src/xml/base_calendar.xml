@@ -10,6 +10,7 @@
             <t t-set="i" t-value="i + 1"/>
         </t>
     </t>
+        
     <t t-name="invitation_view">
         <div class="oe_right"><b><t t-esc="invitation['current_attendee'].cn"/> (<t t-esc="invitation['current_attendee'].email"/>)</b></div>
         <div class="oe_left"><img class="cal_inline cal_image" t-attf-src="data:image/png;base64,#{invitation['logo']}"/><p class="cal_tag cal_inline">Calendar</p></div>

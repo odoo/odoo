@@ -77,5 +77,17 @@ class meetting_invitation(http.Controller):
             'modules': simplejson.dumps(webmain.module_boot(db)),
             'init': "s.base_calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)),
         }
-
+        
+    @http.route('/calendar/NextNotify', type='json', auth="none")
+    def NextNotify(self, type=''):
+        registry = openerp.modules.registry.RegistryManager.get(request.session.db)
+        uid = request.session.uid
+        context = request.session.context
+        with registry.cursor() as cr:
+            if type=='GET':            
+                res = registry.get("calendar.alarm_manager").get_next_event(cr,uid,context=context)
+                return res
+            elif type=="UPDATE":
+                res = registry.get("res.partner").update_cal_last_event(cr,uid,context=context)
+                return res
 
