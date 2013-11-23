@@ -58,7 +58,7 @@ class event_track(osv.osv):
         'description': fields.html('Track Description'),
         'date': fields.datetime('Track Date'),
         'duration': fields.float('Duration (Hours)'),
-        'location_id': fields.many2one('event.track.location'),
+        'location_id': fields.many2one('event.track.location', 'Location'),
         'attachment_show': fields.boolean('Show Documents'),
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'color': fields.integer('Color Index'),
@@ -66,6 +66,7 @@ class event_track(osv.osv):
     _defaults = {
         'user_id': lambda self, cr, uid, ctx: uid,
         'attachment_show': lambda self, cr, uid, ctx: True,
+        'duration': lambda *args: 2
     }
 
 

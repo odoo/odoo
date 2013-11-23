@@ -4,8 +4,8 @@
 
         <record id="act_event_list_tracks" model="ir.actions.act_window">
             <field name="res_model">event.track</field>
-            <field name="view_type">form</field>
             <field name="name">Event Tracks</field>
+            <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
         </record>
@@ -193,23 +193,20 @@
                                 <field name="name"/>
                             </h1>
                             <label for="event_id" class="oe_edit_only"/>
-                            <h2>
+                            <h3>
                                 <field name="event_id"/>
-                            </h2>
-                            <label for="tag_ids" class="oe_edit_only"/>
-                            <h2>
-                                <field name="tag_ids"/>
-                            </h2>
+                            </h3>
                         </div>
                         <group>
                             <group>
                                 <field name="user_id"/>
-                                <field name="speaker_ids"/>
+                                <field name="speaker_ids" widget="many2many_tags"/>
                                 <field name="location_id"/>
                             </group>
                             <group>
                                 <field name="date"/>
-                                <field name="duration"/>
+                                <field name="duration" widget="float_time"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
                             </group>
                         </group>
                     </sheet>
