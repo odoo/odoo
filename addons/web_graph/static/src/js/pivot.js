@@ -103,12 +103,17 @@ var PivotTable = openerp.web.Class.extend({
 			_.each(tree.children, tree_traversal);
 		}
 		tree_traversal(header);
+		var ids_to_remove = _.map(_.rest(list), function (h) { return h.id;});
+
 		header.root.headers = _.difference(header.root.headers, _.rest(list));
 		header.is_expanded = false;
         var fold_lvls = _.map(header.root.headers, function(g) {return g.path.length;});
         var new_groupby_length = _.max(fold_lvls); 
         header.root.groupby.splice(new_groupby_length);
         header.children = [];
+        this.cells = _.reject(this.cells, function (cell) {
+        	return (_.contains(ids_to_remove, cell.x) || _.contains(ids_to_remove, cell.y));
+        });
 	},
 
 	expand: function (row_id, field_id) {
