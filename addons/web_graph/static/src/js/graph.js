@@ -199,7 +199,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             header = pivot['get_' + options.type](id);
 
         if (header.is_expanded) {
-            pivot['fold_' + options.type](header);
+            pivot.fold(header);
             this.draw_table();
         } else {
             if (header.path.length < pivot[options.type + 's'].groupby.length) {
@@ -327,9 +327,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 cell.append((value === undefined) ? '' : value);
                 if ((self.heat_map_mode) && (value !== undefined)) {
                     // heat map
-                    console.log("heat map", self.heat_map_mode, pivot.total);
                     var ratio = Math.floor(70 + 185*(pivot.total - value)/pivot.total);
-                    console.log("ratio",ratio);
                     cell.css("background-color", "rgb(255," + ratio + "," + ratio + ")");
                 } 
                 html_row.append(cell);

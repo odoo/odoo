@@ -33,6 +33,8 @@ var PivotTable = openerp.web.Class.extend({
 			headers: [main_col],
 		};
 
+		main_row.root = this.rows;
+		main_col.root = this.cols;
 		this.cells = [];
 		this.model = options.model;
 		this.domain = options.domain;
@@ -92,34 +94,19 @@ var PivotTable = openerp.web.Class.extend({
 		return _.find(this.rows.headers, function (row) { return row.id == id;});
 	},
 
-	fold_row: function (row) {
+	fold: function (header) {
 		var list = [];
 		function tree_traversal(tree) {
 			list.push(tree);
 			_.each(tree.children, tree_traversal);
 		}
-		tree_traversal(row);
-		this.rows.headers = _.difference(this.rows.headers, _.rest(list));
-		row.is_expanded = false;
-        var fold_lvls = _.map(this.rows.headers, function(g) {return g.path.length;});
+		tree_traversal(header);
+		header.root.headers = _.difference(header.root.headers, _.rest(list));
+		header.is_expanded = false;
+        var fold_lvls = _.map(header.root.headers, function(g) {return g.path.length;});
         var new_groupby_length = _.max(fold_lvls); 
-        this.rows.groupby.splice(new_groupby_length);
-        row.children = [];
-	},
-
-	fold_col: function (col) {
-		var list = [];
-		function tree_traversal(tree) {
-			list.push(tree);
-			_.each(tree.children, tree_traversal);
-		}
-		tree_traversal(col);
-		this.cols.headers = _.difference(this.cols.headers, _.rest(list));
-		col.is_expanded = false;
-        var fold_lvls = _.map(this.cols.headers, function(g) {return g.path.length;});
-        var new_groupby_length = _.max(fold_lvls); 
-        this.cols.groupby.splice(new_groupby_length);
-        col.children = [];
+        header.root.groupby.splice(new_groupby_length);
+        header.children = [];
 	},
 
 	expand_row: function (row_id, field_id) {
@@ -155,6 +142,7 @@ var PivotTable = openerp.web.Class.extend({
 			parent: parent.id,
 			children: [],
 			domain: groups[0].model._domain,
+			root: parent.root,
 		};
 		parent.children.splice(0,0, new_header)
 		insertAfter(header_list, parent, new_header);
@@ -201,11 +189,11 @@ var PivotTable = openerp.web.Class.extend({
 	},
 
 	fold_rows: function () {
-		this.fold_row(this.rows.main);
+		this.fold(this.rows.main);
 	},
 
 	fold_cols: function () {
-		this.fold_col(this.cols.main);
+		this.fold(this.cols.main);
 	},
 
 	fold_all: function () {
