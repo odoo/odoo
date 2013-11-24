@@ -32,30 +32,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         'click .web_graph_click' : function (event) {
             event.preventDefault();
-            if (event.target.attributes['data-row-id'] !== undefined) {
-                this.handle_header_event({type:'row', event:event});
-
-            }
-            if (event.target.attributes['data-col-id'] !== undefined) {
-                this.handle_header_event({type:'col', event:event});
-            }
+            var id = event.target.attributes['data-id'].nodeValue;
+            this.handle_header_event({id:id, event:event});
         },
 
         'click a.field-selection' : function (event) {
-            var id,
+            var id = event.target.attributes['data-id'].nodeValue,
                 field_id = event.target.attributes['data-field-id'].nodeValue;
             event.preventDefault();
             this.dropdown.remove();
-            if (event.target.attributes['data-row-id'] !== undefined) {
-                id = event.target.attributes['data-row-id'].nodeValue;
-                this.pivot_table.expand(id, field_id)
-                    .then(this.proxy('draw_table'));
-            } 
-            if (event.target.attributes['data-col-id'] !== undefined) {
-                id = event.target.attributes['data-col-id'].nodeValue;
-                this.pivot_table.expand(id, field_id)
-                    .then(this.proxy('draw_table'));
-            } 
+            this.pivot_table.expand(id, field_id)
+                .then(this.proxy('draw_table'));
         },
 
         'click label.graph_swap_axis' : function (event) {
@@ -194,7 +181,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     handle_header_event: function (options) {
         var pivot = this.pivot_table,
-            id = options.event.target.attributes['data-' + options.type + '-id'].nodeValue,
+            id = options.id,
             header = pivot.get_header(id);
 
         if (header.is_expanded) {
@@ -206,10 +193,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 pivot.expand(id, field).then(this.proxy('draw_table'));
             } else {
                 this.display_dropdown({id:header.id, 
-                                       type: options.type,
-                                       target: $(event.target), 
-                                       x: event.pageX, 
-                                       y: event.pageY});
+                                       target: $(options.event.target), 
+                                       x: options.event.pageX, 
+                                       y: options.event.pageY});
             }
         }
     },
@@ -220,10 +206,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
             already_grouped = pivot.rows.groupby.concat(pivot.cols.groupby),
             possible_groups = _.difference(self.data.important_fields, already_grouped),
             dropdown_options = {
+                header_id: options.id,
                 fields: _.map(possible_groups, function (field) {
                     return {id: field, value: self.data.fields[field].string};
             })};
-        dropdown_options[options.type + '_id'] = options.id;
 
         this.dropdown = $(QWeb.render('field_selection', dropdown_options));
         options.target.after(this.dropdown);
@@ -272,7 +258,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         function make_col_header (col) {
             var cell = self.make_border_cell(col.width, col.height);
-            return cell.append(self.make_header_title(col).attr('data-col-id', col.id));
+            return cell.append(self.make_header_title(col).attr('data-id', col.id));
         }
 
         function make_cells (queue, level) {
@@ -306,7 +292,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             pivot = this.pivot_table,
             html_row = $('<tr></tr>'),
             row_header = this.make_border_cell(1,1)
-                .append(this.make_header_title(row).attr('data-row-id', row.id))
+                .append(this.make_header_title(row).attr('data-id', row.id))
                 .addClass('graph_border');
 
         for (var i in _.range(row.path.length)) {

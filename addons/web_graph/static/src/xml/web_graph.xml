@@ -22,30 +22,15 @@
     	<div class="graph_main_content"></div>
     </t>
 
-    <t t-name="pivot_table">
-    	<table></table>
-    </t>
-
-    <t t-name="chart_view">
-    	<div class="graph_chart"></div>
-    </t>
-
 	<t t-name="field_selection">
 		<div class="btn-group">
 			<span class="btn btn-default field-selection dropdown-toggle" data-toggle="dropdown"></span>
 	        <ul class="dropdown-menu" role="menu">
     	    	<t t-foreach="fields" t-as="field">
 			        <li>
-                        <t t-if="row_id">
-                            <a class="field-selection" t-att-data-field-id="field.id" t-att-data-row-id="row_id" href="#">
-                                <t t-esc="field.value"/>
-                            </a>
-                        </t>
-                        <t t-if="col_id">
-                            <a class="field-selection" t-att-data-field-id="field.id" t-att-data-col-id="col_id" href="#">
-                                <t t-esc="field.value"/>
-                            </a>
-                        </t>
+                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" href="#">
+                            <t t-esc="field.value"/>
+                        </a>
 			        </li>
 		        </t>
                 <li class="divider"></li>
