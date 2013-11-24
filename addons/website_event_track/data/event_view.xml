@@ -7,7 +7,15 @@
             <field name="name">Event Tracks</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'stage_id'}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                  Click to add a track.
+              </p><p>
+                  Tracks define the agenda of your event. These can be
+                  a talk, a round table, a meeting, etc.
+              </p>
+            </field>
         </record>
 
 
@@ -53,6 +61,7 @@
             <field name="model">event.track.stage</field>
             <field name="arch" type="xml">
                 <tree string="Event Stage">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                 </tree>
             </field>
@@ -64,6 +73,32 @@
         <menuitem name="Event Stages" id="menu_event_track_stage"
             action="action_event_track_stage" parent="event.event_configuration"
             groups="base.group_no_one"/>
+
+        <!-- EVENTS/CONFIGURATION/EVENT Tags -->
+        <record model="ir.ui.view" id="view_event_track_tag_form">
+            <field name="name">Track Tags</field>
+            <field name="model">event.track.tag</field>
+            <field name="arch" type="xml">
+                <form string="Event Track Tag" version="7.0">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_track_tag_tree">
+            <field name="name">Tracks Tag</field>
+            <field name="model">event.track.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Event Track Tag">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_event_track_tag">
+            <field name="name">Track Tags</field>
+            <field name="res_model">event.track.tag</field>
+        </record>
+        <menuitem name="Tracks Tags" id="menu_event_track_tag" action="action_event_track_tag" parent="event.event_configuration" groups="base.group_no_one"/>
+
 
         <!-- EVENTS/CONFIGURATION/EVENT Tags -->
         <record model="ir.ui.view" id="view_event_tag_form">
@@ -100,11 +135,21 @@
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <label for="tag_ids" class="oe_edit_only"/>
                     <field name="tag_ids" widget="many2many_tags"/>
+                    <div name="event_checkboxes">
+                        <field name="show_menu"/>
+                        <label for="show_menu"/>
+                        <field name="show_tracks"/>
+                        <label for="show_tracks"/>
+                        <field name="show_track_proposal"/>
+                        <label for="show_track_proposal"/>
+
+                    </div>
                 </xpath>
                 <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
                     <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Tracks"/>
-                    <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Activate Blog"/>
-                    <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Desactivate Blog"/>
+                </xpath>
+                <xpath expr="//field[@name='twitter_hashtag']" position="after">
+                    <field name="track_tag_ids" widget="many2many_tags"/>
                 </xpath>
             </field>
         </record>
@@ -115,14 +160,17 @@
             <field name="name">event.track.kanban</field>
             <field name="model">event.track</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" string="Tracks">
+                <kanban>
                     <templates>
+                        <field name="color"/>
+                        <field name="priority"/>
+                        <field name="speaker_ids"/>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">View Track</a></li></t>
+                                        <li><a href="/event/1/track/2">View Track</a></li>
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit Track</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
@@ -131,15 +179,26 @@
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
                                     <field name="tag_ids"/>
-                                    <div>
-                                        <field name="date"/>
-                                        <field name="duration"/> hours
+                                    <div t-if="duration"><field name="duration"/> hours</div>
+                                    <span class="oe_right">
+                                        <t t-set="priority" t-value="record.priority.raw_value || 0"/>
+                                        <a type="object" name="set_priority" args="['2']" t-if="priority == 3" title="Normal Priority">
+                                           <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                        </a>
+                                        <a type="object" name="set_priority" args="['3']" t-if="priority lte 2" title="Normal Priority">
+                                           <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                        </a>
+                                        <a type="object" name="set_priority" args="['1']" title="High Priority">
+                                           <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 1 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                        </a>
+                                        <a type="object" name="set_priority" args="['0']" title="Highest Priority">
+                                           <img t-attf-src="/web/static/src/img/icons/star-#{priority == 0 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                        </a>
+                                    </span>
+                                    <div t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
+                                        <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-speaker_id="speaker" class="oe_kanban_avatar oe_left" width="24px" height="24px"/>
                                     </div>
-                                    <div class="oe_kanban_project_avatars">
-                                        <t t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
-                                            <img t-att-src="kanban_image('res.partner', 'image_small', speaker)" t-att-data-speaker_id="speaker"/>
-                                        </t>
-                                    </div>
+                                    <div class="oe_clear"/>
                                 </div>
                             </div>
                         </t>
@@ -182,8 +241,6 @@
             <field name="arch" type="xml">
                 <form string="Event Track" version="7.0">
                     <header>
-                        <button name="publish" string="Publish"/>
-                        <button name="unpublish" string="Publish"/>
                         <field name="stage_id" widget="statusbar"/>
                     </header>
                     <sheet string="Track">

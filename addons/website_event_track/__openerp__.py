@@ -15,6 +15,7 @@ Online Events
     'data': [
         'data/event_view.xml',
         'data/event_data.xml',
+        'views/website_event.xml',
         'security/ir.model.access.csv',
         'security/event.xml',
     ],

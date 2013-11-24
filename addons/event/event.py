@@ -217,6 +217,9 @@ class event_event(osv.osv):
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
         'visibility': fields.selection(_visibility_selection, 'Privacy / Visibility',
             select=True, required=True),
+        'organizer_id': fields.many2one('res.partner', "Organizer"),
+        'phone': fields.related('organizer_id', 'phone', type='char', string='Phone'),
+        'email': fields.related('organizer_id', 'email', type='char', string='Email'),
     }
     _defaults = {
         'state': 'draft',

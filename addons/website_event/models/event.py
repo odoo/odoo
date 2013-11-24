@@ -55,9 +55,11 @@ class event(osv.osv):
             help="Website communication history",
         ),
         'website_url': fields.function(_website_url, string="Website url"),
+        'show_menu': fields.boolean('Dedicated Menu'),
+        'menu_id': fields.many2one('website.menu', 'Event Menu'),
     }
     _defaults = {
-        'website_published': False,
+        'show_menu': False,
     }
 
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):

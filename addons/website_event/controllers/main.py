@@ -36,7 +36,7 @@ from openerp import tools
 import urllib
 
 class website_event(http.Controller):
-    @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public", multilang=True)
+    @website.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", multilang=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
@@ -163,15 +163,11 @@ class website_event(http.Controller):
 
         return request.website.render("website_event.index", values)
 
-    @website.route(['/event/<int:event_id>'], type='http', auth="public", multilang=True)
-    def event(self, event_id=None, **post):
-        event_obj = request.registry['event.event']
-        event = event_obj.browse(request.cr, request.uid, event_id, dict(request.context, show_address_only=1))
+    @website.route(['/event/<model("event.event"):event>'], type='http', auth="public", multilang=True)
+    def event(self, event=None, **post):
         values = {
-            'event_id': event,
-            'main_object': event,
+            'event': event,
             'range': range,
-            'float': float,
         }
         return request.website.render("website_event.event_description_full", values)
 
