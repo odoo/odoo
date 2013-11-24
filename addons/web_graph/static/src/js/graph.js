@@ -48,12 +48,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.dropdown.remove();
             if (event.target.attributes['data-row-id'] !== undefined) {
                 id = event.target.attributes['data-row-id'].nodeValue;
-                this.pivot_table.expand_row(id, field_id)
+                this.pivot_table.expand(id, field_id)
                     .then(this.proxy('draw_table'));
             } 
             if (event.target.attributes['data-col-id'] !== undefined) {
                 id = event.target.attributes['data-col-id'].nodeValue;
-                this.pivot_table.expand_col(id, field_id)
+                this.pivot_table.expand(id, field_id)
                     .then(this.proxy('draw_table'));
             } 
         },
@@ -195,19 +195,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
     handle_header_event: function (options) {
         var pivot = this.pivot_table,
             id = options.event.target.attributes['data-' + options.type + '-id'].nodeValue,
-            header = pivot['get_' + options.type](id);
+            header = pivot.get_header(id);
 
         if (header.is_expanded) {
             pivot.fold(header);
             this.draw_table();
         } else {
-            if (header.path.length < pivot[options.type + 's'].groupby.length) {
-                // expand the corresponding header
-                var field = pivot[options.type + 's'].groupby[header.path.length];
-                pivot['expand_' + options.type](id, field)
-                    .then(this.proxy('draw_table'));
+            if (header.path.length < header.root.groupby.length) {
+                var field = header.root.groupby[header.path.length];
+                pivot.expand(id, field).then(this.proxy('draw_table'));
             } else {
-                // display dropdown to query field to expand
                 this.display_dropdown({id:header.id, 
                                        type: options.type,
                                        target: $(event.target), 

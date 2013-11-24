@@ -48,7 +48,7 @@ var PivotTable = openerp.web.Class.extend({
 	// drawing the table (otherwise the data returned will be empty...)
 	start: function () {
 		var self = this,
-			initial_group = this.expand_row(this.rows.main.id, this.rows.groupby[0]),
+			initial_group = this.expand(this.rows.main.id, this.rows.groupby[0]),
 			total = query_groups(this.model, this.measure, this.domain, [])
 				.then(function (total) {
 					var val = total[0].attributes.aggregates[self.measure];
@@ -68,30 +68,32 @@ var PivotTable = openerp.web.Class.extend({
 		return this.rows.groupby.concat(this.cols.groupby, this.measure);
 	},
 
-	set_value: function (row, col, value) {
-		var cell = _.find(this.cells, function (c) {
-			return ((c.row_id == row) && (c.col_id == col));
+	set_value: function (id1, id2, value) {
+		var x = Math.min(id1, id2),
+			y = Math.max(id1, id2),
+			cell = _.find(this.cells, function (c) {
+			return ((c.x == x) && (c.y == y));
 		});
 		if (cell) {
 			cell.value = value;
 		} else {
-			this.cells.push({row_id: row, col_id: col, value: value});
+			this.cells.push({x: x, y: y, value: value});
 		}
 	},
 
-	get_value: function (row, col) {
-		var cell = _.find(this.cells, function (c) {
-			return ((c.row_id == row) && (c.col_id == col));
+	get_value: function (id1, id2) {
+		var x = Math.min(id1, id2),
+			y = Math.max(id1, id2),
+			cell = _.find(this.cells, function (c) {
+			return ((c.x == x) && (c.y == y));
 		});
 		return (cell === undefined) ? undefined : cell.value;
 	},
 
-	get_col: function (id) {
-		return _.find(this.cols.headers, function (col) { return col.id == id;});
-	},
-
-	get_row: function (id) {
-		return _.find(this.rows.headers, function (row) { return row.id == id;});
+	get_header: function (id) {
+		return _.find(this.rows.headers.concat(this.cols.headers), function (header) {
+			return header.id == id;
+		});		
 	},
 
 	fold: function (header) {
@@ -109,20 +111,26 @@ var PivotTable = openerp.web.Class.extend({
         header.children = [];
 	},
 
-	expand_row: function (row_id, field_id) {
+	expand: function (row_id, field_id) {
         var self = this,
-        	row = this.get_row(row_id);
+        	row = this.get_header(row_id);
 
-        if (row.path.length == this.rows.groupby.length) {
-            this.rows.groupby.push(field_id);
+        if (row.path.length == row.root.groupby.length) {
+            row.root.groupby.push(field_id);
         }
-        return query_groups_data(this.model, this.visible_fields(), row.domain, this.cols.groupby, field_id)
+
+        var otherDim = (row.root === this.cols) ? this.rows : this.cols; 
+        return query_groups_data(this.model, this.visible_fields(), row.domain, otherDim.groupby, field_id)
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
-                	var new_row_id = self.make_header(group, row, self.rows.headers);
+                	var new_row_id = self.make_header(group, row);
                     _.each(group, function (data) {
-                    	var col = _.find(self.cols.headers, function (c) {
-                    		return _.isEqual(_.rest(data.path), c.path);
+                    	var col = _.find(otherDim.headers, function (c) {
+                    		if (row.root === this.cols) {
+                    			return _.isEqual(data.path.slice(1), c.path);
+                    		} else {
+                    			return _.isEqual(_.rest(data.path), c.path);
+                    		}
                     	});
                     	if (col) {
                     		self.set_value(new_row_id, col.id, data.attributes.aggregates[self.measure]);
@@ -133,11 +141,12 @@ var PivotTable = openerp.web.Class.extend({
         });
 	},
 
-	make_header: function (groups, parent, header_list) {
-		var new_header = {
+	make_header: function (groups, parent) {
+		var name = (groups[0].attributes.value) ? groups[0].attributes.value[1] : 'Undefined',
+		    new_header = {
 			id: this.generate_id(),
-			path: parent.path.concat(groups[0].attributes.value[1]),
-			name: groups[0].attributes.value[1],
+			path: parent.path.concat(name),
+			name: name,
 			is_expanded: false,
 			parent: parent.id,
 			children: [],
@@ -145,47 +154,17 @@ var PivotTable = openerp.web.Class.extend({
 			root: parent.root,
 		};
 		parent.children.splice(0,0, new_header)
-		insertAfter(header_list, parent, new_header);
+		insertAfter(parent.root.headers, parent, new_header);
 		return new_header.id;
-	},
-
-	expand_col: function (col_id, field_id) {
-        var self = this,
-        	col = this.get_col(col_id);
-
-        if (col.path.length == this.cols.groupby.length) {
-            this.cols.groupby.push(field_id);
-        }
-
-        return query_groups_data(this.model, this.visible_fields(), col.domain, this.rows.groupby, field_id)
-            .then(function (groups) {
-                _.each(groups.reverse(), function (group) {
-                	var new_col_id = self.make_header(group, col, self.cols.headers);
-                    _.each(group, function (data) {
-                    	var row = _.find(self.rows.headers, function (c) {
-                    		return _.isEqual(data.path.slice(1), c.path);
-                    	});
-                    	if (row) {
-                    		self.set_value(row.id, new_col_id, data.attributes.aggregates[self.measure]);
-                    	}
-                    });
-                });
-                col.is_expanded = true;
-        });
 	},
 
 	swap_axis: function () {
 		var temp = this.rows;
 		this.rows = this.cols;
 		this.cols = temp;
+
 		this.rows.main.name = "Total";
 		this.cols.main.name = this.measure_label;
-
-		_.each(this.cells, function (cell) {
-			temp = cell.row_id;
-			cell.row_id = cell.col_id;
-			cell.col_id = temp;
-		});
 	},
 
 	fold_rows: function () {
