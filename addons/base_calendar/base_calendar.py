@@ -268,6 +268,9 @@ class calendar_attendee(osv.osv):
                  'declined':'red'                 
         }
         
+        if not isinstance(ids, (tuple, list)):
+            ids = [ids]
+            
         for attendee in self.browse(cr, uid, ids, context=context):            
             res_obj = attendee.ref
             if res_obj:
