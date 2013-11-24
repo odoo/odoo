@@ -119,7 +119,7 @@ class event_event(osv.osv):
         'show_tracks': False,
         'show_blog': False,
     }
-    def _get_new_menu_pages(serf, cr, uid, event, context=None):
+    def _get_new_menu_pages(self, cr, uid, event, context=None):
         context = context or {}
         result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
         if event.blog_id:

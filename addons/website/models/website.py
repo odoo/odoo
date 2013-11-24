@@ -3,6 +3,7 @@ import fnmatch
 import functools
 import inspect
 import logging
+import psycopg2
 import math
 import itertools
 import traceback
@@ -128,7 +129,7 @@ class website(osv.osv):
         view = self.pool.get('ir.ui.view')
 
         module, tmp_page = template.split('.')
-        view_model, view_id = imd.get_object_reference(cr, uid, tmp_mod, tmp_page)
+        view_model, view_id = imd.get_object_reference(cr, uid, module, tmp_page)
 
         newview_id = view.copy(cr, uid, view_id, context=context)
         newview = view.browse(cr, uid, newview_id, context=context)
@@ -137,21 +138,14 @@ class website(osv.osv):
             'name': name,
             'page': ispage,
         })
-        # Fuck it, we're doing it live
-        try:
-            imd.create(cr, uid, {
-                'name': idname,
-                'module': module,
-                'model': 'ir.ui.view',
-                'res_id': newview_id,
-                'noupdate': True
-            }, context=request.context)
-        except psycopg2.IntegrityError:
-            logger.exception('Unable to create ir_model_data for page %s', path)
-            request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
-            return werkzeug.exceptions.InternalServerError()
-        else:
-            request.cr.execute('RELEASE SAVEPOINT pagenew')
+        imd.create(cr, uid, {
+            'name': idname,
+            'module': module,
+            'model': 'ir.ui.view',
+            'res_id': newview_id,
+            'noupdate': True
+        }, context=context)
+        cr.execute('RELEASE SAVEPOINT pagenew')
         return "%s.%s" % (module, idname)
 
     def get_public_user(self, cr, uid, context=None):

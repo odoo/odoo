@@ -22,6 +22,8 @@
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
 
+from openerp.tools.translate import _
+
 
 # defined for access rules
 class product(osv.osv):
@@ -35,23 +37,25 @@ class event(osv.osv):
     _name = 'event.event'
     _inherit = ['event.event','website.seo.metadata']
 
-    def _get_new_menu_pages(serf, cr, uid, event, context=None):
+    def _get_new_menu_pages(self, cr, uid, event, context=None):
         context = context or {}
         todo = [
             (_('Introduction'), 'website_event.template_intro'),
             (_('Location'), 'website_event.template_location')
         ]
-        web = request.registry['website']
+        web = self.pool.get('website')
         result = []
         for name,path in todo:
-            newpath = web.new_page(request.cr, request.uid, path, request.context)
+            name = name+' '+event.name
+            newpath = web.new_page(cr, uid, name, path, ispage=False, context=context)
             url = "/event/event.id/page/" + newpath
             result.append((name, newpath))
         return result
 
     def _set_show_menu(self, cr, uid, ids, name, value, arg, context=None):
         menuobj = self.pool.get('website.menu')
-        for event in self.browse(cr, uid, ids, context=context):
+        eventobj = self.pool.get('event.event')
+        for event in self.browse(cr, uid, [ids], context=context):
             if event.menu_id and not value:
                 menuobj.unlink(cr, uid, [event.menu_id.id], context=context)
             elif value and not event.menu_id:
@@ -69,6 +73,7 @@ class event(osv.osv):
                         'sequence': sequence
                     }, context=context)
                     sequence += 1
+                eventobj.write(cr, uid, [event.id], {'menu_id': root}, context=context)
         return True
 
     def _get_show_menu(self, cr, uid, ids, field_name, arg, context=None):
