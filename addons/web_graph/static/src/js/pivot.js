@@ -154,7 +154,7 @@ var PivotTable = openerp.web.Class.extend({
 			children: [],
 			domain: groups[0].model._domain,
 		};
-		parent.children.push(new_header);
+		parent.children.splice(0,0, new_header)
 		insertAfter(header_list, parent, new_header);
 		return new_header.id;
 	},
@@ -169,7 +169,7 @@ var PivotTable = openerp.web.Class.extend({
 
         return query_groups_data(this.model, this.visible_fields(), col.domain, this.rows.groupby, field_id)
             .then(function (groups) {
-                _.each(groups, function (group) {
+                _.each(groups.reverse(), function (group) {
                 	var new_col_id = self.make_header(group, col, self.cols.headers);
                     _.each(group, function (data) {
                     	var row = _.find(self.rows.headers, function (c) {
@@ -188,6 +188,8 @@ var PivotTable = openerp.web.Class.extend({
 		var temp = this.rows;
 		this.rows = this.cols;
 		this.cols = temp;
+		this.rows.main.name = "Total";
+		this.cols.main.name = this.measure_label;
 
 		_.each(this.cells, function (cell) {
 			temp = cell.row_id;
@@ -196,10 +198,19 @@ var PivotTable = openerp.web.Class.extend({
 		});
 	},
 
-	clear_all: function () {
+	fold_rows: function () {
 		this.fold_row(this.rows.main);
+	},
+
+	fold_cols: function () {
 		this.fold_col(this.cols.main);
-	}
+	},
+
+	fold_all: function () {
+		this.fold_rows();
+		this.fold_cols();
+	},
+
 });
 
 

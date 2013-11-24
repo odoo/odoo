@@ -63,8 +63,18 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.draw_table();
         },
 
-        'click label.graph_clear_all' : function (event) {
-            this.pivot_table.clear_all();
+        'click label.graph_fold_all' : function (event) {
+            this.pivot_table.fold_all();
+            this.draw_table();
+        },
+
+        'click label.graph_fold_rows' : function (event) {
+            this.pivot_table.fold_rows();
+            this.draw_table();
+        },
+
+        'click label.graph_fold_cols' : function (event) {
+            this.pivot_table.fold_cols();
             this.draw_table();
         },
     },
@@ -172,7 +182,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.svg.remove();
             this.svg = $('<div><svg></svg></div>');
             this.$el.filter('.graph_main_content').append(this.svg);
-            Charts[mode](this.pivot_table);
+            draw_chart(this.svg, mode, this.pivot_table);
 
         }
     },
