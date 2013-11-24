@@ -46,10 +46,10 @@ class event(osv.osv):
         web = self.pool.get('website')
         result = []
         for name,path in todo:
-            name = name+' '+event.name
-            newpath = web.new_page(cr, uid, name, path, ispage=False, context=context)
-            url = "/event/event.id/page/" + newpath
-            result.append((name, newpath))
+            name2 = name+' '+event.name
+            newpath = web.new_page(cr, uid, name2, path, ispage=False, context=context)
+            url = "/event/"+str(event.id)+"/page/" + newpath
+            result.append((name, url))
         return result
 
     def _set_show_menu(self, cr, uid, ids, name, value, arg, context=None):

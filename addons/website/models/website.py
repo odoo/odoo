@@ -546,7 +546,7 @@ class website_menu(osv.osv):
 
     def get_menu(self, cr, uid, website_id, context=None):
         root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
-        menu_ids = self.search(cr, uid, root_domain, context=context)
+        menu_ids = self.search(cr, uid, root_domain, order='id', context=context)
         menu = self.browse(cr, uid, menu_ids, context=context)
         return menu[0]
 

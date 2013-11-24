@@ -163,6 +163,13 @@ class website_event(http.Controller):
 
         return request.website.render("website_event.index", values)
 
+    @website.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", multilang=True)
+    def event_page(self, event, page, **post):
+        values = {
+            'event': event,
+        }
+        return request.website.render(page, values)
+
     @website.route(['/event/<model("event.event"):event>'], type='http', auth="public", multilang=True)
     def event(self, event=None, **post):
         if event.menu_id and event.menu_id.child_id:

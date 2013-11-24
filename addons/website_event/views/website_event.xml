@@ -72,7 +72,7 @@
                                         </span>
                                     </t>
                                     <h4 class="media-heading">
-                                        <a t-href="/event/#{ event.id }/"><span t-field="event.name"> </span></a>
+                                        <a t-href="/event/#{(not event.menu_id) and 'register/' or ''}#{ event.id }/"><span t-field="event.name"> </span></a>
                                         <small t-if="not event.website_published" class="label label-danger">not published</small>
                                     </h4>
                                     <div>
@@ -172,7 +172,7 @@
                 <div class="row mt8">
                     <div class="col-sm-7" id="event_menu">
                         <ol class="breadcrumb mb0" t-if="not event.menu_id">
-                            <li t-if="not event.type"><a href="/event">All Events</a></li>
+                            <li><a href="/event">All Events</a></li>
                             <li t-if="event.type">
                                 <a t-href="/event?type=#{event.type.id}" t-esc="event.type.name"/>
                             </li>

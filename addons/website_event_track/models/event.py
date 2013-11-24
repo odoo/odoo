@@ -88,7 +88,7 @@ class event_track(osv.osv):
         'show_attachments': lambda self, cr, uid, ctx: True,
         'duration': lambda *args: 0,
         'stage_id': _default_stage_id,
-        'priority': 3
+        'priority': '2'
     }
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         stage_obj = self.pool.get('event.track.stage')
@@ -122,9 +122,11 @@ class event_event(osv.osv):
     def _get_new_menu_pages(self, cr, uid, event, context=None):
         context = context or {}
         result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
+        if event.show_tracks:
+            result.append( (_('Agenda'), '/event/tracks/'+str(event.id)))
         if event.blog_id:
-            pass
+            result.append( (_('News'), '/blog/cat/'+str(event.blog_ig.id)))
         if event.show_track_proposal:
-            result.append( _('Talk Proposals'), '/event/track_proposal/'+str(event.id))
+            result.append( (_('Talk Proposals'), '/event/track_proposal/'+str(event.id)))
         return result
 

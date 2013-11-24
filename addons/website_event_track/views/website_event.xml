@@ -35,6 +35,56 @@
         </t>
     </template>
 
+    <template id="tracks">
+        <t t-call="website_event.layout">
+            <div class="oe_structure"/>
+            <div class="container">
+                <div class="row mt16">
+                    <div class="col-md-3 css_noprint">
+
+                        <ul class="nav nav-pills nav-stacked">
+                            <li t-att-class="(not searches.get('tag')) and 'active' or ''"><a href="/event/tracks/#{ event.id }">All</a></li>
+                            <t t-foreach="tags" t-as="tag">
+                                <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
+                                    <a t-href="/event/tracks/#{ event.id }&amp;tag=#{ tag.id }">
+                                        <t t-esc="tag.name"/>
+                                    </a>
+                                </li>
+                            </t>
+                        </ul>
+                    
+                    </div><div class="col-md-9">
+
+                        <ul class="media-list">
+                            <li t-foreach="event.track_ids" t-as="track" class="media">
+                                <div class="media-body">
+                                    <h4 class="media-heading">
+                                        <a t-href="/event/track_view/#{track.id}"><span t-field="track.name"> </span></a>
+                                        <!-- <small t-if="not track.website_published" class="label label-danger">not published</small> -->
+                                    </h4>
+                                    <p>TODO: NOT Implemented</p>
+                                </div>
+                            </li>
+                        </ul>
+ 
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="track_view">
+        <t t-call="website_event.layout">
+            <div class="oe_structure"/>
+            <div class="container">
+                <h1>Not Implmented</h1>
+                <h2 t-esc="track.name"/>
+            </div>
+        </t>
+    </template>
+
+
     <template id="event_track_proposal">
         <t t-call="website_event.layout">
             <div class="oe_structure"/>
