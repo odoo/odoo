@@ -288,6 +288,9 @@ class calendar_attendee(osv.osv):
                                                     'datas': str(ics_file).encode('base64')})]
                     vals['model'] = None #We don't want to have the mail in the tchatter while in queue!
                     vals['auto_delete'] = True #We don't need mail after it has been sended !
+                    vals['recipient_ids'] = [(4,attendee.partner_id.id),] #We don't need mail after it has been sended !
+                    
+                    print vals
                     
                     if not attendee.partner_id.opt_out:
                         mail_id.append(mail_pool.create(cr, uid, vals, context=context))
@@ -705,6 +708,7 @@ class calendar_alarm_manager(osv.osv):
                     vals = template_pool.generate_email(cr, uid, template_id, event.id, context=local_context)
                     vals['model'] = None #We don't want to have the mail in the tchatter while in queue!
                     vals['auto_delete'] = True #We don't need mail after it has been sended !
+                    vals['recipient_ids'] = [(4,attendee.partner_id.id),] #We don't need mail after it has been sended !
                      
                     if not attendee.partner_id.opt_out:
                         mail_id.append(mail_pool.create(cr, uid, vals, context=context))
@@ -1001,6 +1005,11 @@ class crm_meeting(osv.Model):
     def _tz_get(self, cr, uid, context=None):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
+    _track = {
+        'location': {
+            'calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
+        },
+    }
     _columns = {
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Write Date', readonly=True),
@@ -1024,7 +1033,7 @@ class crm_meeting(osv.Model):
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
-        'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}),
+        'location': fields.char('Location', size=264, help="Location of Event", track_visibility='onchange', states={'done': [('readonly', True)]}),
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Show Time as', states={'done': [('readonly', True)]}),        
         
         #'state': fields.selection([('tentative', 'Uncertain'),('cancelled', 'Cancelled'),('confirmed', 'Confirmed'),],'Status', readonly=True, track_visibility='onchange'),
@@ -1179,6 +1188,9 @@ class crm_meeting(osv.Model):
                     mail_to = mail_to + " " + partner.email
                 new_attendees.append(att_id)
                 new_att_partner_ids.append(partner.id)
+                if current_user.email:
+                    if self.pool.get('calendar.attendee')._send_mail(cr, uid, att_id, '', email_from = current_user.email, context=context):
+                        self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), context=context)
             
             self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]},context=context)
                         
@@ -1192,7 +1204,12 @@ class crm_meeting(osv.Model):
                 if attendee_ids_to_remove: 
                     self.pool.get("calendar.attendee").unlink(cr, uid, attendee_ids_to_remove, context) 
             
-        return True
+        return {
+                'new_partner_ids' : new_att_partner_ids,
+                'new_attendee_ids' : new_attendees,
+                'all_partner_ids' : all_partner_ids,
+                'all_attendee_ids' : all_attendee_ids
+                }
 
     def get_recurrent_ids(self, cr, uid, select, domain, limit=100, context=None):
         """Gives virtual event ids for recurring events based on value of Recurrence Rule
@@ -1441,13 +1458,13 @@ class crm_meeting(osv.Model):
 
     def do_sendmail(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context):            
-                     
             current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)                       
 
             if current_user.email:
                 if self.pool.get('calendar.attendee')._send_mail(cr, uid, [att.id for att in event.attendee_ids], '', email_from = current_user.email, context=context):
                     self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), context=context)
         return;
+    
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
         #Used for view in controller 
@@ -1589,8 +1606,17 @@ class crm_meeting(osv.Model):
                 end_date = self._get_recurrency_end_date(data, context=context)
                 super(crm_meeting, self).write(cr, uid, [data['id']], {'end_date': end_date}, context=context)
         
+        attendees_create = False
+        
         if values.get('partner_ids', False):
-            self.create_attendees(cr, uid, ids, context)
+            attendees_create = self.create_attendees(cr, uid, ids, context)
+        
+        print values
+        if values.get('date', False):
+            print "Date has been changed !!!! --> SEND MAIL"
+            
+        
+        
         
         return res or True and False
 

@@ -46,7 +46,6 @@
                                 context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_inline"/>
-                            <button name="do_sendmail" type="object" string="Send mail(s)" attrs="{'invisible':[('partner_ids','=',False)]}" icon="terp-mail-message-new" class="oe_link"/>
                         </h2>
                     </div>
                     <notebook>
@@ -131,9 +130,10 @@
                         </page>
                         
                         <page string="Invitations" groups="base.group_no_one">
+                            <button name="do_sendmail" type="object" string="Send mail" icon="terp-mail-message-new" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" >
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
-                                    <field name="partner_id" /> <!--on_change="onchange_partner_id(partner_id)"/>-->
+                                    <field name="partner_id" />
                                     <field name="state" />
                                     <field name="email" widget="email"/>                                   
                                      

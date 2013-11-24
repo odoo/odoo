@@ -114,5 +114,5 @@
   I invite a user for meeting.
 -
   !python {model: calendar.attendee}: |
-    meeting_id = self.create(cr, uid, {'user_id': ref('base.user_root'), 'email': 'user@meeting.com' })
+    meeting_id = self.create(cr, uid, {'partner_id': ref('base.partner_root'), 'email': 'user@meeting.com' })
     self.do_accept(cr, uid, [meeting_id])
