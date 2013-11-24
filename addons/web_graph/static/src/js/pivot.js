@@ -38,6 +38,7 @@ var PivotTable = openerp.web.Class.extend({
 		this.domain = options.domain;
 		this.measure = options.measure;
 		this.measure_label = options.measure_label;
+		this.total = 0;
 	},
 
 	// Load initial data into the rows, cols and cells array.
@@ -50,6 +51,7 @@ var PivotTable = openerp.web.Class.extend({
 				.then(function (total) {
 					var val = total[0].attributes.aggregates[self.measure];
 					self.set_value(self.rows.main.id, self.cols.main.id, val);
+					self.total = val;
 				});
 
 		return $.when(total, initial_group);
@@ -79,7 +81,7 @@ var PivotTable = openerp.web.Class.extend({
 		var cell = _.find(this.cells, function (c) {
 			return ((c.row_id == row) && (c.col_id == col));
 		});
-		return (cell) ? cell.value : '';
+		return (cell === undefined) ? undefined : cell.value;
 	},
 
 	get_col: function (id) {

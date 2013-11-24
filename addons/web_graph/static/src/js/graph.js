@@ -77,6 +77,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.pivot_table.fold_cols();
             this.draw_table();
         },
+
+        'click label.graph_heat_map' : function (event) {
+            this.heat_map_mode = !this.heat_map_mode;
+            this.draw_table();
+        },
     },
 
     view_loading: function (fields_view_get) {
@@ -90,6 +95,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             row_groupby = [];
 
         this.pivot_table = null;
+        this.heat_map_mode = false;
 
         // get the default groupbys and measure defined in the field view
         _.each(fields_view_get.arch.children, function (field) {
@@ -300,7 +306,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     draw_row: function (row) {
-        var pivot = this.pivot_table,
+        var self = this,
+            pivot = this.pivot_table,
             html_row = $('<tr></tr>'),
             row_header = this.make_border_cell(1,1)
                 .append(this.make_header_title(row).attr('data-row-id', row.id))
@@ -314,7 +321,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         _.each(pivot.cols.headers, function (col) {
             if (col.children.length === 0) {
-                var cell = $('<td></td>').append(pivot.get_value(row.id, col.id));
+                var value = pivot.get_value(row.id, col.id),
+                    cell = $('<td></td>');
+
+                cell.append((value === undefined) ? '' : value);
+                if ((self.heat_map_mode) && (value !== undefined)) {
+                    // heat map
+                    console.log("heat map", self.heat_map_mode, pivot.total);
+                    var ratio = Math.floor(70 + 185*(pivot.total - value)/pivot.total);
+                    console.log("ratio",ratio);
+                    cell.css("background-color", "rgb(255," + ratio + "," + ratio + ")");
+                } 
                 html_row.append(cell);
             }
         });
