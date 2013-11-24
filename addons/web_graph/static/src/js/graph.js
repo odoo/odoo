@@ -178,7 +178,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     switch_mode: function (mode) {
-        var self = this;
         this.mode = mode;
         if (mode === 'pivot') {
             this.table.css('display', 'block');
@@ -188,7 +187,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.svg.remove();
             this.svg = $('<div><svg></svg></div>');
             this.$el.filter('.graph_main_content').append(this.svg);
-            draw_chart(this.svg, mode, this.pivot_table);
+            draw_chart(mode, this.pivot_table);
 
         }
     },
@@ -326,9 +325,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
                 cell.append((value === undefined) ? '' : value);
                 if ((self.heat_map_mode) && (value !== undefined)) {
-                    // heat map
-                    var ratio = Math.floor(70 + 185*(pivot.total - value)/pivot.total);
-                    cell.css("background-color", "rgb(255," + ratio + "," + ratio + ")");
+                    var color = Math.floor(50 + 205*(pivot.total - value)/pivot.total);
+                    cell.css("background-color", "rgb(255," + color + "," + color + ")");
                 } 
                 html_row.append(cell);
             }
