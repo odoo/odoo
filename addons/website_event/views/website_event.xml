@@ -203,6 +203,24 @@
         </t>
     </template>
 
+    <template id="template_location">
+        <t t-call="website_event.layout">
+            <section class="container" data-snippet-id="title">
+                <h1 class="text-center">Event Location</h1>
+            </section>
+            <div class="oe_structure oe_empty"/>
+        </t>
+    </template>
+
+    <template id="template_intro">
+        <t t-call="website_event.layout">
+            <section class="container" data-snippet-id="title">
+                <h1 class="text-center">Event Introduction</h1>
+            </section>
+            <div class="oe_structure oe_empty"/>
+        </t>
+    </template>
+
     <template id="event_description_full">
         <t t-call="website_event.layout">
             <div class="container">
@@ -216,10 +234,9 @@
                     <span t-field="event.city"/>,
                     <span t-field="event.country_id"/>
                 </h4>
-
                 <div class="row mt32 mb32">
                     <div class="col-md-8">
-                        <form t-action="/event/#{ event.id }/add_cart" method="post" t-if="event.event_ticket_ids">
+                        <form t-action="/event/add_cart?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
                             <table class="table table-striped">
                                 <thead>
                                     <tr>

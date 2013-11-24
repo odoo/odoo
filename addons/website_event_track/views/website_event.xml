@@ -39,6 +39,10 @@
         <t t-call="website_event.layout">
             <div class="oe_structure"/>
             <div class="container">
+                <section data-snippet-id="title">
+                    <h1 class="text-center mb0">Call for Proposals</h1>
+                    <h2 class="text-center text-muted mb32" t-esc="event.name"></h2>
+                </section>
                 <section id="forms" t-if="not event.show_track_proposal">
                     <h1>Proposals are closed!</h1>
                     <p>
@@ -47,60 +51,80 @@
                 </section>
                 <section class="row">
                     <div class="col-md-7">
-                        <div class="oe_structure"/>
-                        <div class="row">
-                            <section id="forms" t-if="event.show_track_proposal">
-                                <form class="form-horizontal mt32" action="/event/track_proposal/success" method="post" enctype="multipart/form-data">
-                                    <input type="hidden" t-att-value="event.id" name="event"/>
-                                    <div class="form-group">
-                                        <label class="col-md-3 col-sm-4 control-label" for="partner_name">Speaker Name</label>
-                                        <div class="col-md-7 col-sm-8">
-                                            <input type="text" class="form-control" name="partner_name" required="True" />
-                                        </div>
+                        <div class="oe_structure">
+                            <section data-snippet-id="text">
+                                <h3 class="page-header mt16">
+                                    Introduction
+                                </h3>
+                                <p>
+                                    We will accept a broad range of
+                                    presentations, from reports on academic and
+                                    commercial projects to tutorials and case
+                                    studies. As long as the presentation is
+                                    interesting and potentially useful to the
+                                    audience, it will be considered for
+                                    inclusion in the programme.
+                                </p>
+                            </section>
+                            <section data-snippet-id="text">
+                                <h3 class="page-header">Application</h3>
+                                <p>
+                                    Fill this form to propose your talk.
+
+                                </p>
+                            </section>
+                        </div>
+                        <section id="forms" t-if="event.show_track_proposal">
+                            <form class="form-horizontal mt32" action="/event/track_proposal/success" method="post" enctype="multipart/form-data">
+                                <input type="hidden" t-att-value="event.id" name="event"/>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-4 control-label" for="partner_name">Speaker Name</label>
+                                    <div class="col-md-7 col-sm-8">
+                                        <input type="text" class="form-control" name="partner_name" required="True" />
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-md-3 col-sm-4 control-label" for="email_from">Your Email</label>
-                                        <div class="col-md-7 col-sm-8">
-                                            <input type="email" class="form-control" name="email_from" required="True" />
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-4 control-label" for="email_from">Your Email</label>
+                                    <div class="col-md-7 col-sm-8">
+                                        <input type="email" class="form-control" name="email_from" required="True" />
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-md-3 col-sm-4 control-label" for="phone">Your Phone</label>
-                                        <div class="col-md-7 col-sm-8">
-                                            <input type="text" class="form-control" name="phone" required="True" />
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-4 control-label" for="phone">Your Phone</label>
+                                    <div class="col-md-7 col-sm-8">
+                                        <input type="text" class="form-control" name="phone" required="True" />
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-md-3 col-sm-4 control-label" for="phone">Tags</label>
-                                        <div class="col-md-7 col-sm-8">
-                                            <div class="row">
-                                                <div class="col-sm-4" t-foreach="event.track_tag_ids" t-as="tag">
-                                                    <input type="checkbox" t-att-value="tag.id" name="tags"/>
-                                                    <t t-esc="tag.name"/>
-                                                </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-4 control-label" for="phone">Tags</label>
+                                    <div class="col-md-7 col-sm-8">
+                                        <div class="row">
+                                            <div class="col-sm-4" t-foreach="event.track_tag_ids" t-as="tag">
+                                                <input type="checkbox" t-att-value="tag.id" name="tags"/>
+                                                <t t-esc="tag.name"/>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-md-3 col-sm-4 control-label" for="phone">Speaker Biography</label>
-                                        <div class="col-md-7 col-sm-8">
-                                            <textarea  class="form-control" name="biography" style="min-height: 120px"/>
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-4 control-label" for="phone">Speaker Biography</label>
+                                    <div class="col-md-7 col-sm-8">
+                                        <textarea  class="form-control" name="biography" style="min-height: 120px"/>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-md-3 col-sm-4 control-label" for="description">Talk Introduction</label>
-                                        <div class="col-md-7 col-sm-8">
-                                            <textarea  class="form-control" name="description" style="min-height: 120px"/>
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-4 control-label" for="description">Talk Introduction</label>
+                                    <div class="col-md-7 col-sm-8">
+                                        <textarea  class="form-control" name="description" style="min-height: 120px"/>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                                            <button type="submit" class="btn btn-primary">Submit Proposal</button>
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                                        <button type="submit" class="btn btn-primary">Submit Proposal</button>
                                     </div>
-                                </form>
-                            </section>
-                        </div>
+                                </div>
+                            </form>
+                        </section>
                         <div class="oe_structure"/>
                     </div><div class="col-md-4 col-md-offset-1">
                         <div class="panel panel-default">

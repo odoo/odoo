@@ -165,14 +165,23 @@ class website_event(http.Controller):
 
     @website.route(['/event/<model("event.event"):event>'], type='http', auth="public", multilang=True)
     def event(self, event=None, **post):
+        print 'ICI'
+        if event.menu_id and event.menu_id.child_id:
+            print 'MENU', website.menu_id.child_id[0].url
+            return request.redirect(website.menu_id.child_id[0].url)
+        return request.redirect('/event/register/'+event.id)
+
+    @website.route(['/event/register/<model("event.event"):event>'], type='http', auth="public", multilang=True)
+    def event(self, event=None, **post):
         values = {
             'event': event,
             'range': range,
         }
         return request.website.render("website_event.event_description_full", values)
 
-    @website.route(['/event/<int:event_id>/add_cart'], type='http', auth="public", multilang=True)
+    @website.route(['/event/add_cart'], type='http', auth="public", multilang=True)
     def add_cart(self, event_id=None, **post):
+        assert event_id, 'An event is required'
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')

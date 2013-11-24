@@ -99,7 +99,6 @@ class event_track(osv.osv):
         'stage_id': _read_group_stage_ids,
     }
 
-
 #
 # Events
 #
@@ -120,4 +119,12 @@ class event_event(osv.osv):
         'show_tracks': False,
         'show_blog': False,
     }
+    def _get_new_menu_pages(serf, cr, uid, event, context=None):
+        context = context or {}
+        result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
+        if event.blog_id:
+            pass
+        if event.show_track_proposal:
+            result.append( _('Talk Proposals'), '/event/track_proposal/'+str(event.id))
+        return result
 

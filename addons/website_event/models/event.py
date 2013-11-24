@@ -35,6 +35,48 @@ class event(osv.osv):
     _name = 'event.event'
     _inherit = ['event.event','website.seo.metadata']
 
+    def _get_new_menu_pages(serf, cr, uid, event, context=None):
+        context = context or {}
+        todo = [
+            (_('Introduction'), 'website_event.template_intro'),
+            (_('Location'), 'website_event.template_location')
+        ]
+        web = request.registry['website']
+        result = []
+        for name,path in todo:
+            newpath = web.new_page(request.cr, request.uid, path, request.context)
+            url = "/event/event.id/page/" + newpath
+            result.append((name, newpath))
+        return result
+
+    def _set_show_menu(self, cr, uid, ids, name, value, arg, context=None):
+        menuobj = self.pool.get('website.menu')
+        for event in self.browse(cr, uid, ids, context=context):
+            if event.menu_id and not value:
+                menuobj.unlink(cr, uid, [event.menu_id.id], context=context)
+            elif value and not event.menu_id:
+                root = menuobj.create(cr, uid, {
+                    'name': event.name
+                }, context=context)
+                tocreate = self._get_new_menu_pages(cr, uid, event, context)
+                tocreate.append((_('Register'), '/event/register/'+str(event.id)))
+                sequence = 0
+                for name,url in tocreate:
+                    menuobj.create(cr, uid, {
+                        'name': name,
+                        'url': url,
+                        'parent_id': root,
+                        'sequence': sequence
+                    }, context=context)
+                    sequence += 1
+        return True
+
+    def _get_show_menu(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, '')
+        for event in self.browse(cr, uid, ids, context=context):
+            res[event.id] = bool(event.menu_id)
+        return res
+
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, '')
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
@@ -55,7 +97,7 @@ class event(osv.osv):
             help="Website communication history",
         ),
         'website_url': fields.function(_website_url, string="Website url"),
-        'show_menu': fields.boolean('Dedicated Menu'),
+        'show_menu': fields.function(_get_show_menu, fnct_inv=_set_show_menu, type='boolean', string='Dedicated Menu'),
         'menu_id': fields.many2one('website.menu', 'Event Menu'),
     }
     _defaults = {
