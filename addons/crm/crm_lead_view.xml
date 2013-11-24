@@ -621,7 +621,6 @@
                 if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
                     self.case_mark_lost(cr, uid, context['active_ids'], context=context)
             </field>
-            <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/>
         </record>
 
         <record id="ir_mark_as_lost" model="ir.values">
