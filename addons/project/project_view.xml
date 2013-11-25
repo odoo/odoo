@@ -158,7 +158,7 @@
                             <group string="Miscellaneous" name="misc">
                                 <field name="date_start"/>
                                 <field name="date" string="End Date"/>
-                                <field name="priority" groups="base.group_no_one"/>
+                                <field name="sequence" groups="base.group_no_one"/>
                                 <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                                 <field name="currency_id" groups="base.group_multi_currency" required="1"/>
                                 <field name="parent_id" string="Parent" help="Append this project to another one using analytic accounts hierarchy" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}" />
