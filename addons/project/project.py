@@ -41,14 +41,13 @@ class project_task_type(osv.osv):
         'case_default': fields.boolean('Default for New Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
-        'fold': fields.boolean('Folded by Default',
-                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+        'fold': fields.boolean('Folded in Kanban View',
+                               help='This stage is folded in the kanban view when'
+                               'there are no records in that stage to display.'),
     }
 
     _defaults = {
         'sequence': 1,
-        'fold': False,
-        'case_default': False,
         'project_ids': lambda self, cr, uid, ctx=None: self.pool['project.task']._get_default_project_id(cr, uid, context=ctx),
     }
     _order = 'sequence'
@@ -189,6 +188,8 @@ class project(osv.osv):
         return res
 
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
+        """ :deprecated: this method will be removed with OpenERP v8. Use task_ids
+                         fields instead. """
         if context is None:
             context = {}
         res = dict.fromkeys(ids, 0)
@@ -265,7 +266,10 @@ class project(osv.osv):
             }),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'task_count': fields.function(_task_count, type='integer', string="Open Tasks"),
+        'task_count': fields.function(_task_count, type='integer', string="Open Tasks",
+                                      deprecated="This field will be removed in OpenERP v8. Use task_ids one2many field instead."),
+        'task_ids': fields.one2many('project.task', 'project_id',
+                                    domain=[('stage_id.fold', '=', False)]),
         'color': fields.integer('Color Index'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Internal email associated with this project. Incoming emails are automatically synchronized"
@@ -556,8 +560,9 @@ class task(osv.osv):
     _mail_post_access = 'read'
     _track = {
         'stage_id': {
-            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
-            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id.sequence != 1,
+            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
+            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
+            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id.sequence > 1,
         },
         'user_id': {
             'project.mt_task_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
@@ -582,7 +587,7 @@ class task(osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         project_id = self._get_default_project_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], project_id, [('sequence', '=', '1')], context=context)
+        return self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
         """ Returns ID of project based on the value of 'default_project_id'
@@ -994,7 +999,7 @@ class task(osv.osv):
 
     def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
         for task in self.browse(cr, uid, ids, context=context):
-            if (task.stage_id and task.stage_id.sequence == 1) or (task.planned_hours == 0.0):
+            if (task.stage_id and task.stage_id.sequence <= 1) or (task.planned_hours == 0.0):
                 self.write(cr, uid, [task.id], {'planned_hours': remaining_time}, context=context)
         self.write(cr, uid, ids, {'remaining_hours': remaining_time}, context=context)
         return True
@@ -1127,7 +1132,8 @@ class task(osv.osv):
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
-        if custom_values is None: custom_values = {}
+        if custom_values is None:
+            custom_values = {}
         defaults = {
             'name': msg.get('subject'),
             'planned_hours': 0.0,
@@ -1137,10 +1143,10 @@ class task(osv.osv):
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """
-        if update_vals is None: update_vals = {}
-        act = False
+        if update_vals is None:
+            update_vals = {}
         maps = {
-            'cost':'planned_hours',
+            'cost': 'planned_hours',
         }
         for line in msg['body'].split('\n'):
             line = line.strip()
@@ -1153,9 +1159,7 @@ class task(osv.osv):
                         update_vals[field] = float(res.group(2).lower())
                     except (ValueError, TypeError):
                         pass
-        if act:
-            getattr(self,act)(cr, uid, ids, context=context)
-        return super(task,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+        return super(task, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
 class project_work(osv.osv):
     _name = "project.task.work"
@@ -1243,6 +1247,8 @@ class account_analytic_account(osv.osv):
         return analytic_account_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         vals_for_project = vals.copy()
         for account in self.browse(cr, uid, ids, context=context):
             if not vals.get('name'):

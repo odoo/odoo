@@ -157,7 +157,7 @@
                     <field name="date"/>
                     <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
                     <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" help="Confirmed Expenses"/>
-                    <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay" help="Expenses to Invoice"/>
+                    <filter icon="terp-dolar" domain="['|',('state','=','accepted'),('state','=','done')]" string="To Pay" help="Expenses to Invoice"/>
                     <separator/>
                     <filter domain="[('user_id', '=', uid)]" string="My Expenses"/>
                     <field name="employee_id"/>
