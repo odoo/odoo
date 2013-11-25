@@ -52,7 +52,7 @@ class website_hr_recruitment(http.Controller):
     def detail(self, job, **kwargs):
         return request.website.render("website_hr_recruitment.detail", {'job': job})
 
-    @website.route(['/job/success'], type='http', auth="admin", multilang=True)
+    @website.route(['/job/success'], methods=['POST'], type='http', auth="admin", multilang=True)
     def success(self, **post):
         data = {
             'name': _('Online Form'),
