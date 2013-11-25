@@ -423,7 +423,9 @@
 
                             <!-- Labels -->
                             <group colspan="2" string="Choice of answers" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
-                                <field colspan="2"  name="simple_choice_display" string="Display mode" />
+                                <field colspan="2"  name="display_mode" string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice'])]}"/>
+                                <field colspan="2"  name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
+
                                 <field colspan="2" name="labels_ids" nolabel="1" context="{'default_question_id': active_id}">
                                     <tree string="Suggested answers" editable="bottom">
                                         <field name="sequence" widget="handle"/>

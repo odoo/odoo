@@ -22,6 +22,7 @@
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
+from openerp.osv import fields
 from openerp import SUPERUSER_ID
 
 import werkzeug
@@ -48,15 +49,17 @@ class WebsiteSurvey(http.Controller):
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
         return request.website.render('survey.list', {'surveys': surveys})
 
+
     # Survey displaying
-    @website.route(['/survey/fill/<model("survey.survey"):survey>',
-        '/survey/fill/<model("survey.survey"):survey>/<string:token>'],
+    @website.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>'],
         type='http', auth='public', multilang=True)
     def fill_survey(self, survey, token=None, **post):
         '''Display and validates a survey'''
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
         user_input_obj = request.registry['survey.user_input']
+
+        # Mettre methode start survey sur objet survey
 
         # In case of bad survey, redirect to surveys list
         if survey_obj.exists(cr, uid, survey.id, context=context) == []:
@@ -68,7 +71,7 @@ class WebsiteSurvey(http.Controller):
 
         # In case of non open surveys
         if survey.state != 'open':
-                return request.website.render("survey.notopen")
+            return request.website.render("survey.notopen")
 
         # If enough surveys completed
         if survey.user_input_limit > 0:
@@ -91,35 +94,34 @@ class WebsiteSurvey(http.Controller):
             else:
                 user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
 
+        # Prevent opening of the survey if the deadline has turned out
+        # ! This will NOT disallow access to users who have already partially filled the survey !
+        # if user_input.deadline > fields.date.now() and user_input.state == 'new':
+        #     return request.website.render("survey.notopen")
+            # TODO check if this is ok
+
         _logger.debug('Incoming data: %s', post)
 
-        # if user input.state = new => page -1
-        # sinon, chercher la dernière page sur laquelle on a des infos enregistrées
-        # si c'est la dernière, afficher la page de conclusion
+        # Select the right page
 
-        # Display success message if totally succeeded
-        if post and post['next'] == "finished":
+        # if user_input.state == 'new' and not post:  # Intro page
+        #     data = {'survey': survey, 'page': None, 'token': user_input.token}
+        #     return request.website.render('survey.survey', data)
+        if user_input.state == 'new':  # First page
+            page, page_nr, last = self.find_next_page(survey, user_input)
+            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+            if last:
+                data.update({'last': True})
+            return request.website.render('survey.survey', data)
+        elif user_input.state == 'done':  # Display success message
             return request.website.render('survey.finished', {'survey': survey})
-
-        # Page selection
-        pagination = {'current': -1, 'next': 0}
-        # Default pagination if first opening
-
-        if 'current' in post and 'next' in post and post['next'] != "finished":
-            oldnext = int(post['next'])
-            if oldnext not in range(0, len(survey.page_ids)):
-                raise Exception("This page does not exist")
-            else:
-                pagination['current'] = oldnext
-            if oldnext == len(survey.page_ids) - 1:
-                pagination['next'] = 'finished'
-            else:
-                pagination['next'] = oldnext + 1
-
-        return request.website.render('survey.survey',
-                                    {'survey': survey,
-                                    'pagination': pagination,
-                                    'token': user_input.token})
+        elif user_input.state == 'skip':
+            page, page_nr, last = self.find_next_page(survey, user_input)
+            if last:
+                data.update({'last': True})
+            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+        else:
+            return request.website.render("website.403")
 
     # @website.route(['/survey/prefill/<model("survey.survey"):survey>'], type='json', auth='public', multilang=True):
 
@@ -134,21 +136,30 @@ class WebsiteSurvey(http.Controller):
                     type='http', auth='public', multilang=True)
     def submit(self, survey, **post):
         _logger.debug('Incoming data: %s', post)
-        page_nr = int(post['current'])
-        questions = survey.page_ids[page_nr].question_ids
+        page_id = int(post['page_id'])
+        cr, uid, context = request.cr, request.uid, request.context
+        questions_obj = request.registry['survey.question']
+        questions_ids = questions_obj.search(cr, uid, [('page_id', '=', page_id)],
+            context=context)
+        questions = questions_obj.browse(cr, uid, questions_ids, context=context)
 
         errors = {}
         for question in questions:
-            answer_tag = "%s_%s_%s" % (survey.id, page_nr, question.id)
-            errors.update(self.validate_question(survey.id, page_nr, question, post, answer_tag))
+            answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
+            errors.update(self.validate_question(question, post, answer_tag))
 
         ret = {}
         if (len(errors) != 0):
             ret['errors'] = errors
         else:
             cr, uid, context = request.cr, request.uid, request.context
+            user_input_obj = request.registry['survey.user_input']
+            try:
+                user_input_id = user_input_obj.search(cr, uid, [('token', '=', post['token'])])[0]
+            except IndexError:  # Invalid token
+                return request.website.render("website.403")
             # Store here data if allowed
-            ret['redirect'] = "nexturl"
+            ret['redirect'] = True
         return json.dumps(ret)
 
     # Printing routes
@@ -161,9 +172,31 @@ class WebsiteSurvey(http.Controller):
                                     {'survey': survey,
                                     'pagination': pagination})
 
+    # Pagination
+
+    def find_next_page(self, survey, user_input):
+        ''' Find the browse record of the first unfilled page '''
+        if not user_input.user_input_line_ids:
+            return survey.page_ids[0], 0, len(survey.page_ids) == 1
+        else:
+            filled_pages = set()
+            for user_input_line in user_input.user_input_line_ids:
+                filled_pages.add(user_input_line.page_id)
+            last = False
+            page_nr = 0
+            nextpage = None
+            for page in survey.pages_ids:
+                if page in filled_pages:
+                    page_nr = page_nr + 1
+                else:
+                    nextpage = page
+                if page_nr == len(survey.pages_ids):
+                    last = True
+            return nextpage, page_nr, last
+
     # Validation methods
 
-    def validate_question(self, survey_id, page_nr, question, post, answer_tag):
+    def validate_question(self, question, post, answer_tag):
         ''' Routing to the right question valider, depending on question type '''
         try:
             checker = getattr(self, 'validate_' + question.type)
@@ -171,9 +204,9 @@ class WebsiteSurvey(http.Controller):
             _logger.warning(question.type + ": This type of question has no validation method")
             return {}
         else:
-            return checker(survey_id, page_nr, question, post, answer_tag)
+            return checker(question, post, answer_tag)
 
-    def validate_free_text(self, survey_id, page_nr, question, post, answer_tag):
+    def validate_free_text(self, question, post, answer_tag):
         errors = {}
         answer = post[answer_tag].strip()
         # Empty answer to mandatory question
@@ -181,7 +214,7 @@ class WebsiteSurvey(http.Controller):
             errors.update({answer_tag: question.constr_error_msg})
         return errors
 
-    def validate_textbox(self, survey_id, page_nr, question, post, answer_tag):
+    def validate_textbox(self, question, post, answer_tag):
         errors = {}
         answer = post[answer_tag].strip()
         # Empty answer to mandatory question
@@ -232,7 +265,7 @@ class WebsiteSurvey(http.Controller):
                 pass
         return errors
 
-    def validate_numerical_box(self, survey_id, page_nr, question, post, answer_tag):
+    def validate_numerical_box(self, question, post, answer_tag):
         errors = {}
         answer = post[answer_tag].strip()
         # Empty answer to mandatory question
@@ -246,7 +279,7 @@ class WebsiteSurvey(http.Controller):
                 errors.update({answer_tag: question.constr_error_msg})
         return errors
 
-    def validate_datetime(self, survey_id, page_nr, question, post, answer_tag):
+    def validate_datetime(self, question, post, answer_tag):
         errors = {}
         answer = post[answer_tag].strip()
         # Empty answer to mandatory question
@@ -256,20 +289,17 @@ class WebsiteSurvey(http.Controller):
         # TODO when datepicker will be available
         return errors
 
-    # def validate_simple_choice(self, survey_id, page_nr, question, post, answer_tag):
-    #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
+    # def validate_simple_choice(self, question, post, answer_tag):
     #     problems = []
     #     if question.constr_mandatory:
     #         problems = problems + self.__has_empty_input(question, post, answer_tag)
     #     return problems
 
-    # def validate_multiple_choice(self, survey_id, page_nr, question, post, answer_tag):
-    #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
+    # def validate_multiple_choice(self, question, post, answer_tag):
     #     problems = []
     #     return problems
 
-    # def validate_matrix(self, survey_id, page_nr, question, post, answer_tag):
-    #     answer_tag = survey_id.__str__() + '*' + page_nr + '*' + question.id.__str__()
+    # def validate_matrix(self, question, post, answer_tag):
     #     problems = []
     #     return problems
 

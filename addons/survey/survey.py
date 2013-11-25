@@ -76,7 +76,7 @@ class survey_survey(osv.osv):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
             'web.base.url')
         for survey_browse in self.browse(cr, uid, ids, context=context):
-            res[survey_browse.id] = urljoin(base_url, "survey/fill/%s/"
+            res[survey_browse.id] = urljoin(base_url, "survey/start/%s/"
                                             % survey_browse.id)
         return res
 
@@ -96,7 +96,7 @@ class survey_survey(osv.osv):
             [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
             ('cancel', 'Cancelled')], 'Status', required=1, readonly=1,
             translate=1),
-        'visible_to_user': fields.boolean('Visible in the Surveys menu',
+        'visible_to_user': fields.boolean('Public in website',
             help="If unchecked, only invited users will be able to open the survey."),
         'auth_required': fields.boolean('Login required',
             help="Users with a public link will be requested to login before taking part to the survey",
@@ -113,7 +113,7 @@ class survey_survey(osv.osv):
         'user_input_ids': fields.one2many('survey.user_input', 'survey_id',
             'User responses', readonly=1),
         'public_url': fields.function(_get_public_url,
-            string="Public link", searchable=True, type="char", store=True),
+            string="Public link", type="char"),
         'email_template_id': fields.many2one('email.template',
             'Email Template', ondelete='set null'),
         'thank_you_message': fields.html('Thank you message', translate=True,
@@ -364,11 +364,15 @@ class survey_question(osv.osv):
             'question_id', 'Suggested answers', oldname='answer_choice_ids'),
 
         # Display options
-        'simple_choice_display': fields.selection([('1col', '1 column choices'),
-                ('2col', '2 columns choices'),
-                ('3col', '3 columns choices'),
-                ('horizontal', 'Horizontal choices'),
-                ('dropdown', 'Dropdown menu')], 'Display mode'),
+        'column_nb': fields.selection([('12', '1 column choices'),
+                ('6', '2 columns choices'),
+                ('4', '3 columns choices'),
+                ('3', '4 columns choices'),
+                ('2', '6 columns choices')
+                ], 'Number of columns'),
+        'display_mode': fields.selection([('columns', 'Columns'),
+                ('dropdown', 'Dropdown menu')
+                ], 'Display mode'),
 
         # Comments
         'comments_allowed': fields.boolean('Allow comments',
@@ -417,7 +421,8 @@ class survey_question(osv.osv):
     _defaults = {
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
         'type': 'free_text',
-        'simple_choice_display': '1col',
+        'column_nb': '12',
+        'display_mode': 'dropdown',
         'constr_type': 'at least',
         'constr_minimum_req_ans': 1,
         'constr_error_msg': lambda s, cr, uid, c:
@@ -579,9 +584,9 @@ class survey_user_input(osv.osv):
             'Answer Type', required=1, oldname="response_type"),
         'state': fields.selection([('new', 'Not started yet'),
             ('skip', 'Partially completed'),
-            ('done', 'Completed'),
-            ('test', 'Test')], 'Status',
+            ('done', 'Completed')], 'Status',
             readonly=True),
+        'test_entry': fields.boolean('Test entry'),
 
         # Optional Identification data
         'token': fields.char("Identification token", readonly=1),
@@ -692,19 +697,20 @@ class survey_user_input_line(osv.osv):
     _columns = {
         'user_input_id': fields.many2one('survey.user_input', 'User Input',
             ondelete='cascade', required=1),
-        'survey_id': fields.many2one('survey.survey', 'Survey', required=1,
-            readonly=1, ondelete='cascade'),
-
-        'date_create': fields.datetime('Create Date', required=1),  # drop
-        'skipped': fields.boolean('Skipped'),
+        'survey_id': fields.related('user_input_id', 'survey_id',
+            type="many2one", relation="survye.survey", string='Survey'),
         'question_id': fields.many2one('survey.question', 'Question',
             ondelete='restrict'),
+        'page_id': fields.related('question_id', 'page_id', type='many2one',
+            relation='survey.page', string="Page"),
+        'date_create': fields.datetime('Create Date', required=1),  # drop
+        'skipped': fields.boolean('Skipped'),
         'answer_type': fields.selection([('textbox', 'Text box'),
                 ('numerical_box', 'Numerical box'),
                 ('free_text', 'Free Text'),
                 ('datetime', 'Date and Time'),
-                ('checkbox', 'Checkbox'),
-            ], 'Question Type', required=1),
+                ('checkbox', 'Checkbox')],
+            'Question Type', required=1),
         'value_text': fields.char("Text answer"),
         'value_number': fields.float("Numerical answer"),
         'value_date': fields.datetime("Date answer"),
