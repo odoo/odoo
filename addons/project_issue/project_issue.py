@@ -320,56 +320,6 @@ class project_issue(osv.Model):
         """
         return self.set_priority(cr, uid, ids, '3')
 
-    def convert_issue_task(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-
-        case_obj = self.pool.get('project.issue')
-        data_obj = self.pool.get('ir.model.data')
-        task_obj = self.pool.get('project.task')
-
-        result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
-        res = data_obj.read(cr, uid, result, ['res_id'])
-        id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
-        id3 = data_obj._get_id(cr, uid, 'project', 'view_task_tree2')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
-        for bug in case_obj.browse(cr, uid, ids, context=context):
-            new_task_id = task_obj.create(cr, uid, {
-                'name': bug.name,
-                'partner_id': bug.partner_id.id,
-                'description':bug.description,
-                'date_deadline': bug.date,
-                'project_id': bug.project_id.id,
-                # priority must be in ['0','1','2','3','4'], while bug.priority is in ['1','2','3','4','5']
-                'priority': str(int(bug.priority) - 1),
-                'user_id': bug.user_id.id,
-                'planned_hours': 0.0,
-            })
-            vals = {
-                'task_id': new_task_id,
-                'stage_id': self.stage_find(cr, uid, [bug], bug.project_id.id, [('sequence', '=', 1)], context=context),
-            }
-            message = _("Project issue <b>converted</b> to task.")
-            self.message_post(cr, uid, [bug.id], body=message, context=context)
-            case_obj.write(cr, uid, [bug.id], vals, context=context)
-
-        return  {
-            'name': _('Tasks'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'project.task',
-            'res_id': int(new_task_id),
-            'view_id': False,
-            'views': [(id2,'form'),(id3,'tree'),(False,'calendar'),(False,'graph')],
-            'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id'],
-            'nodestroy': True
-        }
-
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)
         if not default:

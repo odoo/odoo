@@ -144,6 +144,9 @@
 .pos .pos-right-align {
     text-align: right;
 }
+.pos .pos-center-align {
+    text-align: center;
+}
 .pos .pos-right-align input {
     text-align: right;
     border: 1px solid #cecbcb;
@@ -332,12 +335,12 @@
     text-align: center;
     vertical-align: top;
     width: 205px;
-    max-height: 232px;
+    max-height: 350px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 .pos .paypad button {
-    height: 50px;
+    height: 39px;
     display: block;
     width: 100%;
     margin: 0px -6px 4px -2px;
@@ -788,6 +791,10 @@
 }
 
 @media print {
+<<<<<<< TREE
+    .pos{
+        background: white !important;
+    }
     .pos .pos-topheader, .pos .pos-leftpane {
         display: none !important;
     }
@@ -807,9 +814,6 @@
     .pos-actionbar {
         display: none !important;
     }
-    .pos-sale-ticket {
-        margin: 0;
-    }
     .debug-widget{
         display: none !important;
     }
@@ -819,9 +823,12 @@
         background: transparent !important;
     }
     .pos .pos-sale-ticket{
+        margin: 0;
         margin-left: auto !important;
         margin-right: auto !important;
-        border: solid 1px black !important;
+        border: none !important;
+        font-size: 13px !important;
+        width: 266px !important;
     }
 }
 
