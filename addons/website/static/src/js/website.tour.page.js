@@ -40,6 +40,9 @@
                     content: "Click here to create a new menu entry and manage options.",
                     triggers: function () {
                         $(document).one('shown.bs.modal', function () {
+                            $('.modal-header:first button.close').one('click', function () {
+                                self.stop();
+                            });
                             self.moveToNextStep();
                         });
                     },
@@ -52,6 +55,9 @@
                     content: "Click here to create a new menu entry.",
                     triggers: function () {
                         $(document).one('shown.bs.modal', function () {
+                            $('.modal-header:last button.close').one('click', function () {
+                                self.stop();
+                            });
                             self.moveToNextStep();
                         });
                     },
