@@ -72,6 +72,39 @@
                     template: self.popover({ next: "OK" }),
                 },
                 {
+                    stepId: 'update-image',
+                    element: '#wrap img.img:first',
+                    placement: 'top',
+                    title: "Update image",
+                    content: "Click here to set an image describing your product.",
+                    triggers: function () {
+                        function registerClick () {
+                            $('button.image-edit-button').one('click', function () {
+                                $('#wrap img.img:first').off('hover', registerClick);
+                                self.moveToNextStep();
+                            });
+                        }
+                        $('#wrap img.img:first').on('hover', registerClick);
+
+                    },
+                },
+                {
+                    stepId: 'upload-image',
+                    element: 'button.filepicker',
+                    placement: 'left',
+                    title: "Upload image",
+                    content: "Click on 'Upload an image from your computer' to pick an image describing your product.",
+                    template: self.popover({ next: "OK" }),
+                },
+                {
+                    stepId: 'save-image',
+                    element: 'button.save',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Save the image",
+                    content: "Click 'Save Changes' to add the image to the product decsription.",
+                },
+                {
                     stepId: 'add-block',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
