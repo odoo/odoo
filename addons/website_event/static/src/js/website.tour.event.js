@@ -20,8 +20,8 @@
                     stepId: 'welcome-event',
                     orphan: true,
                     backdrop: true,
-                    title: "Event",
-                    content: "We will show how to create a new event.",
+                    title: "Create an Event",
+                    content: "Let's go through the firsts step to publish a new event.",
                     template: self.popover({ next: "Start Tutorial", end: "Skip It" }),
                 },
                 {
@@ -29,15 +29,15 @@
                     element: '#content-menu-button',
                     placement: 'left',
                     reflex: true,
-                    title: "Edit the content",
-                    content: "Click here to add content to your site.",
+                    title: "Add Content",
+                    content: "The <em>Content</em> menu allows to create new pages, events, menus, etc.",
                 },
                 {
                     stepId: 'new-post-entry',
                     element: 'a[data-action=new_event]',
                     placement: 'left',
-                    title: "New event",
-                    content: "Click here to create an event.",
+                    title: "New Event",
+                    content: "Click here to create a new event.",
                     triggers: function () {
                         var $doc = $(document);
                         function stopNewEvent () {
@@ -57,15 +57,14 @@
                     stepId: 'choose-name',
                     element: '.modal input',
                     placement: 'right',
-                    title: "Choose the event name",
-                    content: "Choose a name for the new event and click 'Continue'.",
+                    title: "Choose an Event Name",
+                    content: "Choose a name for your new event and click <em>'Continue'</em>. e.g: Technical Training",
                 },
                 {
                     stepId: 'event-page',
                     orphan: true,
-                    backdrop: true,
-                    title: "New event created",
-                    content: "You just created a new event. We are now going to edit it.",
+                    title: "New Event Created",
+                    content: "This is your new event page. We will edit the event presentation page.",
                     template: self.popover({ next: "OK" }),
                 },
                 {

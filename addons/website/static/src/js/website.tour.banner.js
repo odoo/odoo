@@ -78,11 +78,48 @@
                     title: "Customize the banner",
                     content: "You can customize characteristic of any blocks through the Customize menu. For instance, change the background of the banner.",
                     template: self.popover({ next: "Continue" }),
+                },
+                {
+                    stepId: 'add-three-cols',
+                    element: 'button[data-action=snippet]',
+                    placement: 'bottom',
+                    title: "Add Another Block",
+                    content: "Let's add another building block to your page.",
                     triggers: function () {
-                        $('.dropdown-menu [name=carousel-background]').one('click', function () {
+                        $('button[data-action=snippet]').on('click', function () {
+                            self.moveToNextStep();
+                        });
+                    }
+                },
+                {
+                    stepId: 'drag-three-columns',
+                    element: '#website-top-navbar [data-snippet-id=three-columns].ui-draggable',
+                    placement: 'bottom',
+                    title: "Drag & Drop a Block",
+                    content: "Drag the <em>'3 Columns'</em> block and drop it below the banner.",
+                    triggers: function () {
+                        self.onSnippetDraggedAdvance('three-columns');
+                    },
+                },
+                {
+                    stepId: 'activate-text-block-title',
+                    element: '#wrap [data-snippet-id=three-columns] .text-center[data-snippet-id=colmd]',
+                    placement: 'top',
+                    title: "Edit an Area",
+                    content: "Select any area of the page to modify it. Click on this subtitle.",
+                    triggers: function () {
+                        $('#wrap [data-snippet-id=three-columns] .text-center[data-snippet-id=colmd]').one('click', function () {
                             self.moveToNextStep();
                         });
                     },
+                },
+                {
+                    stepId: 'remove-text-block-title',
+                    element: '.oe_snippet_remove:last',
+                    placement: 'top',
+                    reflex: true,
+                    title: "Delete the Title",
+                    content: "From this toolbar you can move, duplicate or delete the selected zone. Click on the cross to delete the title.",
                 },
                 {
                     stepId: 'save-changes',
@@ -90,29 +127,45 @@
                     placement: 'right',
                     reflex: true,
                     title: "Save your modifications",
-                    content: "Once you click on save, your website page is updated.",
+                    content: "Publish your page by clicking on the <em>'Save'</em> button.",
                 },
                 {
                     stepId: 'part-2',
                     orphan: true,
                     title: "Congratulation!",
-                    content: "Your homepage have been updated. Now, we suggest you insert another snippet to overview possible customization.",
+                    content: "Your homepage has been updated.",
                     template: self.popover({ next: "Continue" }),
+                },
+                {
+                    stepId: 'show-mobile',
+                    element: 'a[data-action=show-mobile-preview]',
+                    placement: 'bottom',
+                    reflex: true,
+                    title: "Test Your Mobile Version",
+                    content: "Let's check how your homepage looks like on mobile devices.",
+                },
+                {
+                    stepId: 'show-mobile-close',
+                    element: 'button[data-dismiss=modal]',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Close Mobile Preview",
+                    content: "Scroll in the mobile preview to test the rendering. Once it's ok, close this dialog.",
                 },
                 {
                     stepId: 'show-tutorials',
                     element: '#help-menu-button',
                     placement: 'left',
                     reflex: true,
-                    title: "Help is always available",
-                    content: "You can always click here if you want more helps or continue to build and get more tips about your website contents like page menu, ...",
-                    template: self.popover({ end: "Close" }),
+                    title: "More Tutorials",
+                    content: "Get more tutorials through this <em>'Help'</em> menu or click on the left <em>'Edit'</em> button to continue modifying this page.",
+                    template: self.popover({ end: "Close Tutorial" }),
                 }
             ];
             return this._super();
         },
         resume: function () {
-            return (this.isCurrentStep('part-2') || this.isCurrentStep('show-tutorials')) && !this.tour.ended();
+            return (this.isCurrentStep('show-tutorials')) && !this.tour.ended();
         },
     });
 
