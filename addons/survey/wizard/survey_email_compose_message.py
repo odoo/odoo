@@ -47,7 +47,7 @@ class survey_mail_compose_message(osv.TransientModel):
         """ Compute if the message is unread by the current user. """
         urls = self._get_public_url(cr, uid, ids, name, arg, context=context)
         for key, url in urls.items():
-            urls[key] = '<a href="%s">%s</a>' % (url, _("Click here to take survey"))
+            urls[key] = '<a href="%s">%s</a>' % (url, _("Click here to start survey"))
         return urls
 
     _columns = {
