@@ -79,7 +79,7 @@ class website_hr_recruitment(http.Controller):
                 'datas': base64.encodestring(post['ufile'].read()),
                 'datas_fname': post['ufile'].filename,
                 'res_model': 'hr.applicant',
-                'res_name': post['name'],
+                'res_name': data['partner_name'],
                 'res_id': jobid
                 }
             request.registry['ir.attachment'].create(request.cr, request.uid, attachment_values, context=request.context)
