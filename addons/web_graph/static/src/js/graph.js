@@ -310,7 +310,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 if ((self.heat_map_mode) && (value !== undefined)) {
                     var color = Math.floor(50 + 205*(pivot.total - value)/pivot.total);
                     cell.css("background-color", "rgb(255," + color + "," + color + ")");
-                } 
+                }
+                if (row.is_expanded && (row.path.length <= 2)) {
+                    var color = row.path.length *   5 + 240;
+                    cell.css("background-color", "rgb(" + [color, color, color].join() + ")");
+                }
                 html_row.append(cell);
             }
         });
