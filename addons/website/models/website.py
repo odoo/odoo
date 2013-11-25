@@ -386,6 +386,8 @@ class website(osv.osv):
         :rtype: list({name: str, url: str})
         """
         router = request.httprequest.app.get_db_router(request.db)
+        # Force enumeration to be performed as public user
+        uid = self.get_public_user(cr, uid, context=context).id
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
@@ -396,10 +398,10 @@ class website(osv.osv):
                 # allow single converter as decided by fp, checked by
                 # rule_is_enumerable
                 [(name, converter)] = converters.items()
-                # FIXME: perform generation as public user
+                converter_values = converter.generate(
+                    request.cr, uid, query=query_string, context=context)
                 generated = ({k: v} for k, v in itertools.izip(
-                                        itertools.repeat(name),
-                                        converter.generate(query=query_string)))
+                    itertools.repeat(name), converter_values))
             else:
                 # force single iteration for literal urls
                 generated = [{}]
