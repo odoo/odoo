@@ -48,12 +48,20 @@
         isCurrentStep: function (stepId) {
             return this.currentStepIndex() === this.indexOfStep(stepId);
         },
-        movetoStep: function (stepId) {
-            $('.popover.tour').remove();
-            var index = this.indexOfStep(stepId);
-            if (index > -1) {
-                this.tour.goto(index);
+        moveToStep: function (step) {
+            var index = _.isNumber(step) ? step : this.indexOfStep(step);
+            if (index >= this.steps.length) {
+                this.stop();
+            } else if (index >= 0) {
+                var self = this;
+                setTimeout(function () {
+                    $('.popover.tour').remove();
+                    self.tour.goto(index);
+                }, 0);
             }
+        },
+        moveToNextStep: function () {
+            this.moveToStep(this.currentStepIndex() + 1);
         },
         stop: function () {
             this.tour.end();
@@ -82,25 +90,24 @@
         popover: function (options) {
             return openerp.qweb.render('website.tour_popover', options);
         },
-        onSnippetDraggedMoveTo: function (stepId) {
+        onSnippetDraggedAdvance: function (snippetId, stepId) {
             var self = this;
             var $body = $(document.body);
+            var $snippetIcon = $('#website-top-navbar [data-snippet-id='+snippetId+'].ui-draggable');
             function beginDrag () {
                 $('.popover.tour').remove();
-                function goToNextStep () {
+                function advance () {
                     $('#snippets').toggle();
                     if (stepId) {
-                        self.movetoStep(stepId);
+                        self.moveToStep(stepId);
                     } else {
-                        self.stop();
+                        self.moveToNextStep()
                     }
-                    $body.off('mouseup', goToNextStep);
                 }
-                $body.off('mousedown', beginDrag);
-                $body.on('mouseup', goToNextStep);
+                $body.one('mouseup', advance);
             }
-            $body.on('mousedown', beginDrag);
-        }
+            $snippetIcon.one('mousedown', beginDrag);
+        },
     });
 
     website.UrlParser = openerp.Class.extend({

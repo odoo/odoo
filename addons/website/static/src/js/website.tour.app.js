@@ -12,7 +12,7 @@
 
     website.AppTour = website.Tour.extend({
         id: 'app-tutorial',
-        name: "Install a new application",
+        name: "Install an application",
         init: function (editor) {
             var self = this;
             self.steps = [
@@ -31,9 +31,7 @@
                     title: "Install an app",
                     content: "Add new apps by customizing your website.",
                     triggers: function () {
-                        editor.on('rte:customize_menu_ready', editor, function () {
-                            self.movetoStep('install-app');
-                        });
+                        editor.on('rte:customize_menu_ready', self, self.moveToNextStep);
                     },
                 },
                 {

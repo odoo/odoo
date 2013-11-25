@@ -40,10 +40,10 @@
                     content: "Click here to create an event.",
                     triggers: function () {
                         $(document).one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').click(function () {
-                                self.movetoStep('event-page');
+                            $('.modal button.btn-primary').one('click', function () {
+                                self.moveToStep('event-page');
                             });
-                            self.movetoStep('choose-category');
+                            self.moveToNextStep();
                         });
                     },
                 },
@@ -66,7 +66,6 @@
                     stepId: 'add-block',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
-                    reflex: true,
                     title: "Layout your event",
                     content: "Insert blocks like text-image to layout the body of your event.",
                 },

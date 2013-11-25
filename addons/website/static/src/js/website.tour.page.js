@@ -40,7 +40,7 @@
                     content: "Click here to create a new menu entry and manage options.",
                     triggers: function () {
                         $(document).one('shown.bs.modal', function () {
-                            self.movetoStep('add-menu-entry');
+                            self.moveToNextStep();
                         });
                     },
                 },
@@ -52,7 +52,7 @@
                     content: "Click here to create a new menu entry.",
                     triggers: function () {
                         $(document).one('shown.bs.modal', function () {
-                            self.movetoStep('enter-entry-name');
+                            self.moveToNextStep();
                         });
                     },
                 },
@@ -80,7 +80,7 @@
                     content: "Save your new page.",
                     triggers: function () {
                         $(document).one('hidden.bs.modal', function () {
-                            self.movetoStep('save-menu');
+                            self.moveToNextStep();
                         });
                     },
                 },

@@ -32,9 +32,7 @@
                     title: "Edit this page",
                     content: "Every page of your website can be modified through the <i>Edit</i> button.",
                     triggers: function () {
-                        editor.on('tour:editor_bar_loaded', editor, function () {
-                            self.movetoStep('add-block');
-                        });
+                        editor.on('tour:editor_bar_loaded', self, self.moveToNextStep);
                     },
                 },
                 {
@@ -44,8 +42,8 @@
                     title: "Insert building blocks",
                     content: "To add content in a page, you can insert building blocks.",
                     triggers: function () {
-                        $('button[data-action=snippet]').click(function () {
-                            self.movetoStep('drag-banner');
+                        $('button[data-action=snippet]').one('click', function () {
+                            self.moveToNextStep();
                         });
                     }
                 },
@@ -56,7 +54,7 @@
                     title: "Drag & Drop a Banner",
                     content: "Drag the Banner block and drop it in your page.",
                     triggers: function () {
-                        self.onSnippetDraggedMoveTo('edit-title');
+                        self.onSnippetDraggedAdvance('carousel');
                     },
                 },
                 {
@@ -81,8 +79,8 @@
                     content: "You can customize characteristic of any blocks through the Customize menu. For instance, change the background of the banner.",
                     template: self.popover({ next: "Continue" }),
                     triggers: function () {
-                        $('.dropdown-menu [name=carousel-background]').click(function () {
-                            self.movetoStep('save-changes');
+                        $('.dropdown-menu [name=carousel-background]').one('click', function () {
+                            self.moveToNextStep();
                         });
                     },
                 },

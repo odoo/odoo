@@ -16,7 +16,7 @@
         init: function (editor) {
             var self = this;
             self.steps = [
-            {
+                {
                     stepId: 'welcome-blog',
                     orphan: true,
                     backdrop: true,
@@ -40,10 +40,10 @@
                     content: "Click here to create a blog post.",
                     triggers: function () {
                         $(document).one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').click(function () {
-                                self.movetoStep('post-page');
+                            $('.modal button.btn-primary').one('click', function () {
+                                self.moveToStep('post-page');
                             });
-                            self.movetoStep('choose-category');
+                            self.moveToNextStep();
                         });
                     },
                 },
@@ -54,13 +54,14 @@
                     title: "Choose the post category",
                     content: "Select the 'News' category and click 'Continue'.",
                     triggers: function () {
-                        $('.modal select').change(function () {
+                        function newsSelected () {
                             var $this = $(this);
-                            var selected = $this.find("[value="+$this.val()+"]").text();
-                            if (selected.toLowerCase() === 'news') {
-                                self.movetoStep('continue-category');
+                            if ($this.find('[value='+$this.val()+']').text().toLowerCase() === 'news') {
+                                self.moveToNextStep();
+                                $('.modal select').off('change', newsSelected);
                             }
-                        });
+                        }
+                        $('.modal select').on('change', newsSelected);
                     },
                 },
                 {
@@ -93,10 +94,10 @@
                     title: "Layout your blog post",
                     content: "Insert blocks like text-image to layout the body of your blog post.",
                     triggers: function () {
-                        $('button[data-action=snippet]').click(function () {
-                            self.movetoStep('drag-image-text');
+                        $('button[data-action=snippet]').one('click', function () {
+                            self.moveToNextStep();
                         });
-                    }
+                    },
                 },
                 {
                     stepId: 'drag-image-text',
@@ -105,7 +106,7 @@
                     title: "Drag & Drop a block",
                     content: "Drag the 'Image Text' block and drop it in your page.",
                     triggers: function () {
-                        self.onSnippetDraggedMoveTo('add-text-block');
+                        self.onSnippetDraggedAdvance('image-text');
                     },
                 },
                 {
@@ -115,8 +116,8 @@
                     title: "Add another block",
                     content: "Let's add another blog to your post.",
                     triggers: function () {
-                        $('button[data-action=snippet]').click(function () {
-                            self.movetoStep('drag-text-block');
+                        $('button[data-action=snippet]').on('click', function () {
+                            self.moveToNextStep();
                         });
                     }
                 },
@@ -127,7 +128,7 @@
                     title: "Drag & Drop a block",
                     content: "Drag the 'Text Block' block and drop it below the image block.",
                     triggers: function () {
-                        self.onSnippetDraggedMoveTo('activate-text-block-title');
+                        self.onSnippetDraggedAdvance('text-block');
                     },
                 },
                 {
@@ -137,8 +138,8 @@
                     title: "Activate on the title",
                     content: "Click on the title to activate it.",
                     triggers: function () {
-                        $('#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]').click(function () {
-                            self.movetoStep('remove-text-block-title');
+                        $('#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]').one('click', function () {
+                            self.moveToNextStep();
                         });
                     },
                 },

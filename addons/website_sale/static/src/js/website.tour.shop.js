@@ -40,10 +40,10 @@
                     content: "Select 'New Product' to create it and manage its properties to boost your sales.",
                     triggers: function () {
                         $(document).one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').click(function () {
-                                self.movetoStep('product-page');
+                            $('.modal button.btn-primary').one('click', function () {
+                                self.moveToStep('product-page');
                             });
-                            self.movetoStep('enter-name');
+                            self.moveToNextStep();
                         });
                     },
                 },
@@ -52,7 +52,7 @@
                     element: '.modal input[type=text]',
                     placement: 'right',
                     title: "Choose name",
-                    content: "Enter a name for your new product.",
+                    content: "Enter a name for your new product then click 'Continue'.",
 
                 },
                 {
@@ -75,9 +75,23 @@
                     stepId: 'add-block',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
-                    reflex: true,
                     title: "Describe the product for your audience",
                     content: "Insert blocks like text-image, or gallery to fully describe the product and make your visitors want to buy this product.",
+                    triggers: function () {
+                        $('button[data-action=snippet]').one('click', function () {
+                            self.moveToNextStep();
+                        });
+                    },
+                },
+                {
+                    stepId: 'drag-big-picture',
+                    element: '#website-top-navbar [data-snippet-id=big-picture].ui-draggable',
+                    placement: 'bottom',
+                    title: "Drag & Drop a block",
+                    content: "Drag the 'Big Picture' block and drop it in your page.",
+                    triggers: function () {
+                        self.onSnippetDraggedAdvance('big-picture');
+                    },
                 },
             ];
             return this._super();
