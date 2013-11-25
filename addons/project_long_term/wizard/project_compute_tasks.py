@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class project_compute_tasks(osv.osv_memory):
     _name = 'project.compute.tasks'
     _description = 'Project Compute Tasks'
@@ -32,32 +33,36 @@ class project_compute_tasks(osv.osv_memory):
         """
         Schedule the tasks according to users and priority.
         """
-        project_pool = self.pool.get('project.project')
-        task_pool = self.pool.get('project.task')
         if context is None:
             context = {}
         context['compute_by'] = 'project'
-        data = self.read(cr, uid, ids, [])[0]
-        project_id = data['project_id'][0]
-        project_pool.schedule_tasks(cr, uid, [project_id], context=context)
-        return self._open_task_list(cr, uid, data, context=context)
 
-    def _open_task_list(self, cr, uid, data, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            task.scheduled_tasks()
+
+        return self._open_task_list(cr, uid, context=context)
+
+    def _open_task_list(self, cr, uid, context=None):
         """
         Return the scheduled task list.
         """
         if context is None:
             context = {}
-        mod_obj = self.pool.get('ir.model.data')
-        act_obj = self.pool.get('ir.actions.act_window')
-        result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_resouce_allocation')
-        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-        result = {}
-        if not id:
-            return result
-        result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['target'] = 'current'
-        return result
+
+        try:
+            proxy = self.pool.get('ir.model.data')
+            _, res_id = proxy.get_object_reference(cr, uid,
+                                                   'project_long_term',
+                                                   'act_resouce_allocation')
+            proxy = self.pool.get('ir.actions.act_window')
+            action = proxy.read(cr, uid, [res_id], context=context)[0]
+            action['target'] = 'current'
+            return action
+        except ValueError:
+            # this record does not exist into the model.data object
+            # we return an empty dictionary
+            return {}
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
