@@ -209,6 +209,7 @@ class partner(osv.osv):
 
         if 'answers_ids' in vals:
             vals['category_id']=[[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
+
         return super(partner, self).write(cr, uid, ids, vals, context=context)
 
 

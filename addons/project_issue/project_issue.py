@@ -329,7 +329,7 @@ class project_issue(osv.Model):
         task_obj = self.pool.get('project.task')
 
         result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
-        res = data_obj.read(cr, uid, result, ['res_id'])
+        res = data_obj.read(cr, uid, [result], ['res_id'])[0]
         id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
         id3 = data_obj._get_id(cr, uid, 'project', 'view_task_tree2')
         if id2:

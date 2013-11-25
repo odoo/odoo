@@ -61,8 +61,8 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         invs = self.pool.get('account.analytic.line').invoice_cost_create(cr, uid, context['active_ids'], data, context=context)
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        mod_ids = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')], context=context)[0]
-        res_id = mod_obj.read(cr, uid, mod_ids, ['res_id'], context=context)['res_id']
+        mod_ids = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')], context=context)
+        res_id = mod_obj.read(cr, uid, mod_ids, ['res_id'], context=context)[0]['res_id']
         act_win = act_obj.read(cr, uid, [res_id], [], context=context)[0]
         act_win['domain'] = [('id','in',invs),('type','=','out_invoice')]
         act_win['name'] = _('Invoices')

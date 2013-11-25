@@ -153,7 +153,7 @@ class stock_return_picking(osv.osv_memory):
         act_obj = self.pool.get('ir.actions.act_window')
         model_obj = self.pool.get('ir.model.data')
         pick = pick_obj.browse(cr, uid, record_id, context=context)
-        data = self.read(cr, uid, ids[0], context=context)
+        data = self.read(cr, uid, [ids[0]], context=context)[0]
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
         set_invoice_state_to_none = True
         returned_lines = 0

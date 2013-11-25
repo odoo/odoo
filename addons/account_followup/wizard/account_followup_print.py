@@ -212,7 +212,7 @@ class account_followup_print(osv.osv_memory):
         partner_list = tmp['partner_ids']
         to_update = tmp['to_update']
         date = self.browse(cr, uid, ids, context=context)[0].date
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         data['followup_id'] = data['followup_id'][0]
 
         #Update partners
