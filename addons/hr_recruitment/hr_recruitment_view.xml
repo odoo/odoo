@@ -378,6 +378,7 @@
                     <field name="survey_id"/>
                     <field name="message_summary"/>
                     <field name="state"/>
+                    <field name="user_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
@@ -405,7 +406,7 @@
                                             <field name="name"/>
                                         </div>
                                         <div class="oe_job oe_department oe_kanban_ellipsis">
-                                            <field name="user_id"/>
+                                            <field name="department_id"/>
                                             <span t-if="record.manager_id.value" class="oe_manager_name">
                                                 (<t t-esc="record.manager_id.value"/>)
                                             </span>

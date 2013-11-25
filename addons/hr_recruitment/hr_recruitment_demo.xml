@@ -83,7 +83,7 @@
     </record>
     <record id="hr_case_traineemca1" model="hr.applicant">
         <field name="name">Trainee - MCA</field>
-        <field name="job_id" ref="hr.job_developer"/>
+        <field name="job_id" ref="hr.job_trainee"/>
         <field name="type_id" ref="degree_bac5"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
@@ -96,7 +96,7 @@
     </record>
     <record id="hr_case_programmer" model="hr.applicant">
         <field name="name">Programmer</field>
-        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="job_id" ref="hr.job_developer"/>
         <field name="type_id" ref="degree_bac5"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>

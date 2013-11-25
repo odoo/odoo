@@ -232,6 +232,15 @@ class hr_applicant(osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        res = super(hr_applicant, self).default_get(cr, uid, fields, context=context)
+        if context.get('active_id'):
+            job = self.pool.get('hr.job').browse(cr, uid, context.get('active_id'), context=context)
+            res.update({'user_id': job.user_id.id})
+        return res
+
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         if job_id:
             job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
@@ -486,7 +495,7 @@ class hr_job(osv.osv):
         'application_count': fields.function(_application_count, type='integer', string="Total Applications"),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int'),
-        'user_id': fields.many2one('hr.employee', 'Recruitment Responsible'),
+        'user_id': fields.many2one('res.users', 'Recruitment Responsible'),
     }
 
     _defaults = {
