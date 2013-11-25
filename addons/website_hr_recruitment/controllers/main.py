@@ -16,29 +16,24 @@ class website_hr_recruitment(http.Controller):
         '/jobs/department/<model("hr.department"):department>',
         '/jobs/office/<model("res.partner"):office>'
         ], type='http', auth="public", multilang=True)
-    def jobs(self, department=None, office=None, page=0):
-        hr_job_obj = request.registry['hr.job']
-        domain = []
-        jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published desc,no_of_recruitment desc", context=request.context)
-        jobs = hr_job_obj.browse(request.cr, request.uid, jobpost_ids, request.context)
+    def jobs(self, department=None, office=None):
+        jobs = self._browse_jobs([])
 
         departments = set()
+        offices = set()
         for job in jobs:
             if job.department_id:
                 departments.add(job.department_id)
-
-        offices = set()
-        for job in jobs:
             if job.address_id:
                 offices.add(job.address_id)
 
         if department or office:
-            if office:
-                domain += [('address_id','=', office.id)]
+            domain = []
             if department:
-                domain += [('department_id','=', department.id)]
-            jobpost_ids = hr_job_obj.search(request.cr, request.uid, domain, order="website_published desc,no_of_recruitment desc", context=request.context)
-            jobs = hr_job_obj.browse(request.cr, request.uid, jobpost_ids, request.context)
+                domain.append(('department_id','=', department.id))
+            if office:
+                domain.append(('address_id','=', office.id))
+            jobs = self._browse_jobs(domain)
 
         return request.website.render("website_hr_recruitment.index", {
             'jobs': jobs,
@@ -69,7 +64,7 @@ class website_hr_recruitment(http.Controller):
         try:
             model, source_id = imd.get_object_reference(request.cr, request.uid, 'hr_recruitment', 'source_website_company')
             data['source_id'] = source_id
-        except ValueError, e:
+        except ValueError:
             pass
 
         jobid = request.registry['hr.applicant'].create(request.cr, request.uid, data, context=request.context)
@@ -107,3 +102,11 @@ class website_hr_recruitment(http.Controller):
         }, context=request.context)
 
         return request.redirect("/job/detail/%s/?enable_editor=1" % job_id)
+
+    def _browse_jobs(self, domain):
+        Jobs = request.registry['hr.job']
+        jobpost_ids = Jobs.search(request.cr, request.uid, domain,
+            order="website_published desc,no_of_recruitment desc",
+            context=request.context)
+        jobs = Jobs.browse(request.cr, request.uid, jobpost_ids, context=request.context)
+        return jobs
