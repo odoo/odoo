@@ -213,13 +213,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var scroller = this.$('.order-scroller')[0];
             var scrollbottom = true;
             var scrollTop = 0;
-            if(scroller){
+            /*if(scroller){
                 var overflow_bottom = scroller.scrollHeight - scroller.clientHeight;
                 scrollTop = scroller.scrollTop;
                 if( !goto_bottom && scrollTop < 0.9 * overflow_bottom){
                     scrollbottom = false;
                 }
-            }
+            }*/
             this._super();
 
             // freeing subwidgets
@@ -245,11 +245,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             scroller = this.$('.order-scroller')[0];
             if(scroller){
+                //scroller.scrollTop = 1000000;
+                /*
                 if(scrollbottom){
                     scroller.scrollTop = scroller.scrollHeight - scroller.clientHeight;
                 }else{
                     scroller.scrollTop = scrollTop;
-                }
+                }*/
             }
         },
         update_summary: function(){
@@ -835,6 +837,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     self.pos.delete_current_order();
                 });
                 
+                $('body').on('keyup',function(event){
+                    if(event.which === 13){
+                        self.set_fullscreen();
+                    }
+                });
+                
                 //when a new order is created, add an order button widget
                 self.pos.get('orders').bind('add', function(new_order){
                     var new_order_button = new module.OrderButtonWidget(null, {
@@ -857,6 +865,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
 
                 self.pos.barcode_reader.connect();
+
+                if(!$('#oe-fullscreenwidget-viewport').length){
+                    $('head').append('<meta id="oe-pos-viewport" name="viewport" content=" width=1024px; user-scalable=no;">');
+                    $('head').append('<meta id="oe-pos-apple-mobile" name="apple-mobile-web-capable" content="yes">');
+                }
+
+                $('.oe_leftbar').addClass('oe_hidden');
 
                 instance.webclient.set_content_full_screen(true);
 
@@ -1050,7 +1065,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             }
         },
-
+        set_fullscreen: function(){
+            if(this.el.webkitRequestFullscreen){
+                this.el.webkitRequestFullscreen();
+            }
+        },
         //shows or hide the leftpane (contains the list of orderlines, the numpad, the paypad, etc.)
         set_leftpane_visible: function(visible){
             if(visible !== this.leftpane_visible){
@@ -1105,6 +1124,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         destroy: function() {
             this.pos.destroy();
             instance.webclient.set_content_full_screen(false);
+            $('.oe_leftbar').removeClass('oe_hidden');
+            $('#oe-pos-viewport').remove();
+            $('#oe-pos-apple-mobile').remove();
             this._super();
         }
     });
