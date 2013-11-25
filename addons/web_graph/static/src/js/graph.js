@@ -284,6 +284,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             make_cells(pivot.cols.headers, 0);
         } else {
             make_cells(pivot.cols.main.children, 1);
+            header_cells[0].push(self.make_border_cell(1, height).append('Total'));
         }
 
         _.each(header_cells, function (cells) {
@@ -322,6 +323,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 html_row.append(cell);
             }
         });
+        var cell = $('<td></td>').append(pivot.get_value(row.id,pivot.cols.main.id));
+        if (row.is_expanded && (row.path.length <= 2)) {
+            var color = row.path.length *   5 + 240;
+            cell.css("background-color", "rgb(" + [color, color, color].join() + ")");
+        }
+
+        if (pivot.cols.main.children.length > 0) {
+            html_row.append(cell);
+        }
+
         this.table.append(html_row);
     }
 });
