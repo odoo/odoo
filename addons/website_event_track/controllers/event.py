@@ -21,18 +21,10 @@
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.tools.translate import _
-from openerp.addons import website_sale
 from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
 
 controllers = controllers()
-
-
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-from openerp import tools
-import urllib
 
 class website_event(http.Controller):
     @website.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", multilang=True)
@@ -45,7 +37,7 @@ class website_event(http.Controller):
         '/event/<model("event.event"):event>/track/',
         '/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'
         ], type='http', auth="public", multilang=True)
-    def event_tracks(self, event, tag, **post):
+    def event_tracks(self, event, tag=None, **post):
         if tag:
             track_obj = request.registry.get('event.track')
             track_ids = track_obj.search(request.cr, request.uid,
@@ -67,11 +59,11 @@ class website_event(http.Controller):
         return request.website.render("website_event_track.event_home", values)
 
     @website.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", multilang=True)
-    def event_detail(self, event, **post):
+    def event_track_proposal(self, event, **post):
         values = { 'event': event }
         return request.website.render("website_event_track.event_track_proposal", values)
 
     @website.route(['/event/<model("event.event"):event>/track_proposal/success/'], type='http', auth="public", multilang=True)
-    def event_detail(self, event, **post):
+    def event_track_proposal_success(self, event, **post):
         values = { 'event': event }
-        return ""
+        return request.website.render("website_event_track.event_track_proposal_success", values)

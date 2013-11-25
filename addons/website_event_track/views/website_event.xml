@@ -43,10 +43,10 @@
                     <div class="col-md-3 css_noprint">
 
                         <ul class="nav nav-pills nav-stacked">
-                            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ event.id }/tracks/">All</a></li>
+                            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ event.id }/track/">All</a></li>
                             <t t-foreach="tags" t-as="tag">
                                 <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
-                                    <a t-href="/event/#{ event.id }/tracks/tag/#{ tag.id }">
+                                    <a t-href="/event/#{ event.id }/track/tag/#{ tag.id }">
                                         <t t-esc="tag.name"/>
                                     </a>
                                 </li>
@@ -218,6 +218,15 @@
 
             </div>
             <div class="oe_structure"/>
+        </t>
+    </template>
+
+
+    <template id="event_track_proposal_success">
+        <t t-call="website_event.layout">
+            <div class="container">
+                Thanks
+            </div>
         </t>
     </template>
  </data>
