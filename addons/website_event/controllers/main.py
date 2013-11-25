@@ -23,10 +23,8 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
-from openerp.addons import website_sale
 from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
-from openerp.addons.website_sale.controllers.main import Ecommerce as Ecommerce
 controllers = controllers()
 
 
@@ -192,7 +190,7 @@ class website_event(http.Controller):
 
         order = request.context['website_sale_order']
         if not order:
-            order = website_sale.controllers.main.get_order()
+            order = request.registry['website']._get_order(request.cr, request.uid, context=request.context)
 
         partner_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid,
                                      context=request.context).partner_id.id

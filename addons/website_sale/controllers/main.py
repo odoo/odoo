@@ -464,6 +464,8 @@ class Ecommerce(http.Controller):
 
         if 'promo' in post:
             self.change_pricelist(post.get('promo'))
+        else:
+            self.get_pricelist()
 
         suggested_ids = []
         product_ids = []
@@ -518,6 +520,8 @@ class Ecommerce(http.Controller):
         tx = context.get('website_sale_transaction')
         if tx and tx.state != 'draft':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
+        
+        self.get_pricelist()
 
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
