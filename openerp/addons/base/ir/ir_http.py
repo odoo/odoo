@@ -89,9 +89,13 @@ class ir_http(osv.AbstractModel):
         getattr(self, "_auth_method_%s" % auth_method)()
         return auth_method
 
-    def _handle_exception(self, e):
-        fn = getattr(self, '_handle_%s' % getattr(e, 'code', 500), self._handle_500)
-        return fn(e)
+    def _handle_exception(self, exception):
+        if isinstance(exception, openerp.exceptions.AccessError):
+            fn = self._handle_403
+        else:
+            code = getattr(exception, 'code', 500)
+            fn = getattr(self, '_handle_%s' % code)
+        return fn(exception)
 
     def _handle_404(self, exception):
         raise exception

@@ -402,7 +402,7 @@ class HttpRequest(WebRequest):
     def dispatch(self):
         try:
             r = self._call_function(**self.params)
-        except werkzeug.exceptions.HTTPException, e:
+        except (openerp.exceptions.AccessError, werkzeug.exceptions.HTTPException), e:
             r = e
         except Exception, e:
             _logger.exception("An exception occured during an http request")
