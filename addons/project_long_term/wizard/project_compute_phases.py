@@ -43,7 +43,7 @@ class project_compute_phases(osv.osv_memory):
         Compute the phases for scheduling.
         """
         project_pool = self.pool.get('project.project')
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         if not data['project_id'] and data['target_project'] == 'one':
             raise osv.except_osv(_('Error!'), _('Please specify a project to schedule.'))
 

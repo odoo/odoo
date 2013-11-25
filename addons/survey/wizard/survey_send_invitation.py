@@ -100,7 +100,7 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
     def action_send(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        record = self.read(cr, uid, ids, [],context=context)
+        record = self.read(cr, uid, ids, context=context)
         survey_ids =  context.get('active_ids', [])
         record = record and record[0]
         partner_ids = record['partner_ids']
