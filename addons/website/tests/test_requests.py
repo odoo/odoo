@@ -80,7 +80,7 @@ class CrawlSuite(unittest2.TestSuite):
             assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
     def _wrapped_run(self, result, debug=False):
-        paths = [URL('/')]
+        paths = [URL('/'), URL('/sitemap')]
         seen = set(paths)
 
         while paths:
