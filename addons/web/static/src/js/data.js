@@ -743,7 +743,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
         });
     },
     get_domain: function (other_domain) {
-        this._model.domain(other_domain);
+        return this._model.domain(other_domain);
     },
     alter_ids: function (ids) {
         this._super(ids);
@@ -780,6 +780,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this._super.apply(this, arguments);
         this.reset_ids([]);
         this.last_default_get = {};
+        this.running_reads = [];
     },
     default_get: function(fields, options) {
         var self = this;
@@ -846,6 +847,9 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.to_write = [];
         this.cache = [];
         this.delete_all = false;
+        _.each(_.clone(this.running_reads), function(el) {
+            el.reject();
+        });
     },
     read_ids: function (ids, fields, options) {
         var self = this;
@@ -861,7 +865,6 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                     to_get.push(id);
             }
         });
-        var completion = $.Deferred();
         var return_records = function() {
             var records = _.map(ids, function(id) {
                 return _.extend({}, _.detect(self.cache, function(c) {return c.id === id;}).values, {"id": id});
@@ -896,10 +899,20 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                     }, 0);
                 });
             }
-            completion.resolve(records);
+            return $.when(records);
         };
         if(to_get.length > 0) {
-            var rpc_promise = this._super(to_get, fields, options).done(function(records) {
+            var def = $.Deferred();
+            self.running_reads.push(def);
+            def.always(function() {
+                self.running_reads = _.without(self.running_reads, def);
+            });
+            this._super(to_get, fields, options).then(function() {
+                def.resolve.apply(def, arguments);
+            }, function() {
+                def.reject.apply(def, arguments);
+            });
+            return def.then(function(records) {
                 _.each(records, function(record, index) {
                     var id = to_get[index];
                     var cached = _.detect(self.cache, function(x) {return x.id === id;});
@@ -910,13 +923,11 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                         cached.values = _.defaults(_.clone(cached.values), record);
                     }
                 });
-                return_records();
+                return return_records();
             });
-            $.when(rpc_promise).fail(function() {completion.reject();});
         } else {
-            return_records();
+            return return_records();
         }
-        return completion.promise();
     },
     /**
      * Invalidates caching of a record in the dataset to ensure the next read
