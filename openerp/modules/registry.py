@@ -199,15 +199,16 @@ class RegistryManager(object):
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Return a registry for a given database name."""
-        try:
-            return cls.registries[db_name]
-        except KeyError:
-            return cls.new(db_name, force_demo, status,
-                           update_module)
-        finally:
-            # set db tracker - cleaned up at the WSGI
-            # dispatching phase in openerp.service.wsgi_server.application
-            threading.current_thread().dbname = db_name
+        with cls.registries_lock:
+            try:
+                return cls.registries[db_name]
+            except KeyError:
+                return cls.new(db_name, force_demo, status,
+                               update_module)
+            finally:
+                # set db tracker - cleaned up at the WSGI
+                # dispatching phase in openerp.service.wsgi_server.application
+                threading.current_thread().dbname = db_name
 
     @classmethod
     def new(cls, db_name, force_demo=False, status=None,

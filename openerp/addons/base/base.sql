@@ -25,25 +25,25 @@ create table ir_values
 
 CREATE TABLE ir_model (
   id serial,
-  model varchar(64) DEFAULT ''::varchar NOT NULL,
-  name varchar(64),
-  state varchar(16),
+  model varchar DEFAULT ''::varchar NOT NULL,
+  name varchar,
+  state varchar,
   info text,
   primary key(id)
 );
 
 CREATE TABLE ir_model_fields (
   id serial,
-  model varchar(64) DEFAULT ''::varchar NOT NULL,
+  model varchar DEFAULT ''::varchar NOT NULL,
   model_id int references ir_model on delete cascade,
-  name varchar(64) DEFAULT ''::varchar NOT NULL,
-  relation varchar(64),
-  select_level varchar(4),
-  field_description varchar(256),
-  ttype varchar(64),
-  state varchar(64) default 'base',
+  name varchar DEFAULT ''::varchar NOT NULL,
+  relation varchar,
+  select_level varchar,
+  field_description varchar,
+  ttype varchar,
+  state varchar default 'base',
   relate boolean default False,
-  relation_field varchar(128),
+  relation_field varchar,
   translate boolean default False,
   primary key(id)
 );
@@ -350,11 +350,11 @@ CREATE TABLE ir_model_data (
     write_date timestamp without time zone,
     write_uid integer,
     noupdate boolean,
-    name character varying(128) NOT NULL,
+    name varchar NOT NULL,
     date_init timestamp without time zone,
     date_update timestamp without time zone,
-    module character varying(64) NOT NULL,
-    model character varying(64) NOT NULL,
+    module varchar NOT NULL,
+    model varchar NOT NULL,
     res_id integer, primary key(id)
 );
 
@@ -373,7 +373,7 @@ CREATE TABLE ir_model_constraint (
     module integer NOT NULL references ir_module_module on delete restrict,
     model integer NOT NULL references ir_model on delete restrict,
     type character varying(1) NOT NULL,
-    name character varying(128) NOT NULL
+    name varchar NOT NULL
 );
 
 -- Records relation tables (i.e. implementing many2many) installed by a module
@@ -388,7 +388,7 @@ CREATE TABLE ir_model_relation (
     date_update timestamp without time zone,
     module integer NOT NULL references ir_module_module on delete restrict,
     model integer NOT NULL references ir_model on delete restrict,
-    name character varying(128) NOT NULL
+    name varchar NOT NULL
 );  
 
 ---------------------------------

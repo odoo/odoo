@@ -448,9 +448,9 @@ class YamlInterpreter(object):
                     result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
                     for key, val in (result or {}).get('value', {}).items():
                         assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist either on the object '%s', either in the view '%s' used for the creation" % (key, match.group(1), model._name, view_info['name'])
-                        record_dict[key] = process_val(key, val)
-                        #if (key in fields) and record_dict[key] == process_val(key, val):
-                        #    print '*** You can remove these lines:', key, val
+                        if key not in fields:
+                            # do not shadow values explicitly set in yaml.
+                            record_dict[key] = process_val(key, val)
                 else:
                     nodes = list(el) + nodes
         else:

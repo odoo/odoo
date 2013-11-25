@@ -169,7 +169,8 @@ class res_users(osv.osv):
     }
 
     def on_change_login(self, cr, uid, ids, login, context=None):
-        return {'value': {'email': login}}
+        v = {'email': login} if tools.single_email_re.match(login) else {}
+        return {'value': v}
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]

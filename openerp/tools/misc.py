@@ -470,6 +470,7 @@ ALL_LANGUAGES = {
         'ja_JP': u'Japanese / 日本語',
         'ko_KP': u'Korean (KP) / 한국어 (KP)',
         'ko_KR': u'Korean (KR) / 한국어 (KR)',
+        'lo_LA': u'Lao / ພາສາລາວ',
         'lt_LT': u'Lithuanian / Lietuvių kalba',
         'lv_LV': u'Latvian / latviešu valoda',
         'ml_IN': u'Malayalam / മലയാളം',
