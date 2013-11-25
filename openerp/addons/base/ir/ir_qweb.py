@@ -245,8 +245,21 @@ class QWeb(orm.AbstractModel):
         else:
             return 0
 
-    def render(self, cr, uid, tname, v=None, loader=None,
+    @openerp.tools.ormcache()
+    def get_template_xmlid(self, cr, uid, id):
+        imd = self.pool['ir.model.data']
+        domain = [('model', '=', 'ir.ui.view'), ('res_id', '=', id)]
+        xmlid = imd.search_read(cr, uid, domain, ['module', 'name'])[0]
+        return '%s.%s' % (xmlid['module'], xmlid['name'])
+
+    def render(self, cr, uid, id_or_xml_id, v=None, loader=None,
                undefined_handler=None, context=None):
+        if isinstance(id_or_xml_id, list):
+            id_or_xml_id = id_or_xml_id[0]
+        tname = id_or_xml_id
+        if isinstance(id_or_xml_id, (int, long)):
+            tname = self.get_template_xmlid(cr, uid, tname)
+
         if v is None:
             v = {}
         if not isinstance(v, QWebContext):
