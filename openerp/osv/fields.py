@@ -1116,7 +1116,7 @@ class function(_column):
             # make the result a tuple if it is not already one
             if isinstance(value, (int,long)) and hasattr(obj._columns[field], 'relation'):
                 obj_model = obj.pool.get(obj._columns[field].relation)
-                dict_names = dict(obj_model.name_get(cr, uid, [value], context))
+                dict_names = dict(obj_model.name_get(cr, SUPERUSER_ID, [value], context))
                 result = (value, dict_names[value])
 
         if field_type == 'binary':
