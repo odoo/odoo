@@ -198,7 +198,9 @@ class calendar_attendee(osv.osv):
         def ics_datetime(idate, short=False):
             if idate:
                 #returns the datetime as UTC, because it is stored as it in the database
-                return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('UTC'))
+                return datetime.strptime(idate.split('.')[0], '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('UTC'))
+                #return datetime.strptime(idate, DEFAULT_SERVER_DATETIME_FORMAT).replace(tzinfo=pytz.timezone('UTC'))
+                
             return False
         
         try:
@@ -292,8 +294,6 @@ class calendar_attendee(osv.osv):
                     vals['model'] = None #We don't want to have the mail in the tchatter while in queue!
                     vals['auto_delete'] = True #We don't need mail after it has been sended !
                     vals['recipient_ids'] = [(4,attendee.partner_id.id),] #We don't need mail after it has been sended !
-                    
-                    print vals
                     
                     if not attendee.partner_id.opt_out:
                         mail_id.append(mail_pool.create(cr, uid, vals, context=context))
@@ -1592,8 +1592,7 @@ class crm_meeting(osv.Model):
                 new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
 
                 date_new = event_id.split('-')[1]
-                date_new = time.strftime("%Y%m%dT%H%M%SZ", \
-                             time.strptime(date_new, "%Y%m%d%H%M%S"))
+                date_new = time.strftime("%Y%m%dT%H%M%SZ", time.strptime(date_new, "%Y%m%d%H%M%S"))
                 exdate = (data['exdate'] and (data['exdate'] + ',')  or '') + date_new
                 res = super(crm_meeting, self).write(cr, uid, [real_event_id], {'exdate': exdate})
 
@@ -1733,8 +1732,7 @@ class crm_meeting(osv.Model):
             real_event_id = base_calendar_id2real_id(event_id)
             data = self.read(cr, uid, real_event_id, ['exdate'], context=context)
             date_new = event_id.split('-')[1]
-            date_new = time.strftime("%Y%m%dT%H%M%S", \
-                         time.strptime(date_new, "%Y%m%d%H%M%S"))
+            date_new = time.strftime("%Y%m%dT%H%M%S", time.strptime(date_new, "%Y%m%d%H%M%S"))
             exdate = (data['exdate'] and (data['exdate'] + ',')  or '') + date_new
             self.write(cr, uid, [real_event_id], {'exdate': exdate}, context=context)
             ids.remove(event_id)
