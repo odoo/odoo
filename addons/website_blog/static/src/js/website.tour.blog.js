@@ -88,7 +88,7 @@
                     template: self.popover({ next: "OK" }),
                 },
                 {
-                    stepId: 'add-image-block',
+                    stepId: 'add-image-text',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
                     title: "Layout your blog post",

@@ -93,6 +93,22 @@
                         self.onSnippetDraggedAdvance('big-picture');
                     },
                 },
+                {
+                    stepId: 'publish-post',
+                    element: 'button.js_publish_btn',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Publish your product",
+                    content: "Click to publish your product so your customers can see it.",
+                },
+                {
+                    stepId: 'save-changes',
+                    element: 'button[data-action=save]',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Save your modifications",
+                    content: "Once you click on save, your product is updated.",
+                },
             ];
             return this._super();
         },

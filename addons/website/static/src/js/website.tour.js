@@ -92,21 +92,18 @@
         },
         onSnippetDraggedAdvance: function (snippetId, stepId) {
             var self = this;
-            var $body = $(document.body);
-            var $snippetIcon = $('#website-top-navbar [data-snippet-id='+snippetId+'].ui-draggable');
             function beginDrag () {
                 $('.popover.tour').remove();
                 function advance () {
-                    $('#snippets').toggle();
                     if (stepId) {
                         self.moveToStep(stepId);
                     } else {
                         self.moveToNextStep()
                     }
                 }
-                $body.one('mouseup', advance);
+                $(document.body).one('mouseup', advance);
             }
-            $snippetIcon.one('mousedown', beginDrag);
+            $('#website-top-navbar [data-snippet-id='+snippetId+'].ui-draggable').one('mousedown', beginDrag);
         },
     });
 
