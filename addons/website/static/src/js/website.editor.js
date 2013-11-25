@@ -912,6 +912,8 @@
                             more: false,
                             results: rs
                         });
+                    }, function () {
+                        q.callback({more: false, results: []});
                     });
                 },
             });
@@ -995,8 +997,8 @@
                     limit: 9,
                     context: website.get_context()
                 },
-            }).done(function () {
-                // request completed successfully -> unstore it
+            }).always(function () {
+                // request completed -> unstore it
                 self.req = null;
             });
         },
