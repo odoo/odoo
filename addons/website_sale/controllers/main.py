@@ -489,7 +489,7 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.mycart", values)
 
     @website.route(['/shop/add_cart/'], type='http', auth="public", multilang=True)
-    def add_cart(self, path=None, product_id=None, order_line_id=None, remove=None, **kw):
+    def add_cart(self, product_id=None, order_line_id=None, remove=None, **kw):
         self.add_product_to_cart(product_id=product_id and int(product_id), order_line_id=order_line_id and int(order_line_id), number=(remove and -1 or 1))
         return request.redirect("/shop/mycart/")
 
