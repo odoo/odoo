@@ -185,8 +185,7 @@ class website_event(http.Controller):
         return request.website.render("website_event.event_description_full", values)
 
     @website.route(['/event/add_cart'], type='http', auth="public", multilang=True)
-    def add_cart(self, event_id=None, **post):
-        assert event_id, 'An event is required'
+    def add_cart(self, event_id, **post):
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
