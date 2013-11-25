@@ -895,7 +895,7 @@
         start: function () {
             var self = this;
             this.$('#link-page').select2({
-                minimumInputLength: 3,
+                minimumInputLength: 1,
                 placeholder: _t("New or existing page"),
                 query: function (q) {
                     // FIXME: out-of-order, abort
