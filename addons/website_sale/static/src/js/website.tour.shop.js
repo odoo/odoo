@@ -39,12 +39,18 @@
                     title: "Create a new product",
                     content: "Select 'New Product' to create it and manage its properties to boost your sales.",
                     triggers: function () {
+                        function stopIfModalClosed () {
+                            self.stop();
+                        }
+                        $(document).one('hidden.bs.modal', stopIfModalClosed);
                         $(document).one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').one('click', function () {
+                                $(document).off('hidden.bs.modal', stopIfModalClosed);
                                 self.moveToStep('product-page');
                             });
                             self.moveToNextStep();
                         });
+
                     },
                 },
                 {

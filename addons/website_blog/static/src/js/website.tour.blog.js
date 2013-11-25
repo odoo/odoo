@@ -39,8 +39,14 @@
                     title: "New blog post",
                     content: "Click here to create a blog post.",
                     triggers: function () {
-                        $(document).one('shown.bs.modal', function () {
+                        var $doc = $(document);
+                        function stopNewBlog () {
+                            self.stop();
+                        }
+                        $doc.on('hide.bs.modal', stopNewBlog);
+                        $doc.one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').one('click', function () {
+                                $doc.off('hide.bs.modal', stopNewBlog);
                                 self.moveToStep('post-page');
                             });
                             self.moveToNextStep();

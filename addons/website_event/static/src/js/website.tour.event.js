@@ -39,8 +39,14 @@
                     title: "New event",
                     content: "Click here to create an event.",
                     triggers: function () {
-                        $(document).one('shown.bs.modal', function () {
+                        var $doc = $(document);
+                        function stopNewEvent () {
+                            self.stop();
+                        }
+                        $doc.on('hide.bs.modal', stopNewEvent);
+                        $doc.one('shown.bs.modal', function () {
                             $('.modal button.btn-primary').one('click', function () {
+                                $doc.off('hide.bs.modal', stopNewEvent);
                                 self.moveToStep('event-page');
                             });
                             self.moveToNextStep();
