@@ -257,19 +257,28 @@ class mail_thread(osv.AbstractModel):
         self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
 
         # track values
-        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        track_ctx = dict(context)
+        if 'lang' not in track_ctx:
+            track_ctx['lang'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).lang
+        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
         if tracked_fields:
             initial_values = {thread_id: dict((item, False) for item in tracked_fields)}
-            self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=context)
+            self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=track_ctx)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
+        if context is None:
+            context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
+
         # Track initial values of tracked fields
-        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        track_ctx = dict(context)
+        if 'lang' not in track_ctx:
+            track_ctx['lang'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).lang
+        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
         if tracked_fields:
-            initial = self.read(cr, uid, ids, tracked_fields.keys(), context=context)
+            initial = self.read(cr, uid, ids, tracked_fields.keys(), context=track_ctx)
             initial_values = dict((item['id'], item) for item in initial)
 
         # Perform write, update followers
@@ -278,7 +287,7 @@ class mail_thread(osv.AbstractModel):
 
         # Perform the tracking
         if tracked_fields:
-            self.message_track(cr, uid, ids, tracked_fields, initial_values, context=context)
+            self.message_track(cr, uid, ids, tracked_fields, initial_values, context=track_ctx)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
