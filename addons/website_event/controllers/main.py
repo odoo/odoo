@@ -174,9 +174,9 @@ class website_event(http.Controller):
     def event(self, event=None, **post):
         if event.menu_id and event.menu_id.child_id:
             return request.redirect(event.menu_id.child_id[0].url)
-        return request.redirect('/event/register/'+str(event.id))
+        return request.redirect('/event/%s/register' % str(event.id))
 
-    @website.route(['/event/register/<model("event.event"):event>'], type='http', auth="public", multilang=True)
+    @website.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", multilang=True)
     def event_register(self, event=None, **post):
         values = {
             'event': event,
