@@ -69,6 +69,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.heat_map_mode = !this.heat_map_mode;
             this.draw_table();
         },
+
+        'click label.graph_expand_all' : function (event) {
+            this.pivot_table.expand_all().then(this.proxy('draw_table'));
+        },
     },
 
     view_loading: function (fields_view_get) {

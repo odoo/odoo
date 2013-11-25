@@ -185,6 +185,23 @@ var PivotTable = openerp.web.Class.extend({
 		this.fold_cols();
 	},
 
+	expand_all: function () {
+		var self = this;
+		// temporary code, to use while waiting for correct code.
+		// this code expands all rows/cols by doing as many db queries.
+		// correct code widd do that with just 1 request.
+		var header_to_expand = _.find(this.rows.headers.concat(this.cols.headers), function (header) {
+			return ((!header.is_expanded) && (header.path.length < header.root.groupby.length))
+		});
+		if (header_to_expand === undefined) {
+			return $.when();
+		} else {
+			return this.expand(header_to_expand.id, header_to_expand.root.groupby[header_to_expand.path.length]).then(function () {
+				return self.expand_all();
+			});
+		}
+	},
+
 });
 
 
