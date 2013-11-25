@@ -4994,14 +4994,16 @@ class BaseModel(object):
         fields = self.fields_get(cr, uid, context=context)
 
         for field_name, field_def in fields.items():
+            # removing the lang to compare untranslated values
+            context_wo_lang = dict(context, lang=None)
+            old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context_wo_lang)
             # we must recursively copy the translations for o2o and o2m
             if field_def['type'] == 'one2many':
                 target_obj = self.pool.get(field_def['relation'])
-                old_record, new_record = self.read(cr, uid, [old_id, new_id], [field_name], context=context)
                 # here we rely on the order of the ids to match the translations
                 # as foreseen in copy_data()
-                old_children = sorted(old_record[field_name])
-                new_children = sorted(new_record[field_name])
+                old_children = sorted(r.id for r in old_record[field_name])
+                new_children = sorted(r.id for r in new_record[field_name])
                 for (old_child, new_child) in zip(old_children, new_children):
                     target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
             # and for translatable fields we keep them for copy
@@ -5014,7 +5016,6 @@ class BaseModel(object):
                     trans_name = self._inherit_fields[field_name][0] + "," + field_name
                     # get the id of the parent record to set the translation
                     inherit_field_name = self._inherit_fields[field_name][1]
-                    old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context)
                     target_id = new_record[inherit_field_name].id
                     source_id = old_record[inherit_field_name].id
                 else:
@@ -5024,11 +5025,17 @@ class BaseModel(object):
                         ('name', '=', trans_name),
                         ('res_id', '=', source_id)
                 ])
+                user_lang = context.get('lang')
                 for record in trans_obj.read(cr, uid, trans_ids, context=context):
                     del record['id']
                     # remove source to avoid triggering _set_src
                     del record['source']
                     record.update({'res_id': target_id})
+                    if user_lang and user_lang == record['lang']:
+                        # 'source' to force the call to _set_src
+                        # 'value' needed if value is changed in copy(), want to see the new_value
+                        record['source'] = old_record[field_name]
+                        record['value'] = new_record[field_name]
                     trans_obj.create(cr, uid, record, context=context)
 
 
