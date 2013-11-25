@@ -468,12 +468,12 @@ class account_bank_statement(osv.osv):
         if journal.currency:
             currency = journal.currency
         else:
-            currency = journal.company_id.currency
+            currency = journal.company_id.currency_id
         return {
             'value': {
                 'balance_start': balance_start,
                 'company_id': journal.company_id.id,
-                'currency_id': currency_id.id,
+                'currency_id': currency.id,
             }
         }
 
