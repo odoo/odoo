@@ -4930,10 +4930,7 @@ class BaseModel(object):
                 else:
                     default['state'] = self._defaults['state']
 
-        context_wo_lang = context.copy()
-        if 'lang' in context:
-            del context_wo_lang['lang']
-        data = self.read(cr, uid, [id,], context=context_wo_lang)
+        data = self.read(cr, uid, [id,], context=context)
         if data:
             data = data[0]
         else:

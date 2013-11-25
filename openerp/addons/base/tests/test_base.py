@@ -340,10 +340,10 @@ class test_translation(common.TransactionCase):
         self.new_fr_cat_id = self.res_category.copy(cr, uid, self.cat_id, default={'name': 'Clients (copie)'}, context={'lang':'fr_FR'})
 
         no_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id)
-        self.assertEqual(no_context_cat.name, 'Clients (copie)', "Duplication with default value not applied")
+        self.assertEqual(no_context_cat.name, 'Customers', "Duplication erased original untranslated value")
 
         fr_context_cat = self.res_category.browse(cr, uid, self.new_fr_cat_id, context={'lang':'fr_FR'})
-        self.assertEqual(fr_context_cat.name, 'Clients', "Did not found translation for initial value")
+        self.assertEqual(fr_context_cat.name, 'Clients (copie)', "Did not used default value for translated value")
 
 
 if __name__ == '__main__':
