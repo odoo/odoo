@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-11-17 19:50+0000\n"
+"PO-Revision-Date: 2013-11-19 12:50+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-18 05:22+0000\n"
+"X-Launchpad-Export-Date: 2013-11-20 05:24+0000\n"
 "X-Generator: Launchpad (build 16831)\n"
 
 #. module: sale
@@ -482,7 +482,7 @@ msgstr ""
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
 msgstr ""
-"A megrendelés sorrendet adja a megrendelési sorok listájának kijelzésekor."
+"A megrendelés sorrendet adja ha a megrendelési sorok listáját jelzi ki."
 
 #. module: sale
 #: view:sale.report:0
@@ -543,7 +543,7 @@ msgstr "Megrendelés sorai számlázásának engedélyezése"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Vevői megrendelés sor"
+msgstr "Megrendelési tétel"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
@@ -588,14 +588,15 @@ msgstr "Jóváhagyás"
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr "Az időkimutatások alapján készítsen elő,  számlát"
+msgstr "Az időkimutatások alapján készítsen elő számlát"
 
 #. module: sale
 #: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
-"Nem tud olyan vevői megrendelési sort visszavonni amelyik már számlázva volt."
+"Nem tud olyan vevői megrendelési tételt visszavonni amelyik már számlázva "
+"volt."
 
 #. module: sale
 #: view:account.invoice.report:0
@@ -644,7 +645,7 @@ msgstr "Megrendelés száma"
 #: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
-msgstr "Megrendelés sorok"
+msgstr "Megrendelési tételek"
 
 #. module: sale
 #: report:sale.order:0
@@ -661,7 +662,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr "Számlasorok"
+msgstr "Számla tételek"
 
 #. module: sale
 #: view:sale.report:0
@@ -774,7 +775,7 @@ msgstr "Összesen :"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines ready to be invoiced"
-msgstr "Megrendelési sorok készen állnak számlázásra"
+msgstr "Megrendelési tételek készen állnak számlázásra"
 
 #. module: sale
 #: view:sale.report:0
@@ -854,8 +855,8 @@ msgid ""
 "After clicking 'Show Lines to Invoice', select lines to invoice and create "
 "the invoice from the 'More' dropdown menu."
 msgstr ""
-"A 'Mutasd a számlázandó sorokat' kattintás után, válasszon ki számlázandó "
-"sorokat és hozza létre a számlát a 'Tovább' legördülő menüből."
+"A 'Mutasd a számlázandó tételeket' kattintás után, válasszon ki számlázandó "
+"tételeket és hozza létre a számlát a 'Tovább' legördülő menüből."
 
 #. module: sale
 #: view:sale.order:0
@@ -927,7 +928,7 @@ msgstr "Számla létrehozása és megtekintése"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales order lines done"
-msgstr "Megrendelési sorok elvégezve"
+msgstr "Megrendelési tételek elvégezve"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -964,10 +965,11 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
-"Nem készíthet számlát ehhez a megrendelés sorhoz, az alábbi okok egyikének "
-"következtében:\n"
-"1. A megrendelés sorának állapota: \"Tervezet\" vagy \"Visszavont\".\n"
-"2.  A megrendelési sor már kiszámlázásra került."
+"Nem készíthet számlát ehhez az értékesítési megbízási tételhez, az alábbi "
+"okok egyike miatt:\n"
+"1. Az értékesítési megbízás tételének állapota: \"Tervezet\" vagy "
+"\"Mégsem\".\n"
+"2.  Az értékesítési megbízás tétel már kiszámlázásra került."
 
 #. module: sale
 #: view:sale.order.line.make.invoice:0
@@ -1071,8 +1073,8 @@ msgid ""
 "To allow your salesman to make invoices for sales order lines using the menu "
 "'Lines to Invoice'."
 msgstr ""
-"Lehetővé teszi az értékesítők részére a megrendelések soraira történő "
-"számlázást a 'Számlázandó sorok' menü használatával"
+"Lehetővé teszi az értékesítők részére a megrendelések tételire történő "
+"számlázást a 'Számlázandó tételek' menü használatával."
 
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
@@ -1083,7 +1085,7 @@ msgstr "Értékesítési menü megnyitása"
 #: code:addons/sale/sale.py:598
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr "Nem tud megerősíteni sor nélküli megrendelést"
+msgstr "Nem tud megerősíteni tétel nélküli értékesítési megbízást"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1122,7 +1124,7 @@ msgstr "Ennyi előleg %s %%"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr "Számla létrehozása az értékesítési megbízási sorból"
+msgstr "Számla létrehozása a vásárlói megrendelésből"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1213,11 +1215,12 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Kattintson új értékesítési hely meghatározáshoz.\n"
 "              </p><p>\n"
-"                Mindegyik árajánlatot vagy megrendelést össze kell kötni egy "
-"értékesítési helyhez. Az\n"
-"                értékesítési hely meghatároz egy raktárépületet ahonnan a "
+"                Mindegyik árajánlatot vagy értékesítési megbízást össze kell "
+"kötni egy értékesítési helyhez. Az\n"
+"                értékesítési hely meghatároz egy raktárhelyet ahonnan a "
 "termék\n"
-"                szállítva lesz minden egyes ide vonatkozó értékesítéshez.\n"
+"                kiszállításra kerül minden egyes ide vonatkozó "
+"értékesítéshez.\n"
 "              </p>\n"
 "            "
 
@@ -1244,8 +1247,8 @@ msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
-"Megrendelési sorok, melyek megerősítettek, elvégzettek vagy kifogásolt "
-"állapotú és még nincs számlázva"
+"Értékesítési megbízási tételek, melyek megerősítettek, elvégzettek vagy "
+"kifogásolt állapotúak és még nincs számlázva"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -1348,7 +1351,7 @@ msgstr "Január"
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr "Engedélyezi a megrendelés soraira az árengedmény beállítását"
+msgstr "Engedélyezi a megrendelés tételeire az árengedmény beállítását"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_in_progress
@@ -1363,10 +1366,10 @@ msgid ""
 "                    or a fixed price (for advances) directly from the sales "
 "order form if you prefer."
 msgstr ""
-"Ezen a megrendelésen minden sor tétel számlázva lesz. Lehetősége van a "
+"Ezen a megrendelésen minden tétel sor számlázva lesz. Lehetősége van a "
 "megrendelés egy bizonyos százalékának számlázására\n"
-"                    vagy fix ár (az előlegekre) direkt a megrendelés "
-"űrlapról ha kívánja."
+"                    vagy fix ár (az előlegekre), ah kívánja direkt a "
+"megrendelés űrlapról."
 
 #. module: sale
 #: help:sale.config.settings,module_warning:0
@@ -1377,7 +1380,8 @@ msgid ""
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
 "Lehetővé teszi a termék értesítéseket, melyeket kapcsolhatjuk, ha egy "
-"felhasználó egy megadott terméket értékesíteni akar vagy egy vevőre.\n"
+"felhasználó egy megadott terméket  vagy egy megadott vevőre értékesíteni "
+"szeretne.\n"
 "Például: Termék: Ezt a terméket érvénytelenítsd, nem lehet 5-nél többet "
 "vásárolni.\n"
 "                  Beszállító: Ne felejts el expressz szállításról érdeklődni."
@@ -1438,7 +1442,7 @@ msgstr ""
 #: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
-msgstr "Nem alálható érvényes árlista sor ! :"
+msgstr "Nem található érvényes árlista sor ! :"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:113
@@ -1490,7 +1494,7 @@ msgid ""
 msgstr ""
 "Ez egy olyan számlalista, amely ehhez az értékesítési megbízáshoz jött "
 "létre. Ugyanaz az értékesítési megbízás több alkalommal is számlázásra "
-"kerülhetett (például sorok alapján)."
+"kerülhetett (például tételek alapján)."
 
 #. module: sale
 #: report:sale.order:0
@@ -1500,7 +1504,7 @@ msgstr "Az Ön hivatkozása"
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Show Lines to Invoice"
-msgstr "Mutassa a számlázandó sorokat"
+msgstr "Mutassa a számlázandó tételeket"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -1553,7 +1557,7 @@ msgid ""
 "prices of existing order lines will not be updated."
 msgstr ""
 "Ha ennek a megrendelésnek az árlistáját megváltoztatja (esetleg a "
-"pénznemet), a meglévő megrendelés sorai nem lesznek frissítve."
+"pénznemet), a meglévő megrendelés tételei nem lesznek frissítve."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1602,7 +1606,7 @@ msgstr "Számla"
 #. module: sale
 #: view:sale.order.line:0
 msgid "My Sales Order Lines"
-msgstr "Az én megrendeléseim sorai"
+msgstr "Az én értékesítési megbízásam tételei"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
@@ -1637,7 +1641,7 @@ msgstr "Árajánlat küldés"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Search Uninvoiced Lines"
-msgstr "Számlázatlan sorok keresése"
+msgstr "Számlázatlan tételek keresése"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -1664,12 +1668,15 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                Itt van a lista a már kiszámlázott megrendelési sorokról. "
+"                Ez itt a lista a már kiszámlázott megrendelési tételekről. "
 "Tud\n"
-"                számlázni megrendelési részt, a megrendelés soraival. Nincs\n"
+"                számlázni megrendelési részt, a megrendelés tételeivel. "
+"Nincs\n"
 "                szüksége erre a listára, ha kiszállítási Kiszolgáltatási "
-"jegyből\n"
-"                számláz vagy a teljes értékesítést egyszerre számlázza.\n"
+"jegyből/\n"
+"                Szállító levélből számláz vagy a teljes értékesítést "
+"egyszerre\n"
+"                számlázza.\n"
 "              </p>\n"
 "            "
 
@@ -1683,9 +1690,7 @@ msgstr "Szállítási cím:"
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
-msgstr ""
-"Nem csoportosíthat értékesítést, ha ugyan ahhoz a partnerhez különböző "
-"devizák vannak."
+msgstr "Nem csoportosíthat különböző devizákon értékesítést egy partnerhez."
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -1715,7 +1720,7 @@ msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
-"Nem található ehhez a termékhez és mennyiséghez hasonló árlista sor.\n"
+"Nem található ehhez a termékhez és mennyiséghez hasonló árlista tétel.\n"
 "Változtassa meg vagy a terméket, a mennyiséget vagy az árlistát."
 
 #. module: sale
@@ -2054,7 +2059,7 @@ msgstr ""
 "                Kettintson árajánlat létrehozásához, ez az új értékesítés "
 "első lépése.\n"
 "              </p><p>\n"
-"                OpenERP segít a hatékony értékesítési folyamat hatékony "
+"                OpenERP segít az értékesítési folyamat hatékony "
 "kezelésében:\n"
 "                a megrendelés visszaigazolásában, a szállításban,\n"
 "                a számlázásban és az áru ellenértékének beszedésében.\n"
@@ -2089,7 +2094,7 @@ msgstr "Ellenőrizendő a könyvelő által."
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
 msgid "Properties on lines"
-msgstr "A sorok tulajdonságai"
+msgstr "Tételsorok tulajdonságai"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -2233,9 +2238,9 @@ msgid ""
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Kattintson ehhez a vevőhöz tartozó árajánlat vagy "
-"megrendelés létrehozásához.\n"
+"értékesítési megbízás létrehozásához.\n"
 "              </p><p>\n"
-"                 OpenERP segít a hatékony értékesítési folyamat hatékony "
+"                 OpenERP segít az értékesítési folyamat hatékony "
 "kezelésében:\n"
 "                árajánlat, megrendelés, szállítás,számlázás és "
 "kiegyenlítés.\n"
@@ -2244,9 +2249,6 @@ msgstr ""
 "megbeszélésének szervezésében,\n"
 "                és lehetővé teszik a megrendeléseken a vásárlói fejlődésének "
 "követését.\n"
-"                order, and allow your customer to keep track of the "
-"evolution\n"
-"                of the sales order.\n"
 "              </p>\n"
 "            "
 
@@ -2297,7 +2299,7 @@ msgstr "Értékesítési megbízásból"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr "Megerősített megrendelési sorok, amik még nem kiszálítottak"
+msgstr "Megerősített megrendelési tételek, amiket még nem szállítottak ki"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -2320,14 +2322,15 @@ msgstr "EE"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Some order lines"
-msgstr "Néhány megrendelés sor"
+msgstr "Néhány megrendelési tétel"
 
 #. module: sale
 #: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
-"Nem törölhető az a megrendelési sor amelyik ebben az állapotban van '%s'."
+"Nem törölhető az a megrendelési téetelsor amelyik ebben az állapotban van "
+"'%s'."
 
 #. module: sale
 #: report:sale.order:0
@@ -2343,7 +2346,7 @@ msgstr "Számlázásra kész megrendelés"
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr "Számla létrehozása a megrendelési sorokra"
+msgstr "Számla létrehozása a megrendelési téetelsorokra"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -2372,7 +2375,7 @@ msgstr "Árajánlat száma"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr "Árengedmény a sorokon"
+msgstr "Árengedmény a téetelsorokon"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
