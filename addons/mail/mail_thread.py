@@ -23,6 +23,11 @@ import base64
 import datetime
 import dateutil
 import email
+try:
+    import simplejson as json
+except ImportError:
+    import json
+from lxml import etree
 import logging
 import pytz
 import time
@@ -305,6 +310,28 @@ class mail_thread(osv.AbstractModel):
                  "This summary is directly in html format in order to "\
                  "be inserted in kanban views."),
     }
+
+    def _get_user_chatter_options(self, cr, uid, context=None):
+        options = {
+            'display_log_button': False
+        }
+        group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
+        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
+        is_employee = group_user_id in [group.id for group in group_ids]
+        if is_employee:
+            options['display_log_button'] = True
+        return options
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(mail_thread, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//field[@name='message_ids']"):
+                options = json.loads(node.get('options', '{}'))
+                options.update(self._get_user_chatter_options(cr, uid, context=context))
+                node.set('options', json.dumps(options))
+            res['arch'] = etree.tostring(doc)
+        return res
 
     #------------------------------------------------------
     # CRUD overrides for automatic subscription and logging
