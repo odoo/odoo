@@ -12,4 +12,15 @@
     qty = self._compute_qty(cr, uid, from_uom_id, qty, to_uom_id)
     assert qty == 1.02, "Qty is not correspond."
     assert price == 2000000.0, "Price is not correspond."
-
+-
+  I convert Liters into Gallons with price.
+-
+  !python {model: product.uom}: |
+    from_uom_id = ref("product_uom_litre")
+    to_uom_id = ref("product_uom_gal")
+    price = 2
+    qty = 30.28
+    price = self._compute_price(cr, uid, from_uom_id, price, to_uom_id)
+    qty = self._compute_qty(cr, uid, from_uom_id, qty, to_uom_id)
+    assert qty == 8, "Qty is not correspond."
+    assert round(price,2) == 7.57, "Price is not correspond."

@@ -96,6 +96,55 @@
             <field name="factor">1.0</field>
         </record>
 
+        <!--Americanization of units of measure-->
+        <record id="product_uom_lb" model="product.uom">
+            <field name="name">lb(s)</field>
+            <field name="category_id" ref="product_uom_categ_kgm"/>
+            <field name="factor">2.20462</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_oz" model="product.uom">
+            <field name="name">oz(s)</field>
+            <field name="category_id" ref="product_uom_categ_kgm"/>
+            <field name="factor">35.274</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_inch" model="product.uom">
+            <field name="name">inch(es)</field>
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="factor">39.3701</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_foot" model="product.uom">
+            <field name="name">foot(ft)</field>
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="factor">3.28084</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_mile" model="product.uom">
+            <field name="name">mile(s)</field>
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="factor_inv" eval="1609.34"/>
+            <field name="uom_type">bigger</field>
+        </record>
+        <record id="product_uom_floz" model="product.uom">
+            <field name="name">fl oz</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor">33.814</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_qt" model="product.uom">
+            <field name="name">qt</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor">1.05669</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_gal" model="product.uom">
+            <field name="name">gal(s)</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor_inv" eval="3.78541"/>
+            <field name="uom_type">bigger</field>
+        </record>
 
         <!--
 ... to here, it should be in product_demo but we cant just move it
