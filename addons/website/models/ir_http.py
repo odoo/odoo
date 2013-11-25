@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+import traceback
 import werkzeug.routing
 import openerp
-from openerp.osv import orm
-from openerp.http import request
 from openerp.addons.base import ir
+from openerp.http import request
+from openerp.osv import orm
 
 from ..utils import slugify
+from website import get_current_website
 
 class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
@@ -24,6 +26,33 @@ class ir_http(orm.AbstractModel):
         else:
             request.uid = request.session.uid
 
+    def _handle_403(self, exception):
+        return self._render_error(403, {
+            'error': exception.message
+        })
+
+    def _handle_404(self, exception):
+        return self._render_error(404)
+
+    def _handle_500(self, exception):
+        # TODO: proper logging
+        return self._render_error(500, {
+            'exception': exception,
+            'traceback': traceback.format_exc(),
+            'qweb_template': getattr(exception, 'qweb_template', None),
+            'qweb_node': getattr(exception, 'qweb_node', None),
+            'qweb_eval': getattr(exception, 'qweb_eval', None),
+        })
+
+    def _render_error(self, code, values=None):
+        self._auth_method_public()
+        if not hasattr(request, 'website'):
+            request.website = get_current_website()
+            request.website.preprocess_request(request)
+        return werkzeug.wrappers.Response(
+            request.website._render('website.%s' % code, values),
+            status=code,
+            content_type='text/html;charset=utf-8')
 
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False):

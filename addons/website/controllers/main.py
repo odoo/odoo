@@ -91,7 +91,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {
             'path': page,
         }
-
+        try:
+            request.website.get_template(page)
+        except (Exception), e:
+            if request.context['editable']:
+                page = 'website.page_404'
+            else:
+                return request.registry['ir.http']._handle_404(e)
         return request.website.render(page, values)
 
     @website.route('/website/customize_template_toggle', type='json', auth='user')

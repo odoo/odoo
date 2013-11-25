@@ -6,7 +6,6 @@ import logging
 import psycopg2
 import math
 import itertools
-import traceback
 import urllib
 import urlparse
 
@@ -16,7 +15,6 @@ import werkzeug.exceptions
 import werkzeug.wrappers
 
 import openerp
-from openerp.exceptions import AccessError, AccessDenied
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
 
@@ -41,28 +39,21 @@ def route(routes, *route_args, **route_kwargs):
             request.route_lang = kwargs.pop('lang_code', None)
             if not hasattr(request, 'website'):
                 request.multilang = f.multilang
-                # TODO: Select website, currently hard coded
-                request.website = request.registry['website'].browse(
-                    request.cr, request.uid, 1, context=request.context)
+                request.website = get_current_website()
 
                 if request.route_lang:
                     lang_ok = [lg.code for lg in request.website.language_ids if lg.code == request.route_lang]
                     if not lang_ok:
                         return request.not_found()
                 request.website.preprocess_request(request)
-            try:
-                return f(*args, **kwargs)
-            except Exception, err:
-                logger.exception("Website Rendering Error.")
-                if request.context['is_public_user']:
-                    return request.website.render("website.401")
-                else:
-                    return request.website.render("website.500", {
-                        'traceback': traceback.format_exc(),
-                        'controller': [f.__module__, "%s.%s" % (args[0].__class__.__name__, f.__name__)],
-                    })
+            return f(*args, **kwargs)
         return wrap
     return decorator
+
+def get_current_website():
+    # TODO: Select website, currently hard coded
+    return request.registry['website'].browse(request.cr, request.uid, 1, context=request.context)
+
 
 def url_for(path_or_uri, lang=None, keep_query=None):
     location = path_or_uri.strip()
@@ -159,6 +150,9 @@ class website(osv.osv):
         def redirect(url):
             return werkzeug.utils.redirect(url_for(url))
         request.redirect = redirect
+        if not hasattr(request, 'multilang'):
+            # TODO: try to get rid of this multilang attribute
+            request.multilang = False
 
         is_public_user = request.uid == self.get_public_user(cr, uid, context).id
 
@@ -186,9 +180,17 @@ class website(osv.osv):
             'translatable': not is_public_user and not is_master_lang and request.multilang,
         })
 
-    def _render(self, cr, uid, ids, template, values=None, context=None):
-        view = self.pool.get("ir.ui.view")
+    def get_template(self, cr, uid, ids, template, context=None):
         IMD = self.pool.get("ir.model.data")
+        try:
+            module, xmlid = template.split('.', 1)
+            view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
+        except ValueError: # catches both unpack errors and gor errors
+            module, xmlid = 'website', template
+            view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
+        return self.pool.get("ir.ui.view").browse(cr, uid, view_ref[1])
+
+    def _render(self, cr, uid, ids, template, values=None, context=None):
         user = self.pool.get("res.users")
 
         if not context:
@@ -212,43 +214,12 @@ class website(osv.osv):
             inherit_branding=qweb_context.setdefault('editable', False),
         )
 
-        view_ref = None
-        # check if xmlid of the template exists
-        try:
-            module, xmlid = template.split('.', 1)
-            view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
-        except ValueError: # catches both unpack errors and gor errors
-            module, xmlid = 'website', template
-            try:
-                view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
-            except ValueError:
-                return self.error(cr, uid, 404, qweb_context, context=context)
+        view = self.get_template(cr, uid, ids, template)
 
         if 'main_object' not in qweb_context:
-            try:
-                main_object = self.pool[view_ref[0]].browse(cr, uid, view_ref[1])
-                qweb_context['main_object'] = main_object
-            except Exception:
-                pass
+            qweb_context['main_object'] = view
 
-        try:
-            return view.render(
-                cr, uid, "%s.%s" % (module, xmlid), qweb_context,
-                engine='website.qweb', context=context)
-        except (AccessError, AccessDenied), err:
-            logger.error(err)
-            qweb_context['error'] = err[1]
-            logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.error(cr, uid, 401, qweb_context, context=context)
-        except Exception, e:
-            qweb_context['template'] = getattr(e, 'qweb_template', '')
-            node = getattr(e, 'qweb_node', None)
-            qweb_context['node'] = node and node.toxml()
-            qweb_context['expr'] = getattr(e, 'qweb_eval', '')
-            qweb_context['traceback'] = traceback.format_exc()
-            logger.exception("Website Rendering Error.\n%(template)s\n%(expr)s\n%(node)s" % qweb_context)
-            return self.error(cr, uid, 500 if qweb_context['editable'] else 404,
-                              qweb_context, context=context)
+        return view.render(qweb_context, engine='website.qweb', context=context)
 
     def render(self, cr, uid, ids, template, values=None, context=None):
         def callback(template, values, context):
@@ -256,13 +227,6 @@ class website(osv.osv):
         if values is None:
             values = {}
         return LazyResponse(callback, template=template, values=values, context=context)
-
-    def error(self, cr, uid, code, qweb_context, context=None):
-        View = request.registry['ir.ui.view']
-        return werkzeug.wrappers.Response(
-            View.render(cr, uid, 'website.%d' % code, qweb_context),
-            status=code,
-            content_type='text/html;charset=utf-8')
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
