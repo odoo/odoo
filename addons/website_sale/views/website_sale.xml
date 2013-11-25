@@ -886,7 +886,7 @@
                   </div>
                 </div>
 
-                <div class="js_payment mb64" t-if="not payment_acquirer_id and payments">
+                <div class="js_payment mb64" t-if="not payment_acquirer_id and payments" id="payment_method">
                     <p>Payment method:</p>
                     <div>
                         <t t-foreach="payments or []" t-as="payment">
