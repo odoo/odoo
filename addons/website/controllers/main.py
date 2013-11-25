@@ -48,42 +48,14 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route('/pagenew/<path:path>', type='http', auth="user")
     def pagenew(self, path, noredirect=NOPE):
-        module = 'website'
-        # completely arbitrary max_length
-        idname = slugify(path, max_length=50)
-
-        request.cr.execute('SAVEPOINT pagenew')
-        imd = request.registry['ir.model.data']
-        view = request.registry['ir.ui.view']
-        view_model, view_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'default_page')
-        newview_id = view.copy(
-            request.cr, request.uid, view_id, context=request.context)
-        newview = view.browse(
-            request.cr, request.uid, newview_id, context=request.context)
-        newview.write({
-            'arch': newview.arch.replace("website.default_page",
-                                         "%s.%s" % (module, idname)),
-            'name': path,
-            'page': True,
-        })
-        # Fuck it, we're doing it live
+        web = request.registry['website']
         try:
-            imd.create(request.cr, request.uid, {
-                'name': idname,
-                'module': module,
-                'model': 'ir.ui.view',
-                'res_id': newview_id,
-                'noupdate': True
-            }, context=request.context)
+            path = web.new_page(request.cr, request.uid, path, request.context)
         except psycopg2.IntegrityError:
             logger.exception('Unable to create ir_model_data for page %s', path)
             request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
             return werkzeug.exceptions.InternalServerError()
-        else:
-            request.cr.execute('RELEASE SAVEPOINT pagenew')
-
-        url = "/page/%s" % idname
+        url = "/page/" + path
         if noredirect is not NOPE:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
@@ -112,7 +84,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route(['/website/snippets'], type='json', auth="public")
     def snippets(self):
-        return request.website.render('website.snippets')
+        return request.website._render('website.snippets')
 
     @website.route('/page/<page:page>', type='http', auth="public", multilang=True)
     def page(self, page, **opt):

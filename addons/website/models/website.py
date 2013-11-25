@@ -3,6 +3,7 @@ import fnmatch
 import functools
 import inspect
 import logging
+import psycopg2
 import math
 import itertools
 import traceback
@@ -21,6 +22,7 @@ from openerp.tools.safe_eval import safe_eval
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request, LazyResponse
+from ..utils import slugify
 
 logger = logging.getLogger(__name__)
 
@@ -117,6 +119,34 @@ class website(osv.osv):
     }
 
     public_user = None
+    def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
+        context=context or {}
+        # completely arbitrary max_length
+        idname = slugify(name, max_length=50)
+
+        cr.execute('SAVEPOINT pagenew')
+        imd = self.pool.get('ir.model.data')
+        view = self.pool.get('ir.ui.view')
+
+        module, tmp_page = template.split('.')
+        view_model, view_id = imd.get_object_reference(cr, uid, module, tmp_page)
+
+        newview_id = view.copy(cr, uid, view_id, context=context)
+        newview = view.browse(cr, uid, newview_id, context=context)
+        newview.write({
+            'arch': newview.arch.replace(template, "%s.%s" % (module, idname)),
+            'name': name,
+            'page': ispage,
+        })
+        imd.create(cr, uid, {
+            'name': idname,
+            'module': module,
+            'model': 'ir.ui.view',
+            'res_id': newview_id,
+            'noupdate': True
+        }, context=context)
+        cr.execute('RELEASE SAVEPOINT pagenew')
+        return "%s.%s" % (module, idname)
 
     def get_public_user(self, cr, uid, context=None):
         if not self.public_user:
@@ -473,7 +503,7 @@ class website(osv.osv):
             'range': range,
             'template': template,
         }
-        return request.website.render("website.kanban_contain", values)
+        return request.website._render("website.kanban_contain", values)
 
     def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby, context=None):
         html = ""
@@ -508,6 +538,7 @@ class website_menu(osv.osv):
     _defaults = {
         'url': '',
         'sequence': 0,
+        'new_window': False,
     }
     _parent_store = True
     _parent_order = 'sequence, name'
@@ -515,7 +546,7 @@ class website_menu(osv.osv):
 
     def get_menu(self, cr, uid, website_id, context=None):
         root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
-        menu_ids = self.search(cr, uid, root_domain, context=context)
+        menu_ids = self.search(cr, uid, root_domain, order='id', context=context)
         menu = self.browse(cr, uid, menu_ids, context=context)
         return menu[0]
 

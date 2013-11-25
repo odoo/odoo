@@ -30,8 +30,8 @@
     function link_dialog(editor) {
         return new website.editor.RTELinkDialog(editor).appendTo(document.body);
     }
-    function image_dialog(editor) {
-        return new website.editor.RTEImageDialog(editor).appendTo(document.body);
+    function image_dialog(editor, image) {
+        return new website.editor.RTEImageDialog(editor, image).appendTo(document.body);
     }
 
     // only enable editors manually
@@ -53,7 +53,7 @@
                             && !element.data('cke-realelement')
                             && !element.isReadOnly()
                             && (element.data('oe-model') !== 'ir.ui.view')) {
-                        image_dialog(editor);
+                        image_dialog(editor, element);
                         return;
                     }
 
@@ -69,13 +69,9 @@
                 }, null, null, 500);
 
                 var previousSelection;
-                editor.on('selectionChange', function (evt) {
-                    var selected = evt.data.path.lastElement;
-                    if (previousSelection) {
-                        // cleanup previous selection
-                        $(previousSelection).next().remove();
-                        previousSelection = null;
-                    }
+                $(editor.element.$).on('mouseenter', 'img', function () {
+                    if (previousSelection) { return; }
+                    var selected = new CKEDITOR.dom.element(this);
                     if (!selected.is('img')
                             || selected.data('cke-realelement')
                             || selected.isReadOnly()
@@ -84,26 +80,46 @@
                     }
 
                     // display button
-                    var $el = $(previousSelection = selected.$);
+                    var $el = $((previousSelection = selected).$);
                     var $btn = $('<button type="button" class="btn btn-primary image-edit-button" contenteditable="false">Edit</button>')
                         .insertAfter($el)
                         .click(function (e) {
                             e.preventDefault();
                             e.stopPropagation();
-                            image_dialog(editor);
+                            image_dialog(editor, selected);
                         });
 
                     var position = $el.position();
+                    // http://bugs.jquery.com/ticket/5445#comment:6
+                    // if the image has margin: x auto for centering, FF & IE
+                    // will report top/left as the "correct" value and
+                    // marginTop/marginLeft at "0px", webkit browsers will
+                    // report top/left as 0-ish and set marginTop and
+                    // marginLeft
+                    var image_top = position.top + parseInt($el.css('marginTop'), 10);
+                    var image_left = position.left + parseInt($el.css('marginLeft'), 10);
                     $btn.css({
                         position: 'absolute',
-                        top: $el.height() / 2 + position.top - $btn.outerHeight() / 2,
-                        left: $el.width() / 2 + position.left - $btn.outerWidth() / 2,
+                        top: $el.height() / 2 + image_top - $btn.outerHeight() / 2,
+                        left: $el.width() / 2 + image_left - $btn.outerWidth() / 2,
                     });
+                    $el.css('opacity', 0.75);
+                }).on('mouseleave', 'img', function (e) {
+                    var $previous = $(previousSelection.$);
+                    var $button = $previous.next('button');
+                    $button.css('visibility', 'hidden');
+                    var el = document.elementFromPoint(e.clientX, e.clientY);
+                    $button.css('visibility', '');
+                    if (el === this) { return; }
+                    $button.remove();
+                    $previous.css('opacity', '');
+                    previousSelection = null;
                 });
                 editor.on('destroy', function (evt) {
-                    if (previousSelection) {
-                        $('.image-edit-button').remove();
-                    }
+                    if (!previousSelection) { return; }
+                    $('.image-edit-button')
+                        .prev().css('opacity', '').end()
+                        .remove();
                 });
 
                 //noinspection JSValidateTypes
@@ -202,6 +218,154 @@
             }
         });
 
+        CKEDITOR.plugins.add('linkstyle', {
+            requires: 'panelbutton,floatpanel',
+            init: function (editor) {
+                var label = "Link Style";
+
+                editor.ui.add('LinkStyle', CKEDITOR.UI_PANELBUTTON, {
+                    label: label,
+                    title: label,
+                    icon: '/website/static/src/img/bglink.png',
+                    modes: { wysiwyg: true },
+                    editorFocus: true,
+                    panel: {
+                        css: '/website/static/lib/bootstrap/css/bootstrap.css',
+                        attributes: { 'role': 'listbox', 'aria-label': label },
+                    },
+
+                    types: {
+                        'btn-default': _t("Basic"),
+                        'btn-primary': _t("Primary"),
+                        'btn-success': _t("Success"),
+                        'btn-info': _t("Info"),
+                        'btn-warning': _t("Warning"),
+                        'btn-danger': _t("Danger"),
+                    },
+                    sizes: {
+                        'btn-xs': _t("Extra Small"),
+                        'btn-sm': _t("Small"),
+                        '': _t("Default"),
+                        'btn-lg': _t("Large")
+                    },
+
+                    onRender: function () {
+                        var self = this;
+                        editor.on('selectionChange', function (e) {
+                            var path = e.data.path, el;
+
+                            if (!(e = path.contains('a')) || e.isReadOnly()) {
+                                self.disable();
+                                return;
+                            }
+
+                            self.enable();
+                        });
+                        // no hook where button is available, so wait
+                        // "some time" after render.
+                        setTimeout(function () {
+                            self.disable();
+                        }, 0)
+                    },
+                    enable: function () {
+                        this.setState(CKEDITOR.TRISTATE_OFF);
+                    },
+                    disable: function () {
+                        this.setState(CKEDITOR.TRISTATE_DISABLED);
+                    },
+
+                    onOpen: function () {
+                        var link = get_selected_link(editor);
+                        var id = this._.id;
+                        var block = this._.panel._.panel._.blocks[id];
+                        var $root = $(block.element.$);
+                        $root.find('button').removeClass('active').removeProp('disabled');
+
+                        // enable buttons matching link state
+                        for (var type in this.types) {
+                            if (!this.types.hasOwnProperty(type)) { continue; }
+                            if (!link.hasClass(type)) { continue; }
+
+                            $root.find('button[data-type=types].' + type)
+                                 .addClass('active');
+                        }
+                        var found;
+                        for (var size in this.sizes) {
+                            if (!this.sizes.hasOwnProperty(size)) { continue; }
+                            if (!size || !link.hasClass(size)) { continue; }
+                            found = true;
+                            $root.find('button[data-type=sizes].' + size)
+                                 .addClass('active');
+                        }
+                        if (!found && link.hasClass('btn')) {
+                            $root.find('button[data-type="sizes"][data-set-class=""]')
+                                 .addClass('active');
+                        }
+                    },
+
+                    onBlock: function (panel, block) {
+                        var self = this;
+                        block.autoSize = true;
+
+                        var html = ['<div style="padding: 5px">'];
+                        html.push('<div style="white-space: nowrap">');
+                        _(this.types).each(function (label, key) {
+                            html.push(_.str.sprintf(
+                                '<button type="button" class="btn %s" ' +
+                                        'data-type="types" data-set-class="%s">%s</button>',
+                                key, key, label));
+                        });
+                        html.push('</div>');
+                        html.push('<div style="white-space: nowrap; margin: 5px 0; text-align: center">');
+                        _(this.sizes).each(function (label, key) {
+                            html.push(_.str.sprintf(
+                                '<button type="button" class="btn btn-default %s" ' +
+                                        'data-type="sizes" data-set-class="%s">%s</button>',
+                                key, key, label));
+                        });
+                        html.push('</div>');
+                        html.push('<button type="button" class="btn btn-link btn-block" ' +
+                                          'data-type="reset">Reset</button>');
+                        html.push('</div>');
+
+                        block.element.setHtml(html.join(' '));
+                        var $panel = $(block.element.$);
+                        $panel.on('click', 'button', function () {
+                            self.clicked(this);
+                        });
+                    },
+                    clicked: function (button) {
+                        editor.focus();
+                        editor.fire('saveSnapshot');
+
+                        var $button = $(button),
+                              $link = $(get_selected_link(editor).$);
+                        if (!$link.hasClass('btn')) {
+                            $link.addClass('btn btn-default');
+                        }
+                        switch($button.data('type')) {
+                        case 'reset':
+                            $link.removeClass('btn')
+                                 .removeClass(_.keys(this.types).join(' '))
+                                 .removeClass(_.keys(this.sizes).join(' '));
+                            break;
+                        case 'types':
+                            $link.removeClass(_.keys(this.types).join(' '))
+                                 .addClass($button.data('set-class'));
+                            break;
+                        case 'sizes':
+                            $link.removeClass(_.keys(this.sizes).join(' '))
+                                 .addClass($button.data('set-class'));
+                        }
+                        this._.panel.hide();
+
+                        editor.fire('saveSnapshot');
+                    },
+
+                });
+            }
+        });
+
         CKEDITOR.plugins.add('oeref', {
             requires: 'widget',
 
@@ -222,157 +386,6 @@
                     }
                 });
             }
-        });
-
-        CKEDITOR.plugins.add('bootstrapcombo', {
-            requires: 'richcombo',
-
-            init: function (editor) {
-                var config = editor.config;
-
-                editor.ui.addRichCombo('BootstrapLinkCombo', {
-                    // default title
-                    label: "Links",
-                    // hover
-                    title: "Link styling",
-                    toolbar: 'styles,10',
-                    allowedContent: ['a'],
-
-                    panel: {
-					    css: [
-                            '/website/static/lib/bootstrap/css/bootstrap.css',
-                            CKEDITOR.skin.getPath( 'editor' )
-                        ].concat( config.contentsCss ),
-                        multiSelect: true,
-                    },
-
-                    types: {
-                        'basic': 'btn-default',
-                        'primary': 'btn-primary',
-                        'success': 'btn-success',
-                        'info': 'btn-info',
-                        'warning': 'btn-warning',
-                        'danger': 'btn-danger',
-                    },
-
-                    sizes: {
-                        'large': 'btn-lg',
-                        'default': '',
-                        'small': 'btn-sm',
-                        'extra small': 'btn-xs',
-                    },
-
-                    init: function () {
-                        this.add('', 'Reset');
-                        this.startGroup("Types");
-                        for(var type in this.types) {
-                            if (!this.types.hasOwnProperty(type)) { continue; }
-                            var cls = this.types[type];
-                            var el = _.str.sprintf(
-                                '<span class="btn %s">%s</span>',
-                                cls, type);
-                            this.add(type, el);
-                        }
-                        this.startGroup("Sizes");
-                        for (var size in this.sizes) {
-                            if (!this.sizes.hasOwnProperty(size)) { continue; }
-                            cls = this.sizes[size];
-
-                            el = _.str.sprintf(
-                                '<span class="btn btn-default %s">%s</span>',
-                                cls, size);
-                            this.add(size, el);
-                        }
-                        this.commit();
-                    },
-                    onRender: function () {
-                        var self = this;
-                        editor.on('selectionChange', function (e) {
-                            var path = e.data.path, el;
-
-                            if (!(el = path.contains('a'))) {
-                                self.element = null;
-                                self.disable();
-                                return;
-                            }
-
-                            self.enable();
-                            // This is crap, but getting the currently selected
-                            // element from within onOpen absolutely does not
-                            // work, so store the "current" element in the
-                            // widget instead
-                            self.element = el;
-                        });
-                        setTimeout(function () {
-                            // Because I can't find any normal hook where the
-                            // bloody button's bloody element is available
-                            self.disable();
-                        }, 0);
-                    },
-                    onOpen: function () {
-                        this.showAll();
-                        this.unmarkAll();
-
-                        for(var val in this.types) {
-                            if (!this.types.hasOwnProperty(val)) { continue; }
-                            var cls = this.types[val];
-                            if (!this.element.hasClass(cls)) { continue; }
-
-                            this.mark(val);
-                            break;
-                        }
-
-                        var found;
-                        for(val in this.sizes) {
-                            if (!this.sizes.hasOwnProperty(val)) { continue; }
-                            cls = this.sizes[val];
-                            if (!cls || !this.element.hasClass(cls)) { continue; }
-
-                            found = true;
-                            this.mark(val);
-                            break;
-                        }
-                        if (!found && this.element.hasClass('btn')) {
-                            this.mark('default');
-                        }
-                    },
-                    onClick: function (value) {
-                        editor.focus();
-                        editor.fire('saveShapshot');
-
-                        // basic btn setup
-                        var el = this.element;
-                        if (!el.hasClass('btn')) {
-                            el.addClass('btn');
-                            el.addClass('btn-default');
-                        }
-
-                        if (!value) {
-                            this.setClass(this.types);
-                            this.setClass(this.sizes);
-                            el.removeClass('btn');
-                        } else if (value in this.types) {
-                            this.setClass(this.types, value);
-                        } else if (value in this.sizes) {
-                            this.setClass(this.sizes, value);
-                        }
-
-                        editor.fire('saveShapshot');
-                    },
-                    setClass: function (classMap, value) {
-                        var element = this.element;
-                        _(classMap).each(function (cls) {
-                            if (!cls) { return; }
-                            element.removeClass(cls);
-                        }.bind(this));
-
-                        var cls = classMap[value];
-                        if (cls) {
-                            element.addClass(cls);
-                        }
-                    }
-                });
-            },
         });
 
         var editor = new website.EditorBar();
@@ -788,7 +801,7 @@
                 fillEmptyBlocks: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref,bootstrapcombo',
+                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref,linkstyle',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [{
@@ -800,7 +813,7 @@
                         "Superscript", "TextColor", "BGColor", "RemoveFormat"
                     ]},{
                     name: 'span', items: [
-                        "Link", "Blockquote", "BulletedList",
+                        "Link", "LinkStyle", "Blockquote", "BulletedList",
                         "NumberedList", "Indent", "Outdent"
                     ]},{
                     name: 'justify', items: [
@@ -810,7 +823,7 @@
                         "Image", "TableButton"
                     ]},{
                     name: 'styles', items: [
-                        "Styles", "BootstrapLinkCombo"
+                        "Styles"
                     ]}
                 ],
                 // styles dropdown in toolbar
@@ -1182,26 +1195,30 @@
         },
     });
     website.editor.RTEImageDialog = website.editor.ImageDialog.extend({
-        init: function () {
-            this._super.apply(this, arguments);
+        init: function (editor, image) {
+            this._super(editor);
+
+            this.element = image;
 
             this.on('start', this, this.proxy('started'));
             this.on('save', this, this.proxy('saved'));
         },
         started: function (holder) {
-            var selection = this.editor.getSelection();
-            var el = selection && selection.getSelectedElement();
-            this.element = null;
-
-            if (el && el.is('img')) {
-                this.element = el;
-                _(this.image_styles).each(function (style) {
-                    if (el.hasClass(style)) {
-                        holder.style = style;
-                    }
-                });
-                holder.url = el.getAttribute('src');
+            if (!this.element) {
+                var selection = this.editor.getSelection();
+                this.element = selection && selection.getSelectedElement();
             }
+
+            var el = this.element;
+            if (!el || !el.is('img')) {
+                return;
+            }
+            _(this.image_styles).each(function (style) {
+                if (el.hasClass(style)) {
+                    holder.style = style;
+                }
+            });
+            holder.url = el.getAttribute('src');
         },
         saved: function (data) {
             var element, editor = this.editor;

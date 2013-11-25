@@ -27,9 +27,9 @@ class WebsiteMembership(http.Controller):
         post_country_id = int(post.get('country_id', '0'))
 
         # base domain for groupby / searches
-        base_line_domain = [(1, '=', 1)]
+        base_line_domain = []
         if membership_id:
-            base_line_domain += [('membership_id', '=', membership_id)]
+            base_line_domain.append(('membership_id', '=', membership_id))
             membership = product_obj.browse(cr, uid, membership_id, context=context)
         else:
             membership = None
@@ -41,7 +41,7 @@ class WebsiteMembership(http.Controller):
         countries = partner_obj.read_group(
             cr, uid, [('member_lines', 'in', membership_line_ids)], ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
-        countries_total = sum([country_dict['country_id_count'] for country_dict in countries])
+        countries_total = sum(country_dict['country_id_count'] for country_dict in countries)
         countries.insert(0, {
             'country_id_count': countries_total,
             'country_id': (0, _("All Countries"))
@@ -50,16 +50,15 @@ class WebsiteMembership(http.Controller):
         # displayed membership lines
         line_domain = list(base_line_domain)
         if post_country_id:
-            line_domain += [('partner.country_id', '=', post_country_id)]
+            line_domain.append(('partner.country_id', '=', post_country_id))
 
         membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
         membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
         partner_ids = [m.partner and m.partner.id for m in membership_lines]
-        google_map_partner_ids = ",".join([str(pid) for pid in partner_ids])
+        google_map_partner_ids = ",".join(map(str, partner_ids))
 
         # format domain for group_by and memberships
-        membership_domain = [('membership', '=', True)]
-        membership_ids = product_obj.search(cr, uid, membership_domain, context=context)
+        membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], context=context)
         memberships = product_obj.browse(cr, uid, membership_ids, context=context)
 
         # request pager for lines
@@ -77,16 +76,14 @@ class WebsiteMembership(http.Controller):
         }
         return request.website.render("website_membership.index", values)
 
-    @website.route(['/members/<int:partner_id>/'], type='http', auth="public", multilang=True)
-    def partners_ref(self, partner_id=0, **post):
-        partner_obj = request.registry['res.partner']
-        partner_ids = partner_obj.search(request.cr, request.uid, [('id', '=', partner_id)], context=request.context)
-        if not partner_ids:
-            return self.members(post)
+    @website.route(['/members/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
+    def partners_ref(self, partner, **post):
+        if not partner.exists():
+            return self.members(**post)
 
         values = {
-            'partner_id': partner_obj.browse(
-                request.cr, request.uid, partner_ids[0],
+            'partner_id': request.registry['res.partner'].browse(
+                request.cr, request.uid, partner.id,
                 context=dict(request.context, show_address=True)),
         }
         return request.website.render("website_membership.partner", values)

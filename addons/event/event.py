@@ -41,7 +41,6 @@ class event_type(osv.osv):
         'default_registration_max': 0,
     }
 
-
 class event_event(osv.osv):
     """Event"""
     _name = 'event.event'
@@ -179,7 +178,7 @@ class event_event(osv.osv):
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
+        'name': fields.char('Event Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
         'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
         'register_max': fields.integer('Maximum Registrations', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
@@ -202,14 +201,12 @@ class event_event(osv.osv):
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
-        'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'address_id': fields.many2one('res.partner','Location', readonly=False, states={'done': [('readonly', True)]}),
         'street': fields.related('address_id','street',type='char',string='Street'),
         'street2': fields.related('address_id','street2',type='char',string='Street2'),
         'state_id': fields.related('address_id','state_id',type='many2one', relation="res.country.state", string='State'),
         'zip': fields.related('address_id','zip',type='char',string='zip'),
         'city': fields.related('address_id','city',type='char',string='city'),
-        'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
         'description': fields.html(
@@ -220,6 +217,9 @@ class event_event(osv.osv):
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
         'visibility': fields.selection(_visibility_selection, 'Privacy / Visibility',
             select=True, required=True),
+        'organizer_id': fields.many2one('res.partner', "Organizer"),
+        'phone': fields.related('organizer_id', 'phone', type='char', string='Phone'),
+        'email': fields.related('organizer_id', 'email', type='char', string='Email'),
     }
     _defaults = {
         'state': 'draft',

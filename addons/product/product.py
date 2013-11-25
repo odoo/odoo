@@ -642,6 +642,7 @@ class product_product(osv.osv):
     _table = "product_product"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread']
+    _inherit = ['mail.thread']
     _order = 'default_code,name_template'
     _columns = {
         'qty_available': fields.function(_product_qty_available, type='float', string='Quantity On Hand'),
@@ -839,9 +840,7 @@ class product_product(osv.osv):
                     context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
-        if context and context.get('search_default_categ_id', False):
+        if context and context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
         return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 

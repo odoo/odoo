@@ -36,7 +36,7 @@ from openerp import tools
 import urllib
 
 class website_event(http.Controller):
-    @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public", multilang=True)
+    @website.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", multilang=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
@@ -163,20 +163,30 @@ class website_event(http.Controller):
 
         return request.website.render("website_event.index", values)
 
-    @website.route(['/event/<int:event_id>'], type='http', auth="public", multilang=True)
-    def event(self, event_id=None, **post):
-        event_obj = request.registry['event.event']
-        event = event_obj.browse(request.cr, request.uid, event_id, dict(request.context, show_address_only=1))
+    @website.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", multilang=True)
+    def event_page(self, event, page, **post):
         values = {
-            'event_id': event,
-            'main_object': event,
+            'event': event,
+        }
+        return request.website.render(page, values)
+
+    @website.route(['/event/<model("event.event"):event>'], type='http', auth="public", multilang=True)
+    def event(self, event=None, **post):
+        if event.menu_id and event.menu_id.child_id:
+            return request.redirect(event.menu_id.child_id[0].url)
+        return request.redirect('/event/register/'+str(event.id))
+
+    @website.route(['/event/register/<model("event.event"):event>'], type='http', auth="public", multilang=True)
+    def event_register(self, event=None, **post):
+        values = {
+            'event': event,
             'range': range,
-            'float': float,
         }
         return request.website.render("website_event.event_description_full", values)
 
-    @website.route(['/event/<int:event_id>/add_cart'], type='http', auth="public", multilang=True)
+    @website.route(['/event/add_cart'], type='http', auth="public", multilang=True)
     def add_cart(self, event_id=None, **post):
+        assert event_id, 'An event is required'
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')

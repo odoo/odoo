@@ -14,10 +14,9 @@
                 </a>
             </li>
         </xpath>
-        <xpath expr="//head" position="inside">
-            <t t-if="editable">
-                <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js"></script>
-            </t>
+        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+              <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js" t-ignore="true"></script>
+              <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js" t-ignore="true"></script>
         </xpath>
     </template>
 
@@ -25,7 +24,7 @@
 
     <template id="categories_recursive" name="Category list">
         <li t-att-class="str(category.id) == search.get('category') and 'active' or ''">
-            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/?category=#{ category.id }" t-field="category.name" t-keep-query="search,facettes"></a>
+            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
             <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                 <t t-foreach="category.child_id" t-as="category">
                     <t t-if="category.id in categ[1] or editable">
@@ -49,7 +48,7 @@
         <div class="ribbon"><span contentEditable="true">Promo</span></div>
       </div>
       <div class="oe_product_description">
-          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,facettes">
+          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filter">
               <b t-field="product.name"/>
           </a>
       </div>
@@ -69,7 +68,7 @@
           </b>
       </div>
       <div class="oe_product_image text-center">
-          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,facettes">
+          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filter">
               <span t-field="product.image" t-field-options='{"widget": "image"}'/>
           </a>
       </div>
@@ -118,7 +117,7 @@
 
                                 <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
 
-                                  <div class="css_options" t-ignore="true" t-if="is_website_publisher">
+                                  <div class="css_options" t-ignore="true" t-if="editable">
                                     <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
                                       <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                                       <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
@@ -208,7 +207,7 @@
 
     <template id="add_to_basket" inherit_option_id="website_sale.products_cart" name="Add to Cart">
         <xpath expr="//div[@class='product_price']" position="inside">
-            <a t-href="./add_cart/?product_id=#{ product.id }" class="js_add_cart_json">
+            <a t-href="/shop/add_cart/?product_id=#{ product.id }" class="js_add_cart_json">
                 <span class="icon-shopping-cart"/>
             </a>
         </xpath>
@@ -245,7 +244,7 @@
                   <div class="col-sm-5">
                       <ol class="breadcrumb">
                           <li><a href="/shop">Products</a></li>
-                          <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,facettes"><span t-field="category.name"/></a></li>
+                          <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filter"><span t-field="category.name"/></a></li>
                           <li class="active"><span t-field="product.name"></span></li>
                       </ol>
                   </div><div class="col-sm-3">
@@ -275,7 +274,7 @@
                   </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                       <h1 t-field="product.name">Product Name</h1>
 
-                      <form action="./add_cart/" class="js_add_cart_json">
+                      <form action="/shop/add_cart/" class="js_add_cart_json">
                           <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                           <t t-if="len(product.product_variant_ids) &gt; 1">
                               <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
@@ -294,12 +293,20 @@
                           <div class="product_price mt16" t-if="product.product_variant_ids">
                               <h4>
                                   <b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b>
-
                                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-                                    <span class="text-danger" style="text-decoration: line-through;">
-                                        <t t-esc="product.product_variant_ids[0].lst_price" /> €
-                                    </span>&amp;nbsp;
+                                  <span class="text-danger" style="text-decoration: line-through;"
+                                    t-field="product.product_variant_ids[0].lst_price"
+                                    t-field-options='{
+                                       "widget": "monetary",
+                                       "display_currency": "website.pricelist_id.currency_id"
+                                   }'/><br/>
                                   </t>
+                                  <b class="oe_price"
+                                    t-field="product.product_variant_ids[0].price"
+                                    t-field-options='{
+                                       "widget": "monetary",
+                                       "display_currency": "website.pricelist_id.currency_id"
+                                   }'/>
                               </h4>
                           </div>
                           <button class="btn btn-primary btn-lg mt8">Add to Cart</button>
@@ -509,7 +516,7 @@
 
     <template id="products_attributes" inherit_option_id="website_sale.products" name="Product Filters and Attributes">
         <xpath expr="//div[@id='products_grid_before']" position="inside">
-            <form t-action="/shop/filter/" method="post" t-keep-query="category,search,add_filter">
+            <form t-action="/shop/filter/" method="post" t-keep-query="category,search">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
                     <t t-foreach="attribute_ids" t-as="attribute_id">
@@ -783,6 +790,7 @@
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
                 <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
                 <t t-raw="head or ''"/>
             </t>
@@ -878,19 +886,66 @@
                   </div>
                 </div>
 
-                <div class="js_payment mb64" id="js_payment">
+                <div class="js_payment mb64" t-if="not payment_acquirer_id and payments">
                     <p>Payment method:</p>
                     <div>
                         <t t-foreach="payments or []" t-as="payment">
-                            <label>
+                            <label t-if="payment._content">
                                 <input t-att-value="payment.id" type="radio" name="payment_type"/> <span t-field="payment.name"/>
                             </label>
                         </t>
                     </div>
-                    <t t-foreach="payments or []" t-as="payment">
-                        <div t-att-data-id="payment.id" t-raw="payment._content" class="hidden"/>
+                    <t t-foreach="payments" t-as="payment">
+                        <div t-att-data-id="payment.id" t-raw="payment._content" class="oe_payment_acquirer hidden"/>
                     </t>
-                    <a href="/shop/payment_validate/" class="btn btn-primary mt16">Validate &amp; Pay <span class="icon-long-arrow-right"/></a>
+                </div>
+
+              </div>
+              <div class="oe_structure"/>
+            </div>
+
+        </t>
+    </template>
+
+    <template id="confirmation">
+        <t t-call="website.layout">
+            <t t-set="head">
+                <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+                <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
+                <t t-raw="head or ''"/>
+            </t>
+            <t t-set="additional_title">Shop - Confirmed</t>
+            <div id="wrap">
+              <div class="container oe_website_sale">
+
+                <ul class="wizard pull-right">
+                    <li class="text-muted">Review Order<span class="chevron"></span></li>
+                    <li class="text-muted">Shipping &amp; Billing<span class="chevron"></span></li>
+                    <li class="text-muted">Payment<span class="chevron"></span></li>
+                    <li class="text-primary">Confirmation<span class="chevron"></span></li>
+                </ul>
+                <h1 class="mb32">Order Confirmed</h1>
+                <div class="row">
+                    <div class="col-md-8 oe_mycart">
+                        <h2>Thank you for your order.</h2>
+                        <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
+                        </div>
+                        <div class="clearfix"/>
+                        <div class="oe_structure"/>
+                    </div>
+                    <div class="col-md-3 col-md-offset-1 text-muted" id="right_column">
+                        <h4>Bill To:</h4>
+                        <div t-field="order.partner_invoice_id"/>
+
+                        <h4 class="mt32">Ship To:</h4>
+                        <div t-field="order.partner_shipping_id"/>
+
+                        <h4 class="mt32">Amount:</h4>
+<!--                         <div t-field="order.amount_total" t-field-options='{
+                            "widget": "monetary",
+                            "display_currency": "website.pricelist_id.currency_id"
+                        }'/> -->
+                    </div>
                 </div>
 
               </div>

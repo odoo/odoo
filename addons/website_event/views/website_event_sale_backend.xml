@@ -2,10 +2,10 @@
 <openerp>
 <data>
 
-    <record model="ir.ui.view" id="view_event_form">
+    <record model="ir.ui.view" id="view_event_sale_form">
         <field name="name">event.event.website.form</field>
         <field name="model">event.event</field>
-        <field name="inherit_id" ref="event_sale.view_event_form"/>
+        <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
             <xpath expr="//sheet" position="before">
@@ -19,10 +19,10 @@
                     <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
                 </div>
             </xpath>
-
-            <field name="organizer_id" position="after">
+            <xpath expr="//field[@name='organizer_id']" position="after">
                 <field name="website_published"/>
-            </field>
+                <field name="twitter_hashtag"/>
+            </xpath>
         </field>
     </record>
 
