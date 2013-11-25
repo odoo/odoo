@@ -898,7 +898,6 @@
                 minimumInputLength: 1,
                 placeholder: _t("New or existing page"),
                 query: function (q) {
-                    // FIXME: out-of-order, abort
                     self.fetch_pages(q.term).then(function (results) {
                         var rs = _.map(results, function (r) {
                             return { id: r.url, text: r.name, };
