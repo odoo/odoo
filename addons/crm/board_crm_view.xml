@@ -20,10 +20,7 @@
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_stage_graph"/>
             <!-- avoid done / cancelled -->
-            <field name="domain">['|',
-                                    '!', '&amp;', ('probability', '=', 100), ('stage_id.on_change', '=', 1),
-                                    '!', '&amp;', ('probability', '=', 0), ('stage_id.sequence', '!=', 1),
-                                ('type', '=', 'opportunity')]</field>
+            <field name="domain">['&amp;', ('stage_id.fold', '=', False), ('type', '=', 'opportunity')]</field>
             <field name="context">{'search_default_Stage':1}</field>
         </record>
 
@@ -48,7 +45,7 @@
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_user_stage_graph"/>
             <!-- avoid cancelled -->
-            <field name="domain">['!', '&amp;', ('probability', '=', 0), ('stage_id.sequence', '!=', 1)]</field>
+            <field name="domain">['|', ('stage_id.fold', '=', False), ('stage_id.probability', '=', 100)]</field>
             <field name="context">{'search_default_user': 1, 'search_default_Stage': 1}</field>
         </record>
 
