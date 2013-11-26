@@ -160,8 +160,8 @@ class fleet_vehicle_model(osv.Model):
         'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
         'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
-        'image_medium': fields.related('brand_id', 'image_medium', type="binary", string="Logo"),
-        'image_small': fields.related('brand_id', 'image_small', type="binary", string="Logo"),
+        'image_medium': fields.related('brand_id', 'image_medium', type="binary", string="Logo (medium)"),
+        'image_small': fields.related('brand_id', 'image_small', type="binary", string="Logo (small)"),
     }
 
 
@@ -354,8 +354,8 @@ class fleet_vehicle(osv.Model):
         'power': fields.integer('Power', help='Power in kW of the vehicle'),
         'co2': fields.float('CO2 Emissions', help='CO2 emissions of the vehicle'),
         'image': fields.related('model_id', 'image', type="binary", string="Logo"),
-        'image_medium': fields.related('model_id', 'image_medium', type="binary", string="Logo"),
-        'image_small': fields.related('model_id', 'image_small', type="binary", string="Logo"),
+        'image_medium': fields.related('model_id', 'image_medium', type="binary", string="Logo (medium)"),
+        'image_small': fields.related('model_id', 'image_small', type="binary", string="Logo (small)"),
         'contract_renewal_due_soon': fields.function(_get_contract_reminder_fnc, fnct_search=_search_contract_renewal_due_soon, type="boolean", string='Has Contracts to renew', multi='contract_info'),
         'contract_renewal_overdue': fields.function(_get_contract_reminder_fnc, fnct_search=_search_get_overdue_contract_reminder, type="boolean", string='Has Contracts Overdued', multi='contract_info'),
         'contract_renewal_name': fields.function(_get_contract_reminder_fnc, type="text", string='Name of contract to renew soon', multi='contract_info'),
