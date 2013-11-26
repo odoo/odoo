@@ -73,6 +73,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
         'click label.graph_expand_all' : function (event) {
             this.pivot_table.expand_all().then(this.proxy('draw_table'));
         },
+
+        'click label.graph_update_values' : function (event) {
+            this.pivot_table.update_values().then(this.proxy('draw_table'));
+        },
     },
 
     view_loading: function (fields_view_get) {
@@ -157,7 +161,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             self.pivot_table = new PivotTable(self.data);
             self.pivot_table.start().then(self.proxy('draw_table'));
         } else {
-            this.pivot_table.update_values.done(function () {
+            this.pivot_table.update_values().done(function () {
                 self.draw_table();
             });
         }
@@ -240,7 +244,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             .addClass('web_graph_click')
             .attr('href', '#')
             .addClass((header.is_expanded) ? 'icon-minus-sign' : 'icon-plus-sign')
-            .append(header.name);
+            .append((header.title !== undefined) ? header.title : 'Undefined');
     },
 
     draw_top_headers: function () {
