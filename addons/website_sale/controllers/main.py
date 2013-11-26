@@ -498,10 +498,11 @@ class Ecommerce(http.Controller):
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
         quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
-        order = self.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
-        return [quantity, order.get_total_quantity(), order.amount_total, request.website.render("website_sale.total", {
-                'website_sale_order': order
-            }).strip()]
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        return [quantity,
+                order.get_total_quantity(),
+                order.amount_total,
+                request.website._render("website_sale.total", {'website_sale_order': order})]
 
     @website.route(['/shop/set_cart_json/'], type='json', auth="public")
     def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
