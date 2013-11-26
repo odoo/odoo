@@ -306,7 +306,7 @@ class mail_compose_message(osv.TransientModel):
             if mass_mail_mode and wizard.model:
                 email_dict = rendered_values[res_id]
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
-                # process attachments and attachment_ids before sending values to mail_mail.create()
+                # process attachments: should not be encoded before being processed by message_post / mail_mail create
                 attachments = []
                 if email_dict.get('attachments'):
                     for name, enc_cont in email_dict.pop('attachments'):
