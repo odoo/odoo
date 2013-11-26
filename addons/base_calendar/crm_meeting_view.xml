@@ -137,9 +137,9 @@
                                     <field name="state" />
                                     <field name="email" widget="email"/>                                   
                                      
-                                    <button name="do_attendee_maybe" states="needs-action,declined,accepted" string="Uncertain" type="object" icon="terp-crm" />
-                                    <button name="do_attendee_accept" string="Accept" states="needs-action,tentative,declined" type="object" icon="gtk-apply"/>
-                                    <button name="do_attendee_decline" string="Decline" states="needs-action,tentative,accepted" type="object" icon="gtk-cancel"/>
+                                    <button name="do_tentative" states="needs-action,declined,accepted" string="Uncertain" type="object" icon="terp-crm" />
+                                    <button name="do_accept" string="Accept" states="needs-action,tentative,declined" type="object" icon="gtk-apply"/>
+                                    <button name="do_decline" string="Decline" states="needs-action,tentative,accepted" type="object" icon="gtk-cancel"/>
                                 </tree>
                             </field>
                         </page>
@@ -212,7 +212,7 @@
         <field name="arch" type="xml">                          
             <calendar string="Meetings" date_start="date" date_stop="date_deadline" date_delay="duration" 
                          display="[name]" color="color_partner_id" attendee="partner_ids" 
-                         use_contacts="True" quick_add="True" all_day="allday" event_open_popup="base_calendar.action_crm_meeting_popup">
+                         use_contacts="True" quick_add="True" all_day="allday" event_open_popup="%(base_calendar.view_crm_meeting_form_popup)s">
             
                 <field name="name"/>
                 <field name="user_id"/>
@@ -311,14 +311,7 @@
         <field name="view_mode">form,calendar,tree,gantt</field>
         <field name="view_id" ref="action_view_crm_meeting_form"/>        
     </record>
-    
-    
-    <record id="action_crm_meeting_popup" model="ir.actions.act_window">
-        <field name="name">Meetings</field>
-        <field name="res_model">crm.meeting</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_crm_meeting_form_popup"/>        
-    </record>
+        
     
     </data>
 </openerp>
