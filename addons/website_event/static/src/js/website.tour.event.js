@@ -58,11 +58,11 @@
                     template: self.popover({ next: "OK" }),
                 },
                 {
-                    stepId: 'add-image-text',
+                    stepId: 'add-banner',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
                     title: "Layout your event",
-                    content: "Insert blocks like text-image to layout the body of your event.",
+                    content: "Insert blocks like 'Banner' to layout the body of your event.",
                     triggers: function () {
                         $('button[data-action=snippet]').one('click', function () {
                             self.moveToNextStep();
@@ -70,13 +70,60 @@
                     },
                 },
                 {
-                    stepId: 'drag-image-text',
+                    stepId: 'drag-banner',
+                    element: '#website-top-navbar [data-snippet-id=carousel].ui-draggable',
+                    placement: 'bottom',
+                    title: "Drag & Drop a block",
+                    content: "Drag the 'Banner' block and drop it in your page.",
+                    triggers: function () {
+                        self.onSnippetDraggedAdvance('carousel');
+                    },
+                },
+                {
+                    stepId: 'add-text-block',
+                    element: 'button[data-action=snippet]',
+                    placement: 'bottom',
+                    title: "Layout your event",
+                    content: "Insert another block to your event.",
+                    triggers: function () {
+                        $('button[data-action=snippet]').one('click', function () {
+                            self.moveToNextStep();
+                        });
+                    },
+                },
+                {
+                    stepId: 'drag-text-block',
                     element: '#website-top-navbar [data-snippet-id=text-block].ui-draggable',
                     placement: 'bottom',
                     title: "Drag & Drop a block",
-                    content: "Drag the 'Text Block' block and drop it in your page.",
+                    content: "Drag the 'Text Block' block below the banner.",
                     triggers: function () {
                         self.onSnippetDraggedAdvance('text-block');
+                    },
+                },
+                {
+                    stepId: 'add-three-columns',
+                    element: 'button[data-action=snippet]',
+                    placement: 'bottom',
+                    title: "Layout your event",
+                    content: "Insert a last block to your event.",
+                    triggers: function () {
+                        $('button[data-action=snippet]').one('click', function () {
+                            self.moveToNextStep();
+                        });
+                    },
+                },
+                {
+                    stepId: 'drag-three-columns',
+                    element: '#website-top-navbar [data-snippet-id=three-columns].ui-draggable',
+                    placement: 'bottom',
+                    title: "Drag & Drop a block",
+                    content: "Drag the 'Three Columns' block at the bottom.",
+                    triggers: function () {
+                        self.onSnippetDraggedAdvance('three-columns');
+                    },
+                    onHide: function () {
+                        window.scrollTo(0, 0);
                     },
                 },
                 {
@@ -88,18 +135,34 @@
                     content: "Once you click on save, your event is updated.",
                 },
                 {
-                    stepId: 'publish-post',
+                    stepId: 'publish-event',
                     element: 'button.js_publish_btn',
                     placement: 'top',
                     reflex: true,
                     title: "Publish your event",
                     content: "Click to publish your event.",
                 },
+                {
+                    stepId: 'customize-event',
+                    element: '.js_publish_management button:last',
+                    placement: 'left',
+                    reflex: true,
+                    title: "Customize your event",
+                    content: "Click here to customize your event further.",
+                },
+                {
+                    stepId: 'edit-event-backend',
+                    element: '.js_publish_management ul>li>a',
+                    placement: 'left',
+                    reflex: true,
+                    title: "Customize your event",
+                    content: "Click here to edit your event in the backend.",
+                },
             ];
             return this._super();
         },
         resume: function () {
-            return (this.isCurrentStep('event-page') || this.isCurrentStep('publish-post')) && this._super();
+            return (this.isCurrentStep('event-page') || this.isCurrentStep('publish-event')) && this._super();
         },
         trigger: function () {
             return (this.resume() && this.testUrl(/^\/event\/[0-9]+\/register/)) || this._super();

@@ -15,6 +15,9 @@
                 keyboard: false,
                 template: this.popover(),
             });
+            this.registerSteps();
+        },
+        registerSteps: function () {
             var self = this;
             this.tour.addSteps(_.map(this.steps, function (step) {
                step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
