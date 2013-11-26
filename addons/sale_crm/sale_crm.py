@@ -45,19 +45,6 @@ class sale_order(osv.osv):
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
-    def _currency_conversation(self, cr, uid, id, amount, relation_id, relation_field, context=None):
-        team = self.browse(cr, uid, id, context=context)
-        base_currency_id = team.currency_id.id
-        if relation_field not in ['pricelist_id', 'currency_id']:
-            return super(crm_case_section, self)._currency_conversation(cr, uid, id, amount, relation_id, relation_field, context=context)
-        if relation_field == 'pricelist_id':
-            base_currency_id = self.pool.get('product.pricelist').browse(cr, uid, relation_id, context=context).currency_id.id
-        elif relation_field == 'currency_id':
-            currency_rates = self.pool.get('res.currency.rate').search_read(cr, uid, [('rate', '=', 1)], ['currency_id'], limit=1, context=context)
-            if currency_rates:
-                base_currency_id = currency_rates[0]['currency_id'][0]
-        return self.pool.get('res.currency').compute(cr, uid, base_currency_id, team.currency_id.id, amount, context=context)
-
     def _get_sale_orders_data(self, cr, uid, ids, field_name, arg, context=None):
         obj = self.pool.get('sale.order')
         res = dict.fromkeys(ids, False)
@@ -67,9 +54,9 @@ class crm_case_section(osv.osv):
         for id in ids:
             res[id] = dict()
             created_domain = [('section_id', '=', id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
-            res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, id, obj, created_domain, ['amount_total', 'date_order', 'pricelist_id'], 'amount_total', ['date_order', 'pricelist_id'], context=context)
+            res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
             validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', date_begin), ('date_order', '<=', date_end)]
-            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, id, obj, validated_domain, ['amount_total', 'date_confirm', 'pricelist_id'], 'amount_total', ['date_confirm', 'pricelist_id'], context=context)
+            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_confirm'], 'amount_total', 'date_confirm', context=context)
         return res
 
     def _get_invoices_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -80,15 +67,15 @@ class crm_case_section(osv.osv):
         date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
-            res[id] = self.__get_bar_values(cr, uid, id, obj, created_domain, ['price_total', 'date', 'currency_id'], 'price_total', ['date', 'currency_id'], context=context)
+            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context)
         return res
 
     _columns = {
-        'invoiced_forecast': fields.float("Invoice Forecast",
+        'invoiced_forecast': fields.integer(string='Invoice Forecast',
             help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
                     "team should invoice this month. It is used to compute the progression ratio \n"
                     " of the current and forecast revenue on the kanban view."),
-        'invoiced_target': fields.float("Invoice Target",
+        'invoiced_target': fields.integer(string='Invoice Target',
             help="Target of invoice revenue for the current month. This is the amount the sales \n"
                     "team estimates to be able to invoice this month."),
         'monthly_quoted': fields.function(_get_sale_orders_data,
@@ -103,7 +90,8 @@ class crm_case_section(osv.osv):
     }
 
     def action_forecast(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'invoiced_forecast': value}, context=context)
+        return self.write(cr, uid, [id], {'invoiced_forecast': round(float(value))}, context=context)
+
 
 class res_users(osv.Model):
     _inherit = 'res.users'

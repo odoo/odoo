@@ -248,9 +248,8 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='code']" position="after">
-                    <field name="currency_id" invisible="1"/>
-                    <field name="invoiced_target" readonly="0" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                    <field name="invoiced_forecast" readonly="0" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="invoiced_target"/>
+                    <field name="invoiced_forecast"/>
                 </xpath>
             </data>
             </field>
@@ -273,7 +272,7 @@
                     <div class="oe_salesteams_orders">
                         <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>
                         <a name="%(action_order_report_so_salesteam)d" type="action" class="oe_sparkline_bar_link">
-                            <field name="monthly_confirmed" widget="sparkline_bar" options="{'delayIn': '3000', 'tooltip_suffix_field': 'currency_symbol'}">
+                            <field name="monthly_confirmed" widget="sparkline_bar" options="{'delayIn': '3000'}">
                                 Revenue of confirmed sales orders per month.<br/>Click to acces the Sales Analysis.
                             </field>
                         </a>
@@ -283,7 +282,7 @@
                     <div class="oe_salesteams_invoices" groups="account.group_account_invoice">
                         <a name="%(action_invoice_salesteams)d" type="action">Invoices</a>
                         <a name="%(action_account_invoice_report_salesteam)d" type="action" class="oe_sparkline_bar_link">
-                            <field name="monthly_invoiced" widget="sparkline_bar" options="{'delayIn': '3000', 'tooltip_suffix_field': 'currency_symbol'}">
+                            <field name="monthly_invoiced" widget="sparkline_bar" options="{'delayIn': '3000'}">
                                 Revenue of sent invoices per month.<br/>Click to see a detailed analysis of invoices.
                             </field>
                         </a>
@@ -291,7 +290,7 @@
                     <div class="oe_salesteams_quotations">
                         <a name="%(action_quotations_salesteams)d" type="action" class="oe_sparkline_bar_link">Quotations</a>
                         <a name="%(action_order_report_quotation_salesteam)d" type="action" class="oe_sparkline_bar_link">
-                            <field name="monthly_quoted" widget="sparkline_bar" options="{'delayIn': '3000', 'tooltip_suffix_field': 'currency_symbol'}">
+                            <field name="monthly_quoted" widget="sparkline_bar" options="{'delayIn': '3000'}">
                                 Revenue of created quotations per month.<br/>Click to see a detailed analysis.
                             </field>
                         </a>
