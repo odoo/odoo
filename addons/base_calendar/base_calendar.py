@@ -1535,14 +1535,15 @@ class crm_meeting(osv.Model):
  #                   new_args += ['|','&',('recurrency','=',1),('date_deadline', arg[1], arg[2])]
             elif arg[0] in ('date', unicode('date')):
                 if context.get('virtual_id', True):
-                    new_args += ['|','&',('recurrency','=',1),('end_date', arg[1], arg[2])]
+                    print ''
+                    #new_args += ['|','&',('recurrency','=',1),('end_date', arg[1], arg[2])]
  #                   new_args += ['|','&',('recurrency','=',1),('date_deadline', arg[1], arg[2])]
             elif arg[0] == "id":
                 new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
             new_args.append(new_arg)
         #offset, limit and count must be treated separately as we may need to deal with virtual ids
-        #print 'AFTER SEARCH',new_args
+        print 'AFTER SEARCH',new_args
         
         res = super(crm_meeting,self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
         
@@ -1655,13 +1656,13 @@ class crm_meeting(osv.Model):
         if context is None:
             context = {}
 
-#         if vals.get('duration', '') and vals.get('duration', '')==24 and not 'allday' in vals: #If from quick create
-#             vals['allday'] = True
-        
         if not 'user_id' in vals: #Else bug with quick_create when we are filter on an other user
             vals['user_id'] = uid
             
-                
+        if vals.get('recurrency', True) and vals.get('end_type', 'count') in ('count', unicode('count')) and \
+                (vals.get('rrule_type') or vals.get('count') or vals.get('date') or vals.get('date_deadline')):
+            vals['end_date'] = self._get_recurrency_end_date(vals, context=context)
+            
         res = super(crm_meeting, self).create(cr, uid, vals, context=context)
         #res = self.write(cr, uid, id_res,vals, context)
         
