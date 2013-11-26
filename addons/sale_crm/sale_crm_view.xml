@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="/form/header/button[@name='case_mark_lost']" position="after">
+                    <xpath expr="//field[@name='stage_id']" position="before">
                         <button attrs="{'invisible': [('probability', '&lt;', 100)]}" string="Create Quotation" name="%(action_crm_make_sale)d" type="action"/>
                         <button attrs="{'invisible': [('probability', '=', 100)]}" string="Convert to Quotation" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
                     </xpath>

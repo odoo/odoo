@@ -9,7 +9,7 @@ openerp.document = function (instance) {
         on_attachments_loaded: function(attachments) {
             //to display number in name if more then one attachment which has same name.
             var self = this;
-            _.chain(attachments.reverse())
+            _.chain(attachments)
                  .groupBy(function(attachment) { return attachment.name})
                  .each(function(attachment){
                      if(attachment.length > 1)

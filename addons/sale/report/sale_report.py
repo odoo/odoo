@@ -68,12 +68,12 @@ class sale_report(osv.osv):
                     t.uom_id as product_uom,
                     sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
                     sum(l.product_uom_qty * l.price_unit * (100.0-l.discount) / 100.0) as price_total,
-                    1 as nbr,
+                    count(*) as nbr,
                     s.date_order as date,
                     s.date_confirm as date_confirm,
-                    case when (s.state='draft') then to_char(s.date_order, 'YYYY') else to_char(s.date_confirm, 'YYYY') end as year,
-                    case when (s.state='draft') then to_char(s.date_order, 'MM') else to_char(s.date_confirm, 'MM') end as month,
-                    case when (s.state='draft') then to_char(s.date_order, 'YYYY-MM-DD') else to_char(s.date_confirm, 'YYYY-MM-DD') end as day,
+                    to_char(s.date_order, 'YYYY') as year,
+                    to_char(s.date_order, 'MM') as month,
+                    to_char(s.date_order, 'YYYY-MM-DD') as day,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
                     s.company_id as company_id,
@@ -87,8 +87,8 @@ class sale_report(osv.osv):
 
     def _from(self):
         from_str = """
-                sale_order s
-                    join sale_order_line l on (s.id=l.order_id)
+                sale_order_line l
+                      join sale_order s on (l.order_id=s.id) 
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
@@ -99,7 +99,6 @@ class sale_report(osv.osv):
     def _group_by(self):
         group_by_str = """
             GROUP BY l.product_id,
-                    l.product_uom_qty,
                     l.order_id,
                     t.uom_id,
                     t.categ_id,

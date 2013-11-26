@@ -159,6 +159,10 @@ class stock_location(osv.osv):
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                       """, select = True),
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
+
+        # as discussed on bug 765559, the main purpose of this field is to allow sorting the list of locations
+        # according to the displayed names, and reversing that sort by clicking on a column. It does not work for
+        # translated values though - so it needs fixing.
         'complete_name': fields.function(_complete_name, type='char', size=256, string="Location Name",
                             store={'stock.location': (_get_sublocations, ['name', 'location_id'], 10)}),
 
@@ -239,6 +243,9 @@ class stock_location(osv.osv):
         if location.chained_location_type == 'customer':
             if partner:
                 result = partner.property_stock_customer
+            else:
+                loc_id = self.pool['res.partner'].default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
+                result = self.pool['stock.location'].browse(cr, uid, loc_id, context=context)
         elif location.chained_location_type == 'fixed':
             result = location.chained_location_id
         if result:
@@ -1263,17 +1270,17 @@ class stock_picking(osv.osv):
                     context['currency_id'] = move_currency_id
                     qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
 
-                    if product.id in product_avail:
-                        product_avail[product.id] += qty
-                    else:
+                    if product.id not in product_avail:
+                        # keep track of stock on hand including processed lines not yet marked as done
                         product_avail[product.id] = product.qty_available
 
                     if qty > 0:
                         new_price = currency_obj.compute(cr, uid, product_currency,
-                                move_currency_id, product_price)
+                                move_currency_id, product_price, round=False)
                         new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
                                 product.uom_id.id)
-                        if product.qty_available <= 0:
+                        if product_avail[product.id] <= 0:
+                            product_avail[product.id] = 0
                             new_std_price = new_price
                         else:
                             # Get the standard price
@@ -1288,6 +1295,9 @@ class stock_picking(osv.osv):
                         move_obj.write(cr, uid, [move.id],
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
+
+                        product_avail[product.id] += qty
+
 
 
             for move in too_few:
@@ -1705,7 +1715,8 @@ class stock_move(osv.osv):
             if location_xml_id:
                 try:
                     location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
-                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                    with tools.mute_logger('openerp.osv.orm'):
+                        self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
                 except (orm.except_orm, ValueError):
                     location_id = False
 
@@ -1739,7 +1750,8 @@ class stock_move(osv.osv):
             if location_xml_id:
                 try:
                     location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
-                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                    with tools.mute_logger('openerp.osv.orm'):
+                        self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
                 except (orm.except_orm, ValueError):
                     location_id = False
 
@@ -1963,12 +1975,14 @@ class stock_move(osv.osv):
             location_dest_id = 'stock_location_customers'
         try:
             source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
-            self.pool.get('stock.location').check_access_rule(cr, uid, [source_location[1]], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [source_location[1]], 'read', context=context)
         except (orm.except_orm, ValueError):
             source_location = False
         try:
             dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
-            self.pool.get('stock.location').check_access_rule(cr, uid, [dest_location[1]], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [dest_location[1]], 'read', context=context)
         except (orm.except_orm, ValueError):
             dest_location = False
         return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
@@ -2182,6 +2196,7 @@ class stock_move(osv.osv):
 
                     while res:
                         r = res.pop(0)
+                        product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, ids, move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
                         move_id = self.copy(cr, uid, move.id, {'product_uos_qty': product_uos_qty, 'product_qty': r[0], 'location_id': r[1]})
                         done.append(move_id)
         if done:
@@ -2355,7 +2370,7 @@ class stock_move(osv.osv):
                         {
                          'journal_id': j_id,
                          'line_id': move_lines,
-                         'ref': move.picking_id and move.picking_id.name})
+                         'ref': move.picking_id and move.picking_id.name}, context=context)
 
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
@@ -2693,7 +2708,7 @@ class stock_move(osv.osv):
                 qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
                 if qty > 0:
                     new_price = currency_obj.compute(cr, uid, product_currency,
-                            move_currency_id, product_price)
+                            move_currency_id, product_price, round=False)
                     new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
                             product.uom_id.id)
                     if product.qty_available <= 0:
@@ -2905,7 +2920,8 @@ class stock_inventory_line(osv.osv):
     def _default_stock_location(self, cr, uid, context=None):
         try:
             location_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
         except (orm.except_orm, ValueError):
             location_id = False
         return location_id
@@ -2948,7 +2964,8 @@ class stock_warehouse(osv.osv):
     def _default_lot_input_stock_id(self, cr, uid, context=None):
         try:
             lot_input_stock_model, lot_input_stock_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_input_stock_id], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [lot_input_stock_id], 'read', context=context)
         except (ValueError, orm.except_orm):
             # the user does not have read access on the location or it does not exists
             lot_input_stock_id = False
@@ -2957,7 +2974,8 @@ class stock_warehouse(osv.osv):
     def _default_lot_output_id(self, cr, uid, context=None):
         try:
             lot_output_model, lot_output_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_output')
-            self.pool.get('stock.location').check_access_rule(cr, uid, [lot_output_id], 'read', context=context)
+            with tools.mute_logger('openerp.osv.orm'):
+                self.pool.get('stock.location').check_access_rule(cr, uid, [lot_output_id], 'read', context=context)
         except (ValueError, orm.except_orm):
             # the user does not have read access on the location or it does not exists
             lot_output_id = False
@@ -3026,6 +3044,13 @@ class stock_picking_in(osv.osv):
     def message_unsubscribe(self, *args, **kwargs):
         """Send the unsubscribe action on stock.picking model to match with subscribe"""
         return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        # merge defaults from stock.picking with possible defaults defined on stock.picking.in
+        defaults = self.pool['stock.picking'].default_get(cr, uid, fields_list, context=context)
+        in_defaults = super(stock_picking_in, self).default_get(cr, uid, fields_list, context=context)
+        defaults.update(in_defaults)
+        return defaults
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
@@ -3099,6 +3124,13 @@ class stock_picking_out(osv.osv):
     def message_unsubscribe(self, *args, **kwargs):
         """Send the unsubscribe action on stock.picking model to match with subscribe"""
         return self.pool.get('stock.picking').message_unsubscribe(*args, **kwargs)
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        # merge defaults from stock.picking with possible defaults defined on stock.picking.out
+        defaults = self.pool['stock.picking'].default_get(cr, uid, fields_list, context=context)
+        out_defaults = super(stock_picking_out, self).default_get(cr, uid, fields_list, context=context)
+        defaults.update(out_defaults)
+        return defaults
 
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
