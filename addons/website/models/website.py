@@ -115,29 +115,33 @@ class website(osv.osv):
         # completely arbitrary max_length
         idname = slugify(name, max_length=50)
 
-        cr.execute('SAVEPOINT pagenew')
         imd = self.pool.get('ir.model.data')
         view = self.pool.get('ir.ui.view')
 
         module, tmp_page = template.split('.')
         view_model, view_id = imd.get_object_reference(cr, uid, module, tmp_page)
 
-        newview_id = view.copy(cr, uid, view_id, context=context)
-        newview = view.browse(cr, uid, newview_id, context=context)
-        newview.write({
-            'arch': newview.arch.replace(template, "%s.%s" % (module, idname)),
-            'name': name,
-            'page': ispage,
-        })
-        imd.create(cr, uid, {
-            'name': idname,
-            'module': module,
-            'model': 'ir.ui.view',
-            'res_id': newview_id,
-            'noupdate': True
-        }, context=context)
-        cr.execute('RELEASE SAVEPOINT pagenew')
-        return "%s.%s" % (module, idname)
+        cr.execute('SAVEPOINT new_page')
+        try:
+            newview_id = view.copy(cr, uid, view_id, context=context)
+            newview = view.browse(cr, uid, newview_id, context=context)
+            newview.write({
+                'arch': newview.arch.replace(template, "%s.%s" % (module, idname)),
+                'name': name,
+                'page': ispage,
+            })
+            imd.create(cr, uid, {
+                'name': idname,
+                'module': module,
+                'model': 'ir.ui.view',
+                'res_id': newview_id,
+                'noupdate': True
+            }, context=context)
+            cr.execute('RELEASE SAVEPOINT new_page')
+            return "%s.%s" % (module, idname)
+        except:
+            cr.execute("ROLLBACK TO SAVEPOINT new_page")
+            raise
 
     def get_public_user(self, cr, uid, context=None):
         if not self.public_user:

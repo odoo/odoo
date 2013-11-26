@@ -53,7 +53,6 @@ class Website(openerp.addons.web.controllers.main.Home):
             path = web.new_page(request.cr, request.uid, path, context=request.context)
         except psycopg2.IntegrityError:
             logger.exception('Unable to create ir_model_data for page %s', path)
-            request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
             return werkzeug.exceptions.InternalServerError()
         url = "/page/" + path
         if noredirect is not NOPE:
