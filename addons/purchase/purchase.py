@@ -1108,6 +1108,32 @@ class procurement_order(osv.osv):
         seller_delay = int(procurement.product_id.seller_delay)
         return schedule_date - relativedelta(days=seller_delay)
 
+    def _get_warehouse(self, procurement, user_company):
+        """
+            Return the warehouse containing the procurment stock location (or one of it ancestors)
+            If none match, returns then first warehouse of the company
+        """
+        # TODO refactor the domain once we implement the "parent_of" domain operator
+        company_id = (procurement.company_id or user_company).id
+        domains = [
+            [
+                '&', ('company_id', '=', company_id),
+                '|', '&', ('lot_stock_id.parent_left', '<', procurement.location_id.parent_left),
+                          ('lot_stock_id.parent_right', '>', procurement.location_id.parent_right),
+                     ('lot_stock_id', '=', procurement.location_id.id)
+            ],
+            [('company_id', '=', company_id)]
+        ]
+
+        cr, uid = procurement._cr, procurement._uid
+        context = procurement._context
+        Warehouse = self.pool['stock.warehouse']
+        for domain in domains:
+            ids = Warehouse.search(cr, uid, domain, context=context)
+            if ids:
+                return ids[0]
+        return False
+
     def make_po(self, cr, uid, ids, context=None):
         """ Make purchase order from procurement
         @return: New created Purchase Orders procurement wise
@@ -1122,7 +1148,6 @@ class procurement_order(osv.osv):
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
         seq_obj = self.pool.get('ir.sequence')
-        warehouse_obj = self.pool.get('stock.warehouse')
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
@@ -1130,7 +1155,6 @@ class procurement_order(osv.osv):
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
-            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
@@ -1169,7 +1193,7 @@ class procurement_order(osv.osv):
                 'origin': procurement.origin,
                 'partner_id': partner_id,
                 'location_id': procurement.location_id.id,
-                'warehouse_id': warehouse_id and warehouse_id[0] or False,
+                'warehouse_id': self._get_warehouse(procurement, company),
                 'pricelist_id': pricelist_id,
                 'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
