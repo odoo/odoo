@@ -387,9 +387,7 @@ class email_template(osv.osv):
                     if not report_name.endswith(ext):
                         report_name += ext
                     attachments.append((report_name, result))
-
-                    for res_id in template_res_ids:
-                        results[res_id]['attachments'] = attachments
+                    results[res_id]['attachments'] = attachments
 
         return results
 
