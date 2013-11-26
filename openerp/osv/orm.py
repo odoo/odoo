@@ -4991,8 +4991,8 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_data_seen',{})
-        if id in seen_map.setdefault(self._name,[]):
+        seen_map = context.setdefault('__copy_data_seen', {})
+        if id in seen_map.setdefault(self._name, []):
             return
         seen_map[self._name].append(id)
 
@@ -5004,12 +5004,6 @@ class BaseModel(object):
                     default['state'] = self._defaults['state'](self, cr, uid, context)
                 else:
                     default['state'] = self._defaults['state']
-
-        data = self.read(cr, uid, [id,], context=context)
-        if data:
-            data = data[0]
-        else:
-            raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
@@ -5023,7 +5017,20 @@ class BaseModel(object):
                     blacklist.update(set(self.pool[other]._all_columns) - set(self._columns))
                 else:
                     blacklist_given_fields(self.pool[other])
+            # blacklist deprecated fields
+            for name, field in obj._columns.items():
+                if field.deprecated:
+                    blacklist.add(name)
+
         blacklist_given_fields(self)
+
+        fields_to_read = [f for f in self.check_field_access_rights(cr, uid, 'read', None)
+                          if f not in blacklist]
+        data = self.read(cr, uid, [id], fields_to_read, context=context)
+        if data:
+            data = data[0]
+        else:
+            raise IndexError(_("Record #%d of %s not found, cannot copy!") % (id, self._name))
 
         res = dict(default)
         for f, colinfo in self._all_columns.items():
