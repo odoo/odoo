@@ -68,16 +68,6 @@
                     template: self.popover({ next: "OK" }),
                 },
                 {
-                    stepId: 'edit-page',
-                    element: 'button[data-action=edit]',
-                    placement: 'bottom',
-                    title: "Edit the event desciption",
-                    content: "Edit the page to modify the event description.",
-                    triggers: function () {
-                        editor.on('tour:editor_bar_loaded', self, self.moveToNextStep);
-                    },
-                },
-                {
                     stepId: 'add-image-text',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
