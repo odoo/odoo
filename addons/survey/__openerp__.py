@@ -41,7 +41,7 @@ sent mails with user name and password for the invitation of the survey.
         'survey_cron.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
-        'survey_view.xml',
+        'views/survey_views.xml',
         'views/survey_templates.xml',
         #'wizard/survey_answer.xml',
         #'wizard/survey_print_statistics.xml',
@@ -62,4 +62,5 @@ sent mails with user name and password for the invitation of the survey.
     'css': ['static/src/css/survey.css'],
     'js': ['static/src/js/survey.js'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

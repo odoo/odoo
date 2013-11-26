@@ -49,7 +49,6 @@ class WebsiteSurvey(http.Controller):
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
         return request.website.render('survey.list', {'surveys': surveys})
 
-
     # Survey displaying
     @website.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>'],
         type='http', auth='public', multilang=True)
@@ -127,10 +126,6 @@ class WebsiteSurvey(http.Controller):
 
     # @website.route(['/survey/validate/<model("survey.survey"):survey>'],
     #                 type='json', auth='public', multilang=True)
-    # def validate(self, survey=None, **post):
-    #     # for each {K:V} in post, check
-    #     _logger.debug("Incoming json data: " + post.__str__())
-    #     return {'valid': True, 'errors': None}
 
     @website.route(['/survey/submit/<model("survey.survey"):survey>'],
                     type='http', auth='public', multilang=True)
@@ -167,10 +162,8 @@ class WebsiteSurvey(http.Controller):
         type='http', auth='public', multilang=True)
     def print_empty_survey(self, survey=None, **post):
         '''Display an empty survey in printable view'''
-        pagination = {'current': -1, 'next': 0}
         return request.website.render('survey.survey_print',
-                                    {'survey': survey,
-                                    'pagination': pagination})
+                                    {'survey': survey, 'page_nr': 0})
 
     # Pagination
 
@@ -289,11 +282,28 @@ class WebsiteSurvey(http.Controller):
         # TODO when datepicker will be available
         return errors
 
-    # def validate_simple_choice(self, question, post, answer_tag):
-    #     problems = []
-    #     if question.constr_mandatory:
-    #         problems = problems + self.__has_empty_input(question, post, answer_tag)
-    #     return problems
+    def validate_simple_choice(self, question, post, answer_tag):
+        errors = {}
+        comment_tag = "%s_%s" % (answer_tag, question.comment_children_ids[0].id)
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer_tag in post:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Answer is a comment and is empty
+        if question.constr_mandatory and answer_tag in post and post[answer_tag] == "-1" and question.comment_count_as_answer and comment_tag in post and not post[comment_tag].strip():
+            errors.update({answer_tag: question.constr_error_msg})
+        # There is a comment and it should be validated
+        # if question.comment_allowed and comment_tag in post and post[comment_tag].strip():
+
+
+        ### if comments_allowed:
+        ###     if validation des comments required
+        ###
+        ###     if comment_count_as answer and question mandatory
+        ###
+        ### else:
+        ###     if question mandatory:
+
+        return errors
 
     # def validate_multiple_choice(self, question, post, answer_tag):
     #     problems = []

@@ -85,7 +85,7 @@ class survey_survey(osv.osv):
     _columns = {
         'title': fields.char('Title', size=128, required=1,
             translate=True),
-        'category': fields.char('Category'),
+        'res_model': fields.char('Category'),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
         'date_open': fields.datetime('Opening date'),
         'date_close': fields.datetime('Closing date'),
@@ -121,7 +121,6 @@ class survey_survey(osv.osv):
     }
 
     _defaults = {
-        'category': lambda s, cr, uid, c: _('Uncategorized'),
         'user_input_limit': 0,
         'state': 'draft',
         'visible_to_user': True,
@@ -360,25 +359,30 @@ class survey_question(osv.osv):
                 ('simple_choice', 'Multiple choice (one answer)'),
                 ('multiple_choice', 'Multiple choice (multiple answers)'),
                 ('matrix', 'Matrix')], 'Question Type', required=1),
+        'matrix_subtype': fields.selection([('simple', 'One choice per line'),
+            ('multiple', 'Several choices per line')], 'Matrix Type'),
         'labels_ids': fields.one2many('survey.label',
             'question_id', 'Suggested answers', oldname='answer_choice_ids'),
+        'labels_ids_2': fields.one2many('survey.label',
+            'question_id_2', 'Suggested answers'),
 
         # Display options
         'column_nb': fields.selection([('12', '1 column choices'),
-                ('6', '2 columns choices'),
-                ('4', '3 columns choices'),
-                ('3', '4 columns choices'),
-                ('2', '6 columns choices')
-                ], 'Number of columns'),
+                                       ('6', '2 columns choices'),
+                                       ('4', '3 columns choices'),
+                                       ('3', '4 columns choices'),
+                                       ('2', '6 columns choices')],
+            'Number of columns'),
         'display_mode': fields.selection([('columns', 'Columns'),
-                ('dropdown', 'Dropdown menu')
-                ], 'Display mode'),
+                                          ('dropdown', 'Dropdown menu')],
+            'Display mode'),
 
         # Comments
         'comments_allowed': fields.boolean('Allow comments',
             oldname="allow_comment"),
-        'comment_children_ids': fields.one2many('survey.question',
-            'parent_id', 'Comment question'),  # one2one in fact
+        'comment_children_ids': fields.many2many('survey.question',
+            'question_comment_children_ids', 'comment_id', 'parent_id',
+            'Comment question'),  # one2one in fact
         'comment_count_as_answer': fields.boolean('Comment field is an answer choice',
             oldname='make_comment_field'),
 
@@ -421,6 +425,7 @@ class survey_question(osv.osv):
     _defaults = {
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
         'type': 'free_text',
+        'matrix_subtype': 'simple',
         'column_nb': '12',
         'display_mode': 'dropdown',
         'constr_type': 'at least',
@@ -559,8 +564,10 @@ class survey_label(osv.osv):
 
     _columns = {
         'question_id': fields.many2one('survey.question', 'Question',
-            required=True, ondelete='cascade'),
-        'sequence': fields.integer('Page number'),
+            ondelete='cascade'),
+        'question_id_2': fields.many2one('survey.question', 'Question',
+            ondelete='cascade'),
+        'sequence': fields.integer('Label Sequence order'),
         'value': fields.char("Suggested value", translate=True,
             required=True)
     }
@@ -607,6 +614,45 @@ class survey_user_input(osv.osv):
     _sql_constraints = [
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!')
     ]
+
+    def create(self, cr, uid, vals, context=None):
+        #if not vals['test_entry']:
+        # if survey_obj.exists(cr, uid, survey.id, context=context) == []:
+        #     return werkzeug.utils.redirect("/survey/")
+
+        # # In case of auth required, block public user
+        # if survey.auth_required and uid == request.registry['website'].get_public_user(request.cr, SUPERUSER_ID, request.context).id:
+        #     return request.website.render("website.401")
+
+        # # In case of non open surveys
+        # if survey.state != 'open':
+        #     return request.website.render("survey.notopen")
+
+        # # If enough surveys completed
+        # if survey.user_input_limit > 0:
+        #     completed = user_input_obj.search(cr, uid, [('state', '=', 'done')], count=True)
+        #     if completed >= survey.user_input_limit:
+        #         return request.website.render("survey.notopen")
+
+        # # Manual surveying
+        # if not token:
+        #     if survey.visible_to_user:
+        #         user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id})
+        #         user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+        #     else:  # An user cannot open hidden surveys without token
+        #         return request.website.render("website.403")
+        # else:
+        #     try:
+        #         user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
+        #     except IndexError:  # Invalid token
+        #         return request.website.render("website.403")
+        #     else:
+        #         user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+
+        return super(survey_user_input, self).create(cr, uid, vals, context)
+
+    #         raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page.title))
+
 
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
         ''' Remove empty user inputs that have been created manually '''

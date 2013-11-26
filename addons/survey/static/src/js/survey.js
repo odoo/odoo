@@ -17,9 +17,11 @@ $(document).ready(function () {
     $('.js_drop select').change(function(){
         var other_val = $(this).find('.js_other_option').val();
         if($(this).val() === other_val){
+            $(this).parent().removeClass('col-md-12').addClass('col-md-6');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').show().focus();
         }
         else{
+            $(this).parent().removeClass('col-md-6').addClass('col-md-12');
             $(this).closest('.js_drop').find('input[data-oe-survey-othert="1"]').val("").hide();
         }
     });
