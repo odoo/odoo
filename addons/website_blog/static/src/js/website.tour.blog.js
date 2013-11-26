@@ -157,14 +157,6 @@
                     content: "From this toolbar you can move, duplicate or delete the selected zone. Click on the cross to delete the title.",
                 },
                 {
-                    stepId: 'publish-post',
-                    element: 'button.js_publish_btn',
-                    placement: 'right',
-                    reflex: true,
-                    title: "Publish Your Post",
-                    content: "Your blog post is not yet published. You can update this draft version and publish it once you are ready.",
-                },
-                {
                     stepId: 'save-changes',
                     element: 'button[data-action=save]',
                     placement: 'right',
@@ -173,21 +165,29 @@
                     content: "Click the <em>Save</em> button to record changes on the page.",
                 },
                 {
+                    stepId: 'publish-post',
+                    element: 'button.js_publish_btn',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Publish Your Post",
+                    content: "Your blog post is not yet published. You can update this draft version and publish it once you are ready.",
+                },
+                {
                     stepId: 'end-tutorial',
                     orphan: true,
                     backdrop: true,
                     title: "Thanks!",
                     content: "This tutorial is finished. To discover more features, improve the content of this page and try the <em>Promote</em> button in the top right menu.",
-                    template: self.popover({ next: "Close Tutorial" }),
+                    template: self.popover({ end: "Close Tutorial" }),
                 },
             ];
             return this._super();
         },
         resume: function () {
-            return this.isCurrentStep('post-page') && !this.tour.ended();
+            return (this.isCurrentStep('post-page') || this.isCurrentStep('publish-post')) && this._super();
         },
         trigger: function () {
-            return (this.resume() && this.testUrl(/^\/blog\/[0-9]+\/\?enable_editor=1/)) || this._super();
+            return (this.resume() && this.testUrl(/^\/blog\/[0-9]+\//)) || this._super();
         },
     });
 

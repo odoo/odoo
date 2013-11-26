@@ -86,7 +86,7 @@
                     title: "Add Another Block",
                     content: "Let's add another building block to your page.",
                     triggers: function () {
-                        $('button[data-action=snippet]').on('click', function () {
+                        $('button[data-action=snippet]').one('click', function () {
                             self.moveToNextStep();
                         });
                     }
@@ -140,9 +140,13 @@
                     stepId: 'show-mobile',
                     element: 'a[data-action=show-mobile-preview]',
                     placement: 'bottom',
-                    reflex: true,
                     title: "Test Your Mobile Version",
                     content: "Let's check how your homepage looks like on mobile devices.",
+                    triggers: function () {
+                        $(document).one('shown.bs.modal', function () {
+                            self.moveToNextStep();
+                        });
+                    }
                 },
                 {
                     stepId: 'show-mobile-close',
@@ -165,7 +169,7 @@
             return this._super();
         },
         resume: function () {
-            return (this.isCurrentStep('show-tutorials')) && !this.tour.ended();
+            return this.isCurrentStep('part-2') && this._super();
         },
     });
 

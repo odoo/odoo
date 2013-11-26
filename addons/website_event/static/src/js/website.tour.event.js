@@ -100,14 +100,6 @@
                     },
                 },
                 {
-                    stepId: 'publish-post',
-                    element: 'button.js_publish_btn',
-                    placement: 'right',
-                    reflex: true,
-                    title: "Publish your event",
-                    content: "Click to publish your event.",
-                },
-                {
                     stepId: 'save-changes',
                     element: 'button[data-action=save]',
                     placement: 'right',
@@ -115,14 +107,22 @@
                     title: "Save your modifications",
                     content: "Once you click on save, your event is updated.",
                 },
+                {
+                    stepId: 'publish-post',
+                    element: 'button.js_publish_btn',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Publish your event",
+                    content: "Click to publish your event.",
+                },
             ];
             return this._super();
         },
         resume: function () {
-            return this.isCurrentStep('event-page') && !this.tour.ended();
+            return (this.isCurrentStep('event-page') || this.isCurrentStep('publish-post')) && this._super();
         },
         trigger: function () {
-            return (this.resume() && this.testUrl(/^\/event\/register\/[0-9]+/)) || this._super();
+            return (this.resume() && this.testUrl(/^\/event\/[0-9]+\/register/)) || this._super();
         },
     });
 

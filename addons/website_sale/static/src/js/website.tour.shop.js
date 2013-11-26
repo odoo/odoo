@@ -101,12 +101,16 @@
                     title: "Upload image",
                     content: "Click on 'Upload an image from your computer' to pick an image describing your product.",
                     template: self.popover({ next: "OK" }),
+                    triggers: function () {
+                        $(document).on('hide.bs.modal', function () {
+                            self.moveToStep('add-block');
+                        });
+                    }
                 },
                 {
                     stepId: 'save-image',
                     element: 'button.save',
                     placement: 'right',
-                    reflex: true,
                     title: "Save the image",
                     content: "Click 'Save Changes' to add the image to the product decsription.",
                 },
@@ -133,14 +137,6 @@
                     },
                 },
                 {
-                    stepId: 'publish-post',
-                    element: 'button.js_publish_btn',
-                    placement: 'right',
-                    reflex: true,
-                    title: "Publish your product",
-                    content: "Click to publish your product so your customers can see it.",
-                },
-                {
                     stepId: 'save-changes',
                     element: 'button[data-action=save]',
                     placement: 'right',
@@ -148,14 +144,22 @@
                     title: "Save your modifications",
                     content: "Once you click on save, your product is updated.",
                 },
+                {
+                    stepId: 'publish-product',
+                    element: 'button.js_publish_btn',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Publish your product",
+                    content: "Click to publish your product so your customers can see it.",
+                },
             ];
             return this._super();
         },
         resume: function () {
-            return this.isCurrentStep('product-page') && !this.tour.ended();
+            return (this.isCurrentStep('product-page') || this.isCurrentStep('publish-product')) && this._super();
         },
         trigger: function (url) {
-            return (this.resume() && this.testUrl(/^\/shop\/product\/[0-9]+\/\?enable_editor=1/)) || this._super();
+            return (this.resume() && this.testUrl(/^\/shop\/product\/[0-9]+\//)) || this._super();
         },
     });
 

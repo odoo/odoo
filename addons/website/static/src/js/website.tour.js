@@ -73,9 +73,12 @@
                 window.location.replace(newUrl);
             }
         },
+        ended: function () {
+            return this.tourStorage.getItem(this.id+'_end') === "yes";
+        },
         resume: function () {
             // Override if necessary
-            return this.currentStepIndex() === 0;
+            return !this.ended();
         },
         trigger: function (url) {
             // Override if necessary
