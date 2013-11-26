@@ -369,7 +369,7 @@ class email_template(osv.osv):
                     attachment_ids=[attach.id for attach in template.attachment_ids],
                 )
 
-            # Add report in attachments
+            # Add report in attachments: generate once for all template_res_ids
             if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
@@ -388,7 +388,8 @@ class email_template(osv.osv):
                         report_name += ext
                     attachments.append((report_name, result))
 
-                    values['attachments'] = attachments
+                    for res_id in template_res_ids:
+                        results[res_id]['attachments'] = attachments
 
         return results
 
