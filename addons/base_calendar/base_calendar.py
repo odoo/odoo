@@ -251,7 +251,7 @@ class calendar_attendee(osv.osv):
         res = cal.serialize()
         return res
 
-    def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
+    def _send_mail(self, cr, uid, ids, email_from=tools.config.get('email_from', False), context=None):
         """
         Send mail for event invitation to event attendees.
         @param email_from: email address for user sending the mail
@@ -272,7 +272,9 @@ class calendar_attendee(osv.osv):
         
         if not isinstance(ids, (tuple, list)):
             ids = [ids]
-            
+        
+        
+        print "IDS too send = ", ids    
         for attendee in self.browse(cr, uid, ids, context=context):            
             res_obj = attendee.ref
             if res_obj:
@@ -287,13 +289,18 @@ class calendar_attendee(osv.osv):
                     local_context['dbname'] = cr.dbname
                     local_context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
                     vals = template_pool.generate_email(cr, uid, template_id, res_obj.id, context=local_context)
+                    
                     if ics_file:
                         vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
                                                     'datas_fname': 'invitation.ics',
                                                     'datas': str(ics_file).encode('base64')})]
+                    
                     vals['model'] = None #We don't want to have the mail in the tchatter while in queue!
                     vals['auto_delete'] = True #We don't need mail after it has been sended !
-                    vals['recipient_ids'] = [(4,attendee.partner_id.id),] #We don't need mail after it has been sended !
+                    
+                    if (vals['email_to']== attendee.partner_id.email):
+                        vals['email_to'] = ''
+                        vals['recipient_ids'] = [(4,attendee.partner_id.id),] 
                     
                     if not attendee.partner_id.opt_out:
                         mail_id.append(mail_pool.create(cr, uid, vals, context=context))
@@ -349,7 +356,8 @@ class calendar_attendee(osv.osv):
         for attendee in self.browse(cr, uid, ids, context=context):
             meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attendee.id)], context=context)
             if meeting_ids:
-                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has accepted invitation") % (attendee.cn)), context=context)
+                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has accepted invitation") % (attendee.cn)),subtype="base_calendar.subtype_invitation", context=context)
+                
         return res
     
     def do_decline(self, cr, uid, ids, context=None, *args):
@@ -364,7 +372,7 @@ class calendar_attendee(osv.osv):
         for attandee in self.browse(cr, uid, ids, context=context):
             meeting_ids = meeting_obj.search(cr, uid, [('attendee_ids', '=', attandee.id)], context=context)
             if meeting_ids:
-                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has declined invitation") % (attandee.cn)), context=context)
+                meeting_obj.message_post(cr, uid, get_real_ids(meeting_ids), body=_(("%s has declined invitation") % (attandee.cn)),subtype="base_calendar.subtype_invitation", context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -1010,7 +1018,10 @@ class crm_meeting(osv.Model):
 
     _track = {
         'location': {
-            'calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
+            'base_calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
+        },
+       'date': {
+            'base_calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
         },
     }
     _columns = {
@@ -1030,7 +1041,7 @@ class crm_meeting(osv.Model):
         'id': fields.integer('ID', readonly=True),
         'sequence': fields.integer('Sequence'),
         
-        'date': fields.datetime('Date', states={'done': [('readonly', True)]}, required=True,),
+        'date': fields.datetime('Date', states={'done': [('readonly', True)]}, required=True,track_visibility='onchange'),
         'date_deadline': fields.datetime('End Date', states={'done': [('readonly', True)]}, required=True,),
         
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
@@ -1113,6 +1124,7 @@ class crm_meeting(osv.Model):
         value = {}
         if not start_date:
             return value
+        
         if not end_date and not duration:
             duration = 1.00
             value['duration'] = duration
@@ -1125,9 +1137,10 @@ class crm_meeting(osv.Model):
             user = self.pool.get('res.users').browse(cr, uid, uid)
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc
             start = pytz.utc.localize(start).astimezone(tz)     # convert start in user's timezone
-            start = start.replace(hour=0, minute=0, second=0)   # remove time 
+            #start = start.replace(hour=0, minute=0, second=0)   # remove time 
             start = start.astimezone(pytz.utc)                  # convert start back to utc
             value['date'] = start.strftime("%Y-%m-%d %H:%M:%S")
+                        
 
         if end_date and not duration:
             end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
@@ -1146,6 +1159,7 @@ class crm_meeting(osv.Model):
             duration = float(diff.days)* 24 + (float(diff.seconds) / 3600)
             value['duration'] = round(duration, 2)
 
+        print "Out value : ", value        
         return {'value': value}
 
     def unlink_events(self, cr, uid, ids, context=None):
@@ -1174,8 +1188,8 @@ class crm_meeting(osv.Model):
             for att in event.attendee_ids:
                 attendees[att.partner_id.id] = True
             new_attendees = []
-            new_att_partner_ids = [] #avoid to rebrowse attendees
-            mail_to = ""
+            new_att_partner_ids = [] #avoid to rebrowse attendees            
+#             mail_to = ""
             for partner in event.partner_ids:
                 if partner.id in attendees:                    
                     continue
@@ -1187,16 +1201,28 @@ class crm_meeting(osv.Model):
                     'access_token': access_token,
                     'email': partner.email,
                 }, context=context)
-                if partner.email:
-                    mail_to = mail_to + " " + partner.email
+#                 if partner.email:
+#                     mail_to = mail_to + " " + partner.email
+                
                 new_attendees.append(att_id)
                 new_att_partner_ids.append(partner.id)
-                if current_user.email:
-                    if self.pool.get('calendar.attendee')._send_mail(cr, uid, att_id, '', email_from = current_user.email, context=context):
-                        self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,), context=context)
+                
+                
+                if not current_user.email or current_user.email != partner.email :
+                    mail_from = current_user.email or tools.config.get('email_from', False)
+                    print "Send mail... from ",mail_from, " to ",att_id 
+                    if self.pool.get('calendar.attendee')._send_mail(cr, uid, att_id, email_from = mail_from, context=context):
+                        self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,),subtype="base_calendar.subtype_invitation", context=context)
+                else:
+                    print "DON'T SEND MAIL TO MYSELF !"
+                            
             
-            self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]},context=context)
-                        
+            if  new_attendees:
+                self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]},context=context)
+            if  new_att_partner_ids:
+                self.message_subscribe(cr, uid, [event.id], new_att_partner_ids, context=context)
+            
+            
             # We remove old attendees who are not in partner_ids now.
             all_partner_ids = [part.id for part in event.partner_ids]
             all_attendee_ids = [att.partner_id.id for att in event.attendee_ids]
@@ -1205,7 +1231,8 @@ class crm_meeting(osv.Model):
             if partner_ids_to_remove:
                 attendee_ids_to_remove =self.pool.get("calendar.attendee").search(cr,uid,[('partner_id.id','in',partner_ids_to_remove),('ref.id','=',event.id)],context=context)
                 if attendee_ids_to_remove: 
-                    self.pool.get("calendar.attendee").unlink(cr, uid, attendee_ids_to_remove, context) 
+                    self.pool.get("calendar.attendee").unlink(cr, uid, attendee_ids_to_remove, context)
+                    ## NEED TO UNSUBSCRIBE ? 
             
         return {
                 'new_partner_ids' : new_att_partner_ids,
@@ -1464,8 +1491,8 @@ class crm_meeting(osv.Model):
             current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)                       
 
             if current_user.email:
-                if self.pool.get('calendar.attendee')._send_mail(cr, uid, [att.id for att in event.attendee_ids], '', email_from = current_user.email, context=context):
-                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), context=context)
+                if self.pool.get('calendar.attendee')._send_mail(cr, uid, [att.id for att in event.attendee_ids], email_from = current_user.email, context=context):
+                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), subtype="base_calendar.subtype_invitation", context=context)
         return;
     
 
@@ -1487,7 +1514,7 @@ class crm_meeting(osv.Model):
 
     def get_interval(self, cr, uid, ids, date, interval, context=None):
         #Function used only in crm_meeting_data.xml for email template
-        date = datetime.strptime(date, DEFAULT_SERVER_DATETIME_FORMAT)
+        date = datetime.strptime(date.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
         if interval == 'day':
             res = str(date.day)
         elif interval == 'month':
@@ -1627,8 +1654,8 @@ class crm_meeting(osv.Model):
         if context is None:
             context = {}
 
-        if vals.get('duration', '') and vals.get('duration', '')==24 and not 'allday' in vals: #If from quick create
-            vals['allday'] = True
+#         if vals.get('duration', '') and vals.get('duration', '')==24 and not 'allday' in vals: #If from quick create
+#             vals['allday'] = True
         
         if not 'user_id' in vals: #Else bug with quick_create when we are filter on an other user
             vals['user_id'] = uid

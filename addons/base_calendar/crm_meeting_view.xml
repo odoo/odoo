@@ -153,6 +153,34 @@
         </field>
     </record>
 
+
+    <record model="ir.ui.view" id="view_crm_meeting_form_popup">
+        <field name="name">Meetings Popup</field>
+        <field name="model">crm.meeting</field>
+        <field name="arch" type="xml">
+            <form string="Meetings" version="7.0">
+                <field name="state" invisible="1"/>
+                <field name="is_attendee" invisible="1"/>
+                <field name="attendee_status" invisible="1"/>
+                <label for="name"/>
+                <field name="name"/>
+                <group>
+                    <group>
+                        <field name="date" string="Start" />
+                        <field name="duration" string="Duration" widget="float_time" attrs="{'invisible': [('allday','=',True)]}"/>
+                        <field name="allday" class="oe_inline" attrs="{'invisible': [('allday','=',False)]}"/>
+                        <field name="partner_ids" widget="many2manyattendee" string="Attendees"/>                                                                        
+                    </group>
+                    <group>
+                        <field name="categ_ids" widget="many2many_tags"/>
+                        <field name="alarm_ids" widget="many2many_tags" />
+                        <field name="location"/>
+                    </group>
+                </group>       
+            </form>
+        </field>
+    </record>
+
     <!-- CRM Meeting Tree View  -->
 
     <record model="ir.ui.view" id="view_crm_meeting_tree">
@@ -178,13 +206,13 @@
 
     <!-- CRM Meeting Calendar -->
     <record model="ir.ui.view" id="view_crm_meeting_calendar">
-        <field name="name">CRM - Meetings Calendar</field>
+        <field name="name">Meetings Calendar</field>
         <field name="model">crm.meeting</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">                          
             <calendar string="Meetings" date_start="date" date_stop="date_deadline" date_delay="duration" 
-                         display="[name] ([user_id])" color="color_partner_id" attendee="partner_ids" 
-                         color_is_attendee="True" use_contacts="True" quick_add="True">
+                         display="[name]" color="color_partner_id" attendee="partner_ids" 
+                         use_contacts="True" quick_add="True" all_day="allday" event_open_popup="base_calendar.action_crm_meeting_popup">
             
                 <field name="name"/>
                 <field name="user_id"/>
@@ -283,5 +311,14 @@
         <field name="view_mode">form,calendar,tree,gantt</field>
         <field name="view_id" ref="action_view_crm_meeting_form"/>        
     </record>
+    
+    
+    <record id="action_crm_meeting_popup" model="ir.actions.act_window">
+        <field name="name">Meetings</field>
+        <field name="res_model">crm.meeting</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_crm_meeting_form_popup"/>        
+    </record>
+    
     </data>
 </openerp>

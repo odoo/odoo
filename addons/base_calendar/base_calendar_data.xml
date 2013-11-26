@@ -3,10 +3,11 @@
     <data noupdate="1">
     
          <!-- Expense-related subtypes for messaging / Chatter -->
-        <record id="subtype_invitation" model="mail.message.subtype">
+        <record id="base_calendar.subtype_invitation" model="mail.message.subtype">
             <field name="name">Invitation</field>
             <field name="res_model">crm.meeting</field>
-            <field name="description">Invitation Sended</field>
+            <field name="description">Warning, a mandatory field has been modified since the creation of this event</field>
+            <field name="default" eval="False"/>
         </record>
         
         <record model="res.request.link" id="request_link_event">
@@ -148,7 +149,7 @@
                                 <strong>${object.name}</strong>
                             </div>
                             <div style="height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px">
-                                <strong style="margin-left:12px">Hello ${ctx['att_obj'].cn}</strong> ,<br/><p style="margin-left:12px">${object.organizer} invited you for the ${object.name} meeting of ${object.user_id.company_id.name}.</p>
+                                <strong style="margin-left:12px">Hello ${ctx['att_obj'].cn}</strong> ,<br/><p style="margin-left:12px">${object.user_id.partner_id.name} invited you for the ${object.name} meeting of ${object.user_id.company_id.name}.</p> 
                             </div>
                             <div style="height: auto;margin-left:12px;margin-top:30px;">
                                 <table>
@@ -163,7 +164,7 @@
                                         </td>
                                         <td>
                                             <table cellspacing="0" cellpadding="0" border="0" style="margin-top: 15px; margin-left: 10px;font-size: 16px;">
-                                                % if object.location :
+                                                % if object.location:
                                                     <tr style=" height: 30px;">
                                                         <td style="vertical-align:top;">
                                                             <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
@@ -175,20 +176,6 @@
                                                                 : ${object.location}
                                                                 <span style= "color:#A9A9A9; ">(<a href="http://maps.google.com/maps?oi=map&q=${object.location}">View Map</a>)
                                                                     </span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                % endif
-                                                % if not object.location :
-                                                    <tr style=" height: 30px;color:#909090">
-                                                        <td>
-                                                            <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                                Where
-                                                            </div>
-                                                        </td>
-                                                        <td colspan="1">
-                                                            <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px;" >
-                                                                : -
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -206,21 +193,7 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                % endif
-                                                % if not object.description :
-                                                    <tr style=" height: 30px;color:#909090">
-                                                        <td style="vertical-align:top;">
-                                                            <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                                What
-                                                            </div>
-                                                        </td>
-                                                        <td colspan="3" style="vertical-align:text-top;">
-                                                            <div style="font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                                : -
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                % endif
+                                                % endif 
                                                 <tr style=" height: 30px;">
                                                     <td style="height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                         <div>
