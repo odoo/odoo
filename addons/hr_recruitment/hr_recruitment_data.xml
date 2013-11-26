@@ -110,6 +110,7 @@
     <record model="hr.recruitment.stage" id="stage_job5">
         <field name="name">Contract Signed</field>
         <field name="sequence">5</field>
+        <field name="fold" eval="True"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job6">
         <field name="name">Refused</field>
@@ -117,6 +118,7 @@
         <field name="template_id" ref="email_template_refuse_applicant"/>
         <field name="fold" eval="True"/>
     </record>
+
     <record id="survey_job_0" model="survey">
         <field name="title">Job Survey</field>
         <field name="max_response_limit">20</field>

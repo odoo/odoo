@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 def fragment_to_query_string(func):
     @functools.wraps(func)
-    def wrapper(self, **kw):
+    def wrapper(self, *a, **kw):
         if not kw:
             return """<html><head><script>
                 var l = window.location;
@@ -31,7 +31,7 @@ def fragment_to_query_string(func):
                 }
                 window.location = r;
             </script></head><body></body></html>"""
-        return func(self, **kw)
+        return func(self, *a, **kw)
     return wrapper
 
 

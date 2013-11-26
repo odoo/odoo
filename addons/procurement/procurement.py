@@ -181,10 +181,6 @@ class procurement_order(osv.osv):
         """
         return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids, context=context))
 
-    #This Function is create to avoid  a server side Error Like 'ERROR:tests.mrp:name 'check_move' is not defined'
-    def check_move(self, cr, uid, ids, context=None):
-        pass
-
     def check_move_done(self, cr, uid, ids, context=None):
         """ Checks if move is done or not.
         @return: True or False.
@@ -294,6 +290,12 @@ class procurement_order(osv.osv):
     def check_buy(self, cr, uid, ids):
         """ Depicts the capacity of the procurement workflow to manage the supply_method == 'buy'.
             By default, it's False. Overwritten by purchase module.
+        """
+        return False
+
+    def check_move(self, cr, uid, ids, context=None):
+        """ Check whether the given procurement can be satisfied by an internal move,
+            typically a pulled flow. By default, it's False. Overwritten by the `stock_location` module.
         """
         return False
 

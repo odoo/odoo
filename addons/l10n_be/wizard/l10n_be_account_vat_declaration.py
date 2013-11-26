@@ -185,7 +185,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         for item in cases_list:
             grid_amount_data = {
                     'code': str(int(item['code'])),
-                    'amount': str(abs(item['sum_period'])),
+                    'amount': '%.2f' % abs(item['sum_period']),
                     }
             data_of_file += '\n\t\t\t<ns2:Amount GridNumber="%(code)s">%(amount)s</ns2:Amount''>' % (grid_amount_data)
 
