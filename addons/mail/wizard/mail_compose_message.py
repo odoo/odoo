@@ -20,6 +20,7 @@
 ##############################################################################
 
 import re
+
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv
@@ -260,10 +261,13 @@ class mail_compose_message(osv.TransientModel):
 
             for res_id, mail_values in all_mail_values.iteritems():
                 if mass_mail_mode and not wizard.post:
-                    # Attachments are still formatted as a list of ids, because message_post will process them
-                    # We have to put them back as a m2m command if we want attachments to be sent
-                    if mail_values.get('attachment_ids'):
-                        mail_values['attachment_ids'] = [(4, id) for id in mail_values['attachment_ids']]
+                    # process attachments and attachment_ids before sending values to mail_mail.Lcreat
+                    m2m_attachment_ids = self.pool['mail.thread']._message_preprocess_attachments(
+                        cr, uid, mail_values.pop('attachments', []),
+                        mail_values.pop('attachment_ids', []),
+                        'mail.message', 0,
+                        context=context)
+                    mail_values['attachment_ids'] = m2m_attachment_ids
                     self.pool.get('mail.mail').create(cr, uid, mail_values, context=context)
                 else:
                     subtype = 'mail.mt_comment'
