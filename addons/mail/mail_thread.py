@@ -188,13 +188,10 @@ class mail_thread(osv.AbstractModel):
                 new = set(command[2])
 
         # remove partners that are no longer followers
-        fol_ids = fol_obj.search(cr, SUPERUSER_ID,
-            [('res_model', '=', self._name), ('res_id', '=', id), ('partner_id', 'not in', list(new))])
-        fol_obj.unlink(cr, SUPERUSER_ID, fol_ids)
+        self.message_unsubscribe(cr, uid, [id], list(old-new))
 
         # add new followers
-        for partner_id in new - old:
-            fol_obj.create(cr, SUPERUSER_ID, {'res_model': self._name, 'res_id': id, 'partner_id': partner_id})
+        self.message_subscribe(cr, uid, [id], list(new-old))
 
     def _search_followers(self, cr, uid, obj, name, args, context):
         fol_obj = self.pool.get('mail.followers')
@@ -240,15 +237,22 @@ class mail_thread(osv.AbstractModel):
         """
         if context is None:
             context = {}
+
+        # subscribe uid unless asked not to
+        if not context.get('mail_create_nosubscribe'):
+            pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id.id
+            message_follower_ids = values.get('message_follower_ids')
+            if message_follower_ids is False or message_follower_ids is None:  # web client seems to send False as message_follower_ids value
+                message_follower_ids = []
+            message_follower_ids.append([4, pid])
+            values['message_follower_ids'] = message_follower_ids
+
         thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
             self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
 
-        # subscribe uid unless asked not to
-        if not context.get('mail_create_nosubscribe'):
-            self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
         for key, val in context.iteritems():
@@ -1189,35 +1193,33 @@ class mail_thread(osv.AbstractModel):
         else:
             self.check_access_rights(cr, uid, 'write')
 
-        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            existing_pids = set([f.id for f in record.message_follower_ids
-                                            if f.id in partner_ids])
+        existing_pids_dict = {}
+        fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        for fol in mail_followers_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context):
+            existing_pids_dict.setdefault(fol.res_id, set()).add(fol.partner_id.id)
+
+        # subtype_ids specified: update already subscribed partners
+        if subtype_ids and fol_ids:
+            mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+        # subtype_ids not specified: do not update already subscribed partner, fetch default subtypes for new partners
+        if subtype_ids is None:
+            subtype_ids = subtype_obj.search(
+                cr, uid, [
+                    ('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+
+        for id in ids:
+            existing_pids = existing_pids_dict.get(id, set())
             new_pids = set(partner_ids) - existing_pids
 
-            # subtype_ids specified: update already subscribed partners
-            if subtype_ids and existing_pids:
-                fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [
-                                                        ('res_model', '=', self._name),
-                                                        ('res_id', '=', record.id),
-                                                        ('partner_id', 'in', list(existing_pids)),
-                                                    ], context=context)
-                mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
-            # subtype_ids not specified: do not update already subscribed partner, fetch default subtypes for new partners
-            elif subtype_ids is None:
-                subtype_ids = subtype_obj.search(cr, uid, [
-                                                        ('default', '=', True),
-                                                        '|',
-                                                        ('res_model', '=', self._name),
-                                                        ('res_model', '=', False)
-                                                    ], context=context)
             # subscribe new followers
             for new_pid in new_pids:
-                mail_followers_obj.create(cr, SUPERUSER_ID, {
-                                                'res_model': self._name,
-                                                'res_id': record.id,
-                                                'partner_id': new_pid,
-                                                'subtype_ids': [(6, 0, subtype_ids)],
-                                            }, context=context)
+                mail_followers_obj.create(
+                    cr, SUPERUSER_ID, {
+                        'res_model': self._name,
+                        'res_id': id,
+                        'partner_id': new_pid,
+                        'subtype_ids': [(6, 0, subtype_ids)],
+                    }, context=context)
 
         return True
 
@@ -1236,7 +1238,14 @@ class mail_thread(osv.AbstractModel):
             self.check_access_rights(cr, uid, 'read')
         else:
             self.check_access_rights(cr, uid, 'write')
-        return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
+        fol_obj = self.pool['mail.followers']
+        fol_ids = fol_obj.search(
+            cr, SUPERUSER_ID, [
+                ('res_model', '=', self._name),
+                ('res_id', 'in', ids),
+                ('partner_id', 'in', partner_ids)
+            ], context=context)
+        return fol_obj.unlink(cr, SUPERUSER_ID, fol_ids, context=context)
 
     def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
         """ Returns the list of relational fields linking to res.users that should
