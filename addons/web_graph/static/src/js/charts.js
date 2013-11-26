@@ -2,8 +2,10 @@
 function draw_chart (mode, pivot) {
     var values = _.map(pivot.rows.main.children, function (pt) {
         var val = pivot.get_value(pt.id, pivot.cols.main.id);
-        return {x: pt.name, y: val};
+        return {x: pt.title, y: val};
     });
+
+    console.log("values",values);
 
     switch (mode) {
         case 'bar_chart':
