@@ -16,7 +16,15 @@
             <field name="res_model">web_calendar.contacts</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_calendar_contacts" />                       
+            <field name="view_id" ref="view_calendar_contacts" />
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add your first contact.
+              </p><p>
+                Add your contacts here to see the events which are created by them.<br/>
+                Each contact will have it own color on calendar, to see easily who is busy...
+              </p>
+            </field>                       
         </record>
             
     </data>
