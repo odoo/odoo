@@ -330,10 +330,7 @@ var PivotTable = openerp.web.Class.extend({
 				row_data = _.last(_.initial(args)),
 				cell_data = args;
 
-			var result = self.format_data(total, col_data, row_data, cell_data);
-			console.log("result final",result);
-			return result;
-
+			return self.format_data(total, col_data, row_data, cell_data);
 		});
 
 	},

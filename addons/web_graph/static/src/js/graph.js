@@ -161,6 +161,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             self.pivot_table = new PivotTable(self.data);
             self.pivot_table.start().then(self.proxy('draw_table'));
         } else {
+            this.pivot_table.domain = domain;
             this.pivot_table.update_values().done(function () {
                 self.draw_table();
             });
