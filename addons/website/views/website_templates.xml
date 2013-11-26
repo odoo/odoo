@@ -66,6 +66,7 @@
                         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
                         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+                        <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
                         <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
                         <script type="text/javascript">
                             // Bootstrap and jQuery UI conflicts
@@ -360,6 +361,24 @@
         <template id="default_page">
             <t t-call="website.layout">
               <div id="wrap" class="oe_structure oe_empty"></div>
+            </t>
+        </template>
+
+        <template id="403">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure oe_empty">
+                        <div class="container">
+                            <h1 class="mt32">403: Forbidden!</h1>
+                                <p>Access Denied.</p>
+                                <p>Maybe you were looking for one of these popular pages ?</p>
+                            <ul>
+                                <li><a href="/">Homepage</a></li>
+                                <li><a href="/page/website.contactus/">Contact Us</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </t>
         </template>
 
