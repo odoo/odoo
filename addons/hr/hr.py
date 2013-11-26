@@ -259,11 +259,13 @@ class hr_employee(osv.osv):
         employee_id = super(hr_employee, self).create(cr, uid, data, context=create_ctx)
         employee = self.browse(cr, uid, employee_id, context=context)
         if employee.user_id:
+            res_users = self.pool['res.users']
             # send a copy to every user of the company
-            company_id = employee.user_id.partner_id.company_id.id
-            partner_ids = self.pool.get('res.partner').search(cr, uid, [
-                ('company_id', '=', company_id),
-                ('user_ids', '!=', False)], context=context)
+            # TODO: post to the `Whole Company` mail.group when we'll be able to link to the employee record  
+            _model, group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')
+            user_ids = res_users.search(cr, uid, [('company_id', '=', employee.user_id.company_id.id),
+                                                  ('groups_id', 'in', group_id)])
+            partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, uid, user_ids, context=context)))
         else:
             partner_ids = []
         self.message_post(cr, uid, [employee_id],

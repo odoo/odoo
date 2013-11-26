@@ -977,9 +977,9 @@ class mail_compose_message(osv.Model):
 
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
-        if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
+        if context.get('active_model') == 'sale.order' and context.get('active_ids') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
-            self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
+            self.pool.get('sale.order').signal_quotation_sent(cr, uid, context['active_ids'])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 

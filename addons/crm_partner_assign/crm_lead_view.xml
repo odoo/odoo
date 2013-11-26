@@ -65,6 +65,9 @@
                             domain="[]" context="{'group_by':'date_assign'}"/>
 
                 </filter>
+                <filter string="My Team(s)" position="after">
+                    <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
+                </filter>
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
                 </field>
@@ -131,10 +134,39 @@
                 <filter string="Team" position="after">
                     <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
+                <filter string="My Team(s)" position="after">
+                    <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
+                </filter>
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
                 </field>
             </field>
+        </record>
+
+        <record id="action_assign_salesman_according_assigned_partner" model="ir.actions.server">
+            <field name="name">Assign salesman of assigned partner</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">
+                if context.get('active_model') == 'crm.lead':
+                    ids = []
+                    if context.get('active_domain'):
+                        ids = self.search(cr, uid, context['active_domain'], context=context) 
+                    elif context.get('active_ids'):
+                        ids = context['active_ids']
+                    if ids:
+                        self.assign_salesman_of_assigned_partner(cr, uid, ids, context=context)
+            </field>
+            <field name="groups_id" eval="[(4,ref('base.group_sale_manager'))]"/>
+        </record>
+
+        <record model="ir.values" id="ir_assign_salesman_according_assigned_partner">
+            <field name="model_id" ref="model_crm_lead" />
+            <field name="name">Assign salesman of assigned partner</field>
+            <field name="key2">client_action_multi</field>
+            <field eval="'ir.actions.server,%d'%action_assign_salesman_according_assigned_partner" name="value"/>
+            <field name="key">action</field>
+            <field name="model">crm.lead</field>
         </record>
 
     </data>
