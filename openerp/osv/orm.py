@@ -3464,7 +3464,7 @@ class BaseModel(object):
                     records
         """
         self_fields = self._fields
-        if fields is None:
+        if not fields:
             names = self_fields.keys()
         elif all(name in self_fields for name in fields):
             names = set(fields)
