@@ -562,7 +562,9 @@
                 window_title: "New Page",
                 input: "Page Title",
             }).then(function (val) {
-                document.location = '/pagenew/' + encodeURI(val);
+                if (val) {
+                    document.location = '/pagenew/' + encodeURI(val);
+                }
             });
         },
     });
