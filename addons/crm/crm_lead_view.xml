@@ -323,7 +323,7 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Leads">
-                    <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                    <field name="name" string="Lead / Customer" filter_domain="['|','|','|',('partner_name','ilike',self),('email_from','ilike',self),('contact_name','ilike',self),('name','ilike',self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]"/>
                     <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
@@ -334,14 +334,14 @@
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]"
                             help="No salesperson"/>
-                    <filter string="Assigned to Me"
+                    <filter string="My Leads"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
                             help="Leads that are assigned to me"/>
-                    <filter string="Assigned to My Team(s)" groups="base.group_multi_salesteams"
+                    <filter string="My Team(s)" groups="base.group_multi_salesteams"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                             help="Leads that are assigned to any sales teams I am member of"/>
                     <filter string="Dead" name="dead"
-                            domain="[('probability', '=', '0'), ('stage_id.sequence', '!=', 1)]"/>
+                            domain="[('probability', '=', '0'), ('stage_id.fold', '=', True)]"/>
                     <separator />
                     <filter string="Available for mass mailing"
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
@@ -379,10 +379,12 @@
             <field name="arch" type="xml">
                 <form string="Opportunities" version="7.0">
                     <header>
+                        <!-- :deprecated: this button will be removed from the view with OpenERP v8 -->
                         <button name="case_mark_won" string="Mark Won" type="object" class="oe_highlight"
-                                attrs="{'invisible': [('probability', '=', 100)]}"/>
+                                invisible="True"/>
+                        <!-- :deprecated: this button will be removed from the view with OpenERP v8 -->
                         <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"
-                                attrs="{'invisible': ['|', ('probability', '=', 0), ('probability', '=', 100)]}"/>
+                                invisible="True"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                                 domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
                     </header>
@@ -550,18 +552,16 @@
                     <field name="stage_id" domain="[]"/>
                     <field name="probability"/>
                     <separator/>
-                    <filter string="New" name="new"
-                            domain="[('probability', '=', 0), ('stage_id.sequence', '=', 1)]"/>
                     <filter string="Won" name="won"
-                            domain="[('probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
+                            domain="[('probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"
-                            domain="[('probability', '=', 0), ('stage_id.sequence', '!=', 1)]"/>
+                            domain="[('probability', '=', 0), ('stage_id.fold', '=', True)]"/>
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to me"/>
-                    <filter string="Assigned to My Team(s)"
+                    <filter string="My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to any sales teams I am member of"/>
                     <separator/>
@@ -600,7 +600,7 @@
                 id="crm.action_lead_mass_mail"
                 context="{
                             'default_composition_mode': 'mass_mail',
-                            'default_email_to':'{$object.email or \'\'}',
+                            'default_email_to':'{($object.email or \'\')|safe}',
                             'default_use_template': True,
                             'default_template_id': ref('crm.email_template_opportunity_mail'),
                         }"
