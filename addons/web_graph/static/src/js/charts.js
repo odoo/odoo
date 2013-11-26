@@ -5,8 +5,6 @@ function draw_chart (mode, pivot) {
         return {x: pt.title, y: val};
     });
 
-    console.log("values",values);
-
     switch (mode) {
         case 'bar_chart':
             bar_chart(values);
