@@ -27,6 +27,7 @@
     <record model="ir.ui.view" id="view_crm_meeting_form">
         <field name="name">CRM - Meetings Form</field>
         <field name="model">crm.meeting</field>
+        <field name="sequence">1</field>
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
                 <sheet>
@@ -157,6 +158,7 @@
     <record model="ir.ui.view" id="view_crm_meeting_form_popup">
         <field name="name">Meetings Popup</field>
         <field name="model">crm.meeting</field>
+        <field name="sequence">5</field>
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
                 <field name="state" invisible="1"/>
@@ -188,8 +190,6 @@
         <field name="model">crm.meeting</field>
         <field name="arch" type="xml">
             <tree string="Meetings" fonts="bold:message_unread==True">
-                <button name="do_run_stack_scheduler" string="RUN SCHEDULER" type="object"  />
-                                    
                 <field name="name" string="Subject"/>
                 <field name="date" string="Event Date"/>
                 <field name="user_id"/>
@@ -199,7 +199,6 @@
                 <field name="state" invisible="True"/>
                 <field name="duration"/>
                 <field name="message_unread" invisible="1"/>
-
             </tree>
         </field>
     </record>
