@@ -475,7 +475,7 @@ class purchase_order(osv.osv):
             if not acc_id:
                 raise osv.except_osv(_('Error!'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
         else:
-            acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
+            acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
         fpos = po_line.order_id.fiscal_position or False
         return fiscal_obj.map_account(cr, uid, fpos, acc_id)
 
@@ -515,15 +515,23 @@ class purchase_order(osv.osv):
         :return: ID of created invoice.
         :rtype: int
         """
-        res = False
-
+        if context is None:
+            context = {}
         journal_obj = self.pool.get('account.journal')
         inv_obj = self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
 
+        res = False
+        uid_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         for order in self.browse(cr, uid, ids, context=context):
+            context.pop('force_company', None)
+            if order.company_id.id != uid_company_id:
+                #if the company of the document is different than the current user company, force the company in the context
+                #then re-do a browse to read the property fields for the good company.
+                context['force_company'] = order.company_id.id
+                order = self.browse(cr, uid, order.id, context=context)
             pay_acc_id = order.partner_id.property_account_payable.id
-            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', order.company_id.id)], limit=1)
+            journal_ids = journal_obj.search(cr, uid, [('type', '=', 'purchase'), ('company_id', '=', order.company_id.id)], limit=1)
             if not journal_ids:
                 raise osv.except_osv(_('Error!'),
                     _('Define purchase journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
@@ -536,7 +544,7 @@ class purchase_order(osv.osv):
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
 
-                po_line.write({'invoiced':True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
+                po_line.write({'invoiced': True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
 
             # get invoice data and create invoice
             inv_data = {
