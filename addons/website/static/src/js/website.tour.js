@@ -15,14 +15,6 @@
                 keyboard: false,
                 template: this.popover(),
             });
-        },
-        reset: function () {
-            this.tourStorage.removeItem(this.id+'_current_step');
-            this.tourStorage.removeItem(this.id+'_end');
-            this.tour._current = 0;
-            $('.popover.tour').remove();
-        },
-        start: function () {
             var self = this;
             this.tour.addSteps(_.map(this.steps, function (step) {
                step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
@@ -48,6 +40,14 @@
                }
                return step;
             }));
+        },
+        reset: function () {
+            this.tourStorage.removeItem(this.id+'_current_step');
+            this.tourStorage.removeItem(this.id+'_end');
+            this.tour._current = 0;
+            $('.popover.tour').remove();
+        },
+        start: function () {
             if (this.resume() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
                 this.tour.start();
             }
