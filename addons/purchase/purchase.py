@@ -1114,6 +1114,9 @@ class procurement_order(osv.osv):
             If none match, returns then first warehouse of the company
         """
         # TODO refactor the domain once we implement the "parent_of" domain operator
+        # NOTE This method has been copied in the `purchase_requisition` module to ensure
+        #      retro-compatibility. This code duplication will be deleted in next stable version.
+        #      Do not forget to update both version in case of modification.
         company_id = (procurement.company_id or user_company).id
         domains = [
             [
