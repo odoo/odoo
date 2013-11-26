@@ -3,6 +3,7 @@
 #----------------------------------------------------------
 import logging
 import re
+import sys
 
 import werkzeug.exceptions
 import werkzeug.routing
@@ -91,19 +92,14 @@ class ir_http(osv.AbstractModel):
 
     def _handle_exception(self, exception):
         if isinstance(exception, openerp.exceptions.AccessError):
-            fn = self._handle_403
+            code = 403
         else:
             code = getattr(exception, 'code', 500)
-            fn = getattr(self, '_handle_%s' % code)
+
+        fn = getattr(self, '_handle_%d' % code, self._handle_unknown_exception)
         return fn(exception)
 
-    def _handle_404(self, exception):
-        raise exception
-
-    def _handle_403(self, exception):
-        raise exception
-
-    def _handle_500(self, exception):
+    def _handle_unknown_exception(self, exception):
         raise exception
 
     def _dispatch(self):
@@ -111,13 +107,16 @@ class ir_http(osv.AbstractModel):
         try:
             func, arguments = self._find_handler()
         except werkzeug.exceptions.NotFound, e:
-            return self._handle_404(e)
+            return self._handle_exception(e)
 
         # check authentication level
         try:
             auth_method = self._authenticate(func, arguments)
-        except werkzeug.exceptions.NotFound, e:
-            return self._handle_403(e)
+        except Exception:
+            # force a Forbidden exception with the original traceback
+            return self._handle_exception(
+                convert_exception_to(
+                    werkzeug.exceptions.Forbidden))
 
         # post process arg to set uid on browse records
         for arg in arguments.itervalues():
@@ -146,5 +145,30 @@ class ir_http(osv.AbstractModel):
             self._routing_map = http.routing_map(mods, False, converters=self._get_converters())
 
         return self._routing_map
+
+def convert_exception_to(to_type, with_message=False):
+    """ Should only be called from an exception handler. Fetches the current
+    exception data from sys.exc_info() and creates a new exception of type
+    ``to_type`` with the original traceback.
+
+    If ``with_message`` is ``True``, sets the new exception's message to be
+    the stringification of the original exception. If ``False``, does not
+    set the new exception's message. Otherwise, uses ``with_message`` as the
+    new exception's message.
+
+    :type with_message: str|bool
+    """
+    etype, original, tb = sys.exc_info()
+    try:
+        if with_message is False:
+            message = None
+        elif with_message is True:
+            message = str(original)
+        else:
+            message = str(with_message)
+
+        raise to_type, message, tb
+    except to_type, e:
+        return e
 
 # vim:et:

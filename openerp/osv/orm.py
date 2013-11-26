@@ -1887,8 +1887,6 @@ class BaseModel(object):
             cr, uid, self._name, node, view_id, context=context)
 
     def search_count(self, cr, user, args, context=None):
-        if not context:
-            context = {}
         res = self.search(cr, user, args, context=context, count=True)
         if isinstance(res, list):
             return len(res)
