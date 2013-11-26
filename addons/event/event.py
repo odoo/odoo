@@ -225,7 +225,9 @@ class event_event(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
-        'visibility': 'employees',
+        'visibility': 'public',
+        'organizer_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, context=c).company_id.partner_id.id,
+        'address_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, context=c).company_id.partner_id.id
     }
 
     def subscribe_to_event(self, cr, uid, ids, context=None):

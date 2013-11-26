@@ -23,6 +23,7 @@ from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
 
 from openerp.tools.translate import _
+import re
 
 
 # defined for access rules
@@ -89,6 +90,10 @@ class event(osv.osv):
             res[event.id] = "%s/event/%s/" % (base_url, event.id)
         return res
 
+    def _default_hashtag(self, cr, uid, context={}):
+        name = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+        return re.sub("[- \\.\\(\\)]+", "", name).lower()
+
     _columns = {
         'twitter_hashtag': fields.char('Twitter Hashtag'),
         'website_published': fields.boolean('Visible in Website'),
@@ -107,6 +112,7 @@ class event(osv.osv):
     }
     _defaults = {
         'show_menu': False,
+        'twitter_hashtag': _default_hashtag
     }
 
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):

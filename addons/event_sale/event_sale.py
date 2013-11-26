@@ -116,6 +116,18 @@ class event_event(osv.osv):
             result[rec.id] = sum([ep.register_max for ep in rec.event_ticket_ids])
         return result
 
+    def _get_tickets(self, cr, uid, context={}):
+        md = self.pool.get('ir.model.data')
+        try:
+            dummy, res_id = md.get_object_reference(cr, uid, 'event_sale', 'product_product_event')
+        except ValueError:
+            return []
+        return [{
+                'name': _('Subscription'),
+                'product_id': res_id,
+                'price': 100,
+            }]
+
     _columns = {
         'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
         'register_max': fields.function(_get_register_max,
@@ -123,6 +135,9 @@ class event_event(osv.osv):
             help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
             type='integer')
+    }
+    _defaults = {
+        'event_ticket_ids': _get_tickets
     }
 
     def check_registration_limits(self, cr, uid, ids, context=None):
@@ -181,6 +196,18 @@ class event_ticket(osv.osv):
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', type='integer', multi='register_numbers'),
         'register_attended': fields.function(_get_register, string='# of Participations', type='integer', multi='register_numbers'),
     }
+    def _default_product_id(self, cr, uid, context={}):
+        md = self.pool.get('ir.model.data')
+        try:
+            dummy, res_id = md.get_object_reference(cr, uid, 'event_sale', 'product_product_event')
+        except ValueError:
+            return False
+        return res_id
+
+    _defaults = {
+        'product_id': _default_product_id
+    }
+
 
     def check_registration_limits_before(self, cr, uid, ids, number, context=None):
         for ticket in self.browse(cr, uid, ids, context=context):
