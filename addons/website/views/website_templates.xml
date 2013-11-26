@@ -629,5 +629,41 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             </t>
         </template>
 
+        <template id="creation_failed">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <div class="container">
+                            <h1 class="text-center">
+                                The page "<em><t t-esc="page"/></em>"
+                                already exists
+                            </h1>
+                            <h3 class="text-center text-muted">We could not create it.</h3>
+                            <ul>
+                                <li>
+                                    You can <a t-href="#{path}">visit the existing page</a>
+                                </li>
+                                <li>Or you can <a href="#" class="create-new-page">
+                                    create an other page.</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <script type="application/javascript">
+                    $(document.body).on('click', 'a.create-new-page', function (e) {
+                        e.preventDefault();
+                        openerp.website.prompt({
+                            window_title: "New Page",
+                            input: "Page Title",
+                        }).then(function (val) {
+                            if (val) {
+                                document.location = '/pagenew/' + encodeURI(val);
+                            }
+                        });
+                    });
+                </script>
+            </t>
+        </template>
+
      </data>
 </openerp>
