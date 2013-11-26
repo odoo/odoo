@@ -57,16 +57,7 @@
                         <h3 class="modal-title">Mobile preview</h3>
                     </div>
                     <div class="modal-body">
-                        <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
-                        <script>
-                            var $o = $('<div style="width:50px; overflow:scroll;"><div style="width:100%;"></div></div>');
-                            $o.appendTo("body");
-                            var scrollSize = 50 - $o.find("div").innerWidth();
-                            $o.remove();
-
-                            $(".modal-body").css({'overflow': 'hidden', 'margin-right': '5px'});
-                            $(".oe_mobile_viewport").css({'width': (320 + scrollSize + 5) + 'px'});
-                        </script>
+                        <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true" style="width: 326px"></iframe>
                     </div>
                 </div>
             </div>
