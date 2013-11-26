@@ -38,19 +38,9 @@
                     placement: 'left',
                     title: "New Event",
                     content: "Click here to create a new event.",
-                    triggers: function () {
-                        var $doc = $(document);
-                        function stopNewEvent () {
-                            self.stop();
-                        }
-                        $doc.on('hide.bs.modal', stopNewEvent);
-                        $doc.one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').one('click', function () {
-                                $doc.off('hide.bs.modal', stopNewEvent);
-                                self.moveToStep('event-page');
-                            });
-                            self.moveToNextStep();
-                        });
+                    modal: {
+                        stopOnClose: true,
+                        afterSubmit: 'event-page',
                     },
                 },
                 {
@@ -100,7 +90,7 @@
                 {
                     stepId: 'publish-post',
                     element: 'button.js_publish_btn',
-                    placement: 'right',
+                    placement: 'top',
                     reflex: true,
                     title: "Publish your event",
                     content: "Click to publish your event.",

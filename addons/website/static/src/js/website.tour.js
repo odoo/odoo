@@ -15,11 +15,6 @@
                 keyboard: false,
                 template: this.popover(),
             });
-            this.tour.addSteps(_.map(this.steps, function (step) {
-               step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
-               step.onShow = step.triggers;
-               return step;
-            }));
         },
         reset: function () {
             this.tourStorage.removeItem(this.id+'_current_step');
@@ -28,6 +23,31 @@
             $('.popover.tour').remove();
         },
         start: function () {
+            var self = this;
+            this.tour.addSteps(_.map(this.steps, function (step) {
+               step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
+               if (step.modal) {
+                   step.onShow = function () {
+                        var $doc = $(document);
+                        function onStop () {
+                            if (step.modal.stopOnClose) {
+                                self.stop();
+                            }
+                        }
+                        $doc.on('hide.bs.modal', onStop);
+                        $doc.one('shown.bs.modal', function () {
+                            $('.modal button.btn-primary').one('click', function () {
+                                $doc.off('hide.bs.modal', onStop);
+                                self.moveToStep(step.modal.afterSubmit);
+                            });
+                            self.moveToNextStep();
+                        });
+                    };
+               } else {
+                   step.onShow = step.triggers;
+               }
+               return step;
+            }));
             if (this.resume() || ((this.currentStepIndex() === 0) && !this.tour.ended())) {
                 this.tour.start();
             }
