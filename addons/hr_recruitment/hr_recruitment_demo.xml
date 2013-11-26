@@ -4,6 +4,7 @@
     <record id="hr_case_salesman0" model="hr.applicant">
         <field name="name">Sales Manager</field>
         <field name="job_id" ref="hr.job_marketing"/>
+        <field name="department_id" ref="hr.dep_sales"/>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field name="user_id" ref="base.user_demo"/>
@@ -18,6 +19,7 @@
     <record id="hr_case_traineemca0" model="hr.applicant">
         <field name="name">Trainee - MCA</field>
         <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_rd"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
@@ -33,6 +35,7 @@
     <record id="hr_case_fresher0" model="hr.applicant">
         <field name="name">Fresher</field>
         <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_administration"/>
         <field name="type_id" ref="degree_bachelor"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
@@ -47,6 +50,7 @@
     <record id="hr_case_yrsexperienceinphp0" model="hr.applicant">
         <field name="name">Marketing Job</field>
         <field name="job_id" ref="hr.job_marketing"/>
+        <field name="department_id" ref="hr.dep_sales"/>
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field eval="time.strftime('%Y-%m-25 16:25:52')" name="date"/>
@@ -59,6 +63,7 @@
     <record id="hr_case_marketingjob0" model="hr.applicant">
         <field name="name">More than 5 yrs Experience in PHP</field>
         <field name="job_id" ref="hr.job_developer"/>
+        <field name="department_id" ref="hr.dep_rd"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
         <field eval="time.strftime('%Y-%m-26 17:15:32')" name="date"/>
@@ -71,6 +76,7 @@
     <record id="hr_case_financejob0" model="hr.applicant">
         <field name="name">Finance Manager</field>
         <field name="job_id" ref="hr.job_hrm"/>
+        <field name="department_id" ref="hr.dep_administration"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
         <field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
@@ -85,6 +91,7 @@
     <record id="hr_case_traineemca1" model="hr.applicant">
         <field name="name">Trainee - MCA</field>
         <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_rd"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
@@ -98,6 +105,7 @@
     <record id="hr_case_programmer" model="hr.applicant">
         <field name="name">Programmer</field>
         <field name="job_id" ref="hr.job_developer"/>
+        <field name="department_id" ref="hr.dep_rd"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
@@ -112,6 +120,7 @@
     <record id="hr_case_advertisement" model="hr.applicant">
         <field name="name">Advertisement</field>
         <field name="job_id" ref="hr.job_consultant"/>
+        <field name="department_id" ref="hr.dep_ps"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
