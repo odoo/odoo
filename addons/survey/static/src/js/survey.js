@@ -65,7 +65,7 @@ $(document).ready(function () {
                 return false;
             }
             else if (_.has(response, 'redirect')){      // form is ok
-                alert('here, it should redirect');
+                window.location.replace(response.redirect);
                 return true;
             }
             else {                                      // server sends bad data

@@ -291,10 +291,6 @@ class survey_page(osv.osv):
             oldname="note"),
     }
 
-    _defaults = {
-        'sequence': 1
-    }
-
     # Public methods #
 
     # def survey_save(self, cr, uid, ids, context=None):
@@ -588,15 +584,15 @@ class survey_user_input(osv.osv):
             help="Date by which the person can take part to the survey",
             oldname="date_deadline"),
         'type': fields.selection([('manually', 'Manually'), ('link', 'Link')],
-            'Answer Type', required=1, oldname="response_type"),
+            'Answer Type', required=1, readonly=1, oldname="response_type"),
         'state': fields.selection([('new', 'Not started yet'),
             ('skip', 'Partially completed'),
             ('done', 'Completed')], 'Status',
             readonly=True),
-        'test_entry': fields.boolean('Test entry'),
+        'test_entry': fields.boolean('Test entry', readonly=1),
+        'token': fields.char("Identification token", readonly=1, required=1),
 
         # Optional Identification data
-        'token': fields.char("Identification token", readonly=1),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
         'email': fields.char("E-mail", readonly=1),
 
@@ -716,10 +712,6 @@ class survey_user_input(osv.osv):
             'context': context
         }
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        self.pool.get('survey.survey').check_access_rights(cr, uid, 'write')
-        return self.write(cr, uid, ids, {'state': 'cancel'})
-
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
@@ -744,7 +736,7 @@ class survey_user_input_line(osv.osv):
         'user_input_id': fields.many2one('survey.user_input', 'User Input',
             ondelete='cascade', required=1),
         'survey_id': fields.related('user_input_id', 'survey_id',
-            type="many2one", relation="survye.survey", string='Survey'),
+            type="many2one", relation="survey.survey", string='Survey'),
         'question_id': fields.many2one('survey.question', 'Question',
             ondelete='restrict'),
         'page_id': fields.related('question_id', 'page_id', type='many2one',
@@ -756,7 +748,7 @@ class survey_user_input_line(osv.osv):
                 ('free_text', 'Free Text'),
                 ('datetime', 'Date and Time'),
                 ('checkbox', 'Checkbox')],
-            'Question Type', required=1),
+            'Answer Type', required=1),
         'value_text': fields.char("Text answer"),
         'value_number': fields.float("Numerical answer"),
         'value_date': fields.datetime("Date answer"),

@@ -49,10 +49,69 @@ class WebsiteSurvey(http.Controller):
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
         return request.website.render('survey.list', {'surveys': surveys})
 
+    # Survey start
+    @website.route(['/survey/start/<model("survey.survey"):survey>',
+                    '/survey/start/<model("survey.survey"):survey>/<string:token>'],
+                    type='http', auth='public', multilang=True)
+    def start_survey(self, survey, token=None, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        survey_obj = request.registry['survey.survey']
+        user_input_obj = request.registry['survey.user_input']
+
+        # In case of bad survey, redirect to surveys list
+        if survey_obj.exists(cr, uid, survey.id, context=context) == []:
+            return werkzeug.utils.redirect("/survey/")
+
+        # In case of auth required, block public user
+        if survey.auth_required and uid == request.registry['website'].get_public_user(request.cr, SUPERUSER_ID, request.context).id:
+            return request.website.render("website.401")
+
+        # In case of non open surveys
+        if survey.state != 'open':
+            return request.website.render("survey.notopen")
+
+        # If enough surveys completed
+        if survey.user_input_limit > 0:
+            completed = user_input_obj.search(cr, uid, [('state', '=', 'done')], count=True)
+            if completed >= survey.user_input_limit:
+                return request.website.render("survey.notopen")
+
+        # Manual surveying
+        if not token:
+            if survey.visible_to_user:
+                user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id})
+                user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+            else:  # An user cannot open hidden surveys without token
+                return request.website.render("website.403")
+        else:
+            try:
+                user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
+            except IndexError:  # Invalid token
+                return request.website.render("website.403")
+            else:
+                user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+
+        # Prevent opening of the survey if the deadline has turned out
+        # ! This will NOT disallow access to users who have already partially filled the survey !
+        # if user_input.deadline > fields.date.now() and user_input.state == 'new':
+        #     return request.website.render("survey.notopen")
+            # TODO check if this is ok
+
+        # Select the right page
+
+        if user_input.state == 'new':  # Intro page
+            data = {'survey': survey, 'page': None, 'token': user_input.token}
+            return request.website.render('survey.survey_init', data)
+        else:
+            return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
+
+
+
+
     # Survey displaying
     @website.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>'],
         type='http', auth='public', multilang=True)
-    def fill_survey(self, survey, token=None, **post):
+    def fill_survey(self, survey, token, **post):
         '''Display and validates a survey'''
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
@@ -98,8 +157,6 @@ class WebsiteSurvey(http.Controller):
         # if user_input.deadline > fields.date.now() and user_input.state == 'new':
         #     return request.website.render("survey.notopen")
             # TODO check if this is ok
-
-        _logger.debug('Incoming data: %s', post)
 
         # Select the right page
 
@@ -151,15 +208,23 @@ class WebsiteSurvey(http.Controller):
             user_input_obj = request.registry['survey.user_input']
             try:
                 user_input_id = user_input_obj.search(cr, uid, [('token', '=', post['token'])])[0]
-            except IndexError:  # Invalid token
+            except KeyError:  # Invalid token
                 return request.website.render("website.403")
+
+
+
+
+            # TODO
             # Store here data if allowed
-            ret['redirect'] = True
+
+
+
+            ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
         return json.dumps(ret)
 
     # Printing routes
     @website.route(['/survey/print/<model("survey.survey"):survey>/'],
-        type='http', auth='public', multilang=True)
+        type='http', auth='user', multilang=True)
     def print_empty_survey(self, survey=None, **post):
         '''Display an empty survey in printable view'''
         return request.website.render('survey.survey_print',
@@ -284,16 +349,18 @@ class WebsiteSurvey(http.Controller):
 
     def validate_simple_choice(self, question, post, answer_tag):
         errors = {}
-        comment_tag = "%s_%s" % (answer_tag, question.comment_children_ids[0].id)
+        if question.comments_allowed:
+            comment_tag = "%s_%s" % (answer_tag, question.comment_children_ids[0].id)
         # Empty answer to mandatory question
         if question.constr_mandatory and not answer_tag in post:
+            errors.update({answer_tag: question.constr_error_msg})
+        if question.constr_mandatory and answer_tag in post and post[answer_tag].strip() == '':
             errors.update({answer_tag: question.constr_error_msg})
         # Answer is a comment and is empty
         if question.constr_mandatory and answer_tag in post and post[answer_tag] == "-1" and question.comment_count_as_answer and comment_tag in post and not post[comment_tag].strip():
             errors.update({answer_tag: question.constr_error_msg})
         # There is a comment and it should be validated
         # if question.comment_allowed and comment_tag in post and post[comment_tag].strip():
-
 
         ### if comments_allowed:
         ###     if validation des comments required

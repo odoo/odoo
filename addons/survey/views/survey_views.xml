@@ -33,7 +33,6 @@
         <field name="arch" type="xml">
             <form string="Survey User inputs" version="7.0">
                 <header>
-                    <button name="action_cancel" states="new,skip" string="Cancel" type="object" icon="gtk-stop"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -46,15 +45,25 @@
                         <group>
                             <field name="survey_id"/>
                             <field name="date_create"/>
-                            <field name="deadline"/>
                             <field name="type"/>
-                        </group>
-                        <group>
-                            <field name="partner_id"/>
-                            <field name="email"/>
                             <field name="token" groups="base.group_no_one"/>
                         </group>
+                        <group>
+                            <field name="deadline"/>
+                            <field name="partner_id"/>
+                            <field name="email" widget="email"/>
+                            <field name="test_entry" groups="base.group_no_one"/>
+                        </group>
                     </group>
+                        <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
+                          <tree>
+                                <field name="page_id"/>
+                                <field name="question_id"/>
+                                <field name="answer_type"/>
+                                <field name="skipped"/>
+                                <field name="date_create"/>
+                            </tree>
+                        </field>
                 </sheet>
             </form>
         </field>
@@ -167,7 +176,6 @@
                                     <field name="user_input_line_ids"/>
                                 </tree>
                             </field>
-
                         </page>
                     </notebook>
                 </sheet>
