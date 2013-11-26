@@ -459,7 +459,7 @@
         <tr>
             <td class="oe_leftbar" valign="top">
                 <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
-                <a class="oe_logo" t-attf-href="/?#{debug}">
+                <a class="oe_logo" t-attf-href="/web?#{debug}">
                     <span class="oe_logo_edit">Edit Company data</span>
                     <img t-att-src='widget.session.url("/web/binary/company_logo")'/>
                 </a>
@@ -1107,10 +1107,9 @@
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-id="widget.id_for_label">
-            <t t-foreach="widget.get('values')" t-as="option">
-                <option>
-                    <t t-esc="widget.node.attrs.placeholder" t-if="option[0] === false and widget.node.attrs.placeholder"/>
-                    <t t-esc="option[1]" t-if="option[0] !== false"/>
+            <t t-foreach="values" t-as="option">
+                <option t-att-value="JSON.stringify(option[0])">
+                    <t t-esc="option[1]"/>
                 </option>
             </t>
     </select>
