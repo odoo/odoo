@@ -103,7 +103,6 @@
                         top: $el.height() / 2 + image_top - $btn.outerHeight() / 2,
                         left: $el.width() / 2 + image_left - $btn.outerWidth() / 2,
                     });
-                    $el.css('opacity', 0.75);
                 }).on('mouseleave', 'img', function (e) {
                     var $previous = $(previousSelection.$);
                     var $button = $previous.next('button');
@@ -112,14 +111,11 @@
                     $button.css('visibility', '');
                     if (el === this) { return; }
                     $button.remove();
-                    $previous.css('opacity', '');
                     previousSelection = null;
                 });
-                editor.on('destroy', function (evt) {
+                editor.on('destroy', function () {
                     if (!previousSelection) { return; }
-                    $('.image-edit-button')
-                        .prev().css('opacity', '').end()
-                        .remove();
+                    $('.image-edit-button').remove();
                 });
 
                 //noinspection JSValidateTypes
