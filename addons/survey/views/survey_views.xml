@@ -225,75 +225,52 @@
                    </group>
                </search>
            </field>
-       </record>
+        </record>
 
-       <record model="ir.ui.view" id="view_survey_kanban">
-        <field name="name">event.survey.kanban</field>
-        <field name="model">survey.survey</field>
-        <field name="arch" type="xml">
-            <kanban>
-                <field name="title"/>
-                <field name="date_open"/>
-                <field name="tot_comp_survey"/>
-                <field name="user_input_limit"/>
-                <field name="color"/>
-                <field name="state"/>
-                <field name="auth_required"/>
-                <field name="public_url"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey oe_kanban_global_click">
-                            <span class="oe_survey_fill">
-                            </span>
-                            <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
-                                <span class="oe_e">i</span>
-                                <ul class="oe_dropdown_menu">
-                                    <t t-if="widget.view.is_action_enabled('edit')"><li><a type="open">Edit...</a></li></t>
-                                    <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
-                            </div>
-                            <div class="oe_kanban_content">
-                                <span class="oe_kanban_right" t-if="widget.view.is_action_enabled('edit')">
-                                    <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
-                                    <a t-if="record.state.raw_value === 'open' and record.auth_required.raw_value" title="Open for authentified people" class="oe_kanban_status_green"> </a>
-                                    <a t-if="record.state.raw_value === 'open' and !record.auth_required.raw_value" title="Open to everyone" class="oe_kanban_status_green"> </a>
-                                    <a t-if="record.state.raw_value === 'close'" title="Close" class="oe_kanban_status_red"> </a>
-                                    <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_red"> </a>
+        <record model="ir.ui.view" id="view_survey_kanban">
+            <field name="name">event.survey.kanban</field>
+            <field name="model">survey.survey</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="title"/>
+                    <field name="date_open"/>
+                    <field name="tot_comp_survey"/>
+                    <field name="user_input_limit"/>
+                    <field name="color"/>
+                    <field name="state"/>
+                    <field name="auth_required"/>
+                    <field name="public_url"/>
+                    <templates>
+                            <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey oe_kanban_global_click">
+                                <span class="oe_survey_fill">
                                 </span>
-                                <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
-                                <table class="oe_kanban_survey_list" t-if="widget.view.is_action_enabled('edit')">
-                                    <tr>
-                                        <td>
-                                            <t t-if="record.state.raw_value === 'open'"><a name="action_survey_fill2" type="object">Start survey</a></t>
-                                            <t t-if="record.state.raw_value !== 'open'"><span class="oe_inactive" title="You can only take open surveys">Start survey</span></t>
-                                        </td>
-                                        <td>
-                                            <t t-if="record.state.raw_value === 'open'"><a name="action_send_survey" type="object">Invite people</a></t>
-                                            <t t-if="record.state.raw_value !== 'open'"><span class="oe_inactive" title="You can only collect answers for the open survey">Invite people</span></t>
-                                        </td>
-                                        <td>
-                                            <t t-if="record.tot_comp_survey.raw_value"><a name="%(action_selected_survey_user_input)d" type="action">Get responses (<field name="tot_comp_survey"/><t t-if="record.user_input_limit.raw_value > 0"> / <field name="user_input_limit"/></t>)</a></t>
-                                            <t t-if="!record.tot_comp_survey.raw_value"><span class="oe_inactive" title="There is no answer yet">Get responses (<field name="tot_comp_survey"/><t t-if="record.user_input_limit.raw_value > 0"> / <field name="user_input_limit"/></t>)</span></t>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <a name="action_print_survey" type="object">Print Survey</a>
-                                        </td>
-                                        <td>
-                                            <t t-if="record.tot_comp_survey.raw_value"><a name="print_statistics" type="object">Print Statistics</a></t>
-                                            <t t-if="!record.tot_comp_survey.raw_value"><span class="oe_inactive" title="There is no answer yet">Print Statistics</span></t>
-                                        </td>
-                                    </tr>
-                                </table>
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <li t-if="widget.view.is_action_enabled('edit')"><a type="open">Edit...</a></li>
+                                        <li t-if="record.state.raw_value === 'open'"><a name="action_send_survey" type="object">Invite People...</a></li>
+                                        <li t-if="record.state.raw_value === 'open'"><a name="action_survey_fill2" type="object">Start Survey...</a></li>
+                                        <li><a name="action_print_survey" type="object">Print Survey...</a></li>
+                                        <li t-if="record.tot_comp_survey.raw_value"><a name="%(action_selected_survey_user_input)d" type="action">View Answers...(<field name="tot_comp_survey"/><t t-if="record.user_input_limit.raw_value > 0"> / <field name="user_input_limit"/></t>)</a></li>
+                                        <li t-if="record.tot_comp_survey.raw_value"><a name="print_statistics" type="object">Print Statistics...</a></li>
+                                        <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete!</a></li>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <span class="oe_kanban_right" t-if="widget.view.is_action_enabled('edit')">
+                                        <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
+                                        <a t-if="record.state.raw_value === 'open'" title="Open" class="oe_kanban_status_green"> </a>
+                                        <a t-if="record.state.raw_value === 'close'" title="Closed" class="oe_kanban_status_red"> </a>
+
+                                    </span>
+                                    <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
+                                </div>
                             </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
+                        </templates>
+                </kanban>
+            </field>
+        </record>
 
     <record model="ir.actions.act_window" id="action_survey_form">
         <field name="name">Surveys</field>

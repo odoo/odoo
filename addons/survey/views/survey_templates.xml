@@ -141,24 +141,24 @@
 
     <template id="simple_choice" name="Simple choice">
         <div t-if="question.display_mode == 'dropdown'" class="js_drop row">
-                <div class="col-md-12">
-                    <select class="form-control" t-att-name="prefix">
-                        <option disabled="1" selected="1" value="">Choose...</option>
-                        <t t-foreach='question.labels_ids' t-as='label'>
-                            <option t-att-value='label.id'><t t-esc='label.value'/></option>
-                        </t>
-                        <t t-if='question.comments_allowed and question.comment_count_as_answer'>
-                            <option class="js_other_option" value="-1"><span t-esc="question.comment_children_ids[0].question" /></option>
-                        </t>
-                    </select>
-                </div>
-                <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-md-6">
-                    <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, question.comment_children_ids[0].id)" data-oe-survey-othert="1"/>
-                </div>
-                <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12 mt16">
-                    <span t-field="question.comment_children_ids[0].question"/>
-                    <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, question.comment_children_ids[0].id)"/>
-                </div>
+            <div class="col-md-12">
+                <select class="form-control" t-att-name="prefix">
+                    <option disabled="1" selected="1" value="">Choose...</option>
+                    <t t-foreach='question.labels_ids' t-as='label'>
+                        <option t-att-value='label.id'><t t-esc='label.value'/></option>
+                    </t>
+                    <t t-if='question.comments_allowed and question.comment_count_as_answer'>
+                        <option class="js_other_option" value="-1"><span t-esc="question.comment_children_ids[0].question" /></option>
+                    </t>
+                </select>
+            </div>
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-md-6">
+                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, question.comment_children_ids[0].id)" data-oe-survey-othert="1"/>
+            </div>
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12 mt16">
+                <span t-field="question.comment_children_ids[0].question"/>
+                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, question.comment_children_ids[0].id)"/>
+            </div>
         </div>
         <div t-if="question.display_mode == 'columns' " class="row js_radio">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
@@ -247,7 +247,7 @@
                     </div>
                 </div>
             </div>
-         </t>
+        </t>
     </template>
 </data>
 </openerp>
