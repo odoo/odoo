@@ -76,8 +76,7 @@ class ir_http(osv.AbstractModel):
         request.disable_db = True
         request.uid = None
 
-    def _authenticate(self, func, arguments):
-        auth_method = getattr(func, "auth", "user")
+    def _authenticate(self, auth_method='user'):
         if request.session.uid:
             try:
                 request.session.check_security()
@@ -111,7 +110,7 @@ class ir_http(osv.AbstractModel):
 
         # check authentication level
         try:
-            auth_method = self._authenticate(func, arguments)
+            auth_method = self._authenticate(getattr(func, "auth", None))
         except Exception:
             # force a Forbidden exception with the original traceback
             return self._handle_exception(
