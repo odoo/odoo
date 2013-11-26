@@ -9,7 +9,7 @@ from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 
 
-class CheckoutInfo:
+class CheckoutInfo(object):
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
     optional_billing_fields = ["company", "state_id"]
     string_billing_fields = ["name", "phone", "email", "street", "city", "zip"]
@@ -27,7 +27,7 @@ class CheckoutInfo:
         return self.mandatory_fields() + self.optional_fields()
 
     def empty(self):
-        return dict((field_name, '') for field_name in self.all_fields())
+        return dict.fromkeys(self.all_fields(), '')
 
     def from_partner(self, partner):
         result = dict((field_name, getattr(partner, field_name)) for field_name in self.string_billing_fields if getattr(partner, field_name))
