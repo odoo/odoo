@@ -21,36 +21,36 @@
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.tools.translate import _
-from openerp.addons import website_sale
 from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
 
 controllers = controllers()
 
-
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-from openerp import tools
-import urllib
-
 class website_event(http.Controller):
-    @website.route(['/event/track_view/<model("event.track"):track>'], type='http', auth="public", multilang=True)
-    def event_track_view(self, track, **post):
+    @website.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", multilang=True)
+    def event_track_view(self, event, track, **post):
         # TODO: not implemented
         values = { 'track': track, 'event': track.event_id}
         return request.website.render("website_event_track.track_view", values)
 
-    @website.route(['/event/tracks/<model("event.event"):event>'], type='http', auth="public", multilang=True)
+    @website.route([
+        '/event/<model("event.event"):event>/track/',
+        '/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'
+        ], type='http', auth="public", multilang=True)
     def event_tracks(self, event, tag=None, **post):
-        # TODO: filter on tracks: tags, search keywords
+        if tag:
+            track_obj = request.registry.get('event.track')
+            track_ids = track_obj.search(request.cr, request.uid,
+                [("id", "in", [track.id for track in event.track_ids]), ("tag_ids", "=", tag.id)], context=request.context)
+            tracks = track_obj.browse(request.cr, request.uid, track_ids, context=request.context)
+        else:
+            tracks = event.track_ids
         values = {
             'event': event,
-            'tracks': event.track_ids,
+            'tracks': tracks,
             'tags': event.track_tag_ids,
             'searches': {}
         }
-        print 'ICI'
         return request.website.render("website_event_track.tracks", values)
 
     @website.route(['/event/detail/<model("event.event"):event>'], type='http', auth="public", multilang=True)
@@ -58,8 +58,12 @@ class website_event(http.Controller):
         values = { 'event': event }
         return request.website.render("website_event_track.event_home", values)
 
-    @website.route(['/event/track_proposal/<model("event.event"):event>'], type='http', auth="public", multilang=True)
-    def event_detail(self, event=None, **post):
+    @website.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", multilang=True)
+    def event_track_proposal(self, event, **post):
         values = { 'event': event }
         return request.website.render("website_event_track.event_track_proposal", values)
 
+    @website.route(['/event/<model("event.event"):event>/track_proposal/success/'], type='http', auth="public", multilang=True)
+    def event_track_proposal_success(self, event, **post):
+        values = { 'event': event }
+        return request.website.render("website_event_track.event_track_proposal_success", values)

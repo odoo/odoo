@@ -16,34 +16,40 @@
         init: function (editor) {
             var self = this;
             self.steps = [
-            {
+                {
                     stepId: 'welcome-blog',
                     orphan: true,
                     backdrop: true,
-                    title: "Blog",
-                    content: "We will show how to create a new blog post.",
-                    template: self.popover({ next: "Start Tutorial", end: "Skip It" }),
+                    title: "New Blog Post",
+                    content: "Let's go through the first steps to write beautiful blog posts.",
+                    template: self.popover({ next: "Start Tutorial", end: "Skip" }),
                 },
                 {
                     stepId: 'content-menu',
                     element: '#content-menu-button',
                     placement: 'left',
                     reflex: true,
-                    title: "Edit the content",
-                    content: "Click here to add content to your site.",
+                    title: "Add Content",
+                    content: "Create new pages, blogs, menu items and products through the <em>'Content'</em> menu.",
                 },
                 {
                     stepId: 'new-post-entry',
                     element: 'a[data-action=new_blog_post]',
                     placement: 'left',
-                    title: "New blog post",
-                    content: "Click here to create a blog post.",
+                    title: "New Blog Post",
+                    content: "Select this entry to create a new blog post.",
                     triggers: function () {
-                        $(document).one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').click(function () {
-                                self.movetoStep('post-page');
+                        var $doc = $(document);
+                        function stopNewBlog () {
+                            self.stop();
+                        }
+                        $doc.on('hide.bs.modal', stopNewBlog);
+                        $doc.one('shown.bs.modal', function () {
+                            $('.modal button.btn-primary').one('click', function () {
+                                $doc.off('hide.bs.modal', stopNewBlog);
+                                self.moveToStep('post-page');
                             });
-                            self.movetoStep('choose-category');
+                            self.moveToNextStep();
                         });
                     },
                 },
@@ -51,72 +57,72 @@
                     stepId: 'choose-category',
                     element: '.modal select',
                     placement: 'right',
-                    title: "Choose the post category",
-                    content: "Select the 'News' category and click 'Continue'.",
+                    title: "Which Blog?",
+                    content: "Blog posts are organized in multiple categories (news, job offers, events, etc). Select <em>News</em> and click <em>Continue</em>.",
                     triggers: function () {
-                        $('.modal select').change(function () {
+                        function newsSelected () {
                             var $this = $(this);
-                            var selected = $this.find("[value="+$this.val()+"]").text();
-                            if (selected.toLowerCase() === 'news') {
-                                self.movetoStep('continue-category');
+                            if ($this.find('[value='+$this.val()+']').text().toLowerCase() === 'news') {
+                                self.moveToNextStep();
+                                $('.modal select').off('change', newsSelected);
                             }
-                        });
+                        }
+                        $('.modal select').on('change', newsSelected);
                     },
                 },
                 {
                     stepId: 'continue-category',
                     element: '.modal button.btn-primary',
                     placement: 'right',
-                    title: "Choose the post category",
-                    content: "Click 'Continue' to create the post.",
+                    title: "Create Blog Post",
+                    content: "Click <em>Continue</em> to create the blog post.",
                 },
                 {
                     stepId: 'post-page',
                     orphan: true,
-                    backdrop: true,
-                    title: "New blog post created",
-                    content: "You just created a new blog post. We are now going to edit it.",
-                    template: self.popover({ next: "OK" }),
+                    title: "Blog Post Created",
+                    content: "This is your new blog post. We will edit your pages inline. What You See Is What You Get. No need for a complex backend.",
+                    template: self.popover({ next: "Continue" }),
                 },
                 {
                     stepId: 'post-title',
                     element: 'h1[data-oe-expression="blog_post.name"]',
                     placement: 'top',
-                    title: "Pick a title",
-                    content: "Choose a catchy title for your blog post.",
+                    title: "Pick a Title",
+                    content: "Click on this area and set a catchy title.",
                     template: self.popover({ next: "OK" }),
                 },
                 {
-                    stepId: 'add-image-block',
+                    stepId: 'add-image-text',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
-                    title: "Layout your blog post",
-                    content: "Insert blocks like text-image to layout the body of your blog post.",
+                    title: "Layout Your Blog Post",
+                    content: "Use well designed building blocks to structure the content of your blog.",
                     triggers: function () {
-                        $('button[data-action=snippet]').click(function () {
-                            self.movetoStep('drag-image-text');
+                        $('button[data-action=snippet]').one('click', function () {
+                            self.moveToNextStep();
                         });
-                    }
+                    },
                 },
                 {
                     stepId: 'drag-image-text',
                     element: '#website-top-navbar [data-snippet-id=image-text].ui-draggable',
                     placement: 'bottom',
-                    title: "Drag & Drop a block",
-                    content: "Drag the 'Image Text' block and drop it in your page.",
+                    title: "Drag & Drop a Block",
+                    content: "Drag the <em>'Image-Text'</em> block and drop it in your page.",
                     triggers: function () {
-                        self.onSnippetDraggedMoveTo('add-text-block');
+                        self.onSnippetDraggedAdvance('image-text');
                     },
                 },
                 {
                     stepId: 'add-text-block',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
-                    title: "Add another block",
-                    content: "Let's add another blog to your post.",
+                    title: "Add Another Block",
+                    content: "Let's add another block to your post.",
                     triggers: function () {
-                        $('button[data-action=snippet]').click(function () {
-                            self.movetoStep('drag-text-block');
+                        $('button[data-action=snippet]').on('click', function () {
+                            self.moveToNextStep();
                         });
                     }
                 },
@@ -125,20 +131,20 @@
                     element: '#website-top-navbar [data-snippet-id=text-block].ui-draggable',
                     placement: 'bottom',
                     title: "Drag & Drop a block",
-                    content: "Drag the 'Text Block' block and drop it below the image block.",
+                    content: "Drag the <em>'Text Block'</em> block and drop it below the image block.",
                     triggers: function () {
-                        self.onSnippetDraggedMoveTo('activate-text-block-title');
+                        self.onSnippetDraggedAdvance('text-block');
                     },
                 },
                 {
                     stepId: 'activate-text-block-title',
                     element: '#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]',
                     placement: 'top',
-                    title: "Activate on the title",
-                    content: "Click on the title to activate it.",
+                    title: "Edit an Area",
+                    content: "Select any area of the page to modify it. Click on this subtitle.",
                     triggers: function () {
-                        $('#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]').click(function () {
-                            self.movetoStep('remove-text-block-title');
+                        $('#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]').one('click', function () {
+                            self.moveToNextStep();
                         });
                     },
                 },
@@ -147,33 +153,41 @@
                     element: '.oe_snippet_remove:last',
                     placement: 'top',
                     reflex: true,
-                    title: "Delete the title",
-                    content: "Click on the cross to delete the title.",
-                },
-                {
-                    stepId: 'publish-post',
-                    element: 'button.js_publish_btn',
-                    placement: 'right',
-                    reflex: true,
-                    title: "Publish your blog post",
-                    content: "Click to publish your blog post.",
+                    title: "Delete the Title",
+                    content: "From this toolbar you can move, duplicate or delete the selected zone. Click on the cross to delete the title.",
                 },
                 {
                     stepId: 'save-changes',
                     element: 'button[data-action=save]',
                     placement: 'right',
                     reflex: true,
-                    title: "Save your modifications",
-                    content: "Once you click on save, your post is updated.",
+                    title: "Save Your Blog",
+                    content: "Click the <em>Save</em> button to record changes on the page.",
+                },
+                {
+                    stepId: 'publish-post',
+                    element: 'button.js_publish_btn',
+                    placement: 'right',
+                    reflex: true,
+                    title: "Publish Your Post",
+                    content: "Your blog post is not yet published. You can update this draft version and publish it once you are ready.",
+                },
+                {
+                    stepId: 'end-tutorial',
+                    orphan: true,
+                    backdrop: true,
+                    title: "Thanks!",
+                    content: "This tutorial is finished. To discover more features, improve the content of this page and try the <em>Promote</em> button in the top right menu.",
+                    template: self.popover({ end: "Close Tutorial" }),
                 },
             ];
             return this._super();
         },
         resume: function () {
-            return this.isCurrentStep('post-page') && !this.tour.ended();
+            return (this.isCurrentStep('post-page') || this.isCurrentStep('publish-post')) && this._super();
         },
         trigger: function () {
-            return (this.resume() && this.testUrl(/^\/blog\/[0-9]+\/\?enable_editor=1/)) || this._super();
+            return (this.resume() && this.testUrl(/^\/blog\/[0-9]+\//)) || this._super();
         },
     });
 

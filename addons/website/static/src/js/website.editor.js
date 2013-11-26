@@ -103,7 +103,6 @@
                         top: $el.height() / 2 + image_top - $btn.outerHeight() / 2,
                         left: $el.width() / 2 + image_left - $btn.outerWidth() / 2,
                     });
-                    $el.css('opacity', 0.75);
                 }).on('mouseleave', 'img', function (e) {
                     var $previous = $(previousSelection.$);
                     var $button = $previous.next('button');
@@ -112,14 +111,11 @@
                     $button.css('visibility', '');
                     if (el === this) { return; }
                     $button.remove();
-                    $previous.css('opacity', '');
                     previousSelection = null;
                 });
-                editor.on('destroy', function (evt) {
+                editor.on('destroy', function () {
                     if (!previousSelection) { return; }
-                    $('.image-edit-button')
-                        .prev().css('opacity', '').end()
-                        .remove();
+                    $('.image-edit-button').remove();
                 });
 
                 //noinspection JSValidateTypes
@@ -566,7 +562,9 @@
                 window_title: "New Page",
                 input: "Page Title",
             }).then(function (val) {
-                document.location = '/pagenew/' + encodeURI(val);
+                if (val) {
+                    document.location = '/pagenew/' + encodeURI(val);
+                }
             });
         },
     });
@@ -895,10 +893,9 @@
         start: function () {
             var self = this;
             this.$('#link-page').select2({
-                minimumInputLength: 3,
+                minimumInputLength: 1,
                 placeholder: _t("New or existing page"),
                 query: function (q) {
-                    // FIXME: out-of-order, abort
                     self.fetch_pages(q.term).then(function (results) {
                         var rs = _.map(results, function (r) {
                             return { id: r.url, text: r.name, };
@@ -912,6 +909,8 @@
                             more: false,
                             results: rs
                         });
+                    }, function () {
+                        q.callback({more: false, results: []});
                     });
                 },
             });
@@ -995,8 +994,8 @@
                     limit: 9,
                     context: website.get_context()
                 },
-            }).done(function () {
-                // request completed successfully -> unstore it
+            }).always(function () {
+                // request completed -> unstore it
                 self.req = null;
             });
         },

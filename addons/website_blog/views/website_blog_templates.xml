@@ -167,13 +167,11 @@
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>
-                <li>
-                    <a href="#" t-attf-data-href="/blog/duplicate?blog_post_id=#{blog_post.id}">Duplicate</a>
-                    <script>
-                        var $a=$("[data-href$='/duplicate']");
-                        $a.attr("href", $a.data('href')).removeAttr('data-href');
-                        $a.next("script").remove();
-                    </script>
+                <li t-ignore="True">
+                    <form class="duplicate hidden" action="/blog/duplicate">
+                        <input name="blog_post_id" t-att-value="blog_post.id"/>
+                    </form>
+                    <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
                 </li>
             </t>
           </div>

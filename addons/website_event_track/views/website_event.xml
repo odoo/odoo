@@ -43,10 +43,10 @@
                     <div class="col-md-3 css_noprint">
 
                         <ul class="nav nav-pills nav-stacked">
-                            <li t-att-class="(not searches.get('tag')) and 'active' or ''"><a href="/event/tracks/#{ event.id }">All</a></li>
+                            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ event.id }/track/">All</a></li>
                             <t t-foreach="tags" t-as="tag">
                                 <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
-                                    <a t-href="/event/tracks/#{ event.id }&amp;tag=#{ tag.id }">
+                                    <a t-href="/event/#{ event.id }/track/tag/#{ tag.id }">
                                         <t t-esc="tag.name"/>
                                     </a>
                                 </li>
@@ -59,7 +59,7 @@
                             <li t-foreach="event.track_ids" t-as="track" class="media">
                                 <div class="media-body">
                                     <h4 class="media-heading">
-                                        <a t-href="/event/track_view/#{track.id}"><span t-field="track.name"> </span></a>
+                                        <a t-href="/event/#{ event.id }/track/#{track.id}"><span t-field="track.name"> </span></a>
                                         <!-- <small t-if="not track.website_published" class="label label-danger">not published</small> -->
                                     </h4>
                                     <p>TODO: NOT Implemented</p>
@@ -125,8 +125,7 @@
                             </section>
                         </div>
                         <section id="forms" t-if="event.show_track_proposal">
-                            <form class="form-horizontal mt32" action="/event/track_proposal/success" method="post" enctype="multipart/form-data">
-                                <input type="hidden" t-att-value="event.id" name="event"/>
+                            <form class="form-horizontal mt32" action="/event/#{event.id}/track_proposal/success" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label class="col-md-3 col-sm-4 control-label" for="partner_name">Speaker Name</label>
                                     <div class="col-md-7 col-sm-8">
@@ -219,6 +218,15 @@
 
             </div>
             <div class="oe_structure"/>
+        </t>
+    </template>
+
+
+    <template id="event_track_proposal_success">
+        <t t-call="website_event.layout">
+            <div class="container">
+                Thanks
+            </div>
         </t>
     </template>
  </data>

@@ -50,10 +50,9 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=NOPE):
         web = request.registry['website']
         try:
-            path = web.new_page(request.cr, request.uid, path, request.context)
+            path = web.new_page(request.cr, request.uid, path, context=request.context)
         except psycopg2.IntegrityError:
             logger.exception('Unable to create ir_model_data for page %s', path)
-            request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
             return werkzeug.exceptions.InternalServerError()
         url = "/page/" + path
         if noredirect is not NOPE:
@@ -91,7 +90,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {
             'path': page,
         }
-
+        try:
+            request.website.get_template(page)
+        except (Exception), e:
+            if request.context['editable']:
+                page = 'website.page_404'
+            else:
+                return request.registry['ir.http']._handle_404(e)
         return request.website.render(page, values)
 
     @website.route('/website/customize_template_toggle', type='json', auth='user')
@@ -227,7 +232,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
 
-    @website.route(['/website/kanban/'], type='http', auth="public")
+    @website.route(['/website/kanban/'], type='http', auth="public", methods=['POST'])
     def kanban(self, **post):
         return request.website.kanban_col(**post)
 
@@ -239,7 +244,9 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route('/sitemap', type='http', auth='public', multilang=True)
     def sitemap(self):
-        return request.website.render('website.sitemap', {'pages': request.website.enumerate_pages()})
+        return request.website.render('website.sitemap', {
+            'pages': request.website.enumerate_pages()
+        })
 
     @website.route('/sitemap.xml', type='http', auth="public")
     def sitemap_xml(self):

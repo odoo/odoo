@@ -63,7 +63,7 @@ class event(osv.osv):
                     'name': event.name
                 }, context=context)
                 tocreate = self._get_new_menu_pages(cr, uid, event, context)
-                tocreate.append((_('Register'), '/event/register/'+str(event.id)))
+                tocreate.append((_('Register'), '/event/%s/register' % str(event.id)))
                 sequence = 0
                 for name,url in tocreate:
                     menuobj.create(cr, uid, {

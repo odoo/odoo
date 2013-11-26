@@ -53,7 +53,7 @@
 
     website.snippet.animationRegistry.carousel = website.snippet.Animation.extend({
         start: function () {
-            this.$target.carousel({interval: false});
+            this.$target.carousel({interval: 10000});
         },
     });
 

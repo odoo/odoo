@@ -23,10 +23,8 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
-from openerp.addons import website_sale
 from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
-from openerp.addons.website_sale.controllers.main import Ecommerce as Ecommerce
 controllers = controllers()
 
 
@@ -174,9 +172,9 @@ class website_event(http.Controller):
     def event(self, event=None, **post):
         if event.menu_id and event.menu_id.child_id:
             return request.redirect(event.menu_id.child_id[0].url)
-        return request.redirect('/event/register/'+str(event.id))
+        return request.redirect('/event/%s/register' % str(event.id))
 
-    @website.route(['/event/register/<model("event.event"):event>'], type='http', auth="public", multilang=True)
+    @website.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", multilang=True)
     def event_register(self, event=None, **post):
         values = {
             'event': event,
@@ -185,15 +183,14 @@ class website_event(http.Controller):
         return request.website.render("website_event.event_description_full", values)
 
     @website.route(['/event/add_cart'], type='http', auth="public", multilang=True)
-    def add_cart(self, event_id=None, **post):
-        assert event_id, 'An event is required'
+    def add_cart(self, event_id, **post):
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
 
         order = request.context['website_sale_order']
         if not order:
-            order = website_sale.controllers.main.get_order()
+            order = request.registry['website']._get_order(request.cr, request.uid, context=request.context)
 
         partner_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid,
                                      context=request.context).partner_id.id
