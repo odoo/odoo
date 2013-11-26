@@ -50,7 +50,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def pagenew(self, path, noredirect=NOPE):
         web = request.registry['website']
         try:
-            path = web.new_page(request.cr, request.uid, path, request.context)
+            path = web.new_page(request.cr, request.uid, path, context=request.context)
         except psycopg2.IntegrityError:
             logger.exception('Unable to create ir_model_data for page %s', path)
             request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
