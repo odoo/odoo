@@ -383,10 +383,12 @@ class browse_record(object):
                     self.__logger.debug(''.join(traceback.format_stack()))
                 raise KeyError(error_msg)
 
+            prefetchable = lambda f: f._classic_write and f._prefetch and not f.groups and not f.deprecated
+
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
-            if col._prefetch and not col.groups:
+            if prefetchable(col):
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                field_filter = lambda x: x[1]._classic_write and x[1]._prefetch and not x[1].groups
+                field_filter = lambda x: prefetchable(x[1])
                 fields_to_fetch = filter(field_filter, self._table._columns.items())
                 # gen the list of inherited fields
                 inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
