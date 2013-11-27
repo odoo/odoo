@@ -27,7 +27,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
         'click .graph_mode_selection li' : function (event) {
             event.preventDefault();
             var mode = event.target.attributes['data-mode'].nodeValue;
-            this.switch_mode(mode);
+            this.mode = mode;
+            this.display_data();
         },
 
         'click .graph_expand_selection li' : function (event) {
@@ -151,9 +152,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     start: function () {
         this.table = $('<table></table>');
-        this.svg = $('<div><svg></svg></div>');
-        this.$el.filter('.graph_main_content').append(this.table);
-        this.$el.filter('.graph_main_content').append(this.svg);
+        this.$('.graph_main_content').append(this.table);
         return this.load_view();
     },
 
@@ -177,20 +176,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return this._super();
     },
 
-    switch_mode: function (mode) {
-        this.mode = mode;
-        var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
-        if (_.contains(table_modes, mode)) {
-            this.draw_table();
-            this.table.css('display', 'block');
-            this.svg.css('display','none');
-        } else {
-            this.table.css('display', 'none');
-            this.svg.remove();
-            this.svg = $('<div><svg></svg></div>');
-            this.$el.filter('.graph_main_content').append(this.svg);
-            openerp.web_graph.draw_chart(mode, this.pivot_table);
+    display_data: function () {
+        this.$('.graph_main_content svg').remove();
+        this.table.empty();
 
+        var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
+        if (_.contains(table_modes, this.mode)) {
+            this.draw_table();
+        } else {
+            this.$('.graph_main_content').append($('<div><svg></svg></div>'));
+            var svg = this.$('.graph_main_content svg')[0];
+            openerp.web_graph.draw_chart(this.mode, this.pivot_table, svg);
         }
     },
 

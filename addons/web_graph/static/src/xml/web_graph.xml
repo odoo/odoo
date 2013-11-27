@@ -1,5 +1,5 @@
 <templates>
-    <t t-name="GraphView">
+    <div t-name="GraphView">
     	<div class="graph_header">
             <div class="btn-group">
                 <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -48,23 +48,21 @@
             </div>
     	</div>
     	<div class="graph_main_content"></div>
-    </t>
+    </div>
 
-	<t t-name="field_selection">
-		<div class="btn-group">
-			<span class="btn btn-default field-selection dropdown-toggle" data-toggle="dropdown"></span>
-	        <ul class="dropdown-menu" role="menu">
-    	    	<t t-foreach="fields" t-as="field">
-			        <li>
-                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" href="#">
-                            <t t-esc="field.value"/>
-                        </a>
-			        </li>
-		        </t>
-                <li class="divider"></li>
-                <li><a>Clear groups</a></li>
-	        </ul>
-	    </div>
-    </t>
+	<div t-name="field_selection" class="btn-group">
+		<span class="btn btn-default field-selection dropdown-toggle" data-toggle="dropdown"></span>
+        <ul class="dropdown-menu" role="menu">
+	    	<t t-foreach="fields" t-as="field">
+		        <li>
+                    <a class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" href="#">
+                        <t t-esc="field.value"/>
+                    </a>
+		        </li>
+	        </t>
+            <li class="divider"></li>
+            <li><a>Clear groups</a></li>
+        </ul>
+    </div>
 
 </templates>
