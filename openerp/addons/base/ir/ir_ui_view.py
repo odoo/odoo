@@ -772,17 +772,6 @@ class view(osv.osv):
         if not context:
             context = {}
 
-        def check_user_access(values):
-            for key in values:
-                value =  isinstance(values, (dict,)) and values[key] or key
-                if isinstance(value, (browse_record,)):
-                    if getattr(value, '_uid', None) == openerp.SUPERUSER_ID and uid != openerp.SUPERUSER_ID:
-                        message = 'SUPERUSER_ID Access used for rendering "%s" in a xml view: %s' % (key, id_or_xml_id,)
-                        _logger.warn(message)
-                elif isinstance(value, (dict, list, browse_record_list,)):
-                    check_user_access(value)
-        check_user_access(values)
-
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
