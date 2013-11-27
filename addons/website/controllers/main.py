@@ -32,19 +32,14 @@ MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
     @website.route('/', type='http', auth="public", multilang=True)
     def index(self, **kw):
-        # TODO: check if plain SQL is needed
-        menu = request.registry['website.menu']
-        root_domain = [('parent_id', '=', False)] # TODO: multiwebsite ('website_id', '=', request.website.id),
-        root_id = menu.search(request.cr, request.uid, root_domain, limit=1, context=request.context)[0]
-        first_menu = menu.search_read(
-            request.cr, request.uid, [('parent_id', '=', root_id)], ['url'],
-            limit=1, order='sequence', context=request.context)
-        if first_menu:
-            first_menu = first_menu[0]['url']
-        if first_menu and first_menu != '/':
-            return request.redirect(first_menu)
-        else:
-            return self.page("website.homepage")
+        try:
+            main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
+            first_menu = main_menu.child_id and main_menu.child_id[0]
+            if first_menu and first_menu.url != '/':
+                return request.redirect(first_menu.url)
+        except:
+            pass
+        return self.page("website.homepage")
 
     @website.route('/pagenew/<path:path>', type='http', auth="user")
     def pagenew(self, path, noredirect=NOPE):
