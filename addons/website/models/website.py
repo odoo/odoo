@@ -3,7 +3,6 @@ import fnmatch
 import functools
 import inspect
 import logging
-import psycopg2
 import math
 import itertools
 import urllib
@@ -15,7 +14,7 @@ import werkzeug.exceptions
 import werkzeug.wrappers
 
 import openerp
-from openerp.osv import orm, osv, fields
+from openerp.osv import osv, fields
 from openerp.tools.safe_eval import safe_eval
 
 from openerp.addons.web import http
@@ -26,44 +25,20 @@ logger = logging.getLogger(__name__)
 
 def route(routes, *route_args, **route_kwargs):
     def decorator(f):
-        new_routes = routes if isinstance(routes, list) else [routes]
         f.cms = True
-        f.multilang = route_kwargs.get('multilang', False)
-        if f.multilang:
-            route_kwargs.pop('multilang')
-            for r in list(new_routes):
-                new_routes.append('/<string(length=5):lang_code>' + r)
-        @http.route(new_routes, *route_args, **route_kwargs)
-        @functools.wraps(f, assigned=functools.WRAPPER_ASSIGNMENTS + ('func_name',))
-        def wrap(*args, **kwargs):
-            request.route_lang = kwargs.pop('lang_code', None)
-            if not hasattr(request, 'website'):
-                request.multilang = f.multilang
-                request.website = get_current_website()
-
-                if request.route_lang:
-                    lang_ok = [lg.code for lg in request.website.language_ids if lg.code == request.route_lang]
-                    if not lang_ok:
-                        return request.not_found()
-                request.website.preprocess_request(request)
-            return f(*args, **kwargs)
-        return wrap
+        f.multilang = route_kwargs.pop('multilang', False)
+        return http.route(routes, *route_args, **route_kwargs)(f)
     return decorator
-
-def get_current_website():
-    # TODO: Select website, currently hard coded
-    return request.registry['website'].browse(request.cr, request.uid, 1, context=request.context)
-
 
 def url_for(path_or_uri, lang=None, keep_query=None):
     location = path_or_uri.strip()
     url = urlparse.urlparse(location)
     if request and not url.netloc and not url.scheme:
         location = urlparse.urljoin(request.httprequest.path, location)
+        lang = lang or request.context.get('lang')
         langs = request.context.get('langs')
-        if location[0] == '/' and (len(langs) > 1 or lang):
+        if location[0] == '/' and len(langs) > 1 and lang != request.context['lang_default']:
             ps = location.split('/')
-            lang = lang or request.context.get('lang')
             if ps[1] in langs:
                 ps[1] = lang
             else:
@@ -164,38 +139,27 @@ class website(osv.osv):
             self.public_user = self.pool[ref[0]].browse(cr, uid, ref[1])
         return self.public_user
 
+    def get_current_website(self, cr, uid, context=None):
+        # TODO: Select website, currently hard coded
+        return self.pool['website'].browse(cr, uid, 1, context=context)
+
     def preprocess_request(self, cr, uid, ids, request, context=None):
         def redirect(url):
             return werkzeug.utils.redirect(url_for(url))
         request.redirect = redirect
-        if not hasattr(request, 'multilang'):
-            # TODO: try to get rid of this multilang attribute
-            request.multilang = False
-
         is_public_user = request.uid == self.get_public_user(cr, uid, context).id
 
         user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         website_publisher_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_website_publisher')[1]
         is_website_publisher = website_publisher_id in [g.id for g in user.groups_id]
 
-        # Select current language
-        if hasattr(request, 'route_lang'):
-            lang = request.route_lang
-        else:
-            lang = request.params.get('lang', None) or request.httprequest.cookies.get('lang', None)
-        if lang not in [lg.code for lg in request.website.language_ids]:
-            lang = request.website.default_lang_id.code
-
+        lang = request.context['lang']
         is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
-            'lang': lang,
-            'lang_selected': [lg for lg in request.website.language_ids if lg.code == lang],
-            'langs': [lg.code for lg in request.website.language_ids],
-            'multilang': request.multilang,
             'is_public_user': is_public_user,
             'is_master_lang': is_master_lang,
             'editable': is_website_publisher,
-            'translatable': not is_public_user and not is_master_lang and request.multilang,
+            'translatable': not is_public_user and not is_master_lang,
         })
 
     def get_template(self, cr, uid, ids, template, context=None):

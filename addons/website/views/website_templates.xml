@@ -188,8 +188,7 @@
                                                     their performance.
                                                 </p>
                                             </div>
-                                            <ul class="nav nav-pills js_language_selector" t-if="request.multilang and
-                                                    (len(website.language_ids) &gt; 1 or editable)">
+                                            <ul class="nav nav-pills js_language_selector" t-if="(len(website.language_ids) &gt; 1 or editable)">
                                                 <li t-foreach="website.language_ids" t-as="lg">
                                                     <a t-att-href="url_for('', lang=lg.code)"
                                                        t-att-data-default-lang="editable and 'true' if lg.code == website.default_lang_id.code else None">
@@ -197,7 +196,7 @@
                                                     </a>
                                                 </li>
                                                 <li t-if="editable">
-                                                    <t t-set="url_return" t-value="request.multilang and url_for(request.httprequest.path, '[lang]') or request.httprequest.path"/>
+                                                    <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]')"/>
                                                     <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
                                                         <i class="icon-plus-sign"/>
                                                         Add a language...
