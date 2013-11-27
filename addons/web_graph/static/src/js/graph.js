@@ -349,9 +349,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
         function make_cell (value) {
             var color,
                 cell = $('<td></td>');
-            if (value !== undefined) {
-                cell.append(value);
+            if (value === undefined) {
+                return cell;
             }
+            cell.append(value);
             if ((self.mode === 'pivot') && (row.is_expanded) && (row.path.length <=2)) {
                 color = row.path.length * 5 + 240;
                 cell.css('background-color', $.Color(color, color, color));
