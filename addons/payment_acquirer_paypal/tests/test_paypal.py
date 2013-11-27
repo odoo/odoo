@@ -48,7 +48,7 @@ class PaypalCommon(PaymentAcquirerCommon):
 
 class PaypalServer2Server(PaypalCommon):
 
-    def test_00(self):
+    def test_00_tx_management(self):
         cr, uid, context = self.cr, self.uid, {}
 
         res = self.payment_acquirer._paypal_s2s_get_access_token(cr, uid, [self.paypal_id], context=context)
@@ -71,75 +71,9 @@ class PaypalServer2Server(PaypalCommon):
         )
 
         tx = self.payment_transaction.browse(cr, uid, tx_id, context=context)
-        print tx.paypal_txn_id
-        self.payment_transaction.s2s_get_tx_status(cr, uid, tx_id, context=context)
-# {
-#     "id":"PAY-2LL14628DB722091TKKHXZHQ",
-#     "create_time":"2013-11-22T15:47:42Z",
-#     "update_time":"2013-11-22T15:48:05Z",
-#     "state":"pending",
-#     "intent":"sale",
-#     "payer": {
-#         "payment_method":"credit_card",
-#         "funding_instruments": [{
-#             "credit_card": {
-#                 "type":"visa",
-#                 "number":"xxxxxxxxxxxx1111",
-#                 "expire_month":"9",
-#                 "expire_year":"2015",
-#                 "first_name":"Norbert Buyer",
-#                 "last_name":"Norbert Buyer",
-#                 "billing_address": {
-#                     "line1":"Huge Street 2/543",
-#                     "city":"Sin City",
-#                     "postal_code":"1000",
-#                     "country_code":"BE"
-#                 }
-#             }
-#         }]
-#     },
-#     "transactions": [{
-#         "amount": {
-#             "total":"0.01",
-#             "currency":"EUR",
-#             "details": {
-#                 "subtotal":"0.01"
-#             }
-#         },
-#         "related_resources": [{
-#             "sale": {
-#                 "id":"4KU52719R3958614J",
-#                 "create_time":"2013-11-22T15:47:42Z",
-#                 "update_time":"2013-11-22T15:48:05Z",
-#                 "state":"pending",
-#                 "amount": {
-#                     "total":"0.01",
-#                     "currency":"EUR"
-#                 },
-#                 "pending_reason":"multicurrency",
-#                 "parent_payment":"PAY-2LL14628DB722091TKKHXZHQ",
-#                 "links": [{
-#                     "href":"https://api.sandbox.paypal.com/v1/payments/sale/4KU52719R3958614J",
-#                     "rel":"self",
-#                     "method":"GET"
-#                     },{
-#                     "href":"https://api.sandbox.paypal.com/v1/payments/sale/4KU52719R3958614J/refund",
-#                     "rel":"refund",
-#                     "method":"POST"
-#                     },{
-#                     "href":"https://api.sandbox.paypal.com/v1/payments/payment/PAY-2LL14628DB722091TKKHXZHQ",
-#                     "rel":"parent_payment",
-#                     "method":"GET"
-#                     }]
-#                 }
-#             }]
-#         }],
-#     "links": [{
-#         "href":"https://api.sandbox.paypal.com/v1/payments/payment/PAY-2LL14628DB722091TKKHXZHQ",
-#         "rel":"self",
-#         "method":"GET"
-#     }]
-# }
+        self.assertTrue(tx.paypal_txn_id is not False, 'paypal: txn_id should have been set after s2s request')
+
+        self.payment_transaction.write(cr, uid, tx_id, {'paypal_txn_id': False}, context=context)
 
 
 class PaypalForm(PaypalCommon):

@@ -352,6 +352,7 @@ class PaymentTransaction(osv.Model):
         return True
 
     def s2s_get_tx_status(self, cr, uid, tx_id, context=None):
+        """ Get the tx status. """
         tx = self.browse(cr, uid, tx_id, context=context)
 
         invalid_param_method_name = '_%s_s2s_get_tx_status' % tx.acquirer_id.name
