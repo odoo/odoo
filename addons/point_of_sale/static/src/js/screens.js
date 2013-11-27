@@ -812,6 +812,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
+            this.pos_widget.set_numpad_visible(false);
+
             var print_button = this.add_action_button({
                     label: _t('Print'),
                     icon: '/point_of_sale/static/src/img/icons/png48/printer.png',
@@ -872,6 +874,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.currentOrder = this.pos.get('selectedOrder');
             $('.pos-receipt-container', this.$el).html(QWeb.render('PosTicket',{widget:this}));
         },
+        close: function(){
+            this._super();
+            this.pos_widget.set_numpad_visible(true);
+        }
     });
 
     module.PaymentScreenWidget = module.ScreenWidget.extend({
@@ -1006,6 +1012,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     this.pos_widget.screen_selector.set_current_screen(this.next_screen);
                 }
             }
+            // hide onscreen (iOS) keyboard 
+            setTimeout(function(){
+                document.activeElement.blur();
+                $("input").blur();
+            },250);
         },
         bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
@@ -1068,8 +1079,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         isPaymentPaid: function(){
             var currentOrder = this.pos.get('selectedOrder');
-            return (currentOrder.getTotalTaxIncluded < 0.000001 
-                   && currentOrder.getPaidTotal() + 0.000001 < currentOrder.getTotalTaxIncluded());
+            return (currentOrder.getTotalTaxIncluded() >= 0.000001 
+                   && currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
 
         },
         updatePaymentSummary: function() {
@@ -1088,8 +1099,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
                 
             if(this.pos_widget.action_bar){
-                this.pos_widget.action_bar.set_button_disabled('validation', this.isPaymentPaid());
-                this.pos_widget.action_bar.set_button_disabled('invoice', this.isPaymentPaid());
+                this.pos_widget.action_bar.set_button_disabled('validation', !this.isPaymentPaid());
+                this.pos_widget.action_bar.set_button_disabled('invoice', !this.isPaymentPaid());
             }
         },
         set_numpad_state: function(numpadState) {

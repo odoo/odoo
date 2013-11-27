@@ -213,13 +213,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var scroller = this.$('.order-scroller')[0];
             var scrollbottom = true;
             var scrollTop = 0;
-            /*if(scroller){
+            if(scroller){
                 var overflow_bottom = scroller.scrollHeight - scroller.clientHeight;
                 scrollTop = scroller.scrollTop;
                 if( !goto_bottom && scrollTop < 0.9 * overflow_bottom){
                     scrollbottom = false;
                 }
-            }*/
+            }
             this._super();
 
             // freeing subwidgets
@@ -244,14 +244,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.update_summary();
 
             scroller = this.$('.order-scroller')[0];
+
             if(scroller){
-                //scroller.scrollTop = 1000000;
-                /*
                 if(scrollbottom){
                     scroller.scrollTop = scroller.scrollHeight - scroller.clientHeight;
                 }else{
                     scroller.scrollTop = scrollTop;
-                }*/
+                }
             }
         },
         update_summary: function(){
@@ -313,8 +312,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         focus: function(){
             var val = this.$('input')[0].value;
             this.$('input')[0].focus();
-            this.$('input')[0].value = val;
-            this.$('input')[0].select();
+            if(Number(val) === 0){
+                this.$('input')[0].value = '';
+            }else{
+                this.$('input')[0].value = val;
+                this.$('input')[0].select();
+            }
         },
     });
 
@@ -863,15 +866,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 self.screen_selector.set_default_screen();
 
-
                 self.pos.barcode_reader.connect();
-
-                if(!$('#oe-fullscreenwidget-viewport').length){
-                    $('head').append('<meta id="oe-pos-viewport" name="viewport" content=" width=1024px; user-scalable=no;">');
-                    $('head').append('<meta id="oe-pos-apple-mobile" name="apple-mobile-web-capable" content="yes">');
-                }
-
-                $('.oe_leftbar').addClass('oe_hidden');
 
                 instance.webclient.set_content_full_screen(true);
 
@@ -1104,7 +1099,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
                         var action = result;
                         action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
-                        //self.destroy();
                         this.do_action(action);
                     }, this));
                 }, self));
@@ -1124,9 +1118,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         destroy: function() {
             this.pos.destroy();
             instance.webclient.set_content_full_screen(false);
-            $('.oe_leftbar').removeClass('oe_hidden');
-            $('#oe-pos-viewport').remove();
-            $('#oe-pos-apple-mobile').remove();
             this._super();
         }
     });

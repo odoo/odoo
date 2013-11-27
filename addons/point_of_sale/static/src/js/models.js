@@ -378,7 +378,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         _flush_order: function(order_id, options){
             var self   = this;
             options = options || {};
-            timeout = typeof options.timeout === 'number' ? options.timeout : 5000;
+            timeout = typeof options.timeout === 'number' ? options.timeout : 7500;
 
             var order  = this.db.get_order(order_id);
             order.to_invoice = options.to_invoice || false;
