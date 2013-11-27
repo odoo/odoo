@@ -146,6 +146,12 @@ class event_event(osv.osv):
                 event.event_ticket_ids.check_registration_limits_before(0)
         return super(event_event, self).check_registration_limits(cr, uid, ids, context=context)
 
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('event_ticket_ids'):
+            for data in vals.get('event_ticket_ids'):
+                if not data[0] and not data[2]['deadline']:
+                    data[2]['deadline'] = vals.get('date_begin')
+        return super(event_event, self).create(cr, uid, vals, context=context)
 
 class event_ticket(osv.osv):
     _name = 'event.event.ticket'
