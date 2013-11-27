@@ -100,6 +100,9 @@
                     triggers: function () {
                         self.onSnippetDraggedAdvance('text-block');
                     },
+                    onHide: function () {
+                        window.scrollTo(0, 0);
+                    },
                 },
                 {
                     stepId: 'add-three-columns',

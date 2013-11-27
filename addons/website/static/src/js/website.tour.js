@@ -124,7 +124,7 @@
                     if (stepId) {
                         self.moveToStep(stepId);
                     } else {
-                        self.moveToNextStep()
+                        self.moveToNextStep();
                     }
                 }
                 $(document.body).one('mouseup', advance);
