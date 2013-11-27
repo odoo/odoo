@@ -333,32 +333,44 @@ instance.web_graph.GraphView = instance.web.View.extend({
         _.each(pivot.cols.headers, function (col) {
             if (col.children.length === 0) {
                 var value = pivot.get_value(row.id, col.id),
-                    cell = make_cell(value);
+                    cell = make_cell(value, col);
                 html_row.append(cell);
             }
         });
 
         if (pivot.cols.main.children.length > 0) {
             var row_total = pivot.get_value(row.id, pivot.cols.main.id),
-                cell = make_cell(row_total).css('font-weight', 'bold');
+                cell = make_cell(row_total, pivot.cols.main)
+                            .css('font-weight', 'bold');
             html_row.append(cell);
         }
 
         this.table.append(html_row);
 
-        function make_cell (value) {
+        function make_cell (value, col) {
             var color,
+                total,
                 cell = $('<td></td>');
-            if (value === undefined) {
-                return cell;
-            }
-            cell.append(value);
             if ((self.mode === 'pivot') && (row.is_expanded) && (row.path.length <=2)) {
                 color = row.path.length * 5 + 240;
                 cell.css('background-color', $.Color(color, color, color));
             }
+            if (value === undefined) {
+                return cell;
+            }
+            cell.append(value);
             if (self.mode === 'heatmap') {
                 color = Math.floor(50 + 205*(pivot.total - value)/pivot.total);
+                cell.css('background-color', $.Color(255, color, color));
+            }
+            if (self.mode === 'row_heatmap') {
+                total = pivot.get_value(row.id, pivot.cols.main.id);
+                color = Math.floor(50 + 205*(total - value)/total);
+                cell.css('background-color', $.Color(255, color, color));
+            }
+            if (self.mode === 'col_heatmap') {
+                total = pivot.get_value(col.id, pivot.rows.main.id);
+                color = Math.floor(50 + 205*(total - value)/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             return cell;
