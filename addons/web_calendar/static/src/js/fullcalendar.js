@@ -47,10 +47,10 @@ openerp.web_calendar = function(instance) {
             this.view_id = view_id;
             this.view_type = 'calendar';
 
-            this.COLOR_PALETTE = ['#ffc900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
+            this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
                                   '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
                                   '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
-                                  '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#f57900' ];
+                                  '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900' ];
 
             this.color_map = {};
             this.last_search = [];
@@ -82,7 +82,6 @@ openerp.web_calendar = function(instance) {
             this.info_fields = [];
 
             /* buttons */
-
             this.$buttons = $(QWeb.render("CalendarView.buttons", {'widget': this}));
             if (this.options.$buttons) {
                 this.$buttons.appendTo(this.options.$buttons);
@@ -96,7 +95,6 @@ openerp.web_calendar = function(instance) {
             });
 
             /* xml view calendar options */
-
             var attrs = fv.arch.attrs;
 
             if (!attrs.date_start) {
@@ -107,7 +105,6 @@ openerp.web_calendar = function(instance) {
 
             this.name = fv.name || attrs.string;
             this.view_id = fv.view_id;
-
 
             this.mode = attrs.mode;                 // one of month, week or day
             this.date_start = attrs.date_start;     // Field name of starting date field
@@ -130,13 +127,12 @@ openerp.web_calendar = function(instance) {
             if (typeof attrs.display !== "undefined")
                 this.how_display_event = attrs.display; // String with [FIELD]
             
-            // If this field is set ot true, we don't open the event in form view, but in a popup with the xml_view_id passed by this parameter
+            // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter
             if (attrs.event_open_popup == null || attrs.event_open_popup == "False")
                 this.open_popup_action = false; 
             else {
                 this.open_popup_action = attrs.event_open_popup;
             }
-
             
             // If this field is set to true, we will use de calendar_friends model as filter and not the color field.
             if (typeof attrs.use_contacts !== "undefined" && attrs.use_contacts == "True")
@@ -151,10 +147,8 @@ openerp.web_calendar = function(instance) {
             else
                 this.colorIsAttendee = true;
 
-
                     
             this.color_field = attrs.color;
-
         
             if (this.color_field && this.selected_filters.length === 0) {
                 var default_filter;
@@ -182,7 +176,7 @@ openerp.web_calendar = function(instance) {
         get_fc_init_options: function () {
             var self = this;
             return $.extend({}, fc_defaultOptions, {
-
+                
                 defaultView: (this.mode == "month")?"month":
                     (this.mode == "week"?"agendaWeek":
                      (this.mode == "day"?"agendaDay":"month")),
@@ -199,6 +193,7 @@ openerp.web_calendar = function(instance) {
                 // callbacks
 
                 eventDrop: function (event, _day_delta, _minute_delta, _all_day, _revertFunc) {
+                debugger;
                     var data = self.get_event_data(event);
                     self.proxy('update_record')(event._id, data); // we don't revert the event, but update it.
                 },
@@ -207,10 +202,15 @@ openerp.web_calendar = function(instance) {
                     self.proxy('update_record')(event._id, data);
                 },
                 eventRender: function (event, element, view) {
-                    element.find('.fc-event-title').html(event.title);
-                    if (!self.options.read_only_mode) {
-                        //self.append_deletion_handle(event, element, view);
-                    }
+                    element.find('.fc-event-title').html(event.title);                    
+                },
+                eventAfterRender: function (event, element, view) {                    
+                    if ((view.name !== 'month') && (((event.end-event.start)/60000)<=30)) {
+                        //if duration is too small, we see the html code of img
+                        var current_title = $(element.find('.fc-event-time')).text();
+                        var new_title = current_title.substr(0,current_title.indexOf("<img")>0?current_title.indexOf("<img"):current_title.length)
+                        element.find('.fc-event-time').html(new_title);
+                    }                    
                 },
                 eventClick: function (event) { console.log(event); self.open_event(event._id,event.title); },
                 select: function (start_date, end_date, all_day, _js_event, _view) {
@@ -253,7 +253,7 @@ openerp.web_calendar = function(instance) {
                         },
                 firstHour: 8,
                 weekMode : 'liquid',
-
+                aspectRatio: 1.8,
                 
 
             });
@@ -511,18 +511,28 @@ openerp.web_calendar = function(instance) {
                 }
                 the_title = the_title.replace(/&/g,'&amp;').replace(/</g,'&lt;'); //.replace(/>/g,'&gt;');
                 
-                
                 if (typeof this.attendee_people !== "undefined") {
+                    var MAX_ATTENDEES = 3;
+                    var attendee_showed = 0;
+                    var attendee_other = '';
+
                     _.each(temp_ret[this.attendee_people], 
                         function (the_attendee_people) { 
                             attendees.push(the_attendee_people);
-
-                            style = 'style="border:2px solid '+self.get_color((the_attendee_people in self.allFilters) ? the_attendee_people : '-1')+'"';
-
+                            attendee_showed += 1;
+                            //style = 'style="border:2px solid '+self.get_color((the_attendee_people in self.allFilters) ? the_attendee_people : '-1')+'"';
+                            if (attendee_showed<= MAX_ATTENDEES) {
                             // if (the_attendee_people in self.allFilters && (!self.colorIsAttendee || temp_ret[self.color_field]!=the_attendee_people)) { //&& the_attendee_people != this.colorIsAttendee
-                            the_title += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head" width="24px" height="24px" ' + style + ' src="/web/binary/image?model=res.partner&field=image_small&id=' + the_attendee_people + '"></img>';                                
+                                the_title += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head" width="20px" height="20px" src="/web/binary/image?model=res.partner&field=image_small&id=' + the_attendee_people + '"></img>';                                
+                            }
+                            else {
+                                attendee_other += self.all_attendees[the_attendee_people] +", ";
+                            }                                    
                         }
-                    );                                       
+                    );
+                    if (attendee_other.length) {
+                        the_title += '<span class="attendee_head" title="' + attendee_other.substring(0, attendee_other.length - 2) + '">+</span>';                    
+                    }
                 }                
             }
             
@@ -576,6 +586,12 @@ openerp.web_calendar = function(instance) {
                 name: event.title
             };
             data[this.date_start] = instance.web.parse_value(event.start, this.fields[this.date_start]);
+    
+            //Bug whenmove a all_day event from week or day, we don't have a dateend or duration...            
+            if (event_end == null) {
+                event_end = event.start.addHours(2);
+            }
+
             if (this.date_stop) {
                 data[this.date_stop] = instance.web.parse_value(event_end, this.fields[this.date_stop]);
             }
@@ -898,6 +914,12 @@ openerp.web_calendar = function(instance) {
             self.on('added', self, function() {
                 self.trigger('close');
             });
+            
+            self.$el.on('dialogclose', self, function() {
+                console.log("dialogclose");
+                self.trigger('close');
+            });
+
         },
         focus: function() {
             this.$el.find('input').focus();
@@ -1178,7 +1200,6 @@ openerp.web_calendar = function(instance) {
                 self.is_loaded = self.is_loaded.then(function() {
                     self.calendar_view.destroy();
                     return $.when(self.load_view()).done(function() {
-                        console.log("Load view done, so we render");
                         self.render_value();
                     });
                 });
