@@ -79,34 +79,34 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         });
 	},
 
-	expand: function (row_id, field_id) {
+	expand: function (header_id, field_id) {
         var self = this,
-            row = this.get_header(row_id);
+            header = this.get_header(header_id);
 
-        if (row.path.length == row.root.groupby.length) {
-            row.root.groupby.push(field_id);
+        if (header.path.length == header.root.groupby.length) {
+            header.root.groupby.push(field_id);
         }
 
-        var otherDim = (row.root === this.cols) ? this.rows : this.cols;
-        return query_groups_data(this.model, this.visible_fields(), row.domain, otherDim.groupby, field_id)
+        var otherDim = (header.root === this.cols) ? this.rows : this.cols;
+        return query_groups_data(this.model, this.visible_fields(), header.domain, otherDim.groupby, field_id)
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
-                    var new_row_id = self.make_header(group, row);
+                    var new_header_id = self.make_header(group, header);
                     _.each(group, function (data) {
-					var col = _.find(otherDim.headers, function (c) {
-						if (row.root === self.cols) {
-							return _.isEqual(data.path.slice(1), c.path);
-	                    } else {
-							return _.isEqual(_.rest(data.path), c.path);
-	                    }
-	                });
-	                if (col) {
-	                    self.set_value(new_row_id, col.id, data.attributes.aggregates[self.measure]);
-                   }
-	            });
-            });
-            row.is_expanded = true;
-        });
+						var other = _.find(otherDim.headers, function (h) {
+							if (header.root === self.cols) {
+								return _.isEqual(data.path.slice(1), h.path);
+		                    } else {
+								return _.isEqual(_.rest(data.path), h.path);
+		                    }
+		                });
+		                if (other) {
+		                    self.set_value(new_header_id, other.id, data.attributes.aggregates[self.measure]);
+	                   }
+	            	});
+            	});
+            	header.is_expanded = true;
+        	});
 	},
 
 	make_header: function (groups, parent) {
