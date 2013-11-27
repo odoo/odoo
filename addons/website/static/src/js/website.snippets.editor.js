@@ -1125,7 +1125,8 @@
                     id = _id + 1;
                 }
             });
-            this.$target.attr("id", "myCarousel" + id);
+            this.id = "myCarousel" + id;
+            this.$target.attr("id", this.id);
             this.$target.find(".carousel-control").attr("href", "#myCarousel" + id);
             this.$target.find("[data-target='#myCarousel']").attr("data-target", "#myCarousel" + id);
 

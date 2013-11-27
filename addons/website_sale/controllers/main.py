@@ -9,7 +9,7 @@ from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 
 
-class CheckoutInfo:
+class CheckoutInfo(object):
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
     optional_billing_fields = ["company", "state_id"]
     string_billing_fields = ["name", "phone", "email", "street", "city", "zip"]
@@ -27,7 +27,7 @@ class CheckoutInfo:
         return self.mandatory_fields() + self.optional_fields()
 
     def empty(self):
-        return dict((field_name, '') for field_name in self.all_fields())
+        return dict.fromkeys(self.all_fields(), '')
 
     def from_partner(self, partner):
         result = dict((field_name, getattr(partner, field_name)) for field_name in self.string_billing_fields if getattr(partner, field_name))
@@ -464,6 +464,8 @@ class Ecommerce(http.Controller):
 
         if 'promo' in post:
             self.change_pricelist(post.get('promo'))
+        else:
+            self.get_pricelist()
 
         suggested_ids = []
         product_ids = []
@@ -489,17 +491,18 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.mycart", values)
 
     @website.route(['/shop/add_cart/'], type='http', auth="public", multilang=True)
-    def add_cart(self, path=None, product_id=None, order_line_id=None, remove=None, **kw):
+    def add_cart(self, product_id=None, order_line_id=None, remove=None, **kw):
         self.add_product_to_cart(product_id=product_id and int(product_id), order_line_id=order_line_id and int(order_line_id), number=(remove and -1 or 1))
         return request.redirect("/shop/mycart/")
 
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
         quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
-        order = self.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
-        return [quantity, order.get_total_quantity(), order.amount_total, request.website.render("website_sale.total", {
-                'website_sale_order': order
-            }).strip()]
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        return [quantity,
+                order.get_total_quantity(),
+                order.amount_total,
+                request.website._render("website_sale.total", {'website_sale_order': order})]
 
     @website.route(['/shop/set_cart_json/'], type='json', auth="public")
     def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
@@ -518,6 +521,8 @@ class Ecommerce(http.Controller):
         tx = context.get('website_sale_transaction')
         if tx and tx.state != 'draft':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
+        
+        self.get_pricelist()
 
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')

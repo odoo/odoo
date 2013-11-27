@@ -215,7 +215,7 @@ class WebsiteBlog(http.Controller):
         return request.website.render("website_blog.blog_post_complete", values)
 
     @website.route(['/blog/<int:blog_post_id>/comment'], type='http', auth="public")
-    def blog_post_comment(self, blog_post_id=None, **post):
+    def blog_post_comment(self, blog_post_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
             request.registry['blog.post'].message_post(
@@ -226,8 +226,8 @@ class WebsiteBlog(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
-    @website.route(['/blog/new'], type='http', auth="public", multilang=True)
-    def blog_post_create(self, category_id=None, **post):
+    @website.route('/blog/new', type='http', auth="public", multilang=True)
+    def blog_post_create(self, category_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].create(
@@ -239,8 +239,8 @@ class WebsiteBlog(http.Controller):
             }, context=create_context)
         return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % new_blog_post_id)
 
-    @website.route(['/blog/duplicate'], type='http', auth="public")
-    def blog_post_copy(self, blog_post_id=None, **post):
+    @website.route('/blog/duplicate', type='http', auth="public")
+    def blog_post_copy(self, blog_post_id, **post):
         """ Duplicate a blog.
 
         :param blog_post_id: id of the blog post currently browsed.

@@ -29,7 +29,7 @@
         </template>
 
         <template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
-                <html t-att-lang="lang.replace('_', '-')"
+                <html t-att-lang="lang and lang.replace('_', '-')"
                       t-att-data-website-id="website.id if editable else None"
                       t-att-data-editable="'1' if editable else None"
                       t-att-data-translatable="'1' if translatable else None"
@@ -102,8 +102,6 @@
                             <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
                             <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.page.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.app.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
                             <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
@@ -215,7 +213,7 @@
                                         <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
                                     </div>
                                     <div class="pull-left text-muted">
-                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span> - <a href="/sitemap">Sitemap</a>
+                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
                                     </div>
                                 </div>
                             </footer>
@@ -365,34 +363,40 @@
             </t>
         </template>
 
-        <template id="404">
-            <t t-call="website.layout">
-              <div id="wrap">
-                <div class="container" t-if="editable and path">
+        <template id="page_404">
+            <t t-call="website.404">
+                <div class="container">
                     <div class="well mt32">
                         <p>This page does not exists, but you can create it as you are administrator of this site.</p>
-                        <a class="btn btn-primary" t-att-href="'/pagenew/'+path">Create Page</a>
+                        <a class="btn btn-primary" t-attf-href="/pagenew/#{ path }">Create Page</a>
                         <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
                     </div>
                     <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
                 </div>
-                <hr />
-                <div class="oe_structure oe_empty">
-                    <div class="container">
-                        <h1 class="mt32">404: Page not found!</h1>
-                        <p>
-                            The page you were looking for could not be found; it is possible you have
-                            typed the address incorrectly, but it has most probably been removed due
-                            to the recent website reorganisation.
-                        </p>
-                        <p>Maybe you were looking for one of these popular pages ?</p>
-                        <ul>
-                            <li><a href="/">Homepage</a></li>
-                            <li><a href="/page/website.contactus/">Contact Us</a></li>
-                        </ul>
+                <hr/>
+            </t>
+        </template>
+
+        <template id="404">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <t t-raw="0"/>
+                    <div class="oe_structure oe_empty">
+                        <div class="container">
+                            <h1 class="mt32">404: Page not found!</h1>
+                            <p>
+                                The page you were looking for could not be found; it is possible you have
+                                typed the address incorrectly, but it has most probably been removed due
+                                to the recent website reorganisation.
+                            </p>
+                            <p>Maybe you were looking for one of these popular pages ?</p>
+                            <ul>
+                                <li><a href="/">Homepage</a></li>
+                                <li><a href="/page/website.contactus/">Contact Us</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-              </div>
             </t>
         </template>
 
@@ -402,22 +406,67 @@
                     <div class="oe_structure">
                         <h1 class="container mt32">500: Internal Server Error!</h1>
                     </div>
-                    <t t-if="editable">
-                        <h3 t-if="template">Exception in template: <span id="exception_template" t-esc="template"/></h3>
-                        <h3 t-if="controller">Exception in controller: <span id="exception_controller" t-esc="controller[1]"/> <small>(Module: <span id="exception_module" t-esc="controller[0]"/>)</small> </h3>
-                        <h4 t-if="expr">Expression: <t t-esc="expr"/></h4>
-                        <t t-if="node"><pre id="exception_node" t-esc="node"/></t>
-                        <pre id="exception_traceback" t-esc="traceback"/>
-                    </t>
+
+                    <div class="container panel-group" id="debug_infos" t-if="editable">
+                        <div class="panel panel-default" t-if="exception">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">
+                                        Error
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="error_main" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
+                                    <p><strong>Error message:</strong> <t t-esc="exception.message"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default" t-if="qweb_template">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
+                                        QWeb
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="error_qweb" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>
+                                        The error occured while rendering the template <code t-esc="qweb_template"/>
+                                        <t t-if="qweb_eval">and evaluating the following expression: <code t-esc="qweb_eval"/></t>
+                                    </p>
+                                    <t t-if="qweb_node">
+                                        <pre id="exception_node" t-esc="qweb_node.toxml()"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default" t-if="traceback">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">
+                                        Traceback
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="error_traceback" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <pre id="exception_traceback" t-esc="traceback"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </t>
         </template>
 
-        <template id="401">
+        <template id="403">
             <t t-call="website.layout">
               <div id="wrap">
                 <div class="container">
-                    <h1 class="mt32">401: Unauthorized Access!</h1>
+                    <h1 class="mt32">403: Forbidden</h1>
                     <p>
                         The page you were looking for could not be
                         authorized.
@@ -577,6 +626,42 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     </div>
                     <div class="oe_structure"></div>
                 </div>
+            </t>
+        </template>
+
+        <template id="creation_failed">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <div class="container">
+                            <h1 class="text-center">
+                                The page "<em><t t-esc="page"/></em>"
+                                already exists
+                            </h1>
+                            <h3 class="text-center text-muted">We could not create it.</h3>
+                            <ul>
+                                <li>
+                                    You can <a t-href="#{path}">visit the existing page</a>
+                                </li>
+                                <li>Or you can <a href="#" class="create-new-page">
+                                    create an other page.</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <script type="application/javascript">
+                    $(document.body).on('click', 'a.create-new-page', function (e) {
+                        e.preventDefault();
+                        openerp.website.prompt({
+                            window_title: "New Page",
+                            input: "Page Title",
+                        }).then(function (val) {
+                            if (val) {
+                                document.location = '/pagenew/' + encodeURI(val);
+                            }
+                        });
+                    });
+                </script>
             </t>
         </template>
 

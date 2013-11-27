@@ -37,5 +37,6 @@
     'data': [
         'views/website_payment_templates.xml',
     ],
-    'installable': True,
+    'installable': False,
+    'active': False,
 }

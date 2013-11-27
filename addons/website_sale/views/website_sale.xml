@@ -292,12 +292,6 @@
 
                           <div class="product_price mt16" t-if="product.product_variant_ids">
                               <h4>
-                                  <b><span class="oe_price" t-esc="product.product_variant_ids[0].price"
-                                        t-field-options='{
-                                          "widget": "monetary",
-                                          "display_currency": "website.pricelist_id.currency_id"
-                                        }'/>
-                                  </b>
                                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                                   <span class="text-danger" style="text-decoration: line-through;"
                                     t-field="product.product_variant_ids[0].lst_price"
@@ -891,7 +885,7 @@
                   </div>
                 </div>
 
-                <div class="js_payment mb64" t-if="not payment_acquirer_id and payments">
+                <div class="js_payment mb64" t-if="not payment_acquirer_id and payments" id="payment_method">
                     <p>Payment method:</p>
                     <div>
                         <t t-foreach="payments or []" t-as="payment">

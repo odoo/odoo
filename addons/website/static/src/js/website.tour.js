@@ -15,8 +15,32 @@
                 keyboard: false,
                 template: this.popover(),
             });
+            this.registerSteps();
+        },
+        registerSteps: function () {
+            var self = this;
             this.tour.addSteps(_.map(this.steps, function (step) {
                step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
+               if (step.modal) {
+                   step.onShow = function () {
+                        var $doc = $(document);
+                        function onStop () {
+                            if (step.modal.stopOnClose) {
+                                self.stop();
+                            }
+                        }
+                        $doc.on('hide.bs.modal', onStop);
+                        $doc.one('shown.bs.modal', function () {
+                            $('.modal button.btn-primary').one('click', function () {
+                                $doc.off('hide.bs.modal', onStop);
+                                self.moveToStep(step.modal.afterSubmit);
+                            });
+                            self.moveToNextStep();
+                        });
+                    };
+               } else {
+                   step.onShow = step.triggers;
+               }
                return step;
             }));
         },
@@ -47,12 +71,20 @@
         isCurrentStep: function (stepId) {
             return this.currentStepIndex() === this.indexOfStep(stepId);
         },
-        movetoStep: function (stepId) {
-            $('.popover.tour').remove();
-            var index = this.indexOfStep(stepId);
-            if (index > -1) {
-                this.tour.goto(index);
+        moveToStep: function (step) {
+            var index = _.isNumber(step) ? step : this.indexOfStep(step);
+            if (index >= this.steps.length) {
+                this.stop();
+            } else if (index >= 0) {
+                var self = this;
+                setTimeout(function () {
+                    $('.popover.tour').remove();
+                    self.tour.goto(index);
+                }, 0);
             }
+        },
+        moveToNextStep: function () {
+            this.moveToStep(this.currentStepIndex() + 1);
         },
         stop: function () {
             this.tour.end();
@@ -64,9 +96,12 @@
                 window.location.replace(newUrl);
             }
         },
+        ended: function () {
+            return this.tourStorage.getItem(this.id+'_end') === "yes";
+        },
         resume: function () {
             // Override if necessary
-            return this.currentStepIndex() === 0;
+            return !this.ended();
         },
         trigger: function (url) {
             // Override if necessary
@@ -81,25 +116,21 @@
         popover: function (options) {
             return openerp.qweb.render('website.tour_popover', options);
         },
-        onSnippetDraggedMoveTo: function (stepId) {
+        onSnippetDraggedAdvance: function (snippetId, stepId) {
             var self = this;
-            var $body = $(document.body);
             function beginDrag () {
                 $('.popover.tour').remove();
-                function goToNextStep () {
-                    $('#snippets').toggle();
+                function advance () {
                     if (stepId) {
-                        self.movetoStep(stepId);
+                        self.moveToStep(stepId);
                     } else {
-                        self.stop();
+                        self.moveToNextStep();
                     }
-                    $body.off('mouseup', goToNextStep);
                 }
-                $body.off('mousedown', beginDrag);
-                $body.on('mouseup', goToNextStep);
+                $(document.body).one('mouseup', advance);
             }
-            $body.on('mousedown', beginDrag);
-        }
+            $('#website-top-navbar [data-snippet-id='+snippetId+'].ui-draggable').one('mousedown', beginDrag);
+        },
     });
 
     website.UrlParser = openerp.Class.extend({

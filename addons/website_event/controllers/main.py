@@ -23,10 +23,8 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
-from openerp.addons import website_sale
 from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
-from openerp.addons.website_sale.controllers.main import Ecommerce as Ecommerce
 controllers = controllers()
 
 
@@ -36,7 +34,7 @@ from openerp import tools
 import urllib
 
 class website_event(http.Controller):
-    @website.route(['/event/', '/event/page/<int:page>/'], type='http', auth="public", multilang=True)
+    @website.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", multilang=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
@@ -163,27 +161,40 @@ class website_event(http.Controller):
 
         return request.website.render("website_event.index", values)
 
-    @website.route(['/event/<int:event_id>'], type='http', auth="public", multilang=True)
-    def event(self, event_id=None, **post):
-        event_obj = request.registry['event.event']
-        event = event_obj.browse(request.cr, request.uid, event_id, dict(request.context, show_address_only=1))
+    @website.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", multilang=True)
+    def event_page(self, event, page, **post):
         values = {
-            'event_id': event,
-            'main_object': event,
+            'event': event,
+        }
+        return request.website.render(page, values)
+
+    @website.route(['/event/<model("event.event"):event>'], type='http', auth="public", multilang=True)
+    def event(self, event=None, **post):
+        if event.menu_id and event.menu_id.child_id:
+            target_url = event.menu_id.child_id[0].url
+        else:
+            target_url = '/event/%s/register' % str(event.id)
+        if post.get('enable_editor') == '1':
+            target_url += '?enable_editor=1'
+        return request.redirect(target_url);
+
+    @website.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", multilang=True)
+    def event_register(self, event=None, **post):
+        values = {
+            'event': event,
             'range': range,
-            'float': float,
         }
         return request.website.render("website_event.event_description_full", values)
 
-    @website.route(['/event/<int:event_id>/add_cart'], type='http', auth="public", multilang=True)
-    def add_cart(self, event_id=None, **post):
+    @website.route(['/event/add_cart'], type='http', auth="public", multilang=True)
+    def add_cart(self, event_id, **post):
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
 
         order = request.context['website_sale_order']
         if not order:
-            order = website_sale.controllers.main.get_order()
+            order = request.registry['website']._get_order(request.cr, request.uid, context=request.context)
 
         partner_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid,
                                      context=request.context).partner_id.id
@@ -245,10 +256,23 @@ class website_event(http.Controller):
     def add_event(self, event_name="New Event", **kwargs):
         Event = request.registry.get('event.event')
         date_begin = datetime.today() + timedelta(days=(15)) # FIXME: better defaults
-        event_id = Event.create(request.cr, request.uid, {
+
+        vals = {
             'name': event_name,
             'date_begin': date_begin.strftime('%Y-%m-%d'),
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
-        }, context=request.context)
+        }
+        try:
+            dummy, res_id = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'event_sale', 'product_product_event')
+            vals['event_ticket_ids'] = [[0,0,{
+                'name': _('Subscription'),
+                'product_id': res_id,
+                'deadline' : vals.get('date_begin'),
+                'price': 0,
+            }]]
+        except ValueError:
+            pass
+
+        event_id = Event.create(request.cr, request.uid, vals, context=request.context)
 
         return request.redirect("/event/%s/?enable_editor=1" % event_id)

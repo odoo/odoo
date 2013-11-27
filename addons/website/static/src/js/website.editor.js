@@ -103,7 +103,6 @@
                         top: $el.height() / 2 + image_top - $btn.outerHeight() / 2,
                         left: $el.width() / 2 + image_left - $btn.outerWidth() / 2,
                     });
-                    $el.css('opacity', 0.75);
                 }).on('mouseleave', 'img', function (e) {
                     var $previous = $(previousSelection.$);
                     var $button = $previous.next('button');
@@ -112,14 +111,11 @@
                     $button.css('visibility', '');
                     if (el === this) { return; }
                     $button.remove();
-                    $previous.css('opacity', '');
                     previousSelection = null;
                 });
-                editor.on('destroy', function (evt) {
+                editor.on('destroy', function () {
                     if (!previousSelection) { return; }
-                    $('.image-edit-button')
-                        .prev().css('opacity', '').end()
-                        .remove();
+                    $('.image-edit-button').remove();
                 });
 
                 //noinspection JSValidateTypes
@@ -214,6 +210,154 @@
                         block.element.getDocument().getBody().setStyle('overflow', 'hidden');
                         CKEDITOR.ui.fire('ready', this);
                     },
+                });
+            }
+        });
+
+        CKEDITOR.plugins.add('linkstyle', {
+            requires: 'panelbutton,floatpanel',
+            init: function (editor) {
+                var label = "Link Style";
+
+                editor.ui.add('LinkStyle', CKEDITOR.UI_PANELBUTTON, {
+                    label: label,
+                    title: label,
+                    icon: '/website/static/src/img/bglink.png',
+                    modes: { wysiwyg: true },
+                    editorFocus: true,
+                    panel: {
+                        css: '/website/static/lib/bootstrap/css/bootstrap.css',
+                        attributes: { 'role': 'listbox', 'aria-label': label },
+                    },
+
+                    types: {
+                        'btn-default': _t("Basic"),
+                        'btn-primary': _t("Primary"),
+                        'btn-success': _t("Success"),
+                        'btn-info': _t("Info"),
+                        'btn-warning': _t("Warning"),
+                        'btn-danger': _t("Danger"),
+                    },
+                    sizes: {
+                        'btn-xs': _t("Extra Small"),
+                        'btn-sm': _t("Small"),
+                        '': _t("Default"),
+                        'btn-lg': _t("Large")
+                    },
+
+                    onRender: function () {
+                        var self = this;
+                        editor.on('selectionChange', function (e) {
+                            var path = e.data.path, el;
+
+                            if (!(e = path.contains('a')) || e.isReadOnly()) {
+                                self.disable();
+                                return;
+                            }
+
+                            self.enable();
+                        });
+                        // no hook where button is available, so wait
+                        // "some time" after render.
+                        setTimeout(function () {
+                            self.disable();
+                        }, 0)
+                    },
+                    enable: function () {
+                        this.setState(CKEDITOR.TRISTATE_OFF);
+                    },
+                    disable: function () {
+                        this.setState(CKEDITOR.TRISTATE_DISABLED);
+                    },
+
+                    onOpen: function () {
+                        var link = get_selected_link(editor);
+                        var id = this._.id;
+                        var block = this._.panel._.panel._.blocks[id];
+                        var $root = $(block.element.$);
+                        $root.find('button').removeClass('active').removeProp('disabled');
+
+                        // enable buttons matching link state
+                        for (var type in this.types) {
+                            if (!this.types.hasOwnProperty(type)) { continue; }
+                            if (!link.hasClass(type)) { continue; }
+
+                            $root.find('button[data-type=types].' + type)
+                                 .addClass('active');
+                        }
+                        var found;
+                        for (var size in this.sizes) {
+                            if (!this.sizes.hasOwnProperty(size)) { continue; }
+                            if (!size || !link.hasClass(size)) { continue; }
+                            found = true;
+                            $root.find('button[data-type=sizes].' + size)
+                                 .addClass('active');
+                        }
+                        if (!found && link.hasClass('btn')) {
+                            $root.find('button[data-type="sizes"][data-set-class=""]')
+                                 .addClass('active');
+                        }
+                    },
+
+                    onBlock: function (panel, block) {
+                        var self = this;
+                        block.autoSize = true;
+
+                        var html = ['<div style="padding: 5px">'];
+                        html.push('<div style="white-space: nowrap">');
+                        _(this.types).each(function (label, key) {
+                            html.push(_.str.sprintf(
+                                '<button type="button" class="btn %s" ' +
+                                        'data-type="types" data-set-class="%s">%s</button>',
+                                key, key, label));
+                        });
+                        html.push('</div>');
+                        html.push('<div style="white-space: nowrap; margin: 5px 0; text-align: center">');
+                        _(this.sizes).each(function (label, key) {
+                            html.push(_.str.sprintf(
+                                '<button type="button" class="btn btn-default %s" ' +
+                                        'data-type="sizes" data-set-class="%s">%s</button>',
+                                key, key, label));
+                        });
+                        html.push('</div>');
+                        html.push('<button type="button" class="btn btn-link btn-block" ' +
+                                          'data-type="reset">Reset</button>');
+                        html.push('</div>');
+
+                        block.element.setHtml(html.join(' '));
+                        var $panel = $(block.element.$);
+                        $panel.on('click', 'button', function () {
+                            self.clicked(this);
+                        });
+                    },
+                    clicked: function (button) {
+                        editor.focus();
+                        editor.fire('saveSnapshot');
+
+                        var $button = $(button),
+                              $link = $(get_selected_link(editor).$);
+                        if (!$link.hasClass('btn')) {
+                            $link.addClass('btn btn-default');
+                        }
+                        switch($button.data('type')) {
+                        case 'reset':
+                            $link.removeClass('btn')
+                                 .removeClass(_.keys(this.types).join(' '))
+                                 .removeClass(_.keys(this.sizes).join(' '));
+                            break;
+                        case 'types':
+                            $link.removeClass(_.keys(this.types).join(' '))
+                                 .addClass($button.data('set-class'));
+                            break;
+                        case 'sizes':
+                            $link.removeClass(_.keys(this.sizes).join(' '))
+                                 .addClass($button.data('set-class'));
+                        }
+                        this._.panel.hide();
+
+                        editor.fire('saveSnapshot');
+                    },
+
                 });
             }
         });
@@ -418,7 +562,9 @@
                 window_title: "New Page",
                 input: "Page Title",
             }).then(function (val) {
-                document.location = '/pagenew/' + encodeURI(val);
+                if (val) {
+                    document.location = '/pagenew/' + encodeURI(val);
+                }
             });
         },
     });
@@ -653,7 +799,7 @@
                 fillEmptyBlocks: false,
                 filebrowserImageUploadUrl: "/website/attach",
                 // Support for sharedSpaces in 4.x
-                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref',
+                extraPlugins: 'sharedspace,customdialogs,tablebutton,oeref,linkstyle',
                 // Place toolbar in controlled location
                 sharedSpaces: { top: 'oe_rte_toolbar' },
                 toolbar: [{
@@ -665,7 +811,7 @@
                         "Superscript", "TextColor", "BGColor", "RemoveFormat"
                     ]},{
                     name: 'span', items: [
-                        "Link", "Blockquote", "BulletedList",
+                        "Link", "LinkStyle", "Blockquote", "BulletedList",
                         "NumberedList", "Indent", "Outdent"
                     ]},{
                     name: 'justify', items: [
@@ -742,28 +888,35 @@
             this._super(editor);
             this.text = null;
             // Store last-performed request to be able to cancel/abort it.
-            this.req = null;
+            this.page_exists_req = null;
+            this.search_pages_req = null;
         },
         start: function () {
             var self = this;
             this.$('#link-page').select2({
-                minimumInputLength: 3,
+                minimumInputLength: 1,
                 placeholder: _t("New or existing page"),
                 query: function (q) {
-                    // FIXME: out-of-order, abort
-                    self.fetch_pages(q.term).then(function (results) {
+                    $.when(
+                        self.page_exists(q.term),
+                        self.fetch_pages(q.term)
+                    ).then(function (exists, results) {
                         var rs = _.map(results, function (r) {
                             return { id: r.url, text: r.name, };
                         });
-                        rs.push({
-                            create: true,
-                            id: q.term,
-                            text: _.str.sprintf(_t("Create page '%s'"), q.term),
-                        });
+                        if (!exists) {
+                            rs.push({
+                                create: true,
+                                id: q.term,
+                                text: _.str.sprintf(_t("Create page '%s'"), q.term),
+                            });
+                        }
                         q.callback({
                             more: false,
                             results: rs
                         });
+                    }, function () {
+                        q.callback({more: false, results: []});
                     });
                 },
             });
@@ -836,20 +989,30 @@
                 .siblings().removeClass('active')
                 .addBack().removeClass('has-error');
         },
-        fetch_pages: function (term) {
+        call: function (method, args, kwargs) {
             var self = this;
-            if (this.req) { this.req.abort(); }
-            return this.req = openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+            var req = method + '_req';
+
+            if (this[req]) { this[req].abort(); }
+
+            return this[req] = openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website',
-                method: 'search_pages',
-                args: [null, term],
-                kwargs: {
-                    limit: 9,
-                    context: website.get_context()
-                },
-            }).done(function () {
-                // request completed successfully -> unstore it
-                self.req = null;
+                method: method,
+                args: args,
+                kwargs: kwargs,
+            }).always(function () {
+                self[req] = null;
+            });
+        },
+        page_exists: function (term) {
+            return this.call('page_exists', [null, term], {
+                context: website.get_context(),
+            });
+        },
+        fetch_pages: function (term) {
+            return this.call('search_pages', [null, term], {
+                limit: 9,
+                context: website.get_context(),
             });
         },
     });
