@@ -36,50 +36,75 @@
     </template>
 
     <template id="tracks">
-        <t t-call="website_event.layout">
-            <div class="oe_structure"/>
-            <div class="container">
-                <div class="row mt16">
-                    <div class="col-md-3 css_noprint">
+        <t t-call="website_event.event_details">
+            <div class="col-md-3 css_noprint">
 
-                        <ul class="nav nav-pills nav-stacked">
-                            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ event.id }/track/">All</a></li>
-                            <t t-foreach="tags" t-as="tag">
-                                <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
-                                    <a t-href="/event/#{ event.id }/track/tag/#{ tag.id }">
-                                        <t t-esc="tag.name"/>
-                                    </a>
-                                </li>
-                            </t>
-                        </ul>
-                    
-                    </div><div class="col-md-9">
+                <ul class="nav nav-pills nav-stacked">
+                    <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ event.id }/track/">All</a></li>
+                    <t t-foreach="tags" t-as="tag">
+                        <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
+                            <a t-href="/event/#{ event.id }/track/tag/#{ tag.id }">
+                                <t t-esc="tag.name"/>
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div class="col-md-9">
 
-                        <ul class="media-list">
-                            <li t-foreach="event.track_ids" t-as="track" class="media">
-                                <div class="media-body">
-                                    <h4 class="media-heading">
-                                        <a t-href="/event/#{ event.id }/track/#{track.id}"><span t-field="track.name"> </span></a>
-                                        <!-- <small t-if="not track.website_published" class="label label-danger">not published</small> -->
-                                    </h4>
-                                    <p>TODO: NOT Implemented</p>
-                                </div>
-                            </li>
-                        </ul>
- 
-                    </div>
-                </div>
+                <ul class="media-list">
+                    <li t-foreach="tracks" t-as="track" class="media">
+                        <div class="media-body">
+                            <h4 class="media-heading">
+                                <a t-href="/event/#{ event.id }/track/#{track.id}"><span t-field="track.name"> </span></a>
+                                <span t-field="track.date"/>
+                                <!-- <small t-if="not track.website_published" class="label label-danger">not published</small> -->
+                            </h4>
+                            <div><span t-esc="html2text(track.description)[0:400]"/>...</div>
+                            <div>
+                                <t t-foreach="track.tag_ids" t-as="tag_id">
+                                    <span class="label label-default" t-field="tag_id.name"/>
+                                </t>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </t>
     </template>
 
 
     <template id="track_view">
-        <t t-call="website_event.layout">
-            <div class="oe_structure"/>
-            <div class="container">
-                <h1>Not Implmented</h1>
-                <h2 t-esc="track.name"/>
+        <t t-call="website_event.event_details">
+            <div class="col-md-8">
+                <h2 t-field="track.name"/>
+                <div t-field="track.description"/>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Informations</h4>
+                    </div>
+                    <div class="panel-body">
+                        <t t-foreach="track.tag_ids" t-as="tag_id">
+                            <span class="label label-default" t-field="tag_id.name"/>
+                        </t>
+                    </div>
+                    <div class="panel-body">
+                        <b>Responsible</b><br/>
+                        <span t-field="track.user_id"/><br/>
+                        <b>Speakers</b><br/>
+                        <span t-field="track.speaker_ids"/><br/>
+                        <b>Date</b><br/>
+                        <span t-field="track.date"/><br/>
+                        <b>Duration</b><br/>
+                        <span t-field="track.duration"/><br/>
+                        <b>Location</b><br/>
+                        <span t-field="track.location_id"/><br/>
+                        <b>Stage</b><br/>
+                        <span t-field="track.stage_id"/><br/>
+                    </div>
+                </div>
             </div>
         </t>
     </template>
@@ -148,7 +173,7 @@
                                     <label class="col-md-3 col-sm-4 control-label" for="phone">Tags</label>
                                     <div class="col-md-7 col-sm-8">
                                         <div class="row">
-                                            <div class="col-sm-4" t-foreach="event.track_tag_ids" t-as="tag">
+                                            <div class="col-sm-4" t-foreach="event.allowed_track_tag_ids" t-as="tag">
                                                 <input type="checkbox" t-att-value="tag.id" name="tags"/>
                                                 <t t-esc="tag.name"/>
                                             </div>
@@ -223,10 +248,11 @@
 
 
     <template id="event_track_proposal_success">
-        <t t-call="website_event.layout">
-            <div class="container">
+        <t t-call="website_event.event_details">
+            <div class="col-md-8">
                 Thanks
             </div>
+            <div class="col-md-4"></div>
         </t>
     </template>
  </data>

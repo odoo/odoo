@@ -105,6 +105,14 @@ class event_track(osv.osv):
 
 class event_event(osv.osv):
     _inherit = "event.event"
+
+    def _get_tracks_tag_ids(self, cr, uid, ids, field_names, arg=None, context=None):
+        res = dict.fromkeys(ids, [])
+        for event in self.browse(cr, uid, ids, context=context):
+            for track in event.track_ids:
+                res[event.id] += [tag.id for tag in track.tag_ids]
+            res[event.id] = list(set(res[event.id]))
+        return res
     _columns = {
         'tag_ids': fields.many2many('event.tag', string='Tags'),
         'track_ids': fields.one2many('event.track', 'event_id', 'Tracks'),
@@ -112,7 +120,8 @@ class event_event(osv.osv):
         'show_track_proposal': fields.boolean('Talks Proposals'),
         'show_tracks': fields.boolean('Multiple Tracks'),
         'show_blog': fields.boolean('News'),
-        'track_tag_ids': fields.many2many('event.track.tag', string='Accepted Tracks'),
+        'tracks_tag_ids': fields.function(_get_tracks_tag_ids, type='one2many', relation='event.track.tag', string='Tags of Tracks'),
+        'allowed_track_tag_ids': fields.many2many('event.track.tag', string='Accepted Tracks'),
     }
     _defaults = {
         'show_track_proposal': False,
