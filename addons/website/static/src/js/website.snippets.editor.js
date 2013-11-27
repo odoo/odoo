@@ -675,7 +675,7 @@
             if (np.$next) {
                 if (np.$next.hasClass("oe_custom_bg")) {
                     var editor = new website.editor.ImageDialog();
-                    editor.on('start', self, function (o) {o.url = np.$prev && np.$prev.data("src") || "";});
+                    editor.on('start', self, function (o) {o.url = np.$prev && np.$prev.data("src") || np.$next && np.$next.data("src") || "";});
                     editor.on('save', self, function (o) {
                         self._set_bg(o.url);
                         np.$next.data("src", o.url);
@@ -683,7 +683,6 @@
                     });
                     editor.on('cancel', self, function () {
                         if (!np.$prev || np.$prev.data("src") === "") {
-                            np.$next.removeClass('active');
                             self.$target.removeClass(np.$next.data("class"));
                             self.$target.trigger("snippet-style-change", [self, np]);
                         }
@@ -694,6 +693,7 @@
                 }
             } else {
                 this._set_bg(false);
+                this.$target.removeClass(np.$prev.data("class"));
             }
         },
         preview: function (event, np) {
