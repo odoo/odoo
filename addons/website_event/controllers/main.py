@@ -35,7 +35,7 @@ from openerp import tools
 import urllib
 
 # remove product event from the website content grid and list view (not removed in detail view)
-Ecommerce.domain += [('event_ok', '=', False)]
+# Ecommerce.domain += [('event_ok', '=', False)]  # this is not correct, install only ecommerce, this crashes
 
 class website_event(http.Controller):
     @website.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", multilang=True)

@@ -122,12 +122,3 @@ class Website(orm.Model):
             order.write(values)
             for line in order.order_line:
                 self.add_product_to_cart(order_line_id=line.id, number=0)
-
-
-class PaymentTransaction(orm.Model):
-    _inherit = 'payment.transaction'
-
-    _columns = {
-        # link with the sale order
-        'sale_order_id': fields.many2one('sale.order', 'Sale Order'),
-    }

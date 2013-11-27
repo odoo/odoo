@@ -1,30 +1,15 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-# from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
 from openerp.addons.website.models import website
 
+try:
+    import simplejson as json
+except ImportError:
+    import json
 import logging
+import pprint
 import requests
 from urllib import urlencode
 
@@ -36,64 +21,50 @@ class PaypalController(http.Controller):
     _return_url = '/payment/paypal/dpn/'
     _cancel_url = '/payment/paypal/cancel/'
 
+    def paypal_validate_data(self, **post):
+        """ Paypal IPN: three steps validation to ensure data correctness
+
+         - step 1: return an empty HTTP 200 response -> will be done at the end
+           by returning ''
+         - step 2: POST the complete, unaltered message back to Paypal (preceded
+           by cmd=_notify-validate), with same encoding
+         - step 3: paypal send either VERIFIED or INVALID (single word)
+
+        Once data is validated, process it. """
+        res = False
+        paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr"
+        post_url = '%s?cmd=_notify-validate&%s' % (paypal_url, urlencode(post))
+        resp = requests.post(post_url)
+        if resp.text == 'VERIFIED':
+            _logger.info('Paypal: validated data')
+            cr, uid, context = request.cr, request.uid, request.context
+            res = request.registry['payment.transaction'].form_feedback(cr, uid, post, 'paypal', context=context)
+        elif resp.text == 'INVALID':
+            _logger.warning('Paypal: answered INVALID on data verification')
+        else:
+            _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED or INVALID' % resp.text)
+        return res
+
     @website.route([
         '/payment/paypal/ipn/',
     ], type='http', auth='public')
     def paypal_ipn(self, **post):
-        print 'Entering paypal_ipn with post', post
-        # step 1: return an empty HTTP 200 response -> will be done at the end by returning ''
-
-        # step 2: POST the complete, unaltered message back to Paypal (preceded by cmd=_notify-validate), with same encoding
-        paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr"
-        post_url = '%s?cmd=_notify-validate&%s' % (paypal_url, urlencode(post))
-        resp = requests.post(post_url)
-        print '\tReceived response', resp, resp.text
-
-        # step 3: paypal send either VERIFIED or INVALID (single word)
-        if resp.text == 'VERIFIED':
-            _logger.info('Paypal: received verified IPN')
-            cr, uid, context = request.cr, request.uid, request.context
-            payment_transaction = request.registry['payment.transaction']
-            res = payment_transaction.paypal_form_feedback(cr, uid, post, context=context)
-            print '\tValidation result', res
-        elif resp.text == 'INVALID':
-            _logger.warning('Paypal: received invalid IPN with post %s' % post)
-        else:
-            _logger.warning('Paypal: received unrecognized IPN with post %s' % post)
-
+        """ Paypal IPN. """
+        _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
+        self.paypal_validate_data(**post)
         return ''
 
     @website.route([
         '/payment/paypal/dpn',
     ], type='http', auth="public")
     def paypal_dpn(self, **post):
-        """ TODO
-        """
-        cr, uid, context = request.cr, request.uid, request.context
-        print 'Entering paypal_dpn with post', post
-
-        # step 1: return an empty HTTP 200 response -> will be done at the end by returning ''
-
-        # step 2: POST the complete, unaltered message back to Paypal (preceded by cmd=_notify-validate), with same encoding
-        paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr"
-        post_url = '%s?cmd=_notify-validate&%s' % (paypal_url, urlencode(post))
-        resp = requests.post(post_url)
-        print '\tReceived response', resp, resp.text
-
-        # step 3: paypal send either VERIFIED or INVALID (single word)
-        if resp.text == 'VERIFIED':
-            _logger.info('Paypal: received verified IPN')
-            cr, uid, context = request.cr, request.uid, request.context
-            payment_transaction = request.registry['payment.transaction']
-            res = payment_transaction.paypal_form_feedback(cr, uid, post, context=context)
-            print '\tValidation result', res
-        elif resp.text == 'INVALID':
-            _logger.warning('Paypal: received invalid IPN with post %s' % post)
-        else:
-            _logger.warning('Paypal: received unrecognized IPN with post %s' % post)
-
-        return_url = post.pop('return_url', '/')
-        print 'return_url', return_url
+        """ Paypal DPN """
+        _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
+        return_url = post.pop('return_url', '')
+        if not return_url:
+            custom = json.loads(post.pop('custom', '{}'))
+            return_url = custom.pop('return_url', '/')
+        self.paypal_validate_data(**post)
         return request.redirect(return_url)
 
     @website.route([

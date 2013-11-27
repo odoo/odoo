@@ -12,9 +12,10 @@
                             attrs="{'invisible': [('name', '!=', 'paypal')]}">
                         <field name="paypal_email_id"/>
                         <field name="paypal_username"/>
-                        <field name="paypal_password"/>
-                        <field name="paypal_signature"/>
                         <field name="paypal_use_ipn"/>
+                        <field name="paypal_api_enabled"/>
+                        <field name="paypal_api_username"/>
+                        <field name="paypal_api_password"/>
                     </group>
                 </xpath>
             </field>

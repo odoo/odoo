@@ -23,11 +23,11 @@
                     <input type='hidden' name="custom" t-att-value='tx_values["custom"]'/>
                 </t>
                 <!-- URLs -->
-                <input t-if="acquirer.paypal_use_dpn" type='hidden' name='return'
+                <input t-if="tx_values.get('return')" type='hidden' name='return'
                     t-att-value="tx_values['return']"/>
                 <input t-if="acquirer.paypal_use_ipn" type='hidden' name='notify_url'
                     t-att-value="tx_values['notify_url']"/>
-                <input t-if="tx_values['cancel_return']" type="hidden" name="cancel_return"
+                <input t-if="tx_values.get('cancel_return')" type="hidden" name="cancel_return"
                     t-att-value="tx_values['cancel_return']"/>
                 <!-- button -->
                 <input type="image" name="submit" id="payment_submit"
