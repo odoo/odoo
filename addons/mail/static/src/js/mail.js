@@ -834,7 +834,9 @@ openerp.mail = function (session) {
                 // go to the parented message
                 var message = this.parent_thread.parent_message;
                 var parent_message = message.parent_id ? message.parent_thread.parent_message : message;
-                var messages = [parent_message].concat(parent_message.get_childs());
+                if(parent_message){
+                    var messages = [parent_message].concat(parent_message.get_childs());
+                }
             } else if (this.options.emails_from_on_composer) {
                 // get all wall messages if is not a mail.Wall
                 _.each(this.options.root_thread.messages, function (msg) {messages.push(msg); messages.concat(msg.get_childs());});
