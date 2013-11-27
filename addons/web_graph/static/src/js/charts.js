@@ -1,5 +1,5 @@
 
-function draw_chart (mode, pivot) {
+openerp.web_graph.draw_chart = function (mode, pivot) {
     var values = _.map(pivot.rows.main.children, function (pt) {
         var val = pivot.get_value(pt.id, pivot.cols.main.id);
         return {x: pt.title, y: val};
@@ -7,18 +7,18 @@ function draw_chart (mode, pivot) {
 
     switch (mode) {
         case 'bar_chart':
-            bar_chart(values);
+            openerp.web_graph.bar_chart(values);
             break;
         case 'line_chart':
-            line_chart(values);
+            openerp.web_graph.line_chart(values);
             break;
         case 'pie_chart':
-            pie_chart(values);
+            openerp.web_graph.pie_chart(values);
             break;
     }
 }
 
-function bar_chart (data) {
+openerp.web_graph.bar_chart = function (data) {
     nv.addGraph(function () {
       var chart = nv.models.discreteBarChart()
             .tooltips(false)
@@ -38,7 +38,7 @@ function bar_chart (data) {
     });
 };
 
-function line_chart (data) {
+openerp.web_graph.line_chart = function (data) {
     nv.addGraph(function () {
         var chart = nv.models.lineChart()
             .x(function (d,u) { return u; })
@@ -56,7 +56,7 @@ function line_chart (data) {
       });
 };
 
-function pie_chart(data) {
+openerp.web_graph.pie_chart = function(data) {
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
             .color(d3.scale.category10().range())

@@ -162,7 +162,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.data.domain = new instance.web.CompoundDomain(domain);
 
         if (!this.pivot_table) {
-            self.pivot_table = new PivotTable(self.data);
+            self.pivot_table = new openerp.web_graph.PivotTable(self.data);
             self.pivot_table.start().then(self.proxy('draw_table'));
         } else {
             this.pivot_table.domain = domain;
@@ -189,7 +189,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.svg.remove();
             this.svg = $('<div><svg></svg></div>');
             this.$el.filter('.graph_main_content').append(this.svg);
-            draw_chart(mode, this.pivot_table);
+            openerp.web_graph.draw_chart(mode, this.pivot_table);
 
         }
     },

@@ -1,5 +1,5 @@
 
-var PivotTable = openerp.web.Class.extend({
+openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	id_seed: 0,
 
 	init: function (options) {
@@ -49,7 +49,7 @@ var PivotTable = openerp.web.Class.extend({
 	start: function () {
 		var self = this,
 			initial_group = this.expand(this.rows.main.id, this.rows.groupby[0]),
-			total = query_groups(this.model, this.measure, this.domain, [])
+			total = openerp.web_graph.query_groups(this.model, this.measure, this.domain, [])
 				.then(function (total) {
 					var val = total[0].attributes.aggregates[self.measure];
 					self.set_value(self.rows.main.id, self.cols.main.id, val);
@@ -125,7 +125,7 @@ var PivotTable = openerp.web.Class.extend({
         }
 
         var otherDim = (row.root === this.cols) ? this.rows : this.cols; 
-        return query_groups_data(this.model, this.visible_fields(), row.domain, otherDim.groupby, field_id)
+        return openerp.web_graph.query_groups_data(this.model, this.visible_fields(), row.domain, otherDim.groupby, field_id)
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
                 	var new_row_id = self.make_header(group, row);
@@ -159,7 +159,7 @@ var PivotTable = openerp.web.Class.extend({
 				root: parent.root,
 			};
 		parent.children.splice(0,0, new_header);
-		insertAfter(parent.root.headers, parent, new_header);
+		openerp.web_graph.insertAfter(parent.root.headers, parent, new_header);
 		return new_header.id;
 	},
 
@@ -319,7 +319,7 @@ var PivotTable = openerp.web.Class.extend({
 			groupbys = [rows, []];
 		}
 		def_array = _.map(groupbys, function (groupby) {
-			return query_groups(self.model, self.visible_fields(), self.domain, groupby);
+			return openerp.web_graph.query_groups(self.model, self.visible_fields(), self.domain, groupby);
 		});
 
 		return $.when.apply(null, def_array).then(function () {
@@ -434,14 +434,14 @@ var PivotTable = openerp.web.Class.extend({
 });
 
 
-function removeFromArray(array, element) {
+openerp.web_graph.removeFromArray = function (array, element) {
     var index = array.indexOf(element);
     if (index > -1) {
         array.splice(index, 1);
     }
 }
 
-function insertAfter(array, after, elem) {
+openerp.web_graph.insertAfter = function (array, after, elem) {
     array.splice(array.indexOf(after) + 1, 0, elem);
 }
 
@@ -450,7 +450,7 @@ function insertAfter(array, after, elem) {
  * with all the groupbys applied (this is done for now, but the goal
  * is to modify read_group in order to allow eager and lazy groupbys
  */
-function query_groups (model, fields, domain, groupbys) {
+openerp.web_graph.query_groups = function (model, fields, domain, groupbys) {
     return model.query(fields)
         .filter(domain)
         .group_by(groupbys)
@@ -464,7 +464,7 @@ function query_groups (model, fields, domain, groupbys) {
                 var get_subgroups = $.when.apply(null, _.map(non_empty_results, function (result) {
                     var new_domain = result.model._domain;
                     var new_groupings = groupbys.slice(1);
-                    return query_groups(model, fields,new_domain, new_groupings).then(function (subgroups) {
+                    return openerp.web_graph.query_groups(model, fields,new_domain, new_groupings).then(function (subgroups) {
                         result.subgroups_data = subgroups;
                     });
                 }));
@@ -475,19 +475,19 @@ function query_groups (model, fields, domain, groupbys) {
         });
 }
 
-function query_groups_data(model, fields, domain, row_groupbys, col_groupby) {
-    return query_groups(model, fields, domain, [col_groupby].concat(row_groupbys)).then(function (groups) {
+openerp.web_graph.query_groups_data = function (model, fields, domain, row_groupbys, col_groupby) {
+    return openerp.web_graph.query_groups(model, fields, domain, [col_groupby].concat(row_groupbys)).then(function (groups) {
         return _.map(groups, function (group) {
-            return format_group(group, []);
+            return openerp.web_graph.format_group(group, []);
         });
     });
 }
 
-function format_group (group, path) {
+openerp.web_graph.format_group = function (group, path) {
     group.path = path.concat(group.attributes.value[1]);
     result = [group];
     _.each(group.subgroups_data, function (subgroup) {
-        result = result.concat(format_group (subgroup, group.path));
+        result = result.concat(openerp.web_graph.format_group (subgroup, group.path));
     });
     return result;
 }
