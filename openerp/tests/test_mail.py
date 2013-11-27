@@ -23,8 +23,11 @@
 ##############################################################################
 
 import unittest2
-from . import test_mail_examples
+
+from lxml import etree
+
 from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html
+from . import test_mail_examples
 
 class TestSanitizer(unittest2.TestCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
