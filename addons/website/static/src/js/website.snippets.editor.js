@@ -324,14 +324,12 @@
                             }
                         },
                         out:    function(){
-                            if( action === 'insert'){
+                            var prev = $toInsert.prev();
+                            if( action === 'insert' && prev && this != prev[0]){
                                 dropped = false;
                                 $toInsert.detach();
                             }
-                        },
-                        drop:   function(){
-                            dropped = true;
-                        },
+                        }
                     });
                 },
                 stop: function(ev, ui){
