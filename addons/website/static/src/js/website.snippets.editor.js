@@ -325,7 +325,7 @@
                         },
                         out:    function(){
                             var prev = $toInsert.prev();
-                            if( action === 'insert' && prev && this != prev[0]){
+                            if( action === 'insert' && this === prev[0]){
                                 dropped = false;
                                 $toInsert.detach();
                             }
