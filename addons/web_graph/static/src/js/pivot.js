@@ -11,7 +11,7 @@ var PivotTable = openerp.web.Class.extend({
 			parent: null,
 			children: [],
 			domain: options.domain,
-		}; 
+		};
 		main_col = {
 			id: this.generate_id(),
 			path: [],
@@ -19,7 +19,7 @@ var PivotTable = openerp.web.Class.extend({
 			is_expanded: false,
 			parent: null,
 			children: [],
-			domain: options.domain,				
+			domain: options.domain,
 		};
 
 		this.rows = {
@@ -93,7 +93,7 @@ var PivotTable = openerp.web.Class.extend({
 	get_header: function (id) {
 		return _.find(this.rows.headers.concat(this.cols.headers), function (header) {
 			return header.id == id;
-		});		
+		});
 	},
 
 	fold: function (header) {
@@ -108,7 +108,7 @@ var PivotTable = openerp.web.Class.extend({
 		header.root.headers = _.difference(header.root.headers, _.rest(list));
 		header.is_expanded = false;
         var fold_lvls = _.map(header.root.headers, function(g) {return g.path.length;});
-        var new_groupby_length = _.max(fold_lvls); 
+        var new_groupby_length = _.max(fold_lvls);
         header.root.groupby.splice(new_groupby_length);
         header.children = [];
         this.cells = _.reject(this.cells, function (cell) {
@@ -118,7 +118,7 @@ var PivotTable = openerp.web.Class.extend({
 
 	expand: function (row_id, field_id) {
         var self = this,
-        	row = this.get_header(row_id);
+            row = this.get_header(row_id);
 
         if (row.path.length == row.root.groupby.length) {
             row.root.groupby.push(field_id);
@@ -158,7 +158,7 @@ var PivotTable = openerp.web.Class.extend({
 				domain: groups[0].model._domain,
 				root: parent.root,
 			};
-		parent.children.splice(0,0, new_header)
+		parent.children.splice(0,0, new_header);
 		insertAfter(parent.root.headers, parent, new_header);
 		return new_header.id;
 	},
@@ -199,11 +199,11 @@ var PivotTable = openerp.web.Class.extend({
 			self.cols.main.title = self.measure_label;
 			_.each(self.rows.headers, function (row) {
 				row.root = self.rows;
-				row.is_expanded = (row.children.length > 0)
+				row.is_expanded = (row.children.length > 0);
 			});
 			_.each(self.cols.headers, function (col) {
 				col.root = self.cols;
-				col.is_expanded = (col.children.length > 0)
+				col.is_expanded = (col.children.length > 0);
 			});
 
 		});
@@ -227,7 +227,7 @@ var PivotTable = openerp.web.Class.extend({
 						corresponding_col.is_expanded = true;
 						_.each(corresponding_col.children, function (c) {
 							c.is_expanded = false;
-						})
+						});
 					} else {
 						corresponding_col.is_expanded = false;
 					}
@@ -257,7 +257,7 @@ var PivotTable = openerp.web.Class.extend({
 						corresponding_row.is_expanded = true;
 						_.each(corresponding_row.children, function (c) {
 							c.is_expanded = false;
-						})
+						});
 					} else {
 						corresponding_row.is_expanded = false;
 					}
@@ -274,7 +274,6 @@ var PivotTable = openerp.web.Class.extend({
 				}
 			});
 			self.rows.main = self.rows.headers[0];
-
 
 			// now some more tweaks
 			self.total = self.rows.main.total;

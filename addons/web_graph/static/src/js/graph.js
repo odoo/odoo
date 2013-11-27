@@ -33,7 +33,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         'click .graph_expand_selection li' : function (event) {
             event.preventDefault();
             switch (event.target.attributes['data-choice'].nodeValue) {
-                case 'fold_columns': 
+                case 'fold_columns':
                     this.pivot_table.fold_cols();
                     this.draw_table();
                     break;
@@ -54,7 +54,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         'click .graph_options_selection li' : function (event) {
             event.preventDefault();
             switch (event.target.attributes['data-choice'].nodeValue) {
-                case 'swap_axis': 
+                case 'swap_axis':
                     this.pivot_table.swap_axis();
                     this.draw_table();
                     break;
@@ -81,12 +81,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.pivot_table.expand(id, field_id)
                 .then(this.proxy('draw_table'));
         },
-
-
-        'click label.graph_heat_map' : function (event) {
-            this.heat_map_mode = !this.heat_map_mode;
-            this.draw_table();
-        },
     },
 
     view_loading: function (fields_view_get) {
@@ -96,7 +90,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
             measure = null,
             fields,
             important_fields = [],
-            col_groupby = [], 
             row_groupby = [];
 
         this.pivot_table = null;
@@ -214,9 +207,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 var field = header.root.groupby[header.path.length];
                 pivot.expand(id, field).then(this.proxy('draw_table'));
             } else {
-                this.display_dropdown({id:header.id, 
-                                       target: $(options.event.target), 
-                                       x: options.event.pageX, 
+                this.display_dropdown({id:header.id,
+                                       target: $(options.event.target),
+                                       x: options.event.pageX,
                                        y: options.event.pageY});
             }
         }
@@ -306,7 +299,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
 
         _.each(header_cells, function (cells) {
-            self.table.append($("<tr></tr>").append(cells));
+            self.table.append($('<tr></tr>').append(cells));
         });
     },
 
@@ -330,15 +323,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     cell = $('<td></td>');
 
                 cell.append((value === undefined) ? '' : value);
-                console.log("self.mode",self.mode);
                 if ((self.mode == 'heatmap') && (value !== undefined)) {
-                    console.log("yop");
                     var color = Math.floor(50 + 205*(pivot.total - value)/pivot.total);
-                    cell.css("background-color", "rgb(255," + color + "," + color + ")");
+                    cell.css('background-color', 'rgb(255,' + color + ',' + color + ')');
                 }
                 if (row.is_expanded && (row.path.length <= 2)) {
                     var color = row.path.length *   5 + 240;
-                    cell.css("background-color", "rgb(" + [color, color, color].join() + ")");
+                    cell.css('background-color', 'rgb(' + [color, color, color].join() + ')');
                 }
                 html_row.append(cell);
             }
@@ -349,10 +340,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
             .css('font-weight', 'bold');
         if (row.is_expanded && (row.path.length <= 2)) {
             var color = row.path.length *   5 + 240;
-            cell.css("background-color", "rgb(" + [color, color, color].join() + ")");
+            cell.css('background-color', 'rgb(' + [color, color, color].join() + ')');
         } else if (self.heat_map_mode) {
             var color = Math.floor(50 + 205*(pivot.total - total)/pivot.total);
-            cell.css("background-color", "rgb(255," + color + "," + color + ")");
+            cell.css('background-color', 'rgb(255,' + color + ',' + color + ')');
         }
 
         if (pivot.cols.main.children.length > 0) {
