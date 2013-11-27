@@ -614,6 +614,29 @@ openerp.testing.section('search.completions', {
             {relation: 'dummy.model'}, view);
         return f.complete("bob");
     });
+    test("M2O custom operator", {asserts: 6}, function (instance) {
+        var view = { inputs: [], };
+        var f = new instance.web.search.ManyToOneField(
+            {attrs: {string: 'Dummy', operator:'ilike'}},
+            {relation: 'dummy.model'}, view);
+
+        return f.complete('bob')
+            .done(function (completions) {
+                equal(completions.length, 1, "should provide a single completion");
+                var c = completions[0];
+                equal(c.label, "Search <em>Dummy</em> for: <strong>bob</strong>",
+                      "should propose fuzzy searching of the value");
+                ok(c.facet, "should have a facet");
+
+                var facet = new instance.web.search.Facet(c.facet);
+                equal(facet.get('category'), f.attrs.string,
+                      "completion facet should bear the field's name");
+                strictEqual(facet.get('field'), f,
+                            "completion facet should yield the field");
+                deepEqual(facet.values.toJSON(), [{label: 'bob', value: 'bob'}],
+                          "facet should have a single value using the completion item");
+            });
+});
     test('Integer: invalid', {asserts: 1}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.IntegerField(

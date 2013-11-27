@@ -724,7 +724,7 @@ instance.web.Login =  instance.web.Widget.extend({
         params.db = db;
         this.$('.oe_login_dbpane').empty().text(_t('Loading...'));
         this.$('[name=login], [name=password]').prop('readonly', true);
-        instance.web.redirect('/?' + $.param(params));
+        instance.web.redirect('/web?' + $.param(params));
     },
     on_db_loaded: function (result) {
         var self = this;
@@ -1221,6 +1221,26 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 modal: true, width: 507, height: 290, resizable: false, title: _t("About")});
         });
     },
+});
+
+instance.web.FullscreenWidget = instance.web.Widget.extend({
+    /**
+     * Widgets extending the FullscreenWidget will be displayed fullscreen,
+     * and will have a fixed 1:1 zoom level on mobile devices.
+     */
+    start: function(){
+        if(!$('#oe-fullscreenwidget-viewport').length){
+            $('head').append('<meta id="oe-fullscreenwidget-viewport" name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">');
+        }
+        instance.webclient.set_content_full_screen(true);
+        return this._super();
+    },
+    destroy: function(){
+        instance.webclient.set_content_full_screen(false);
+        $('#oe-fullscreenwidget-viewport').remove();
+        return this._super();
+    },
+
 });
 
 instance.web.Client = instance.web.Widget.extend({

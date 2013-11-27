@@ -743,7 +743,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
         });
     },
     get_domain: function (other_domain) {
-        this._model.domain(other_domain);
+        return this._model.domain(other_domain);
     },
     alter_ids: function (ids) {
         this._super(ids);
@@ -780,6 +780,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this._super.apply(this, arguments);
         this.reset_ids([]);
         this.last_default_get = {};
+        this.running_reads = [];
     },
     default_get: function(fields, options) {
         var self = this;
@@ -846,6 +847,9 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.to_write = [];
         this.cache = [];
         this.delete_all = false;
+        _.each(_.clone(this.running_reads), function(el) {
+            el.reject();
+        });
     },
     read_ids: function (ids, fields, options) {
         var self = this;
@@ -861,7 +865,6 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                     to_get.push(id);
             }
         });
-        var completion = $.Deferred();
         var return_records = function() {
             var records = _.map(ids, function(id) {
                 return _.extend({}, _.detect(self.cache, function(c) {return c.id === id;}).values, {"id": id});
@@ -896,10 +899,20 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                     }, 0);
                 });
             }
-            completion.resolve(records);
+            return $.when(records);
         };
         if(to_get.length > 0) {
-            var rpc_promise = this._super(to_get, fields, options).done(function(records) {
+            var def = $.Deferred();
+            self.running_reads.push(def);
+            def.always(function() {
+                self.running_reads = _.without(self.running_reads, def);
+            });
+            this._super(to_get, fields, options).then(function() {
+                def.resolve.apply(def, arguments);
+            }, function() {
+                def.reject.apply(def, arguments);
+            });
+            return def.then(function(records) {
                 _.each(records, function(record, index) {
                     var id = to_get[index];
                     var cached = _.detect(self.cache, function(x) {return x.id === id;});
@@ -910,13 +923,11 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                         cached.values = _.defaults(_.clone(cached.values), record);
                     }
                 });
-                return_records();
+                return return_records();
             });
-            $.when(rpc_promise).fail(function() {completion.reject();});
         } else {
-            return_records();
+            return return_records();
         }
-        return completion.promise();
     },
     /**
      * Invalidates caching of a record in the dataset to ensure the next read
@@ -1088,6 +1099,157 @@ instance.web.DropMisordered = instance.web.Class.extend({
 
         return res.promise();
     }
+});
+
+instance.web.SimpleIndexedDB = instance.web.Class.extend({
+    /** 
+     * A simple wrapper around IndexedDB that provides an asynchronous 
+     * localStorage-like Key-Value api that persists between browser 
+     * restarts.
+     *
+     * It will not work if the browser doesn't support a recent version 
+     * of IndexedDB, and it may fail if the user refuses db access.
+     *
+     * All instances of SimpleIndexedDB will by default refer to the same
+     * IndexedDB database, if you want to pick another one, use the 'name'
+     * option on instanciation.
+     */
+    init: function(opts){
+        var self = this;
+        var opts = opts || {};
+
+        this.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+        this.db = undefined;
+        this._ready = new $.Deferred();
+
+        if(this.indexedDB && this.indexedDB.open){
+            var request = this.indexedDB.open( opts.name || "SimpleIndexedDB" ,1);
+
+            request.onerror = function(event){
+                self.db = null;
+                self._ready.reject(event.target.error);
+            };
+
+            request.onsuccess = function(event){
+                self.db = request.result;
+                self._ready.resolve();
+            };
+
+            request.onupgradeneeded = function(event){
+                self.db = event.target.result;
+
+                var objectStore = self.db.createObjectStore("keyvals", { keyPath:"key" });
+                self._ready.resolve();
+            };
+        }else{
+            this.db = null;
+            this._ready.reject({type:'UnknownError', message:'IndexedDB is not supported by your Browser'});
+        }
+    },
+
+    /**
+     * returns true if the browser supports the necessary IndexedDB API 
+     * (but doesn't tell if the db can be created, check ready() for that) 
+     */
+    isSupportedByBrowser: function(){
+        return this.indexedDB && this.indexedDB.open;
+    },
+
+    /**
+     * returns a deferred that resolves when the db has been successfully
+     * initialized. done/failed callbacks are optional.
+     */
+    ready: function(done,failed){
+        this._ready.then(done,failed);
+        return this._ready.promise();
+    },
+
+    /**
+     * fetches the value associated to 'key' in the db. if the key doesn't
+     * exists, it returns undefined. The returned value is provided as a 
+     * deferred, or as the first parameter of the optional 'done' callback.
+     */
+    getItem: function(key,done,failed){
+        var self = this;
+        var def = new $.Deferred();
+            def.then(done,failed);
+
+        this._ready.then(function(){
+                var request = self.db.transaction(["keyvals"],"readwrite")
+                                     .objectStore("keyvals")
+                                     .get(key);
+
+                request.onsuccess = function(){
+                    def.resolve(request.result ? request.result.value : undefined);
+                };
+
+                request.onerror = function(event){ 
+                    def.reject(event.target.error);
+                };
+            },function(){
+                def.reject({type:'UnknownError', message:'Could not initialize the IndexedDB database'});
+            });
+
+        return def.promise();
+    },
+    
+    /**
+     * Associates a value to 'key' in the db, overwriting previous value if
+     * necessary. Contrary to localStorage, the value is not limited to strings and
+     * can be any javascript object, even with cyclic references !
+     *
+     * Be sure to check for failure as the user may refuse to have data localy stored.
+     */
+    setItem: function(key,value,done,failed){
+        var self = this;
+        var def = new $.Deferred();
+            def.then(done,failed);
+
+        this._ready.then(function(){
+                var request = self.db.transaction(["keyvals"],"readwrite")
+                                     .objectStore("keyvals")
+                                     .put( {key:key, value:value} );
+
+                request.onsuccess = function(){
+                    def.resolve();
+                };
+
+                request.onerror = function(event){ 
+                    def.reject(event.target.error);
+                };
+            },function(){
+                def.reject({type:'UnknownError', message:'Could not initialize the IndexedDB database'});
+            });
+
+        return def.promise();
+    },
+
+    /**
+     * Removes the value associated with 'key' from the db. 
+     */
+    removeItem: function(key,done,failed){
+        var self = this;
+        var def = new $.Deferred();
+            def.then(done,failed);
+
+        this._ready.then(function(){
+                var request = self.db.transaction(["keyvals"],"readwrite")
+                                  .objectStore("keyvals")
+                                  .delete(key);
+
+                request.onsuccess = function(){
+                    def.resolve();
+                };
+
+                request.onerror = function(event){ 
+                    def.reject(event.target.error);
+                };
+            },function(){
+                def.reject({type:'UnknownError', message:'Could not initialize the IndexedDB database'});
+            });
+
+        return def.promise();
+    },
 });
 
 })();

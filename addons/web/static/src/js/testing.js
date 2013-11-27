@@ -58,8 +58,7 @@ openerp.testing = {};
             }
             var fn, params;
             var needle = rparams.model + ':' + rparams.method;
-            if (url.url === '/web/dataset/call_kw'
-                && needle in this.responses) {
+            if (url.url.substr(0, 20) === '/web/dataset/call_kw' && needle in this.responses) {
                 fn = this.responses[needle];
                 params = [
                     rparams.args || [],
