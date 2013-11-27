@@ -683,41 +683,63 @@ class calendar_alarm_manager(osv.osv):
         return  all_notif
             
     def do_mail_reminder(self,cr,uid,alert,context=None):
+        print 'in Do mail reminder'
         if context is None:
             context = {}
+        res = False
+        
         event = self.pool.get("crm.meeting").browse(cr,uid,alert['event_id'],context=context)
         alarm = self.pool.get("calendar.alarm").browse(cr,uid,alert['alarm_id'],context=context)
         
         if alarm.type == 'email':
-            mail_id = []
-            mail_pool = self.pool.get('mail.mail')
+            mail_ids = []
             data_pool = self.pool.get('ir.model.data')
-            template_pool = self.pool.get('email.template')                       
-            local_context = {}
+            mail_pool = self.pool.get('mail.mail')
+            template_pool = self.pool.get('email.template')
+            local_context = context and context.copy() or {}
+            color = {
+                     'needs-action' : 'grey',
+                     'accepted' :'green',
+                     'tentative' :'#FFFF00',
+                     'declined':'red'                 
+            }
             
             for attendee in event.attendee_ids:            
-                dummy,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "crm_email_template_meeting_reminder")
+                dummy,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', 'crm_email_template_meeting_reminder')
                 dummy,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")                
                 body = template_pool.browse(cr, uid, template_id, context=context).body_html
-                if attendee.email: # and tools.config.get('email_from', False):
+                
+                #mail_from = tools.config.get('email_from',event.user_id.email)
+                if attendee.email:
                     local_context['att_obj'] = attendee
+                    local_context['color'] = color
                     local_context['action_id'] = self.pool.get('ir.actions.act_window').search(cr, uid, [('view_id','=',act_id)], context=context)[0]
                     local_context['dbname'] = cr.dbname
                     local_context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-                    vals = template_pool.generate_email(cr, uid, template_id, event.id, context=local_context)
+                    vals = template_pool.generate_email(cr, uid, template_id, attendee.ref.id, context=local_context)
+                    
                     vals['model'] = None #We don't want to have the mail in the tchatter while in queue!
                     vals['auto_delete'] = True #We don't need mail after it has been sended !
-                    vals['recipient_ids'] = [(4,attendee.partner_id.id),] #We don't need mail after it has been sended !
-                     
-                    if not attendee.partner_id.opt_out:
-                        mail_id.append(mail_pool.create(cr, uid, vals, context=context))
-             
-            if mail_id:
-                for mail in mail_pool.browse(cr,uid,mail_id,context=context):
-                    print "REMINDER SENDED ... EMAIL : ",mail.id
                     
+                    if (vals['email_to']== attendee.partner_id.email):
+                        vals['email_to'] = ''
+                        vals['recipient_ids'] = [(4,attendee.partner_id.id),] 
+                    
+                    if not attendee.partner_id.opt_out:
+                        mail_ids.append(mail_pool.create(cr, uid, vals, context=local_context))
+                else:
+                    print "attendee no email or mail from not found", attendee.email 
+            print 'Mail ids : ',mail_ids            
+            if mail_ids:
+                try:
+                    res =  mail_pool.send(cr, uid, mail_ids, context=local_context)
+                    print "REMINDER SENDED ... EMAIL : ",mail_ids
+                except Exception as e:
+                    print e
         else:
             print "SHOULD BE AN MAIL ALARM :(   FOR EVENT %s / ALARM %s" % (alert['event_id'],alert['alarm_id'])
+        
+        return res
 
     def do_notif_reminder(self,cr,uid,alert,context=None):
         alarm = self.pool.get("calendar.alarm").browse(cr,uid,alert['alarm_id'],context=context)
@@ -1577,7 +1599,7 @@ class crm_meeting(osv.Model):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
         res = False
-                
+        new_id = False        
           
          # Special write of complex IDS
         for event_id in ids[:]:
@@ -1634,19 +1656,23 @@ class crm_meeting(osv.Model):
         
         print values
         if values.get('date', False):
+            print 'Id notified (ids|new_id)  : ',ids,"|",new_id
+            the_id = new_id or (ids and int(ids[0]));
+             
             print "Date has been changed !!!! --> SEND MAIL"
             if attendees_create:
-                attendees_create = attendees_create[ids[0]]
+                attendees_create = attendees_create[the_id]
                 mail_to_ids = list(set(attendees_create['old_attendee_ids']) - set(attendees_create['removed_attendee_ids']))
                 print 'xxxToSend to ', mail_to_ids
             else:
-                mail_to_ids = [att.id for att in self.browse(cr,uid,int(ids[0]),context=context).attendee_ids]
+                
+                mail_to_ids = [att.id for att in self.browse(cr,uid,the_id,context=context).attendee_ids]
                 print 'yyyToSend to ', mail_to_ids    
             
             if mail_to_ids:
                 current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
                 if self.pool.get('calendar.attendee')._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='crm_email_template_meeting_changedate',email_from=current_user.email, context=context):
-                    self.message_post(cr, uid, int(ids[0]), body=_("A email has been send to specify that the date has been changed !"),subtype="base_calendar.subtype_invitation", context=context)
+                    self.message_post(cr, uid, the_id, body=_("A email has been send to specify that the date has been changed !"),subtype="base_calendar.subtype_invitation", context=context)
                 else:
                     print 'Send mail return false'
         return res or True and False
