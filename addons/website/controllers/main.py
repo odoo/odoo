@@ -53,7 +53,12 @@ class Website(openerp.addons.web.controllers.main.Home):
             path = web.new_page(request.cr, request.uid, path, context=request.context)
         except psycopg2.IntegrityError:
             logger.exception('Unable to create ir_model_data for page %s', path)
-            return werkzeug.exceptions.InternalServerError()
+            response = request.website.render('website.creation_failed', {
+                    'page': path,
+                    'path': '/page/' + request.website.page_for_name(name=path)
+                })
+            response.status_code = 409
+            return response
         url = "/page/" + path
         if noredirect is not NOPE:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')

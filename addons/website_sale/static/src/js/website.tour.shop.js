@@ -38,19 +38,9 @@
                     placement: 'left',
                     title: "Create a new product",
                     content: "Select 'New Product' to create it and manage its properties to boost your sales.",
-                    triggers: function () {
-                        var $doc = $(document);
-                        function stopProductTour () {
-                            self.stop();
-                        }
-                        $doc.on('hide.bs.modal', stopProductTour);
-                        $doc.one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').one('click', function () {
-                                $doc.off('hide.bs.modal', stopProductTour);
-                                self.moveToStep('product-page');
-                            });
-                            self.moveToNextStep();
-                        });
+                    modal: {
+                        stopOnClose: true,
+                        afterSubmit: 'product-page',
                     },
                 },
                 {
@@ -147,7 +137,7 @@
                 {
                     stepId: 'publish-product',
                     element: 'button.js_publish_btn',
-                    placement: 'right',
+                    placement: 'top',
                     reflex: true,
                     title: "Publish your product",
                     content: "Click to publish your product so your customers can see it.",
@@ -158,7 +148,7 @@
         resume: function () {
             return (this.isCurrentStep('product-page') || this.isCurrentStep('publish-product')) && this._super();
         },
-        trigger: function (url) {
+        trigger: function () {
             return (this.resume() && this.testUrl(/^\/shop\/product\/[0-9]+\//)) || this._super();
         },
     });

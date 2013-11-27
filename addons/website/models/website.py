@@ -143,6 +143,20 @@ class website(osv.osv):
             cr.execute("ROLLBACK TO SAVEPOINT new_page")
             raise
 
+    def page_for_name(self, cr, uid, ids, name, module='website', context=None):
+        # whatever
+        return '%s.%s' % (module, slugify(name, max_length=50))
+
+    def page_exists(self, cr, uid, ids, name, module='website', context=None):
+        page = self.page_for_name(cr, uid, ids, name, module=module, context=context)
+
+        try:
+            return self.get_template(
+                cr, uid, ids, template=page, context=context
+            ).exists()
+        except:
+            return False
+
     def get_public_user(self, cr, uid, context=None):
         if not self.public_user:
             uid = openerp.SUPERUSER_ID
@@ -185,14 +199,14 @@ class website(osv.osv):
         })
 
     def get_template(self, cr, uid, ids, template, context=None):
-        IMD = self.pool.get("ir.model.data")
+        IMD = self.pool["ir.model.data"]
         try:
             module, xmlid = template.split('.', 1)
-            view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
+            model, id = IMD.get_object_reference(cr, uid, module, xmlid)
         except ValueError: # catches both unpack errors and gor errors
             module, xmlid = 'website', template
-            view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
-        return self.pool.get("ir.ui.view").browse(cr, uid, view_ref[1])
+            model, id = IMD.get_object_reference(cr, uid, module, xmlid)
+        return self.pool["ir.ui.view"].browse(cr, uid, id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         user = self.pool.get("res.users")

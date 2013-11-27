@@ -171,8 +171,12 @@ class website_event(http.Controller):
     @website.route(['/event/<model("event.event"):event>'], type='http', auth="public", multilang=True)
     def event(self, event=None, **post):
         if event.menu_id and event.menu_id.child_id:
-            return request.redirect(event.menu_id.child_id[0].url)
-        return request.redirect('/event/%s/register' % str(event.id))
+            target_url = event.menu_id.child_id[0].url
+        else:
+            target_url = '/event/%s/register' % str(event.id)
+        if post.get('enable_editor') == '1':
+            target_url += '?enable_editor=1'
+        return request.redirect(target_url);
 
     @website.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", multilang=True)
     def event_register(self, event=None, **post):

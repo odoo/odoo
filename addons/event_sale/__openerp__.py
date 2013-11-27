@@ -39,7 +39,10 @@ this event.
 """,
     'author': 'OpenERP SA',
     'depends': ['event', 'sale_crm'],
-    'data': ['event_sale_view.xml'],
+    'data': [
+        'event_sale_view.xml',
+        'event_sale_data.xml',
+    ],
     'demo': ['event_demo.xml'],
     'test': ['test/confirm.yml'],
     'installable': True,

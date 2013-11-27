@@ -36,7 +36,7 @@
                     },
                 },
                 {
-                    stepId: 'add-block',
+                    stepId: 'add-banner',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
                     title: "Insert building blocks",

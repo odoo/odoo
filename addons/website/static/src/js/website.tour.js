@@ -15,9 +15,32 @@
                 keyboard: false,
                 template: this.popover(),
             });
+            this.registerSteps();
+        },
+        registerSteps: function () {
+            var self = this;
             this.tour.addSteps(_.map(this.steps, function (step) {
                step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
-               step.onShow = step.triggers;
+               if (step.modal) {
+                   step.onShow = function () {
+                        var $doc = $(document);
+                        function onStop () {
+                            if (step.modal.stopOnClose) {
+                                self.stop();
+                            }
+                        }
+                        $doc.on('hide.bs.modal', onStop);
+                        $doc.one('shown.bs.modal', function () {
+                            $('.modal button.btn-primary').one('click', function () {
+                                $doc.off('hide.bs.modal', onStop);
+                                self.moveToStep(step.modal.afterSubmit);
+                            });
+                            self.moveToNextStep();
+                        });
+                    };
+               } else {
+                   step.onShow = step.triggers;
+               }
                return step;
             }));
         },

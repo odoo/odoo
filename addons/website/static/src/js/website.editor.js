@@ -888,7 +888,8 @@
             this._super(editor);
             this.text = null;
             // Store last-performed request to be able to cancel/abort it.
-            this.req = null;
+            this.page_exists_req = null;
+            this.search_pages_req = null;
         },
         start: function () {
             var self = this;
@@ -896,15 +897,20 @@
                 minimumInputLength: 1,
                 placeholder: _t("New or existing page"),
                 query: function (q) {
-                    self.fetch_pages(q.term).then(function (results) {
+                    $.when(
+                        self.page_exists(q.term),
+                        self.fetch_pages(q.term)
+                    ).then(function (exists, results) {
                         var rs = _.map(results, function (r) {
                             return { id: r.url, text: r.name, };
                         });
-                        rs.push({
-                            create: true,
-                            id: q.term,
-                            text: _.str.sprintf(_t("Create page '%s'"), q.term),
-                        });
+                        if (!exists) {
+                            rs.push({
+                                create: true,
+                                id: q.term,
+                                text: _.str.sprintf(_t("Create page '%s'"), q.term),
+                            });
+                        }
                         q.callback({
                             more: false,
                             results: rs
@@ -983,20 +989,30 @@
                 .siblings().removeClass('active')
                 .addBack().removeClass('has-error');
         },
-        fetch_pages: function (term) {
+        call: function (method, args, kwargs) {
             var self = this;
-            if (this.req) { this.req.abort(); }
-            return this.req = openerp.jsonRpc('/web/dataset/call_kw', 'call', {
+            var req = method + '_req';
+
+            if (this[req]) { this[req].abort(); }
+
+            return this[req] = openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website',
-                method: 'search_pages',
-                args: [null, term],
-                kwargs: {
-                    limit: 9,
-                    context: website.get_context()
-                },
+                method: method,
+                args: args,
+                kwargs: kwargs,
             }).always(function () {
-                // request completed -> unstore it
-                self.req = null;
+                self[req] = null;
+            });
+        },
+        page_exists: function (term) {
+            return this.call('page_exists', [null, term], {
+                context: website.get_context(),
+            });
+        },
+        fetch_pages: function (term) {
+            return this.call('search_pages', [null, term], {
+                limit: 9,
+                context: website.get_context(),
             });
         },
     });

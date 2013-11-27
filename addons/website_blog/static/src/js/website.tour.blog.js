@@ -38,19 +38,9 @@
                     placement: 'left',
                     title: "New Blog Post",
                     content: "Select this entry to create a new blog post.",
-                    triggers: function () {
-                        var $doc = $(document);
-                        function stopNewBlog () {
-                            self.stop();
-                        }
-                        $doc.on('hide.bs.modal', stopNewBlog);
-                        $doc.one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').one('click', function () {
-                                $doc.off('hide.bs.modal', stopNewBlog);
-                                self.moveToStep('post-page');
-                            });
-                            self.moveToNextStep();
-                        });
+                    modal: {
+                        stopOnClose: true,
+                        afterSubmit: 'post-page',
                     },
                 },
                 {
@@ -167,7 +157,7 @@
                 {
                     stepId: 'publish-post',
                     element: 'button.js_publish_btn',
-                    placement: 'right',
+                    placement: 'top',
                     reflex: true,
                     title: "Publish Your Post",
                     content: "Your blog post is not yet published. You can update this draft version and publish it once you are ready.",
