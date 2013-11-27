@@ -333,38 +333,36 @@ instance.web_graph.GraphView = instance.web.View.extend({
         _.each(pivot.cols.headers, function (col) {
             if (col.children.length === 0) {
                 var value = pivot.get_value(row.id, col.id),
-                    cell = $('<td></td>');
-
-                cell.append((value === undefined) ? '' : value);
-                if ((self.mode == 'heatmap') && (value !== undefined)) {
-                    var color = Math.floor(50 + 205*(pivot.total - value)/pivot.total);
-                    cell.css('background-color', 'rgb(255,' + color + ',' + color + ')');
-                }
-                if (row.is_expanded && (row.path.length <= 2)) {
-                    var color = row.path.length *   5 + 240;
-                    cell.css('background-color', 'rgb(' + [color, color, color].join() + ')');
-                }
+                    cell = make_cell(value);
                 html_row.append(cell);
             }
         });
-        var total = pivot.get_value(row.id, pivot.cols.main.id);
-        var cell = $('<td></td>')
-            .append(total)
-            .css('font-weight', 'bold');
-        if (row.is_expanded && (row.path.length <= 2)) {
-            var color = row.path.length *   5 + 240;
-            cell.css('background-color', 'rgb(' + [color, color, color].join() + ')');
-        } else if (self.heat_map_mode) {
-            var color = Math.floor(50 + 205*(pivot.total - total)/pivot.total);
-            cell.css('background-color', 'rgb(255,' + color + ',' + color + ')');
-        }
 
         if (pivot.cols.main.children.length > 0) {
+            var row_total = pivot.get_value(row.id, pivot.cols.main.id),
+                cell = make_cell(row_total).css('font-weight', 'bold');
             html_row.append(cell);
         }
 
         this.table.append(html_row);
-    }
+
+        function make_cell (value) {
+            var color,
+                cell = $('<td></td>');
+            if (value !== undefined) {
+                cell.append(value);
+            }
+            if ((self.mode === 'pivot') && (row.is_expanded) && (row.path.length <=2)) {
+                color = row.path.length * 5 + 240;
+                cell.css('background-color', $.Color(color, color, color));
+            }
+            if (self.mode === 'heatmap') {
+                color = Math.floor(50 + 205*(pivot.total - value)/pivot.total);
+                cell.css('background-color', $.Color(255, color, color));
+            }
+            return cell;
+        }
+    },
 });
 
 };
