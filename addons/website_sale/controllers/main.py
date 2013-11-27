@@ -378,9 +378,9 @@ class Ecommerce(http.Controller):
         order_line_obj = request.registry.get('sale.order.line')
         order_obj = request.registry.get('sale.order')
 
-        order = website.get_current_order(request.cr, request.uid, context=request.context)
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         if not order:
-            order = website._get_order(request.cr, request.uid, context=request.context)
+            order = request.registry['website']._get_order(request.cr, request.uid, context=request.context)
 
         request.context = dict(request.context, pricelist=self.get_pricelist())
 
