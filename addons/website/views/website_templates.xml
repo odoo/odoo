@@ -545,8 +545,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     <div class="row">
                         <div class="col-md-8">
                             <div class="oe_structure">
-                                <p>Contact us about anything related to our company or services.</p>
-                                <p>We'll do our best to get back to you as soon as possible.</p>
+                                <div>
+                                    <p>Contact us about anything related to our company or services.</p>
+                                    <p>We'll do our best to get back to you as soon as possible.</p>
+                                </div>
                             </div>
                             <div class="text-center mt64" name="mail_button">
                                 <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary">Send us an email</a>

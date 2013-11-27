@@ -262,7 +262,16 @@
                                     <div><small t-field="ticket.product_id.description_sale"/></div>
                                 </td>
                                 <td><span t-field="ticket.deadline"/></td>
-                                <td><span t-field="ticket.price"/></td>
+                                <td>
+                                    <t t-if="ticket.price or editable"><span t-field="ticket.price" t-field-options='{
+                                           "widget": "monetary",
+                                           "display_currency": "website.pricelist_id.currency_id"
+                                      }'/>
+                                    </t>
+                                    <t t-if="not ticket.price and not editable">
+                                        <span>Free</span>
+                                    </t>
+                                </td>
                                 <td>
                                     <span t-if="ticket.register_max and ((ticket.register_current or 0)*100 / ticket.register_max)&gt;75" class="text-muted">
                                         <t t-esc="ticket.register_max - ticket.register_current"/> <span>left</span>
