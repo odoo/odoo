@@ -99,6 +99,7 @@
                             help="Convert to Opportunity" class="oe_highlight"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"
+                            options="{'fold_field': 'fold'}"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
@@ -379,14 +380,11 @@
             <field name="arch" type="xml">
                 <form string="Opportunities" version="7.0">
                     <header>
-                        <!-- :deprecated: this button will be removed from the view with OpenERP v8 -->
-                        <button name="case_mark_won" string="Mark Won" type="object" class="oe_highlight"
-                                invisible="True"/>
-                        <!-- :deprecated: this button will be removed from the view with OpenERP v8 -->
-                        <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"
-                                invisible="True"/>
+                        <button name="case_mark_won" string="Mark Won" type="object" class="oe_highlight"/>
+                        <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
-                                domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
+                            options="{'fold_field': 'fold'}"
+                            domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
