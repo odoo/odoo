@@ -202,7 +202,7 @@
     <blockTable colWidths="100.0,154.0,162.0,109.0" style="Content_Order_Reference_Table">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ picking.stock_journal_id.name]]</para>
+          <para style="terp_default_Centre_8">[[ picking.picking_type_id.name]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ picking.origin or '']]</para>
@@ -249,7 +249,7 @@
             <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
+            <para style="terp_default_Centre_9">[[ move_lines.quant_ids and ','.join(map(str, [q.lot_id.name for q in move_lines.quant_ids if q.lot_id])) or '' ]]</para>
           </td>
           <td>
             <para style="terp_default_9">Waiting Availability[[ move_lines.state == 'confirmed' and ' ' or removeParentNode('para') ]]</para>
