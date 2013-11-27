@@ -262,9 +262,11 @@
                                         <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
                                         <a t-if="record.state.raw_value === 'open'" title="Open" class="oe_kanban_status_green"> </a>
                                         <a t-if="record.state.raw_value === 'close'" title="Closed" class="oe_kanban_status_red"> </a>
-
                                     </span>
                                     <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
+                                    <div>tot started surveys</div>
+                                    <div>tot sent surveys</div>
+                                    <div>tot completed surveys</div>
                                 </div>
                             </div>
                         </templates>
