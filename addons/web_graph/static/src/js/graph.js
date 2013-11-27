@@ -36,18 +36,18 @@ instance.web_graph.GraphView = instance.web.View.extend({
             switch (event.target.attributes['data-choice'].nodeValue) {
                 case 'fold_columns':
                     this.pivot_table.fold_cols();
-                    this.draw_table();
+                    this.display_data();
                     break;
                 case 'fold_rows':
                     this.pivot_table.fold_rows();
-                    this.draw_table();
+                    this.display_data();
                     break;
                 case 'fold_all':
                     this.pivot_table.fold_all();
-                    this.draw_table();
+                    this.display_data();
                     break;
                 case 'expand_all':
-                    this.pivot_table.expand_all().then(this.proxy('draw_table'));
+                    this.pivot_table.expand_all().then(this.proxy('display_data'));
                     break;
             }
         },
@@ -57,10 +57,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
             switch (event.target.attributes['data-choice'].nodeValue) {
                 case 'swap_axis':
                     this.pivot_table.swap_axis();
-                    this.draw_table();
+                    this.display_data();
                     break;
                 case 'update_values':
-                    this.pivot_table.update_values().then(this.proxy('draw_table'));
+                    this.pivot_table.update_values().then(this.proxy('display_data'));
                     break;
                 case 'export_data':
                     // Export code...  To do...
@@ -80,7 +80,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             event.preventDefault();
             this.dropdown.remove();
             this.pivot_table.expand(id, field_id)
-                .then(this.proxy('draw_table'));
+                .then(this.proxy('display_data'));
         },
     },
 
@@ -162,11 +162,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         if (!this.pivot_table) {
             self.pivot_table = new openerp.web_graph.PivotTable(self.data);
-            self.pivot_table.start().then(self.proxy('draw_table'));
+            self.pivot_table.start().then(self.proxy('display_data'));
         } else {
             this.pivot_table.domain = domain;
             this.pivot_table.update_values().done(function () {
-                self.draw_table();
+                self.display_data();
             });
         }
     },
@@ -197,11 +197,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         if (header.is_expanded) {
             pivot.fold(header);
-            this.draw_table();
+            this.display_data();
         } else {
             if (header.path.length < header.root.groupby.length) {
                 var field = header.root.groupby[header.path.length];
-                pivot.expand(id, field).then(this.proxy('draw_table'));
+                pivot.expand(id, field).then(this.proxy('display_data'));
             } else {
                 this.display_dropdown({id:header.id,
                                        target: $(options.event.target),
@@ -231,7 +231,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     draw_table: function () {
-        this.table.empty();
         this.draw_top_headers();
         _.each(this.pivot_table.rows.headers, this.proxy('draw_row'));
     },
