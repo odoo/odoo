@@ -340,7 +340,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if processed_modules:
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                if model in registry and not registry[model].is_transient() and isinstance(registry[model], openerp.osv.orm.AbstractModel):
+                if model in registry and not registry[model].is_transient() and not isinstance(registry[model], openerp.osv.orm.AbstractModel):
                     _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,1,1,1',
                         model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
