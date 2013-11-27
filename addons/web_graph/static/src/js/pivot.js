@@ -15,6 +15,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.measure_label = options.measure_label;
 		this.total = 0;
 		this.id_seed = 0;
+		this.no_data = true;
 	},
 
 	start: function () {
@@ -151,22 +152,27 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		var self = this;
 
 		return this.query_all_values().then(function (result) {
-			self.rows.headers = result.row_headers;
-			self.cols.headers = result.col_headers;
-			self.cells = result.cells;
-			self.rows.main = self.rows.headers[0];
-			self.cols.main = self.cols.headers[0];
-			self.total = self.rows.main.total;
-			self.rows.main.title = 'Total';
-			self.cols.main.title = self.measure_label;
-			_.each(self.rows.headers, function (row) {
-				row.root = self.rows;
-				row.is_expanded = (row.children.length > 0);
-			});
-			_.each(self.cols.headers, function (col) {
-				col.root = self.cols;
-				col.is_expanded = (col.children.length > 0);
-			});
+			if (result) {
+				self.no_data = false;
+				self.rows.headers = result.row_headers;
+				self.cols.headers = result.col_headers;
+				self.cells = result.cells;
+				self.rows.main = self.rows.headers[0];
+				self.cols.main = self.cols.headers[0];
+				self.total = self.rows.main.total;
+				self.rows.main.title = 'Total';
+				self.cols.main.title = self.measure_label;
+				_.each(self.rows.headers, function (row) {
+					row.root = self.rows;
+					row.is_expanded = (row.children.length > 0);
+				});
+				_.each(self.cols.headers, function (col) {
+					col.root = self.cols;
+					col.is_expanded = (col.children.length > 0);
+				});
+			} else {
+				self.no_data = true;
+			}
 
 		});
 	},
@@ -174,6 +180,10 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	update_values: function () {
 		var self = this;
 		return this.query_all_values().then(function (result) {
+			if (!result) {
+				return undefined;
+			}
+			self.no_data = false;			
 			var old_col_headers = self.cols.headers,
 				old_row_headers = self.rows.headers;
 
@@ -291,7 +301,10 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				row_data = _.last(_.initial(args)),
 				cell_data = args;
 
-			return self.format_data(total, col_data, row_data, cell_data);
+			if (total === undefined) { self.no_data = true;}
+			return (total === undefined) 
+					? undefined
+					: self.format_data(total, col_data, row_data, cell_data);
 		});
 
 	},

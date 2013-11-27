@@ -193,13 +193,18 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.$('.graph_main_content svg').remove();
         this.table.empty();
 
-        var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
-        if (_.contains(table_modes, this.mode)) {
-            this.draw_table();
+        if (this.pivot_table.no_data) {
+            var msg = 'No data available. Try to remove any filter or add some data.';
+            this.table.append($('<tr><td>' + msg + '</td></tr>'));
         } else {
-            this.$('.graph_main_content').append($('<div><svg></svg></div>'));
-            var svg = this.$('.graph_main_content svg')[0];
-            openerp.web_graph.draw_chart(this.mode, this.pivot_table, svg);
+            var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
+            if (_.contains(table_modes, this.mode)) {
+                this.draw_table();
+            } else {
+                this.$('.graph_main_content').append($('<div><svg></svg></div>'));
+                var svg = this.$('.graph_main_content svg')[0];
+                openerp.web_graph.draw_chart(this.mode, this.pivot_table, svg);
+            }
         }
     },
 
