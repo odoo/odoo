@@ -69,6 +69,12 @@ class Ecommerce(http.Controller):
 
         return (categories, full_category_ids)
 
+    def get_pricelist(self):
+        return request.registry.get('website').get_pricelist_id(request.cr, request.uid, None, context=request.context)
+
+    def change_pricelist(self):
+        return request.registry.get('website').change_pricelist_id(request.cr, request.uid, None, context=request.context)
+
     def get_bin_packing_products(self, product_ids, fill_hole, col_number=4):
         """
         Packing all products of the search into a table of #col_number columns in function of the product sizes
@@ -368,42 +374,13 @@ class Ecommerce(http.Controller):
 
         return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
 
-    def get_pricelist(self):
-        if not request.httprequest.session.get('ecommerce_pricelist'):
-            self.change_pricelist(None)
-        return request.httprequest.session.get('ecommerce_pricelist')
-
-    def change_pricelist(self, code):
-        request.httprequest.session.setdefault('ecommerce_pricelist', False)
-
-        pricelist_id = False
-        if code:
-            pricelist_obj = request.registry.get('product.pricelist')
-            pricelist_ids = pricelist_obj.search(request.cr, SUPERUSER_ID, [('code', '=', code)], context=request.context)
-            if pricelist_ids:
-                pricelist_id = pricelist_ids[0]
-
-        if not pricelist_id:
-            partner_id = request.registry.get('res.users').browse(request.cr, SUPERUSER_ID, request.uid, request.context).partner_id.id
-            pricelist_id = request.registry['sale.order'].onchange_partner_id(request.cr, SUPERUSER_ID, [], partner_id, context=request.context)['value']['pricelist_id']
-
-        request.httprequest.session['ecommerce_pricelist'] = pricelist_id
-
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
-        if order:
-            values = {'pricelist_id': pricelist_id}
-            values.update(order.onchange_pricelist_id(pricelist_id, None)['value'])
-            order.write(values)
-            for line in order.order_line:
-                self.add_product_to_cart(order_line_id=line.id, number=0)
-
     def add_product_to_cart(self, product_id=0, order_line_id=0, number=1, set_number=-1):
         order_line_obj = request.registry.get('sale.order.line')
         order_obj = request.registry.get('sale.order')
 
-        order = request.registry.get('website').get_current_order(request.cr, request.uid, context=request.context)
+        order = website.get_current_order(request.cr, request.uid, context=request.context)
         if not order:
-            order = request.registry.get('website')._get_order(request.cr, request.uid, context=request.context)
+            order = website._get_order(request.cr, request.uid, context=request.context)
 
         request.context = dict(request.context, pricelist=self.get_pricelist())
 
