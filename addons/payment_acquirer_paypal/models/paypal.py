@@ -67,7 +67,7 @@ class AcquirerPaypal(osv.Model):
             'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
         }
         if tx_custom_values and tx_custom_values.get('return_url'):
-            tx_values['custom'] = 'return_url=%s' % tx_custom_values.pop('return_url')
+            tx_values['custom'] = json.dumps({'return_url': '%s' % tx_custom_values.pop('return_url')})
         if tx_custom_values:
             tx_values.update(tx_custom_values)
         return tx_values

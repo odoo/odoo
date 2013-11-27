@@ -4,6 +4,10 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 
+try:
+    import simplejson as json
+except ImportError:
+    import json
 import logging
 import pprint
 import requests
@@ -56,8 +60,11 @@ class PaypalController(http.Controller):
     def paypal_dpn(self, **post):
         """ Paypal DPN """
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
+        return_url = post.pop('return_url', '')
+        if not return_url:
+            custom = json.loads(post.pop('custom', '{}'))
+            return_url = custom.pop('return_url', '/')
         self.paypal_validate_data(**post)
-        return_url = post.pop('return_url', '/')
         return request.redirect(return_url)
 
     @website.route([
