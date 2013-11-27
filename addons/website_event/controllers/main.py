@@ -256,10 +256,23 @@ class website_event(http.Controller):
     def add_event(self, event_name="New Event", **kwargs):
         Event = request.registry.get('event.event')
         date_begin = datetime.today() + timedelta(days=(15)) # FIXME: better defaults
-        event_id = Event.create(request.cr, request.uid, {
+
+        vals = {
             'name': event_name,
             'date_begin': date_begin.strftime('%Y-%m-%d'),
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
-        }, context=request.context)
+        }
+        try:
+            dummy, res_id = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'event_sale', 'product_product_event')
+            vals['event_ticket_ids'] = [[0,0,{
+                'name': _('Subscription'),
+                'product_id': res_id,
+                'deadline' : vals.get('date_begin'),
+                'price': 0,
+            }]]
+        except ValueError:
+            pass
+
+        event_id = Event.create(request.cr, request.uid, vals, context=request.context)
 
         return request.redirect("/event/%s/?enable_editor=1" % event_id)
