@@ -2,47 +2,16 @@
 (function () {
 
 openerp.web_graph.PivotTable = openerp.web.Class.extend({
-	id_seed: 0,
-
 	init: function (options) {
-		main_row = {
-			id: this.generate_id(),
-			path: [],
-			title: "Total",
-			is_expanded: false,
-			parent: null,
-			children: [],
-			domain: options.domain,
-		};
-		main_col = {
-			id: this.generate_id(),
-			path: [],
-			title: options.measure_label,
-			is_expanded: false,
-			parent: null,
-			children: [],
-			domain: options.domain,
-		};
-
-		this.rows = {
-			groupby: options.row_groupby,
-			main: main_row,
-			headers: [main_row],
-		};
-		this.cols = {
-			groupby: [],
-			main: main_col,
-			headers: [main_col],
-		};
-
-		main_row.root = this.rows;
-		main_col.root = this.cols;
+		this.rows = { groupby: options.row_groupby };
+		this.cols = { groupby: [] };
 		this.cells = [];
 		this.model = options.model;
 		this.domain = options.domain;
 		this.measure = options.measure;
 		this.measure_label = options.measure_label;
 		this.total = 0;
+		this.id_seed = 0;
 	},
 
 	start: function () {
