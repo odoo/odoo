@@ -17,12 +17,3 @@ class Website(orm.Model):
         'pricelist_id': fields.function(
             _get_pricelist, type='many2one', obj='product.pricelist')
     }
-
-
-class PaymentTransaction(orm.Model):
-    _inherit = 'payment.transaction'
-
-    _columns = {
-        # link with the sale order
-        'sale_order_id': fields.many2one('sale.order', 'Sale Order'),
-    }
