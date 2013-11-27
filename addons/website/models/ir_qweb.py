@@ -10,13 +10,16 @@ import cStringIO
 import datetime
 import itertools
 import logging
+import os
 import urllib2
 import urlparse
+import re
 
 import werkzeug.utils
 from dateutil import parser
 from lxml import etree, html
 from PIL import Image as I
+import openerp.modules
 
 from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -223,6 +226,7 @@ class Image(orm.AbstractModel):
             record._model._name,
             field_name, record.id)
 
+    local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
     def from_html(self, cr, uid, model, column, element, context=None):
         url = element.find('img').get('src')
 
@@ -233,7 +237,37 @@ class Image(orm.AbstractModel):
                 cr, uid, int(query['id']), context=context)
             return attachment.datas
 
-        # remote URL?
+        if self.local_url_re.match(url_object.path):
+            return self.load_local_url(url)
+
+        return self.load_remote_url(url)
+
+    def load_local_url(self, url):
+        match = self.local_url_re.match(urlparse.urlsplit(url).path)
+
+        rest = match.group('rest')
+        for sep in os.sep, os.altsep:
+            if sep and sep != '/':
+                rest.replace(sep, '/')
+
+        path = openerp.modules.get_module_resource(
+            match.group('module'), 'static', *(rest.split('/')))
+
+        if not path:
+            return False
+
+        try:
+            with open(path, 'rb') as f:
+                # force complete image load to ensure it's valid image data
+                image = I.open(f)
+                image.load()
+                f.seek(0)
+                return f.read().encode('base64')
+        except Exception:
+            logger.exception("Failed to load local image %r", url)
+            return False
+
+    def load_remote_url(self, url):
         try:
             # should probably remove remote URLs entirely:
             # * in fields, downloading them without blowing up the server is a
