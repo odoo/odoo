@@ -612,8 +612,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 $product.find('img').replaceWith(self.pos_widget.image_cache.get_image(products[i].get_image_url()));
                 $product.appendTo(self.$('.product-list'));
             });
-            this.$el.delegate('a','click',function(){ 
+
+            this.$el.delegate('.product','touchstart',function TOUCHSTART(){ 
+                console.log('Touchstart',(new Date()).getTime());
+            });
+
+            this.$el.delegate('.product','touchend',function TOUCHEND(){ 
+                console.log('Touchend',(new Date()).getTime());
+            });
+
+            this.$el.delegate('.product','click',function TOUCHCLICK(){ 
+                console.log('ClickStart',(new Date()).getTime());
                 self.click_product_action(new module.Product(self.pos.db.get_product_by_id(+$(this).data('product-id')))); 
+                console.log('ClickEnd',(new Date()).getTime());
             });
 
         },

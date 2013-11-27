@@ -15,14 +15,17 @@ _logger = logging.getLogger(__name__)
 html_template = """<!DOCTYPE html>
 <html>
     <head>
-        <title>OpenERP Point of Sale</title>
+        <title>OpenERP POS</title>
 
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <meta http-equiv="content-type" content="text/html, charset=utf-8" />
 
         <meta name="viewport" content=" width=1024, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="mobile-web-app-capable" content="yes">
 
+        <link rel="shortcut icon"    sizes="196x196" href="/point_of_sale/static/src/img/touch-icon-196.png">
+        <link rel="shortcut icon"    sizes="128x128" href="/point_of_sale/static/src/img/touch-icon-128.png">
         <link rel="apple-touch-icon"                 href="/point_of_sale/static/src/img/touch-icon-iphone.png">
         <link rel="apple-touch-icon" sizes="76x76"   href="/point_of_sale/static/src/img/touch-icon-ipad.png">
         <link rel="apple-touch-icon" sizes="120x120" href="/point_of_sale/static/src/img/touch-icon-iphone-retina.png">
@@ -52,11 +55,16 @@ class PosController(http.Controller):
 
     @http.route('/pos/web', type='http', auth='none')
     def a(self, debug=False, **k):
+
+        print '\nDEBUG',debug,'\n'
+
         js_list = manifest_list('js',db=request.db, debug=debug)
         css_list =   manifest_list('css',db=request.db, debug=debug)
         
         print css_list
         print js_list
+
+        js_list = [ js for js in js_list if 'select2' not in js ]
 
         js = "\n".join('<script type="text/javascript" src="%s"></script>' % i for i in js_list)
         css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in css_list)

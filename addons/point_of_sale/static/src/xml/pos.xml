@@ -422,25 +422,23 @@
     </t>
 
     <t t-name="Product">
-        <li class='product'>
-            <a href="#" t-att-data-product-id="product.id">
-                <div class="product-img">
-                    <img src='' /> <!-- the product thumbnail -->
-                    <t t-if="!product.get('to_weight')">
-                        <span class="price-tag">
-                            <t t-esc="widget.format_currency(product.get('price'))"/>
-                        </span>
-                    </t>
-                    <t t-if="product.get('to_weight')">
-                        <span class="price-tag">
-                            <t t-esc="widget.format_currency(product.get('price'))+'/Kg'"/>
-                        </span>
-                    </t>
-                </div>
-                <div class="product-name">
-                    <t t-esc="product.get('name')"/>
-                </div>
-            </a>
+        <li class='product' t-att-data-product-id="product.id">
+            <div class="product-img">
+                <img src='' /> <!-- the product thumbnail -->
+                <t t-if="!product.get('to_weight')">
+                    <span class="price-tag">
+                        <t t-esc="widget.format_currency(product.get('price'))"/>
+                    </span>
+                </t>
+                <t t-if="product.get('to_weight')">
+                    <span class="price-tag">
+                        <t t-esc="widget.format_currency(product.get('price'))+'/Kg'"/>
+                    </span>
+                </t>
+            </div>
+            <div class="product-name">
+                <t t-esc="product.get('name')"/>
+            </div>
         </li>
     </t>
 

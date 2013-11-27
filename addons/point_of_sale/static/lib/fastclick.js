@@ -733,7 +733,7 @@ FastClick.notNeeded = function(layer) {
 		if (FastClick.prototype.deviceIsAndroid) {
 			metaViewport = document.querySelector('meta[name=viewport]');
 			if (metaViewport && metaViewport.content.indexOf('user-scalable=no') !== -1) {
-				return true;
+				return false; //WIP FIX
 			}
 
 		// Chrome desktop doesn't need FastClick (issue #15)
