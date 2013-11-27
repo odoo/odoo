@@ -245,6 +245,7 @@ class calendar_attendee(osv.osv):
                 trigger.value = delta
                 # Compute other details
                 valarm.add('DESCRIPTION').value = alarm.name or 'OpenERP'
+
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
