@@ -70,6 +70,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         'click .web_graph_click' : function (event) {
             event.preventDefault();
+            event.stopPropagation();
             var id = event.target.attributes['data-id'].nodeValue;
             this.handle_header_event({id:id, event:event});
         },
@@ -78,10 +79,19 @@ instance.web_graph.GraphView = instance.web.View.extend({
             var id = event.target.attributes['data-id'].nodeValue,
                 field_id = event.target.attributes['data-field-id'].nodeValue;
             event.preventDefault();
-            this.dropdown.remove();
             this.pivot_table.expand(id, field_id)
                 .then(this.proxy('display_data'));
         },
+    },
+
+    init: function(parent, dataset, view_id, options) {
+        this._super(parent);
+        this.dataset = dataset;
+        this.set_default_options(options);
+        this.dropdown = null;
+        this.pivot_table = null;
+        this.heat_map_mode = false;
+        this.mode = 'pivot';
     },
 
     view_loading: function (fields_view_get) {
@@ -93,9 +103,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
             important_fields = [],
             row_groupby = [];
 
-        this.pivot_table = null;
-        this.heat_map_mode = false;
-        this.mode = 'pivot';
 
         // get the default groupbys and measure defined in the field view
         _.each(fields_view_get.arch.children, function (field) {
@@ -153,6 +160,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
     start: function () {
         this.table = $('<table></table>');
         this.$('.graph_main_content').append(this.table);
+        instance.web.bus.on('click', this, function (ev) {
+            if (this.dropdown) {
+                this.dropdown.remove();
+                this.dropdown = null;
+            }
+        });
         return this.load_view();
     },
 
@@ -227,7 +240,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.dropdown.css({position:'absolute',
                            left:options.x,
                            top:options.y});
-        $('.field-selection').next('.dropdown-menu').toggle();
+        this.$('.field-selection').next('.dropdown-menu').toggle();
     },
 
     draw_table: function () {
