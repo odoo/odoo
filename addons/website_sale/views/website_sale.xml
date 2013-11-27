@@ -292,7 +292,12 @@
 
                           <div class="product_price mt16" t-if="product.product_variant_ids">
                               <h4>
-                                  <b><span class="oe_price" t-esc="product.product_variant_ids[0].price" /> €</b>
+                                  <b><span class="oe_price" t-esc="product.product_variant_ids[0].price"
+                                        t-field-options='{
+                                          "widget": "monetary",
+                                          "display_currency": "website.pricelist_id.currency_id"
+                                        }'/>
+                                  </b>
                                   <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
                                   <span class="text-danger" style="text-decoration: line-through;"
                                     t-field="product.product_variant_ids[0].lst_price"
