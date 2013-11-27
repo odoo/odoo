@@ -45,20 +45,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.total = 0;
 	},
 
-	// Load initial data into the rows, cols and cells array.
-	// This function needs to be called after init and before
-	// drawing the table (otherwise the data returned will be empty...)
 	start: function () {
-		var self = this,
-			initial_group = this.expand(this.rows.main.id, this.rows.groupby[0]),
-			total = query_groups(this.model, this.measure, this.domain, [])
-				.then(function (total) {
-					var val = total[0].attributes.aggregates[self.measure];
-					self.set_value(self.rows.main.id, self.cols.main.id, val);
-					self.total = val;
-				});
-
-		return $.when(total, initial_group);
+		return this.expand_all();
 	},
 
 	generate_id: function () {
