@@ -1,5 +1,8 @@
 
+/* jshint undef: false  */
+
 (function () {
+'use strict';
 
 openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	init: function (options) {
@@ -71,7 +74,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         header.root.groupby.splice(new_groupby_length);
         header.children = [];
         this.cells = _.reject(this.cells, function (cell) {
-        	return (_.contains(ids_to_remove, cell.x) || _.contains(ids_to_remove, cell.y));
+            return (_.contains(ids_to_remove, cell.x) || _.contains(ids_to_remove, cell.y));
         });
 	},
 
@@ -83,25 +86,25 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             row.root.groupby.push(field_id);
         }
 
-        var otherDim = (row.root === this.cols) ? this.rows : this.cols; 
+        var otherDim = (row.root === this.cols) ? this.rows : this.cols;
         return query_groups_data(this.model, this.visible_fields(), row.domain, otherDim.groupby, field_id)
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
-                	var new_row_id = self.make_header(group, row);
+                    var new_row_id = self.make_header(group, row);
                     _.each(group, function (data) {
-                    	var col = _.find(otherDim.headers, function (c) {
-                    		if (row.root === this.cols) {
-                    			return _.isEqual(data.path.slice(1), c.path);
-                    		} else {
-                    			return _.isEqual(_.rest(data.path), c.path);
-                    		}
-                    	});
-                    	if (col) {
-                    		self.set_value(new_row_id, col.id, data.attributes.aggregates[self.measure]);
-                    	}
-                    });
-                });
-                row.is_expanded = true;
+					var col = _.find(otherDim.headers, function (c) {
+						if (row.root === self.cols) {
+							return _.isEqual(data.path.slice(1), c.path);
+	                    } else {
+							return _.isEqual(_.rest(data.path), c.path);
+	                    }
+	                });
+	                if (col) {
+	                    self.set_value(new_row_id, col.id, data.attributes.aggregates[self.measure]);
+                   }
+	            });
+            });
+            row.is_expanded = true;
         });
 	},
 
@@ -127,7 +130,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.rows = this.cols;
 		this.cols = temp;
 
-		this.rows.main.title = "Total";
+		this.rows.main.title = 'Total';
 		this.cols.main.title = this.measure_label;
 	},
 
@@ -154,7 +157,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			self.rows.main = self.rows.headers[0];
 			self.cols.main = self.cols.headers[0];
 			self.total = self.rows.main.total;
-			self.rows.main.title = "Total";
+			self.rows.main.title = 'Total';
 			self.cols.main.title = self.measure_label;
 			_.each(self.rows.headers, function (row) {
 				row.root = self.rows;
@@ -243,7 +246,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				col.root = self.cols;
 			});
 			self.cells = result.cells;
-			self.rows.main.title = "Total";
+			self.rows.main.title = 'Total';
 			self.cols.main.title = self.measure_label;
 		});
 	},
@@ -282,7 +285,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		});
 
 		return $.when.apply(null, def_array).then(function () {
-			var args = Array.prototype.slice.call(arguments), 
+			var args = Array.prototype.slice.call(arguments),
 				col_data = _.first(args),
 				total = _.last(args)[0],
 				row_data = _.last(_.initial(args)),
@@ -298,7 +301,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			dim_row = this.rows.groupby.length,
 			dim_col = this.cols.groupby.length,
 			col_headers = make_headers(col_data, dim_col),
-			row_headers = make_headers(row_data, dim_row);
+			row_headers = make_headers(row_data, dim_row),
 			cells = [];
 
 		if (dim_col > 0) {
@@ -310,8 +313,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			make_cells(cell_data[1], 0, []);
 		}
 
-		return {col_headers: col_headers, 
-			    row_headers: row_headers, 
+		return {col_headers: col_headers,
+			    row_headers: row_headers,
 			    cells: cells};
 
 		function make_headers (data, depth) {
@@ -379,7 +382,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				var col = _.find(col_headers, function (header) {
 					return _.isEqual(header.path, colpath);
 				});
-				cells.push({x: Math.min(row.id, col.id), 
+				cells.push({x: Math.min(row.id, col.id),
 							y: Math.max(row.id, col.id),
 							value: value});
 
@@ -392,15 +395,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 });
 
-
-removeFromArray = function (array, element) {
-    var index = array.indexOf(element);
-    if (index > -1) {
-        array.splice(index, 1);
-    }
-}
-
-insertAfter = function (array, after, elem) {
+function insertAfter(array, after, elem) {
     array.splice(array.indexOf(after) + 1, 0, elem);
 }
 
@@ -409,7 +404,7 @@ insertAfter = function (array, after, elem) {
  * with all the groupbys applied (this is done for now, but the goal
  * is to modify read_group in order to allow eager and lazy groupbys
  */
-query_groups = function (model, fields, domain, groupbys) {
+function query_groups (model, fields, domain, groupbys) {
     return model.query(fields)
         .filter(domain)
         .group_by(groupbys)
@@ -434,7 +429,7 @@ query_groups = function (model, fields, domain, groupbys) {
         });
 }
 
-query_groups_data = function (model, fields, domain, row_groupbys, col_groupby) {
+function query_groups_data (model, fields, domain, row_groupbys, col_groupby) {
     return query_groups(model, fields, domain, [col_groupby].concat(row_groupbys)).then(function (groups) {
         return _.map(groups, function (group) {
             return format_group(group, []);
@@ -442,9 +437,9 @@ query_groups_data = function (model, fields, domain, row_groupbys, col_groupby) 
     });
 }
 
-format_group = function (group, path) {
+function format_group (group, path) {
     group.path = path.concat(group.attributes.value[1]);
-    result = [group];
+    var result = [group];
     _.each(group.subgroups_data, function (subgroup) {
         result = result.concat(format_group (subgroup, group.path));
     });
