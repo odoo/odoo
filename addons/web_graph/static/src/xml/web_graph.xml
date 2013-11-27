@@ -1,25 +1,58 @@
 <templates>
     <t t-name="GraphView">
     	<div class="graph_header">
-    		<div class="btn-group">
-    			<label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    				Mode <span class="caret"></span>
-    			</label>
-    			<ul class="dropdown-menu graph_mode_selection" role="menu">
-    				<li><a data-mode="pivot" href="#">Pivot table</a></li>
+            <div class="btn-group">
+                <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Mode <span class="caret"></span>
+                </label>
+                <ul class="dropdown-menu graph_mode_selection" role="menu">
+                    <li><a data-mode="pivot" href="#">Table</a></li>
+                    <li><a data-mode="heatmap" href="#">Heatmap</a></li>
+                    <li><a data-mode="row_heatmap" href="#">Row Heatmap</a></li>
+                    <li><a data-mode="col_heatmap" href="#">Col Heatmap</a></li>
                     <li role="presentation" class="divider"></li>
-    				<li><a data-mode="bar_chart" href="#">Bar chart</a></li>
-    				<li><a data-mode="line_chart" href="#">Line Chart</a></li>
-    				<li><a data-mode="pie_chart" href="#">Pie chart</a></li>
-    			</ul>
-                <label type="button" class="btn btn-default graph_swap_axis">Swap Axis</label>
+                    <li><a data-mode="bar_chart" href="#">Bar chart</a></li>
+                    <li><a data-mode="line_chart" href="#">Line Chart</a></li>
+                    <li><a data-mode="pie_chart" href="#">Pie chart</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Measure <span class="caret"></span>
+                </label>
+                <ul class="dropdown-menu graph_measure_selection" role="menu">
+                    <li><a data-choice="count" href="#">Count</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Fold/Expand <span class="caret"></span>
+                </label>
+                <ul class="dropdown-menu graph_expand_selection" role="menu">
+                    <li><a data-choice="fold_columns" href="#">Fold Columns</a></li>
+                    <li><a data-choice="fold_rows" href="#">Fold Rows</a></li>
+                    <li><a data-choice="fold_all" href="#">Fold All</a></li>
+                    <li role="presentation" class="divider"></li>
+                    <li><a data-choice="expand_all" href="#">Expand All</a></li>
+                </ul>
+<!--                 <label type="button" class="btn btn-default graph_swap_axis">Swap Axis</label>
                 <label type="button" class="btn btn-default graph_fold_rows">Fold Rows</label>
                 <label type="button" class="btn btn-default graph_fold_cols">Fold Cols</label>
                 <label type="button" class="btn btn-default graph_fold_all">Fold All</label>
                 <label type="button" class="btn btn-default graph_heat_map">Heat Map</label>
                 <label type="button" class="btn btn-default graph_expand_all">Expand All</label>
                 <label type="button" class="btn btn-default graph_update_values">Update Values</label>
-    		</div>
+ -->    		</div>
+            <div class="btn-group">
+                <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Options <span class="caret"></span>
+                </label>
+                <ul class="dropdown-menu graph_options_selection" role="menu">
+                    <li><a data-choice="swap_axis" href="#">Swap Axis</a></li>
+                    <li><a data-choice="update_values" href="#">Update all values</a></li>
+                    <li><a data-choice="export_data" href="#">Export data</a></li>
+                </ul>
+            </div>
     	</div>
     	<div class="graph_main_content"></div>
     </t>

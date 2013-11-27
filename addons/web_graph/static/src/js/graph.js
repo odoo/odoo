@@ -30,6 +30,43 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.switch_mode(mode);
         },
 
+        'click .graph_expand_selection li' : function (event) {
+            event.preventDefault();
+            switch (event.target.attributes['data-choice'].nodeValue) {
+                case 'fold_columns': 
+                    this.pivot_table.fold_cols();
+                    this.draw_table();
+                    break;
+                case 'fold_rows':
+                    this.pivot_table.fold_rows();
+                    this.draw_table();
+                    break;
+                case 'fold_all':
+                    this.pivot_table.fold_all();
+                    this.draw_table();
+                    break;
+                case 'expand_all':
+                    this.pivot_table.expand_all().then(this.proxy('draw_table'));
+                    break;
+            }
+        },
+
+        'click .graph_options_selection li' : function (event) {
+            event.preventDefault();
+            switch (event.target.attributes['data-choice'].nodeValue) {
+                case 'swap_axis': 
+                    this.pivot_table.swap_axis();
+                    this.draw_table();
+                    break;
+                case 'update_values':
+                    this.pivot_table.update_values().then(this.proxy('draw_table'));
+                    break;
+                case 'export_data':
+                    // Export code...  To do...
+                    break;
+            }
+        },
+
         'click .web_graph_click' : function (event) {
             event.preventDefault();
             var id = event.target.attributes['data-id'].nodeValue;
@@ -45,37 +82,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 .then(this.proxy('draw_table'));
         },
 
-        'click label.graph_swap_axis' : function (event) {
-            this.pivot_table.swap_axis();
-            this.draw_table();
-        },
-
-        'click label.graph_fold_all' : function (event) {
-            this.pivot_table.fold_all();
-            this.draw_table();
-        },
-
-        'click label.graph_fold_rows' : function (event) {
-            this.pivot_table.fold_rows();
-            this.draw_table();
-        },
-
-        'click label.graph_fold_cols' : function (event) {
-            this.pivot_table.fold_cols();
-            this.draw_table();
-        },
 
         'click label.graph_heat_map' : function (event) {
             this.heat_map_mode = !this.heat_map_mode;
             this.draw_table();
-        },
-
-        'click label.graph_expand_all' : function (event) {
-            this.pivot_table.expand_all().then(this.proxy('draw_table'));
-        },
-
-        'click label.graph_update_values' : function (event) {
-            this.pivot_table.update_values().then(this.proxy('draw_table'));
         },
     },
 
@@ -91,6 +101,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         this.pivot_table = null;
         this.heat_map_mode = false;
+        this.mode = 'pivot';
 
         // get the default groupbys and measure defined in the field view
         _.each(fields_view_get.arch.children, function (field) {
@@ -175,7 +186,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     switch_mode: function (mode) {
         this.mode = mode;
-        if (mode === 'pivot') {
+        var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
+        if (_.contains(table_modes, mode)) {
+            this.draw_table();
             this.table.css('display', 'block');
             this.svg.css('display','none');
         } else {
@@ -317,7 +330,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     cell = $('<td></td>');
 
                 cell.append((value === undefined) ? '' : value);
-                if ((self.heat_map_mode) && (value !== undefined)) {
+                console.log("self.mode",self.mode);
+                if ((self.mode == 'heatmap') && (value !== undefined)) {
+                    console.log("yop");
                     var color = Math.floor(50 + 205*(pivot.total - value)/pivot.total);
                     cell.css("background-color", "rgb(255," + color + "," + color + ")");
                 }
