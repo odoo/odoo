@@ -473,7 +473,7 @@ class account_bank_statement(osv.osv):
             'value': {
                 'balance_start': balance_start,
                 'company_id': journal.company_id.id,
-                'currency_id': currency.id,
+                'currency': currency.id,
             }
         }
 
