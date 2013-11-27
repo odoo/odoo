@@ -25,11 +25,11 @@ class PaypalCommon(PaymentAcquirerCommon):
                 'name': 'paypal',
                 'env': 'test',
                 'view_template_id': self.paypal_view_id,
-                'paypal_email_id': 'tde+paypal-facilitator@openerp.com',
-                'paypal_username': 'tde+paypal-facilitator_api1.openerp.com',
+                'paypal_email_id': 'dummy',
+                'paypal_username': 'dummy',
                 'paypal_api_enabled': True,
-                'paypal_api_username': 'AYf_uBATwly1C72DqE2njwDHmZI25UHcZMwvgvgICLkeQEgutvrhrg6y3KhZ',
-                'paypal_api_password': 'EJSDgxC_LuZ9oeG-Ud_oozfiDqqN3mUVLMmzPK71IZA3TM4taicUY2uaJYU1',
+                'paypal_api_username': 'dummy',
+                'paypal_api_password': 'dummy',
             })
         # tde+seller@openerp.com - tde+buyer@openerp.com - tde+buyer-it@openerp.com
 
