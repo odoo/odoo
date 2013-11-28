@@ -7,15 +7,29 @@
             <field name="model">payment.acquirer</field>
             <field name="inherit_id" ref="payment_acquirer.acquirer_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//group[@name="acquirer_base"]' position='after'>
-                    <group string="Paypal Details"
-                            attrs="{'invisible': [('name', '!=', 'paypal')]}">
-                        <field name="paypal_email_id"/>
-                        <field name="paypal_username"/>
-                        <field name="paypal_use_ipn"/>
-                        <field name="paypal_api_enabled"/>
-                        <field name="paypal_api_username"/>
-                        <field name="paypal_api_password"/>
+                <xpath expr='//group[@name="acquirer_display"]' position='after'>
+                    <group attrs="{'invisible': [('name', '!=', 'paypal')]}">
+                        <group>
+                            <field name="paypal_email_id"/>
+                            <field name="paypal_username"/>
+                            <field name="paypal_use_ipn"/>
+                            <field name="paypal_api_enabled"/>
+                            <field name="paypal_api_username"
+                                attrs="{'invisible': [('paypal_api_enabled', '=', False)]}"/>
+                            <field name="paypal_api_password"
+                                attrs="{'invisible': [('paypal_api_enabled', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="paypal_fee_active"/>
+                            <field name="paypal_fee_dom_fixed"
+                                attrs="{'invisible': [('paypal_fee_active', '=', False)]}"/>
+                            <field name="paypal_fee_dom_var"
+                                attrs="{'invisible': [('paypal_fee_active', '=', False)]}"/>
+                            <field name="paypal_fee_int_fixed"
+                                attrs="{'invisible': [('paypal_fee_active', '=', False)]}"/>
+                            <field name="paypal_fee_int_var"
+                                attrs="{'invisible': [('paypal_fee_active', '=', False)]}"/>
+                        </group>
                     </group>
                 </xpath>
             </field>

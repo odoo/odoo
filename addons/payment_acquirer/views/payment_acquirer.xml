@@ -12,32 +12,41 @@
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <form string="Payment Acquirer" version="7.0">
-                    <group name="acquirer_base">
-                        <field name="name"/>
-                        <field name="portal_published"/>
-                        <field name="env"/>
-                        <field name="message"/>
-                        <label for="view_template_id"/>
-                        <div>
-                            <field name="view_template_id" nolabel="1"/>
+                    <sheet>
+                        <group name="acquirer_base">
+                            <group>
+                                <field name="name"/>
+                                <field name="company_id"/>
+                            </group>
+                            <group>
+                                <field name="portal_published"/>
+                                <field name="env"/>
+                            </group>
+                        </group>
+                        <group name="acquirer_display">
+                            <field name="message"/>
+                            <label for="view_template_id"/>
                             <div>
-                                This is an HTML form template to submit a payment through this acquirer.
-                                The template will be rendered with qWeb, so it may use qWeb expressions.
-                                The qWeb evaluation context provides:
-                                <ul>
-                                    <li>acquirer: payment.acquirer browse record</li>
-                                    <li>user: current user browse record</li>
-                                    <li>reference: the transaction reference number</li>
-                                    <li>currency: the transaction currency browse record</li>
-                                    <li>amount: the transaction amount, a float</li>
-                                    <li>partner: the buyer partner browse record, not necessarily set</li>
-                                    <li>partner_values: specific values about the buyer, for example coming from a shipping form</li>
-                                    <li>tx_values: specific transaction values</li>
-                                    <li>context: the current context dictionary</li>
-                                </ul>
+                                <field name="view_template_id" nolabel="1"/>
+                                <div>
+                                    This is an HTML form template to submit a payment through this acquirer.
+                                    The template will be rendered with qWeb, so it may use qWeb expressions.
+                                    The qWeb evaluation context provides:
+                                    <ul>
+                                        <li>acquirer: payment.acquirer browse record</li>
+                                        <li>user: current user browse record</li>
+                                        <li>reference: the transaction reference number</li>
+                                        <li>currency: the transaction currency browse record</li>
+                                        <li>amount: the transaction amount, a float</li>
+                                        <li>partner: the buyer partner browse record, not necessarily set</li>
+                                        <li>partner_values: specific values about the buyer, for example coming from a shipping form</li>
+                                        <li>tx_values: specific transaction values</li>
+                                        <li>context: the current context dictionary</li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </group>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -84,6 +93,7 @@
                             <group>
                                 <field name="reference"/>
                                 <field name="amount"/>
+                                <field name="fees"/>
                                 <field name="currency_id"/>
                                 <field name="partner_id"/>
                                 <field name="partner_name"/>
