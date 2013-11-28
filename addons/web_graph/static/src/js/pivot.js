@@ -194,6 +194,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	update_values: function () {
+		if (!this.rows.headers) {
+			return this.expand_all();
+		}
 		var self = this;
 		return this.query_all_values().then(function (result) {
 			if (!result) {

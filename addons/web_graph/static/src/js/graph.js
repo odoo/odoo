@@ -114,7 +114,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 this.dropdown = null;
             }
         });
-
         return this.load_view();
     },
 
@@ -167,7 +166,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return $.when(important_fields_def, field_descr_def)
             .then(function () {
                 self.fields = fields;
-                self.data = {
+                var data = {
                     model: model,
                     domain: domain,
                     fields: fields,
@@ -176,6 +175,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     row_groupby: row_groupby,
                     groups: [],
                 };
+                self.pivot_table = new openerp.web_graph.PivotTable(data);
+
                 var measure_selection = self.$('.graph_measure_selection');
                 _.each(self.measure_list, function (measure) {
                     var choice = $('<a></a>').attr('data-choice', measure)
@@ -188,18 +189,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
-        var self = this;
-        this.data.domain = new instance.web.CompoundDomain(domain);
-
-        if (!this.pivot_table) {
-            self.pivot_table = new openerp.web_graph.PivotTable(self.data);
-            self.pivot_table.start().then(self.proxy('display_data'));
-        } else {
-            this.pivot_table.domain = domain;
-            this.pivot_table.update_values().done(function () {
-                self.display_data();
-            });
-        }
+        this.pivot_table.domain = domain;
+        this.pivot_table.update_values().done(this.proxy('display_data'));
     },
 
     do_show: function () {
@@ -255,7 +246,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             dropdown_options = {
                 header_id: options.id,
                 fields: _.map(possible_groups, function (field) {
-                    return {id: field, value: self.data.fields[field].string};
+                    return {id: field, value: self.fields[field].string};
             })};
 
         this.dropdown = $(QWeb.render('field_selection', dropdown_options));
