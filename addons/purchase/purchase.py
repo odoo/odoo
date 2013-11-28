@@ -1289,8 +1289,8 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        if po_ids:
-            purchase_order_obj.message_post(cr, user_id, po_ids, body=_("Invoice paid"), context=context)
+        for po_id in po_ids:
+            purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice paid"), context=context)
         return res
 
 class account_invoice_line(osv.Model):
