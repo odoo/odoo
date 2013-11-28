@@ -816,6 +816,10 @@ class mail_message(osv.Model):
 
         return email_reply_to
 
+    # def baseN(num, b, numerals=string.digits + string.letters):
+    #     return ((num == 0) and "0") or (baseN(num // b, b, numerals).lstrip("0") + numerals[num % b])
+         # message-id with db
+
     def _get_message_id(self, cr, uid, values, context=None):
         message_id = None
         if not values.get('message_id') and values.get('reply_to'):

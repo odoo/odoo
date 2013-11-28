@@ -829,9 +829,26 @@ class mail_thread(osv.AbstractModel):
         email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
+        thread_references = references or in_reply_to
+
+        # 1. message is a reply to an existing message (exact match of message_id)
+        msg_references = thread_references.split()
+        for msg_reference in msg_references:
+            mail_message_ids = self.pool['mail.message'].search(
+                cr, uid, [('message_id', '=', msg_reference)], context=context)
+            if mail_message_ids:
+                original_msg = self.pool['mail.message'].browse(cr, SUPERUSER_ID, mail_message_ids[0], context=context)
+                model, thread_id = original_msg.model, original_msg.res_id
+                _logger.info(
+                    'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                    email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                route = self.message_route_verify(
+                    cr, uid, message, message_dict,
+                    (model, thread_id, custom_values, uid, None),
+                    update_author=True, assert_model=True, create_fallback=True, context=context)
+                return route and [route] or []
 
         # 1. Verify if this is a reply to an existing thread
-        thread_references = references or in_reply_to
         ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
             thread_id = int(ref_match.group(1))
