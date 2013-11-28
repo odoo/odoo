@@ -35,6 +35,22 @@
         </t>
     </template>
 
+    <template name="Sponsors" id="event_sponsor" inherit_option_id="website_event.layout" inherit_id="website_event.layout">
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <div class="container mt32 mb16" t-if="event.sponsor_ids">
+                <section data-snippet-id="title">
+                    <h2 class="text-center">Our Sponsors</h2>
+                </section>
+                <div class="row">
+                    <div class="col-md-3 text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
+                        <span t-field="sponsor.partner_id.image_small" style="max-height: 500px" t-field-options='{"widget": "image", "class": "img img-responsive"}'/>
+                        <span t-field="sponsor.sponsor_type_id"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
     <template id="tracks">
         <t t-call="website_event.event_details">
             <div class="col-md-3 css_noprint">
