@@ -8,7 +8,7 @@ Publish and Assign Partner
 ==========================
         """,
     'author': 'OpenERP SA',
-    'depends': ['website_partner', 'website_google_map'],
+    'depends': ['crm_partner_assign','website_partner', 'website_google_map'],
     'data': [
         'views/website_crm_partner_assign.xml',
     ],
