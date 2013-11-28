@@ -156,29 +156,26 @@ instance.web_graph.GraphView = instance.web.View.extend({
         // get the fields descriptions from the model
         var deferred2 = model.call('fields_get', []).then(function (fs) { 
             self.fields = fs; 
-            console.log("fiels",self.fields);
+            var measure_selection = self.$('.graph_measure_selection');
+            _.each(self.measure_list, function (measure) {
+                var choice = $('<a></a>').attr('data-choice', measure)
+                                         .attr('href', '#')
+                                         .append(self.fields[measure].string);
+                measure_selection.append($('<li></li>').append(choice));
+
+            });
         });
 
-        return $.when(deferred1, deferred2)
-            .then(function () {
-                var data = {
-                    model: model,
-                    domain: [],
-                    measure: self.measure,
-                    col_groupby: [],
-                    row_groupby: row_groupby,
-                };
-                self.pivot_table = new openerp.web_graph.PivotTable(data);
-
-                var measure_selection = self.$('.graph_measure_selection');
-                _.each(self.measure_list, function (measure) {
-                    var choice = $('<a></a>').attr('data-choice', measure)
-                                             .attr('href', '#')
-                                             .append(self.fields[measure].string);
-                    measure_selection.append($('<li></li>').append(choice));
-
-                });
-            });
+        return $.when(deferred1, deferred2).then(function () {
+            var data = {
+                model: model,
+                domain: [],
+                measure: self.measure,
+                col_groupby: [],
+                row_groupby: row_groupby,
+            };
+            self.pivot_table = new openerp.web_graph.PivotTable(data);
+        });
     },
 
     do_search: function (domain, context, group_by) {
