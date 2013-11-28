@@ -31,6 +31,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.display_data();
         },
 
+        'click .graph_measure_selection li' : function (event) {
+            event.preventDefault();
+            var measure = event.target.attributes['data-choice'].nodeValue;
+            this.pivot_table.set_measure(measure)
+                .then(this.proxy('display_data'));
+        },
+
         'click .graph_expand_selection li' : function (event) {
             event.preventDefault();
             switch (event.target.attributes['data-choice'].nodeValue) {
@@ -92,23 +99,35 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.pivot_table = null;
         this.heat_map_mode = false;
         this.mode = 'pivot';
+        this.measure_list = [];
+        this.important_fields = [];
+    },
+
+    start: function () {
+        this.table = $('<table></table>');
+        this.$('.graph_main_content').append(this.table);
+        instance.web.bus.on('click', this, function (ev) {
+            if (this.dropdown) {
+                this.dropdown.remove();
+                this.dropdown = null;
+            }
+        });
+
+        return this.load_view();
     },
 
     view_loading: function (fields_view_get) {
         var self = this,
             model = new instance.web.Model(fields_view_get.model, {group_by_no_leaf: true}),
             domain = [],
-            measure = null,
             fields,
-            important_fields = [],
             row_groupby = [];
-
 
         // get the default groupbys and measure defined in the field view
         _.each(fields_view_get.arch.children, function (field) {
             if ('name' in field.attrs) {
                 if ('operator' in field.attrs) {
-                    measure = field.attrs.name;
+                    self.measure_list.push(field.attrs.name);
                 } else {
                     row_groupby.push(field.attrs.name);
                 }
@@ -130,7 +149,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 _.each(g.children, function (g) {
                     if (g.attrs.context) {
                         var field_id = py.eval(g.attrs.context).group_by;
-                        important_fields.push(field_id);
+                        self.important_fields.push(field_id);
                     }
                 });
             });
@@ -146,27 +165,21 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     model: model,
                     domain: domain,
                     fields: fields,
-                    important_fields: important_fields,
-                    measure: measure,
-                    measure_label: fields[measure].string,
+                    measure: self.measure_list[0],
+                    measure_label: fields[self.measure_list[0]].string,
                     col_groupby: [],
                     row_groupby: row_groupby,
                     groups: [],
-                    total: null,
                 };
-            });
-    },
+                var measure_selection = self.$('.graph_measure_selection');
+                _.each(self.measure_list, function (measure) {
+                    var choice = $('<a></a>').attr('data-choice', measure)
+                                             .attr('href', '#')
+                                             .append(fields[measure].string);
+                    measure_selection.append($('<li></li>').append(choice));
 
-    start: function () {
-        this.table = $('<table></table>');
-        this.$('.graph_main_content').append(this.table);
-        instance.web.bus.on('click', this, function (ev) {
-            if (this.dropdown) {
-                this.dropdown.remove();
-                this.dropdown = null;
-            }
-        });
-        return this.load_view();
+                });
+            });
     },
 
     do_search: function (domain, context, group_by) {
@@ -233,7 +246,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var self = this,
             pivot = this.pivot_table,
             already_grouped = pivot.rows.groupby.concat(pivot.cols.groupby),
-            possible_groups = _.difference(self.data.important_fields, already_grouped),
+            possible_groups = _.difference(self.important_fields, already_grouped),
             dropdown_options = {
                 header_id: options.id,
                 fields: _.map(possible_groups, function (field) {

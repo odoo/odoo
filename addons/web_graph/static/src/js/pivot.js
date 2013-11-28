@@ -28,7 +28,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	visible_fields: function () {
-		return this.rows.groupby.concat(this.cols.groupby, this.measure);
+		var result = this.rows.groupby.concat(this.cols.groupby);
+		if (this.measure) {
+			result = result.concat(this.measure);
+		}
+		return result;
 	},
 
 	set_value: function (id1, id2, value) {
@@ -51,6 +55,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			return ((c.x == x) && (c.y == y));
 		});
 		return (cell === undefined) ? undefined : cell.value;
+	},
+
+	set_measure: function (measure) {
+		this.measure = (measure === '__count') ? null : measure;
+		return this.update_values();
 	},
 
 	get_header: function (id) {
@@ -101,7 +110,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		                    }
 		                });
 		                if (other) {
-		                    self.set_value(new_header_id, other.id, data.attributes.aggregates[self.measure]);
+		                	if (self.measure) {
+		                    	self.set_value(new_header_id, other.id, data.attributes.aggregates[self.measure]);
+		                    } else {
+		                    	self.set_value(new_header_id, other.id, data.attributes.length);
+		                    }
 	                   }
 	            	});
             	});
@@ -333,14 +346,17 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		function make_headers (data, depth) {
 			var main = {
 				id: self.generate_id(),
-				count: total.attributes.length,
-				total: total.attributes.aggregates[self.measure],
 				path: [],
 				parent: null,
 				children: [],
 				title: '',
 				domain: self.domain,
 			};
+			if (self.measure) {
+				main.total = total.attributes.aggregates[self.measure];
+			} else {
+				main.total = total.attributes.length;
+			}
 
 			if (depth > 0) {
 				main.children = _.map(data, function (data_pt) {
@@ -361,7 +377,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		function make_tree_headers (data_pt, parent, max_depth) {
 			var node = {
 				id: self.generate_id(),
-				count: data_pt.attributes.length,
 				total: data_pt.attributes.aggregates[self.measure],
 				path: parent.path.concat(data_pt.attributes.value[1]),
 				title: data_pt.attributes.value[1],
@@ -369,6 +384,12 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				parent: parent,
 				children: [],
 			};
+			if (self.measure) {
+				node.total = data_pt.attributes.aggregates[self.measure];
+			} else {
+				node.total = data_pt.attributes.length;
+			}
+
 			if (node.path.length < max_depth) {
 				node.children = _.map(data_pt.subgroups_data, function (child) {
 					return make_tree_headers (child, node, max_depth);
@@ -381,7 +402,13 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			_.each(data, function (group) {
 				var attr = group.attributes,
 					path = current_path,
+					value;
+
+				if (self.measure) {
 					value = attr.aggregates[self.measure];
+				} else {
+					value = attr.length;
+				}
 
 				if (attr.grouped_on !== undefined) {
 					path = path.concat(attr.value[1]);
