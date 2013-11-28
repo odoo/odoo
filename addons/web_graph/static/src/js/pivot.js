@@ -193,68 +193,38 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				return undefined;
 			}
 			self.no_data = false;			
-			var old_col_headers = self.cols.headers,
-				old_row_headers = self.rows.headers;
-
-			// the next 30 lines replace this.cols.headers with the 
-			// corresponding headers in result.col_headers
-			_.each(old_col_headers, function (header) {
-				var corresponding_col = _.find(result.col_headers, function (c) {
-					return _.isEqual(c.path, header.path);
-				});
-
-				if (corresponding_col !== undefined) {
-					if (header.is_expanded) {
-						corresponding_col.is_expanded = true;
-						_.each(corresponding_col.children, function (c) {
-							c.is_expanded = false;
-						});
-					} else {
-						corresponding_col.is_expanded = false;
-					}
-				}
-			});
-
-			self.cols.headers = _.filter(result.col_headers, function (header) {
-				return (header.is_expanded !== undefined);
-			});
-
-			_.each(self.cols.headers, function (col) {
-				if (!col.is_expanded) {
-					col.children = [];
-				}
-			});
+			self.cols.headers = update_headers(self.cols.headers, result.col_headers);
+			self.rows.headers = update_headers(self.rows.headers, result.row_headers);
 			self.cols.main = self.cols.headers[0];
+			self.rows.main = self.rows.headers[0];
 
-			// the next 30 lines replace this.rows.headers with the 
-			// corresponding headers in result.row_headers
-			_.each(old_row_headers, function (header) {
-				var corresponding_row = _.find(result.row_headers, function (c) {
-					return _.isEqual(c.path, header.path);
-				});
 
-				if (corresponding_row !== undefined) {
-					if (header.is_expanded) {
-						corresponding_row.is_expanded = true;
-						_.each(corresponding_row.children, function (c) {
+			function update_headers (old_headers, new_headers) {
+				_.each(old_headers, function (header) {
+					var corresponding_header = _.find(new_headers, function (h) {
+						return _.isEqual(h.path, header.path);
+					});
+					if (corresponding_header && (header.is_expanded)) {
+						corresponding_header.is_expanded = true;
+						_.each(corresponding_header.children, function (c) {
 							c.is_expanded = false;
 						});
-					} else {
-						corresponding_row.is_expanded = false;
+					} 
+					if (corresponding_header && (!header.is_expanded)) {
+						corresponding_header.is_expanded = false;
 					}
-				}
-			});
+				});
+				var updated_headers = _.filter(new_headers, function (header) {
+					return (header.is_expanded !== undefined);
+				});
+				_.each(updated_headers, function (hdr) {
+					if (!hdr.is_expanded) {
+						hdr.children = [];
+					}
+				});
 
-			self.rows.headers = _.filter(result.row_headers, function (header) {
-				return (header.is_expanded !== undefined);
-			});
-
-			_.each(self.rows.headers, function (col) {
-				if (!col.is_expanded) {
-					col.children = [];
-				}
-			});
-			self.rows.main = self.rows.headers[0];
+				return updated_headers;
+			}
 
 			// now some more tweaks
 			self.total = self.rows.main.total;
@@ -265,8 +235,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				col.root = self.cols;
 			});
 			self.cells = result.cells;
-			self.rows.main.title = '';
-			self.cols.main.title = '';
 		});
 	},
 
