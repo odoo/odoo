@@ -402,17 +402,8 @@ class HttpRequest(WebRequest):
     def dispatch(self):
         try:
             r = self._call_function(**self.params)
-        except (openerp.exceptions.AccessError, werkzeug.exceptions.HTTPException), e:
+        except (werkzeug.exceptions.HTTPException), e:
             r = e
-        except Exception, e:
-            _logger.exception("An exception occured during an http request")
-            se = serialize_exception(e)
-            error = {
-                'code': 200,
-                'message': "OpenERP Server Error",
-                'data': se
-            }
-            r = werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
         else:
             if not r:
                 r = werkzeug.wrappers.Response(status=204)  # no content
