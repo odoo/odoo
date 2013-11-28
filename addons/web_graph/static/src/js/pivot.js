@@ -12,7 +12,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.model = options.model;
 		this.domain = options.domain;
 		this.measure = options.measure;
-		this.total = 0;
 		this.id_seed = 0;
 		this.no_data = true;
 	},
@@ -168,7 +167,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				self.cells = result.cells;
 				self.rows.main = self.rows.headers[0];
 				self.cols.main = self.cols.headers[0];
-				self.total = self.rows.main.total;
 				self.rows.main.title = '';
 				self.cols.main.title = '';
 				_.each(self.rows.headers, function (row) {
@@ -184,6 +182,15 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			}
 
 		});
+	},
+
+	get_total: function (header) {
+		if (header) {
+			var main = (header.root === this.rows) ? this.cols.main : this.rows.main;
+			return this.get_value(header.id, main.id);
+		} else {
+			return this.rows.main.total;
+		}
 	},
 
 	update_values: function () {
@@ -226,8 +233,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				return updated_headers;
 			}
 
-			// now some more tweaks
-			self.total = self.rows.main.total;
 			_.each(self.rows.headers, function (row) {
 				row.root = self.rows;
 			});
@@ -341,7 +346,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		function make_tree_headers (data_pt, parent, max_depth) {
 			var node = {
 				id: self.generate_id(),
-				total: data_pt.attributes.aggregates[self.measure],
 				path: parent.path.concat(data_pt.attributes.value[1]),
 				title: data_pt.attributes.value[1],
 				domain: data_pt.model._domain,

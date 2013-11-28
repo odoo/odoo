@@ -363,8 +363,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         });
 
         if (pivot.cols.main.children.length > 0) {
-            var row_total = pivot.get_value(row.id, pivot.cols.main.id),
-                cell = make_cell(row_total, pivot.cols.main)
+            var cell = make_cell(pivot.get_total(row), pivot.cols.main)
                             .css('font-weight', 'bold');
             html_row.append(cell);
         }
@@ -384,16 +383,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
             cell.append(value);
             if (self.mode === 'heatmap') {
-                color = Math.floor(50 + 205*(pivot.total - value)/pivot.total);
+                total = pivot.get_total();
+                color = Math.floor(50 + 205*(total - value)/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             if (self.mode === 'row_heatmap') {
-                total = pivot.get_value(row.id, pivot.cols.main.id);
+                total = pivot.get_total(row);
                 color = Math.floor(50 + 205*(total - value)/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             if (self.mode === 'col_heatmap') {
-                total = pivot.get_value(col.id, pivot.rows.main.id);
+                total = pivot.get_total(col);
                 color = Math.floor(50 + 205*(total - value)/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
