@@ -34,7 +34,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
         'click .graph_measure_selection li' : function (event) {
             event.preventDefault();
             var measure = event.target.attributes['data-choice'].nodeValue;
-            this.pivot_table.set_measure(measure)
+            this.measure = (measure === '__count') ? null : measure;
+            this.pivot_table.set_measure(this.measure)
                 .then(this.proxy('display_data'));
         },
 
@@ -99,6 +100,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.pivot_table = null;
         this.heat_map_mode = false;
         this.mode = 'pivot';
+        this.measure = null;
         this.measure_list = [];
         this.important_fields = [];
     },
@@ -133,6 +135,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 }
             }
         });
+        if (this.measure_list.length > 0) {
+            this.measure = this.measure_list[0];
+        }
 
         // get the most important fields (of the model) by looking at the
         // groupby filters defined in the search view
@@ -161,12 +166,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         return $.when(important_fields_def, field_descr_def)
             .then(function () {
+                self.fields = fields;
                 self.data = {
                     model: model,
                     domain: domain,
                     fields: fields,
-                    measure: self.measure_list[0],
-                    measure_label: fields[self.measure_list[0]].string,
+                    measure: self.measure,
                     col_groupby: [],
                     row_groupby: row_groupby,
                     groups: [],
@@ -261,7 +266,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.$('.field-selection').next('.dropdown-menu').toggle();
     },
 
+    measure_label: function () {
+        return (this.measure) ? this.fields[this.measure].string : 'Quantity';
+    },
+
     draw_table: function () {
+        this.pivot_table.rows.main.title = 'Total';
+        this.pivot_table.cols.main.title = this.measure_label();
         this.draw_top_headers();
         _.each(this.pivot_table.rows.headers, this.proxy('draw_row'));
     },

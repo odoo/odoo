@@ -12,7 +12,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.model = options.model;
 		this.domain = options.domain;
 		this.measure = options.measure;
-		this.measure_label = options.measure_label;
 		this.total = 0;
 		this.id_seed = 0;
 		this.no_data = true;
@@ -58,7 +57,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	set_measure: function (measure) {
-		this.measure = (measure === '__count') ? null : measure;
+		this.measure = measure;
 		return this.update_values();
 	},
 
@@ -143,9 +142,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		var temp = this.rows;
 		this.rows = this.cols;
 		this.cols = temp;
-
-		this.rows.main.title = 'Total';
-		this.cols.main.title = this.measure_label;
 	},
 
 	fold_rows: function () {
@@ -173,8 +169,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				self.rows.main = self.rows.headers[0];
 				self.cols.main = self.cols.headers[0];
 				self.total = self.rows.main.total;
-				self.rows.main.title = 'Total';
-				self.cols.main.title = self.measure_label;
+				self.rows.main.title = '';
+				self.cols.main.title = '';
 				_.each(self.rows.headers, function (row) {
 					row.root = self.rows;
 					row.is_expanded = (row.children.length > 0);
@@ -269,8 +265,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				col.root = self.cols;
 			});
 			self.cells = result.cells;
-			self.rows.main.title = 'Total';
-			self.cols.main.title = self.measure_label;
+			self.rows.main.title = '';
+			self.cols.main.title = '';
 		});
 	},
 
