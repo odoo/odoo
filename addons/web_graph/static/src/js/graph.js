@@ -180,7 +180,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     do_search: function (domain, context, group_by) {
         this.pivot_table.domain = domain;
-        this.pivot_table.update_values().done(this.proxy('display_data'));
+        if (group_by.length > 0) {
+            this.pivot_table.set_row_groupby(group_by).done(this.proxy('display_data'));
+        } else {
+            this.pivot_table.update_values().done(this.proxy('display_data'));            
+        }
     },
 
     do_show: function () {
