@@ -478,6 +478,9 @@ class product_template(osv.osv):
         default = default.copy()
         default.update(name=_("%s (copy)") % (template['name']))
         id = super(product_template, self).copy(cr, uid, id, default=default, context=context)
+        '''Note: while copy a template at that time create variants(product) 
+        with old value. and due to inherits product_tmpl_id, It's update the 
+        new template name. So we are update new template name with copy.'''
         if template['product_variant_ids']:
             self.write(cr, uid, id, default, context)
         return id
