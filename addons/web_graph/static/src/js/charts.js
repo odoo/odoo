@@ -2,8 +2,9 @@
 openerp.web_graph.draw_chart = function (mode, pivot, svg) {
 
     var data = _.map(pivot.rows.main.children, function (pt) {
-        var val = pivot.get_value(pt.id, pivot.cols.main.id);
-        return {x: pt.title, y: val};
+        var value = pivot.get_value(pt.id, pivot.cols.main.id),
+            title = (pt.title !== undefined) ? pt.title : 'Undefined';
+        return {x: title, y: value};
     });
     
     switch (mode) {

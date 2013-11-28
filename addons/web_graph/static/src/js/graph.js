@@ -122,6 +122,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
             model = new instance.web.Model(fields_view_get.model, {group_by_no_leaf: true}),
             row_groupby = [];
 
+        if (fields_view_get.arch.attrs.type === 'bar') {
+            this.mode = 'bar_chart';
+        }
+
         // get the default groupbys and measure defined in the field view
         _.each(fields_view_get.arch.children, function (field) {
             if ('name' in field.attrs) {
