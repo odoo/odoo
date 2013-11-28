@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
 import cStringIO
-import json
 import datetime
-import dateutil.relativedelta
+import json
 import logging
+import math
 import re
 import urllib
 import xml # FIXME use lxml and etree
 
+import babel
+import babel.dates
+import dateutil.relativedelta
 import Image
-import math
 import werkzeug.utils
 
-from openerp.osv import osv, orm, fields
 import openerp.tools
+from openerp.osv import osv, orm, fields
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -458,7 +461,7 @@ class QWeb(orm.AbstractModel):
         """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
         node_name = e.nodeName
         assert node_name not in ("table", "tbody", "thead", "tfoot", "tr", "td",
-                                 "ol", "ul", "ol", "dl", "dt", "dd"),\
+                                 "li", "ul", "ol", "dl", "dt", "dd"),\
             "RTE widgets do not work correctly on %r elements" % node_name
         assert node_name != 't',\
             "t-field can not be used on a t element, provide an actual HTML node"
@@ -775,6 +778,54 @@ class MonetaryConverter(osv.AbstractModel):
     def display_currency(self, cr, uid, options):
         return self.qweb_object().eval_object(
             options['display_currency'], options['_qweb_context'])
+
+TIMEDELTA_UNITS = (
+    ('year',   3600 * 24 * 365),
+    ('month',  3600 * 24 * 30),
+    ('week',   3600 * 24 * 7),
+    ('day',    3600 * 24),
+    ('hour',   3600),
+    ('minute', 60),
+    ('second', 1)
+)
+class DurationConverter(osv.AbstractModel):
+    """ ``duration`` converter, to display integral or fractional values as
+    human-readable time spans (e.g. 1.5 as "1 hour 30 minutes").
+
+    Can be used on any numerical field.
+
+    Has a mandatory option ``unit`` which can be one of ``second``, ``minute``,
+    ``hour``, ``day``, ``week`` or ``year``, used to interpret the numerical
+    field value before converting it.
+
+    Sub-second values will be ignored.
+    """
+    _name = 'ir.qweb.field.duration'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        units = dict(TIMEDELTA_UNITS)
+        if value < 0:
+            raise ValueError(_("Durations can't be negative"))
+        if not options or options.get('unit') not in units:
+            raise ValueError(_("A unit must be provided to duration widgets"))
+
+        locale = babel.Locale.parse(
+            self.user_lang(cr, uid, context=context).code)
+        print locale
+        factor = units[options['unit']]
+
+        sections = []
+        r = value * factor
+        for unit, secs_per_unit in TIMEDELTA_UNITS:
+            v, r = divmod(r, secs_per_unit)
+            if not v: continue
+            section = babel.dates.format_timedelta(
+                v*secs_per_unit, threshold=1, locale=locale)
+            if section:
+                sections.append(section)
+        return u' '.join(sections)
+
 
 def get_field_type(column, options):
     """ Gets a t-field's effective type from the field's column and its options

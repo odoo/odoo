@@ -22,15 +22,21 @@ class TestExport(common.TransactionCase):
     def get_column(self, name):
         return self.Model._all_columns[name].column
 
-    def get_converter(self, name):
+    def get_converter(self, name, type=None):
         column = self.get_column(name)
-        try:
-            model = self.registry('ir.qweb.field.' + column._type)
-        except KeyError:
-            model = self.registry('ir.qweb.field')
 
-        return lambda value: model.value_to_html(
-            self.cr, self.uid, value, column)
+        for postfix in type, column._type, '':
+            fs = ['ir', 'qweb', 'field']
+            if postfix is None: continue
+            if postfix: fs.append(postfix)
+
+            try:
+                model = self.registry('.'.join(fs))
+                break
+            except KeyError: pass
+
+        return lambda value, options=None, context=None: model.value_to_html(
+            self.cr, self.uid, value, column, options=options, context=context)
 
 class TestBasicExport(TestExport):
     _model = 'test_converter.test_model'
@@ -297,5 +303,38 @@ class TestDatetimeExport(TestBasicExport):
         # default lang/format is US
         self.assertEqual(value, '05/03/2011 00:12:13')
 
-# o2m, m2m?
-# reference?
+class TestDurationExport(TestBasicExport):
+    def setUp(self):
+        super(TestDurationExport, self).setUp()
+
+        self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
+
+    def test_negative(self):
+        converter = self.get_converter('float', 'duration')
+
+        with self.assertRaises(ValueError):
+            converter(-4)
+
+    def test_missing_unit(self):
+        converter = self.get_converter('float', 'duration')
+
+        with self.assertRaises(ValueError):
+            converter(4)
+
+    def test_basic(self):
+        converter = self.get_converter('float', 'duration')
+
+        result = converter(4, {'unit': 'hour'}, {'lang': 'fr_FR'})
+        self.assertEqual(result, u'4 heures')
+
+        result = converter(50, {'unit': 'second'}, {'lang': 'fr_FR'})
+        self.assertEqual(result, u'50 secondes')
+
+    def test_multiple(self):
+        converter = self.get_converter('float', 'duration')
+
+        result = converter(1.5, {'unit': 'hour'}, {'lang': 'fr_FR'})
+        self.assertEqual(result, u"1 heure 30 minutes")
+
+        result = converter(72, {'unit': 'second'}, {'lang': 'fr_FR'})
+        self.assertEqual(result, u"1 minute 12 secondes")
