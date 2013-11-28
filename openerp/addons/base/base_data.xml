@@ -39,7 +39,7 @@
             <field name="city"></field>
             <field name="zip"></field>
             <field name="phone"></field>
-            <field name="email">info@yourcompany.com</field>
+            <field name="email">info@yourcompany.example.com</field>
             <field name="website">www.yourcompany.com</field>
         </record>
 
@@ -68,7 +68,10 @@
             <field name="name">Administrator</field>
             <field name="company_id" ref="main_company"/>
             <field name="customer" eval="False"/>
-            <field name="email">admin@example.com</field>
+            <field name="email">admin@yourcompany.example.com</field>
+            <field name="city">Barchon</field>
+            <field name="zip">4671</field>
+            <field name="street">Rue de Heuseux 61</field>
         </record>
 
         <record model="res.users" id="base.user_root">

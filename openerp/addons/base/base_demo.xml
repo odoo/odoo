@@ -6,7 +6,11 @@
             <field name="name">Demo User</field>
             <field name="company_id" ref="main_company"/>
             <field name="customer" eval="False"/>
-            <field name="email">demo@example.com</field>
+            <field name="email">demo@yourcompany.example.com</field>
+            <field name="street">Avenue des Dessus-de-Lives, 2</field>
+            <field name="city">Namur (Loyers)</field>
+            <field name="zip">5101</field>
+            <field name="country_id" ref="be"/>
         </record>
 
         <record id="main_partner" model="res.partner">
@@ -16,7 +20,7 @@
             <field name="zip">18540</field>
             <field name="country_id" ref="us"/>
             <field name="phone">+1 555 123 8069</field>
-            <field name="email">info@example.com</field>
+            <field name="email">info@yourcompany.example.com</field>
             <field name="website">www.example.com</field>
             <field name="image">iVBORw0KGgoAAAANSUhEUgAAALQAAAAuCAYAAACBMDMXAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
 /wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sDCAo7GWN31l0AAA1fSURBVHja
@@ -169,7 +173,7 @@ gk//2Q==</field>
         </record>
 
         <record model="res.partner" id="base.partner_root">
-            <field name="email">admin@example.com</field>
+            <field name="email">admin@yourcompany.example.com</field>
             <field name="tz">Europe/Brussels</field>
             <field name="image">/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEP
 ERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4e
