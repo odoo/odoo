@@ -167,8 +167,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				self.cells = result.cells;
 				self.rows.main = self.rows.headers[0];
 				self.cols.main = self.cols.headers[0];
-				self.rows.main.title = '';
-				self.cols.main.title = '';
 				_.each(self.rows.headers, function (row) {
 					row.root = self.rows;
 					row.is_expanded = (row.children.length > 0);
