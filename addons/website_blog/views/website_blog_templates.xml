@@ -121,7 +121,7 @@
                 </span>
                 <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
             </p>
-            <div t-field="blog_post.shortened_content" class="blog_content"/>
+            <div t-raw="blog_post.shortened_content" class="blog_content"/>
             <hr/>
           </div>
 
@@ -269,6 +269,7 @@
                 <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
             </t>
             <div id="wrap">
+                <div class="oe_structure"></div>
                 <div class="container mt16 js_website_blog">
                     <div class="row">
                         <div class="col-lg-12 col-sm-12" id="blog_left_column">
@@ -277,6 +278,7 @@
                         <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
                     </div>
                 </div>
+                <div class="oe_structure"></div>
             </div>
         </t>
     </template>

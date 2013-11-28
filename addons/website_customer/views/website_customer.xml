@@ -93,20 +93,18 @@
     <template id="details" name="Customer Detail">
       <t t-call="website.layout">
         <div id="wrap">
+            <div class="oe_structure"/>
             <div class="container mt16">
                 <div class="row">
                     <div class="col-md-5">
                         <ol class="breadcrumb">
                             <li><a href="/customers">Our References</a></li>
-                            <li class="active" t-field="partner.name"/>
+                            <li class="active"><span t-field="partner.name"/></li>
                         </ol>
                     </div>
                     <div class="col-md-7">
                         <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
                     </div>
-                </div>
-                <div class="oe_structure"/>
-                <div class="row">
                     <div class="col-md-12">
                         <h1 class="text-center" t-field="partner.name"/>
                     </div>
