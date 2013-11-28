@@ -23,7 +23,7 @@
                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
-                       <filter string='Template' name="template_id" domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
+                       <filter string='Template' name="template_id" domain="[]" context="{'group_by' : 'product_tmpl_id'}" groups="product.group_product_variant"/>
                    </group>
                 </search>
             </field>
@@ -37,7 +37,7 @@
                 <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
-                    <field name="variants"/>
+                    <field name="variants" groups="product.group_product_variant"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
@@ -297,8 +297,8 @@
         </record>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
-        <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>
-        <menuitem action="product.product_action_template" id="product.menu_products_bytemplate" parent="base.menu_product" groups="product.group_product_variant"/>
+        <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="0"/>
+        <menuitem action="product.product_action_template" id="product.menu_products_bytemplate" parent="base.menu_product" groups="product.group_product_variant" sequence="2"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -395,7 +395,7 @@
             action="product_category_action"
             id="product.menu_products_category"
             parent="base.menu_product"
-            sequence="0" groups="base.group_no_one"/>
+            sequence="1" groups="base.group_no_one"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Product Categories</field>
             <field name="type">ir.actions.act_window</field>
@@ -609,7 +609,7 @@
             </field>
         </record>
         <menuitem
-            action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
+            action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="5"/>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
@@ -704,6 +704,7 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <search string="Product Variant">
+                   <field name="product_tmpl_id"/>
                    <field name="name" string="Product" filter_domain="['|','|',('name','ilike',self),('default_code','ilike',self),('variants','ilike',self)]"/>
                    <group  expand='0' string='Group by...'>
                        <filter string='Template' name="template_id" domain="[]" context="{'group_by' : 'product_tmpl_id'}"/>
@@ -774,7 +775,7 @@
             <field name="view_id" ref="product_variant_form_view"/>
             <field name="act_window_id" ref="product_variant_action"/>
         </record>
-        <menuitem action="product.product_variant_action" id="product.menu_variant_product" parent="prod_config_main" sequence="100" groups="product.group_product_variant"/>
+        <menuitem action="product.product_variant_action" id="product.menu_variant_product" parent="prod_config_main" sequence="4" groups="product.group_product_variant"/>
 
         <!-- templates -->
 
@@ -850,7 +851,7 @@
                                 <group colspan="4" string="Product Variants">
                                     <field colspan="4" name="product_variant_ids" nolabel="1">
                                         <tree string="Product Variants" editable="bottom">
-                                            <field name="variants" required="1"/>
+                                            <field name="variants"/>
                                             <field name="price_margin" string="Variant Price Margin(%%)"/>
                                             <field name="price_extra"/>
                                             <field name="lst_price" string="Sale Price"/>

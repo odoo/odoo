@@ -683,8 +683,8 @@ class product_product(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
-        'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
-        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),
+        'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price'), help="Price Extra: Extra price for the variant on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
+        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price'), help="Price Margin: Margin in percentage on sale price for the variant. eg. 10% price margin, 1000 + 10% = 1100."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store={
             'product.template': (_get_name_template_ids, ['name'], 10),
