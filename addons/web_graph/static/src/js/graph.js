@@ -120,8 +120,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     view_loading: function (fields_view_get) {
         var self = this,
             model = new instance.web.Model(fields_view_get.model, {group_by_no_leaf: true}),
-            domain = [],
-            fields,
             row_groupby = [];
 
         // get the default groupbys and measure defined in the field view
@@ -140,40 +138,35 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         // get the most important fields (of the model) by looking at the
         // groupby filters defined in the search view
-        var load_view = instance.web.fields_view_get({
-            model: model,
-            view_type: 'search',
-        });
-
-        var important_fields_def = $.when(load_view).then(function (search_view) {
-            var groups = _.select(search_view.arch.children, function (c) {
-                return (c.tag == 'group') && (c.attrs.string != 'Display');
-            });
-            _.each(groups, function(g) {
-                _.each(g.children, function (g) {
-                    if (g.attrs.context) {
-                        var field_id = py.eval(g.attrs.context).group_by;
-                        self.important_fields.push(field_id);
-                    }
+        var options = {model:model, view_type: 'search'},
+            deferred1 = instance.web.fields_view_get(options).then(function (search_view) {
+                var groups = _.select(search_view.arch.children, function (c) {
+                    return (c.tag == 'group') && (c.attrs.string != 'Display');
+                });
+                _.each(groups, function(g) {
+                    _.each(g.children, function (g) {
+                        if (g.attrs.context) {
+                            var field_id = py.eval(g.attrs.context).group_by;
+                            self.important_fields.push(field_id);
+                        }
+                    });
                 });
             });
-        });
 
         // get the fields descriptions from the model
-        var field_descr_def = model.call('fields_get', [])
-            .then(function (fs) { fields = fs; });
+        var deferred2 = model.call('fields_get', []).then(function (fs) { 
+            self.fields = fs; 
+            console.log("fiels",self.fields);
+        });
 
-        return $.when(important_fields_def, field_descr_def)
+        return $.when(deferred1, deferred2)
             .then(function () {
-                self.fields = fields;
                 var data = {
                     model: model,
-                    domain: domain,
-                    fields: fields,
+                    domain: [],
                     measure: self.measure,
                     col_groupby: [],
                     row_groupby: row_groupby,
-                    groups: [],
                 };
                 self.pivot_table = new openerp.web_graph.PivotTable(data);
 
@@ -181,7 +174,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 _.each(self.measure_list, function (measure) {
                     var choice = $('<a></a>').attr('data-choice', measure)
                                              .attr('href', '#')
-                                             .append(fields[measure].string);
+                                             .append(self.fields[measure].string);
                     measure_selection.append($('<li></li>').append(choice));
 
                 });
