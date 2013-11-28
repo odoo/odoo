@@ -43,7 +43,6 @@ class CheckoutInfo(object):
 class Ecommerce(http.Controller):
 
     _order = 'website_sequence desc, website_published desc'
-    domain = [("sale_ok", "=", True)]
 
     def get_attribute_ids(self):
         attributes_obj = request.registry.get('product.attribute')
@@ -281,7 +280,7 @@ class Ecommerce(http.Controller):
             self.change_pricelist(post.get('promo'))
         product_obj = request.registry.get('product.template')
 
-        domain = list(self.domain)
+        domain = request.registry.get('website').get_website_sale_domain()
 
         # remove product_product_consultant from ecommerce editable mode, this product never be publish
         ref = request.registry.get('ir.model.data').get_object_reference(request.cr, SUPERUSER_ID, 'product', 'product_product_consultant')
