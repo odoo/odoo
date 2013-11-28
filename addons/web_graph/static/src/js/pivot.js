@@ -180,14 +180,24 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		});
 	},
 
-	set_row_groupby: function (groupby) {
+	set_groupby: function (root, groupby) {
 		var self = this;
-		this.rows.groupby = groupby;
+		var other_root = (root === this.cols) ? this.rows : this.cols;
+
+		root.groupby = groupby;
 		return this.query_all_values().then(function (result) {
 			if (result) {
+				var new_root_headers, new_other_root_headers;
+				if (root === this.cols) {
+					new_root_headers = result.col_headers;
+					new_other_root_headers = result.how_headers;
+				} else {
+					new_root_headers = result.row_headers;
+					new_other_root_headers = result.col_headers;
+				}
 				self.no_data = false;
-				self.expand_headers(self.rows, result.row_headers);
-				self.update_headers(self.cols, result.col_headers);
+				self.expand_headers(root, new_root_headers);
+				self.update_headers(other_root, new_other_root_headers);
 				self.cells = result.cells;
 			} else {
 				self.no_data = true;
