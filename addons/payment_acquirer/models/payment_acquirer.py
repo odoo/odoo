@@ -76,6 +76,13 @@ class PaymentAcquirer(osv.Model):
         (_check_required_if_provider, 'Required fields not filled', ['required for this provider']),
     ]
 
+    def get_form_action_url(self, cr, uid, id, context=None):
+        """ Returns the form action URL, for form-based acquirer implementations. """
+        acquirer = self.browse(cr, uid, id, context=context)
+        if hasattr(self, '%s_get_form_action_url' % acquirer.name):
+            return getattr(self, '%s_get_form_action_url' % acquirer.name)(cr, uid, id, context=context)
+        return False
+
     def render(self, cr, uid, id, reference, amount, currency, tx_id=None, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
         """ Renders the form template of the given acquirer as a qWeb template.
         All templates should handle:
@@ -118,13 +125,14 @@ class PaymentAcquirer(osv.Model):
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         acquirer = self.browse(cr, uid, id, context=context)
-        method_name = '%s_form_generate_values' % (acquirer.name)
 
-        if tx_id and hasattr(self.pool['payment.transaction'], method_name):
-            method = getattr(self.pool['payment.transaction'], method_name)
+        # call <name>_form_generate_values to update the tx dict with acqurier specific values
+        cust_method_name = '%s_form_generate_values' % (acquirer.name)
+        if tx_id and hasattr(self.pool['payment.transaction'], cust_method_name):
+            method = getattr(self.pool['payment.transaction'], cust_method_name)
             tx_values = method(cr, uid, tx_id, tx_custom_values, context=context)
-        elif hasattr(self, method_name):
-            method = getattr(self, method_name)
+        elif hasattr(self, cust_method_name):
+            method = getattr(self, cust_method_name)
             tx_values = method(cr, uid, id, reference, amount, currency, partner_id, partner_values, tx_custom_values, context=context)
         else:
             tx_values = tx_custom_values
@@ -142,12 +150,6 @@ class PaymentAcquirer(osv.Model):
         }
         # because render accepts view ids but not qweb -> need to find the xml_id
         return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.xml_id, qweb_context, engine='ir.qweb', context=context)
-
-    def get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
-        if hasattr(self, '%s_get_form_action_url' % acquirer.name):
-            return getattr(self, '%s_get_form_action_url' % acquirer.name)(cr, uid, id, context=context)
-        return False
 
 
 class PaymentTransaction(osv.Model):
