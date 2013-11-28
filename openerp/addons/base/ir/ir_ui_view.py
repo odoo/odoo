@@ -668,11 +668,7 @@ class view(osv.osv):
 
     # view used as templates
 
-    @tools.ormcache(skiparg=2)
-    def read_template(self, cr, uid, id_, lang=None):
-        context = {}
-        if lang:
-            context['lang'] = lang
+    def read_template(self, cr, uid, id_, context=None):
         try:
             id_ = int(id_)
         except ValueError:
@@ -777,7 +773,7 @@ class view(osv.osv):
             context = {}
 
         def loader(name):
-            return self.read_template(cr, uid, name, context['lang'])
+            return self.read_template(cr, uid, name, context=context)
 
         return self.pool[engine].render(
             cr, uid, id_or_xml_id, values,
