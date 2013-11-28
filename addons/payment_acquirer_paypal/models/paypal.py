@@ -52,7 +52,7 @@ class AcquirerPaypal(osv.Model):
         'paypal_api_enabled': False,
     }
 
-    def paypal_compute_fees(self, cr, uid, id, amount, country_id, context=None):
+    def paypal_compute_fees(self, cr, uid, id, amount, currency_id, country_id, context=None):
         """ Compute paypal fees.
 
             :param float amount: the amount to pay
@@ -77,11 +77,7 @@ class AcquirerPaypal(osv.Model):
         partner = None
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        if partner:
-            country_id = partner.country_id.id
-        else:
-            country_ids = self.pool['res.country'].search(cr, uid, [('name', '=', partner_values.get('country_name'))], context=context)
-            country_id = country_ids and country_ids[0] or None
+
         tx_values = {
             'cmd': '_xclick',
             'business': acquirer.paypal_email_id,
@@ -101,7 +97,7 @@ class AcquirerPaypal(osv.Model):
             'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
         }
         if acquirer.paypal_fee_active:
-            tx_values['handling'] = '%.2f' % self.paypal_compute_fees(cr, uid, acquirer.id, amount, country_id, context=context)
+            tx_values['handling'] = '%.2f' % tx_custom_values.pop('fees', 0.0)
         if tx_custom_values and tx_custom_values.get('return_url'):
             tx_values['custom'] = json.dumps({'return_url': '%s' % tx_custom_values.pop('return_url')})
         if tx_custom_values:
@@ -147,16 +143,6 @@ class TxPaypal(osv.Model):
         'paypal_txn_id': fields.char('Transaction ID'),
         'paypal_txn_type': fields.char('Transaction type'),
     }
-
-    # --------------------------------------------------
-    # CRUD
-    # --------------------------------------------------
-
-    def paypal_create(self, cr, uid, values, context=None):
-        paypal = self.pool['payment.acquirer'].browse(cr, uid, values['acquirer_id'], context=context)
-        if paypal.paypal_fee_active:
-            values['fees'] = self.pool['payment.acquirer'].paypal_compute_fees(cr, uid, paypal.id, values.get('amount', 0.0), values.get('country_id'), context=context)
-        return values
 
     # --------------------------------------------------
     # FORM RELATED METHODS
