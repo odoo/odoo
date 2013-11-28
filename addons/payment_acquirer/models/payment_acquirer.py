@@ -48,6 +48,7 @@ class PaymentAcquirer(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'message': fields.html('Message', help='Message displayed to help payment and validation'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
         'env': fields.selection(
@@ -58,8 +59,9 @@ class PaymentAcquirer(osv.Model):
     }
 
     _defaults = {
-        'portal_published': True,
+        'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'env': 'test',
+        'portal_published': True,
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
@@ -198,6 +200,7 @@ class PaymentTransaction(osv.Model):
         'amount': fields.float('Amount', required=True,
                                help='Amount in cents',
                                track_visibility='always'),
+        'fees': fields.float('Fees', help='Fees amount; set by the system because depends on the acquirer'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'reference': fields.char('Order Reference', required=True),
         # duplicate partner / transaction data to store the values at transaction time
