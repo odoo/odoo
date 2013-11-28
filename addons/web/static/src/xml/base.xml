@@ -1334,7 +1334,7 @@
 <t t-name="FieldBinaryFileUploader.files">
     <div class="oe_attachments">
         <t t-if="!widget.get('effective_readonly')">
-            <t t-foreach="widget.get('value')" t-as="id">
+            <t t-foreach="values" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div class="oe_attachment">
                     <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">

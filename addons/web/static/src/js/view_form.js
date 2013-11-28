@@ -5379,25 +5379,26 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
     read_name_values : function () {
         var self = this;
         // don't reset know values
-        var _value = _.filter(this.get('value'), function (id) { return typeof self.data[id] == 'undefined'; } );
+        var ids = this.get('value');
+        var _value = _.filter(ids, function (id) { return typeof self.data[id] == 'undefined'; } );
         // send request for get_name
         if (_value.length) {
-            return this.ds_file.call('read', [_value, ['id', 'name', 'datas_fname']]).done(function (datas) {
+            return this.ds_file.call('read', [_value, ['id', 'name', 'datas_fname']]).then(function (datas) {
                 _.each(datas, function (data) {
                     data.no_unlink = true;
                     data.url = self.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: data.id});
                     self.data[data.id] = data;
                 });
+                return ids;
             });
         } else {
-            return $.when();
+            return $.when(ids);
         }
     },
     render_value: function () {
         var self = this;
-        this.read_name_values().then(function () {
-
-            var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': self}));
+        this.read_name_values().then(function (ids) {
+            var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': self, 'values': ids}));
             render.on('click', '.oe_delete', _.bind(self.on_file_delete, self));
             self.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
 
