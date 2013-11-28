@@ -106,11 +106,9 @@ class WebsiteSurvey(http.Controller):
             return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
 
 
-
-
     # Survey displaying
     @website.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>'],
-        type='http', auth='public', multilang=True)
+                   type='http', auth='public', multilang=True)
     def fill_survey(self, survey, token, **post):
         '''Display and validates a survey'''
         cr, uid, context = request.cr, request.uid, request.context
@@ -173,28 +171,43 @@ class WebsiteSurvey(http.Controller):
             return request.website.render('survey.finished', {'survey': survey})
         elif user_input.state == 'skip':
             page, page_nr, last = self.find_next_page(survey, user_input)
+            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
-            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
         else:
             return request.website.render("website.403")
 
     # @website.route(['/survey/prefill/<model("survey.survey"):survey>'], type='json', auth='public', multilang=True):
 
     # @website.route(['/survey/validate/<model("survey.survey"):survey>'],
-    #                 type='json', auth='public', multilang=True)
+    #                type='http', auth='public', multilang=True)
+    # def validate(self, survey, **post):
+    #     _logger.debug('Incoming data: %s', post)
+    #     page_id = int(post['page_id'])
+    #     cr, uid, context = request.cr, request.uid, request.context
+    #     questions_obj = request.registry['survey.question']
+    #     questions_ids = questions_obj.search(cr, uid, [('page_id', '=', page_id)], context=context)
+    #     questions = questions_obj.browse(cr, uid, questions_ids, context=context)
+    #     errors = {}
+    #     for question in questions:
+    #         answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
+    #         errors.update(self.validate_question(question, post, answer_tag))
+    #     ret = {}
+    #     if (len(errors) != 0):
+    #         ret['errors'] = errors
+    #     return json.dumps(ret)
 
     @website.route(['/survey/submit/<model("survey.survey"):survey>'],
-                    type='http', auth='public', multilang=True)
+                   type='http', auth='public', multilang=True)
     def submit(self, survey, **post):
         _logger.debug('Incoming data: %s', post)
         page_id = int(post['page_id'])
         cr, uid, context = request.cr, request.uid, request.context
         questions_obj = request.registry['survey.question']
-        questions_ids = questions_obj.search(cr, uid, [('page_id', '=', page_id)],
-            context=context)
+        questions_ids = questions_obj.search(cr, uid, [('page_id', '=', page_id)], context=context)
         questions = questions_obj.browse(cr, uid, questions_ids, context=context)
 
+        # Answer validation
         errors = {}
         for question in questions:
             answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
@@ -202,33 +215,43 @@ class WebsiteSurvey(http.Controller):
 
         ret = {}
         if (len(errors) != 0):
+            # Return errors messages to webpage
             ret['errors'] = errors
         else:
-            cr, uid, context = request.cr, request.uid, request.context
+            # Store answers into database
             user_input_obj = request.registry['survey.user_input']
+            user_input_line_obj = request.registry['survey.user_input_line']
             try:
-                user_input_id = user_input_obj.search(cr, uid, [('token', '=', post['token'])])[0]
+                user_input_id = user_input_obj.search(cr, uid, [('token', '=', post['token'])], context=context)[0]
             except KeyError:  # Invalid token
                 return request.website.render("website.403")
 
-
-
-
-            # TODO
-            # Store here data if allowed
-
-
-
+            user_input_obj.write(cr, uid, [user_input_id], {'state': 'skip'}, context=context)
+            for question in questions:
+                answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
+                vals = {
+                    'user_input_id': user_input_id,
+                    'question_id': question.id,
+                    'page_id': page_id,
+                    'survey_id': survey.id,
+                }
+                if answer_tag in post:
+                    if question.type == 'textbox':
+                        vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
+                    pass
+                else:
+                    vals.update({'skipped': True})
+                user_input_line_obj.create(cr, uid, vals, context=context)
             ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
         return json.dumps(ret)
 
     # Printing routes
     @website.route(['/survey/print/<model("survey.survey"):survey>/'],
-        type='http', auth='user', multilang=True)
+                   type='http', auth='user', multilang=True)
     def print_empty_survey(self, survey=None, **post):
         '''Display an empty survey in printable view'''
         return request.website.render('survey.survey_print',
-                                    {'survey': survey, 'page_nr': 0})
+                                      {'survey': survey, 'page_nr': 0})
 
     # Pagination
 
@@ -243,12 +266,12 @@ class WebsiteSurvey(http.Controller):
             last = False
             page_nr = 0
             nextpage = None
-            for page in survey.pages_ids:
+            for page in survey.page_ids:
                 if page in filled_pages:
                     page_nr = page_nr + 1
                 else:
                     nextpage = page
-                if page_nr == len(survey.pages_ids):
+                if page_nr == len(survey.page_ids):
                     last = True
             return nextpage, page_nr, last
 

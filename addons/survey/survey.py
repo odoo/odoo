@@ -597,7 +597,7 @@ class survey_user_input(osv.osv):
         'email': fields.char("E-mail", readonly=1),
 
         # The answers !
-        'user_input_line_ids': fields.one2many('survey.user_input.line',
+        'user_input_line_ids': fields.one2many('survey.user_input_line',
             'user_input_id', 'Answers'),
     }
     _defaults = {
@@ -729,26 +729,26 @@ class survey_user_input(osv.osv):
 
 
 class survey_user_input_line(osv.osv):
-    _name = 'survey.user_input.line'
+    _name = 'survey.user_input_line'
     _description = 'Survey User Input Line'
     _rec_name = 'date_create'
     _columns = {
         'user_input_id': fields.many2one('survey.user_input', 'User Input',
             ondelete='cascade', required=1),
-        'survey_id': fields.related('user_input_id', 'survey_id',
-            type="many2one", relation="survey.survey", string='Survey'),
         'question_id': fields.many2one('survey.question', 'Question',
             ondelete='restrict'),
         'page_id': fields.related('question_id', 'page_id', type='many2one',
             relation='survey.page', string="Page"),
+        'survey_id': fields.related('user_input_id', 'survey_id',
+            type="many2one", relation="survey.survey", string='Survey'),
         'date_create': fields.datetime('Create Date', required=1),  # drop
         'skipped': fields.boolean('Skipped'),
-        'answer_type': fields.selection([('textbox', 'Text box'),
-                ('numerical_box', 'Numerical box'),
+        'answer_type': fields.selection([('text', 'Text'),
+                ('number', 'Number'),
+                ('date', 'Date'),
                 ('free_text', 'Free Text'),
-                ('datetime', 'Date and Time'),
-                ('checkbox', 'Checkbox')],
-            'Answer Type', required=1),
+                ('suggestion', 'Suggestion')],
+            'Answer Type'),
         'value_text': fields.char("Text answer"),
         'value_number': fields.float("Numerical answer"),
         'value_date': fields.datetime("Date answer"),
