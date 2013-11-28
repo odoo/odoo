@@ -25,6 +25,7 @@ from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
+from openerp.addons.website_sale.controllers.main import Ecommerce as Ecommerce
 controllers = controllers()
 
 
@@ -32,6 +33,9 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import urllib
+
+# remove product event from the website content grid and list view (not removed in detail view)
+# Ecommerce.domain += [('event_ok', '=', False)]  # this is not correct, install only ecommerce, this crashes
 
 class website_event(http.Controller):
     @website.route(['/event/', '/event/page/<int:page>'], type='http', auth="public", multilang=True)
@@ -256,10 +260,23 @@ class website_event(http.Controller):
     def add_event(self, event_name="New Event", **kwargs):
         Event = request.registry.get('event.event')
         date_begin = datetime.today() + timedelta(days=(15)) # FIXME: better defaults
-        event_id = Event.create(request.cr, request.uid, {
+
+        vals = {
             'name': event_name,
             'date_begin': date_begin.strftime('%Y-%m-%d'),
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
-        }, context=request.context)
+        }
+        try:
+            dummy, res_id = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'event_sale', 'product_product_event')
+            vals['event_ticket_ids'] = [[0,0,{
+                'name': _('Subscription'),
+                'product_id': res_id,
+                'deadline' : vals.get('date_begin'),
+                'price': 0,
+            }]]
+        except ValueError:
+            pass
+
+        event_id = Event.create(request.cr, request.uid, vals, context=request.context)
 
         return request.redirect("/event/%s/?enable_editor=1" % event_id)

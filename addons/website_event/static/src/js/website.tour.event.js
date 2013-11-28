@@ -58,6 +58,14 @@
                     template: self.popover({ next: "OK" }),
                 },
                 {
+                    stepId: 'event-price',
+                    element: '[data-oe-field=price]',
+                    placement: 'top',
+                    title: "Ticket price",
+                    content: "Edit your ticket price.",
+                    template: self.popover({ next: "OK" }),
+                },
+                {
                     stepId: 'add-banner',
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
@@ -99,6 +107,9 @@
                     content: "Drag the 'Text Block' block below the banner.",
                     triggers: function () {
                         self.onSnippetDraggedAdvance('text-block');
+                    },
+                    onHide: function () {
+                        window.scrollTo(0, 0);
                     },
                 },
                 {

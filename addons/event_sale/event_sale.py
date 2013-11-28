@@ -125,7 +125,7 @@ class event_event(osv.osv):
         return [{
                 'name': _('Subscription'),
                 'product_id': res_id,
-                'price': 100,
+                'price': 0,
             }]
 
     _columns = {

@@ -23,6 +23,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
+import re
 
 controllers = controllers()
 
@@ -38,18 +39,26 @@ class website_event(http.Controller):
         '/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'
         ], type='http', auth="public", multilang=True)
     def event_tracks(self, event, tag=None, **post):
+        searches = {}
+
         if tag:
+            searches.update(tag=tag.id)
             track_obj = request.registry.get('event.track')
             track_ids = track_obj.search(request.cr, request.uid,
                 [("id", "in", [track.id for track in event.track_ids]), ("tag_ids", "=", tag.id)], context=request.context)
             tracks = track_obj.browse(request.cr, request.uid, track_ids, context=request.context)
         else:
             tracks = event.track_ids
+
+        def html2text(html):
+            return re.sub(r'<[^>]+>', "", html)
+
         values = {
             'event': event,
             'tracks': tracks,
-            'tags': event.track_tag_ids,
-            'searches': {}
+            'tags': event.tracks_tag_ids,
+            'searches': searches,
+            'html2text': html2text
         }
         return request.website.render("website_event_track.tracks", values)
 

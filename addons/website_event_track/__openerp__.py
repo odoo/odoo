@@ -13,9 +13,9 @@ Online Events
     'author': 'OpenERP SA',
     'depends': ['website_event', 'website_blog'],
     'data': [
-        'data/event_view.xml',
         'data/event_data.xml',
         'views/website_event.xml',
+        'views/event_backend.xml',
         'security/ir.model.access.csv',
         'security/event.xml',
     ],

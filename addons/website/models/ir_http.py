@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 import traceback
+
 import werkzeug.routing
+
 import openerp
 from openerp.addons.base import ir
 from openerp.http import request
 from openerp.osv import orm
 
 from ..utils import slugify
-from website import get_current_website
 
 class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
+
+    rerouting_limit = 10
 
     def _get_converters(self):
         return dict(
@@ -26,29 +29,82 @@ class ir_http(orm.AbstractModel):
         else:
             request.uid = request.session.uid
 
-    def _handle_403(self, exception):
-        return self._render_error(403, {
-            'error': exception.message
-        })
+    def _dispatch(self):
+        request.website = None
+        func = None
+        try:
+            func, arguments = self._find_handler()
+            request.cms = getattr(func, 'cms', False)
+        except werkzeug.exceptions.NotFound:
+            # either we have a language prefixed route, either a real 404
+            # in all cases, website processes them
+            request.cms = True
 
-    def _handle_404(self, exception):
-        return self._render_error(404)
+        if request.cms:
+            if func:
+                self._authenticate(getattr(func, 'auth', None))
+            else:
+                self._auth_method_public()
+            request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
+            langs = request.context['langs'] = [lg.code for lg in request.website.language_ids]
+            lang_cookie = request.httprequest.cookies.get('lang', None)
+            if lang_cookie in langs:
+                request.context['lang_cookie'] = lang_cookie
+            request.context['lang_default'] = request.website.default_lang_id.code
+            if not hasattr(request, 'lang'):
+                request.lang = request.context['lang_default']
+            request.context['lang'] = request.lang
+            request.website.preprocess_request(request)
+            if not func:
+                path = request.httprequest.path.split('/')
+                if path[1] in langs:
+                    request.lang = request.context['lang'] = path.pop(1)
+                    path = '/'.join(path) or '/'
+                    return self.reroute(path)
+                return self._handle_404()
+
+        return super(ir_http, self)._dispatch()
+
+    def reroute(self, path):
+        if not hasattr(request, 'rerouting'):
+            request.rerouting = []
+        if path in request.rerouting:
+            raise Exception("Rerouting loop is forbidden")
+        request.rerouting.append(path)
+        if len(request.rerouting) > self.rerouting_limit:
+            raise Exception("Rerouting limit exceeded")
+        request.httprequest.environ['PATH_INFO'] = path
+        # void werkzeug cached_property. TODO: find a proper way to do this
+        for key in ('path', 'full_path', 'url', 'base_url'):
+            request.httprequest.__dict__.pop(key, None)
+
+        return self._dispatch()
+
+    def _handle_403(self, exception):
+        if getattr(request, 'cms', False) and request.website:
+            self._auth_method_public()
+            return self._render_error(403, {
+                'error': exception.message
+            })
+        raise exception
+
+    def _handle_404(self, exception=None):
+        if getattr(request, 'cms', False) and request.website:
+            return self._render_error(404)
+        raise request.not_found()
 
     def _handle_500(self, exception):
-        # TODO: proper logging
-        return self._render_error(500, {
-            'exception': exception,
-            'traceback': traceback.format_exc(),
-            'qweb_template': getattr(exception, 'qweb_template', None),
-            'qweb_node': getattr(exception, 'qweb_node', None),
-            'qweb_eval': getattr(exception, 'qweb_eval', None),
-        })
+        if getattr(request, 'cms', False) and request.website:
+            return self._render_error(500, {
+                'exception': exception,
+                'traceback': traceback.format_exc(),
+                'qweb_template': getattr(exception, 'qweb_template', None),
+                'qweb_node': getattr(exception, 'qweb_node', None),
+                'qweb_eval': getattr(exception, 'qweb_eval', None),
+            })
+        raise exception
 
     def _render_error(self, code, values=None):
-        self._auth_method_public()
-        if not hasattr(request, 'website'):
-            request.website = get_current_website()
-            request.website.preprocess_request(request)
         return werkzeug.wrappers.Response(
             request.website._render('website.%s' % code, values),
             status=code,

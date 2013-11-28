@@ -221,7 +221,7 @@
         </t>
     </template>
 
-    <template id="event_description_full">
+    <template id="event_details">
         <t t-call="website_event.layout">
             <div class="container">
                 <h1 class="text-center" t-field="event.name"></h1>
@@ -235,135 +235,149 @@
                     <span t-field="event.country_id"/>
                 </h4>
                 <div class="row mt32 mb32">
-                    <div class="col-md-8">
-                        <form t-action="/event/add_cart?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Ticket Type</th>
-                                        <th style="min-width: 100px">Sales End</th>
-                                        <th style="min-width: 100px">Price</th>
-                                        <th></th>
-                                        <th>Quantity</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr t-foreach="event.event_ticket_ids" t-as="ticket">
-                                        <td>
-                                            <div t-field="ticket.name"/>
-                                            <div><small t-field="ticket.product_id.description_sale"/></div>
-                                        </td>
-                                        <td><span t-field="ticket.deadline"/></td>
-                                        <td><span t-field="ticket.price"/></td>
-                                        <td>
-                                            <span t-if="ticket.register_max and ((ticket.register_current or 0)*100 / ticket.register_max)&gt;75" class="text-muted">
-                                                <t t-esc="ticket.register_max - ticket.register_current"/> <span>left</span>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <select t-if="ticket.register_avail" t-attf-name="ticket-#{ ticket.id }" class="form-control">
-                                                <t t-foreach="range(0, ticket.register_avail > 9 and 10 or ticket.register_avail+1 )" t-as="nb"><option t-esc="nb"/></t>
-                                            </select>
-                                            <span t-if="not ticket.register_avail">Sold Out</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <button type="submit" class="btn btn-primary btn-lg pull-right" t-if="event.register_avail">Order Now</button>
-                            <div class="clearfix"/>
-                            <hr/>
-                        </form>
-                        <div t-field="event.description"></div>
-                        <div class="clearfix"/>
-                        <ul class="media-list" id="comment">
-                            <li t-foreach="event.website_message_ids" t-as="comment" class="media">
-                                <div class="media-body">
-                                    <t t-call="website.publish_management">
-                                        <t t-set="object" t-value="comment"/>
-                                        <t t-set="publish_edit" t-value="True"/>
-                                        <t t-set="publish_controller">/event/publish</t>
+                    <t t-raw="0"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="event_description_full">
+        <t t-call="website_event.event_details">
+            <div class="col-md-8">
+                <form t-action="/event/add_cart?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Ticket Type</th>
+                                <th style="min-width: 100px">Sales End</th>
+                                <th style="min-width: 100px">Price</th>
+                                <th></th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="event.event_ticket_ids" t-as="ticket">
+                                <td>
+                                    <div t-field="ticket.name"/>
+                                    <div><small t-field="ticket.product_id.description_sale"/></div>
+                                </td>
+                                <td><span t-field="ticket.deadline"/></td>
+                                <td>
+                                    <t t-if="ticket.price or editable"><span t-field="ticket.price" t-field-options='{
+                                           "widget": "monetary",
+                                           "display_currency": "website.pricelist_id.currency_id"
+                                      }'/>
                                     </t>
-                                    <t t-raw="comment.body"/>
-                                    <small class="pull-right muted text-right">
-                                        <div t-field="comment.author_id"/>
-                                        <div t-field="comment.date"/>
-                                    </small>
-                                </div>
-                            </li>
-                        </ul>
+                                    <t t-if="not ticket.price and not editable">
+                                        <span>Free</span>
+                                    </t>
+                                </td>
+                                <td>
+                                    <span t-if="ticket.register_max and ((ticket.register_current or 0)*100 / ticket.register_max)&gt;75" class="text-muted">
+                                        <t t-esc="ticket.register_max - ticket.register_current"/> <span>left</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <select t-if="ticket.register_avail" t-attf-name="ticket-#{ ticket.id }" class="form-control">
+                                        <t t-foreach="range(0, ticket.register_avail > 9 and 10 or ticket.register_avail+1 )" t-as="nb"><option t-esc="nb"/></t>
+                                    </select>
+                                    <span t-if="not ticket.register_avail">Sold Out</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="submit" class="btn btn-primary btn-lg pull-right" t-if="event.register_avail">Order Now</button>
+                    <div class="clearfix"/>
+                    <hr/>
+                </form>
+                <div t-field="event.description"></div>
+                <div class="clearfix"/>
+                <ul class="media-list" id="comment">
+                    <li t-foreach="event.website_message_ids" t-as="comment" class="media">
+                        <div class="media-body">
+                            <t t-call="website.publish_management">
+                                <t t-set="object" t-value="comment"/>
+                                <t t-set="publish_edit" t-value="True"/>
+                                <t t-set="publish_controller">/event/publish</t>
+                            </t>
+                            <t t-raw="comment.body"/>
+                            <small class="pull-right muted text-right">
+                                <div t-field="comment.author_id"/>
+                                <div t-field="comment.date"/>
+                            </small>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4 css_noprint">
+                <div class="clearfix"/>
+
+                <div class="panel panel-default" t-if="event.address_id">
+                    <div class="panel-heading">
+                        <h4>Where</h4>
                     </div>
-                    <div class="col-md-4 css_noprint">
-                        <div class="clearfix"/>
-
-                        <div class="panel panel-default" t-if="event.address_id">
-                            <div class="panel-heading">
-                                <h4>Where</h4>
+                    <div class="panel-body">
+                        <a t-att-href="event.google_map_link()" target="_BLANK">
+                            <img t-att-src="event.google_map_img()" width="100%%"/>
+                        </a>
+                        <address class="mt16 mb8" t-field="event.address_id"> <!-- TODO: use widget contact -->
+                           <!--  <strong t-field="event.address_id"/>
+                            <p t-field="event.address_id"/>
+                            <div t-if="event.address_id.phone">
+                                <span class="icon-phone"/> <span t-field="event.address_id.phone"/>
                             </div>
-                            <div class="panel-body">
-                                <a t-att-href="event.google_map_link()" target="_BLANK">
-                                    <img t-att-src="event.google_map_img()" width="100%%"/>
+                            <div t-if="event.address_id.email">
+                                <span class="icon-envelope"/>
+                                <a t-att-href="'mailto:'+event.address_id.email">
+                                  <span t-field="event.address_id.email"/>
                                 </a>
-                                <address class="mt16 mb8" t-field="event.address_id"> <!-- TODO: use widget contact -->
-                                   <!--  <strong t-field="event.address_id"/>
-                                    <p t-field="event.address_id"/>
-                                    <div t-if="event.address_id.phone">
-                                        <span class="icon-phone"/> <span t-field="event.address_id.phone"/>
-                                    </div>
-                                    <div t-if="event.address_id.email">
-                                        <span class="icon-envelope"/>
-                                        <a t-att-href="'mailto:'+event.address_id.email">
-                                          <span t-field="event.address_id.email"/>
-                                        </a>
-                                    </div> -->
-                                </address>
-                            </div>
-                        </div>
+                            </div> -->
+                        </address>
+                    </div>
+                </div>
 
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4>When</h4>
-                            </div>
-                            <div class="panel-body">
-                                <i class="icon-time"></i> <span t-field="event.date_begin"> </span><br/>
-                                <i class="icon-time"></i> <span t-field="event.date_end"> </span>
-                            </div>
-                        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>When</h4>
+                    </div>
+                    <div class="panel-body">
+                        <i class="icon-time"></i> <span t-field="event.date_begin"> </span><br/>
+                        <i class="icon-time"></i> <span t-field="event.date_end"> </span>
+                    </div>
+                </div>
 
-                        <div class="panel panel-default" t-if="event.organizer_id">
-                            <div class="panel-heading">
-                                <h4>Organizer</h4>
-                            </div>
-                            <div class="panel-body" t-field="event.organizer_id">  <!-- TODO: use widget contact -->
-                              <!--   <p><strong t-field="event.organizer_id.display_name"/></p>
-                                <div t-if="event.phone">
-                                    <span class="icon-phone"/> <span t-field="event.phone"/>
-                                </div>
-                                <div t-if="event.email">
-                                    <i class="icon-envelope"/> <span t-field="event.email"/>
-                                </div> -->
-                            </div>
+                <div class="panel panel-default" t-if="event.organizer_id">
+                    <div class="panel-heading">
+                        <h4>Organizer</h4>
+                    </div>
+                    <div class="panel-body" t-field="event.organizer_id">  <!-- TODO: use widget contact -->
+                      <!--   <p><strong t-field="event.organizer_id.display_name"/></p>
+                        <div t-if="event.phone">
+                            <span class="icon-phone"/> <span t-field="event.phone"/>
                         </div>
+                        <div t-if="event.email">
+                            <i class="icon-envelope"/> <span t-field="event.email"/>
+                        </div> -->
+                    </div>
+                </div>
 
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4>Social Stream</h4>
-                            </div>
-                            <div class="panel-body">
-                                <t t-call="website_mail.follow"><t t-set="object" t-value="event"/></t>
-                                <div t-if="event.twitter_hashtag" class="mt16">
-                                    <p><strong>Participate on Twitter</strong></p>
-                                    <p class="text-muted">
-                                        Find out what others are seeing and
-                                        saying about this event, and join the
-                                        conversation.
-                                    </p>
-                                    <p><strong>Use this tag:
-                                        <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
-                                    </strong></p>
-                                </div>
-                            </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Social Stream</h4>
+                    </div>
+                    <div class="panel-body">
+                        <t t-call="website_mail.follow"><t t-set="object" t-value="event"/></t>
+                        <div t-if="event.twitter_hashtag" class="mt16">
+                            <p><strong>Participate on Twitter</strong></p>
+                            <p class="text-muted">
+                                Find out what others are seeing and
+                                saying about this event, and join the
+                                conversation.
+                            </p>
+                            <p><strong>Use this tag:
+                                <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
+                            </strong></p>
                         </div>
-
                     </div>
                 </div>
             </div>
