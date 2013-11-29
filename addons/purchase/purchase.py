@@ -504,7 +504,7 @@ class purchase_order(osv.osv):
             if not acc_id:
                 raise osv.except_osv(_('Error!'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
         else:
-            acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
+            acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
         fpos = po_line.order_id.fiscal_position or False
         return fiscal_obj.map_account(cr, uid, fpos, acc_id)
 
@@ -549,15 +549,23 @@ class purchase_order(osv.osv):
         :return: ID of created invoice.
         :rtype: int
         """
-        res = False
-
+        if context is None:
+            context = {}
         journal_obj = self.pool.get('account.journal')
         inv_obj = self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
 
+        res = False
+        uid_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         for order in self.browse(cr, uid, ids, context=context):
+            context.pop('force_company', None)
+            if order.company_id.id != uid_company_id:
+                #if the company of the document is different than the current user company, force the company in the context
+                #then re-do a browse to read the property fields for the good company.
+                context['force_company'] = order.company_id.id
+                order = self.browse(cr, uid, order.id, context=context)
             pay_acc_id = order.partner_id.property_account_payable.id
-            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', order.company_id.id)], limit=1)
+            journal_ids = journal_obj.search(cr, uid, [('type', '=', 'purchase'), ('company_id', '=', order.company_id.id)], limit=1)
             if not journal_ids:
                 raise osv.except_osv(_('Error!'),
                     _('Define purchase journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
@@ -570,7 +578,7 @@ class purchase_order(osv.osv):
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
 
-                po_line.write({'invoiced':True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
+                po_line.write({'invoiced': True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
 
             # get invoice data and create invoice
             inv_data = {
@@ -777,6 +785,7 @@ class purchase_order(osv.osv):
             'invoice_ids': [],
             'picking_ids': [],
             'origin' : '',
+            'partner_ref': '',
             'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
         })
         return super(purchase_order, self).copy(cr, uid, id, default, context)
@@ -1330,17 +1339,27 @@ class account_invoice(osv.Model):
     def invoice_validate(self, cr, uid, ids, context=None):
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
         purchase_order_obj = self.pool.get('purchase.order')
-        po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        # read access on purchase.order object is not required
+        if not purchase_order_obj.check_access_rights(cr, uid, 'read', raise_exception=False):
+            user_id = SUPERUSER_ID
+        else:
+            user_id = uid
+        po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
         for po_id in po_ids:
-            purchase_order_obj.message_post(cr, uid, po_id, body=_("Invoice received"), context=context)
+            purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):
         res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
         purchase_order_obj = self.pool.get('purchase.order')
-        po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        # read access on purchase.order object is not required
+        if not purchase_order_obj.check_access_rights(cr, uid, 'read', raise_exception=False):
+            user_id = SUPERUSER_ID
+        else:
+            user_id = uid
+        po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
         if po_ids:
-            purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice paid"), context=context)
+            purchase_order_obj.message_post(cr, user_id, po_ids, body=_("Invoice paid"), context=context)
         return res
 
 class account_invoice_line(osv.Model):

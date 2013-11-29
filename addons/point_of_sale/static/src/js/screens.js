@@ -873,8 +873,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
-            if(this.pos.iface_cashdrawer){
-                this.pos.proxy.open_cashbox();
+            if( this.pos.iface_cashdrawer && this.pos.get('selectedOrder').get('paymentLines').find(                function(pl){ return pl.cashregister.get('journal').type === 'cash'; })){
+                    this.pos.proxy.open_cashbox();
             }
 
             this.set_numpad_state(this.pos_widget.numpad.state);
@@ -908,6 +908,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
                         click: function(){
                             self.validateCurrentOrder({invoice: true});
+                        },
+                    });
+            }
+
+            if( this.pos.iface_cashdrawer ){
+                this.add_action_button({
+                        label: _t('Cash'),
+                        name: 'cashbox',
+                        icon: '/point_of_sale/static/src/img/open-cashbox.png',
+                        click: function(){
+                            self.pos.proxy.open_cashbox();
                         },
                     });
             }

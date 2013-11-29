@@ -41,6 +41,8 @@ class sale_report(osv.osv):
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'sale_report')
+        # TODO: make parent view extensible similarly to invoice analysis and
+        #       remove the duplication
         cr.execute("""
             create or replace view sale_report as (
                 select
@@ -49,7 +51,7 @@ class sale_report(osv.osv):
                     t.uom_id as product_uom,
                     sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
                     sum(l.product_uom_qty * l.price_unit * (100.0-l.discount) / 100.0) as price_total,
-                    1 as nbr,
+                    count(*) as nbr,
                     s.date_order as date,
                     s.date_confirm as date_confirm,
                     to_char(s.date_order, 'YYYY') as year,
@@ -67,15 +69,14 @@ class sale_report(osv.osv):
                     s.pricelist_id as pricelist_id,
                     s.project_id as analytic_account_id
                 from
-                    sale_order s
-                    join sale_order_line l on (s.id=l.order_id)
+                    sale_order_line l
+                      join sale_order s on (l.order_id=s.id) 
                          left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
                 group by
                     l.product_id,
-                    l.product_uom_qty,
                     l.order_id,
                     t.uom_id,
                     t.categ_id,

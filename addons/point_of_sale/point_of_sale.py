@@ -703,7 +703,7 @@ class pos_order(osv.osv):
 
     def create_picking(self, cr, uid, ids, context=None):
         """Create a picking for each order and validate it."""
-        picking_obj = self.pool.get('stock.picking')
+        picking_obj = self.pool.get('stock.picking.out')
         partner_obj = self.pool.get('res.partner')
         move_obj = self.pool.get('stock.move')
 
@@ -757,7 +757,6 @@ class pos_order(osv.osv):
         @return: True
         """
         stock_picking_obj = self.pool.get('stock.picking')
-        wf_service = netsvc.LocalService("workflow")
         for order in self.browse(cr, uid, ids, context=context):
             stock_picking_obj.action_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':

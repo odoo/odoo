@@ -24,7 +24,6 @@ from openerp.osv import fields, osv
 class crm_contact_us(osv.TransientModel):
     """ Add employees list to the portal's contact page """
     _inherit = 'portal_crm.crm_contact_us'
-    _description = 'Contact form for the portal'
     _columns = {
         'employee_ids' : fields.many2many('hr.employee', string='Employees', readonly=True),
     }
@@ -40,7 +39,6 @@ class crm_contact_us(osv.TransientModel):
     }
 
 class hr_employee(osv.osv):
-    _description = 'Portal employee'
     _inherit = 'hr.employee'
 
     """

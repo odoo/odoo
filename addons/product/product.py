@@ -135,7 +135,7 @@ class product_uom(osv.osv):
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=(12,12),
             fnct_inv=_factor_inv_write,
-            string='Ratio',
+            string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
         'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
