@@ -524,6 +524,134 @@ class survey_question(osv.osv):
             'context': context
         }
 
+    # Validation methods
+
+    def validate_question(self, cr, uid, question, post, answer_tag, context=None):
+        ''' Routing to the right question valider, depending on question type '''
+        try:
+            checker = getattr(self, 'validate_' + question.type)
+        except AttributeError:
+            _logger.error(question.type + ": This type of question has no validation method")
+            return {}
+        else:
+            return checker(cr, uid, question, post, answer_tag, context=context)
+
+    def validate_free_text(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        return errors
+
+    def validate_textbox(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Answer validation (if properly defined)
+        if answer and question.validation_required and question.validation_type:
+            # Length of the answer must be in a range
+            if question.validation_type == "has_length":
+                if not (question.validation_length_min <= len(answer) <= question.validation_length_max):
+                    errors.update({answer_tag: question.validation_error_msg})
+
+            # Answer must be an integer in a particular range
+            elif question.validation_type == "is_integer":
+                try:
+                    intanswer = int(answer)
+                # Answer is not an integer
+                except ValueError:
+                    errors.update({answer_tag: question.validation_error_msg})
+                else:
+                    # Answer is not in the right range
+                    if not (question.validation_min_int_value <= intanswer <= question.validation_max_int_value):
+                        errors.update({answer_tag: question.validation_error_msg})
+            # Answer must be a float in a particular range
+            elif question.validation_type == "is_decimal":
+                try:
+                    floatanswer = float(answer)
+                # Answer is not an integer
+                except ValueError:
+                    errors.update({answer_tag: question.validation_error_msg})
+                else:
+                    # Answer is not in the right range
+                    if not (question.validation_min_float_value <= floatanswer <= question.validation_max_float_value):
+                        errors.update({answer_tag: question.validation_error_msg})
+
+            # Answer must be a date in a particular range
+            elif question.validation_type == "is_date":
+                raise Exception("Not implemented")
+            # Answer must be an email address
+            # Note: this validation is very basic:
+            #       all the strings of the form
+            #       <something>@<anything>.<extension>
+            #       will be accepted
+            elif question.validation_type == "is_email":
+                if not re.match(r"[^@]+@[^@]+\.[^@]+", answer):
+                    errors.update({answer_tag: question.validation_error_msg})
+            else:
+                pass
+        return errors
+
+    def validate_numerical_box(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Checks if user input is a number
+        if answer:
+            try:
+                float(answer)
+            except ValueError:
+                errors.update({answer_tag: question.constr_error_msg})
+        return errors
+
+    def validate_datetime(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        answer = post[answer_tag].strip()
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer:
+            errors.update({answer_tag: question.constr_error_msg})
+        # Checks if user input is a datetime
+        # TODO when datepicker will be available
+        return errors
+
+    def validate_simple_choice(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        if question.comments_allowed:
+            comment_tag = "%s_%s" % (answer_tag, question.comment_children_ids[0].id)
+        # Empty answer to mandatory question
+        if question.constr_mandatory and not answer_tag in post:
+            errors.update({answer_tag: question.constr_error_msg})
+        if question.constr_mandatory and answer_tag in post and post[answer_tag].strip() == '':
+            errors.update({answer_tag: question.constr_error_msg})
+        # Answer is a comment and is empty
+        if question.constr_mandatory and answer_tag in post and post[answer_tag] == "-1" and question.comment_count_as_answer and comment_tag in post and not post[comment_tag].strip():
+            errors.update({answer_tag: question.constr_error_msg})
+        # There is a comment and it should be validated
+        # if question.comment_allowed and comment_tag in post and post[comment_tag].strip():
+
+        ### if comments_allowed:
+        ###     if validation des comments required
+        ###
+        ###     if comment_count_as answer and question mandatory
+        ###
+        ### else:
+        ###     if question mandatory:
+
+        return errors
+
+    # def validate_multiple_choice(self, cr, uid, question, post, answer_tag, context=None):
+    #     problems = []
+    #     return problems
+
+    # def validate_matrix(self, cr, uid, question, post, answer_tag, context=None):
+    #     problems = []
+    #     return problems
+
 
 class survey_label(osv.osv):
     ''' A suggested answer for a question '''
