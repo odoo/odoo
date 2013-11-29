@@ -141,9 +141,14 @@
                     stepId: 'save-changes',
                     element: 'button[data-action=save]',
                     placement: 'right',
-                    reflex: true,
                     title: "Save your modifications",
                     content: "Once you click on save, your event is updated.",
+                    triggers: function () {
+                        var $publish = $('button.js_publish_btn');
+                        if ($publish.length > 0 && $publish.is(":visible")) {
+                            self.moveToNextStep();
+                        }
+                    },
                 },
                 {
                     stepId: 'publish-event',
@@ -173,7 +178,7 @@
             return this._super();
         },
         resume: function () {
-            return (this.isCurrentStep('event-page') || this.isCurrentStep('publish-event')) && this._super();
+            return (this.isCurrentStep('event-page') || this.isCurrentStep('save-changes')) && this._super();
         },
         trigger: function () {
             return (this.resume() && this.testUrl(/^\/event\/[0-9]+\/register/)) || this._super();
