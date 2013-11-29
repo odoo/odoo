@@ -130,9 +130,15 @@
                     stepId: 'save-changes',
                     element: 'button[data-action=save]',
                     placement: 'right',
-                    reflex: true,
                     title: "Save your modifications",
                     content: "Once you click on save, your product is updated.",
+                    triggers: function () {
+                        var $publish = $('button.js_publish_btn');
+                        if ($publish.length > 0 && $publish.is(":visible")) {
+                            self.moveToNextStep();
+                        }
+                    },
+
                 },
                 {
                     stepId: 'publish-product',
@@ -146,7 +152,7 @@
             return this._super();
         },
         resume: function () {
-            return (this.isCurrentStep('product-page') || this.isCurrentStep('publish-product')) && this._super();
+            return (this.isCurrentStep('product-page') || this.isCurrentStep('save-changes')) && this._super();
         },
         trigger: function () {
             return (this.resume() && this.testUrl(/^\/shop\/product\/[0-9]+\//)) || this._super();
