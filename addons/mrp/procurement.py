@@ -66,28 +66,33 @@ class procurement_order(osv.osv):
         @return: True or False
         """
         for procurement in self.browse(cr, uid, ids, context=context):
-            product = procurement.product_id
             properties = [x.id for x in procurement.property_ids]
             bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
             if not bom_id:
-                cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
-                for (id, name) in self.name_get(cr, uid, procurement.id):
-                    message = _("Procurement '%s' has an exception: 'No BoM defined for this product !'") % name
-                    self.message_post(cr, uid, [procurement.id], body=message, context=context)
                 return False
         return True
 
     def make_mo(self, cr, uid, ids, context=None):
         """ Make Manufacturing(production) order from procurement
-        @return: New created Production Orders procurement wise 
+        @return: New created Production Orders procurement wise
         """
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         production_obj = self.pool.get('mrp.production')
+        bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
         procurement_obj = self.pool.get('procurement.order')
         for procurement in procurement_obj.browse(cr, uid, ids, context=context):
             if self.check_bom_exists(cr, uid, [procurement.id], context=context):
+                if procurement.bom_id:
+                    bom_id = procurement.bom_id.id
+                    routing_id = procurement.bom_id.routing_id.id
+                else:
+                    properties = [x.id for x in procurement.property_ids]
+                    bom_id = bom_obj._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
+                    bom = bom_obj.browse(cr, uid, bom_id, context=context)
+                    routing_id = bom.routing_id.id
+
                 res_id = procurement.move_dest_id and procurement.move_dest_id.id or False
                 newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.produce_delay or 0.0)
                 newdate = newdate - relativedelta(days=company.manufacturing_lead)
@@ -100,16 +105,18 @@ class procurement_order(osv.osv):
                     'product_uos': procurement.product_uos and procurement.product_uos.id or False,
                     'location_src_id': procurement.location_id.id,
                     'location_dest_id': procurement.location_id.id,
-                    'bom_id': procurement.bom_id and procurement.bom_id.id or False,
+                    'bom_id': bom_id,
+                    'routing_id': routing_id,
                     'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                     'move_prod_id': res_id,
                     'company_id': procurement.company_id.id,
                 })
-                
+
                 res[procurement.id] = produce_id
-                self.write(cr, uid, [procurement.id], {'production_id': produce_id})   
-                bom_result = production_obj.action_compute(cr, uid,
-                        [produce_id], properties=[x.id for x in procurement.property_ids])
+                self.write(cr, uid, [procurement.id], {'production_id': produce_id})
+                procurement.refresh()
+                self.production_order_create_note(cr, uid, procurement, context=context)
+                production_obj.action_compute(cr, uid, [produce_id], properties=[x.id for x in procurement.property_ids])
                 production_obj.signal_button_confirm(cr, uid, [produce_id])
                 if res_id:
                     move_obj.write(cr, uid, [res_id],
@@ -117,13 +124,11 @@ class procurement_order(osv.osv):
             else:
                 res[procurement.id] = False
                 self.message_post(cr, uid, [procurement.id], body=_("No BoM exists for this product!"), context=context)
-        self.production_order_create_note(cr, uid, ids, context=context)
         return res
 
-    def production_order_create_note(self, cr, uid, ids, context=None):
-        for procurement in self.browse(cr, uid, ids, context=context):
-            body = _("Manufacturing Order <em>%s</em> created.") % ( procurement.production_id.name,)
-            self.message_post(cr, uid, [procurement.id], body=body, context=context)
-    
+    def production_order_create_note(self, cr, uid, procurement, context=None):
+        body = _("Manufacturing Order <em>%s</em> created.") % (procurement.production_id.name,)
+        self.message_post(cr, uid, [procurement.id], body=body, context=context)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
