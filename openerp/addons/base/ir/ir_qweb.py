@@ -812,7 +812,6 @@ class DurationConverter(osv.AbstractModel):
 
         locale = babel.Locale.parse(
             self.user_lang(cr, uid, context=context).code)
-        print locale
         factor = units[options['unit']]
 
         sections = []
@@ -825,6 +824,24 @@ class DurationConverter(osv.AbstractModel):
             if section:
                 sections.append(section)
         return u' '.join(sections)
+
+class RelativeDatetimeConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.relative'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        parse_format = openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT
+        locale = babel.Locale.parse(
+            self.user_lang(cr, uid, context=context).code)
+
+        if isinstance(value, basestring):
+            value = datetime.datetime.strptime(value, parse_format)
+
+        # value should be a naive datetime in UTC. So is fields.datetime.now()
+        reference = datetime.datetime.strptime(column.now(), parse_format)
+
+        return babel.dates.format_timedelta(
+            value - reference, add_direction=True, locale=locale)
 
 
 def get_field_type(column, options):

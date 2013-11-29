@@ -2,6 +2,7 @@
 import json
 import os
 import xml.dom.minidom
+import datetime
 
 from openerp.tests import common
 from openerp.addons.base.ir import ir_qweb
@@ -306,7 +307,7 @@ class TestDatetimeExport(TestBasicExport):
 class TestDurationExport(TestBasicExport):
     def setUp(self):
         super(TestDurationExport, self).setUp()
-
+        # needs to have lang installed otherwise falls back on en_US
         self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
 
     def test_negative(self):
@@ -338,3 +339,19 @@ class TestDurationExport(TestBasicExport):
 
         result = converter(72, {'unit': 'second'}, {'lang': 'fr_FR'})
         self.assertEqual(result, u"1 minute 12 secondes")
+
+class TestRelativeDatetime(TestBasicExport):
+    # not sure how a test based on "current time" should be tested. Even less
+    # so as it would mostly be a test of babel...
+
+    def setUp(self):
+        super(TestRelativeDatetime, self).setUp()
+        # needs to have lang installed otherwise falls back on en_US
+        self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
+
+    def test_basic(self):
+        converter = self.get_converter('datetime', 'relative')
+        t = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
+
+        result = converter(t, context={'lang': 'fr_FR'})
+        self.assertEqual(result, u"il y a 1 heure")
