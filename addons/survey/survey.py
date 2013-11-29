@@ -19,10 +19,14 @@
 #
 ##############################################################################
 
-from urlparse import urljoin
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from urlparse import urljoin
+
 import uuid
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class survey_survey(osv.osv):
@@ -251,16 +255,6 @@ class survey_survey(osv.osv):
             pass
         return super(survey_survey, self).write(cr, uid, ids, vals, context=None)
 
-    # def unlink(self, cr, uid, ids, context=None):
-    #     ''' Delete survey and linked email templates (if any) '''
-    #     email_template_ids = list()
-    #     for survey in self.browse(cr, uid, ids, context=context):
-    #         email_template_ids.append(survey.email_template_id.id)
-    #     if email_template_ids:
-    #         self.pool.get('email.template').unlink(cr, uid, email_template_ids,
-    #                                             context=context)
-    #     return super(survey_survey, self).unlink(cr, uid, ids, context=context)
-
 
 class survey_page(osv.osv):
     '''A page for a survey.
@@ -292,21 +286,6 @@ class survey_page(osv.osv):
     }
 
     # Public methods #
-
-    # def survey_save(self, cr, uid, ids, context=None):
-    #     if context is None:
-    #         context = {}
-    #     surv_name_wiz = self.pool.get('survey.question.wiz')
-    #     surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)],
-    #         {'transfer': True, 'page_no': context.get('page_number', 0)})
-    #     return {
-    #         'view_type': 'form',
-    #         'view_mode': 'form',
-    #         'res_model': 'survey.question.wiz',
-    #         'type': 'ir.actions.act_window',
-    #         'target': 'new',
-    #         'context': context
-    #     }
 
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
@@ -371,7 +350,7 @@ class survey_question(osv.osv):
             'Number of columns'),
         'display_mode': fields.selection([('columns', 'Columns'),
                                           ('dropdown', 'Dropdown menu')],
-            'Display mode'),
+                                         'Display mode'),
 
         # Comments
         'comments_allowed': fields.boolean('Allow comments',
@@ -391,7 +370,7 @@ class survey_question(osv.osv):
             ('is_decimal', 'Must be a decimal number'),
             #('is_date', 'Must be a date'),
             ('is_email', 'Must be an email address')],
-            'Validation type'),
+            'Validation type', translate=True),
         'validation_length_min': fields.integer('Minimum length'),
         'validation_length_max': fields.integer('Maximum length'),
         'validation_min_float_value': fields.float('Minimum value'),
@@ -400,7 +379,9 @@ class survey_question(osv.osv):
         'validation_max_int_value': fields.integer('Maximum value'),
         'validation_min_date': fields.date('Start date range'),
         'validation_max_date': fields.date('End date range'),
-        'validation_error_msg': fields.char("Error message", oldname='validation_valid_err_msg'),
+        'validation_error_msg': fields.char('Error message',
+                                            oldname='validation_valid_err_msg',
+                                            translate=True),
 
         # Constraints on number of answers
         'constr_mandatory': fields.boolean('Mandatory question',
@@ -439,13 +420,6 @@ class survey_question(osv.osv):
         ('validation_int', 'CHECK (validation_min_int_value <= validation_max_int_value)', 'Max value cannot be smaller than min value!'),
         ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!')
     ]
-
-    def on_change_page_id(self, cr, uid, ids, page_id, context=None):
-        if page_id:
-            page = self.pool.get('survey.page').browse(cr, uid, page_id,
-                                    context=context)
-            return {'survey_id': page.survey_id and page.survey_id.id}
-        return {'value': {}}
 
     # def write(self, cr, uid, ids, vals, context=None):
     #     questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type',
@@ -577,18 +551,20 @@ class survey_user_input(osv.osv):
 
     _columns = {
         'survey_id': fields.many2one('survey.survey', 'Survey', required=True,
-            readonly=1, ondelete='restrict'),
+                                     readonly=1, ondelete='restrict'),
         'date_create': fields.datetime('Creation Date', required=True,
-            readonly=1),
+                                       readonly=1),
         'deadline': fields.date("Deadline",
-            help="Date by which the person can take part to the survey",
-            oldname="date_deadline"),
+                                help="Date by which the person can take part to the survey",
+                                oldname="date_deadline"),
         'type': fields.selection([('manually', 'Manually'), ('link', 'Link')],
-            'Answer Type', required=1, readonly=1, oldname="response_type"),
+                                 'Answer Type', required=1, readonly=1,
+                                 oldname="response_type"),
         'state': fields.selection([('new', 'Not started yet'),
-            ('skip', 'Partially completed'),
-            ('done', 'Completed')], 'Status',
-            readonly=True),
+                                   ('skip', 'Partially completed'),
+                                   ('done', 'Completed')],
+                                  'Status',
+                                  readonly=True),
         'test_entry': fields.boolean('Test entry', readonly=1),
         'token': fields.char("Identification token", readonly=1, required=1),
 
@@ -598,7 +574,7 @@ class survey_user_input(osv.osv):
 
         # The answers !
         'user_input_line_ids': fields.one2many('survey.user_input_line',
-            'user_input_id', 'Answers'),
+                                               'user_input_id', 'Answers'),
     }
     _defaults = {
         'date_create': fields.datetime.now,
@@ -649,13 +625,48 @@ class survey_user_input(osv.osv):
 
     #         raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page.title))
 
-
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
         ''' Remove empty user inputs that have been created manually '''
-        empty_user_input_ids = self.search(cr, uid,
-            [('type', '=', 'manually'), ('state', '=', 'new')], context=context)
+        empty_user_input_ids = self.search(cr, uid, [('type', '=', 'manually'),
+                                                     ('state', '=', 'new')],
+                                           context=context)
         if empty_user_input_ids:
-                self.unlink(cr, uid, empty_user_input_ids, context=context)
+            self.unlink(cr, uid, empty_user_input_ids, context=context)
+
+    def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
+                   context=None):
+        try:
+            saver = getattr(self, 'save_' + question.type)
+        except AttributeError:
+            _logger.error(question.type + ": This type of question has no saving function")
+            return False
+        else:
+            return saver(cr, uid, user_input_id, question, post, answer_tag, context=context)
+        # i f of question type select right saving meth
+            # user_input_obj.write(cr, uid, [user_input_id], {'state': 'skip'}, context=context)
+
+            #     vals = {
+            #         'user_input_id': user_input_id,
+            #         'question_id': question.id,
+            #         'page_id': page_id,
+            #         'survey_id': survey.id,
+            #     }
+            #     if answer_tag in post:
+            #         user_input_obj.save_lines(cr,uid,context=context)
+            #         if question.type == 'textbox':
+            #             vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
+            #         pass
+            #     else:
+            #         vals.update({'skipped': True})
+            #     user_input_line_obj.create(cr, uid, vals, context=context)
+
+        #here store answers
+
+    # def save_textbox(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+
+
+    #     return True
+
 
     def action_survey_resent(self, cr, uid, ids, context=None):
         record = self.browse(cr, uid, ids[0], context=context)
@@ -712,17 +723,6 @@ class survey_user_input(osv.osv):
             'context': context
         }
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['partner_id', 'date_create'],
-            context=context)
-        res = []
-        for record in reads:
-            name = (record['partner_id'] and record['partner_id'][1] or '') + ' (' + record['date_create'].split('.')[0] + ')'
-            res.append((record['id'], name))
-        return res
-
     def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
             element!'))
@@ -734,21 +734,22 @@ class survey_user_input_line(osv.osv):
     _rec_name = 'date_create'
     _columns = {
         'user_input_id': fields.many2one('survey.user_input', 'User Input',
-            ondelete='cascade', required=1),
+                                         ondelete='cascade', required=1),
         'question_id': fields.many2one('survey.question', 'Question',
-            ondelete='restrict'),
+                                       ondelete='restrict'),
         'page_id': fields.related('question_id', 'page_id', type='many2one',
-            relation='survey.page', string="Page"),
+                                  relation='survey.page', string="Page"),
         'survey_id': fields.related('user_input_id', 'survey_id',
-            type="many2one", relation="survey.survey", string='Survey'),
+                                    type="many2one", relation="survey.survey",
+                                    string='Survey'),
         'date_create': fields.datetime('Create Date', required=1),  # drop
         'skipped': fields.boolean('Skipped'),
         'answer_type': fields.selection([('text', 'Text'),
-                ('number', 'Number'),
-                ('date', 'Date'),
-                ('free_text', 'Free Text'),
-                ('suggestion', 'Suggestion')],
-            'Answer Type'),
+                                         ('number', 'Number'),
+                                         ('date', 'Date'),
+                                         ('free_text', 'Free Text'),
+                                         ('suggestion', 'Suggestion')],
+                                        'Answer Type'),
         'value_text': fields.char("Text answer"),
         'value_number': fields.float("Numerical answer"),
         'value_date': fields.datetime("Date answer"),
@@ -759,5 +760,13 @@ class survey_user_input_line(osv.osv):
         'skipped': False,
         'date_create': fields.datetime.now
     }
+
+def dict_keys_startswith(self, dictionary, string):
+    '''Returns a dictionary containing the elements of <dict> whose keys start
+    with <string>.
+
+    .. note::
+        This function uses dictionary comprehensions (Python >= 2.7)'''
+    return {k: dictionary[k] for k in filter(lambda key: key.startswith(string), dictionary.keys())}
 
 # vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:

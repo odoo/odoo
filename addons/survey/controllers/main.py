@@ -22,7 +22,6 @@
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
-from openerp.osv import fields
 from openerp import SUPERUSER_ID
 
 import werkzeug
@@ -37,22 +36,22 @@ class WebsiteSurvey(http.Controller):
 
     # Survey list
     @website.route(['/survey/',
-        '/survey/list/'],
-        type='http', auth='public', multilang=True)
+                    '/survey/list/'],
+                   type='http', auth='public', multilang=True)
     def list_surveys(self, **post):
         '''Lists all the public surveys'''
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
         survey_ids = survey_obj.search(cr, uid, [('state', '=', 'open'),
-                                                ('page_ids', '!=', 'None')],
-            context=context)
+                                                 ('page_ids', '!=', 'None')],
+                                       context=context)
         surveys = survey_obj.browse(cr, uid, survey_ids, context=context)
         return request.website.render('survey.list', {'surveys': surveys})
 
     # Survey start
     @website.route(['/survey/start/<model("survey.survey"):survey>',
                     '/survey/start/<model("survey.survey"):survey>/<string:token>'],
-                    type='http', auth='public', multilang=True)
+                   type='http', auth='public', multilang=True)
     def start_survey(self, survey, token=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
@@ -220,28 +219,13 @@ class WebsiteSurvey(http.Controller):
         else:
             # Store answers into database
             user_input_obj = request.registry['survey.user_input']
-            user_input_line_obj = request.registry['survey.user_input_line']
             try:
                 user_input_id = user_input_obj.search(cr, uid, [('token', '=', post['token'])], context=context)[0]
             except KeyError:  # Invalid token
                 return request.website.render("website.403")
-
-            user_input_obj.write(cr, uid, [user_input_id], {'state': 'skip'}, context=context)
             for question in questions:
                 answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
-                vals = {
-                    'user_input_id': user_input_id,
-                    'question_id': question.id,
-                    'page_id': page_id,
-                    'survey_id': survey.id,
-                }
-                if answer_tag in post:
-                    if question.type == 'textbox':
-                        vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
-                    pass
-                else:
-                    vals.update({'skipped': True})
-                user_input_line_obj.create(cr, uid, vals, context=context)
+                user_input_obj.save_lines(cr, uid, user_input_id, question, post, answer_tag, context=context)
             ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
         return json.dumps(ret)
 
@@ -282,7 +266,7 @@ class WebsiteSurvey(http.Controller):
         try:
             checker = getattr(self, 'validate_' + question.type)
         except AttributeError:
-            _logger.warning(question.type + ": This type of question has no validation method")
+            _logger.error(question.type + ": This type of question has no validation method")
             return {}
         else:
             return checker(question, post, answer_tag)
@@ -403,11 +387,4 @@ class WebsiteSurvey(http.Controller):
     #     problems = []
     #     return problems
 
-
-def dict_keys_startswith(self, dictionary, string):
-    '''Returns a dictionary containing the elements of <dict> whose keys start
-    with <string>.
-
-    .. note::
-        This function uses dictionary comprehensions (Python >= 2.7)'''
-    return {k: dictionary[k] for k in filter(lambda key: key.startswith(string), dictionary.keys())}
+# vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:

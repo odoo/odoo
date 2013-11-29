@@ -19,11 +19,12 @@
 #
 ##############################################################################
 
-import re
 from openerp.osv import osv
 from openerp.osv import fields
-from datetime import datetime
 from openerp.tools.translate import _
+from datetime import datetime
+
+import re
 import uuid
 
 emails_split = re.compile(r"[;,\n\r]+")

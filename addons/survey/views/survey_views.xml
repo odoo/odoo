@@ -242,8 +242,6 @@
                     <field name="public_url"/>
                     <templates>
                             <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey oe_kanban_global_click">
-                                <span class="oe_survey_fill">
-                                </span>
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
@@ -262,11 +260,17 @@
                                         <a t-if="record.state.raw_value === 'draft'" title="Draft" class="oe_kanban_status"> </a>
                                         <a t-if="record.state.raw_value === 'open'" title="Open" class="oe_kanban_status_green"> </a>
                                         <a t-if="record.state.raw_value === 'close'" title="Closed" class="oe_kanban_status_red"> </a>
+                                        <a t-if="record.state.raw_value === 'cancel'" title="Cancelled" class="oe_kanban_status_salmon"> </a>
                                     </span>
                                     <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
-                                    <div>tot started surveys</div>
-                                    <div>tot sent surveys</div>
-                                    <div>tot completed surveys</div>
+                                    <div><p>
+                                        <ul>
+                                        <li>Opening: <field name="date_open"/></li>
+                                        <li>Closing: <field name="date_close"/></li>
+                                        </ul>
+                                    </p></div>
+                                    <div class="oe_stats_box"><span><field name="tot_start_survey"/></span><br/>started</div>
+                                    <div class="oe_stats_box"><span><field name="tot_comp_survey"/></span><br/>completed</div>
                                 </div>
                             </div>
                         </templates>
@@ -395,26 +399,16 @@
                             </group>
 
                             <!-- Labels -->
-                            <group colspan="4" nolabel="1" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
+                            <group colspan="4" nolabel="1" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice', 'matrix'])]}">
                                 <field name="display_mode" string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice'])]}"/>
                                 <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
                                 <field name="labels_ids" colspan="4" nolabel="1" context="{'default_question_id': active_id}">
-                                    <tree string="Answer choices" editable="bottom">
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="value" />
-                                    </tree>
-                                </field>
-                            </group>
-
-                            <!-- Sub-questions -->
-                            <group colspan="4" attrs="{'invisible':[('type','not in',['matrix'])]}">
-                                <field name="labels_ids" colspan="4" nolabel="1" context="{'default_question_id': active_id}">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="value" string="Columns labels"/>
+                                        <field name="value" string="Answer choices"/>
                                     </tree>
                                 </field>
-                                <field name="labels_ids_2" colspan="4" nolabel="1" context="{'default_question_id_2': active_id}">
+                                <field name="labels_ids_2" colspan="4" nolabel="1" context="{'default_question_id_2': active_id}" attrs="{'invisible':[('type','not in',['matrix'])]}">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="value" string="Rows labels"/>

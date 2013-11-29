@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class survey_print_statistics(osv.osv_memory):
     _name = 'survey.print.statistics'
     _columns = {

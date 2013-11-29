@@ -20,3 +20,5 @@
 ##############################################################################
 
 import main
+
+# vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:
