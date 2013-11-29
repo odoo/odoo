@@ -51,7 +51,6 @@
         </div>
     </div>
 
-
     <div data-snippet-id="text-image" data-selector-children=".oe_structure, [data-oe-type=html]">
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
@@ -280,11 +279,71 @@
         </section>
     </div>
 
+    <div data-snippet-id="slider" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <li class="oe_snippet_options divider"></li>
+        <li class="oe_snippet_options">
+            <a href="#" class="button js_add">Add Slide</a>
+        </li>
+        <li class="oe_snippet_options">
+            <a href="#" class="button js_remove">Remove Slide</a>
+        </li>
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
+            <span class="oe_snippet_thumbnail_title">Quotes Slider</span>         
+        </div>
+        <div id="myQuoteCarousel" class="oe_snippet_body carousel slide oe_small mb0">
+            <!-- Indicators -->
+            <ol class="carousel-indicators mb0">
+                <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
+            </ol>
+            <div class="carousel-inner">
+
+                <div class="item text_only active">
+                    <div class="container">
+                        <div class="content">
+
+                            <div class="row">
+                                <blockquote class="col-md-5 col-md-offset-4 mt64">
+                                        <p>
+                                            Write here a quote from one of your customer. Quotes are are
+                                            great way to give confidence in your products or services.
+                                        </p>
+                                        <small>Author of this quote</small>
+                                </blockquote>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item text_only">
+                    <div class="container">
+                        <div class="content">
+
+                            <div class="row">
+                                <blockquote class="col-md-5 col-md-offset-4 mt64">
+                                        <p>
+                                            OpenERP provides essential platform for our project management.
+                                            Things are better organized and more visible with it.
+                                        </p>
+                                        <small>John Doe, CEO</small>
+                                </blockquote>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div id="snippet_content" class="tab-pane fade">
 
-    <div data-snippet-id="well" data-selector-siblings="p, h1, h2, h3, blockquote">
+    <div data-snippet-id="well" data-selector-siblings="p, h1, h2, h3, blockquote" data-selector-children=".content">
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_well.png"/>
             <span class="oe_snippet_thumbnail_title">Well</span>
@@ -296,7 +355,7 @@
     </div>
 
 
-    <div data-snippet-id="quote" data-selector-siblings="p, h1, h2, h3, blockquote">
+    <div data-snippet-id="quote" data-selector-siblings="p, h1, h2, h3, blockquote" data-selector-children=".content">
         <div class="oe_snippet_thumbnail">            
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quote.png"/>
             <span class="oe_snippet_thumbnail_title">Quote</span>
@@ -311,7 +370,7 @@
     </div>
 
 
-    <div data-snippet-id="panel" data-selector-siblings="p, h1, h2, h3, blockquote">
+    <div data-snippet-id="panel" data-selector-siblings="p, h1, h2, h3, blockquote" data-selector-children=".content">
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_panel.png"/>
             <span class="oe_snippet_thumbnail_title">Panel</span>
@@ -661,10 +720,10 @@
     <div data-snippet-id="parallax_quote" data-selector-children=".oe_structure, [data-oe-type=html]">
         <div class="oe_snippet_thumbnail">
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
-            <span class="oe_snippet_thumbnail_title">Quotes Slider</span>        
+            <span class="oe_snippet_thumbnail_title">Parallax Slider</span>        
         </div>
         <section class="oe_snippet_body parallax_quote oe_structure" style="background-image: url('/website/static/src/img/parallax/quote.png')">
-            <div id="myQuoteCarousel" class="carousel slide oe_medium mb32" data-snippet-id="carousel">
+            <div id="myQuoteCarousel" class="carousel slide oe_medium mb32" data-snippet-id="slider">
                 <!-- Indicators -->
                 <ol class="carousel-indicators mb0">
                     <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
@@ -677,20 +736,15 @@
                             <div class="content">
 
                                 <div class="row">
-                                    <div class="col-md-5 col-md-offset-4 mt64">
-                                        <blockquote>
+                                    <blockquote class="col-md-5 col-md-offset-4 mt64">
                                             <p>
                                                 Write here a quote from one of your customer. Quotes are are
                                                 great way to give confidence in your products or services.
                                             </p>
                                             <small>Author of this quote</small>
-                                        </blockquote>
-                                    </div>
+                                    </blockquote>
                                 </div>
 
-                            </div>
-                            <div class="carousel-image hidden-xs">
-                                <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
                             </div>
                         </div>
                     </div>
@@ -700,33 +754,23 @@
                             <div class="content">
 
                                 <div class="row">
-                                    <div class="col-md-5 col-md-offset-4 mt64">
-                                        <blockquote>
+                                    <blockquote class="col-md-5 col-md-offset-4 mt64">
                                             <p>
                                                 OpenERP provides essential platform for our project management.
                                                 Things are better organized and more visible with it.
                                             </p>
                                             <small>John Doe, CEO</small>
-                                        </blockquote>
-                                    </div>
+                                    </blockquote>
                                 </div>
 
-                            </div>
-                            <div class="carousel-image hidden-xs">
-                                <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
                             </div>
                         </div>
 
                     </div>
                 </div>
-                <a class="carousel-control left hidden" href="#myQuoteCarousel" data-slide="prev" style="width: 10%"><span class="glyphicon glyphicon-chevron-left"><span class="hidden">.</span></span></a>
-                <a class="carousel-control right hidden" href="#myQuoteCarousel" data-slide="next" style="width: 10%"><span class="glyphicon glyphicon-chevron-right"><span class="hidden">.</span></span></a>
             </div>
-
-
         </section>
     </div>
-
 
 </div>
 
@@ -749,7 +793,7 @@
         </li>
     </div>
 
-    <div data-snippet-style-id='size' data-selector='div[data-snippet-id="parallax"], div[data-snippet-id="carousel"]'>
+    <div data-snippet-style-id='size' data-selector='div[data-snippet-id="parallax"], div[data-snippet-id="carousel"], div[data-snippet-id="slider"]'>
         <li class="dropdown-submenu" data-required="true">
             <a tabindex="-1" href="#">Size</a>
             <ul class="dropdown-menu">
@@ -792,6 +836,7 @@
                 <li class="dropdown-submenu">
                     <a tabindex="-1" href="#">Various</a>
                     <ul class="dropdown-menu">
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/parallax/quote.png"><a>Aqua</a></li>
                         <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
                         <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
                         <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/black.jpg"><a>Black</a></li>

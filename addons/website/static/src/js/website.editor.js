@@ -104,6 +104,7 @@
                         left: $el.width() / 2 + image_left - $btn.outerWidth() / 2,
                     });
                 }).on('mouseleave', 'img', function (e) {
+                    if (!previousSelection) { return; }
                     var $previous = $(previousSelection.$);
                     var $button = $previous.next('button');
                     $button.css('visibility', 'hidden');
