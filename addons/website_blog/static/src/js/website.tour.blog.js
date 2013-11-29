@@ -182,7 +182,7 @@
             return (this.isCurrentStep('post-page') || this.isCurrentStep('save-changes')) && this._super();
         },
         trigger: function () {
-            return (this.resume() && this.testUrl(/^\/blog\/[0-9]+\//)) || this._super();
+            return (this.resume() && this.testUrl(/^\/blogpost\/[0-9]+\//)) || this._super();
         },
     });
 
