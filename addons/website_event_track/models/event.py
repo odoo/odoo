@@ -102,7 +102,6 @@ class event_track(osv.osv):
 #
 # Events
 #
-
 class event_event(osv.osv):
     _inherit = "event.event"
 
@@ -116,6 +115,7 @@ class event_event(osv.osv):
     _columns = {
         'tag_ids': fields.many2many('event.tag', string='Tags'),
         'track_ids': fields.one2many('event.track', 'event_id', 'Tracks'),
+        'sponsor_ids': fields.one2many('event.sponsor', 'event_id', 'Sponsorships'),
         'blog_id': fields.many2one('blog.category', 'Event Blog'),
         'show_track_proposal': fields.boolean('Talks Proposals'),
         'show_tracks': fields.boolean('Multiple Tracks'),
@@ -138,3 +138,27 @@ class event_event(osv.osv):
         if event.show_track_proposal:
             result.append( (_('Talk Proposals'), '/event/%s/track_proposal/' % event.id))
         return result
+
+#
+# Sponsors
+# 
+
+class event_sponsors_type(osv.osv):
+    _name = "event.sponsor.type"
+    _order = "sequence"
+    _columns = {
+        "name": fields.char('Sponsor Type', required=True),
+        "sequence": fields.integer('Sequence')
+    }
+
+class event_sponsors_type(osv.osv):
+    _name = "event.sponsor"
+    _order = "sequence"
+    _columns = {
+        'event_id': fields.many2one('event.event', 'Event', required=True),
+        'sponsor_type_id': fields.many2one('event.sponsor.type', 'Sponsoring Type', required=True),
+        'partner_id': fields.many2one('res.partner', 'Sponsor/Customer', required=True),
+        'sequence': fields.related('sponsor_type_id', 'sequence', string='Sequence', store=True),
+    }
+
+

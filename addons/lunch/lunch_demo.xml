@@ -18,10 +18,21 @@
 
         <record model="res.partner" id="partner_coin_gourmand">
             <field name="name">Coin gourmand</field>
+            <field name="city">Tirana</field>
+            <field name="country_id" ref="base.al"/>
+            <field name="street">Rr. e Durrësit, Pall. M.C. Inerte</field>
+            <field name="street2">Kati.1, Laprakë, Tirana, Shqipëri</field>
+            <field name="email">coin.gourmand@yourcompany.example.com</field>
         </record>
 
         <record model="res.partner" id="partner_pizza_inn">
             <field name="name">Pizza Inn</field>
+            <field name="city">New Delhi TN</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="street">#8, 1 st Floor,iscore complex</field>
+            <field name="street2">Gandhi Gramam,Gandhi Nagar</field>
+            <field name="zip">607308</field>
+            <field name="email">pizza.inn@yourcompany.example.com</field>
         </record>
 
         <record model="lunch.product" id="product_cheese_ham">

@@ -180,7 +180,7 @@
 
         <!--        Child Company 1-->
         <record id="res_partner_company_1" model="res.partner">
-            <field name="name">Your Company, Chicago shop</field>
+            <field name="name">Your Company, Chicago</field>
             <field eval="1" name="customer"/>
             <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
@@ -205,7 +205,7 @@
             <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field name="name">Your Company, Chicago shop</field>
+            <field name="name">Your Company</field>
         </record>
 
         <!--        Child Company 2-->
@@ -245,7 +245,7 @@
             <field name="usage">internal</field>
             <field name="chained_location_type">none</field>
             <field eval="1" name="active"/>
-            <field name="name">Your Company, Chicago shop</field>
+            <field name="name">Your Company, Chicago</field>
             <field name="chained_auto_packing">manual</field>
         </record>
         <record id="stock_location_shop1" model="stock.location">

@@ -122,3 +122,7 @@ class Website(orm.Model):
             order.write(values)
             for line in order.order_line:
                 self.add_product_to_cart(order_line_id=line.id, number=0)
+
+
+    def get_website_sale_domain(self):
+        return [("sale_ok", "=", True)]

@@ -74,6 +74,33 @@
             action="action_event_track_stage" parent="event.event_configuration"
             groups="base.group_no_one"/>
 
+        <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
+        <record model="ir.ui.view" id="view_event_sponsor_type_form">
+            <field name="name">Sponsor Types</field>
+            <field name="model">event.sponsor.type</field>
+            <field name="arch" type="xml">
+                <form string="Event Sponsor Types" version="7.0">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_event_sponsor_type_tree">
+            <field name="name">Sponsor Types</field>
+            <field name="model">event.sponsor.type</field>
+            <field name="arch" type="xml">
+                <tree string="Event Sponsor Type">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_event_sponsor_type">
+            <field name="name">Sponsor Types</field>
+            <field name="res_model">event.sponsor.type</field>
+        </record>
+        <menuitem id="menu_event_sponsor_type" action="action_event_sponsor_type" parent="event.event_configuration" groups="base.group_no_one"/>
+
         <!-- EVENTS/CONFIGURATION/EVENT Tags -->
         <record model="ir.ui.view" id="view_event_track_tag_form">
             <field name="name">Track Tags</field>
@@ -97,7 +124,7 @@
             <field name="name">Track Tags</field>
             <field name="res_model">event.track.tag</field>
         </record>
-        <menuitem name="Tracks Tags" id="menu_event_track_tag" action="action_event_track_tag" parent="event.event_configuration" groups="base.group_no_one"/>
+        <menuitem id="menu_event_track_tag" action="action_event_track_tag" parent="event.event_configuration" groups="base.group_no_one"/>
 
 
         <!-- EVENTS/CONFIGURATION/EVENT Tags -->
@@ -147,6 +174,18 @@
                 <xpath expr="//notebook" position="inside">
                     <page string="Tracks">
                         <field name="track_ids" context="{'default_event_id': active_id}"/>
+                    </page>
+                    <page string="Sponsorships">
+                        <field name="sponsor_ids" context="{'default_event_id': active_id}">
+                            <tree editable="bottom">
+                                <field name="partner_id"/>
+                                <field name="sponsor_type_id"/>
+                            </tree>
+                            <form string="Sponsoring">
+                                <field name="partner_id"/>
+                                <field name="sponsor_type_id"/>
+                            </form>
+                        </field>
                     </page>
                 </xpath>
                 <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">

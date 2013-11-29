@@ -564,6 +564,12 @@ class product_product(osv.osv):
             res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
         return res
 
+    def _save_product_lst_price(self, cr, uid, product_id, field_name, field_value, arg, context=None):
+        field_value = field_value or 0.0
+        product = self.browse(cr, uid, product_id, context=context)
+        list_price = (field_value - product.price_extra) / (product.price_margin or 1.0)
+        return self.write(cr, uid, [product_id], {'list_price': list_price}, context=context)
+
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
             if supinfo.name.id == partner_id:
@@ -650,7 +656,7 @@ class product_product(osv.osv):
         'incoming_qty': fields.function(_product_incoming_qty, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, type='float', string='Outgoing'),
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'lst_price' : fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
+        'lst_price' : fields.function(_product_lst_price,  fnct_inv=_save_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', size=64, select=True),
