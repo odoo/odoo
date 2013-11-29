@@ -27,7 +27,6 @@ from openerp import SUPERUSER_ID
 import werkzeug
 import json
 import logging
-import re
 
 _logger = logging.getLogger(__name__)
 
@@ -114,8 +113,6 @@ class WebsiteSurvey(http.Controller):
         survey_obj = request.registry['survey.survey']
         user_input_obj = request.registry['survey.user_input']
 
-        # Mettre methode start survey sur objet survey
-
         # In case of bad survey, redirect to surveys list
         if survey_obj.exists(cr, uid, survey.id, context=context) == []:
             return werkzeug.utils.redirect("/survey/")
@@ -157,9 +154,6 @@ class WebsiteSurvey(http.Controller):
 
         # Select the right page
 
-        # if user_input.state == 'new' and not post:  # Intro page
-        #     data = {'survey': survey, 'page': None, 'token': user_input.token}
-        #     return request.website.render('survey.survey', data)
         if user_input.state == 'new':  # First page
             page, page_nr, last = self.find_next_page(survey, user_input)
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
@@ -219,13 +213,20 @@ class WebsiteSurvey(http.Controller):
         else:
             # Store answers into database
             user_input_obj = request.registry['survey.user_input']
+            user_input_line_obj = request.registry['survey.user_input_line']
             try:
                 user_input_id = user_input_obj.search(cr, uid, [('token', '=', post['token'])], context=context)[0]
             except KeyError:  # Invalid token
                 return request.website.render("website.403")
             for question in questions:
                 answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
-                user_input_obj.save_lines(cr, uid, user_input_id, question, post, answer_tag, context=context)
+                user_input_line_obj.save_lines(cr, uid, user_input_id, question, post, answer_tag, context=context)
+
+                # page, _, _ = self.find_next_page(survey, user_input_obj.browse(cr, uid, [user_input_id], context=context))
+                # if page:
+                #     user_input_obj.write(cr, uid, user_input_id, {'state': 'skip'})
+                # else:
+                user_input_obj.write(cr, uid, user_input_id, {'state': 'done'})
             ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
         return json.dumps(ret)
 

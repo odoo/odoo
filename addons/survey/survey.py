@@ -21,10 +21,14 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 from urlparse import urljoin
 
-import uuid
+import datetime
 import logging
+import re
+import uuid
+import traceback
 
 _logger = logging.getLogger(__name__)
 
@@ -527,11 +531,11 @@ class survey_question(osv.osv):
     # Validation methods
 
     def validate_question(self, cr, uid, question, post, answer_tag, context=None):
-        ''' Routing to the right question valider, depending on question type '''
+        ''' Validate question, depending on question type and parameters '''
         try:
             checker = getattr(self, 'validate_' + question.type)
         except AttributeError:
-            _logger.error(question.type + ": This type of question has no validation method")
+            _logger.warning(question.type + ": This type of question has no validation method")
             return {}
         else:
             return checker(cr, uid, question, post, answer_tag, context=context)
@@ -632,16 +636,8 @@ class survey_question(osv.osv):
         if question.constr_mandatory and answer_tag in post and post[answer_tag] == "-1" and question.comment_count_as_answer and comment_tag in post and not post[comment_tag].strip():
             errors.update({answer_tag: question.constr_error_msg})
         # There is a comment and it should be validated
-        # if question.comment_allowed and comment_tag in post and post[comment_tag].strip():
-
-        ### if comments_allowed:
-        ###     if validation des comments required
-        ###
-        ###     if comment_count_as answer and question mandatory
-        ###
-        ### else:
-        ###     if question mandatory:
-
+        # if question.comment_children_ids[0].validation_required:
+        #     _logger.warning("No validation of the comments was implemented")
         return errors
 
     # def validate_multiple_choice(self, cr, uid, question, post, answer_tag, context=None):
@@ -754,47 +750,17 @@ class survey_user_input(osv.osv):
     #         raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page.title))
 
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
-        ''' Remove empty user inputs that have been created manually '''
+        ''' Remove empty user inputs that have been created manually
+
+        .. note:
+            This function does not remove
+        '''
         empty_user_input_ids = self.search(cr, uid, [('type', '=', 'manually'),
-                                                     ('state', '=', 'new')],
+                                                     ('state', '=', 'new'),
+                                                     ('date_create', '<', (datetime.datetime.now() - datetime.timedelta(hours=1)).strftime(DF))],
                                            context=context)
         if empty_user_input_ids:
             self.unlink(cr, uid, empty_user_input_ids, context=context)
-
-    def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
-                   context=None):
-        try:
-            saver = getattr(self, 'save_' + question.type)
-        except AttributeError:
-            _logger.error(question.type + ": This type of question has no saving function")
-            return False
-        else:
-            return saver(cr, uid, user_input_id, question, post, answer_tag, context=context)
-        # i f of question type select right saving meth
-            # user_input_obj.write(cr, uid, [user_input_id], {'state': 'skip'}, context=context)
-
-            #     vals = {
-            #         'user_input_id': user_input_id,
-            #         'question_id': question.id,
-            #         'page_id': page_id,
-            #         'survey_id': survey.id,
-            #     }
-            #     if answer_tag in post:
-            #         user_input_obj.save_lines(cr,uid,context=context)
-            #         if question.type == 'textbox':
-            #             vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
-            #         pass
-            #     else:
-            #         vals.update({'skipped': True})
-            #     user_input_line_obj.create(cr, uid, vals, context=context)
-
-        #here store answers
-
-    # def save_textbox(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
-
-
-    #     return True
-
 
     def action_survey_resent(self, cr, uid, ids, context=None):
         record = self.browse(cr, uid, ids[0], context=context)
@@ -889,7 +855,106 @@ class survey_user_input_line(osv.osv):
         'date_create': fields.datetime.now
     }
 
-def dict_keys_startswith(self, dictionary, string):
+    def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
+                   context=None):
+        ''' Save answers to questions, depending on question type
+
+        If an answer already exists for question and user_input_id, it will be
+        overwritten (in order to maintain data consistency). '''
+        try:
+            saver = getattr(self, 'save_line_' + question.type)
+        except AttributeError:
+            _logger.error(question.type + ": This type of question has no saving function")
+            return False
+        else:
+            saver(cr, uid, user_input_id, question, post, answer_tag, context=context)
+
+    def save_line_free_text(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+        }
+        if answer_tag in post:
+            vals.update({'answer_type': 'free_text', 'value_free_text': post[answer_tag]})
+        else:
+            vals.update({'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
+        return True
+
+    def save_line_textbox(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+        }
+        if answer_tag in post:
+            vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
+        else:
+            vals.update({'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
+        return True
+
+    def save_line_numerical_box(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+        }
+        if answer_tag in post:
+            vals.update({'answer_type': 'number', 'value_number': float(post[answer_tag])})
+        else:
+            vals.update({'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
+        return True
+
+    def save_line_datetime(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+        }
+        if answer_tag in post:
+            vals.update({'answer_type': 'date', 'value_number': post[answer_tag]})
+        else:
+            vals.update({'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
+        return True
+
+
+def dict_keys_startswith(dictionary, string):
     '''Returns a dictionary containing the elements of <dict> whose keys start
     with <string>.
 

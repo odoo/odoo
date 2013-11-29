@@ -93,7 +93,7 @@ $(document).ready(function () {
         },
         timeout: 5000,
         error: function(jqXHR, textStatus, errorThrown){ // failure of AJAX request
-            alert("Something went wrong while contacting survey server. Your answers have probably not been recorded. Try refreshing.");
+            alert("Something went wrong while contacting survey server. Your answers have probably not been recorded. Try refreshing.\n" + errorThrown);
         }
     });
 
