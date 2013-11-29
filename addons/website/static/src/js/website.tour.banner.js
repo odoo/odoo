@@ -76,7 +76,7 @@
                     element: '.oe_overlay_options .oe_options',
                     placement: 'left',
                     title: "Customize the banner",
-                    content: "You can customize characteristic of any blocks through the Customize menu. For instance, change the background of the banner.",
+                    content: "Customize any block through this menu. Try to change the background of the banner.",
                     template: self.popover({ next: "Continue" }),
                 },
                 {
