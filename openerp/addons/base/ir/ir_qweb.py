@@ -628,11 +628,11 @@ class DateConverter(osv.AbstractModel):
         if not value: return ''
         lang = self.user_lang(cr, uid, context=context)
 
-        parse_format = openerp.tools.DEFAULT_SERVER_DATE_FORMAT
         out_format = lang.date_format.encode('utf-8')
 
         if isinstance(value, basestring):
-            value = datetime.datetime.strptime(value, parse_format)
+            value = datetime.datetime.strptime(
+                value, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
 
         return value.strftime(out_format)
 
@@ -644,11 +644,11 @@ class DateTimeConverter(osv.AbstractModel):
         if not value: return ''
         lang = self.user_lang(cr, uid, context=context)
 
-        parse_format = openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT
         out_format = (u"%s %s" % (lang.date_format, lang.time_format)).encode('utf-8')
 
         if isinstance(value, basestring):
-            value = datetime.datetime.strptime(value, parse_format)
+            value = datetime.datetime.strptime(
+                value, openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         value = column.context_timestamp(
             cr, uid, timestamp=value, context=context)
