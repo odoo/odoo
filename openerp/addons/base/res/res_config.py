@@ -22,6 +22,7 @@ import logging
 from operator import attrgetter
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _
@@ -530,6 +531,9 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         return res
 
     def execute(self, cr, uid, ids, context=None):
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
+
         ir_values = self.pool.get('ir.values')
         ir_module = self.pool.get('ir.module.module')
         classified = self._get_classified_fields(cr, uid, context)
@@ -538,7 +542,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
 
         # default values fields
         for name, model, field in classified['default']:
-            ir_values.set_default(cr, uid, model, field, config[name])
+            ir_values.set_default(cr, SUPERUSER_ID, model, field, config[name])
 
         # group fields: modify group / implied groups
         for name, group, implied_group in classified['group']:
