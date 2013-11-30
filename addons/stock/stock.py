@@ -1361,9 +1361,9 @@ class stock_picking(osv.osv):
                 self.action_move(cr, uid, [new_picking], context=context)
                 self.signal_button_done(cr, uid, [new_picking])
                 workflow.trg_write(uid, 'stock.picking', pick.id, cr)
-                delivered_pack_id = new_picking
+                delivered_pack_id = pick.id
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
-                self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
+                self.message_post(cr, uid, new_picking, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
             else:
                 self.action_move(cr, uid, [pick.id], context=context)
                 self.signal_button_done(cr, uid, [pick.id])
