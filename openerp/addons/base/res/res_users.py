@@ -707,9 +707,11 @@ class groups_view(osv.osv):
         return True
 
     def get_user_groups_view(self, cr, uid, context=None):
-        view = self.pool['ir.model.data'].get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context)
-        if not view.exists() or not (view._table_name == 'ir.ui.view'):
-            view == False
+        try:
+            view = self.pool['ir.model.data'].get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context)
+            assert view and view.exists() and view._table_name == 'ir.ui.view'
+        except Exception:
+            view = False
         return view
 
     def get_application_groups(self, cr, uid, domain=None, context=None):
