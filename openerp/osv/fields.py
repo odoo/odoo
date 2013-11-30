@@ -600,9 +600,12 @@ class one2many(_column):
         domain = self._domain(obj) if callable(self._domain) else self._domain
         model = obj.pool[self._obj]
         ids2 = model.search(cr, user, domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
-        for r in model._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            if r[self._fields_id] in res:
-                res[r[self._fields_id]].append(r['id'])
+        if len(ids)<>1:
+            for r in model._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+                if r[self._fields_id] in res:
+                    res[r[self._fields_id]].append(r['id'])
+        else:
+            res[ids[0]] = ids2
         return res
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
