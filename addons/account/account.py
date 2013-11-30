@@ -3414,6 +3414,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
         accounting properties... accordingly for the chosen company.
         '''
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         obj_data = self.pool.get('ir.model.data')
         ir_values_obj = self.pool.get('ir.values')
         obj_wizard = self.browse(cr, uid, ids[0])
@@ -3430,7 +3432,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         self.pool[tmp2[0]].write(cr, uid, tmp2[1], {
                             'currency_id': obj_wizard.currency_id.id
                         })
-                except ValueError, e:
+                except ValueError:
                     pass
 
         # If the floats for sale/purchase rates have been filled, create templates from them

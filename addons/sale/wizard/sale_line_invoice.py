@@ -61,7 +61,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
             else:
                 pay_term = False
             inv = {
-                'name': order.name,
+                'name': order.client_order_ref or '',
                 'origin': order.name,
                 'type': 'out_invoice',
                 'reference': "P%dSO%d" % (order.partner_id.id, order.id),
