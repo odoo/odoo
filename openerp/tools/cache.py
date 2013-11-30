@@ -17,8 +17,8 @@ class ormcache(object):
 
     def __call__(self,m):
         self.method = m
-        def lookup(self2, cr, *args):
-            r = self.lookup(self2, cr, *args)
+        def lookup(self2, cr, *args, **argv):
+            r = self.lookup(self2, cr, *args, **argv)
             return r
         lookup.clear_cache = self.clear
         return lookup
@@ -37,7 +37,7 @@ class ormcache(object):
             d = ormcache[self.method] = lru.LRU(self.size)
         return d
 
-    def lookup(self, self2, cr, *args):
+    def lookup(self, self2, cr, *args, **argv):
         d = self.lru(self2)
         key = args[self.skiparg-2:]
         try:
@@ -63,12 +63,39 @@ class ormcache(object):
         d.clear()
         self2.pool._any_cache_cleared = True
 
+class ormcache_context(ormcache):
+    def __init__(self, skiparg=2, size=8192, accepted_keys=()):
+        super(ormcache_context,self).__init__(skiparg,size)
+        self.accepted_keys = accepted_keys
+
+    def lookup(self, self2, cr, *args, **argv):
+        d = self.lru(self2)
+
+        context = argv.get('context', {})
+        ckey = filter(lambda x: x[0] in self.accepted_keys, context.items())
+        ckey.sort()
+
+        d = self.lru(self2)
+        key = args[self.skiparg-2:]+tuple(ckey)
+        try:
+           r = d[key]
+           self.stat_hit += 1
+           return r
+        except KeyError:
+           self.stat_miss += 1
+           value = d[key] = self.method(self2, cr, *args, **argv)
+           return value
+        except TypeError:
+           self.stat_err += 1
+           return self.method(self2, cr, *args, **argv)
+
+
 class ormcache_multi(ormcache):
     def __init__(self, skiparg=2, size=8192, multi=3):
         super(ormcache_multi,self).__init__(skiparg,size)
         self.multi = multi - 2
 
-    def lookup(self, self2, cr, *args):
+    def lookup(self, self2, cr, *args, **argv):
         d = self.lru(self2)
         args = list(args)
         multi = self.multi
@@ -129,6 +156,7 @@ if __name__ == '__main__':
     print r
     for i in a._ormcache:
         print a._ormcache[i].d
+    a.m.clear_cache()
     a.n.clear_cache(a,1,1)
     r=a.n("cr",1,[1,2])
     print r

@@ -152,6 +152,8 @@ class view(osv.osv):
 
         if not values.get('name'):
             values['name'] = "%s %s" % (values['model'], values['type'])
+
+        self.read_template.clear_cache(self)
         return super(view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -164,6 +166,7 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
+        self.read_template.clear_cache(self)
         return super(view, self).write(cr, uid, ids, vals, context)
 
     # default view selection
@@ -668,6 +671,7 @@ class view(osv.osv):
 
     # view used as templates
 
+    @tools.ormcache_context(accepted_keys=('lang','inherit_branding'))
     def read_template(self, cr, uid, id_, context=None):
         try:
             id_ = int(id_)

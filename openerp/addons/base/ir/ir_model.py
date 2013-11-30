@@ -887,10 +887,7 @@ class ir_model_data(osv.osv):
     def get_object(self, cr, uid, module, xml_id, context=None):
         """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
         res_model, res_id = self.get_object_reference(cr, uid, module, xml_id)
-        result = self.pool[res_model].browse(cr, uid, res_id, context=context)
-        if not result.exists():
-            raise ValueError('No record found for unique ID %s.%s. It may have been deleted.' % (module, xml_id))
-        return result
+        return self.pool[res_model].browse(cr, uid, res_id, context=context)
 
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
