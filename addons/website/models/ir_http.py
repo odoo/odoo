@@ -25,7 +25,7 @@ class ir_http(orm.AbstractModel):
     def _auth_method_public(self):
         if not request.session.uid:
             request.uid = request.registry['website'].get_public_user(
-                request.cr, openerp.SUPERUSER_ID, request.context).id
+                request.cr, openerp.SUPERUSER_ID, request.context)
         else:
             request.uid = request.session.uid
 

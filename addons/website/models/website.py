@@ -69,6 +69,10 @@ def urlplus(url, params):
     ))
 
 class website(osv.osv):
+    def _get_public_user(self, cr, uid, ids, name='public_user', arg=(), context=None):
+        ref = self.get_public_user(cr, uid, context=context)
+        return dict( map(lambda x: (x, ref), ids) )
+
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
@@ -82,9 +86,9 @@ class website(osv.osv):
         'social_linkedin': fields.char('LinkedIn Account'),
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
+        'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User', store=True)
     }
 
-    public_user = None
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
         context=context or {}
         # completely arbitrary max_length
@@ -133,11 +137,8 @@ class website(osv.osv):
             return False
 
     def get_public_user(self, cr, uid, context=None):
-        if not self.public_user:
-            uid = openerp.SUPERUSER_ID
-            ref = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
-            self.public_user = self.pool[ref[0]].browse(cr, uid, ref[1])
-        return self.public_user
+        uid = openerp.SUPERUSER_ID
+        return self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')[1]
 
     def get_current_website(self, cr, uid, context=None):
         # TODO: Select website, currently hard coded
@@ -147,7 +148,6 @@ class website(osv.osv):
         def redirect(url):
             return werkzeug.utils.redirect(url_for(url))
         request.redirect = redirect
-        is_public_user = request.uid == self.get_public_user(cr, uid, context).id
 
         user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         website_publisher_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_website_publisher')[1]
@@ -156,10 +156,9 @@ class website(osv.osv):
         lang = request.context['lang']
         is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
-            'is_public_user': is_public_user,
             'is_master_lang': is_master_lang,
             'editable': is_website_publisher,
-            'translatable': not is_public_user and not is_master_lang,
+            'translatable': not is_master_lang,
         })
 
     def get_template(self, cr, uid, ids, template, context=None):
@@ -333,7 +332,7 @@ class website(osv.osv):
         """
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
-        uid = self.get_public_user(cr, uid, context=context).id
+        uid = self.get_public_user(cr, uid, context=context)[1].id
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue

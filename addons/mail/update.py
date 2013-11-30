@@ -94,13 +94,11 @@ class publisher_warranty_contract(osv.osv):
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             IMD = self.pool['ir.model.data']
             user = self.pool['res.users'].browse(cr, SUPERUSER_ID, SUPERUSER_ID)
-            try:
-                poster = IMD.get_object(cr, SUPERUSER_ID, 'mail', 'group_all_employees')
-            except ValueError:
-                # Cannot found group, post the message on the wall of the admin
-                poster = user
+            poster = IMD.get_object(cr, SUPERUSER_ID, 'mail', 'group_all_employees')
             if not poster.exists():
-                return True
+                if not user.exists():
+                    return True
+                poster = user
             for message in result["messages"]:
                 try:
                     poster.message_post(body=message, subtype='mt_comment', partner_ids=[user.partner_id.id])

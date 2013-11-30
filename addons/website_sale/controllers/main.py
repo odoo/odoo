@@ -312,10 +312,12 @@ class Ecommerce(http.Controller):
         fill_hole = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset']+step, order=self._order, context=request.context)
 
         styles = []
-        if not request.context['is_public_user']:
+        try:
             style_obj = request.registry.get('website.product.style')
             style_ids = style_obj.search(request.cr, request.uid, [], context=request.context)
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
+        except:
+            pass
 
         values = {
             'Ecommerce': self,
@@ -520,7 +522,7 @@ class Ecommerce(http.Controller):
         checkout = values['checkout']
         error = values['error']
 
-        if not context['is_public_user']:
+        if not request.uid == self.pool.get('website').get_public_user(cr, uid, context):
             partner = orm_user.browse(cr, uid, uid, context).partner_id
             partner_info = info.from_partner(partner)
             checkout.update(partner_info)
@@ -596,7 +598,7 @@ class Ecommerce(http.Controller):
         billing_info = dict(checkout)
         billing_info['parent_id'] = company_id
 
-        if not context['is_public_user']:
+        if not request.uid == self.pool.get('website').get_public_user(cr, uid, context):
             partner_id = orm_user.browse(cr, uid, uid, context=context).partner_id.id
             orm_parter.write(cr, uid, [partner_id], billing_info, context=context)
         else:
