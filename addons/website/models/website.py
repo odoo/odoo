@@ -36,8 +36,8 @@ def url_for(path_or_uri, lang=None, keep_query=None):
     if request and not url.netloc and not url.scheme:
         location = urlparse.urljoin(request.httprequest.path, location)
         lang = lang or request.context.get('lang')
-        langs = request.context.get('langs')
-        if location[0] == '/' and len(langs) > 1 and lang != request.context['lang_default']:
+        langs = [lg.code for lg in request.website.language_ids]
+        if location[0] == '/' and len(langs) > 1 and lang != request.website.default_lang_id.code:
             ps = location.split('/')
             if ps[1] in langs:
                 ps[1] = lang
@@ -69,6 +69,12 @@ def urlplus(url, params):
     ))
 
 class website(osv.osv):
+    def _get_menu(self, cr, uid, ids, name, arg, context=None):
+        root_domain = [('parent_id', '=', False)]
+        menus = self.search(cr, uid, root_domain, order='id', context=context)
+        menu = menus and menus[0] or False
+        return dict( map(lambda x: (x, menu), ids) )
+
     def _get_public_user(self, cr, uid, ids, name='public_user', arg=(), context=None):
         ref = self.get_public_user(cr, uid, context=context)
         return dict( map(lambda x: (x, ref), ids) )
@@ -86,7 +92,8 @@ class website(osv.osv):
         'social_linkedin': fields.char('LinkedIn Account'),
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
-        'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User', store=True)
+        'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User', store=True),
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu', store=True)
     }
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
@@ -148,11 +155,7 @@ class website(osv.osv):
         def redirect(url):
             return werkzeug.utils.redirect(url_for(url))
         request.redirect = redirect
-
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        website_publisher_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_website_publisher')[1]
-        is_website_publisher = website_publisher_id in [g.id for g in user.groups_id]
-
+        is_website_publisher = self.pool.get('ir.model.access').check_groups(cr, uid, 'base.group_website_publisher')
         lang = request.context['lang']
         is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
@@ -173,7 +176,6 @@ class website(osv.osv):
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         user = self.pool.get("res.users")
-
         if not context:
             context = {}
 
@@ -199,8 +201,9 @@ class website(osv.osv):
 
         if 'main_object' not in qweb_context:
             qweb_context['main_object'] = view
-
-        return view.render(qweb_context, engine='website.qweb', context=context)
+        #context['debug'] = True
+        result = view.render(qweb_context, engine='website.qweb', context=context)
+        return result
 
     def render(self, cr, uid, ids, template, values=None, context=None):
         def callback(template, values, context):
@@ -464,8 +467,6 @@ class website(osv.osv):
             html += request.website._render(template, {'object_id': object_id})
         return html
 
-    def get_menu(self, cr, uid, ids, context=None):
-        return self.pool['website.menu'].get_menu(cr, uid, ids[0], context=context)
 
 class website_menu(osv.osv):
     _name = "website.menu"
@@ -491,12 +492,7 @@ class website_menu(osv.osv):
     _parent_order = 'sequence, name'
     _order = "parent_left"
 
-    def get_menu(self, cr, uid, website_id, context=None):
-        root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
-        menu_ids = self.search(cr, uid, root_domain, order='id', context=context)
-        menu = self.browse(cr, uid, menu_ids, context=context)
-        return menu[0]
-
+    # would be better to take a menu_id as argument
     def get_tree(self, cr, uid, website_id, context=None):
         def make_tree(node):
             menu_node = dict(
@@ -511,7 +507,7 @@ class website_menu(osv.osv):
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
-        menu = self.get_menu(cr, uid, website_id, context=context)
+        menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
         return make_tree(menu)
 
     def save(self, cr, uid, website_id, data, context=None):

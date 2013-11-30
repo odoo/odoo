@@ -125,7 +125,7 @@
                                         </div>
                                         <div class="collapse navbar-collapse navbar-top-collapse">
                                             <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                                <t t-foreach="website.get_menu().child_id" t-as="submenu">
+                                                <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                                     <t t-call="website.submenu"/>
                                                 </t>
                                                 <li class="active dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
@@ -522,13 +522,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
         <template id="company_description" name="Company Description">
             <address>
-                <strong t-field="res_company.name">Name</strong><br />
-                <span t-field="res_company.street"></span> <span t-field="res_company.state_id"></span><br />
-                <span t-field="res_company.zip"></span> <span t-field="res_company.city"></span><br />
-                <span t-field="res_company.country_id"> </span><br />
+                <div t-field="res_company.partner_id">Name</div>
                 <br />
-                <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
-                <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
+                <div>&amp;#x2706; <span t-field="res_company.phone"></span></div>
+                <div class="icon-envelope" t-field="res_company.email"></div>
             </address>
              <a t-att-href="res_company.google_map_link()" target="_BLANK">
                 <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
