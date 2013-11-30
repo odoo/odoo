@@ -69,9 +69,13 @@ def urlplus(url, params):
     ))
 
 class website(osv.osv):
+    def _get_menu_website(self, cr, uid, ids, context=None):
+        # IF a menu is changed, update all websites
+        return self.search(cr, uid, [], context=context)
+        
     def _get_menu(self, cr, uid, ids, name, arg, context=None):
         root_domain = [('parent_id', '=', False)]
-        menus = self.search(cr, uid, root_domain, order='id', context=context)
+        menus = self.pool.get('website.menu').search(cr, uid, root_domain, order='id', context=context)
         menu = menus and menus[0] or False
         return dict( map(lambda x: (x, menu), ids) )
 
@@ -92,8 +96,11 @@ class website(osv.osv):
         'social_linkedin': fields.char('LinkedIn Account'),
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
-        'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User', store=True),
-        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu', store=True)
+        'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User'),
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
+            store= {
+                'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
+            })
     }
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
@@ -145,7 +152,8 @@ class website(osv.osv):
 
     def get_public_user(self, cr, uid, context=None):
         uid = openerp.SUPERUSER_ID
-        return self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')[1]
+        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
+        return res and res[1] or False
 
     def get_current_website(self, cr, uid, context=None):
         # TODO: Select website, currently hard coded
