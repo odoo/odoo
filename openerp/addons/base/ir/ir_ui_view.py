@@ -671,7 +671,7 @@ class view(osv.osv):
 
     # view used as templates
 
-    @tools.ormcache_context(accepted_keys=('lang','inherit_branding'))
+    @tools.ormcache_context(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
     def read_template(self, cr, uid, id_, context=None):
         try:
             id_ = int(id_)
