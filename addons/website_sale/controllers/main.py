@@ -45,7 +45,7 @@ class CheckoutInfo(object):
 #
 # Compute grid of products according to their sizes
 #
-class bin_position(object):
+class table_compute(object):
     def __init__(self):
         self.table = {}
 
@@ -60,6 +60,7 @@ class bin_position(object):
         return True
 
     def process(self, products):
+        # Compute products positions on the grid
         minpos = 0
         index = 0
         for p in products:
@@ -70,7 +71,7 @@ class bin_position(object):
             pos = minpos
             while not self._check_place(pos%PPR, pos/PPR, x, y):
                 pos += 1
-            if x==1 and y==1:   # simple heuristic for optimization
+            if x==1 and y==1:   # simple heuristic for CPU optimization
                 minpos = pos/PPR
 
             for y2 in range(y):
@@ -82,6 +83,7 @@ class bin_position(object):
             }
             index += 1
 
+        # Format table according to HTML needs
         rows = self.table.items()
         rows.sort()
         rows = map(lambda x: x[1], rows)
@@ -199,9 +201,7 @@ class Ecommerce(http.Controller):
     ], type='http', auth="public", multilang=True)
     def shop(self, category=0, page=0, filter='', search='', **post):
         cr, uid, context = request.cr, request.uid, request.context
-
         product_obj = request.registry.get('product.template')
-
         domain = request.registry.get('website').get_website_sale_domain()
         if search:
             domain += ['|',
@@ -233,7 +233,7 @@ class Ecommerce(http.Controller):
 
         values = {
             'products': products,
-            'bins': bin_position().process(products),
+            'bins': table_compute().process(products),
             'search': {
                 'search': search,
                 'category': category,
