@@ -59,6 +59,22 @@ class Website(openerp.addons.web.controllers.main.Home):
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
 
+    @website.route('/website/test', type='http', auth="admin")
+    def website_test(self, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        pobj = request.registry['product.template']
+        pids = pobj.search(cr, uid, [('website_published','=',True)], context=context)
+        print 'Start', len(pids), '-'*50
+        products = pobj.browse(cr, uid, pids, context=context)
+        for p in products:
+            for var in p.product_variant_ids:
+                print '1', var.lst_price
+                print '2', var.price
+            print p.name
+        print 'End', '-'*50
+        return 'Hello World!'
+
+
     @website.route('/website/theme_change', type='http', auth="admin")
     def theme_change(self, theme_id=False, **kwargs):
         imd = request.registry['ir.model.data']

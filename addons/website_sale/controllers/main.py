@@ -102,25 +102,6 @@ class Ecommerce(http.Controller):
         attributes_ids = attributes_obj.search(request.cr, request.uid, [], context=request.context)
         return attributes_obj.browse(request.cr, request.uid, attributes_ids, context=request.context)
 
-    def get_categories(self):
-        domain = [('parent_id', '=', False)]
-
-        category_obj = request.registry.get('product.public.category')
-        category_ids = category_obj.search(request.cr, SUPERUSER_ID, domain, context=request.context)
-        categories = category_obj.browse(request.cr, SUPERUSER_ID, category_ids, context=request.context)
-
-        product_obj = request.registry.get('product.product')
-        groups = product_obj.read_group(request.cr, SUPERUSER_ID, [("sale_ok", "=", True), ('website_published', '=', True)], ['public_categ_id'], 'public_categ_id', context=request.context)
-        full_category_ids = [group['public_categ_id'][0] for group in groups if group['public_categ_id']]
-
-        for cat_id in category_obj.browse(request.cr, SUPERUSER_ID, full_category_ids, context=request.context):
-            while cat_id.parent_id:
-                cat_id = cat_id.parent_id
-                full_category_ids.append(cat_id.id)
-        full_category_ids.append(1)
-
-        return (categories, full_category_ids)
-
     def get_pricelist(self):
         return request.registry.get('website').get_pricelist_id(request.cr, request.uid, None, context=request.context)
 
@@ -199,7 +180,7 @@ class Ecommerce(http.Controller):
         '/shop/category/<int:category>/',
         '/shop/category/<int:category>/page/<int:page>/'
     ], type='http', auth="public", multilang=True)
-    def shop(self, category=0, page=0, filter='', search='', **post):
+    def shop(self, category=0, page=0, filter_domain='', search='', **post):
         cr, uid, context = request.cr, request.uid, request.context
         product_obj = request.registry.get('product.template')
         domain = request.registry.get('website').get_website_sale_domain()
@@ -209,10 +190,10 @@ class Ecommerce(http.Controller):
                 ('description', 'ilike', "%%%s%%" % search)]
         if category:
             domain.append(('product_variant_ids.public_categ_id', 'child_of', category))
-        if filter:
-            filter = simplejson.loads(filter)
-            if filter:
-                ids = self.attributes_to_ids(filter)
+        if filter_domain:
+            filter_domain = simplejson.loads(filter_domain)
+            if filter_domain:
+                ids = self.attributes_to_ids(filter_domain)
                 domain.append(('id', 'in', ids or [0]))
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
@@ -231,24 +212,29 @@ class Ecommerce(http.Controller):
         except:
             pass
 
+        category_obj = request.registry.get('product.public.category')
+        category_ids = category_obj.search(cr, uid, [], context=context)
+        categories = category_obj.browse(cr, uid, category_ids, context=context)
+        categs = filter(lambda x: not x.parent_id, categories)
+
         values = {
             'products': products,
             'bins': table_compute().process(products),
             'search': {
                 'search': search,
                 'category': category,
-                'filter': filter,
+                'filter_domain': filter_domain,
             },
             'pager': pager,
             'styles': styles,
-            # 'Ecommerce': self,
-            # 'product_ids_for_holes': fill_hole,
-            # 'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
+            'categories': categs,
+            'Ecommerce': self,   # TODO fp: Should be removed
+            'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
         }
         return request.website.render("website_sale.products", values)
 
     @website.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", multilang=True)
-    def product(self, product, search='', category='', filter='', **kwargs):
+    def product(self, product, search='', category='', filter_domain='', **kwargs):
         category_obj = request.registry.get('product.public.category')
 
         category_ids = category_obj.search(request.cr, request.uid, [], context=request.context)
@@ -269,7 +255,7 @@ class Ecommerce(http.Controller):
             'search': {
                 'search': search,
                 'category': category and str(category.id),
-                'filter': filter,
+                'filter': filter_domain,
             }
         }
         return request.website.render("website_sale.product", values)
@@ -369,7 +355,6 @@ class Ecommerce(http.Controller):
 
         values = {
             'int': int,
-            'get_categories': self.get_categories,
             'suggested_products': prod_obj.browse(cr, uid, suggested_products, context),
         }
         return request.website.render("website_sale.mycart", values)
