@@ -36,8 +36,8 @@ def url_for(path_or_uri, lang=None, keep_query=None):
     if request and not url.netloc and not url.scheme:
         location = urlparse.urljoin(request.httprequest.path, location)
         lang = lang or request.context.get('lang')
-        langs = [lg.code for lg in request.website.language_ids]
-        if location[0] == '/' and len(langs) > 1 and lang != request.website.default_lang_id.code:
+        langs = [lg[0] for lg in request.website.get_languages()]
+        if location[0] == '/' and len(langs) > 1 and lang != request.website.default_lang_code:
             ps = location.split('/')
             if ps[1] in langs:
                 ps[1] = lang
@@ -99,6 +99,7 @@ class website(osv.osv):
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
         'default_lang_id': fields.many2one('res.lang', string="Default language"),
+        'default_lang_code': fields.related('default_lang_id', 'code', type="char", string="Default language code", store=True),
         'social_twitter': fields.char('Twitter Account'),
         'social_facebook': fields.char('Facebook Account'),
         'social_github': fields.char('GitHub Account'),
@@ -111,6 +112,10 @@ class website(osv.osv):
                 'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
             })
     }
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self.get_languages.clear_cache(self)
+        return super(website, self).write(cr, uid, ids, vals, context)
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
         context=context or {}
@@ -164,6 +169,13 @@ class website(osv.osv):
         res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
         return res and res[1] or False
 
+    @openerp.tools.ormcache(skiparg=3)
+    def _get_languages(self, cr, uid, id, context=None):
+        website = self.browse(cr, uid, id)
+        return [(lg.code, lg.name) for lg in website.language_ids]
+    def get_languages(self, cr, uid, ids, context=None):
+        return self._get_languages(cr, uid, ids[0])
+
     def get_current_website(self, cr, uid, context=None):
         # TODO: Select website, currently hard coded
         return self.pool['website'].browse(cr, uid, 1, context=context)
@@ -175,7 +187,7 @@ class website(osv.osv):
         is_website_publisher = self.pool.get('ir.model.access').check_groups(cr, uid, 'base.group_website_publisher')
         is_website_publisher = self.pool.get('ir.model.access').check(cr, uid, 'ir.ui.view', 'write', raise_exception=False, context=context)
         lang = request.context['lang']
-        is_master_lang = lang == request.website.default_lang_id.code
+        is_master_lang = lang == request.website.default_lang_code
         request.context.update({
             'is_master_lang': is_master_lang,
             'editable': is_website_publisher,

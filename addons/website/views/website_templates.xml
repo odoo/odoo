@@ -188,11 +188,12 @@
                                                     their performance.
                                                 </p>
                                             </div>
-                                            <ul class="nav nav-pills js_language_selector" t-if="(len(website.language_ids) &gt; 1 or editable)">
-                                                <li t-foreach="website.language_ids" t-as="lg">
-                                                    <a t-att-href="url_for('', lang=lg.code)"
-                                                       t-att-data-default-lang="editable and 'true' if lg.code == website.default_lang_id.code else None">
-                                                        <t t-esc="lg.name.split('/').pop()"/>
+                                            <t t-set="languages" t-value="website.get_languages()"/>
+                                            <ul class="nav nav-pills js_language_selector" t-if="(len(languages) &gt; 1 or editable)">
+                                                <li t-foreach="languages" t-as="lg">
+                                                    <a t-att-href="url_for('', lang=lg[0])"
+                                                       t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
+                                                        <t t-esc="lg[1].split('/').pop()"/>
                                                     </a>
                                                 </li>
                                                 <li t-if="editable">

@@ -46,13 +46,13 @@ class ir_http(orm.AbstractModel):
             else:
                 self._auth_method_public()
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
-            langs = [lg.code for lg in request.website.language_ids]
             if first_pass:
-                request.lang = request.website.default_lang_id.code
+                request.lang = request.website.default_lang_code
             request.context['lang'] = request.lang
             request.website.preprocess_request(request)
             if not func:
                 path = request.httprequest.path.split('/')
+                langs = [lg[0] for lg in request.website.get_languages()]
                 if path[1] in langs:
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
