@@ -289,47 +289,48 @@ openerp.web_calendar = function(instance) {
             
                 if (this.useContacts) {
                     new instance.web.Model("res.users").query(["partner_id"]).filter([["id", "=",this.dataset.context.uid]]).first()
-                            .done(
-                                function(result) { 
-                                    var sidebar_items = {};
-                                    var filter_value = result.partner_id[0];
-                                    var filter_item = {
+                        .done(
+                            function(result) { 
+                                var sidebar_items = {};
+                                var filter_value = result.partner_id[0];
+                                var filter_item = {
+                                        value: filter_value,
+                                        label: result.partner_id[1] + " [Me]",
+                                        color: self.get_color(filter_value)
+                                    };
+                                sidebar_items[filter_value] = filter_item ;
+                                filter_item = {
+                                        value: -1,
+                                        label: "All partners [All]",
+                                        color: self.get_color(-1)
+                                    };
+                                sidebar_items[-1] = filter_item ;
+
+                                new instance.web.Model("web_calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
+                                    _.each(result, function(item) {
+                                        filter_value = item.partner_id[0];
+                                        filter_item = {
                                             value: filter_value,
-                                            label: result.partner_id[1] + " [Me]",
+                                            label: item.partner_id[1],
                                             color: self.get_color(filter_value)
                                         };
-                                    sidebar_items[filter_value] = filter_item ;
-                                    filter_item = {
-                                            value: -1,
-                                            label: "All partners [All]",
-                                            color: self.get_color(-1)
-                                        };
-                                    sidebar_items[-1] = filter_item ;
-
-                                    new instance.web.Model("web_calendar.contacts").query(["partner_id"]).filter([["user_id", "=",self.dataset.context.uid]]).all().then(function(result) {
-                                        _.each(result, function(item) {
-                                            filter_value = item.partner_id[0];
-                                            filter_item = {
-                                                value: filter_value,
-                                                label: item.partner_id[1],
-                                                color: self.get_color(filter_value)
-                                            };
-                                            sidebar_items[filter_value] = filter_item ;
-                                        });
-                                        
-                                        self.allFilters = sidebar_items;
-                                        self.sidebar.filter.events_loaded(sidebar_items);
-                                        self.sidebar.filter.addUpdateButton();
-                                    }).done(function () { 
-                                        self.$calendar.fullCalendar('refetchEvents');            
+                                        sidebar_items[filter_value] = filter_item ;
                                     });
-                                }
-                             );
-                                          
-                }                            
+                                    
+                                    self.allFilters = sidebar_items;
+                                    self.sidebar.filter.events_loaded(sidebar_items);
+                                    self.sidebar.filter.addUpdateButton();
+                                }).done(function () { 
+                                    self.$calendar.fullCalendar('refetchEvents');            
+                                });
+                            }
+                         );               
+                };
+                
+                
             }
             self.$calendar.fullCalendar(self.get_fc_init_options());
-                            
+
             
             return $.when();
         },
@@ -389,6 +390,15 @@ openerp.web_calendar = function(instance) {
         },
 
         get_color: function(key) {
+            if (this.color_map[key]) {
+                return this.color_map[key];
+            }
+            var index = ((_.keys(this.color_map).length + 4) % 24) + 1;
+            this.color_map[key] = index;
+            return index;
+        },
+        
+        old_get_color: function(key) {
             if (this.color_map[key]) {
                 return this.color_map[key];
             }
@@ -551,17 +561,20 @@ openerp.web_calendar = function(instance) {
                 'attendees':attendees
             };
             
+
             if (!self.useContacts || self.all_filters[evt[this.color_field]] != undefined) {
                 if (this.color_field && evt[this.color_field]) {
                     var color_key = evt[this.color_field];
                     if (typeof color_key === "object") {
                         color_key = color_key[0];
                     }
-                    r.color = this.get_color(color_key);                
+                    //r.color = this.get_color(color_key);
+                    r.className = 'cal_opacity calendar_color_'+ this.get_color(color_key);                                
                 }
             }
             else  { // if form all, get color -1
-                r.color = self.all_filters[-1].color;
+//                r.color = self.all_filters[-1].color;
+                  r.className = 'cal_opacity calendar_color_'+ self.all_filters[-1].color;
             }
             
             return r;
@@ -1222,6 +1235,7 @@ openerp.web_calendar = function(instance) {
             }
             var loaded = $.Deferred();
             this.calendar_view.on("calendar_view_loaded", self, function() {
+                alert('Why never here ?');
                 self.initial_is_loaded.resolve();
                 loaded.resolve();
             });
@@ -1418,7 +1432,7 @@ openerp.web_calendar = function(instance) {
                 }).then( function(result) { return self.do_action(result); });
             });
             
-        }
+        },
     });
 
 };
