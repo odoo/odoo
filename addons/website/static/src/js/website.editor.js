@@ -1371,6 +1371,11 @@
         //       a/@href, ...)
         _(mutations).chain()
             .filter(function (m) {
+                // ignore any change related to mundane image-edit-button
+                if (m.target && m.target.className
+                        && m.target.className.indexOf('image-edit-button') !== -1) {
+                    return false;
+                }
                 switch(m.type) {
                 case 'attributes': // ignore .cke_focus being added or removed
                     // if attribute is not a class, can't be .cke_focus change
@@ -1384,8 +1389,11 @@
                     // ignore mutation if the *only* change is .cke_focus
                     return change.length !== 1 || change[0] === 'cke_focus';
                 case 'childList':
-                    // <br type="_moz"> appears when focusing RTE in FF, ignore
-                    return m.addedNodes.length !== 1 || m.addedNodes[0].nodeName !== 'BR';
+                    // Remove ignorable nodes from addedNodes or removedNodes,
+                    // if either set remains non-empty it's considered to be an
+                    // impactful change. Otherwise it's ignored.
+                    return !!remove_mundane_nodes(m.addedNodes).length ||
+                           !!remove_mundane_nodes(m.removedNodes).length;
                 default:
                     return true;
                 }
@@ -1402,4 +1410,24 @@
             .uniq()
             .each(function (node) { $(node).trigger('content_changed'); })
     });
+    function remove_mundane_nodes(nodes) {
+        if (!nodes || !nodes.length) { return []; }
+
+        var output = [];
+        for(var i=0; i<nodes.length; ++i) {
+            var node = nodes[i];
+            if (node.nodeName === 'BR' && node.getAttribute('type') === '_moz') {
+                // <br type="_moz"> appears when focusing RTE in FF, ignore
+                continue;
+            }
+            if (node.className.indexOf('image-edit-button') !== -1) {
+                // [Edit] button added and removed on image hover, don't count
+                // as making parent node dirty
+                continue;
+            }
+
+            output.push(node);
+        }
+        return output;
+    }
 })();
