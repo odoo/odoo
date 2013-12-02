@@ -343,7 +343,7 @@ class website(osv.osv):
         """
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
-        uid = self.get_public_user(cr, uid, context=context)[1].id
+        uid = self.get_public_user(cr, uid, context=context)
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
