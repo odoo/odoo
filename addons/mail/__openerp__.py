@@ -81,6 +81,7 @@ Main Features
     'css': [
         'static/src/css/mail.css',
         'static/src/css/mail_group.css',
+        'static/src/css/announcement.css',
     ],
     'js': [
         'static/lib/jquery.expander/jquery.expander.js',
