@@ -55,7 +55,7 @@ class res_partner(osv.osv, EDIMixin):
         res_partner_bank_type = self.pool.get('res.partner.bank.type')
         try:
             return self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'bank_normal', context=context).code
-        except ValueError:
+        except:
             pass
         # second option: create a new custom type for EDI or use it if already created, as IBAN type is
         # not always appropriate: we need a free-form bank type for max flexibility (users can correct

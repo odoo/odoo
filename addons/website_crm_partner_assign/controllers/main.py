@@ -25,8 +25,6 @@ class WebsiteCrmPartnerAssign(http.Controller):
 
         # format displayed membership lines domain
         base_partner_domain = [('is_company', '=', True)]
-        if request.context['is_public_user']:
-            base_partner_domain += [('website_published', '=', True)]
         partner_domain = list(base_partner_domain)
         if grade_id and grade_id != "all":
             partner_domain += [('grade_id', '=', int(grade_id))]  # try/catch int
@@ -93,10 +91,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
     @website.route(['/partners/<int:partner_id>/'], type='http', auth="public", multilang=True)
     def partners_ref(self, partner_id=0, **post):
         partner_obj = request.registry['res.partner']
-        if request.context['is_public_user']:
-            partner_ids = partner_obj.search(request.cr, request.uid, [('website_published', '=', True), ('id', '=', partner_id)], context=request.context)
-        else:
-            partner_ids = partner_obj.search(request.cr, request.uid, [('id', '=', partner_id)], context=request.context)
+        partner_ids = partner_obj.search(request.cr, request.uid, [('id', '=', partner_id)], context=request.context)
         if not partner_ids:
             return self.members(post)
 

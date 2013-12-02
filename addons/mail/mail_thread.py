@@ -461,9 +461,8 @@ class mail_thread(osv.AbstractModel):
 
             posted = False
             for subtype in subtypes:
-                try:
-                    subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, subtype.split('.')[0], subtype.split('.')[1], context=context)
-                except ValueError, e:
+                subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, subtype.split('.')[0], subtype.split('.')[1], context=context)
+                if not subtype_rec.exists():
                     _logger.debug('subtype %s not found, giving error "%s"' % (subtype, e))
                     continue
                 message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)

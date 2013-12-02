@@ -87,12 +87,9 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            try:
-                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            if product.exists():
                 res['time_unit'] = product.uom_id.id
-            except ValueError:
-                # keep default value in that case
-                _logger.warning("Product with xml_id 'product.product_product_consultant' not found")
         return res
 
     def _get_default_time_unit(self, cr, uid, context=None):
@@ -108,10 +105,10 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            try:
-                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+            if product.exists():
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
-            except ValueError:
+            else:
                 _logger.warning("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")
 
         if wizard.module_project and wizard.time_unit:

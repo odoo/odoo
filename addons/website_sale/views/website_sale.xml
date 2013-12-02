@@ -24,12 +24,10 @@
 
     <template id="categories_recursive" name="Category list">
         <li t-att-class="str(category.id) == search.get('category') and 'active' or ''">
-            <a t-att-class="category.id not in categ[1] and 'unpublish' or ''" t-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
+            <a t-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
             <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
                 <t t-foreach="category.child_id" t-as="category">
-                    <t t-if="category.id in categ[1] or editable">
-                        <t t-call="website_sale.categories_recursive"/>
-                    </t>
+                    <t t-call="website_sale.categories_recursive"/>
                 </t>
             </ul>
         </li>
@@ -39,7 +37,7 @@
 
     <template id="search" name="Search hidden fields">
         <input type="hidden" name="category" t-att-value="search.get('category') or ''"/>
-        <input type="hidden" name="filter" t-att-value="search.get('filter') or ''"/>
+        <input type="hidden" name="filter_domain" t-att-value="search.get('filter_domain') or ''"/>
         <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
     </template>
 
@@ -48,7 +46,7 @@
         <div class="ribbon"><span contentEditable="true">Promo</span></div>
       </div>
       <div class="oe_product_description">
-          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filter">
+          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filter_domain">
               <b t-field="product.name"/>
           </a>
       </div>
@@ -68,7 +66,7 @@
           </b>
       </div>
       <div class="oe_product_image text-center">
-          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filter">
+          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filter_domain">
               <span t-field="product.image" t-field-options='{"widget": "image"}'/>
           </a>
       </div>
@@ -102,11 +100,9 @@
                 <div class='style_default row'>
                   <div class="hidden" id="products_grid_before"></div>
                   <div class="col-md-12" id="products_grid">
-                    <t t-if="product_ids">
                     <table width="100%">
                       <tbody>
-                        <t t-set="table_products" t-value="Ecommerce.get_bin_packing_products(product_ids, product_ids_for_holes, 4)"/>
-                        <tr t-foreach="table_products" t-as="tr_product">
+                        <tr t-foreach="bins" t-as="tr_product">
                           <t t-foreach="tr_product" t-as="td_product">
                             <t t-if="td_product">
                             <t t-set="product" t-value="td_product['product']"/>
@@ -176,8 +172,7 @@
                         </tr>
                       </tbody>
                     </table>
-                    </t>
-                    <t t-if="not product_ids">
+                    <t t-if="not bins">
                       <h3 class="text-center text-muted">No product found for this search</h3>
                     </t>
                   </div>
@@ -218,7 +213,6 @@
     <template id="list_view" inherit_option_id="website_sale.products" name="List View">
         <xpath expr="//div[@id='products_grid']//table" position="replace">
           <div class="row">
-            <t t-set="products" t-value="Ecommerce.get_products(product_ids)"/>
             <t t-foreach="products" t-as="product">
               <div class="col-md-12 oe_list_products oe-height-1">
                 <t t-call="website_sale.products_cart"/>
@@ -244,7 +238,7 @@
                   <div class="col-sm-5">
                       <ol class="breadcrumb">
                           <li><a href="/shop">Products</a></li>
-                          <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filter"><span t-field="category.name"/></a></li>
+                          <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filter_domain"><span t-field="category.name"/></a></li>
                           <li class="active"><span t-field="product.name"/></li>
                       </ol>
                   </div><div class="col-sm-3">
@@ -499,8 +493,7 @@
         <xpath expr="//div[@id='products_grid_before']" position="inside">
             <ul class="nav nav-pills nav-stacked mt16">
                 <li t-att-class=" '' if search.get('category') else 'active' "><a href="/shop/">All Products</a></li>
-                <t t-set="categ" t-value="Ecommerce.get_categories()"/>
-                <t t-foreach="categ[0]" t-as="category">
+                <t t-foreach="categories" t-as="category">
                     <t t-call="website_sale.categories_recursive"/>
                 </t>
             </ul>

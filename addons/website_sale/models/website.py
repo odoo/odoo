@@ -96,10 +96,10 @@ class Website(orm.Model):
 
     def get_pricelist_id(self, cr, uid, ids, context=None):
         if not request.httprequest.session.get('ecommerce_pricelist'):
-            self.change_pricelist_id(cr, uid, ids, None, context=context)
+            self.change_pricelist_id(cr, uid, None, context=context)
         return request.httprequest.session.get('ecommerce_pricelist')
 
-    def change_pricelist_id(self, cr, uid, ids, code, context=None):
+    def change_pricelist_id(self, cr, uid, code=False, context=None):
         request.httprequest.session.setdefault('ecommerce_pricelist', False)
 
         pricelist_id = False

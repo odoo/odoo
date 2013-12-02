@@ -67,14 +67,14 @@ class WebsiteBlog(http.Controller):
         })
 
     @website.route([
-        '/blog/cat/<model("blog.category"):category>/',
-        '/blog/cat/<model("blog.category"):category>/page/<int:page>/',
-        '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/',
-        '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/page/<int:page>/',
-        '/blog/cat/<model("blog.category"):category>/date/<string(length=21):date>/',
-        '/blog/cat/<model("blog.category"):category>/date/<string(length=21):date>/page/<int:page>/',
-        '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/',
-        '/blog/cat/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>/',
+        '/blog/<model("blog.category"):category>/',
+        '/blog/<model("blog.category"):category>/page/<int:page>/',
+        '/blog/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/',
+        '/blog/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/page/<int:page>/',
+        '/blog/<model("blog.category"):category>/date/<string(length=21):date>/',
+        '/blog/<model("blog.category"):category>/date/<string(length=21):date>/page/<int:page>/',
+        '/blog/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/',
+        '/blog/<model("blog.category"):category>/tag/<model("blog.tag"):tag>/date/<string(length=21):date>/page/<int:page>/',
     ], type='http', auth="public", multilang=True)
     def blog(self, category=None, tag=None, date=None, page=1, **opt):
         """ Prepare all values to display the blog.
@@ -151,7 +151,7 @@ class WebsiteBlog(http.Controller):
         return request.website.render("website_blog.blog_post_short", values)
 
     @website.route([
-        '/blog/<model("blog.post"):blog_post>/',
+        '/blogpost/<model("blog.post"):blog_post>/',
     ], type='http', auth="public", multilang=True)
     def blog_post(self, blog_post=None, tag=None, date=None, page=1, enable_editor=None):
         """ Prepare all values to display the blog.
@@ -214,7 +214,7 @@ class WebsiteBlog(http.Controller):
         }
         return request.website.render("website_blog.blog_post_complete", values)
 
-    @website.route(['/blog/<int:blog_post_id>/comment'], type='http', auth="public")
+    @website.route(['/blogpost/<int:blog_post_id>/comment'], type='http', auth="public")
     def blog_post_comment(self, blog_post_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
@@ -226,7 +226,7 @@ class WebsiteBlog(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
-    @website.route('/blog/new', type='http', auth="public", multilang=True)
+    @website.route('/blogpost/new', type='http', auth="public", multilang=True)
     def blog_post_create(self, category_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
@@ -237,9 +237,9 @@ class WebsiteBlog(http.Controller):
                 'content': '',
                 'website_published': False,
             }, context=create_context)
-        return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % new_blog_post_id)
+        return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)
 
-    @website.route('/blog/duplicate', type='http', auth="public")
+    @website.route('/blogpost/duplicate', type='http', auth="public")
     def blog_post_copy(self, blog_post_id, **post):
         """ Duplicate a blog.
 
@@ -250,4 +250,4 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
-        return werkzeug.utils.redirect("/blog/%s/?enable_editor=1" % new_blog_post_id)
+        return werkzeug.utils.redirect("/blogpost/%s/?enable_editor=1" % new_blog_post_id)

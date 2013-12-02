@@ -25,7 +25,7 @@ class ir_http(orm.AbstractModel):
     def _auth_method_public(self):
         if not request.session.uid:
             request.uid = request.registry['website'].get_public_user(
-                request.cr, openerp.SUPERUSER_ID, request.context).id
+                request.cr, openerp.SUPERUSER_ID, request.context)
         else:
             request.uid = request.session.uid
 
@@ -46,13 +46,9 @@ class ir_http(orm.AbstractModel):
             else:
                 self._auth_method_public()
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
-            langs = request.context['langs'] = [lg.code for lg in request.website.language_ids]
-            lang_cookie = request.httprequest.cookies.get('lang', None)
-            if lang_cookie in langs:
-                request.context['lang_cookie'] = lang_cookie
-            request.context['lang_default'] = request.website.default_lang_id.code
+            langs = [lg.code for lg in request.website.language_ids]
             if not hasattr(request, 'lang'):
-                request.lang = request.context['lang_default']
+                request.lang = request.website.default_lang_id.code
             request.context['lang'] = request.lang
             request.website.preprocess_request(request)
             if not func:
@@ -62,7 +58,6 @@ class ir_http(orm.AbstractModel):
                     path = '/'.join(path) or '/'
                     return self.reroute(path)
                 return self._handle_404()
-
         return super(ir_http, self)._dispatch()
 
     def reroute(self, path):

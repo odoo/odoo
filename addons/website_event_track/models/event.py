@@ -134,7 +134,7 @@ class event_event(osv.osv):
         if event.show_tracks:
             result.append( (_('Agenda'), '/event/%s/track/' % event.id))
         if event.blog_id:
-            result.append( (_('News'), '/blog/cat/'+str(event.blog_ig.id)))
+            result.append( (_('News'), '/blogpost/'+str(event.blog_ig.id)))
         if event.show_track_proposal:
             result.append( (_('Talk Proposals'), '/event/%s/track_proposal/' % event.id))
         return result
