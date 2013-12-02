@@ -20,7 +20,6 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/datejs/sugarpak.js",
         "static/lib/datejs/extras.js",
         "static/lib/jquery/jquery.js",
-        "static/lib/jquery.MD5/jquery.md5.js",
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
