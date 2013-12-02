@@ -497,7 +497,7 @@ class Ecommerce(http.Controller):
         billing_info = dict(checkout)
         billing_info['parent_id'] = company_id
 
-        if not request.uid == self.pool.get('website').get_public_user(cr, uid, context):
+        if not request.uid == request.registry['website'].get_public_user(cr, uid, context):
             partner_id = orm_user.browse(cr, uid, uid, context=context).partner_id.id
             orm_parter.write(cr, uid, [partner_id], billing_info, context=context)
         else:
