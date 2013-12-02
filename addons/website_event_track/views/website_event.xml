@@ -59,10 +59,10 @@
             <div class="col-md-3 css_noprint">
 
                 <ul class="nav nav-pills nav-stacked">
-                    <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ event.id }/track/">All</a></li>
+                    <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ slug(event) }/track/">All</a></li>
                     <t t-foreach="tags" t-as="tag">
                         <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
-                            <a t-href="/event/#{ event.id }/track/tag/#{ tag.id }">
+                            <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
                                 <t t-esc="tag.name"/>
                             </a>
                         </li>
@@ -75,7 +75,7 @@
                     <li t-foreach="tracks" t-as="track" class="media">
                         <div class="media-body">
                             <h4 class="media-heading">
-                                <a t-href="/event/#{ event.id }/track/#{track.id}"><span t-field="track.name"> </span></a>
+                                <a t-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
                                 <span t-field="track.date"/>
                                 <!-- <small t-if="not track.website_published" class="label label-danger">not published</small> -->
                             </h4>
