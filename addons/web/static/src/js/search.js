@@ -71,7 +71,10 @@ my.SearchQuery = B.Collection.extend({
     },
     add: function (values, options) {
         options = options || {};
-        if (!(values instanceof Array)) {
+
+        if (!values) {
+            values = [];
+        } else if (!(values instanceof Array)) {
             values = [values];
         }
 
