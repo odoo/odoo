@@ -65,7 +65,7 @@ class hr_timesheet_sheet(osv.osv):
     def create(self, cr, uid, vals, *args, **argv):
         if 'employee_id' in vals:
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign it to a user.'))
+                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must relate a user to it.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product, like \'Consultant\'.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
@@ -76,7 +76,7 @@ class hr_timesheet_sheet(osv.osv):
         if 'employee_id' in vals:
             new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
             if not new_user_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign it to a user.'))
+                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must relate a user to it.'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
                 raise osv.except_osv(_('Error!'), _('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:

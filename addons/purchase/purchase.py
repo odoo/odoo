@@ -476,7 +476,7 @@ class purchase_order(osv.osv):
             if not acc_id:
                 acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
             if not acc_id:
-                raise osv.except_osv(_('Error!'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
+                raise osv.except_osv(_('Error!'), _('Define expense account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
         else:
             acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
         fpos = po_line.order_id.fiscal_position or False
@@ -597,8 +597,7 @@ class purchase_order(osv.osv):
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel','draft'):
                     raise osv.except_osv(
-                        _('Unable to cancel this purchase order.'),
-                        _('You must first cancel all receptions related to this purchase order.'))
+                        _('You must first cancel all invoices related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_invoice_cancel(cr, uid, map(attrgetter('id'), purchase.invoice_ids))
         self.write(cr,uid,ids,{'state':'cancel'})

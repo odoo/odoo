@@ -1195,7 +1195,7 @@ class stock_picking(osv.osv):
                 return True
             for move in pick.move_lines:
                 if move.state == 'done':
-                    raise osv.except_osv(_('Error!'), _('You cannot cancel the picking as some moves have been done. You should cancel the picking lines.'))
+                    raise osv.except_osv(_('Error!'), _('You cannot cancel the picking as some moves have been done. You should cancel remaining moves of this picking.'))
         return True
 
     def unlink(self, cr, uid, ids, context=None):
