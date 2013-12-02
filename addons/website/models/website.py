@@ -14,7 +14,7 @@ import werkzeug.exceptions
 import werkzeug.wrappers
 
 import openerp
-from openerp.osv import osv, fields
+from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
 
 from openerp.addons.web import http
@@ -57,6 +57,15 @@ def url_for(path_or_uri, lang=None, keep_query=None):
                 location += '?%s' % params
 
     return location
+
+def slug(value):
+    if isinstance(value, orm.browse_record):
+        # [(id, name)] = value.name_get()
+        id, name = value.id, value[value._rec_name]
+    else:
+        # assume name_search result tuple
+        id, name = value
+    return "%s-%d" % (slugify(name), id)
 
 def urlplus(url, params):
     if not params:
@@ -198,6 +207,7 @@ class website(osv.osv):
             json=simplejson,
             website=request.website,
             url_for=url_for,
+            slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
         )

@@ -5,10 +5,9 @@ import werkzeug.routing
 
 import openerp
 from openerp.addons.base import ir
+from openerp.addons.website.models.website import slug
 from openerp.http import request
 from openerp.osv import orm
-
-from ..utils import slugify
 
 class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
@@ -112,12 +111,7 @@ class ModelConverter(ir.ir_http.ModelConverter):
         self.regex = r'(?:[A-Za-z0-9-_]+?-)?(\d+)(?=$|/)'
 
     def to_url(self, value):
-        if isinstance(value, orm.browse_record):
-            [(id, name)] = value.name_get()
-        else:
-            # assume name_search result tuple
-            id, name = value
-        return "%s-%d" % (slugify(name), id)
+        return slug(value)
 
     def generate(self, cr, uid, query=None, context=None):
         return request.registry[self.model].name_search(
