@@ -15,7 +15,8 @@
         </record>
         
         
-        <record id="process_node_saleprocurement0" model="process.node">
+        <!-- NOTE: as this node is also define in project_mrp project, we must attach it to the nearest common module -->
+        <record id="procurement.process_node_saleprocurement0" model="process.node">
             <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
             <field name="model_id" ref="procurement.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
@@ -72,7 +73,7 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Procurement Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A procurement order is automatically created as soon as a sales order is confirmed or as the invoice is paid. It drives the purchasing and the production of products regarding to the rules and to the sales order's parameters. &quot;&quot;&quot;" name="note"/>
-            <field name="target_node_id" ref="process_node_saleprocurement0"/>
+            <field name="target_node_id" ref="procurement.process_node_saleprocurement0"/>
             <field name="source_node_id" ref="sale.process_node_saleorder0"/>
         </record>
 
@@ -81,7 +82,7 @@
             <field eval="&quot;&quot;&quot;Create Pick List&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The Pick List form is created as soon as the sales order is confirmed, in the same time as the procurement order. It represents the assignment of parts to the sales order. There is 1 pick list by sales order line which evolves with the availability of parts.&quot;&quot;&quot;" name="note"/>
             <field name="target_node_id" ref="process_node_packinglist0"/>
-            <field name="source_node_id" ref="process_node_saleprocurement0"/>
+            <field name="source_node_id" ref="procurement.process_node_saleprocurement0"/>
         </record>
 
         <record id="process_transition_deliver0" model="process.transition">

@@ -52,12 +52,13 @@ class hr_recruitment_stage(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
-        'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'requirements': fields.text('Requirements'),
+        'fold': fields.boolean('Folded in Kanban View',
+                               help='This stage is folded in the kanban view when'
+                               'there are no records in that stage to display.'),
     }
     _defaults = {
         'sequence': 1,
-        'fold': False,
     }
 
 class hr_recruitment_degree(osv.osv):
@@ -82,8 +83,9 @@ class hr_applicant(osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
         'stage_id': {
-            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
-            'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence != 1,
+            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
+            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
+            'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
         },
     }
 
@@ -94,7 +96,7 @@ class hr_applicant(osv.Model):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         department_id = self._get_default_department_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], department_id, [('sequence', '=', '1')], context=context)
+        return self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
 
     def _resolve_department_id_from_context(self, cr, uid, context=None):
         """ Returns ID of department based on the value of 'default_department_id'
@@ -241,7 +243,7 @@ class hr_applicant(osv.Model):
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
         if not stage_id:
-            stage_id = self.stage_find(cr, uid, [], department_id, [('sequence', '=', '1')], context=context)
+            stage_id = self.stage_find(cr, uid, [], department_id, [('fold', '=', False)], context=context)
         return {'value': {'stage_id': stage_id}}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
@@ -331,7 +333,8 @@ class hr_applicant(osv.Model):
             through message_process.
             This override updates the document according to the email.
         """
-        if custom_values is None: custom_values = {}
+        if custom_values is None:
+            custom_values = {}
         val = msg.get('from').split('<')[0]
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
@@ -344,38 +347,7 @@ class hr_applicant(osv.Model):
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
         defaults.update(custom_values)
-        return super(hr_applicant,self).message_new(cr, uid, msg, custom_values=defaults, context=context)
-
-    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
-        """ Override mail_thread message_update that is called by the mailgateway
-            through message_process.
-            This method updates the document according to the email.
-        """
-        if isinstance(ids, (str, int, long)):
-            ids = [ids]
-        if update_vals is None:
-            update_vals = {}
-
-        update_vals.update({
-            'email_from': msg.get('from'),
-            'email_cc': msg.get('cc'),
-        })
-        if msg.get('priority'):
-            update_vals['priority'] = msg.get('priority')
-
-        maps = {
-            'cost': 'planned_cost',
-            'revenue': 'planned_revenue',
-            'probability': 'probability',
-        }
-        for line in msg.get('body', '').split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res and maps.get(res.group(1).lower(), False):
-                key = maps.get(res.group(1).lower())
-                update_vals[key] = res.group(2).lower()
-
-        return super(hr_applicant, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+        return super(hr_applicant, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if context is None:

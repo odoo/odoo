@@ -26,7 +26,7 @@ from operator import itemgetter
 
 from lxml import etree
 
-from openerp import netsvc
+from openerp import workflow
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -311,13 +311,13 @@ class account_move_line(osv.osv):
             context = {}
         c = context.copy()
         c['initital_bal'] = True
-        sql = """SELECT l2.id, SUM(l1.debit-l1.credit)
-                    FROM account_move_line l1, account_move_line l2
-                    WHERE l2.account_id = l1.account_id
-                      AND l1.id <= l2.id
-                      AND l2.id IN %s AND """ + \
-                self._query_get(cr, uid, obj='l1', context=c) + \
-                " GROUP BY l2.id"
+        sql = """SELECT l1.id, COALESCE(SUM(l2.debit-l2.credit), 0)
+                    FROM account_move_line l1 LEFT JOIN account_move_line l2
+                    ON (l1.account_id = l2.account_id
+                      AND l2.id <= l1.id
+                      AND """ + \
+                self._query_get(cr, uid, obj='l2', context=c) + \
+                ") WHERE l1.id IN %s GROUP BY l1.id"
 
         cr.execute(sql, [tuple(ids)])
         return dict(cr.fetchall())
@@ -932,11 +932,10 @@ class account_move_line(osv.osv):
             'line_id': map(lambda x: (4, x, False), ids),
             'line_partial_ids': map(lambda x: (3, x, False), ids)
         })
-        wf_service = netsvc.LocalService("workflow")
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
         for id in ids:
-            wf_service.trg_trigger(uid, 'account.move.line', id, cr)
+            workflow.trg_trigger(uid, 'account.move.line', id, cr)
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False

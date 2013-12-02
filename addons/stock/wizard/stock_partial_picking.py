@@ -51,7 +51,7 @@ class stock_partial_picking_line(osv.TransientModel):
         'move_id' : fields.many2one('stock.move', "Move", ondelete='CASCADE'),
         'wizard_id' : fields.many2one('stock.partial.picking', string="Wizard", ondelete='CASCADE'),
         'update_cost': fields.boolean('Need cost update'),
-        'cost' : fields.float("Cost", help="Unit Cost for this product line"),
+        'cost' : fields.float("Cost", help="Unit Cost for this product line", digits_compute=dp.get_precision('Product Price')),
         'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
         'tracking': fields.function(_tracking, string='Tracking', type='boolean'),
     }

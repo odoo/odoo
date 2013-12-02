@@ -80,8 +80,13 @@
   I validate this account move by using the 'Post Journal Entries' wizard
 -
   !record {model: validate.account.move, id: validate_account_move_0}:
-    journal_id: account.bank_journal
-    period_id: account.period_6
+    journal_ids:
+      - bank_journal
+      - check_journal
+    period_ids:
+      - period_6
+      - period_7
+      - period_8
 -
   I click on validate Button
 -
