@@ -127,13 +127,15 @@ class report_aged_receivable(osv.osv):
         current_date = datetime.date.today()
         fy_id = pool_obj_fy.find(cr, uid, exception=False)
         names = []
+
         def add(names, start_on, stop_on):
             names.append(start_on.strftime("%Y-%m-%d") + ' to ' + stop_on.strftime('%Y-%m-%d'))
             return names
+
         if fy_id:
             fiscal_year = pool_obj_fy.browse(cr, uid, fy_id)
-            fy_start_date = datetime.datetime.strptime(fiscal_year.date_start, '%Y-%m-%d')
-            Last_month_date = current_date - relativedelta(months=1)
+            fy_start_date = datetime.datetime.strptime(fiscal_year.date_start, '%Y-%m-%d').date()
+            last_month_date = current_date - relativedelta(months=1)
 
             while (last_month_date > fy_start_date):
                 add(names, current_date, last_month_date)
