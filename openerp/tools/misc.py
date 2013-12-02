@@ -41,6 +41,7 @@ from itertools import islice, izip, groupby
 from lxml import etree
 from which import which
 from threading import local
+import traceback
 
 try:
     from html2text import html2text
@@ -50,9 +51,10 @@ except ImportError:
 from config import config
 from cache import *
 
+import openerp
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
-from openerp.loglevels import get_encodings, ustr, exception_to_unicode
+from openerp.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
 
 _logger = logging.getLogger(__name__)
 
@@ -470,6 +472,7 @@ ALL_LANGUAGES = {
         'ja_JP': u'Japanese / 日本語',
         'ko_KP': u'Korean (KP) / 한국어 (KP)',
         'ko_KR': u'Korean (KR) / 한국어 (KR)',
+        'lo_LA': u'Lao / ພາສາລາວ',
         'lt_LT': u'Lithuanian / Lietuvių kalba',
         'lv_LV': u'Latvian / latviešu valoda',
         'ml_IN': u'Malayalam / മലയാളം',
@@ -1136,6 +1139,7 @@ def stripped_sys_argv(*strip_args):
 
     return [x for i, x in enumerate(args) if not strip(args, i)]
 
+
 class ConstantMapping(Mapping):
     """
     An immutable mapping returning the provided value for every single key.
@@ -1162,6 +1166,44 @@ class ConstantMapping(Mapping):
 
     def __getitem__(self, item):
         return self._value
+
+
+def dumpstacks(sig, frame):
+    """ Signal handler: dump a stack trace for each existing thread."""
+    code = []
+
+    def extract_stack(stack):
+        for filename, lineno, name, line in traceback.extract_stack(stack):
+            yield 'File: "%s", line %d, in %s' % (filename, lineno, name)
+            if line:
+                yield "  %s" % (line.strip(),)
+
+    # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
+    # modified for python 2.5 compatibility
+    threads_info = dict([(th.ident, {'name': th.name, 'uid': getattr(th, 'uid', 'n/a')})
+                        for th in threading.enumerate()])
+    for threadId, stack in sys._current_frames().items():
+        thread_info = threads_info.get(threadId)
+        code.append("\n# Thread: %s (id:%s) (uid:%s)" %
+                    (thread_info and thread_info['name'] or 'n/a',
+                     threadId,
+                     thread_info and thread_info['uid'] or 'n/a'))
+        for line in extract_stack(stack):
+            code.append(line)
+
+    if openerp.evented:
+        # code from http://stackoverflow.com/questions/12510648/in-gevent-how-can-i-dump-stack-traces-of-all-running-greenlets
+        import gc
+        from greenlet import greenlet
+        for ob in gc.get_objects():
+            if not isinstance(ob, greenlet) or not ob:
+                continue
+            code.append("\n# Greenlet: %r" % (ob,))
+            for line in extract_stack(ob.gr_frame):
+                code.append(line)
+
+    _logger.info("\n".join(code))
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

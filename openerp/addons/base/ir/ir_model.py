@@ -96,8 +96,8 @@ class ir_model(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Model Description', size=64, translate=True, required=True),
-        'model': fields.char('Model', size=64, required=True, select=1),
+        'name': fields.char('Model Description', translate=True, required=True),
+        'model': fields.char('Model', required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
@@ -105,7 +105,7 @@ class ir_model(osv.osv):
         'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
             fnct_search=_search_osv_memory,
             help="This field specifies whether the model is transient or not (i.e. if records are automatically deleted from the database or not)"),
-        'modules': fields.function(_in_modules, type='char', size=128, string='In Modules', help='List of modules in which the object is defined or inherited'),
+        'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }
 
@@ -223,19 +223,19 @@ class ir_model_fields(osv.osv):
     _rec_name = 'field_description'
 
     _columns = {
-        'name': fields.char('Name', required=True, size=64, select=1),
-        'complete_name': fields.char('Complete Name', size=64, select=1),
-        'model': fields.char('Object Name', size=64, required=True, select=1,
+        'name': fields.char('Name', required=True, select=1),
+        'complete_name': fields.char('Complete Name', select=1),
+        'model': fields.char('Object Name', required=True, select=1,
             help="The technical name of the model this field belongs to"),
-        'relation': fields.char('Object Relation', size=64,
+        'relation': fields.char('Object Relation',
             help="For relationship fields, the technical name of the target model"),
-        'relation_field': fields.char('Relation Field', size=64,
+        'relation_field': fields.char('Relation Field',
             help="For one2many fields, the field on the target model that implement the opposite many2one relationship"),
         'model_id': fields.many2one('ir.model', 'Model', required=True, select=True, ondelete='cascade',
             help="The model this field belongs to"),
-        'field_description': fields.char('Field Label', required=True, size=256),
-        'ttype': fields.selection(_get_fields_type, 'Field Type',size=64, required=True),
-        'selection': fields.char('Selection Options',size=128, help="List of options for a selection field, "
+        'field_description': fields.char('Field Label', required=True),
+        'ttype': fields.selection(_get_fields_type, 'Field Type', required=True),
+        'selection': fields.char('Selection Options', help="List of options for a selection field, "
             "specified as a Python expression defining a list of (key, label) pairs. "
             "For example: [('blue','Blue'),('yellow','Yellow')]"),
         'required': fields.boolean('Required'),
@@ -245,12 +245,12 @@ class ir_model_fields(osv.osv):
         'size': fields.integer('Size'),
         'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On Delete', help='On delete property for many2one fields'),
-        'domain': fields.char('Domain', size=256, help="The optional domain to restrict possible values for relationship fields, "
+        'domain': fields.char('Domain', help="The optional domain to restrict possible values for relationship fields, "
             "specified as a Python expression defining a list of triplets. "
             "For example: [('color','=','red')]"),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'selectable': fields.boolean('Selectable'),
-        'modules': fields.function(_in_modules, type='char', size=128, string='In Modules', help='List of modules in which the field is defined'),
+        'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the field is defined'),
         'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]",
                                                   ondelete='cascade', help="If set, this field will be stored in the sparse "
                                                                            "structure of the serialization field, instead "
@@ -483,7 +483,7 @@ class ir_model_constraint(Model):
     """
     _name = 'ir.model.constraint'
     _columns = {
-        'name': fields.char('Constraint', required=True, size=128, select=1,
+        'name': fields.char('Constraint', required=True, select=1,
             help="PostgreSQL constraint or foreign key name."),
         'model': fields.many2one('ir.model', string='Model',
             required=True, select=1),
@@ -552,7 +552,7 @@ class ir_model_relation(Model):
     """
     _name = 'ir.model.relation'
     _columns = {
-        'name': fields.char('Relation Name', required=True, size=128, select=1,
+        'name': fields.char('Relation Name', required=True, select=1,
             help="PostgreSQL table name implementing a many2many relation."),
         'model': fields.many2one('ir.model', string='Model',
             required=True, select=1),
@@ -601,7 +601,7 @@ class ir_model_relation(Model):
 class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=True),
+        'name': fields.char('Name', required=True, select=True),
         'active': fields.boolean('Active', help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module.'),
         'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True, ondelete='cascade'),
         'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade', select=True),
@@ -815,13 +815,13 @@ class ir_model_data(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('External Identifier', required=True, size=128, select=1,
+        'name': fields.char('External Identifier', required=True, select=1,
                             help="External Key/Identifier that can be used for "
                                  "data integration with third-party systems"),
         'complete_name': fields.function(_complete_name_get, type='char', string='Complete ID'),
         'display_name': fields.function(_display_name_get, type='char', string='Record Name'),
-        'model': fields.char('Model Name', required=True, size=64, select=1),
-        'module': fields.char('Module', required=True, size=64, select=1),
+        'model': fields.char('Model Name', required=True, select=1),
+        'module': fields.char('Module', required=True, select=1),
         'res_id': fields.integer('Record ID', select=1,
                                  help="ID of the target record in the database"),
         'noupdate': fields.boolean('Non Updatable'),
@@ -1125,7 +1125,7 @@ class ir_model_data(osv.osv):
             return True
         to_unlink = []
         cr.execute("""SELECT id,name,model,res_id,module FROM ir_model_data
-                      WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s""",
+                      WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s ORDER BY id DESC""",
                       (tuple(modules), False))
         for (id, name, model, res_id, module) in cr.fetchall():
             if (module,name) not in self.loads:

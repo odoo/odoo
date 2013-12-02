@@ -261,7 +261,7 @@ class ir_fields_converter(orm.Model):
         if not isinstance(selection, (tuple, list)):
             # FIXME: Don't pass context to avoid translations?
             #        Or just copy context & remove lang?
-            selection = selection(model, cr, uid)
+            selection = selection(model, cr, uid, context=None)
         for item, label in selection:
             labels = self._get_translations(
                 cr, uid, ('selection', 'model', 'code'), label, context=context)

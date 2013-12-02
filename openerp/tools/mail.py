@@ -88,7 +88,9 @@ def html_sanitize(src, silent=True):
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = clean.Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
-    except etree.ParserError:
+    except etree.ParserError, e:
+    	if 'empty' in str(e):
+    	    return ""
         if not silent:
             raise
         logger.warning('ParserError obtained when sanitizing %r', src, exc_info=True)

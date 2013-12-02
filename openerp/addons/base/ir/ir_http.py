@@ -53,7 +53,6 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
 
 class ir_http(osv.AbstractModel):
     _name = 'ir.http'
-    
     _description = "HTTP routing"
 
     def _get_converters(self):
@@ -83,9 +82,8 @@ class ir_http(osv.AbstractModel):
                 # what if error in security.check()
                 #   -> res_users.check()
                 #   -> res_users.check_credentials()
-            except http.SessionExpiredException:
+            except Exception:
                 request.session.logout()
-                raise http.SessionExpiredException("Session expired for request %s" % request.httprequest)
         getattr(self, "_auth_method_%s" % auth_method)()
         return auth_method
 

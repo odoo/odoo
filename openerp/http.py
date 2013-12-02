@@ -23,6 +23,7 @@ import urlparse
 import warnings
 
 import babel.core
+import psycopg2
 import simplejson
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
@@ -910,11 +911,9 @@ class Root(object):
         return explicit_session
 
     def setup_db(self, httprequest):
-        # if no db is found on the session try to deduce it from the domain
-        db = db_monodb(httprequest)
-        if db != httprequest.session.db:
-            httprequest.session.logout()
-            httprequest.session.db = db
+        if not httprequest.session.db:
+            # allow "admin" routes to works without being logged in when in monodb.
+            httprequest.session.db = db_monodb(httprequest)
 
     def setup_lang(self, httprequest):
         if not "lang" in httprequest.session.context:
@@ -971,12 +970,26 @@ class Root(object):
 
             request = self.get_request(httprequest)
 
+            def _dispatch_nodb():
+                func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+                request.set_handler(func, arguments, "none")
+                result = request.dispatch()
+                return result
+
             with request:
                 db = request.session.db
                 if db:
                     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-                    result = request.registry['ir.http']._dispatch()
-                    openerp.modules.registry.RegistryManager.signal_caches_change(db)
+                    try:
+                        ir_http = request.registry['ir.http']
+                    except psycopg2.OperationalError:
+                        # psycopg2 error. At this point, that's mean the database does not exists
+                        # anymore. We unlog the user and failback in nodb mode
+                        request.session.logout()
+                        result = _dispatch_nodb()
+                    else:
+                        result = ir_http._dispatch()
+                        openerp.modules.registry.RegistryManager.signal_caches_change(db)
                 else:
                     # fallback to non-db handlers
                     func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()

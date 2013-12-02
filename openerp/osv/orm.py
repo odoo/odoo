@@ -383,10 +383,12 @@ class browse_record(object):
                     self.__logger.debug(''.join(traceback.format_stack()))
                 raise KeyError(error_msg)
 
+            prefetchable = lambda f: f._classic_write and f._prefetch and not f.groups and not f.deprecated
+
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
-            if col._prefetch and not col.groups:
+            if prefetchable(col):
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                field_filter = lambda x: x[1]._classic_write and x[1]._prefetch and not x[1].groups
+                field_filter = lambda x: prefetchable(x[1])
                 fields_to_fetch = filter(field_filter, self._table._columns.items())
                 # gen the list of inherited fields
                 inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
@@ -399,7 +401,15 @@ class browse_record(object):
             ids = filter(lambda id: name not in self._data[id], self._data.keys())
             # read the results
             field_names = map(lambda x: x[0], fields_to_fetch)
-            field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
+            try:
+                field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
+            except (openerp.exceptions.AccessError, except_orm):
+                if len(ids) == 1:
+                    raise
+                # prefetching attempt failed, perhaps we're violating ACL restrictions involuntarily
+                _logger.info('Prefetching attempt for fields %s on %s failed for ids %s, re-trying just for id %s', field_names, self._model._name, ids, self._id)
+                ids = [self._id]
+                field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
 
             # TODO: improve this, very slow for reports
             if self._fields_process:
@@ -4520,8 +4530,8 @@ class BaseModel(object):
             context = {}
 
         # avoid recursion through already copied records in case of circular relationship
-        seen_map = context.setdefault('__copy_data_seen',{})
-        if id in seen_map.setdefault(self._name,[]):
+        seen_map = context.setdefault('__copy_data_seen', {})
+        if id in seen_map.setdefault(self._name, []):
             return
         seen_map[self._name].append(id)
 
@@ -4533,15 +4543,6 @@ class BaseModel(object):
                     default['state'] = self._defaults['state'](self, cr, uid, context)
                 else:
                     default['state'] = self._defaults['state']
-
-        context_wo_lang = context.copy()
-        if 'lang' in context:
-            del context_wo_lang['lang']
-        data = self.read(cr, uid, [id,], context=context_wo_lang)
-        if data:
-            data = data[0]
-        else:
-            raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
@@ -4555,7 +4556,20 @@ class BaseModel(object):
                     blacklist.update(set(self.pool[other]._all_columns) - set(self._columns))
                 else:
                     blacklist_given_fields(self.pool[other])
+            # blacklist deprecated fields
+            for name, field in obj._columns.items():
+                if field.deprecated:
+                    blacklist.add(name)
+
         blacklist_given_fields(self)
+
+        fields_to_read = [f for f in self.check_field_access_rights(cr, uid, 'read', None)
+                          if f not in blacklist]
+        data = self.read(cr, uid, [id], fields_to_read, context=context)
+        if data:
+            data = data[0]
+        else:
+            raise IndexError(_("Record #%d of %s not found, cannot copy!") % (id, self._name))
 
         res = dict(default)
         for f, colinfo in self._all_columns.items():
@@ -4597,36 +4611,50 @@ class BaseModel(object):
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fields = self.fields_get(cr, uid, context=context)
 
-        translation_records = []
         for field_name, field_def in fields.items():
+            # removing the lang to compare untranslated values
+            context_wo_lang = dict(context, lang=None)
+            old_record, new_record = self.browse(cr, uid, [old_id, new_id], context=context_wo_lang)
             # we must recursively copy the translations for o2o and o2m
             if field_def['type'] == 'one2many':
                 target_obj = self.pool[field_def['relation']]
-                old_record, new_record = self.read(cr, uid, [old_id, new_id], [field_name], context=context)
                 # here we rely on the order of the ids to match the translations
                 # as foreseen in copy_data()
-                old_children = sorted(old_record[field_name])
-                new_children = sorted(new_record[field_name])
+                old_children = sorted(r.id for r in old_record[field_name])
+                new_children = sorted(r.id for r in new_record[field_name])
                 for (old_child, new_child) in zip(old_children, new_children):
                     target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
             # and for translatable fields we keep them for copy
             elif field_def.get('translate'):
-                trans_name = ''
                 if field_name in self._columns:
                     trans_name = self._name + "," + field_name
+                    target_id = new_id
+                    source_id = old_id
                 elif field_name in self._inherit_fields:
                     trans_name = self._inherit_fields[field_name][0] + "," + field_name
-                if trans_name:
-                    trans_ids = trans_obj.search(cr, uid, [
-                            ('name', '=', trans_name),
-                            ('res_id', '=', old_id)
-                    ])
-                    translation_records.extend(trans_obj.read(cr, uid, trans_ids, context=context))
+                    # get the id of the parent record to set the translation
+                    inherit_field_name = self._inherit_fields[field_name][1]
+                    target_id = new_record[inherit_field_name].id
+                    source_id = old_record[inherit_field_name].id
+                else:
+                    continue
 
-        for record in translation_records:
-            del record['id']
-            record['res_id'] = new_id
-            trans_obj.create(cr, uid, record, context=context)
+                trans_ids = trans_obj.search(cr, uid, [
+                        ('name', '=', trans_name),
+                        ('res_id', '=', source_id)
+                ])
+                user_lang = context.get('lang')
+                for record in trans_obj.read(cr, uid, trans_ids, context=context):
+                    del record['id']
+                    # remove source to avoid triggering _set_src
+                    del record['source']
+                    record.update({'res_id': target_id})
+                    if user_lang and user_lang == record['lang']:
+                        # 'source' to force the call to _set_src
+                        # 'value' needed if value is changed in copy(), want to see the new_value
+                        record['source'] = old_record[field_name]
+                        record['value'] = new_record[field_name]
+                    trans_obj.create(cr, uid, record, context=context)
 
 
     def copy(self, cr, uid, id, default=None, context=None):
