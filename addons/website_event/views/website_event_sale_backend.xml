@@ -8,19 +8,11 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <xpath expr="//sheet" position="before">
-                <div class="oe_form_box_info oe_text_center">
-                    <p attrs="{'invisible': [('website_published', '=', True)]}">
-                        This event is <b>not available</b> for public user in your website.
-                    </p>
-                    <p attrs="{'invisible': [('website_published', '=', False)]}">
-                        This event is <b>available</b> for public user in your website.
-                    </p>
-                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
-                </div>
+            <xpath expr="//sheet/div" position="before">
+                <field name="website_url" invisible="1"/>
+                <field name="website_published" class="pull-right" widget="website_button"/>
             </xpath>
             <xpath expr="//field[@name='organizer_id']" position="after">
-                <field name="website_published"/>
                 <field name="twitter_hashtag"/>
             </xpath>
         </field>
