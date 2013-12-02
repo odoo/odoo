@@ -51,7 +51,7 @@ class mail_compose_message(osv.TransientModel):
             res.update(
                 self.onchange_template_id(
                     cr, uid, [], context['default_template_id'], res.get('composition_mode'),
-                    res.get('model'), res.get('res_id'), context=context
+                    res.get('model'), res.get('res_id', context.get('active_id')), context=context
                 )['value']
             )
         return res
@@ -114,7 +114,6 @@ class mail_compose_message(osv.TransientModel):
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
             values = self.default_get(cr, uid, ['subject', 'body', 'email_from', 'email_to', 'email_cc', 'partner_to', 'reply_to', 'attachment_ids', 'mail_server_id'], context=context)
-
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
         return {'value': values}
@@ -169,7 +168,6 @@ class mail_compose_message(osv.TransientModel):
         # filter template values
         fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'attachments', 'mail_server_id']
         values = dict.fromkeys(res_ids, False)
-
         template_values = self.pool.get('email.template').generate_email_batch(cr, uid, template_id, res_ids, context=context)
         for res_id in res_ids:
             res_id_values = dict((field, template_values[res_id][field]) for field in fields if template_values[res_id].get(field))

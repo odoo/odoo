@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="static_layout">&lt;!DOCTYPE html&gt;
+            <html t-att-lang="lang.replace('_', '-')"
+                      t-att-data-editable="'1' if editable else None"
+                      t-att-data-translatable="'1' if translatable else None"
+                      t-att-data-view-xmlid="xmlid if editable else None"
+                      t-att-data-main-object="repr(main_object) if editable else None"
+                      t-att-data-report-margin-top="40"
+                      t-att-data-report-innerheight="30">
+                    <head>
+
+                        <link rel='stylesheet' href='/report/static/src/css/report.css'/>
+
+                        <t t-if="main_object and 'website_meta_title' in main_object">
+                            <t t-set="title" t-value="main_object.website_meta_title"/>
+                        </t>
+                        <t t-if="not title and main_object and 'name' in main_object">
+                            <t t-set="additional_title" t-value="main_object.name"/>
+                        </t>
+                        <t t-if="not title">
+                            <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
+                        </t>
+                        <title><t t-esc="title"/></title>
+                        <meta name="openerp.company" t-att-value="res_company.name"/>
+                        <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
+                            and main_object.website_meta_description or website_meta_description"/>
+                        <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
+                            and main_object.website_meta_keywords or website_meta_keywords"/>
+
+                        <!-- Load stylesheets before scripts to avoid blocking -->
+                        <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+                        <t t-if="editable">
+                            <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
+                            <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
+                            <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
+                        </t>
+                        <t t-call="website.theme"/>
+
+
+                        <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
+                        <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+                        <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+                        <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+                        <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
+                        <script type="text/javascript">
+                            // Bootstrap and jQuery UI conflicts
+                            $.fn.bstooltip = $.fn.tooltip;
+                            $.fn.bsbutton = $.fn.button;
+                        </script>
+
+                        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+                        <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+
+                        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+                        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
+
+                        <t t-if="editable" id="editable_scripts_hook">
+                            <link rel="stylesheet" href="/select2/static/lib/select2/select2.css"/>
+                            <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+                            <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
+
+                            <script type="text/javascript" src="/select2/static/lib/select2/select2.js"></script>
+                            <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
+                            <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
+                            <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
+                            <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+                            <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
+                            <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
+                            <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
+                            <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
+                            <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
+
+                            <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
+                            <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
+                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
+                            <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+                        </t>
+                    </head>
+                    <body>
+                        <div id="wrapwrap">
+                            <t t-raw="0" />
+                        </div>
+                    </body>
+            </html>
+        </template>
+         <template id="quotation" name="Your Quotation">
+            <t t-call="website_sale_quote.static_layout">
+            <div class="col-xs-12 col-md-8 tab-content">
+                <section id="main" class="tab-pane active oe_section">
+                    <div class="container panel panel-default">
+                        <div class="row panel-body">
+                            <div class="text-center">
+                                <h1>What does Quickstart cover ?</h1>
+                            </div>
+                            <div>
+                                <p class="lead"><small>1. The OpenERP Enterprise Contract (1 year coverage): unlimited bugfix, security alerts, migration</small></p>
+
+                                <p class="lead"><small>2. The “Get on Board” Hands-on Training (choice between our core modules)</small></p>
+
+                                <p class="lead"><small>3. On-site consulting (minimum 2 days)</small></p>
+
+                            </div>
+                            <div class="text-center">
+                                <h1>How does it work?</h1>
+                            </div>
+                            <div>
+                                <p class="lead"><small>1. OpenERP qualifies your main business needs</small></p>
+
+                                <p class="lead"><small>2. You get a tailored demo</small></p>
+
+                                <p class="lead"><small>3. We train you on your chosen module
+    </small></p>
+                                <p class="lead"><small>4. We deploy your chosen module with a dedicated functional consultant</small></p>
+                                <p class="lead"><small>5. We get you involved in the deployment of OpenERP in your company</small></p>
+
+                            </div>
+                            <p class="lead">
+                                <small>
+                                    The QuickStart offer simply enables any SME to start using OpenERP in just a few days. Since we launched this approach, we already deployed 50 customers in production. <a href="http://v6.openerp.com/node/1390">Check out some of the <strong>testimonials</strong>!</a>
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <section id="quote" class="tab-pane oe_section">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <address>
+                                    <strong t-field="quotation.order_id.partner_id.name"/>
+                                    <br/>
+                                    <t t-esc="quotation.order_id.partner_id.street"/>
+                                    <br/>
+                                    <t t-esc="quotation.order_id.partner_id.city"/>, <t t-esc="quotation.order_id.partner_id.state_id.name"/> <t t-esc="quotation.order_id.partner_id.zip"/>
+                                    <br/>
+                                    <abbr title="Phone">P:</abbr> <t t-esc="quotation.order_id.partner_id.phone"/>
+                                </address>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6 text-right">
+                                <p>
+                                    <em>Date: <t t-esc="quotation.order_id.date_order"/></em>
+                                </p>
+                                <p>
+                                    <em>Quotation #: <t t-esc="quotation.order_id.name"/></em>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center">
+                                <h1>Quotation</h1>
+                            </div>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Description</th>
+                                        <th>#</th>
+                                        <th class="text-center">Unit Price</th>
+                                        <th class="text-center">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="quotation.order_id.order_line" t-as="line">
+                                        <tr>
+                                            <td class="col-md-9"><em><t t-esc="line.product_id.name"/></em></td>
+                                            <td class="col-md-9"><em><t t-esc="line.name"/></em></td>
+                                            <td class="col-md-1" style="text-align: center"><t t-esc="line.product_uom_qty"/></td>
+                                            <td class="col-md-1 text-center"><t t-esc="line.price_unit"/></td>
+                                            <td class="col-md-1 text-center"><t t-esc="line.price_subtotal"/></td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right">
+                                            <p>
+                                                <strong>Untaxed Amount: </strong>
+                                            </p>
+                                            <p>
+                                                <strong>Tax: </strong>
+                                            </p></td>
+                                            <td class="text-center">
+                                            <p>
+                                                <strong t-field="quotation.order_id.amount_untaxed"
+                                                t-field-options='{
+                                                   "widget": "monetary",
+                                                   "display_currency": "website.pricelist_id.currency_id"
+                                               }'></strong>
+                                            </p>
+                                            <p>
+<!--                                                <strong><t t-esc="quotation.amount_taxed"/></strong>-->
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Total: </strong></td>
+                                        <td class="text-center text-success">
+                                            <strong
+                                                t-field="quotation.order_id.amount_total"
+                                                t-field-options='{"widget": "monetary",
+                                               "display_currency":"website.pricelist_id.currency_id"
+                                           }'></strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-center">
+                               <a type="submit" t-if="quotation.state != 'accept'" t-href="/quote/#{ quotation.access_token }/accept" class="btn btn-labeled btn-success"><span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Accept</a>
+                                <a type="submit" t-if="quotation.state != 'cancel'" t-href="/quote/#{ quotation.access_token }/decline" class="btn btn-labeled btn-danger"><span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>Decline</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="accouting" class="tab-pane oe_section">
+                    <div class="container">
+                        <div class="text-center">
+                            <h1>What am i looking for ?</h1>
+                        </div>
+                        <div class="media">
+                            <a class="pull-right" href="#">
+                                <img class="media-object" src="/crm/static/description/icon.png" alt="..."/>
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading">Customer Relationship Management</h4>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Manage my leads</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Optimize my Sales Cycle</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Create customize dashboard</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Improve my Sales reporting</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Communicate with customers and colleagues</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Controll and manage my sales forcastes</i></small></p>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <a class="pull-left" href="#">
+                                <img class="media-object" src="/hr_timesheet_sheet/static/description/icon.png" alt="..."/>
+                            </a>
+                            <div class="media-body pull-right">
+                                <h4 class="media-heading">Service Management</h4>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Manage my customer contracts</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Optimize and analyze my time management</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Manage , analysis and trace my issue</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Create customize dashboard</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Perform project management</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Trace my invoices</i></small></p>
+                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Manage my helpdesk</i></small></p>
+                            </div>
+                        </div>
+                      </div>
+                </section>
+                <section id="sales" class="tab-pane oe_section">
+                    <div class="container">
+                        <div class="text-center">
+                            <h1>What's in it for me ?</h1>
+                        </div>
+                        <div>
+                            <h4>The OpenERP Enterprise contract(1 year) convering</h4>
+                            <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Unlimited Bugfix service</i></small></p>
+                            <p class="lead"><small><i class="glyphicon glyphicon-pencil">"One Click" Update</i></small></p>
+                            <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Functional Support</i></small></p>
+                            <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Migration</i></small></p>
+
+                            <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Online Hosting</i></small></p>
+                        </div>
+                    </div>
+                </section>
+                <div class="panel panel-default widget">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-comment"></span>
+                        <h3 class="panel-title">Recent Comments</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <t t-foreach="quotation.message_ids" t-as="message">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-xs-2 col-md-1">
+                                            <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
+                                        <div class="col-xs-10 col-md-11">
+                                            <div>
+                                                <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html"/>
+                                                    <t t-raw="message.body"/>
+                                                <div class="mic-info">
+                                                    By: <a href="#"><t t-esc="message.author_id.name"/></a> on <t t-esc="message.date"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+                <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% quotation.access_token">
+                    <textarea rows="3" id="new_message" name="new_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
+                    <button type="submit" t-att-id="quotation.access_token" class="btn btn-info">Post your Comment</button>
+                </form>
+            </div>
+            <div class="col-xs-6 col-md-4 sidebar oe_section" id="sidebar">
+                <ul class="nav nav-pills nav-stacked" data-spy="affix">
+                    <li class="active"><a href="#main" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
+                    <li ><a href="#crm" data-toggle="tab"><i class="icon-chevron-right"></i> CRM and Marketing</a></li>
+                    <li><a href="#sales" data-toggle="tab"><i class="icon-chevron-right"></i> Sales and Warehouse</a></li>
+                    <li ><a href="#crm" data-toggle="tab"><i class="icon-chevron-right"></i> Manufacturing</a></li>
+                    <li><a href="#accouting" data-toggle="tab"><i class="icon-chevron-right"></i> Accounting</a></li>
+                    <li><a href="#quote" data-toggle="tab"><i class="icon-chevron-right"></i> Quotation</a></li>
+                </ul>
+            </div></t>
+        </template>
+    </data>
+</openerp>
