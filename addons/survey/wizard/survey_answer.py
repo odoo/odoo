@@ -589,7 +589,7 @@ class survey_question_wiz(osv.osv_memory):
         resp_obj = self.pool.get('survey.response.line')
         res_ans_obj = self.pool.get('survey.response.answer')
         que_obj = self.pool.get('survey.question')
-        sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False), context=context)[0]
+        sur_name_read = surv_name_wiz.read(cr, uid, [context.get('sur_name_id',False)], context=context)[0]
         response_id =  0
 
         if not sur_name_read['response']:
@@ -607,7 +607,7 @@ class survey_question_wiz(osv.osv_memory):
             his_id = self.pool.get('survey.history').create(cr, uid, {'user_id': uid, \
                                               'date': strftime('%Y-%m-%d %H:%M:%S'), 'survey_id': sur_name_read['survey_id'][0]})
             survey_id = sur_name_read['survey_id'][0]
-            sur_rec = survey_obj.read(cr, uid, survey_id)
+            sur_rec = survey_obj.read(cr, uid, [survey_id], context=context)[0]
             survey_obj.write(cr, uid, survey_id,  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
             if context.has_key('cur_id'):
                 if context.has_key('request') and context.get('request',False):
