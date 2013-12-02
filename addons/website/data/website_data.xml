@@ -37,7 +37,7 @@
         </record>
 
         <record id="base.group_public" model="res.groups">
-            <field name="users" eval="[(4, ref('public_user'))]"/>
+            <field name="users" eval="[(4, ref('website.public_user'))]"/>
         </record>
 
         <record id="base.group_website_publisher" model="res.groups">
@@ -130,10 +130,10 @@
 
         <record model="ir.attachment">
             <field name="name">gears</field>
-            <field name="datas_fname">gears.jpg</field>
+            <field name="datas_fname">gears.png</field>
             <field name="res_model">ir.ui.view</field>
             <field name="type">url</field>
-            <field name="url">/website/static/src/img/library/gears.jpg</field>
+            <field name="url">/website/static/src/img/library/gears.png</field>
         </record>
 
         <record model="ir.attachment">

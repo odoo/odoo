@@ -254,6 +254,13 @@ footer {
   content: "Drag Building Blocks Here";
 }
 
+.oe_structure.oe_editable [data-snippet-id]:empty {
+  background: rgba(255, 0, 0, 0.1);
+}
+.oe_structure.oe_editable [data-snippet-id]:empty:before {
+  content: "Please Edit This Empty Block";
+}
+
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .navbar .nav > li > p {
   margin-bottom: 0px;
@@ -406,14 +413,14 @@ ul.nav-stacked > li > a {
 }
 
 /* Parallax Theme */
-.parallax_quote {
+.parallax_quote, [data-snippet-id="slider"] {
   background: center center no-repeat fixed;
   background-size: contain;
 }
-.parallax_quote .carousel-indicators li {
+.parallax_quote .carousel-indicators li, [data-snippet-id="slider"] .carousel-indicators li {
   border: 1px solid grey;
 }
-.parallax_quote .carousel-indicators .active {
+.parallax_quote .carousel-indicators .active, [data-snippet-id="slider"] .carousel-indicators .active {
   background-color: grey;
 }
 
@@ -455,4 +462,41 @@ ul.nav-stacked > li > a {
 .oe_img_bg {
   height: 100%;
   background-size: 100%;
+}
+
+.texttop {
+  vertical-align: top;
+}
+
+table.well tr th {
+  text-align: right;
+  padding-right: 10px;
+}
+table.well tr td {
+  padding-right: 5px;
+}
+
+.logo-img {
+  width: 220px;
+}
+
+.oe_demo {
+  position: relative;
+}
+.oe_demo img {
+  width: 100%;
+}
+.oe_demo div {
+  position: absolute;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 0.85;
+  bottom: 0px;
+  width: 100%;
+  padding: 7px;
+  color: white;
+  font-weight: bold;
+}
+.oe_demo div a {
+  color: white;
 }

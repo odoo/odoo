@@ -232,10 +232,10 @@ class Image(orm.AbstractModel):
 
         url_object = urlparse.urlsplit(url)
         query = dict(urlparse.parse_qsl(url_object.query))
-        if url_object.path == '/website/image' and query['model'] == 'ir.attachment':
-            attachment = self.pool['ir.attachment'].browse(
+        if url_object.path == '/website/image':
+            item = self.pool[query['model']].browse(
                 cr, uid, int(query['id']), context=context)
-            return attachment.datas
+            return item[query['field']]
 
         if self.local_url_re.match(url_object.path):
             return self.load_local_url(url)

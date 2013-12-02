@@ -14,7 +14,7 @@ import werkzeug.exceptions
 import werkzeug.wrappers
 
 import openerp
-from openerp.osv import osv, fields
+from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
 
 from openerp.addons.web import http
@@ -36,8 +36,8 @@ def url_for(path_or_uri, lang=None, keep_query=None):
     if request and not url.netloc and not url.scheme:
         location = urlparse.urljoin(request.httprequest.path, location)
         lang = lang or request.context.get('lang')
-        langs = request.context.get('langs')
-        if location[0] == '/' and len(langs) > 1 and lang != request.context['lang_default']:
+        langs = [lg.code for lg in request.website.language_ids]
+        if location[0] == '/' and len(langs) > 1 and lang != request.website.default_lang_id.code:
             ps = location.split('/')
             if ps[1] in langs:
                 ps[1] = lang
@@ -58,6 +58,15 @@ def url_for(path_or_uri, lang=None, keep_query=None):
 
     return location
 
+def slug(value):
+    if isinstance(value, orm.browse_record):
+        # [(id, name)] = value.name_get()
+        id, name = value.id, value[value._rec_name]
+    else:
+        # assume name_search result tuple
+        id, name = value
+    return "%s-%d" % (slugify(name), id)
+
 def urlplus(url, params):
     if not params:
         return url
@@ -69,6 +78,20 @@ def urlplus(url, params):
     ))
 
 class website(osv.osv):
+    def _get_menu_website(self, cr, uid, ids, context=None):
+        # IF a menu is changed, update all websites
+        return self.search(cr, uid, [], context=context)
+        
+    def _get_menu(self, cr, uid, ids, name, arg, context=None):
+        root_domain = [('parent_id', '=', False)]
+        menus = self.pool.get('website.menu').search(cr, uid, root_domain, order='id', context=context)
+        menu = menus and menus[0] or False
+        return dict( map(lambda x: (x, menu), ids) )
+
+    def _get_public_user(self, cr, uid, ids, name='public_user', arg=(), context=None):
+        ref = self.get_public_user(cr, uid, context=context)
+        return dict( map(lambda x: (x, ref), ids) )
+
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
@@ -82,9 +105,13 @@ class website(osv.osv):
         'social_linkedin': fields.char('LinkedIn Account'),
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
+        'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User'),
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
+            store= {
+                'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
+            })
     }
 
-    public_user = None
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
         context=context or {}
         # completely arbitrary max_length
@@ -133,11 +160,9 @@ class website(osv.osv):
             return False
 
     def get_public_user(self, cr, uid, context=None):
-        if not self.public_user:
-            uid = openerp.SUPERUSER_ID
-            ref = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
-            self.public_user = self.pool[ref[0]].browse(cr, uid, ref[1])
-        return self.public_user
+        uid = openerp.SUPERUSER_ID
+        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
+        return res and res[1] or False
 
     def get_current_website(self, cr, uid, context=None):
         # TODO: Select website, currently hard coded
@@ -147,19 +172,14 @@ class website(osv.osv):
         def redirect(url):
             return werkzeug.utils.redirect(url_for(url))
         request.redirect = redirect
-        is_public_user = request.uid == self.get_public_user(cr, uid, context).id
-
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        website_publisher_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_website_publisher')[1]
-        is_website_publisher = website_publisher_id in [g.id for g in user.groups_id]
-
+        is_website_publisher = self.pool.get('ir.model.access').check_groups(cr, uid, 'base.group_website_publisher')
+        is_website_publisher = self.pool.get('ir.model.access').check(cr, uid, 'ir.ui.view', 'write', raise_exception=False, context=context)
         lang = request.context['lang']
         is_master_lang = lang == request.website.default_lang_id.code
         request.context.update({
-            'is_public_user': is_public_user,
             'is_master_lang': is_master_lang,
             'editable': is_website_publisher,
-            'translatable': not is_public_user and not is_master_lang,
+            'translatable': not is_master_lang,
         })
 
     def get_template(self, cr, uid, ids, template, context=None):
@@ -174,7 +194,6 @@ class website(osv.osv):
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
         user = self.pool.get("res.users")
-
         if not context:
             context = {}
 
@@ -188,6 +207,7 @@ class website(osv.osv):
             json=simplejson,
             website=request.website,
             url_for=url_for,
+            slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
         )
@@ -200,8 +220,9 @@ class website(osv.osv):
 
         if 'main_object' not in qweb_context:
             qweb_context['main_object'] = view
-
-        return view.render(qweb_context, engine='website.qweb', context=context)
+        #context['debug'] = True
+        result = view.render(qweb_context, engine='website.qweb', context=context)
+        return result
 
     def render(self, cr, uid, ids, template, values=None, context=None):
         def callback(template, values, context):
@@ -258,7 +279,6 @@ class website(osv.osv):
             ]
         }
 
-
     def rule_is_enumerable(self, rule):
         """ Checks that it is possible to generate sensible GET queries for
         a given rule (if the endpoint matches its own requirements)
@@ -289,16 +309,7 @@ class website(osv.osv):
         :type rule: werkzeug.routing.Rule
         :rtype: bool
         """
-
-        # apparently the decorator package makes getargspec work correctly
-        # on functions it decorates. That's not the case for
-        # @functools.wraps, so hack around to get the original function
-        # (and hope a single decorator was applied or we're hosed)
-        # FIXME: this is going to blow up if we want/need to use multiple @route (with various configurations) on a method
-        undecorated_func = rule.endpoint.func_closure[0].cell_contents
-
-        # If this is ever ported to py3, use signatures, it doesn't suck as much
-        spec = inspect.getargspec(undecorated_func)
+        spec = inspect.getargspec(rule.endpoint)
 
         # if *args bail the fuck out, only dragons can live there
         if spec.varargs:
@@ -333,7 +344,7 @@ class website(osv.osv):
         """
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
-        uid = self.get_public_user(cr, uid, context=context).id
+        uid = self.get_public_user(cr, uid, context=context)
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
@@ -465,8 +476,6 @@ class website(osv.osv):
             html += request.website._render(template, {'object_id': object_id})
         return html
 
-    def get_menu(self, cr, uid, ids, context=None):
-        return self.pool['website.menu'].get_menu(cr, uid, ids[0], context=context)
 
 class website_menu(osv.osv):
     _name = "website.menu"
@@ -492,12 +501,7 @@ class website_menu(osv.osv):
     _parent_order = 'sequence, name'
     _order = "parent_left"
 
-    def get_menu(self, cr, uid, website_id, context=None):
-        root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
-        menu_ids = self.search(cr, uid, root_domain, order='id', context=context)
-        menu = self.browse(cr, uid, menu_ids, context=context)
-        return menu[0]
-
+    # would be better to take a menu_id as argument
     def get_tree(self, cr, uid, website_id, context=None):
         def make_tree(node):
             menu_node = dict(
@@ -512,7 +516,7 @@ class website_menu(osv.osv):
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
-        menu = self.get_menu(cr, uid, website_id, context=context)
+        menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
         return make_tree(menu)
 
     def save(self, cr, uid, website_id, data, context=None):

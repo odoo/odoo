@@ -5,10 +5,9 @@ import werkzeug.routing
 
 import openerp
 from openerp.addons.base import ir
+from openerp.addons.website.models.website import slug
 from openerp.http import request
 from openerp.osv import orm
-
-from ..utils import slugify
 
 class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
@@ -25,11 +24,12 @@ class ir_http(orm.AbstractModel):
     def _auth_method_public(self):
         if not request.session.uid:
             request.uid = request.registry['website'].get_public_user(
-                request.cr, openerp.SUPERUSER_ID, request.context).id
+                request.cr, openerp.SUPERUSER_ID, request.context)
         else:
             request.uid = request.session.uid
 
     def _dispatch(self):
+        first_pass = not hasattr(request, 'website')
         request.website = None
         func = None
         try:
@@ -46,13 +46,9 @@ class ir_http(orm.AbstractModel):
             else:
                 self._auth_method_public()
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
-            langs = request.context['langs'] = [lg.code for lg in request.website.language_ids]
-            lang_cookie = request.httprequest.cookies.get('lang', None)
-            if lang_cookie in langs:
-                request.context['lang_cookie'] = lang_cookie
-            request.context['lang_default'] = request.website.default_lang_id.code
-            if not hasattr(request, 'lang'):
-                request.lang = request.context['lang_default']
+            langs = [lg.code for lg in request.website.language_ids]
+            if first_pass:
+                request.lang = request.website.default_lang_id.code
             request.context['lang'] = request.lang
             request.website.preprocess_request(request)
             if not func:
@@ -62,7 +58,6 @@ class ir_http(orm.AbstractModel):
                     path = '/'.join(path) or '/'
                     return self.reroute(path)
                 return self._handle_404()
-
         return super(ir_http, self)._dispatch()
 
     def reroute(self, path):
@@ -116,12 +111,7 @@ class ModelConverter(ir.ir_http.ModelConverter):
         self.regex = r'(?:[A-Za-z0-9-_]+?-)?(\d+)(?=$|/)'
 
     def to_url(self, value):
-        if isinstance(value, orm.browse_record):
-            [(id, name)] = value.name_get()
-        else:
-            # assume name_search result tuple
-            id, name = value
-        return "%s-%d" % (slugify(name), id)
+        return slug(value)
 
     def generate(self, cr, uid, query=None, context=None):
         return request.registry[self.model].name_search(

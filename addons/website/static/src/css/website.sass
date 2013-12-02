@@ -171,6 +171,11 @@ footer
 .oe_structure.oe_editable.oe_empty:empty:before, .oe_editable[data-oe-type=html]:empty:before, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
     content: 'Drag Building Blocks Here'
 
+.oe_structure.oe_editable [data-snippet-id]:empty
+    background: rgba(255,0,0,0.1)
+    &:before
+        content: 'Please Edit This Empty Block'
+
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
 .navbar .nav > li > p
@@ -304,7 +309,7 @@ ul.nav-stacked > li > a
 
 /* Parallax Theme */
 
-.parallax_quote
+.parallax_quote, [data-snippet-id="slider"]
     background: center center no-repeat fixed
     background-size: contain
     .carousel-indicators
@@ -338,3 +343,33 @@ ul.nav-stacked > li > a
 .oe_img_bg
     height: 100%
     background-size: 100%
+
+.texttop
+    vertical-align: top
+
+table.well tr
+    th
+        text-align: right
+        padding-right: 10px
+    td
+        padding-right: 5px
+
+.logo-img
+    width: 220px
+
+.oe_demo
+    position: relative
+    img
+        width: 100%
+    div
+        position: absolute
+        left: 0
+        background-color: rgba(0,0,0,0.4)
+        opacity: 0.85
+        bottom: 0px
+        width: 100%
+        padding: 7px
+        color: white
+        font-weight: bold
+        a
+            color: white

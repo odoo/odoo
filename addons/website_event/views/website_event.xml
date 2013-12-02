@@ -72,7 +72,7 @@
                                         </span>
                                     </t>
                                     <h4 class="media-heading">
-                                        <a t-href="/event/#{ event.id }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
+                                        <a t-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
                                         <small t-if="not event.website_published" class="label label-danger">not published</small>
                                     </h4>
                                     <div>
@@ -168,6 +168,7 @@
     <template id="layout">
         <t t-call="website.layout">
           <div id="wrap">
+            <div class="oe_structure"/>
             <div class="container">
                 <div class="row mt8">
                     <div class="col-sm-7" id="event_menu">
@@ -199,6 +200,7 @@
                 </div>
             </div>
             <t t-raw="0"/>
+            <div class="oe_structure"/>
           </div>
         </t>
     </template>

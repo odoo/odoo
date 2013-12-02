@@ -17,12 +17,17 @@
                         </colgroup>
                         <tbody>
                             <t t-set="address" t-value="'&lt;br/&gt;'.join(partner_id.name_get()[0][1].split('\n')[1:])"/>
-                            <tr t-if="address or editable"><th>Address</th><td class="span2" t-raw="address"/></tr>
-                            <tr t-if="partner_id.website or editable"><th>Website</th><td class="span2"><span t-field="partner_id.website"/></td></tr>
-                            <tr t-if="partner_id.phone or editable"><th>Tel</th><td class="span2"><span t-field="partner_id.phone"/></td></tr>
-                            <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="span2"><span t-field="partner_id.mobile"/></td></tr>
-                            <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="span2"><span t-field="partner_id.fax"/></td></tr>
-                            <tr t-if="partner_id.email or editable"><th>Email</th><td class="span2"><span t-field="partner_id.email"/></td></tr>
+                            <tr t-if="address or editable"><th class="texttop">Address</th><td class="span2" t-raw="address"/></tr>
+                            <tr t-if="partner_id.website or editable"><th>Website</th><td class="span2">
+                                <t t-if="partner_id.website"><span t-field="partner_id.website"/></t></td></tr>
+                            <tr t-if="partner_id.phone or editable"><th>Phone</th><td class="span2">
+                                <t t-if="partner_id.phone"><span t-field="partner_id.phone"/></t></td></tr>
+                            <tr t-if="partner_id.mobile or editable"><th>Tel</th><td class="span2">
+                                <t t-if="partner_id.mobile"><span t-field="partner_id.mobile"/></t></td></tr>
+                            <tr t-if="partner_id.fax or editable"><th>Fax</th><td class="span2">
+                                <t t-if="partner_id.fax"><span t-field="partner_id.fax"/></t></td></tr>
+                            <tr t-if="partner_id.email or editable"><th>Email</th><td class="span2">
+                                <t t-if="partner_id.email"><span t-field="partner_id.email"/></t></td></tr>
                         </tbody>
                     </table>
                 </address>

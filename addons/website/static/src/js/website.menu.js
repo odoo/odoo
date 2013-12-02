@@ -15,7 +15,7 @@
             openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website.menu',
                 method: 'get_tree',
-                args: [[context.website_id]],
+                args: [context.website_id],
                 kwargs: {
                     context: context
                 },

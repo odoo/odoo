@@ -14,9 +14,11 @@
             <t t-call="website.layout">
                 <t t-set="additional_title">Task</t>
                 <div id="wrap">
+                    <div class="oe_structure"/>
                     <div class="container">
                         <h4 t-field="task.name"/>
                     </div>
+                    <div class="oe_structure"/>
               </div>
             </t>
         </template>
@@ -43,6 +45,7 @@
             <t t-call="website.layout">
                 <t t-set="additional_title">Project</t>
                 <div id="wrap">
+                    <div class="oe_structure"/>
                     <div class="container">
                         <h4 t-field="project.name"/>
                         <t t-call="website.kanban">
@@ -54,6 +57,7 @@
                             <t t-set="scope">3</t>
                         </t>
                     </div>
+                    <div class="oe_structure"/>
               </div>
             </t>
         </template>

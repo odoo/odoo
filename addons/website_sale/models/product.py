@@ -57,7 +57,7 @@ class product_template(osv.Model):
         'website_size_y': fields.integer('Size Y'),
         'website_style_ids': fields.many2many('website.product.style', 'product_website_style_rel', 'product_id', 'style_id', 'Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
-        'website_url': fields.function(_website_url, string="Website url"),
+        'website_url': fields.function(_website_url, string="Website url", type="char"),
     }
     _defaults = {
         'website_size_x': 1,

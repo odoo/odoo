@@ -4,7 +4,7 @@
     <!-- Page --> 
  
     <template id="aboutus" inherit_id="website.aboutus" inherit_option_id="website.aboutus" name="Our Team">
-        <xpath expr="//div[@class='oe_structure'][last()]" position="inside">
+        <xpath expr="//div[@class='oe_structure']" position="after">
             <section class="container">
                 <div class="col-sm-12 text-center" t-if="len(employee_ids)">
                     <h2>Our Team</h2>

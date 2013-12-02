@@ -35,15 +35,42 @@
         </t>
     </template>
 
+    <template name="Sponsors" id="event_sponsor" inherit_option_id="website_event.layout" inherit_id="website_event.layout">
+        <xpath expr="//t[@t-call='website.layout']" position="inside">
+            <t t-set="head">
+                <link rel='stylesheet' href='/website_event_track/static/src/css/website_event_track.css'/>
+                <t t-raw="head or ''"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <div class="container mt32 mb16" t-if="event.sponsor_ids">
+                <section data-snippet-id="title">
+                    <h2 class="text-center mb32">Our Sponsors</h2>
+                </section>
+                <div class="row">
+                    <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
+                        <a href="sponsor.partner_id.website or '#'" style="position: relative; display: inline-block;">
+                            <span t-field="sponsor.partner_id.image"
+                                t-field-options='{"widget": "image", "class": "shadow"}'/>
+                            <div class="ribbon-wrapper">
+                                <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
     <template id="tracks">
         <t t-call="website_event.event_details">
             <div class="col-md-3 css_noprint">
 
                 <ul class="nav nav-pills nav-stacked">
-                    <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ event.id }/track/">All</a></li>
+                    <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ slug(event) }/track/">All</a></li>
                     <t t-foreach="tags" t-as="tag">
                         <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
-                            <a t-href="/event/#{ event.id }/track/tag/#{ tag.id }">
+                            <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
                                 <t t-esc="tag.name"/>
                             </a>
                         </li>
@@ -56,7 +83,7 @@
                     <li t-foreach="tracks" t-as="track" class="media">
                         <div class="media-body">
                             <h4 class="media-heading">
-                                <a t-href="/event/#{ event.id }/track/#{track.id}"><span t-field="track.name"> </span></a>
+                                <a t-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
                                 <span t-field="track.date"/>
                                 <!-- <small t-if="not track.website_published" class="label label-danger">not published</small> -->
                             </h4>

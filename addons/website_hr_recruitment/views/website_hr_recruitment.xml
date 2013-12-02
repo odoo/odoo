@@ -23,33 +23,32 @@
             <t t-call="website.layout">
                 <div id="wrap">
                     <div class="oe_structure">
-
-                    <section data-snippet-id="text-block" class="mb32">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12 text-center mb16" data-snippet-id="colmd">
-                                    <h2>Our Job Offers</h2>
-                                    <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
-                                </div>
-                                <div class="col-md-12" data-snippet-id="colmd">
-                                    <p>
-                                        With a small team of smart people, we released the most
-                                        disruptive enterprise management software in the world.
-                                        OpenERP is fully open source, super easy, full featured
-                                        (3000+ apps) and its online offer is 3 times cheaper than
-                                        traditional competitors like SAP and Ms Dynamics.
-                                    </p>
-                                    <p>
-                                        Join us, we offer you an extraordinary chance to learn, to
-                                        develop and to be part of an exciting experience and
-                                        team.
-                                    </p>
+                        <section data-snippet-id="text-block" class="mb32">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12 text-center mb16" data-snippet-id="colmd">
+                                        <h2>Our Job Offers</h2>
+                                        <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
+                                    </div>
+                                    <div class="col-md-12" data-snippet-id="colmd">
+                                        <p>
+                                            With a small team of smart people, we released the most
+                                            disruptive enterprise management software in the world.
+                                            OpenERP is fully open source, super easy, full featured
+                                            (3000+ apps) and its online offer is 3 times cheaper than
+                                            traditional competitors like SAP and Ms Dynamics.
+                                        </p>
+                                        <p>
+                                            Join us, we offer you an extraordinary chance to learn, to
+                                            develop and to be part of an exciting experience and
+                                            team.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-
+                        </section>
                     </div>
+
                     <div class="container oe_website_jobs">
                         <div class="row">
                             <div class="col-md-1" id="jobs_grid_left">
@@ -60,7 +59,7 @@
                                     <li t-foreach="jobs" t-as="job" class="media">
                                         <div class="media-body" t-att-data-publish="job.website_published and 'on' or 'off'">
                                             <h3 class="media-heading">
-                                                <a t-href="/job/detail/#{ job.id }/">
+                                                <a t-href="/job/detail/#{ slug(job) }/">
                                                     <span t-field="job.name"/>
                                                 </a>
                                                 <small t-if="job.no_of_recruitment &gt; 1">
@@ -104,6 +103,7 @@
             <t t-call="website.layout">
             <t t-set="additional_title">Job Detail</t>
             <div id="wrap">
+                <div class="oe_structure"/>
 
                 <section class="container mt8">
                     <div class="row">
@@ -240,7 +240,7 @@
                     <li t-att-class=" '' if active else 'active' "><a href="/jobs">All Departments</a></li>
                     <t t-foreach="departments" t-as="department">
                         <li t-att-class="department.id == active and 'active' or ''">
-                        <a t-href="/jobs/department/#{ department.id }/" ><span t-field="department.name"/></a>
+                        <a t-href="/jobs/department/#{ slug(department) }/" ><span t-field="department.name"/></a>
                         </li>
                     </t>
                 </ul>
@@ -256,7 +256,7 @@
                     <li t-att-class=" '' if office else 'active' "><a href="/jobs">All Offices</a></li>
                     <t t-foreach="offices" t-as="thisoffice">
                         <li t-att-class="thisoffice.id == office and 'active' or ''">
-                            <a t-href="/jobs/office/#{ thisoffice.id }/" >
+                            <a t-href="/jobs/office/#{ slug(thisoffice) }/" >
                                 <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">, 
                                     <span t-field="thisoffice.country_id.name"/>
                                 </t>

@@ -11,7 +11,7 @@
     <!-- Layout add nav and footer -->
     <template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
         <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a t-href="/blog/cat/%(website_blog.blog_category_1)d/">News</a></li>
+            <li><a t-href="/blog/%(website_blog.blog_category_1)d/">News</a></li>
         </xpath>
     </template>
 
@@ -52,7 +52,7 @@
                         <t t-foreach="blogs" t-as="blog">
                           <div class="col-md-4">
                             <h4>
-                                <a t-href="/blog/#{blog.id}?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog.name"></a>
+                                <a t-href="/blogpost/#{ slug(blog) }?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog.name"></a>
                                 <span t-if="not blog.website_published" class="text-warning">
                                     &amp;nbsp;
                                     <span class="icon-warning-sign" title="Not published"/>
@@ -61,7 +61,7 @@
                             <div class="text-muted">
                                 <span class="icon-calendar"> <span t-field="blog.create_date"/> &amp;nbsp;</span>
                                 <span class="icon-folder-open"> In
-                                    <a t-href="/blog/cat/#{blog.category_id.id}">
+                                    <a t-href="/blog/#{ slug(blog.category_id) }">
                                     <span t-field="blog.category_id"/>
                                     </a> &amp;nbsp;
                                 </span>
@@ -74,7 +74,7 @@
                             </div>
                             <div class="text-muted" t-if="len(blog.message_ids) &gt; 0">
                                 <span class="icon-comment">
-                                    <a t-href="/blog/#{blog.id}/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comment">
+                                    <a t-href="/blogpost/#{ slug(blog) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comment">
                                         <t t-if="len(blog.message_ids) &lt;= 1" ><t t-esc="len(blog.message_ids)"/> comment</t>
                                         <t t-if="len(blog.message_ids) > 1"><t t-esc="len(blog.message_ids)"/> comments</t>
                                     </a>
@@ -109,19 +109,19 @@
         <t t-foreach="blog_posts" t-as="blog_post">
           <div t-att-data-publish="blog_post.website_published and 'on' or 'off'">
             <h2 class="text-center">
-                <a t-href="/blog/#{blog_post.id}/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
+                <a t-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
             </h2>
             <p class="post-meta text-muted text-center" name='blog_post_data'>
                 <span class="icon-calendar"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
                 <span t-if="len(blog_post.message_ids) &gt; 0" class="icon-comment">
-                    <a t-href="/blog/#{blog_post.id}/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comment">
+                    <a t-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comment">
                         <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
                         <t t-if="len(blog_post.message_ids) > 1"><t t-esc="len(blog_post.message_ids)"/> comments</t>
                     </a>
                 </span>
                 <span t-if="not blog_post.website_published" class="label label-danger">not published</span>
             </p>
-            <div t-field="blog_post.shortened_content" class="blog_content"/>
+            <div t-raw="blog_post.shortened_content" class="blog_content"/>
             <hr/>
           </div>
 
@@ -144,7 +144,7 @@
             <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                 <span class="icon-tags"/>
                 <t t-foreach="blog_post.tag_ids" t-as="tag">
-                    <a t-href="/blog/cat/#{ category.id }/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
+                    <a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
                 </t>
             </p>
         </xpath>
@@ -157,10 +157,10 @@
         <div class="row">
           <div class="col-sm-9">
               <ol class="breadcrumb">
-                  <li><a t-href="/blog/cat/#{category.id}"><span t-field="category.name"/></a></li>
-                  <li t-if="tag"><a t-href="/blog/cat/#{ category.id }/tag/#{tag.id}"><span t-field="tag.name"/></a></li>
-                  <li t-if="tag and date"><a t-href="/blog/cat/#{ category.id }/tag/#{tag.id}/date/#{ date }" t-esc="date_name"/></li>
-                  <li t-if="not tag and date"><a t-href="/blog/cat/#{ category.id }/date/#{ date }" t-esc="date_name"/></li>
+                  <li><a t-href="/blog/#{ slug(category) }"><span t-field="category.name"/></a></li>
+                  <li t-if="tag"><a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag) }"><span t-field="tag.name"/></a></li>
+                  <li t-if="tag and date"><a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag) }/date/#{ date }" t-esc="date_name"/></li>
+                  <li t-if="not tag and date"><a t-href="/blog/#{ slug(category) }/date/#{ date }" t-esc="date_name"/></li>
                   <li class="active"><span t-field="blog_post.name"/></li>
               </ol>
           </div><div class="col-sm-3">
@@ -168,7 +168,7 @@
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>
                 <li t-ignore="True">
-                    <form class="duplicate hidden" action="/blog/duplicate">
+                    <form class="duplicate hidden" action="/blogpost/duplicate">
                         <input name="blog_post_id" t-att-value="blog_post.id"/>
                     </form>
                     <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
@@ -215,21 +215,20 @@
 
     <!-- Options: Blog Post: user can reply -->
     <template id="opt_blog_post_complete_comment" name="Allow Comments"
-            inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete">
+            inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete"
+            groups="website_mail.group_comment">
         <xpath expr="//ul[@id='comments-list']" position="after">
-            <t t-if="not is_public_user">
-                <section groups="group_website_blog_reply" class="mb32">
-                    <form id="comment" t-attf-action="/blog/#{blog_post.id}/#{ path_filter }/comment"
-                            method="POST">
-                        <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
-                        <div class="pull-left mb32" style="width: 75%%">
-                            <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                            <button type="submit" class="btn btn-primary mt8">Post</button>
-                        </div>
-                    </form>
-                </section>
-                <div class="clearfix"/>
-            </t>
+            <section class="mb32">
+                <form id="comment" t-attf-action="/blogpost/#{blog_post.id}/#{ path_filter }/comment"
+                        method="POST">
+                    <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
+                    <div class="pull-left mb32" style="width: 75%%">
+                        <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
+                        <button type="submit" class="btn btn-primary mt8">Post</button>
+                    </div>
+                </form>
+            </section>
+            <div class="clearfix"/>
         </xpath>
     </template>
 
@@ -256,7 +255,7 @@
             <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                 <span class="icon-tags"/>
                 <t t-foreach="blog_post.tag_ids" t-as="tag">
-                    <a t-href="/blog/cat/#{ category.id }/tag/#{tag.id}" t-esc="tag.name"/> &amp;nbsp;
+                    <a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag) }" t-esc="tag.name"/> &amp;nbsp;
                 </t>
             </p>
         </xpath>
@@ -269,6 +268,7 @@
                 <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
             </t>
             <div id="wrap">
+                <div class="oe_structure"></div>
                 <div class="container mt16 js_website_blog">
                     <div class="row">
                         <div class="col-lg-12 col-sm-12" id="blog_left_column">
@@ -277,6 +277,7 @@
                         <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
                     </div>
                 </div>
+                <div class="oe_structure"></div>
             </div>
         </t>
     </template>
@@ -290,7 +291,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="tags" t-as="tag_id">
                 <li t-att-class="tag and tag_id.id == tag.id and 'active' or None" style="display: inline-block;">
-                    <a t-href="/blog/cat/#{ category.id }/tag/#{ tag_id.id }"><span t-field="tag_id.name"/></a>
+                    <a t-href="/blog/#{ slug(category) }/tag/#{ slug(tag_id) }"><span t-field="tag_id.name"/></a>
                 </li>
                 </t>
             </ul>
@@ -310,7 +311,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="nav_list" t-as="months">
                 <li t-att-class="months['date'] == date and 'active' or None">
-                    <a t-ignore="True" t-href="/blog/cat/#{ category.id }/#{ tag and 'tag/%s/' % tag.id or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
+                    <a t-ignore="True" t-href="/blog/#{ slug(category) }/#{ tag and 'tag/%s/' % slug(tag) or '' }date/#{ months['date'] }"><t t-esc="months['create_date']"/><span class="pull-right badge" t-esc="months['create_date_count']"/></a>
                 </li>
                 </t>
             </ul>
@@ -380,7 +381,7 @@
             <ul class="nav nav-pills nav-stacked">
                 <t t-foreach="categories" t-as="nav_category">
                     <li t-att-class="nav_category.id == category.id and 'active' or ''">
-                        <a t-href="/blog/cat/#{nav_category.id}">
+                        <a t-href="/blog/#{ slug(nav_category) }">
                             <span t-field="nav_category.name"/>
                         </a>
                     </li>

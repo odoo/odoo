@@ -150,9 +150,14 @@
                     stepId: 'save-changes',
                     element: 'button[data-action=save]',
                     placement: 'right',
-                    reflex: true,
                     title: "Save Your Blog",
                     content: "Click the <em>Save</em> button to record changes on the page.",
+                    triggers: function () {
+                        var $publish = $('button.js_publish_btn');
+                        if ($publish.length > 0 && $publish.is(":visible")) {
+                            self.moveToNextStep();
+                        }
+                    },
                 },
                 {
                     stepId: 'publish-post',
@@ -174,10 +179,10 @@
             return this._super();
         },
         resume: function () {
-            return (this.isCurrentStep('post-page') || this.isCurrentStep('publish-post')) && this._super();
+            return (this.isCurrentStep('post-page') || this.isCurrentStep('save-changes')) && this._super();
         },
         trigger: function () {
-            return (this.resume() && this.testUrl(/^\/blog\/[0-9]+\//)) || this._super();
+            return (this.resume() && this.testUrl(/^\/blogpost\/[0-9]+\//)) || this._super();
         },
     });
 

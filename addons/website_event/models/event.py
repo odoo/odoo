@@ -106,7 +106,7 @@ class event(osv.osv):
             string='Website Messages',
             help="Website communication history",
         ),
-        'website_url': fields.function(_website_url, string="Website url"),
+        'website_url': fields.function(_website_url, string="Website url", type="char"),
         'show_menu': fields.function(_get_show_menu, fnct_inv=_set_show_menu, type='boolean', string='Dedicated Menu'),
         'menu_id': fields.many2one('website.menu', 'Event Menu'),
     }
