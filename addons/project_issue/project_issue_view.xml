@@ -48,7 +48,8 @@
             <field name="arch" type="xml">
                 <form string="Issue" version="7.0">
                 <header>
-                    <field name="stage_id" widget="statusbar" clickable="True"/>
+                    <field name="stage_id" widget="statusbar" clickable="True"
+                        options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet string="Issue">
                     <label for="name" class="oe_edit_only"/>
