@@ -299,16 +299,7 @@ class website(osv.osv):
         :type rule: werkzeug.routing.Rule
         :rtype: bool
         """
-
-        # apparently the decorator package makes getargspec work correctly
-        # on functions it decorates. That's not the case for
-        # @functools.wraps, so hack around to get the original function
-        # (and hope a single decorator was applied or we're hosed)
-        # FIXME: this is going to blow up if we want/need to use multiple @route (with various configurations) on a method
-        undecorated_func = rule.endpoint.func_closure[0].cell_contents
-
-        # If this is ever ported to py3, use signatures, it doesn't suck as much
-        spec = inspect.getargspec(undecorated_func)
+        spec = inspect.getargspec(rule.endpoint)
 
         # if *args bail the fuck out, only dragons can live there
         if spec.varargs:
