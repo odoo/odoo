@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="payment_acquirer_adyen" model="payment.acquirer">
+            <field name="name">adyen</field>
+            <field name="view_template_id" ref="adyen_acquirer_button"/>
+            <field name="env">test</field>
+            <field name="adyen_merchant_account">OpenERPCOM</field>
+            <field name="adyen_skin_code">cbqYWvVL</field>
+            <field name="adyen_skin_hmac_key">cbqYWvVL</field>
+        </record>
+
+    </data>
+</openerp>
