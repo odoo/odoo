@@ -1369,7 +1369,7 @@ class BaseModel(object):
             record[name]                # force evaluation of defaults
 
         # retrieve defaults from record's cache
-        values = self._convert_to_write(record._read_cache())
+        values = self._convert_to_write(record._get_cache())
 
         # HACK: remove False from values, as this is a sign of "no default
         # value". In some models from base, keeping False causes some issues,
@@ -2811,7 +2811,7 @@ class BaseModel(object):
             record = self.new()
             field = self._fields[column_name]
             field.determine_default(record)
-            defaults = record._read_cache()
+            defaults = record._get_cache()
             if column_name in defaults:
                 default = field.convert_to_write(defaults[column_name])
 
@@ -5458,7 +5458,7 @@ class BaseModel(object):
     # Record cache read/update
     #
 
-    def _read_cache(self):
+    def _get_cache(self):
         """ Return the cache of `self[0]` as a dictionary mapping field names to
             values.
         """

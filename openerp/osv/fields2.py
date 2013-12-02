@@ -874,7 +874,7 @@ class _RelationalMulti(_Relational):
         for record in value:
             # TODO: modified record (1, id, values)
             if not record.id:
-                values = record._convert_to_write(record._read_cache())
+                values = record._convert_to_write(record._get_cache())
                 result.append((0, 0, values))
             else:
                 result.append((4, record.id))
