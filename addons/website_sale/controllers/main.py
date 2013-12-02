@@ -421,7 +421,7 @@ class Ecommerce(http.Controller):
         checkout = values['checkout']
         error = values['error']
 
-        if not request.uid == self.pool.get('website').get_public_user(cr, uid, context):
+        if not request.uid == request.registry['website'].get_public_user(cr, uid, context):
             partner = orm_user.browse(cr, uid, uid, context).partner_id
             partner_info = info.from_partner(partner)
             checkout.update(partner_info)
