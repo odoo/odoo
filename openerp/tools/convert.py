@@ -884,6 +884,10 @@ form: module.record_id""" % (xml_id,)
         for field_name in ('inherit_id','inherit_option_id'):
             value = el.attrib.pop(field_name, None)
             if value: record.append(Field(name=field_name, ref=value))
+        groups = el.attrib.pop('groups', None)
+        if groups:
+            grp_lst = map(lambda x: "ref('%s')" % x, groups.split(','))
+            record.append(Field(name="groups_id", eval="[(6, 0, ["+', '.join(grp_lst)+"])]"))
         if el.attrib.pop('page', None) == 'True':
             record.append(Field(name="page", eval="True"))
 
