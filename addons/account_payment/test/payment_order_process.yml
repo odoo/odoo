@@ -79,7 +79,7 @@
 -
   I create a bank statement.
 -
-  !record {model: account.bank.statement, id: account_bank_statement_1}:
+  !record {model: account.bank.statement, id: account_bank_statement_1, view: False}:
     balance_end_real: 0.0
     balance_start: 0.0
     date: !eval time.strftime('%Y-%m-%d')
