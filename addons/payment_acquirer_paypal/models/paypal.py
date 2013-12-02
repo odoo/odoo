@@ -56,6 +56,8 @@ class AcquirerPaypal(osv.Model):
             :return float fees: computed fees
         """
         acquirer = self.browse(cr, uid, id, context=context)
+        if not acquirer.fees_active:
+            return 0.0
         country = self.pool['res.country'].browse(cr, uid, country_id, context=context)
         if country and acquirer.company_id.country_id.id == country.id:
             fees = amount * (1 + acquirer.fees_dom_var / 100.0) + acquirer.fees_dom_fixed - amount
