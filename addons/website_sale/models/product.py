@@ -111,7 +111,7 @@ class product_product(osv.Model):
         return res
 
     _columns = {
-        'website_url': fields.function(_website_url, string="Website url"),
+        'website_url': fields.function(_website_url, string="Website url", type="char"),
     }
 
     def img(self, cr, uid, ids, field='image_small', context=None):
