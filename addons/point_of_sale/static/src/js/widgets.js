@@ -58,6 +58,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         init: function(parent, options) {
             this._super(parent);
             this.state = new module.NumpadState();
+            window.numpadstate = this.state;
+            var self = this;
+            this.state.bind('change:buffer',function(){
+                console.log('BUFFER:',self.state.get('buffer'));
+            })
         },
         start: function() {
             this.state.bind('change:mode', this.changedMode, this);
@@ -129,61 +134,50 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.OrderlineWidget = module.PosBaseWidget.extend({
-        template: 'OrderlineWidget',
-        init: function(parent, options) {
-            this._super(parent,options);
-
-            this.model = options.model;
-            this.order = options.order;
-
-            this.model.bind('change', this.refresh, this);
-        },
-        renderElement: function() {
-            var self = this;
-            this._super();
-            this.$el.click(function(){
-                self.order.selectLine(self.model);
-                self.trigger('order_line_selected');
-            });
-            if(this.model.is_selected()){
-                this.$el.addClass('selected');
-            }
-        },
-        refresh: function(){
-            this.renderElement();
-            this.trigger('order_line_refreshed');
-        },
-        destroy: function(){
-            this.model.unbind('change',this.refresh,this);
-            this._super();
-        },
-    });
-    
     module.OrderWidget = module.PosBaseWidget.extend({
         template:'OrderWidget',
         init: function(parent, options) {
+            var self = this;
             this._super(parent,options);
-            this.display_mode = options.display_mode || 'numpad';   // 'maximized' | 'actionbar' | 'numpad'
-            this.set_numpad_state(options.numpadState);
+            this.editable = false;
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
             this.bind_orderline_events();
-            this.orderlinewidgets = [];
+            this.line_click_handler = function(event){
+                if(!self.editable){
+                    return;
+                }
+                self.pos.get('selectedOrder').selectLine(this.orderline);
+                self.pos_widget.numpad.state.reset();
+            };
         },
-        set_numpad_state: function(numpadState) {
-        	if (this.numpadState) {
-        		this.numpadState.unbind('set_value', this.set_value);
-        	}
-        	this.numpadState = numpadState;
-        	if (this.numpadState) {
-        		this.numpadState.bind('set_value', this.set_value, this);
-        		this.numpadState.reset();
-        	}
+        enable_numpad: function(){
+            this.disable_numpad();  //ensure we don't register the callbacks twice
+            this.numpad_state = this.pos_widget.numpad.state;
+            if(this.numpad_state){
+                this.numpad_state.reset();
+                this.numpad_state.bind('set_value',   this.set_value, this);
+            }
+                    
+        },
+        disable_numpad: function(){
+            if(this.numpad_state){
+                this.numpad_state.unbind('set_value',  this.set_value);
+                this.numpad_state.reset();
+            }
+        },
+        set_editable: function(editable){
+            this.editable = editable;
+            if(editable){
+                this.enable_numpad();
+            }else{
+                this.disable_numpad();
+                this.pos.get('selectedOrder').deselectLine();
+            }
         },
         set_value: function(val) {
         	var order = this.pos.get('selectedOrder');
-        	if (order.get('orderLines').length !== 0) {
-                var mode = this.numpadState.get('mode');
+        	if (this.editable && order.getSelectedLine()) {
+                var mode = this.numpad_state.get('mode');
                 if( mode === 'quantity'){
                     order.getSelectedLine().set_quantity(val);
                 }else if( mode === 'discount'){
@@ -194,80 +188,95 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         	}
         },
         change_selected_order: function() {
-            this.currentOrderLines.unbind();
             this.bind_orderline_events();
             this.renderElement();
         },
         bind_orderline_events: function() {
-            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('add', function(){ this.renderElement(true);}, this);
-            this.currentOrderLines.bind('remove', this.renderElement, this);
+            var lines = this.pos.get('selectedOrder').get('orderLines');
+                lines.unbind();
+                lines.bind('add', function(){ 
+                        this.numpad_state.reset();
+                        this.renderElement(true);
+                    },this);
+                lines.bind('remove', function(line){
+                        this.remove_orderline(line);
+                        this.numpad_state.reset();
+                        this.update_summary();
+                    },this);
+                lines.bind('change', function(line){
+                        this.rerender_orderline(line);
+                        this.update_summary();
+                    },this);
         },
         update_numpad: function() {
             this.selected_line = this.pos.get('selectedOrder').getSelectedLine();
             if (this.numpadState)
                 this.numpadState.reset();
         },
-        renderElement: function(goto_bottom) {
-            var self = this;
-            var scroller = this.$('.order-scroller')[0];
-            var scrollbottom = true;
-            var scrollTop = 0;
-            if(scroller){
-                var overflow_bottom = scroller.scrollHeight - scroller.clientHeight;
-                scrollTop = scroller.scrollTop;
-                if( !goto_bottom && scrollTop < 0.9 * overflow_bottom){
-                    scrollbottom = false;
-                }
-            }
-            this._super();
+        render_orderline: function(orderline){
+            var el_str  = openerp.qweb.render('Orderline',{widget:this, line:orderline}); 
+            var el_node = document.createElement('div');
+                el_node.innerHTML = _.str.trim(el_str);
+                el_node = el_node.childNodes[0];
+                el_node.orderline = orderline;
+                el_node.addEventListener('click',this.line_click_handler);
 
-            // freeing subwidgets
-            
-            for(var i = 0, len = this.orderlinewidgets.length; i < len; i++){
-                this.orderlinewidgets[i].destroy();
+            orderline.node = el_node;
+            return el_node;
+        },
+        remove_orderline: function(order_line){
+            if(this.pos.get('selectedOrder').get('orderLines').length === 0){
+                this.renderElement();
+            }else{
+                order_line.node.parentNode.removeChild(order_line.node);
             }
-            this.orderlinewidgets = [];
+        },
+        rerender_orderline: function(order_line){
+            var node = order_line.node;
+            var replacement_line = this.render_orderline(order_line);
+            node.parentNode.replaceChild(replacement_line,node);
+        },
+        replace: function($target){
+            this.renderElement();
+            var target = $target[0];
+            target.parentNode.replaceChild(this.el,target);
+        },
+        renderElement: function(scrollbottom){
+            this.pos_widget.numpad.state.reset();
 
-            var $content = this.$('.orderlines');
-            this.currentOrderLines.each(_.bind( function(orderLine) {
-                var line = new module.OrderlineWidget(this, {
-                        model: orderLine,
-                        order: this.pos.get('selectedOrder'),
-                });
-            	line.on('order_line_selected', self, self.update_numpad);
-                line.on('order_line_refreshed', self, self.update_summary);
-                line.appendTo($content);
-                self.orderlinewidgets.push(line);
-            }, this));
-            this.update_numpad();
+            var order  = this.pos.get('selectedOrder');
+            var orderlines = order.get('orderLines').models;
+
+            var el_str  = openerp.qweb.render('OrderWidget',{widget:this, order:order, orderlines:orderlines});
+            var el_node = document.createElement('div');
+                el_node.innerHTML = _.str.trim(el_str);
+                el_node = el_node.childNodes[0];
+
+            var list_container = el_node.querySelector('.orderlines');
+            for(var i = 0, len = orderlines.length; i < len; i++){
+                var orderline = this.render_orderline(orderlines[i]);
+                list_container.appendChild(orderline);
+            }
+
+            if(this.el && this.el.parentNode){
+                this.el.parentNode.replaceChild(el_node,this.el);
+            }
+            this.el = el_node;
             this.update_summary();
 
-            scroller = this.$('.order-scroller')[0];
-
-            if(scroller){
-                if(scrollbottom){
-                    scroller.scrollTop = scroller.scrollHeight - scroller.clientHeight;
-                }else{
-                    scroller.scrollTop = scrollTop;
-                }
+            if(scrollbottom){
+                this.el.querySelector('.order-scroller').scrollTop = 100 * orderlines.length;
             }
         },
         update_summary: function(){
             var order = this.pos.get('selectedOrder');
             var total     = order ? order.getTotalTaxIncluded() : 0;
             var taxes     = order ? total - order.getTotalTaxExcluded() : 0;
-            this.$('.summary .total > .value').html(this.format_currency(total));
-            this.$('.summary .total .subentry .value').html(this.format_currency(taxes));
-        },
-        set_display_mode: function(mode){
-            if(this.display_mode !== mode){
-                this.display_mode = mode;
-                this.renderElement();
-            }
+
+            this.el.querySelector('.summary .total > .value').innerText = this.format_currency(total);
+            this.el.querySelector('.summary .total .subentry .value').innerText = this.format_currency(taxes);
         },
     });
-
 
     module.PaymentlineWidget = module.PosBaseWidget.extend({
         template: 'PaymentlineWidget',
@@ -439,8 +448,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    module.CategoryButton = module.PosBaseWidget.extend({
-    });
     module.ProductCategoriesWidget = module.PosBaseWidget.extend({
         template: 'ProductCategoriesWidget',
         init: function(parent, options){
@@ -451,7 +458,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.category = this.pos.root_category;
             this.breadcrumb = [];
             this.subcategories = [];
+            this.product_list_widget = options.product_list_widget || null;
+            this.category_cache = {};
             this.set_category();
+            this.switch_category_handler = function(event){
+                self.set_category(self.pos.db.get_category_by_id(Number(this.dataset['categoryId'])));
+                self.renderElement();
+            };
         },
 
         // changes the category. if undefined, sets to root category
@@ -474,46 +487,77 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
 
         get_image_url: function(category){
-            return instance.session.url('/web/binary/image', {model: 'pos.category', field: 'image_medium', id: category.id});
+            return window.location.origin + '/web/binary/image?model=pos.category&field=image_medium&id='+category.id;
+        },
+
+        render_category: function( category, with_image ){
+            if(!this.category_cache[category.id]){
+
+                if(with_image){
+                    var image_url = this.get_image_url(category);
+                    var category_html = QWeb.render('CategoryButton',{ 
+                            widget:  this, 
+                            category: category, 
+                        });
+                        category_html = _.str.trim(category_html);
+                    var category_node = document.createElement('div');
+                        category_node.innerHTML = category_html;
+                        category_node = category_node.childNodes[0];
+                    var img = category_node.querySelector('img');
+                        img.parentNode.replaceChild(this.pos_widget.image_cache.get_image(image_url),img);
+                }else{
+                    var category_html = QWeb.render('CategorySimpleButton',{ 
+                            widget:  this, 
+                            category: category, 
+                        });
+                        category_html = _.str.trim(category_html);
+                    var category_node = document.createElement('div');
+                        category_node.innerHTML = category_html;
+                        category_node = category_node.childNodes[0];
+                }
+                this.category_cache[category.id] = category_node;
+            }
+            return this.category_cache[category.id];
+        },
+
+        replace: function($target){
+            this.renderElement();
+            var target = $target[0];
+            target.parentNode.replaceChild(this.el,target);
         },
 
         renderElement: function(){
             var self = this;
-            this._super();
+
+            var el_str  = openerp.qweb.render(this.template, {widget: this});
+            var el_node = document.createElement('div');
+                el_node.innerHTML = el_str;
+                el_node = el_node.childNodes[1];
+
+            if(this.el && this.el.parentNode){
+                this.el.parentNode.replaceChild(el_node,this.el);
+            }
+
+            this.el = el_node;
 
             var hasimages = false;  //if none of the subcategories have images, we don't display buttons with icons
-            _.each(this.subcategories, function(category){
-                if(category.image){
+            for(var i = 0; i < this.subcategories.length; i++){
+                if(this.subcategories[i].image){
                     hasimages = true;
+                    break;
                 }
-            });
+            }
 
-            _.each(this.subcategories, function(category){
-                if(hasimages){
-                    var button = QWeb.render('CategoryButton',{category:category});
-                    var button = _.str.trim(button);
-                    var button = $(button);
-                    button.find('img').replaceWith(self.pos_widget.image_cache.get_image(self.get_image_url(category)));
-                }else{
-                    var button = QWeb.render('CategorySimpleButton',{category:category});
-                    button = _.str.trim(button);    // we remove whitespace between buttons to fix spacing
-                    var button = $(button);
-                }
+            var list_container = el_node.querySelector('.category-list');
+            for(var i = 0, len = this.subcategories.length; i < len; i++){
+                list_container.appendChild(this.render_category(this.subcategories[i],hasimages));
+            };
 
-                button.appendTo(this.$('.category-list')).click(function(event){
-                    var id = category.id;
-                    var cat = self.pos.db.get_category_by_id(id);
-                    self.set_category(cat);
-                    self.renderElement();
-                });
-            });
-            // breadcrumb click actions
-            this.$(".oe-pos-categories-list a").click(function(event){
-                var id = $(event.target).data("category-id");
-                var category = self.pos.db.get_category_by_id(id);
-                self.set_category(category);
-                self.renderElement();
-            });
+            var buttons = el_node.querySelectorAll('.js-category-switch');
+            for(var i = 0; i < buttons.length; i++){
+                buttons[i].addEventListener('click',this.switch_category_handler);
+            }
+
 
             this.search_and_categories();
 
@@ -522,11 +566,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             }
         },
         
-        set_product_type: function(type){       // 'all' | 'weightable'
-            this.product_type = type;
-            this.reset_category();
-        },
-
         // resets the current category to the root category
         reset_category: function(){
             this.set_category();
@@ -536,7 +575,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         // empties the content of the search box
         clear_search: function(){
             var products = this.pos.db.get_product_by_category(this.category.id);
-            this.pos.get('products').reset(products);
+            this.product_list_widget.set_product_list(products);
             this.$('.searchbox input').val('').focus();
             this.$('.search-clear').fadeOut();
         },
@@ -547,9 +586,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             // find all products belonging to the current category
             var products = this.pos.db.get_product_by_category(this.category.id);
-            self.pos.get('products').reset(products);
+            this.product_list_widget.set_product_list(products);
 
 
+            /*
             var searchtimeout = null;
             // filter the products according to the search string
             this.$('.searchbox input').keyup(function(event){
@@ -562,17 +602,17 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     if(query){
                         if(event.which === 13){
                             if( self.pos.get('products').size() === 1 ){
-                                self.pos.get('selectedOrder').addProduct(self.pos.get('products').at(0));
+                                self.pos.get('selectedOrder').addProduct(self.pos.get('products').at(0)); // FIXME
                                 self.clear_search();
                             }
                         }else{
                             var products = self.pos.db.search_product_in_category(self.category.id, query);
-                            self.pos.get('products').reset(products);
+                            this.product_list_widget.set_product_list(products);
                             self.$('.search-clear').fadeIn();
                         }
                     }else{
                         var products = self.pos.db.get_product_by_category(self.category.id);
-                        self.pos.get('products').reset(products);
+                        this.product_list_widget.set_product_list(products);
                         self.$('.search-clear').fadeOut();
                     }
                 },200);
@@ -581,11 +621,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             //reset the search when clicking on reset
             this.$('.search-clear').click(function(){
                 self.clear_search();
-            });
+            });*/
         },
     });
 
-    module.ProductListWidget = module.ScreenWidget.extend({
+    module.ProductListWidget = module.PosBaseWidget.extend({
         template:'ProductListWidget',
         init: function(parent, options) {
             var self = this;
@@ -595,38 +635,65 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.weight = options.weight || 0;
             this.show_scale = options.show_scale || false;
             this.next_screen = options.next_screen || false;
-            this.click_product_action = options.click_product_action;
 
-            this.pos.get('products').bind('reset', function(){
-                self.renderElement();
-            });
+            this.click_product_handler = function(event){
+                var product = self.pos.db.get_product_by_id(this.dataset['productId']);
+                options.click_product_action(product);
+            };
+
+            this.product_list = options.product_list || [];
+            this.product_cache = {};
         },
+        set_product_list: function(product_list){
+            this.product_list = product_list;
+            this.renderElement();
+        },
+        get_product_image_url: function(product){
+            return window.location.origin + '/web/binary/image?model=product.product&field=image_medium&id='+product.id;
+        },
+        replace: function($target){
+            this.renderElement();
+            var target = $target[0];
+            target.parentNode.replaceChild(this.el,target);
+        },
+
+        render_product: function(product){
+            if(!this.product_cache[product.id]){
+                var image_url = this.get_product_image_url(product);
+                var product_html = QWeb.render('Product',{ 
+                        widget:  this, 
+                        product: product, 
+                    });
+                var product_node = document.createElement('div');
+                product_node.innerHTML = product_html;
+                product_node = product_node.childNodes[1];
+                var img = product_node.querySelector('img');
+                img.parentNode.replaceChild(this.pos_widget.image_cache.get_image(image_url),img);
+                this.product_cache[product.id] = product_node;
+            }
+            return this.product_cache[product.id];
+        },
+
         renderElement: function() {
             var self = this;
-            this._super();
 
-            var products = this.pos.get('products').models || [];
+            // this._super()
+            var el_str  = openerp.qweb.render(this.template, {widget: this});
+            var el_node = document.createElement('div');
+                el_node.innerHTML = el_str;
+                el_node = el_node.childNodes[1];
 
-            _.each(products,function(product,i){
-                var $product = $(QWeb.render('Product',{ widget:self, product: products[i] }));
-                $product.find('img').replaceWith(self.pos_widget.image_cache.get_image(products[i].get_image_url()));
-                $product.appendTo(self.$('.product-list'));
-            });
+            if(this.el && this.el.parentNode){
+                this.el.parentNode.replaceChild(el_node,this.el);
+            }
+            this.el = el_node;
 
-            this.$el.delegate('.product','touchstart',function TOUCHSTART(){ 
-                console.log('Touchstart',(new Date()).getTime());
-            });
-
-            this.$el.delegate('.product','touchend',function TOUCHEND(){ 
-                console.log('Touchend',(new Date()).getTime());
-            });
-
-            this.$el.delegate('.product','click',function TOUCHCLICK(){ 
-                console.log('ClickStart',(new Date()).getTime());
-                self.click_product_action(new module.Product(self.pos.db.get_product_by_id(+$(this).data('product-id')))); 
-                console.log('ClickEnd',(new Date()).getTime());
-            });
-
+            var list_container = el_node.querySelector('.product-list');
+            for(var i = 0, len = this.product_list.length; i < len; i++){
+                var product_node = this.render_product(this.product_list[i]);
+                product_node.addEventListener('click',this.click_product_handler);
+                list_container.appendChild(product_node);
+            };
         },
     });
 
@@ -1046,13 +1113,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     this.set_left_action_bar_visible(false);
                     this.numpad.show();
                     this.paypad.show();
-                    this.order_widget.set_display_mode('numpad');
                 }else{
                     this.numpad.hide();
                     this.paypad.hide();
-                    if(this.order_widget.display_mode === 'numpad'){
-                        this.order_widget.set_display_mode('maximized');
-                    }
                 }
             }
         },
@@ -1062,18 +1125,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 if(visible){
                     this.set_numpad_visible(false);
                     this.left_action_bar.show();
-                    this.order_widget.set_display_mode('actionbar');
                 }else{
                     this.left_action_bar.hide();
-                    if(this.order_widget.display_mode === 'actionbar'){
-                        this.order_widget.set_display_mode('maximized');
-                    }
                 }
-            }
-        },
-        set_fullscreen: function(){
-            if(this.el.webkitRequestFullscreen){
-                this.el.webkitRequestFullscreen();
             }
         },
         //shows or hide the leftpane (contains the list of orderlines, the numpad, the paypad, etc.)

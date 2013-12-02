@@ -137,7 +137,7 @@
     </t>
 
     <t t-name="CategoryButton">
-        <li class='category-button'>
+        <li class='category-button js-category-switch' t-att-data-category-id="category.id" >
             <div class="category-img">
                 <img src="" />
             </div>
@@ -148,23 +148,24 @@
     </t>
 
     <t t-name="CategorySimpleButton">
-        <li class='category-simple-button'>
+        <li class='category-simple-button js-category-switch' t-att-data-category-id="category.id" >
             <t t-esc="category.name"/>
         </li>
     </t>
 
     <t t-name="ProductCategoriesWidget">
+        <div>
         <header>
             <ol class="breadcrumb">
                 <li class="oe-pos-categories-list">
-                    <a href="javascript:void(0)">
+                    <a href="javascript:void(0)" class="js-category-switch">
                         <img src="/point_of_sale/static/src/img/home.png" class="homeimg" />
                     </a>
                 </li>
                 <t t-foreach="widget.breadcrumb" t-as="category">
                     <li class="oe-pos-categories-list">
                         <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow" />
-                        <a href="javascript:void(0)" t-att-data-category-id="category.id">
+                        <a href="javascript:void(0)" class="js-category-switch" t-att-data-category-id="category.id">
                             <t t-esc="category.name"/>
                         </a>
                     </li>
@@ -181,6 +182,7 @@
                 </ol>
             </div>
         </t>
+        </div>
     </t>
 
     <t t-name="ProductListWidget">
@@ -425,36 +427,21 @@
         <li class='product' t-att-data-product-id="product.id">
             <div class="product-img">
                 <img src='' /> <!-- the product thumbnail -->
-                <t t-if="!product.get('to_weight')">
+                <t t-if="!product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.get('price'))"/>
+                        <t t-esc="widget.format_currency(product.price)"/>
                     </span>
                 </t>
-                <t t-if="product.get('to_weight')">
+                <t t-if="product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.get('price'))+'/Kg'"/>
+                        <t t-esc="widget.format_currency(product.price)+'/Kg'"/>
                     </span>
                 </t>
             </div>
             <div class="product-name">
-                <t t-esc="product.get('name')"/>
+                <t t-esc="product.name"/>
             </div>
         </li>
-    </t>
-
-    <t t-name="ScrollbarWidget">
-        <div class='scrollbar'>
-            <div class='up-button button oe_e'>
-                &amp;atilde;
-            </div>
-
-            <div class='scroller'>
-            </div>
-
-            <div class='down-button button oe_e'>
-                &amp;auml;
-            </div>
-        </div>
     </t>
 
     <t t-name="OrderWidget">
@@ -462,15 +449,14 @@
             <div class="order-scroller">
                 <div class="order">
                     <ul class="orderlines">
-                        <t t-if="widget.pos.get('selectedOrder').get('orderLines').length === 0">
+                        <t t-if="orderlines.length === 0">
                             <li class="orderline empty">
                                 Your shopping cart is empty
                             </li>
                         </t>
-
                     </ul>
                     <div class="summary">
-                        <div t-attf-class="line #{widget.pos.get('selectedOrder').get('orderLines').length === 0 ? 'empty' : ''}">
+                        <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
                             <div class='entry total'>
                                 <span class="label">Total: </span> <span class="value">0.00 €</span>
                                 <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
@@ -480,8 +466,6 @@
                     </div>
                 </div>
             </div>
-            <div class="shadow-top"></div>
-            <span class="placeholder-ScrollbarWidget"></span>
         </div>
     </t>
 
@@ -538,32 +522,32 @@
         </div>
     </t>
 
-    <t t-name="OrderlineWidget">
-        <li class="orderline">
+    <t t-name="Orderline">
+        <li t-attf-class="orderline #{ line.selected ? 'selected' : '' }">
             <span class="product-name">
-                <t t-esc="widget.model.get_product().get('name')"/>
+                <t t-esc="line.get_product().name"/>
             </span>
             <span class="price">
-                <t t-esc="widget.format_currency(widget.model.get_display_price())"/>
+                <t t-esc="widget.format_currency(line.get_display_price())"/>
             </span>
             <ul class="info-list">
-                <t t-if="widget.model.get_quantity_str() !== '1'">
+                <t t-if="line.get_quantity_str() !== '1' || line.selected ">
                     <li class="info">
                         <em>
-                            <t t-esc="widget.model.get_quantity_str()" />
+                            <t t-esc="line.get_quantity_str()" />
                         </em>
-                        <t t-esc="widget.model.get_unit().name" />
+                        <t t-esc="line.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(widget.model.get_unit_price())" />
+                        <t t-esc="widget.format_currency(line.get_unit_price())" />
                         /
-                        <t t-esc="widget.model.get_unit().name" />
+                        <t t-esc="line.get_unit().name" />
                     </li>
                 </t>
-                <t t-if="widget.model.get_discount_str() !== '0'">
+                <t t-if="line.get_discount_str() !== '0'">
                     <li class="info">
                         With a 
                         <em>
-                            <t t-esc="widget.model.get_discount_str()" />%
+                            <t t-esc="line.get_discount_str()" />%
                         </em>
                         discount
                     </li>
@@ -621,7 +605,7 @@
                 </colgroup>
                 <tr t-foreach="widget.currentOrderLines.toArray()" t-as="orderline">
                     <td>
-                        <t t-esc="orderline.get_product().get('name')"/>
+                        <t t-esc="orderline.get_product().name"/>
                          <t t-if="orderline.get_discount() > 0">
                             <div class="pos-disc-font">
                                 With a <t t-esc="orderline.get_discount()"/>% discount

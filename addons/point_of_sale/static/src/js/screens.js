@@ -634,7 +634,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                             }
 
                             var cashregister = selfCheckoutRegisters[0] || self.pos.get('cashRegisters').models[0];
-                            currentOrder.addPaymentLine(cashregister);
+                            currentOrder.add_payment_line(cashregister);
                             self.pos.push_order(currentOrder)
                             currentOrder.destroy();
                             self.pos.proxy.transaction_end();
@@ -745,19 +745,23 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         start: function(){ //FIXME this should work as renderElement... but then the categories aren't properly set. explore why
             var self = this;
-            this.product_categories_widget = new module.ProductCategoriesWidget(this,{});
-            this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
 
             this.product_list_widget = new module.ProductListWidget(this,{
                 click_product_action: function(product){
-                    if(product.get('to_weight') && self.pos.iface_electronic_scale){
+                    if(product.to_weight && self.pos.iface_electronic_scale){
                         self.pos_widget.screen_selector.set_current_screen( self.cashier_mode ? self.scale_screen : self.client_scale_screen, {product: product});
                     }else{
                         self.pos.get('selectedOrder').addProduct(product);
                     }
                 },
+                product_list: this.pos.db.get_product_by_category(0)
             });
             this.product_list_widget.replace($('.placeholder-ProductListWidget'));
+
+            this.product_categories_widget = new module.ProductCategoriesWidget(this,{
+                product_list_widget: this.product_list_widget,
+            });
+            this.product_categories_widget.replace($('.placeholder-ProductCategoriesWidget'));
         },
 
         show: function(){
@@ -766,7 +770,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.product_categories_widget.reset_category();
 
-            this.pos_widget.order_widget.set_numpad_state(this.pos_widget.numpad.state);
+            this.pos_widget.order_widget.set_editable(true);
 
             if(this.pos_widget.screen_selector.current_mode === 'client'){ 
                 this.add_action_button({
@@ -781,13 +785,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         close: function(){
             this._super();
-            this.pos_widget.order_widget.set_numpad_state(null);
-            this.pos_widget.payment_screen.set_numpad_state(null);
+
+            this.pos_widget.order_widget.set_editable(false);
+
             if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
                 this.pos_widget.onscreen_keyboard.hide();
             }
         },
-
     });
 
     module.ReceiptScreenWidget = module.ScreenWidget.extend({
@@ -811,8 +815,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show: function(){
             this._super();
             var self = this;
-
-            this.pos_widget.set_numpad_visible(false);
 
             var print_button = this.add_action_button({
                     label: _t('Print'),
@@ -876,7 +878,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         close: function(){
             this._super();
-            this.pos_widget.set_numpad_visible(true);
         }
     });
 
@@ -888,7 +889,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super(parent,options);
             this.model = options.model;
             this.pos.bind('change:selectedOrder', this.change_selected_order, this);
-            this.bindPaymentLineEvents();
+            this.bind_payment_line_events();
             this.bind_orderline_events();
             this.paymentlinewidgets = [];
             this.focusedLine = null;
@@ -899,7 +900,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.hotkey_handler = function(event){
                 if(event.which === 13){
-                    self.validateCurrentOrder();
+                    self.validate();
                 }else if(event.which === 27){
                     self.back();
                 }
@@ -912,8 +913,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     this.pos.proxy.open_cashbox();
             }
 
-            this.set_numpad_state(this.pos_widget.numpad.state);
-            
+            this.enable_numpad();
+
             this.add_action_button({
                     label: _t('Back'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
@@ -927,7 +928,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     name: 'validation',
                     icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
                     click: function(){
-                        self.validateCurrentOrder();
+                        self.validate();
                     },
                 });
            
@@ -937,7 +938,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         name: 'invoice',
                         icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
                         click: function(){
-                            self.validateCurrentOrder({invoice: true});
+                            self.validate({invoice: true});
                         },
                     });
             }
@@ -953,13 +954,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     });
             }
 
-            this.updatePaymentSummary();
+            this.update_payment_summary();
             this.line_refocus();
         },
         close: function(){
             this._super();
-            this.pos_widget.order_widget.set_numpad_state(null);
-            this.pos_widget.payment_screen.set_numpad_state(null);
+            this.disable_numpad();
             $('body').off('keyup',this.hotkey_handler);
         },
         back: function() {
@@ -970,13 +970,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             });
             this.pos_widget.screen_selector.set_current_screen(this.back_screen);
         },
-        validateCurrentOrder: function(options) {
+        validate: function(options) {
             var self = this;
             options = options || {};
 
             var currentOrder = this.pos.get('selectedOrder');
 
-            if(!this.isPaymentPaid()){
+            if(!this.is_paid()){
                 return;
             }
 
@@ -1018,19 +1018,19 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 $("input").blur();
             },250);
         },
-        bindPaymentLineEvents: function() {
+        bind_payment_line_events: function() {
             this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
-            this.currentPaymentLines.bind('add', this.addPaymentLine, this);
+            this.currentPaymentLines.bind('add', this.add_payment_line, this);
             this.currentPaymentLines.bind('remove', this.renderElement, this);
-            this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
+            this.currentPaymentLines.bind('all', this.update_payment_summary, this);
         },
         bind_orderline_events: function() {
             this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('all', this.updatePaymentSummary, this);
+            this.currentOrderLines.bind('all', this.update_payment_summary, this);
         },
         change_selected_order: function() {
             this.currentPaymentLines.unbind();
-            this.bindPaymentLineEvents();
+            this.bind_payment_line_events();
             this.currentOrderLines.unbind();
             this.bind_orderline_events();
             this.renderElement();
@@ -1045,7 +1045,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.focusedLine.focus();
             }
         },
-        addPaymentLine: function(newPaymentLine) {
+        add_payment_line: function(newPaymentLine) {
             var self = this;
             var l = new module.PaymentlineWidget(this, {
                     payment_line: newPaymentLine,
@@ -1069,21 +1069,21 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.paymentlinewidgets = [];
             
             this.currentPaymentLines.each(_.bind( function(paymentLine) {
-                this.addPaymentLine(paymentLine);
+                this.add_payment_line(paymentLine);
             }, this));
-            this.updatePaymentSummary();
+            this.update_payment_summary();
         },
         deleteLine: function(lineWidget) {
         	this.currentPaymentLines.remove([lineWidget.payment_line]);
             lineWidget.destroy();
         },
-        isPaymentPaid: function(){
+        is_paid: function(){
             var currentOrder = this.pos.get('selectedOrder');
             return (currentOrder.getTotalTaxIncluded() >= 0.000001 
                    && currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
 
         },
-        updatePaymentSummary: function() {
+        update_payment_summary: function() {
             var currentOrder = this.pos.get('selectedOrder');
             var paidTotal = currentOrder.getPaidTotal();
             var dueTotal = currentOrder.getTotalTaxIncluded();
@@ -1099,25 +1099,29 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }
                 
             if(this.pos_widget.action_bar){
-                this.pos_widget.action_bar.set_button_disabled('validation', !this.isPaymentPaid());
-                this.pos_widget.action_bar.set_button_disabled('invoice', !this.isPaymentPaid());
+                this.pos_widget.action_bar.set_button_disabled('validation', !this.is_paid());
+                this.pos_widget.action_bar.set_button_disabled('invoice', !this.is_paid());
             }
         },
-        set_numpad_state: function(numpadState) {
-        	if (this.numpadState) {
-        		this.numpadState.unbind('set_value', this.set_value);
-        		this.numpadState.unbind('change:mode', this.setNumpadMode);
-        	}
-        	this.numpadState = numpadState;
-        	if (this.numpadState) {
-        		this.numpadState.bind('set_value', this.set_value, this);
-        		this.numpadState.bind('change:mode', this.setNumpadMode, this);
-        		this.numpadState.reset();
-        		this.setNumpadMode();
-        	}
+        enable_numpad: function(){
+            this.disable_numpad();  //ensure we don't register the callbacks twice
+            this.numpad_state = this.pos_widget.numpad.state;
+            if(this.numpad_state){
+                this.numpad_state.reset();
+                this.numpad_state.changeMode('payment');
+                this.numpad_state.bind('set_value',   this.set_value, this);
+                this.numpad_state.bind('change:mode', this.set_mode_back_to_payment, this);
+            }
+                    
         },
-    	setNumpadMode: function() {
-    		this.numpadState.set({mode: 'payment'});
+        disable_numpad: function(){
+            if(this.numpad_state){
+                this.numpad_state.unbind('set_value',  this.set_value);
+                this.numpad_state.unbind('change:mode',this.set_mode_back_to_payment);
+            }
+        },
+    	set_mode_back_to_payment: function() {
+    		this.numpad_state.set({mode: 'payment'});
     	},
         set_value: function(val) {
         	this.currentPaymentLines.last().set_amount(val);

@@ -56,15 +56,12 @@ class PosController(http.Controller):
     @http.route('/pos/web', type='http', auth='none')
     def a(self, debug=False, **k):
 
-        print '\nDEBUG',debug,'\n'
 
         js_list = manifest_list('js',db=request.db, debug=debug)
         css_list =   manifest_list('css',db=request.db, debug=debug)
         
         print css_list
         print js_list
-
-        js_list = [ js for js in js_list if 'select2' not in js ]
 
         js = "\n".join('<script type="text/javascript" src="%s"></script>' % i for i in js_list)
         css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in css_list)
@@ -73,15 +70,18 @@ class PosController(http.Controller):
             'css': css,
             'modules': simplejson.dumps(module_boot(request.db)),
             'init': """
-                     window.navigator.standalone = true;
+                     console.log('LOADED');
                      var wc = new s.web.WebClient();
-                     wc.appendTo($(document.body));
                      wc.show_application = function(){
+                         console.log('SHOW APPLICATION');
                          wc.action_manager.do_action("pos.ui");
                      };
                      wc.show_login = function(){
+                         console.log('SHOW LOGIN');
                          window.location.href = '/';
                      }
+                     wc.appendTo($(document.body));
+                     console.log('APPENDED');
                      """
         }
         return r

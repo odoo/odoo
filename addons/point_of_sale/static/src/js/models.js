@@ -43,7 +43,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                 'orders':           new module.OrderCollection(),
                 //this is the product list as seen by the product list widgets, it will change based on the category filters
-                'products':         new module.ProductCollection(), 
                 'cashRegisters':    null, 
 
                 'bank_statements':  null,
@@ -444,11 +443,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
 
             if(parsed_code.type === 'price'){
-                selectedOrder.addProduct(new module.Product(product), {price:parsed_code.value});
+                selectedOrder.addProduct(product, {price:parsed_code.value});
             }else if(parsed_code.type === 'weight'){
-                selectedOrder.addProduct(new module.Product(product), {quantity:parsed_code.value, merge:false});
+                selectedOrder.addProduct(product, {quantity:parsed_code.value, merge:false});
             }else{
-                selectedOrder.addProduct(new module.Product(product));
+                selectedOrder.addProduct(product);
             }
             return true;
         },
@@ -461,16 +460,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         model: module.CashRegister,
     });
 
-    module.Product = Backbone.Model.extend({
-        get_image_url: function(){
-            return instance.session.url('/web/binary/image', {model: 'product.product', field: 'image_medium', id: this.get('id')});
-        },
-    });
-
-    module.ProductCollection = Backbone.Collection.extend({
-        model: module.Product,
-    });
-
     // An orderline represent one element of the content of a client's shopping cart.
     // An orderline contains a product, its quantity, its price, discount. etc. 
     // An Order contains zero or more Orderlines.
@@ -479,7 +468,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos = options.pos;
             this.order = options.order;
             this.product = options.product;
-            this.price   = options.product.get('price');
+            this.price   = options.product.price;
             this.quantity = 1;
             this.quantityStr = '1';
             this.discount = 0;
@@ -492,7 +481,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var disc = Math.min(Math.max(parseFloat(discount) || 0, 0),100);
             this.discount = disc;
             this.discountStr = '' + disc;
-            this.trigger('change');
+            this.trigger('change',this);
         },
         // returns the discount [0,100]%
         get_discount: function(){
@@ -522,7 +511,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     this.quantityStr = '' + this.quantity;
                 }
             }
-            this.trigger('change');
+            this.trigger('change',this);
         },
         // return the quantity of product
         get_quantity: function(){
@@ -541,7 +530,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         // return the unit of measure of the product
         get_unit: function(){
-            var unit_id = (this.product.get('uos_id') || this.product.get('uom_id'));
+            var unit_id = (this.product.uos_id || this.product.uom_id);
             if(!unit_id){
                 return undefined;
             }
@@ -558,7 +547,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // selects or deselects this orderline
         set_selected: function(selected){
             this.selected = selected;
-            this.trigger('change');
+            this.trigger('change',this);
         },
         // returns true if this orderline is selected
         is_selected: function(){
@@ -567,7 +556,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // when we add an new orderline we want to merge it with the last line to see reduce the number of items
         // in the orderline. This returns true if it makes sense to merge the two
         can_be_merged_with: function(orderline){
-            if( this.get_product().get('id') !== orderline.get_product().get('id')){    //only orderline of the same product can be merged
+            if( this.get_product().id !== orderline.get_product().id){    //only orderline of the same product can be merged
                 return false;
             }else if(this.get_product_type() !== orderline.get_product_type()){
                 return false;
@@ -587,7 +576,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 qty: this.get_quantity(),
                 price_unit: this.get_unit_price(),
                 discount: this.get_discount(),
-                product_id: this.get_product().get('id'),
+                product_id: this.get_product().id,
             };
         },
         //used to create a json of the ticket, to be sent to the printer
@@ -597,19 +586,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 unit_name:          this.get_unit().name,
                 price:              this.get_unit_price(),
                 discount:           this.get_discount(),
-                product_name:       this.get_product().get('name'),
+                product_name:       this.get_product().name,
                 price_display :     this.get_display_price(),
                 price_with_tax :    this.get_price_with_tax(),
                 price_without_tax:  this.get_price_without_tax(),
                 tax:                this.get_tax(),
-                product_description:      this.get_product().get('description'),
-                product_description_sale: this.get_product().get('description_sale'),
+                product_description:      this.get_product().description,
+                product_description_sale: this.get_product().description_sale,
             };
         },
         // changes the base price of the product for this orderline
         set_unit_price: function(price){
             this.price = round_di(parseFloat(price) || 0, 2);
-            this.trigger('change');
+            this.trigger('change',this);
         },
         get_unit_price: function(){
             var rounding = this.pos.get('currency').rounding;
@@ -637,8 +626,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             var product_list = this.pos.get('product_list');
             var product =  this.get_product(); 
-            var taxes_ids = product.get('taxes_id');;
-            var taxes =  self.pos.get('taxes');
+            var taxes_ids = product.taxes_id;
+            var taxes =  self.pos.taxes;
             var taxtotal = 0;
             _.each(taxes_ids, function(el) {
                 var tax = _.detect(taxes, function(t) {return t.id === el;});
@@ -749,7 +738,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         addProduct: function(product, options){
             options = options || {};
-            var attr = product.toJSON();
+            var attr = JSON.parse(JSON.stringify(product));
             attr.pos = this.pos;
             attr.order = this;
             var line = new module.Orderline({}, {pos: this.pos, order: this, product: product});
@@ -948,6 +937,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     this.selected_orderline.set_selected(true);
                 }
             }else{
+                this.selected_orderline = undefined;
+            }
+        },
+        deselectLine: function(){
+            if(this.selected_orderline){
+                this.selected_orderline.set_selected(false);
                 this.selected_orderline = undefined;
             }
         },
