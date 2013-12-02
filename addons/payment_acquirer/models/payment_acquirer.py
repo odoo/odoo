@@ -56,6 +56,12 @@ class PaymentAcquirer(osv.Model):
             string='Environment'),
         'portal_published': fields.boolean('Visible in Portal',
                                            help="Make this payment acquirer available (Customer invoices, etc.)"),
+        # Fees
+        'fees_active': fields.boolean('Compute fees'),
+        'fees_dom_fixed': fields.float('Fixed domestic fees'),
+        'fees_dom_var': fields.float('Variable domestic fees (in percents)'),
+        'fees_int_fixed': fields.float('Fixed international fees'),
+        'fees_int_var': fields.float('Variable international fees (in percents)'),
     }
 
     _defaults = {

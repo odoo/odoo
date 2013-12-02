@@ -19,17 +19,6 @@
                             <field name="paypal_api_password"
                                 attrs="{'invisible': [('paypal_api_enabled', '=', False)]}"/>
                         </group>
-                        <group>
-                            <field name="paypal_fee_active"/>
-                            <field name="paypal_fee_dom_fixed"
-                                attrs="{'invisible': [('paypal_fee_active', '=', False)]}"/>
-                            <field name="paypal_fee_dom_var"
-                                attrs="{'invisible': [('paypal_fee_active', '=', False)]}"/>
-                            <field name="paypal_fee_int_fixed"
-                                attrs="{'invisible': [('paypal_fee_active', '=', False)]}"/>
-                            <field name="paypal_fee_int_var"
-                                attrs="{'invisible': [('paypal_fee_active', '=', False)]}"/>
-                        </group>
                     </group>
                 </xpath>
             </field>

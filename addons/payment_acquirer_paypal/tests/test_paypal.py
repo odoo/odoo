@@ -145,7 +145,7 @@ class PaypalForm(PaypalCommon):
     def test_11_paypal_form_with_fees(self):
         cr, uid, context = self.cr, self.uid, {}
         self.payment_acquirer.write(cr, uid, self.paypal_id, {
-            'paypal_fee_active': True,
+            'fees_active': True,
         }, context)
 
         # be sure not to do stupid things
@@ -168,7 +168,7 @@ class PaypalForm(PaypalCommon):
             if form_input.get('name') in ['handling']:
                 handling_found = True
                 self.assertEqual(form_input.get('value'), '0.84', 'paypal: wrong computed fees')
-        self.assertTrue(handling_found, 'paypal: paypal_fee_active did not add handling input in rendered form')
+        self.assertTrue(handling_found, 'paypal: fees_active did not add handling input in rendered form')
 
     @mute_logger('openerp.addons.payment_acquirer_paypal.models.paypal', 'ValidationError')
     def test_20_paypal_form_management(self):

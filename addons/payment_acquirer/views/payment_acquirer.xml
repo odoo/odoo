@@ -17,10 +17,19 @@
                             <group>
                                 <field name="name"/>
                                 <field name="company_id"/>
-                            </group>
-                            <group>
                                 <field name="portal_published"/>
                                 <field name="env"/>
+                            </group>
+                            <group>
+                                <field name="fees_active"/>
+                                <field name="fees_dom_fixed"
+                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <field name="fees_dom_var"
+                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <field name="fees_int_fixed"
+                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <field name="fees_int_var"
+                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
                             </group>
                         </group>
                         <group name="acquirer_display">
