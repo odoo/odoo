@@ -720,7 +720,7 @@ class product_product(osv.osv):
     def create(self, cr, uid, data, context=None):
         if 'product_tmpl_id' in data:
             template = self.pool.get('product.template').browse(cr, uid, data['product_tmpl_id'], context=context)
-            if template.image:
+            if template.image and not 'image' in data:
                 data['image'] = template.image
         return super(product_product, self).create(cr, uid, data, context=context)
 
