@@ -77,10 +77,15 @@ class ScopeProxy(object):
             self._local.scopes = scopes = []
             return scopes
 
-    def invalidate(self, model, field, ids=None):
-        """ Invalidate a field for the given record ids in the caches. """
+    def invalidate(self, spec):
+        """ Invalidate some fields for some records in the caches.
+
+            :param spec: what to invalidate, a list of `(field, ids)` pair,
+                where `field` is a field object, and `ids` is a list of record
+                ids or ``None`` (to invalidate all records).
+        """
         for scope in self.all_scopes:
-            scope.invalidate(model, field, ids)
+            scope.invalidate(spec)
 
     def invalidate_all(self):
         """ Invalidate the record caches in all scopes. """
@@ -228,13 +233,19 @@ class Scope(object):
         """ return the current language code """
         return self.context.get('lang') or 'en_US'
 
-    def invalidate(self, model_name, field_name, ids=None):
-        """ Invalidate a field for the given record ids in the cache. """
-        model_cache = self.cache[model_name]
-        if ids is None:
-            ids = model_cache.keys()
-        for id in ids:
-            model_cache[id].pop(field_name, None)
+    def invalidate(self, spec):
+        """ Invalidate some fields for some records in the cache of `self`.
+
+            :param spec: what to invalidate, a list of `(field, ids)` pair,
+                where `field` is a field object, and `ids` is a list of record
+                ids or ``None`` (to invalidate all records).
+        """
+        for field, ids in spec:
+            model_cache = self.cache[field.model_name]
+            if ids is None:
+                ids = model_cache.keys()
+            for id in ids:
+                model_cache[id].pop(field.name, None)
 
     def invalidate_all(self):
         """ Invalidate the cache. """

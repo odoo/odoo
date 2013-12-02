@@ -33,7 +33,7 @@ import openerp.osv.orm
 import openerp.tools
 import openerp.modules.db
 import openerp.tools.config
-from openerp.tools import assertion_report
+from openerp.tools import assertion_report, lazy_property
 
 _logger = logging.getLogger(__name__)
 
@@ -100,6 +100,16 @@ class Registry(Mapping):
         """ Return the model with the given name or raise KeyError if it doesn't exist."""
         return self.models[model_name]
 
+    @lazy_property
+    def pure_function_fields(self):
+        """ Return the list of pure function fields (field objects) """
+        fields = []
+        for mname, fnames in self._pure_function_fields.iteritems():
+            model_fields = self[mname]._fields
+            for fname in fnames:
+                fields.append(model_fields[fname])
+        return fields
+
     def do_parent_store(self, cr):
         for o in self._init_parent:
             self.get(o)._parent_store_compute(cr)
@@ -123,6 +133,7 @@ class Registry(Mapping):
 
         """
         models_to_load = [] # need to preserve loading order
+        lazy_property.reset_all(self)
 
         with openerp.osv.scope.Scope(cr, SUPERUSER_ID, None):
             # call hook before adding stuff in the registry

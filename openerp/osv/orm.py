@@ -5678,14 +5678,14 @@ class BaseModel(object):
         if fnames is None:
             if ids is None:
                 return scope_proxy.invalidate_all()
-            fnames = self._fields.keys()
+            fields = self._fields.values()
+        else:
+            fields = map(self._fields.__getitem__, fnames)
 
-        for fname in fnames:
-            scope_proxy.invalidate(self._name, fname, ids)
-            # invalidate inverse fields, too
-            inv = self._fields[fname].inverse_field
-            if inv:
-                scope_proxy.invalidate(inv.model_name, inv.name, None)
+        # invalidate fields and inverse fields, too
+        spec = [(f, ids) for f in fields] + \
+               [(f.inverse_field, None) for f in fields if f.inverse_field]
+        scope_proxy.invalidate(spec)
 
     @api.multi
     def modified(self, fnames):
@@ -5697,13 +5697,14 @@ class BaseModel(object):
                 records `self`
         """
         # each field knows what to invalidate and recompute
+        spec = []
         for fname in fnames:
-            self._fields[fname].modified(self)
+            spec += self._fields[fname].modified(self)
 
         # HACK: invalidate all non-stored fields.function
-        for mname, fnames in self.pool._pure_function_fields.iteritems():
-            for fname in fnames:
-                scope_proxy.invalidate(mname, fname, None)
+        spec += [(f, None) for f in self.pool.pure_function_fields]
+
+        scope_proxy.invalidate(spec)
 
     def recompute(self):
         """ Recompute stored function fields. The fields and records to

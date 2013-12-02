@@ -479,12 +479,13 @@ class Field(object):
     #
 
     def modified(self, records):
-        """ Notify that field `self` has been modified on `records`: invalidate
-            the cache, and prepare the fields/records to recompute.
+        """ Notify that field `self` has been modified on `records`: prepare the
+            fields/records to recompute, and return a spec indicating what to
+            invalidate.
         """
         # invalidate cache for self
         ids = records.unbrowse()
-        scope.invalidate(self.model_name, self.name, ids)
+        spec = [(self, ids)]
 
         # invalidate the fields that depend on self, and prepare their
         # recomputation
@@ -492,10 +493,12 @@ class Field(object):
             if field.store:
                 with scope(user=SUPERUSER_ID, context={'active_test': False}):
                     target = field.model.search([(path, 'in', ids)])
-                scope.invalidate(field.model_name, field.name, target.unbrowse())
+                spec.append((field, target.unbrowse()))
                 scope.recomputation.todo(field, target)
             else:
-                scope.invalidate(field.model_name, field.name, None)
+                spec.append((field, None))
+
+        return spec
 
     def modified_draft(self, records):
         """ Same as :meth:`modified`, but in draft mode. """
@@ -761,10 +764,10 @@ class _Relational(Field):
         # Invalidate cache for self.inverse_field, too. Note that recomputation
         # of fields that depend on self.inverse_field is already covered by the
         # triggers (see above).
-        super(_Relational, self).modified(records)
+        spec = super(_Relational, self).modified(records)
         if self.inverse_field:
-            inv = self.inverse_field
-            scope.invalidate(inv.model_name, inv.name, None)
+            spec.append((self.inverse_field, None))
+        return spec
 
 
 class Many2one(_Relational):
