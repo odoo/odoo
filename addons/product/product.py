@@ -474,16 +474,11 @@ class product_template(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        template = self.read(cr, uid, id, ['name', 'product_variant_ids'], context=context)
-        default = default.copy()
-        default.update(name=_("%s (copy)") % (template['name']))
-        id = super(product_template, self).copy(cr, uid, id, default=default, context=context)
-        '''Note: while copy a template at that time create variants(product) 
-        with old value. and due to inherits product_tmpl_id, It's update the 
-        new template name. So we are update new template name with copy.'''
-        if template['product_variant_ids']:
-            self.write(cr, uid, id, default, context)
-        return id
+        #TOFIX: it should be pass default={'name': _("%s (copy)") % (template['name'])}.
+        template = self.read(cr, uid, id, ['name'], context=context)
+        res = super(product_template, self).copy(cr, uid, id, default=default, context=context)
+        self.write(cr, uid, res, {'name': _("%s (copy)") % (template['name'])}, context=context)
+        return res
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
@@ -908,8 +903,7 @@ class product_product(osv.osv):
           Just skip the identical IDs.
           """
         if old_id == new_id:
-            return
-        super(product_product, self).copy_translations(cr, uid, old_id, new_id, context=context)
+            return super(product_product, self).copy_translations(cr, uid, old_id, new_id, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
