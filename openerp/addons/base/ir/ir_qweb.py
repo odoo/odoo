@@ -693,12 +693,11 @@ class ManyToOneConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.many2one'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, column, options=None, context=None):
-        # value may be a browse_null
-        if not value: return ''
-        name_got = value._model.name_get(
-            cr, openerp.SUPERUSER_ID, value.id, context=context)[0][1]
-        return werkzeug.utils.escape(name_got).replace('\n', '<br>\n')
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        [read] = record.read([field_name])
+        _, value = read[field_name]
+
+        return werkzeug.utils.escape(value).replace('\n', '<br>\n')
 
 class HTMLConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.html'

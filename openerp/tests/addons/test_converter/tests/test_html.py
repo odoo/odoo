@@ -209,15 +209,27 @@ class TestTextExport(TestBasicExport):
 
 class TestMany2OneExport(TestBasicExport):
     def test_many2one(self):
-        converter = self.get_converter('many2one')
         Sub = self.registry('test_converter.test_model.sub')
 
-        id0 = Sub.create(self.cr, self.uid, {'name': "Foo"})
-        value = converter(Sub.browse(self.cr, self.uid, id0))
+
+        id0 = self.Model.create(self.cr, self.uid, {
+            'many2one': Sub.create(self.cr, self.uid, {'name': "Foo"})
+        })
+        id1 = self.Model.create(self.cr, self.uid, {
+            'many2one': Sub.create(self.cr, self.uid, {'name': "Fo<b>o</b>"})
+        })
+
+        def converter(record):
+            column = self.get_column('many2one')
+            model = self.registry('ir.qweb.field.many2one')
+
+            return model.record_to_html(
+                self.cr, self.uid, 'many2one', record, column)
+
+        value = converter(self.Model.browse(self.cr, self.uid, id0))
         self.assertEqual(value, "Foo")
 
-        id1 = Sub.create(self.cr, self.uid, {'name': "Fo<b>o</b>"})
-        value = converter(Sub.browse(self.cr, self.uid, id1))
+        value = converter(self.Model.browse(self.cr, self.uid, id1))
         self.assertEqual(value, "Fo&lt;b&gt;o&lt;/b&gt;")
 
 class TestBinaryExport(TestBasicExport):
