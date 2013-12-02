@@ -37,7 +37,6 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 from openerp.tools.translate import _
 
 
-    
 def get_recurrent_dates(rrulestring, startdate, exdate=None, tz=None, context=None):
     """Get recurrent dates based on Rule string considering exdate and start date.
     
@@ -75,8 +74,11 @@ def get_recurrent_dates(rrulestring, startdate, exdate=None, tz=None, context=No
     for date in exdate:
         datetime_obj = todate(date)
         rset1._exdate.append(datetime_obj)
-            
+    
+    print "CASE 1 ", [d.astimezone(pytz.UTC) for d in rset1]
+    print "CASE 2 ", [d for d in rset1]        
     return [d.astimezone(pytz.UTC) for d in rset1]
+
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
     """
@@ -401,77 +403,7 @@ class res_partner(osv.osv):
         partner = self.pool.get('res.users').browse(cr,uid,uid,context=context).partner_id;
         self.write(cr,uid,partner.id,{'cal_last_notif' : datetime.now() } ,context=context)
         return "OK"
-# 
-#     def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
-#                        context=None):
-#         """Scheduler for event reminder
-#         @param ids: List of calendar alarm's IDs.
-#         @param use_new_cursor: False or the dbname
-#         """
-#         if context is None:
-#             context = {}
-#         current_datetime = datetime.now()
-#         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
-# 
-#         mail_to = ""
-# 
-#         for alarm in self.browse(cr, uid, alarm_ids, context=context):
-#             next_trigger_date = None
-#             update_vals = {}
-#             model_obj = self.pool[alarm.model_id.model]
-#             res_obj = model_obj.browse(cr, uid, alarm.res_id, context=context)
-#             re_dates = []
-# 
-#             if hasattr(res_obj, 'rrule') and res_obj.rrule:
-#                 recurrent_dates = get_recurrent_dates(res_obj.rrule, res_obj.date, res_obj.exdate, res_obj.vtimezone, res_obj.exrule, context=context)
-# 
-#                 trigger_interval = alarm.interval
-#                 if trigger_interval == 'days':
-#                     delta = timedelta(days=alarm.duration)
-#                 if trigger_interval == 'hours':
-#                     delta = timedelta(hours=alarm.duration)
-#                 if trigger_interval == 'minutes':
-#                     delta = timedelta(minutes=alarm.duration)
-#                 
-#                 for rdate in recurrent_dates:
-#                     if rdate + delta > current_datetime:
-#                         break
-#                     if rdate + delta <= current_datetime:
-#                         re_dates.append(rdate.strftime("%Y-%m-%d %H:%M:%S"))
-#                 rest_dates = recurrent_dates[len(re_dates):]
-#                 next_trigger_date = rest_dates and rest_dates[0] or None
-# 
-#             else:
-#                 re_dates = [alarm.date]
-# 
-#             if re_dates:
-#                 if alarm.action == 'email':
-#                     sub = '[OpenERP Reminder] %s' % (alarm.name)
-#                     body = """<pre>Event: %s    
-#                                     Event Date: %s
-#                                     Description: %s
-#                                     From: %s                                
-#                                     ----
-#                                     %s
-#                               </pre>"""  % (alarm.name, alarm.trigger_date, alarm.description, alarm.user_id.name, alarm.user_id.signature)
-#                     mail_to = alarm.user_id.email
-#                     for att in alarm.attendee_ids:
-#                         mail_to = mail_to + " " + att.user_id.email
-#                     if mail_to:
-#                         vals = {
-#                             'state': 'outgoing',
-#                             'subject': sub,
-#                             'body_html': body,
-#                             'email_to': mail_to,
-#                             'email_from': tools.config.get('email_from', mail_to),
-#                         }
-#                         self.pool.get('mail.mail').create(cr, uid, vals, context=context)
-#             if next_trigger_date:
-#                 update_vals.update({'trigger_date': next_trigger_date})
-#             else:
-#                 update_vals.update({'state': 'done'})
-#             self.write(cr, uid, [alarm.id], update_vals)
-#         return True
+
 
 class calendar_alarm_manager(osv.osv):
     _name = 'calendar.alarm_manager'
@@ -1583,6 +1515,7 @@ class crm_meeting(osv.Model):
             
         default = default or {}
         default['attendee_ids'] = False
+        
         
         res = super(crm_meeting, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
         return res        
