@@ -1,0 +1,17 @@
+<template>
+    <t t-extend="CalendarView.sidebar">
+        <t t-jquery="div.oe_calendar_mini" t-operation="after">
+            
+            <div id="sync" class="oe_dhx_cal_sync_button dhx_cal_tab " >
+                <br/>
+                <center>
+                    <button class="oe_button">
+                        <span>
+                            <img src="/google_calendar/static/src/img/calendar_32.png"/> Sync with <b>Google</b>
+                        </span>
+                    </button>
+                </center>
+            </div>
+        </t>
+    </t>
+</template>

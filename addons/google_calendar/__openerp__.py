@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2012 OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,45 +19,27 @@
 #
 ##############################################################################
 
+
 {
-    'name': 'Calendar',
+    'name': 'Google Calendar',
     'version': '1.0',
-    'depends': ['base', 'mail', 'base_action_rule','web_calendar'],
-    'summary': 'Personal & Shared Calendar',
+    'category': 'Tools',
     'description': """
-This is a full-featured calendar system.
+The module adds the possibility to synchronize Google Calendar with OpenERP 
 ========================================
-
-It supports:
-------------
-    - Calendar of events
-    - Recurring events
-
-If you need to manage your meetings, you should install the CRM module.
-    """,
+""",
     'author': 'OpenERP SA',
-    'category': 'Hidden/Dependency',
     'website': 'http://www.openerp.com',
-    'demo': ['crm_meeting_demo.xml'],
-    'data': [
-        'security/calendar_security.xml',
-        'security/ir.model.access.csv',
-        'crm_meeting_view.xml',
-        'base_calendar_data.xml',        
-        'res_config_view.xml',
-    ],
-    'js': [
-        'static/src/js/*.js'
-    ],
+    'depends': ['base_calendar'],
+    'js': ['static/src/js/*.js'],
     'qweb': ['static/src/xml/*.xml'],
-    'css': [
-        'static/src/css/base_calender.css'
-    ],
-    #'test' : ['test/base_calendar_test.yml'],
+    'data': [
+             'google_calendar_view.xml', 
+             'google_calendar_data.xml',
+             'wizard/crm_meeting_view.xml',
+            ],
+    'demo': [],
     'installable': True,
-    'application': True,
     'auto_install': False,
-    'images': ['images/base_calendar1.jpeg','images/base_calendar2.jpeg','images/base_calendar3.jpeg','images/base_calendar4.jpeg'],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

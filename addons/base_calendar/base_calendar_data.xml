@@ -17,35 +17,30 @@
         
         <record model="calendar.alarm" id="alarm_notif_1">
             <field name="name">15 min notif</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="15" />
             <field name="interval">minutes</field>
-            <field name="type">notification</field>            
+            <field name="type">notification</field>                       
         </record>        
         <record model="calendar.alarm" id="alarm_notif_2">
             <field name="name">30 min notif</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="30" />
             <field name="interval">minutes</field>
             <field name="type">notification</field>            
         </record>        
         <record model="calendar.alarm" id="alarm_notif_3">
             <field name="name">1 hour notif</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="1" />
             <field name="interval">hours</field>
             <field name="type">notification</field>            
         </record>        
         <record model="calendar.alarm" id="alarm_notif_4">
             <field name="name">2 hours notif</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="2" />
             <field name="interval">hours</field>
             <field name="type">notification</field>            
         </record>        
         <record model="calendar.alarm" id="alarm_notif_5">
             <field name="name">1 day notif</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="1" />
             <field name="interval">days</field>
             <field name="type">notification</field>            
@@ -54,35 +49,30 @@
         
         <record model="calendar.alarm" id="alarm_mail_1">
             <field name="name">15 min mail</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="15" />
             <field name="interval">minutes</field>
             <field name="type">email</field>            
         </record>        
         <record model="calendar.alarm" id="alarm_mail_2">
             <field name="name">30 min mail</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="30" />
             <field name="interval">minutes</field>
             <field name="type">email</field>            
         </record>        
         <record model="calendar.alarm" id="alarm_mail_3">
             <field name="name">1 hour mail</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="1" />
             <field name="interval">hours</field>
             <field name="type">email</field>            
         </record>        
         <record model="calendar.alarm" id="alarm_mail_4">
             <field name="name">2 hours mail</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="2" />
             <field name="interval">hours</field>
             <field name="type">email</field>            
         </record>        
         <record model="calendar.alarm" id="alarm_mail_5">
             <field name="name">1 day mail</field>
-            <field name="active" eval="1" />
             <field name="duration" eval="1" />
             <field name="interval">days</field>
             <field name="type">email</field>            
@@ -349,10 +339,10 @@
                     <body>
                         <div style="border-radius: 2px; max-width: 1200px; height: auto;margin-left: auto;margin-right: auto;background-color:#f9f9f9;">
                             <div style="height:auto;text-align: center;font-size : 30px;color: #8A89BA;">
-                                <strong>REMINDER : ${object.name}</strong>
+                                <strong>${object.name}</strong>
                             </div>
                             <div style="height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px">
-                                <strong style="margin-left:12px">Hello ${ctx['att_obj'].cn}</strong> ,<br/><p style="margin-left:12px">${object.organizer} invited you for the ${object.name} meeting of ${object.user_id.company_id.name}.</p>
+                                <strong style="margin-left:12px">Hello ${ctx['att_obj'].cn}</strong> ,<br/><p style="margin-left:12px">${object.user_id.partner_id.name} invited you for the ${object.name} meeting of ${object.user_id.company_id.name}.</p> 
                             </div>
                             <div style="height: auto;margin-left:12px;margin-top:30px;">
                                 <table>
@@ -367,7 +357,7 @@
                                         </td>
                                         <td>
                                             <table cellspacing="0" cellpadding="0" border="0" style="margin-top: 15px; margin-left: 10px;font-size: 16px;">
-                                                % if object.location :
+                                                % if object.location:
                                                     <tr style=" height: 30px;">
                                                         <td style="vertical-align:top;">
                                                             <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
@@ -379,20 +369,6 @@
                                                                 : ${object.location}
                                                                 <span style= "color:#A9A9A9; ">(<a href="http://maps.google.com/maps?oi=map&q=${object.location}">View Map</a>)
                                                                     </span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                % endif
-                                                % if not object.location :
-                                                    <tr style=" height: 30px;color:#909090">
-                                                        <td>
-                                                            <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                                Where
-                                                            </div>
-                                                        </td>
-                                                        <td colspan="1">
-                                                            <div style = "font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px;" >
-                                                                : -
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -410,21 +386,7 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                % endif
-                                                % if not object.description :
-                                                    <tr style=" height: 30px;color:#909090">
-                                                        <td style="vertical-align:top;">
-                                                            <div style="height: 25px; width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                                What
-                                                            </div>
-                                                        </td>
-                                                        <td colspan="3" style="vertical-align:text-top;">
-                                                            <div style="font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                                : -
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                % endif
+                                                % endif 
                                                 <tr style=" height: 30px;">
                                                     <td style="height: 25px;width: 120px; background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;">
                                                         <div>
@@ -447,6 +409,13 @@
                                         </td>
                                     </tr>
                                 </table>
+                            </div>
+                            <div style="height: auto;width:300px; margin:0 auto;padding-top:20px;">
+                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/meeting_invitation/accept?db=${ctx['dbname']}&token=${ctx['att_obj'].access_token}&action=${ctx['action_id']}&id=${object.id}">Accept</a>
+                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/meeting_invitation/decline?db=${ctx['dbname']}&token=${ctx['att_obj'].access_token}&action=${ctx['action_id']}&id=${object.id}">Decline</a>
+                            </div>
+                            <div style="padding-top:10px;">
+                                -- </br>  Sent by ${object.user_id.name} from ${object.user_id.company_id.name}. View this meeting detail <a href="${ctx['base_url']}/meeting_invitation/view?db=${ctx['dbname']}&token=${ctx['att_obj'].access_token}&action=${ctx['action_id']}&id=${object.id}">directly in OpenERP.</a>
                             </div>
                         </div>
                     </body>

@@ -1509,7 +1509,6 @@ class crm_meeting(osv.Model):
                     self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), subtype="base_calendar.subtype_invitation", context=context)
         return;
     
-
     def get_attendee(self, cr, uid, meeting_id, context=None):
         #Used for view in controller 
         invitation = {'meeting':{}, 'attendee': [], 'logo': ''}
@@ -1650,13 +1649,11 @@ class crm_meeting(osv.Model):
                 end_date = self._get_recurrency_end_date(data, context=context)
                 super(crm_meeting, self).write(cr, uid, [data['id']], {'end_date': end_date}, context=context)
         
-        attendees_create = False
-        
+        attendees_create = False        
         if values.get('partner_ids', False):
             attendees_create = self.create_attendees(cr, uid, ids, context)
-        
-        print values
-        if values.get('date', False):
+
+        if values.get('date', False) and not context.get('install_mode',False): #Not send mail when install data
             print 'Id notified (ids|new_id)  : ',ids,"|",new_id
             the_id = new_id or (ids and int(ids[0]));
              
@@ -1799,7 +1796,8 @@ class crm_meeting(osv.Model):
         res = super(crm_meeting, self).unlink(cr, uid, ids, context=context)
         self.unlink_events(cr, uid, ids, context=context)
         return res
-
+    
+    
               
 # class mail_mail(osv.osv):
 #     _inherit = "mail.mail"

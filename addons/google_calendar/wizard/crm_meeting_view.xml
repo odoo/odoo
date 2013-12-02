@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_crm_meeting_google_synchronize" model="ir.ui.view">
+            <field name="name">Synchronize Events to Google</field>
+            <field name="model">crm.meeting.synchronize</field>
+            <field name="arch" type="xml">
+                <form string="Synchronize Events to Google" version="7.0">
+                    <group string="This wizard will synchronize Events to Google Calendar">
+                    </group>
+                    <footer>
+                        <button name="synchronize_events" string="Synchronize" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_crm_meeting_google_synchronize" model="ir.actions.act_window">
+            <field name="name">Synchronize Events to Google</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.meeting.synchronize</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_crm_meeting_google_synchronize"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem name="Synchronize with Google"
+            id="mail_menu_calendar_synch" parent="mail.mail_my_stuff"
+            sequence="10" action="action_crm_meeting_google_synchronize"/>
+    </data>
+</openerp>
