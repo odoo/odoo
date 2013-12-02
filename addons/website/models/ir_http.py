@@ -30,6 +30,7 @@ class ir_http(orm.AbstractModel):
             request.uid = request.session.uid
 
     def _dispatch(self):
+        first_pass = not hasattr(request, 'website')
         request.website = None
         func = None
         try:
@@ -47,7 +48,7 @@ class ir_http(orm.AbstractModel):
                 self._auth_method_public()
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
             langs = [lg.code for lg in request.website.language_ids]
-            if not hasattr(request, 'lang'):
+            if first_pass:
                 request.lang = request.website.default_lang_id.code
             request.context['lang'] = request.lang
             request.website.preprocess_request(request)
