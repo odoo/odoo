@@ -63,24 +63,32 @@ class table_compute(object):
         # Compute products positions on the grid
         minpos = 0
         index = 0
+        maxy = 0
         for p in products:
             x = p.website_size_x
             y = p.website_size_y
             if index>PPG:
                 x = y = 1
+
             pos = minpos
             while not self._check_place(pos%PPR, pos/PPR, x, y):
                 pos += 1
+
+            if index>PPG and (pos/PPR)>maxy:
+                break
+
             if x==1 and y==1:   # simple heuristic for CPU optimization
                 minpos = pos/PPR
 
             for y2 in range(y):
                 for x2 in range(x):
                     self.table[(pos/PPR)+y2][(pos%PPR)+x2] = False
-            row = self.table[pos/PPR][pos%PPR] = {
+            self.table[pos/PPR][pos%PPR] = {
                 'product': p, 'x':x, 'y': y,
                 'class': " ".join(map(lambda x: x.html_class, p.website_style_ids))
             }
+            if index<=PPG:
+                maxy=max(maxy,y+(pos/PPR))
             index += 1
 
         # Format table according to HTML needs
