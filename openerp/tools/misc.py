@@ -819,6 +819,76 @@ DATETIME_FORMATS_MAP = {
         '%Z': '',
 }
 
+POSIX_TO_LDML = {
+    'a': 'E',
+    'A': 'EEEE',
+    'b': 'MMM',
+    'B': 'MMMM',
+    #'c': '',
+    'd': 'dd',
+    'H': 'HH',
+    'I': 'hh',
+    'j': 'DDD',
+    'm': 'MM',
+    'M': 'mm',
+    'p': 'a',
+    'S': 'ss',
+    'U': 'w',
+    'w': 'e',
+    'W': 'w',
+    'y': 'yy',
+    'Y': 'yyyy',
+    # see comments above, and babel's format_datetime assumes an UTC timezone
+    # for naive datetime objects
+    #'z': 'Z',
+    #'Z': 'z',
+}
+
+def posix_to_ldml(fmt, locale):
+    """ Converts a posix/strftime pattern into an LDML date format pattern.
+
+    :param fmt: non-extended C89/C90 strftime pattern
+    :param locale: babel locale used for locale-specific conversions (e.g. %x and %X)
+    :return: unicode
+    """
+    buf = []
+    pc = False
+    quoted = []
+
+    for c in fmt:
+        # LDML date format patterns uses letters, so letters must be quoted
+        if not pc and c.isalpha():
+            quoted.append(c if c != "'" else "''")
+            continue
+        if quoted:
+            buf.append("'")
+            buf.append(''.join(quoted))
+            buf.append("'")
+            quoted = []
+
+        if pc:
+            if c == '%': # escaped percent
+                buf.append('%')
+            elif c == 'x': # date format, short seems to match
+                buf.append(locale.date_formats['short'].pattern)
+            elif c == 'X': # time format, seems to include seconds. short does not
+                buf.append(locale.time_formats['medium'].pattern)
+            else: # look up format char in static mapping
+                buf.append(POSIX_TO_LDML[c])
+            pc = False
+        elif c == '%':
+            pc = True
+        else:
+            buf.append(c)
+
+    # flush anything remaining in quoted buffer
+    if quoted:
+        buf.append("'")
+        buf.append(''.join(quoted))
+        buf.append("'")
+
+    return ''.join(buf)
+
 def server_to_local_timestamp(src_tstamp_str, src_format, dst_format, dst_tz_name,
         tz_offset=True, ignore_unparsable_time=True):
     """

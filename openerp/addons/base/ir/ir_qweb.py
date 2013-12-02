@@ -627,14 +627,21 @@ class DateConverter(osv.AbstractModel):
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
         if not value: return ''
         lang = self.user_lang(cr, uid, context=context)
-
-        out_format = lang.date_format.encode('utf-8')
+        locale = babel.Locale.parse(lang.code)
 
         if isinstance(value, basestring):
             value = datetime.datetime.strptime(
                 value, openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
 
-        return value.strftime(out_format)
+        if options and 'format' in options:
+            pattern = options['format']
+        else:
+            strftime_pattern = lang.date_format
+            pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
+
+        return babel.dates.format_datetime(
+            value, format=pattern,
+            locale=locale)
 
 class DateTimeConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.datetime'
@@ -643,17 +650,21 @@ class DateTimeConverter(osv.AbstractModel):
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
         if not value: return ''
         lang = self.user_lang(cr, uid, context=context)
-
-        out_format = (u"%s %s" % (lang.date_format, lang.time_format)).encode('utf-8')
+        locale = babel.Locale.parse(lang.code)
 
         if isinstance(value, basestring):
             value = datetime.datetime.strptime(
                 value, openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
-
         value = column.context_timestamp(
             cr, uid, timestamp=value, context=context)
 
-        return value.strftime(out_format)
+        if options and 'format' in options:
+            pattern = options['format']
+        else:
+            strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
+            pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
+
+        return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
 class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'

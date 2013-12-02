@@ -304,6 +304,22 @@ class TestDatetimeExport(TestBasicExport):
         # default lang/format is US
         self.assertEqual(value, '05/03/2011 00:12:13')
 
+    def test_custom_format(self):
+        converter = self.get_converter('datetime')
+        converter2 = self.get_converter('date')
+        opts = {'format': 'MMMM d'}
+
+        value = converter('2011-03-02 11:12:13', options=opts)
+        value2 = converter2('2001-03-02', options=opts)
+        self.assertEqual(
+            value,
+            'March 2'
+        )
+        self.assertEqual(
+            value2,
+            'March 2'
+        )
+
 class TestDurationExport(TestBasicExport):
     def setUp(self):
         super(TestDurationExport, self).setUp()
