@@ -58,7 +58,7 @@ class res_currency(osv.osv):
             elif not raise_on_no_rate:
                 res[id] = 0
             else:
-                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency %d for the given period" % (currency_name)))
+                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency %s for the given period" % (currency_name)))
         return res
 
     _name = "res.currency"
