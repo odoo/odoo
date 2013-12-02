@@ -1209,11 +1209,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         self.getParent().sidebar_eval_context().done(function (sidebar_eval_context) {
             var ids = self.getParent().get_selected_ids();
+            var domain;
             if (self.getParent().get_active_domain) {
-                var domain = self.getParent().get_active_domain();
+                domain = self.getParent().get_active_domain();
             }
             else {
-                var domain = $.Deferred().resolve(undefined);
+                domain = $.Deferred().resolve(undefined);
             }
             if (ids.length === 0) {
                 instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
@@ -1385,7 +1386,17 @@ instance.web.View = instance.web.Widget.extend({
                 return self.getParent().on_action_executed.apply(null, arguments);
             }
         };
-        var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
+        var context = dataset.get_context();
+        if (action_data.model !== dataset.model) {
+            // filter out context keys that are specific to the action model.
+            // Wrong default_ and search_default values will no give the expected views
+            // Wrong group_by values will simply fail and forbid rendering of the destination view
+            context = _.object(_.reject(_.pairs(context.eval()), function(pair) {
+                return pair[0].match('^(?:(?:default_|search_default_).+|group_by|group_by_no_leaf)$') !== null;
+            }));
+        }
+
+        context = new instance.web.CompoundContext(context, action_data.context || {});
         var handler = function (action) {
             if (action && action.constructor == Object) {
                 var ncontext = new instance.web.CompoundContext(context);

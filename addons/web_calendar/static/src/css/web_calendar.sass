@@ -31,5 +31,19 @@
             table tr td:last-child div.dhx_month_body
                 padding-right: 5px
 
+// Hack for calender {{{
+.dhx_cal_tab
+    height: 18px
+.dhx_cal_tab.active
+    height: 20px
+.dhx_cal_today_button
+    height: 20px
+.dhx_cal_event .dhx_body
+    width: auto !important
+    height: 28px !important
+.dhx_scale_hour
+    height: 42px !important
+// End hack }}}
+
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
