@@ -27,7 +27,6 @@
   color: #4c4c4c;
   font-size: 13px;
   background: white;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
    */
@@ -114,7 +113,7 @@
   font-weight: bold;
   font-size: inherit;
 }
-.openerp a.button:link, .openerp a.button:visited, .openerp button, .openerp input[type='submit'], .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button {
+.openerp a.button:link, .openerp a.button:visited, .openerp .oe_button, .openerp input[type='submit'], .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button {
   display: inline-block;
   border: 1px solid rgba(0, 0, 0, 0.4);
   color: #4c4c4c;
@@ -139,7 +138,7 @@
   -webkit-font-smoothing: antialiased;
   outline: none;
 }
-.openerp a.button:hover, .openerp button:hover, .openerp input[type='submit']:hover, .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover {
+.openerp a.button:hover, .openerp .oe_button:hover, .openerp input[type='submit']:hover, .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover {
   background-color: #ececec;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
   background-image: -webkit-linear-gradient(top, #f6f6f6, #e3e3e3);
@@ -150,7 +149,7 @@
   cursor: pointer;
   background-position: 0;
 }
-.openerp a.button:focus, .openerp button:focus, .openerp input[type='submit']:focus, .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus {
+.openerp a.button:focus, .openerp .oe_button:focus, .openerp input[type='submit']:focus, .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus {
   border: 1px solid #80bfff;
   background-position: 0;
   background-color: #ececec;
@@ -164,7 +163,7 @@
   -webkit-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
   box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
 }
-.openerp a.button:active, .openerp a.button.active, .openerp button:active, .openerp button.active, .openerp input[type='submit']:active, .openerp input[type='submit'].active, .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active {
+.openerp a.button:active, .openerp a.button.active, .openerp .oe_button:active, .openerp .oe_button.active, .openerp input[type='submit']:active, .openerp input[type='submit'].active, .openerp .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active {
   background-color: #ececec;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6));
   background-image: -webkit-linear-gradient(top, #e3e3e3, #f6f6f6);
@@ -176,7 +175,7 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.openerp a.button.disabled, .openerp button:disabled, .openerp input[type='submit']:disabled {
+.openerp a.button.disabled, .openerp .oe_button:disabled, .openerp input[type='submit']:disabled {
   background: #efefef !important;
   border: 1px solid #d1d1d1 !important;
   -moz-box-shadow: none !important;
@@ -1047,7 +1046,7 @@
   background-image: -moz-linear-gradient(top, #fc8787, maroon);
   background-image: -ms-linear-gradient(top, #fc8787, maroon);
   background-image: -o-linear-gradient(top, #fc8787, maroon);
-  background-image: linear-gradient(to bottom, #fc8787, maroon);
+  background-image: linear-gradient(to bottom, #fc8787, #800000);
 }
 .openerp .navbar .oe_topbar_anonymous_login a {
   display: block;
@@ -1359,15 +1358,15 @@
 .openerp .oe_about .oe_bottom a {
   color: #eeeeee;
 }
+.openerp .oe_form_uri {
+  color: #7c7bad;
+}
+.openerp .oe_form_uri:hover {
+  text-decoration: underline;
+}
 .openerp .oe_application {
   width: 100%;
   height: 100%;
-}
-.openerp .oe_application a {
-  color: #7c7bad;
-}
-.openerp .oe_application a:hover {
-  text-decoration: underline;
 }
 .openerp .oe_application > div {
   height: 100%;
@@ -2290,7 +2289,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkGreen;
+  color: darkgreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -3434,7 +3433,6 @@ div.ui-widget-overlay {
     overflow: hidden !important;
   }
 }
-
 .nav li > a {
   padding: 3px 4px 2px 18px;
   color: #4c4c4c;
@@ -3545,7 +3543,7 @@ h5 {
   padding: 4px 32px 4px 12px;
 }
 
-.dropdown-menu {
+.oe_navbar .dropdown-menu {
   font-size: 13px;
   padding: 4px 0;
   background: #333333 !important;
@@ -3565,7 +3563,7 @@ h5 {
   -webkit-border-radius: 3px;
   border-radius: 3px;
 }
-.dropdown-menu li a, .dropdown-menu li a:hover, .dropdown-menu li a:focus {
+.oe_navbar .dropdown-menu li a, .oe_navbar .dropdown-menu li a:hover, .oe_navbar .dropdown-menu li a:focus {
   color: #eeeeee;
 }
 
