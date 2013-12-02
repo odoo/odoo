@@ -159,8 +159,8 @@ class Scope(object):
         scope = object.__new__(cls)
         scope.cr, scope.uid, scope.context = scope.args = args
         scope.registry = RegistryManager.get(cr.dbname)
-        # cache[model_name][record_id][field_name]
-        scope.cache = defaultdict(lambda: defaultdict(dict))
+        scope.cache = defaultdict(dict)     # cache[field] = {id: value}
+        scope.cache_ids = defaultdict(set)  # cache_ids[model_name] = set(ids)
         scope.draft = proxy.draft
         scope_list.append(scope)
         return scope
@@ -241,50 +241,45 @@ class Scope(object):
                 ids or ``None`` (to invalidate all records).
         """
         for field, ids in spec:
-            model_cache = self.cache[field.model_name]
             if ids is None:
-                ids = model_cache.keys()
-            for id in ids:
-                model_cache[id].pop(field.name, None)
+                self.cache.pop(field, None)
+            else:
+                field_cache = self.cache[field]
+                for id in ids:
+                    field_cache.pop(id, None)
 
     def invalidate_all(self):
         """ Invalidate the cache. """
-        # Record caches cannot be dropped, since they are memoized in instances.
-        for model_cache in self.cache.itervalues():
-            for record_cache in model_cache.itervalues():
-                record_id = record_cache.get('id')
-                record_cache.clear()
-                if record_id:
-                    record_cache['id'] = record_id
+        self.cache.clear()
+        self.cache_ids.clear()
 
     def check_cache(self):
         """ Check the cache consistency. """
         with self:
             # make a full copy of the cache, and invalidate it
             cache_dump = dict(
-                (model_name, dict(
-                    (id, dict(record_cache))
-                    for id, record_cache in model_cache.iteritems()
-                ))
-                for model_name, model_cache in self.cache.iteritems()
+                (field, dict(field_cache))
+                for field, field_cache in self.cache.iteritems()
             )
             self.invalidate_all()
 
             # re-fetch the records, and compare with their former cache
             invalids = []
-            for model_name, model_dump in cache_dump.iteritems():
-                records = self[model_name].browse(model_dump)
-                for record, record_dump in zip(records, model_dump.itervalues()):
-                    for field, value in record_dump.iteritems():
-                        try:
-                            if record[field] != value:
-                                info = {'cached': value, 'fetched': record[field]}
-                                invalids.append((record, field, info))
-                        except (AccessError, MissingError):
-                            pass
+            for field, field_dump in cache_dump.iteritems():
+                ids = filter(None, list(field_dump))
+                records = self[field.model_name].browse(ids)
+                for record in records:
+                    try:
+                        cached = field_dump[record._id]
+                        fetched = record[field.name]
+                        if fetched != cached:
+                            info = {'cached': cached, 'fetched': fetched}
+                            invalids.append((field, record, info))
+                    except (AccessError, MissingError):
+                        pass
 
             if invalids:
-                raise Warning('Invalid cache for records\n' + pformat(invalids))
+                raise Warning('Invalid cache for fields\n' + pformat(invalids))
 
 #
 # DraftSwitch - manages the mode switching between draft and non-draft

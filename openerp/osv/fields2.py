@@ -241,14 +241,16 @@ class Field(object):
         if record is None:
             return self         # the field is accessed through the owner class
 
+        cache, id = record._scope.cache, record._id
+
         try:
-            return check_failed(record._record_cache[self.name])
-        except (KeyError, IndexError):
+            return check_failed(cache[self][id])
+        except KeyError:
             pass
 
         # cache miss, retrieve value
         with record._scope:
-            if record._id:
+            if id:
                 # normal record -> read or compute value for this field
                 self.determine_value(record[0])
             elif record:
@@ -259,7 +261,7 @@ class Field(object):
                 return self.null()
 
         # the result should be in cache now
-        return check_failed(record._record_cache[self.name])
+        return check_failed(cache[self][id])
 
     def __set__(self, record, value):
         """ set the value of field `self` on `record` """
@@ -277,7 +279,7 @@ class Field(object):
                 record.write({self.name: self.convert_to_write(value)})
 
             # store the value in cache
-            record._record_cache[self.name] = value
+            _scope.cache[self][record._id] = value
 
     #
     # Management of the computation of field values.
@@ -347,7 +349,7 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        record._record_cache[self.name] = self.null()
+        record._update_cache({self.name: self.null()})
         if self.compute:
             self.compute_value(record)
 
@@ -505,9 +507,8 @@ class Field(object):
         # invalidate self and dependent fields on records only
         model_name = self.model_name
         fields = [self] + [f for f, _ in self._triggers if f.model_name == model_name]
-        for cache in records._caches:
-            for field in fields:
-                cache.pop(field.name, None)
+        ids = records._ids
+        scope.invalidate([(f, ids) for f in fields])
 
 
 class Boolean(Field):

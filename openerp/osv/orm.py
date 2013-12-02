@@ -364,6 +364,12 @@ class MetaModel(api.Meta):
             self.module_to_models.setdefault(self._module, []).append(self)
 
 
+class NewId(object):
+    """ Pseudo-ids for new records. """
+    def __nonzero__(self):
+        return False
+
+
 # special columns automatically created by the ORM
 MAGIC_COLUMNS = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date']
 
@@ -3493,6 +3499,7 @@ class BaseModel(object):
             in the cache.
         """
         # fetch the records of this model without field_name in their cache
+        self._in_cache()
         records = self._in_cache_without(field_name)
 
         # prefetch all classic and many2one fields if column is one of them
@@ -5352,13 +5359,13 @@ class BaseModel(object):
     #
 
     @classmethod
-    def _instance(cls, scope, caches):
-        """ Create an instance attached to `scope`; `caches` is a tuple with the
-            cache dictionaries of the records in the instance.
+    def _instance(cls, scope, ids):
+        """ Create an instance attached to `scope`; `ids` is a tuple with the
+            ids of the records in the instance.
         """
         records = object.__new__(cls)
         records._scope = scope
-        records._caches = caches
+        records._ids = ids
         return records
 
     @classmethod
@@ -5374,14 +5381,9 @@ class BaseModel(object):
             ids = (arg,)
         else:
             ids = ()
-        scope = scope_proxy.current
-        model_cache = scope.cache[cls._name]
-        caches = []
-        for id in ids:
-            cache = model_cache[id]
-            cache['id'] = id
-            caches.append(cache)
-        return cls._instance(scope, tuple(caches))
+        records = cls._instance(scope_proxy.current, ids)
+        records._in_cache()
+        return records
 
     #
     # Internal properties, for manipulating the instance's implementation
@@ -5390,33 +5392,7 @@ class BaseModel(object):
     @property
     def _id(self):
         """ Return the 'id' of record `self` or ``False``. """
-        return bool(self._caches) and self._caches[0].get('id')
-
-    @property
-    def _ids(self):
-        """ Return the 'id' of all records in `self`. """
-        return (cache.get('id') for cache in self._caches)
-
-    @property
-    def _refs(self):
-        """ Return a set of record identifiers for `self`. This is aimed at
-            comparing instances. The result is similar to `_ids`, but uses other
-            values for identifying new records, since they do not have an 'id'.
-        """
-        return set(cache.get('id') or (id(cache),) for cache in self._caches)
-
-    @tools.lazy_property
-    def _model_cache(self):
-        """ Return the cache of the corresponding model. """
-        # Note: The value of this property is evaluated only once and memoized.
-        # It is correct to do so, because the scope's cache never drops the
-        # cache of models, even when all caches are invalidated.
-        return self._scope.cache[self._name]
-
-    @tools.lazy_property
-    def _record_cache(self):
-        """ Return the cache of the first record in `self`. """
-        return self._caches[0]
+        return bool(self._ids) and self._ids[0]
 
     #
     # Conversion methods
@@ -5437,15 +5413,14 @@ class BaseModel(object):
         scope = scope or scope_proxy.current
         if self._scope is scope:
             return self
-        ids = list(self._ids)
-        if all(ids):
+        if all(self._ids):
             with scope:
-                return self.browse(ids)
+                return self.browse(self._ids)
         raise except_orm("ValueError", "Cannot scope %s" % self)
 
     def unbrowse(self):
         """ Return the list of record ids of this instance. """
-        return filter(None, self._ids)
+        return filter(None, list(self._ids))
 
     def _convert_to_write(self, values):
         """ Convert the `values` dictionary in the format of :meth:`write`. """
@@ -5462,31 +5437,35 @@ class BaseModel(object):
         """ Return the cache of `self[0]` as a dictionary mapping field names to
             values.
         """
-        return dict(item
-            for item in self._record_cache.iteritems()
-            if item[0] not in MAGIC_COLUMNS
-        )
+        cache, id = self._scope.cache, self._id
+        values = {}
+        for name, field in self._fields.iteritems():
+            if name not in MAGIC_COLUMNS and id in cache[field]:
+                values[name] = cache[field][id]
+        return values
 
     def _update_cache(self, values):
         """ Update the cache of record `self[0]` with `values`. Only the cache
             is updated, no side effect happens.
         """
         with self._scope:
-            cache = self._record_cache
+            cache = self._scope.cache
             for name, value in values.iteritems():
                 field = self._fields[name]
-                cache[name] = field.convert_to_cache(value)
+                cache[field][self._id] = field.convert_to_cache(value)
 
     def _mark_failed(self, exception, fnames=None):
         """ Update the caches of all records in `self` in order to raise the
             given `exception` when accessing a field among `fnames`.
         """
         if self:
+            cache = self._scope.cache
+            ids_value = dict.fromkeys(self._ids, FailedValue(exception))
             if fnames is None:
                 fnames = set(self._fields) - set(MAGIC_COLUMNS)
-            vals = dict.fromkeys(fnames, FailedValue(exception))
-            for cache in self._caches:
-                cache.update(vals)
+            for fname in fnames:
+                field = self._fields[fname]
+                cache[field].update(ids_value)
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
@@ -5504,9 +5483,7 @@ class BaseModel(object):
             exist in the database.
         """
         assert 'id' not in values, "New records do not have an 'id'."
-        scope = scope_proxy.current
-        record_cache = {}
-        record = self._instance(scope, (record_cache,))
+        record = self.browse((NewId(),))
         record._update_cache(values)
         return record
 
@@ -5516,22 +5493,22 @@ class BaseModel(object):
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty. """
-        return bool(self._caches)
+        return bool(self._ids)
 
     def __len__(self):
         """ Return the size of `self`. """
-        return len(self._caches)
+        return len(self._ids)
 
     def __iter__(self):
         """ Return an iterator over `self`. """
-        for cache in self._caches:
-            yield self._instance(self._scope, (cache,))
+        for id in self._ids:
+            yield self._instance(self._scope, (id,))
 
     def __contains__(self, item):
         """ Test whether `item` is a subset of `self` or a field name. """
         if isinstance(item, BaseModel):
             if self._name == item._name:
-                return item._refs <= self._refs
+                return set(item._ids) <= set(self._ids)
             raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
         if isinstance(item, basestring):
             return item in self._fields
@@ -5541,39 +5518,25 @@ class BaseModel(object):
         """ Return the concatenation of two instances. """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s + %s" % (self, other))
-        scope = scope_proxy.current
-        self, other = self.scoped(scope), other.scoped(scope)
-        return self._instance(scope, self._caches + other._caches)
+        return self.browse(self._ids + other._ids)
 
     def __sub__(self, other):
-        """ Return the difference between two instances (order-preserving). """
+        """ Return the difference between two instances. """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s - %s" % (self, other))
-        scope = scope_proxy.current
-        self, other = self.scoped(scope), other.scoped(scope)
-        id_caches = map(id, other._caches)
-        caches = tuple(cache for cache in self._caches if id(cache) not in id_caches)
-        return self._instance(scope, caches)
+        return self.browse(set(self._ids) - set(other._ids))
 
     def __and__(self, other):
         """ Return the intersection of two instances. """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s & %s" % (self, other))
-        scope = scope_proxy.current
-        self, other = self.scoped(scope), other.scoped(scope)
-        id_caches = map(id, other._caches)
-        caches = tuple(cache for cache in self._caches if id(cache) in id_caches)
-        return self._instance(scope, caches)
+        return self.browse(set(self._ids) & set(other._ids))
 
     def __or__(self, other):
         """ Return the union of two instances. """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s | %s" % (self, other))
-        scope = scope_proxy.current
-        self, other = self.scoped(scope), other.scoped(scope)
-        # index all cache dicts by their id in order to "merge" duplicates
-        index = dict((id(cache), cache) for cache in self._caches + other._caches)
-        return self._instance(scope, tuple(index.itervalues()))
+        return self.browse(set(self._ids) | set(other._ids))
 
     def __eq__(self, other):
         """ Test whether two instances are equivalent (as sets). """
@@ -5581,7 +5544,7 @@ class BaseModel(object):
             if other:
                 _logger.warning("Comparing apples and oranges: %s == %s", self, other)
             return False
-        return self._name == other._name and self._refs == other._refs
+        return self._name == other._name and set(self._ids) == set(other._ids)
 
     def __ne__(self, other):
         return not self == other
@@ -5589,28 +5552,28 @@ class BaseModel(object):
     def __lt__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s < %s" % (self, other))
-        return self._refs < other._refs
+        return set(self._ids) < set(other._ids)
 
     def __le__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s <= %s" % (self, other))
-        return self._refs <= other._refs
+        return set(self._ids) <= set(other._ids)
 
     def __gt__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s > %s" % (self, other))
-        return self._refs > other._refs
+        return set(self._ids) > set(other._ids)
 
     def __ge__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s >= %s" % (self, other))
-        return self._refs >= other._refs
+        return set(self._ids) >= set(other._ids)
 
     def __int__(self):
         return self._id
 
     def __str__(self):
-        return "%s%s" % (self._name, tuple(self._ids))
+        return "%s%s" % (self._name, self._ids)
 
     def __unicode__(self):
         return unicode(str(self))
@@ -5618,9 +5581,8 @@ class BaseModel(object):
     __repr__ = __str__
 
     def __hash__(self):
-        ids = list(self._ids)
-        if all(ids):
-            return hash((self._name, frozenset(ids)))
+        if all(self._ids):
+            return hash((self._name, frozenset(self._ids)))
         raise except_orm("ValueError", "Cannot hash %s" % self)
 
     def __getitem__(self, key):
@@ -5639,9 +5601,9 @@ class BaseModel(object):
             # important: one must call the field's getter
             return self._fields[key].__get__(self, type(self))
         elif isinstance(key, slice):
-            return self._instance(self._scope, self._caches[key])
+            return self._instance(self._scope, self._ids[key])
         else:
-            return self._instance(self._scope, (self._caches[key],))
+            return self._instance(self._scope, (self._ids[key],))
 
     def __setitem__(self, key, value):
         """ Assign the field `key` to `value` in record `self`. """
@@ -5660,14 +5622,19 @@ class BaseModel(object):
         """
         scope_proxy.invalidate_all()
 
+    def _in_cache(self):
+        """ Make sure `self` is introduced in the cache for prefetching. """
+        self._scope.cache_ids[self._name].update(self._ids)
+
     @api.model
     def _in_cache_without(self, fname):
         """ Return the records of model `self` in cache (for the current scope)
             that have no value for the field named `fname`.
         """
-        model_cache = scope_proxy.cache[self._name]
-        return self.browse(id for id, cache in model_cache.iteritems()
-                              if fname not in cache)
+        scope = scope_proxy.current
+        field = self._fields[fname]
+        ids = filter(None, scope.cache_ids[self._name] - set(scope.cache[field]))
+        return self.browse(ids)
 
     def invalidate_cache(self, fnames=None, ids=None):
         """ Invalidate the record caches after some records have been modified.
@@ -5736,8 +5703,10 @@ class BaseModel(object):
     def onchange(self, field_name, values):
         # create a new record with the values, except field_name
         record = self.new(values)
-        record_values = dict(record._record_cache)
-        record._record_cache.pop(field_name)
+        record_values = record._get_cache()
+
+        field = self._fields[field_name]
+        record._scope.invalidate([(field, record._ids)])
 
         # check for a field-specific onchange method
         method = getattr(record, 'onchange_' + field_name, None)

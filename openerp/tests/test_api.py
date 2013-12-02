@@ -366,22 +366,23 @@ class TestAPI(common.TransactionCase):
 
         # all the records of an instance already have an entry in cache
         partners = self.Partner.search([])
-        self.assertEqual(set(partners.unbrowse()), set(partners._model_cache))
+        partner_ids = scope.cache_ids['res.partner']
+        self.assertEqual(set(partners.unbrowse()), set(partner_ids))
 
         # countries have not been fetched yet; their cache must be empty
         countries = self.registry('res.country').browse()
-        self.assertFalse(countries._model_cache)
+        self.assertFalse(scope.cache_ids['res.country'])
 
         # reading ONE partner should fetch them ALL
         countries |= partners[0].country_id
-        country_ids = list(countries._model_cache)
-        for p in partners:
-            self.assertIn('country_id', p._record_cache)
+        country_cache = scope.cache[partners._fields['country_id']]
+        self.assertLessEqual(set(partners._ids), set(country_cache))
 
         # read all partners, and check that the cache already contained them
+        country_ids = list(scope.cache_ids['res.country'])
         for p in partners:
             countries |= p.country_id
-        self.assertEqual(set(countries.unbrowse()), set(country_ids))
+        self.assertLessEqual(set(countries.unbrowse()), set(country_ids))
 
     @mute_logger('openerp.osv.orm')
     def test_70_one(self):
