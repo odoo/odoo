@@ -311,7 +311,7 @@ class Field(object):
         elif callable(self.compute):
             return partial(self.compute, self)
         else:
-            raise Warning("No way to compute %s on %s" % (self, records))
+            raise Warning("No way to compute field %s" % self)
 
     @lazy_property
     def _compute_one(self):
