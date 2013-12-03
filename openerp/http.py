@@ -993,7 +993,7 @@ class Root(object):
                 else:
                     result = _dispatch_nodb()
 
-            response = self.get_response(httprequest, result, explicit_session)
+                response = self.get_response(httprequest, result, explicit_session)
             return response(environ, start_response)
 
         except werkzeug.exceptions.HTTPException, e:
