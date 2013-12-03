@@ -32,7 +32,11 @@
                     title: "Edit this page",
                     content: "Every page of your website can be modified through the <i>Edit</i> button.",
                     triggers: function () {
-                        editor.on('tour:editor_bar_loaded', self, self.moveToNextStep);
+                        function advance () {
+                            self.moveToNextStep();
+                            editor.off('tour:editor_bar_loaded', self, advance);
+                        }
+                        editor.on('tour:editor_bar_loaded', self, advance);
                     },
                 },
                 {
@@ -115,11 +119,11 @@
                 },
                 {
                     stepId: 'remove-text-block-title',
-                    element: '.oe_snippet_remove:last',
+                    element: '.ui-draggable.oe_active .oe_snippet_remove',
                     placement: 'top',
                     reflex: true,
                     title: "Delete the Title",
-                    content: "From this toolbar you can move, duplicate or delete the selected zone. Click on the cross to delete the title.",
+                    content: "From this toolbar you can move, duplicate or delete the selected zone. Click on the trash can to delete the title.",
                 },
                 {
                     stepId: 'save-changes',

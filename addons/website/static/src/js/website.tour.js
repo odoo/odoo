@@ -92,7 +92,6 @@
                 this.stop();
             } else if (index >= 0) {
                 var self = this;
-                self.tourStorage.setItem(step.id+'_current_step', index);
                 setTimeout(function () {
                     $('.popover.tour').remove();
                     self.tour.goto(index);
