@@ -202,7 +202,7 @@
 
     <template id="add_to_basket" inherit_option_id="website_sale.products_cart" name="Add to Cart">
         <xpath expr="//div[@class='product_price']" position="inside">
-            <a t-href="/shop/add_cart/?product_id=#{ product.id }" class="js_add_cart_json">
+            <a t-href="/shop/add_cart/#{ product.product_variant_ids[0].id }/" class="js_add_cart_json">
                 <span class="fa fa-shopping-cart"/>
             </a>
         </xpath>
@@ -268,7 +268,7 @@
                   </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                       <h1 t-field="product.name">Product Name</h1>
 
-                      <form action="/shop/add_cart/" class="js_add_cart_json">
+                      <form action="/shop/add_cart/" class="js_add_cart_json" method="POST">
                           <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                           <t t-if="len(product.product_variant_ids) &gt; 1">
                               <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
@@ -403,6 +403,7 @@
                                         <div>
                                             <a t-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }/">
                                                 <strong t-field="line.product_id.name"/>
+                                                <t t-if="line.product_id.variants">(<t t-esc="line.product_id.variants"/>)</t>
                                             </a>
                                         </div>
                                         <div class="text-muted" t-field="line.product_id.description_sale"/>
@@ -422,15 +423,15 @@
                                     <td>
                                         <div class="input-group">
                                             <span class="input-group-addon">
-                                                <a t-href="./add_cart/?remove=True&amp;order_line_id=#{ line.id }" class="mb8 js_add_cart_json">
-                                                    <span class="fa fa-minus-square"/>
+                                                <a t-href="./change_cart/#{ line.id }/?remove=True" class="mb8 js_add_cart_json">
+                                                    <i class="fa fa-minus-square"></i>
                                                 </a>
                                             </span>
                                             <input type="text" class="js_quantity form-control"
                                                 t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
                                             <span class="input-group-addon">
-                                                <a t-href="./add_cart/?order_line_id=#{ line.id }" class="mb8 float_left js_add_cart_json">
-                                                    <span class="fa fa-plus-square"/>
+                                                <a t-href="./change_cart/#{ line.id }/" class="mb8 float_left js_add_cart_json">
+                                                    <i class="fa fa-plus-square"></i>
                                                 </a>
                                             </span>
                                         </div>
@@ -590,7 +591,7 @@
                             }'/>
                         </td>
                         <td class="text-center">
-                            <a t-href="./add_cart/?product_id=#{ product.id }"><strong>Add to Cart</strong></a>
+                            <a t-href="./add_cart/#{ product.id }/"><strong>Add to Cart</strong></a>
                         </td>
                     </tr>
                 </tbody>
