@@ -233,7 +233,7 @@ class WebsiteBlog(http.Controller):
         new_blog_post_id = request.registry['blog.post'].create(
             request.cr, request.uid, {
                 'category_id': category_id,
-                'name': _("Blog title"),
+                'name': _("Blog Post Title"),
                 'content': '',
                 'website_published': False,
             }, context=create_context)
