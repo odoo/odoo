@@ -1073,30 +1073,4 @@ def stripped_sys_argv(*strip_args):
 
     return [x for i, x in enumerate(args) if not strip(args, i)]
 
-
-class FailedValue(object):
-    """ A failed value simply encapsulates an exception. It  represents the
-        result of an operation that failed. Any attempt to perform an operation
-        on such a value raises the encapsulated exception.
-    """
-    def __init__(self, exception):
-        object.__setattr__(self, '_exception', exception)
-
-    def __str__(self):
-        return "FailedValue(%s)" % self._exception
-
-    @staticmethod
-    def check(value):
-        bool(value)             # raise the exception if value is a FailedValue
-        return value
-
-    def __failed__(self, *args, **kwargs):
-        raise self._exception
-
-    # basic operators and accessors all raise the exception
-    __nonzero__ = __failed__
-    __getattr__ = __failed__
-    __setattr__ = __failed__
-    __delattr__ = __failed__
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

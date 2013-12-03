@@ -63,7 +63,7 @@ import fields
 import openerp
 import openerp.tools as tools
 from openerp.exceptions import AccessError, MissingError
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, FailedValue
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
@@ -1375,15 +1375,7 @@ class BaseModel(object):
             record[name]                # force evaluation of defaults
 
         # retrieve defaults from record's cache
-        values = self._convert_to_write(record._get_cache())
-
-        # HACK: remove False from values, as this is a sign of "no default
-        # value". In some models from base, keeping False causes some issues,
-        # possibly because a NULL overrides an SQL default value in a column.
-        for name, value in values.items():
-            if value is False:
-                values.pop(name)
-        return values
+        return self._convert_to_write(record._get_cache())
 
     def add_default_value(self, name):
         """ Set the default value of field `name` to the new record `self`.
@@ -3535,7 +3527,8 @@ class BaseModel(object):
             self.check_field_access_rights('read', field_names)
         except (except_orm, AccessError) as e:
             # store a failed value for all records in self
-            return self._mark_failed(e, field_names)
+            failed_values = dict.fromkeys(field_names, FailedValue(e))
+            return self._update_cache(failed_values)
 
         # Construct a clause for the security rules.
         # 'tables' holds the list of tables necessary for the SELECT, including
@@ -3642,15 +3635,17 @@ class BaseModel(object):
         missing = self - self.browse(ids)
         if missing:
             # store an access error exception in existing records
-            forbidden = missing.exists()
-            forbidden._mark_failed(AccessError(
+            exc = AccessError(
                 _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                 (self._name, 'read')
-            ))
+            )
+            forbidden = missing.exists()
+            forbidden._update_cache(FailedValue(exc))
             # store a missing error exception in non-existing records
-            (missing - forbidden)._mark_failed(MissingError(
+            exc = MissingError(
                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.')
-            ))
+            )
+            (missing - forbidden)._update_cache(FailedValue(exc))
 
         return result
 
@@ -5434,38 +5429,35 @@ class BaseModel(object):
 
     def _get_cache(self):
         """ Return the cache of `self[0]` as a dictionary mapping field names to
-            values.
+            values. Special values in the cache are not returned.
         """
         cache, id = self._scope.cache, self._id
-        values = {}
+        values, dummy = {}, SpecialValue(None)
         for name, field in self._fields.iteritems():
-            if name not in MAGIC_COLUMNS and id in cache[field]:
-                values[name] = cache[field][id]
+            if name not in MAGIC_COLUMNS:
+                value = cache[field].get(id, dummy)
+                if not isinstance(value, SpecialValue):
+                    values[name] = value
         return values
 
     def _update_cache(self, values):
         """ Update the cache of all records in `self` with `values`.
             Only the cache is updated, no side effect happens.
+
+            :param values: either a dictionary mapping field names to values, or
+                a special value. In the latter case, all fields are updated.
         """
+        if not self:
+            return
         with self._scope:
             cache = self._scope.cache
+            if isinstance(values, SpecialValue):
+                values = dict.fromkeys(set(self._fields) - set(MAGIC_COLUMNS), values)
             for name, value in values.iteritems():
                 field = self._fields[name]
-                value = field.convert_to_cache(value)
+                if not isinstance(value, SpecialValue):
+                    value = field.convert_to_cache(value)
                 cache[field].update(dict.fromkeys(self._ids, value))
-
-    def _mark_failed(self, exception, fnames=None):
-        """ Update the caches of all records in `self` in order to raise the
-            given `exception` when accessing a field among `fnames`.
-        """
-        if self:
-            cache = self._scope.cache
-            ids_value = dict.fromkeys(self._ids, FailedValue(exception))
-            if fnames is None:
-                fnames = set(self._fields) - set(MAGIC_COLUMNS)
-            for fname in fnames:
-                field = self._fields[fname]
-                cache[field].update(ids_value)
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
@@ -5845,6 +5837,6 @@ PGERROR_TO_OE = defaultdict(
 # keep those imports here to avoid dependency cycle errors
 import expression
 import fields2
-from fields2 import Field
+from fields2 import Field, SpecialValue, FailedValue
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

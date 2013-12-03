@@ -27,15 +27,33 @@ from functools import partial
 from operator import attrgetter
 import logging
 
-from openerp.tools import float_round, ustr, html_sanitize, lazy_property, FailedValue
+from openerp.tools import float_round, ustr, html_sanitize, lazy_property
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
-check_failed = FailedValue.check
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 _logger = logging.getLogger(__name__)
+
+
+class SpecialValue(object):
+    """ Encapsulates a value in the cache in place of a normal value. """
+    def __init__(self, value):
+        self.value = value
+    def get(self):
+        return self.value
+
+class FailedValue(SpecialValue):
+    """ Special value that encapsulates an exception instead of a value. """
+    def __init__(self, exception):
+        self.exception = exception
+    def get(self):
+        raise self.exception
+
+def _check_value(value):
+    """ Return `value`, or call its getter if `value` is a :class:`SpecialValue`. """
+    return value.get() if isinstance(value, SpecialValue) else value
 
 
 def default(value):
@@ -244,7 +262,7 @@ class Field(object):
         cache, id = record._scope.cache, record._id
 
         try:
-            return check_failed(cache[self][id])
+            return _check_value(cache[self][id])
         except KeyError:
             pass
 
@@ -261,7 +279,7 @@ class Field(object):
                 return self.null()
 
         # the result should be in cache now
-        return check_failed(cache[self][id])
+        return _check_value(cache[self][id])
 
     def __set__(self, record, value):
         """ set the value of field `self` on `record` """
@@ -313,12 +331,12 @@ class Field(object):
 
             # mark non-existing records in cache
             exc = MissingError("Computing a field on non-existing records.")
-            (all_recs - records)._mark_failed(exc)
+            (all_recs - records)._update_cache(FailedValue(exc))
 
         # mark the field failed in cache, so that access before computation
         # raises an exception
         exc = Warning("Field %s is accessed before being computed." % self)
-        records._mark_failed(exc, [self.name])
+        records._update_cache({self.name: FailedValue(exc)})
 
         self._compute_function(records)
 
@@ -349,7 +367,7 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        record._update_cache({self.name: self.null()})
+        record._update_cache({self.name: SpecialValue(self.null())})
         if self.compute:
             self.compute_value(record)
 
