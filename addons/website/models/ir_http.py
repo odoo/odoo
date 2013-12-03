@@ -2,6 +2,7 @@
 import logging
 import traceback
 
+import werkzeug
 import werkzeug.routing
 
 import openerp

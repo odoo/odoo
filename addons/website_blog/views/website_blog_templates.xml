@@ -112,7 +112,7 @@
                 <a t-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}" t-field="blog_post.name"></a>
             </h2>
             <p class="post-meta text-muted text-center" name='blog_post_data'>
-                <span class="fa fa-calendar"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
+                <span class="fa fa-calendar oe_date"> <span t-field="blog_post.create_date"/> &amp;nbsp;</span>
                 <span t-if="len(blog_post.message_ids) &gt; 0" class="fa fa-comment-o">
                     <a t-href="/blogpost/#{ slug(blog_post) }/?#{ tag and 'tag=%s' % tag.id or '' }#{tag and date and '&amp;' or ''}#{ date and 'date=%s' % date or ''}#comment">
                         <t t-if="len(blog_post.message_ids) &lt;= 1" ><t t-esc="len(blog_post.message_ids)"/> comment</t>
@@ -132,7 +132,7 @@
     <!-- Options: Blog Post Summary: hide author -->
     <template id="opt_blog_post_short_author" name="Author"
             inherit_option_id="website_blog.blog_post_short">
-        <xpath expr="//span[@class='fa-calendar']" position="after">
+        <xpath expr="//span[@class*='oe_date']" position="after">
             <span class="fa fa-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
         </xpath>
     </template>
@@ -235,7 +235,7 @@
     <!-- Options: Blog Post: hide author -->
     <template id="opt_blog_post_complete_author" name="Authors"
             inherit_option_id="website_blog.blog_post_complete">
-        <xpath expr="//span[@class='fa-calendar']" position="after">
+        <xpath expr="//span[@class*='oe_date']" position="after">
             <span class="fa fa-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
         </xpath>
     </template>
@@ -243,7 +243,7 @@
     <!-- Options: Blog Post: show category -->
     <template id="opt_blog_post_complete_category" name="Blog Category"
             inherit_option_id="website_blog.blog_post_complete">
-        <xpath expr="//span[@class='fa-calendar']" position="after">
+        <xpath expr="//span[@class*='oe_date']" position="after">
             <span class="fa fa-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
         </xpath>
     </template>
