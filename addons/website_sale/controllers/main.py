@@ -675,6 +675,8 @@ class Ecommerce(http.Controller):
 
         if transaction_id is None:
             tx = context.get('website_sale_transaction')
+            if not tx:
+                return request.redirect('/shop/')
         else:
             tx = request.registry['payment.transaction'].browse(cr, uid, transaction_id, context=context)
 
