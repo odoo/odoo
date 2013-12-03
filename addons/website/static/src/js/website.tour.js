@@ -129,7 +129,7 @@
                 }
                 $(document.body).one('mouseup', advance);
             }
-            $('#website-top-navbar [data-snippet-id='+snippetId+'].ui-draggable').one('mousedown', beginDrag);
+            $('#website-top-navbar [data-snippet-id].ui-draggable').one('mousedown', beginDrag);
         },
     });
 

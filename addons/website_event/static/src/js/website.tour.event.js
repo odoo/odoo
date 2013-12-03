@@ -84,7 +84,7 @@
                     title: "Drag & Drop a block",
                     content: "Drag the 'Banner' block and drop it in your page.",
                     triggers: function () {
-                        self.onSnippetDraggedAdvance('carousel');
+                        self.onSnippetDraggedAdvance();
                     },
                 },
                 {
@@ -106,7 +106,7 @@
                     title: "Drag & Drop a block",
                     content: "Drag the 'Text Block' block below the banner.",
                     triggers: function () {
-                        self.onSnippetDraggedAdvance('text-block');
+                        self.onSnippetDraggedAdvance();
                     },
                     onHide: function () {
                         window.scrollTo(0, 0);
@@ -131,7 +131,7 @@
                     title: "Drag & Drop a block",
                     content: "Drag the 'Three Columns' block at the bottom.",
                     triggers: function () {
-                        self.onSnippetDraggedAdvance('three-columns');
+                        self.onSnippetDraggedAdvance();
                     },
                     onHide: function () {
                         window.scrollTo(0, 0);

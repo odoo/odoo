@@ -54,7 +54,7 @@
                     title: "Drag & Drop a Banner",
                     content: "Drag the Banner block and drop it in your page.",
                     triggers: function () {
-                        self.onSnippetDraggedAdvance('carousel');
+                        self.onSnippetDraggedAdvance();
                     },
                 },
                 {
@@ -98,7 +98,7 @@
                     title: "Drag & Drop a Block",
                     content: "Drag the <em>'3 Columns'</em> block and drop it below the banner.",
                     triggers: function () {
-                        self.onSnippetDraggedAdvance('three-columns');
+                        self.onSnippetDraggedAdvance();
                     },
                 },
                 {
