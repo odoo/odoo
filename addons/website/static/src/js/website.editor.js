@@ -555,7 +555,20 @@
             });
         },
         cancel: function () {
-            website.reload();
+            new $.Deferred(function (d) {
+                var $dialog = $(openerp.qweb.render('website.editor.discard')).appendTo(document.body);
+                $dialog.on('click', '.btn-danger', function () {
+                    d.resolve();
+                }).on('hidden.bs.modal', function () {
+                    d.reject();
+                });
+                d.always(function () {
+                    $dialog.remove();
+                });
+                $dialog.modal('show');
+            }).then(function () {
+                website.reload();
+            })
         },
         new_page: function (ev) {
             ev.preventDefault();

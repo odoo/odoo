@@ -6,7 +6,7 @@
                     <button type="button" data-action="save"
                             class="btn btn-primary">Save</button>
                     <button type="button" data-action="cancel"
-                            class="btn">Cancel</button>
+                            class="btn">Discard</button>
                 </form>
                 <ul class="nav navbar-nav pull-right">
                 </ul>
@@ -168,6 +168,30 @@
                 <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
             </tbody>
         </table>
+    </t>
+
+    <t t-name="website.editor.discard">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Discard edition</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            If you discard the current edition, <em>all</em>
+                            unsaved changes will be lost.
+                        </p>
+                        <p>You can cancel to return to the edition mode.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger">Discard</button>
+                        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </t>
 
 </templates>
