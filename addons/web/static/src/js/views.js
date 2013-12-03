@@ -1347,6 +1347,14 @@ instance.web.View = instance.web.Widget.extend({
         };
         var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
         var handler = function (action) {
+            if (action_data.model !== dataset.model) {
+                // filter out context keys that are specific to the action model.
+                // Wrong default_ and search_default values will no give the expected views
+                // Wrong group_by values will simply fail and forbid rendering of the destination view
+                context = _.reject(_.keys(context.eval()), function(key) {
+                    return key.match('^(?:(?:default_|search_default_).+|group_by|group_by_no_leaf)$') !== null;
+                });
+            }
             if (action && action.constructor == Object) {
                 var ncontext = new instance.web.CompoundContext(context);
                 if (record_id) {
