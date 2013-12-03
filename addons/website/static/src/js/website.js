@@ -198,7 +198,7 @@
             init: function() {}
         }, options || {});
 
-        var type = _.intersect(Object.keys(options), ['input', 'textarea', 'select']);
+        var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
         type = type.length ? type[0] : 'text';
         options.field_type = type;
         options.field_name = options.field_name || options[type];
