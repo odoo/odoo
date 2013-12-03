@@ -43,6 +43,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/cleditor/jquery.cleditor.js",
         "static/lib/py.js/lib/py.js",
         "static/src/js/openerpframework.js",
+        "static/lib/bootstrap/js/tooltip.js",
         "static/src/js/boot.js",
         "static/src/js/testing.js",
         "static/src/js/pyeval.js",
