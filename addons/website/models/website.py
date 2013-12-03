@@ -181,18 +181,20 @@ class website(osv.osv):
         return self.pool['website'].browse(cr, uid, 1, context=context)
 
     def preprocess_request(self, cr, uid, ids, request, context=None):
-        def redirect(url):
-            return werkzeug.utils.redirect(url_for(url))
-        request.redirect = redirect
-        is_website_publisher = self.pool.get('ir.model.access').check_groups(cr, uid, 'base.group_website_publisher')
-        is_website_publisher = self.pool.get('ir.model.access').check(cr, uid, 'ir.ui.view', 'write', False, context)
+        Access = request.registry['ir.model.access']
+        is_website_publisher = (
+                Access.check_groups(cr, uid, 'base.group_website_publisher')
+            and Access.check(cr, uid, 'ir.ui.view', 'write', False, context))
+
         lang = request.context['lang']
         is_master_lang = lang == request.website.default_lang_code
-        request.context.update({
-            'is_master_lang': is_master_lang,
-            'editable': is_website_publisher,
-            'translatable': not is_master_lang,
-        })
+
+        request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
+        request.context.update(
+            is_master_lang=is_master_lang,
+            editable=is_website_publisher,
+            translatable=not is_master_lang,
+        )
 
     def get_template(self, cr, uid, ids, template, context=None):
         IMD = self.pool["ir.model.data"]
