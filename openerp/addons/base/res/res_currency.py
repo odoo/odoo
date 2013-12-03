@@ -49,16 +49,15 @@ class res_currency(osv.osv):
         currency_rate_type = context.get('currency_rate_type_id') or None
         # ... and use 'is NULL' instead of '= some-id'.
         operator = '=' if currency_rate_type else 'is'
-        currency_name = self.browse(cr, uid, ids, context=context)[0].name
-        for id in ids:
-            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s AND currency_rate_type_id " + operator +" %s ORDER BY name desc LIMIT 1" ,(id, date, currency_rate_type))
+        for currency in self.browse(cr, uid, ids, context=context):
+            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s AND currency_rate_type_id " + operator +" %s ORDER BY name desc LIMIT 1" ,(currency.id, date, currency_rate_type))
             if cr.rowcount:
                 id, rate = cr.fetchall()[0]
                 res[id] = rate
             elif not raise_on_no_rate:
-                res[id] = 0
+                res[currency.id] = 0
             else:
-                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency '%s' for the given period" % (currency_name)))
+                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency '%s' for the given period" % (currency.name)))
         return res
 
     _name = "res.currency"
