@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
-from openerp.addons.website.models import website
-
 try:
     import simplejson as json
 except ImportError:
     import json
 import logging
 import pprint
-import requests
-from urllib import urlencode
+import urllib
+import urllib2
+
+from openerp.addons.web import http
+from openerp.addons.web.http import request
+from openerp.addons.website.models import website
 
 _logger = logging.getLogger(__name__)
 
@@ -32,9 +32,10 @@ class PaypalController(http.Controller):
 
         Once data is validated, process it. """
         res = False
-        paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr"
-        post_url = '%s?cmd=_notify-validate&%s' % (paypal_url, urlencode(post))
-        resp = requests.post(post_url)
+        new_post = dict(post, cmd='_notify-validate')
+        urequest = urllib2.Request("https://www.sandbox.paypal.com/cgi-bin/webscr", urllib.urlencode(new_post))
+        uopen = urllib2.urlopen(urequest)
+        resp = uopen.read()
         if resp.text == 'VERIFIED':
             _logger.info('Paypal: validated data')
             cr, uid, context = request.cr, request.uid, request.context

@@ -1,11 +1,5 @@
 # -*- coding: utf-'8' "-*-"
 
-from openerp.addons.payment_acquirer.models import payment_acquirer
-from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
-from openerp.addons.payment_acquirer_paypal.controllers.main import PaypalController
-from openerp.osv import osv, fields
-from openerp.tools.float_utils import float_compare
-
 import base64
 try:
     import simplejson as json
@@ -15,6 +9,11 @@ import logging
 import urlparse
 import urllib
 import urllib2
+
+from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
+from openerp.addons.payment_acquirer_paypal.controllers.main import PaypalController
+from openerp.osv import osv, fields
+from openerp.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
 
@@ -65,40 +64,34 @@ class AcquirerPaypal(osv.Model):
             fees = amount * (1 + acquirer.fees_int_var / 100.0) + acquirer.fees_int_fixed - amount
         return fees
 
-    def paypal_form_generate_values(self, cr, uid, id, reference, amount, currency, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
-        if partner_values is None:
-            partner_values = {}
+    def paypal_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
-        partner = None
-        if partner_id:
-            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
 
-        tx_values = {
+        paypal_tx_values = dict(tx_values)
+        paypal_tx_values.update({
             'cmd': '_xclick',
             'business': acquirer.paypal_email_id,
-            'item_name': reference,
-            'item_number': reference,
-            'amount': amount,
-            'currency_code': currency and currency.name or 'EUR',
-            'address1': payment_acquirer._partner_format_address(partner and partner.street or partner_values.get('street', ''), partner and partner.street2 or partner_values.get('street2', '')),
-            'city': partner and partner.city or partner_values.get('city', ''),
-            'country': partner and partner.country_id and partner.country_id.name or partner_values.get('country_name', ''),
-            'email': partner and partner.email or partner_values.get('email', ''),
-            'zip': partner and partner.zip or partner_values.get('zip', ''),
-            'first_name': payment_acquirer._partner_split_name(partner and partner.name or partner_values.get('name', ''))[0],
-            'last_name': payment_acquirer._partner_split_name(partner and partner.name or partner_values.get('name', ''))[1],
+            'item_name': tx_values['reference'],
+            'item_number': tx_values['reference'],
+            'amount': tx_values['amount'],
+            'currency_code': tx_values['currency'] and tx_values['currency'].name or '',
+            'address1': partner_values['address'],
+            'city': partner_values['city'],
+            'country': partner_values['country'] and partner_values['country'].name or '',
+            'email': partner_values['email'],
+            'zip': partner_values['zip'],
+            'first_name': partner_values['first_name'],
+            'last_name': partner_values['last_name'],
             'return': '%s' % urlparse.urljoin(base_url, PaypalController._return_url),
             'notify_url': '%s' % urlparse.urljoin(base_url, PaypalController._notify_url),
             'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
-        }
+        })
         if acquirer.fees_active:
-            tx_values['handling'] = '%.2f' % tx_custom_values.pop('fees', 0.0)
-        if tx_custom_values and tx_custom_values.get('return_url'):
-            tx_values['custom'] = json.dumps({'return_url': '%s' % tx_custom_values.pop('return_url')})
-        if tx_custom_values:
-            tx_values.update(tx_custom_values)
-        return tx_values
+            paypal_tx_values['handling'] = '%.2f' % paypal_tx_values.pop('fees', 0.0)
+        if paypal_tx_values.get('return_url'):
+            paypal_tx_values['custom'] = json.dumps({'return_url': '%s' % paypal_tx_values.pop('return_url')})
+        return partner_values, paypal_tx_values
 
     def paypal_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
@@ -143,28 +136,6 @@ class TxPaypal(osv.Model):
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
-
-    def paypal_form_generate_values(self, cr, uid, id, tx_custom_values=None, context=None):
-        tx = self.browse(cr, uid, id, context=context)
-
-        tx_data = {
-            'item_name': tx.name,
-            'first_name': payment_acquirer._partner_split_name(tx.partner_name)[0],
-            'last_name': payment_acquirer._partner_split_name(tx.partner_name)[0],
-            'email': tx.partner_email,
-            'zip': tx.partner_zip,
-            'address1': tx.partner_address,
-            'city': tx.partner_city,
-            'country': tx.partner_country_id and tx.partner_country_id.name or '',
-        }
-        if tx_custom_values:
-            tx_data.update(tx_custom_values)
-        return self.pool['payment.acquirer'].paypal_form_generate_values(
-            cr, uid, tx.acquirer_id.id,
-            tx.reference, tx.amount, tx.currency_id,
-            tx_custom_values=tx_data,
-            context=context
-        )
 
     def _paypal_form_get_tx_from_data(self, cr, uid, data, context=None):
         reference, txn_id = data.get('item_number'), data.get('txn_id')

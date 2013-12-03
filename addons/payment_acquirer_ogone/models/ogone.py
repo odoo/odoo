@@ -1,6 +1,10 @@
 # -*- coding: utf-'8' "-*-"
 
 from hashlib import sha1
+try:
+    import simplejson as json
+except ImportError:
+    import json
 import logging
 from lxml import etree, objectify
 from pprint import pformat
@@ -93,39 +97,34 @@ class PaymentAcquirerOgone(osv.Model):
         shasign = sha1(sign).hexdigest()
         return shasign
 
-    def ogone_form_generate_values(self, cr, uid, id, reference, amount, currency, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
-        if partner_values is None:
-            partner_values = {}
+    def ogone_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
-        partner = None
-        if partner_id:
-            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        tx_values = {
+
+        ogone_tx_values = dict(tx_values)
+        ogone_tx_values.update({
             'PSPID': acquirer.ogone_pspid,
-            'ORDERID': reference,
-            'AMOUNT': '%d' % int(float_round(amount, 2) * 100),
-            'CURRENCY': currency and currency.name or 'EUR',
-            'LANGUAGE': partner and partner.lang or partner_values.get('lang', ''),
-            'CN': partner and partner.name or partner_values.get('name', ''),
-            'EMAIL': partner and partner.email or partner_values.get('email', ''),
-            'OWNERZIP': partner and partner.zip or partner_values.get('zip', ''),
-            'OWNERADDRESS': partner and ' '.join((partner.street or '', partner.street2 or '')).strip() or ' '.join((partner_values.get('street', ''), partner_values.get('street2', ''))).strip(),
-            'OWNERTOWN': partner and partner.city or partner_values.get('city', ''),
-            'OWNERCTY': partner and partner.country_id and partner.country_id.name or partner_values.get('country_name', ''),
-            'OWNERTELNO': partner and partner.phone or partner_values.get('phone', ''),
+            'ORDERID': tx_values['reference'],
+            'AMOUNT': '%d' % int(float_round(tx_values['amount'], 2) * 100),
+            'CURRENCY': tx_values['currency'] and tx_values['currency'].name or '',
+            'LANGUAGE':  partner_values['lang'],
+            'CN':  partner_values['name'],
+            'EMAIL':  partner_values['email'],
+            'OWNERZIP':  partner_values['zip'],
+            'OWNERADDRESS':  partner_values['address'],
+            'OWNERTOWN':  partner_values['city'],
+            'OWNERCTY':  partner_values['country'] and partner_values['country'].name or '',
+            'OWNERTELNO': partner_values['phone'],
             'ACCEPTURL': '%s' % urlparse.urljoin(base_url, OgoneController._accept_url),
             'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),
             'EXCEPTIONURL': '%s' % urlparse.urljoin(base_url, OgoneController._exception_url),
             'CANCELURL': '%s' % urlparse.urljoin(base_url, OgoneController._cancel_url),
-        }
-        if tx_custom_values and tx_custom_values.get('return_url'):
-            tx_values['PARAMPLUS'] = 'return_url=%s' % tx_custom_values.pop('return_url')
-        if tx_custom_values:
-            tx_values.update(tx_custom_values)
+        })
+        if ogone_tx_values.get('return_url'):
+            ogone_tx_values['PARAMPLUS'] = json.dumps('{"return_url": %s}' % ogone_tx_values.pop('return_url'))
         shasign = self._ogone_generate_shasign(acquirer, 'in', tx_values)
-        tx_values['SHASIGN'] = shasign
-        return tx_values
+        ogone_tx_values['SHASIGN'] = shasign
+        return partner_values, ogone_tx_values
 
     def ogone_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
@@ -152,30 +151,6 @@ class PaymentTxOgone(osv.Model):
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
-
-    def ogone_form_generate_values(self, cr, uid, id, tx_custom_values=None, context=None):
-        """ Ogone-specific value generation for rendering a transaction-based
-        form button. """
-        tx = self.browse(cr, uid, id, context=context)
-
-        tx_data = {
-            'LANGUAGE': tx.partner_lang,
-            'CN': tx.partner_name,
-            'EMAIL': tx.partner_email,
-            'OWNERZIP': tx.partner_zip,
-            'OWNERADDRESS': tx.partner_address,
-            'OWNERTOWN': tx.partner_city,
-            'OWNERCTY': tx.partner_country_id and tx.partner_country_id.name or '',
-            'OWNERTELNO': tx.partner_phone,
-        }
-        if tx_custom_values:
-            tx_data.update(tx_custom_values)
-        return self.pool['payment.acquirer'].ogone_form_generate_values(
-            cr, uid, tx.acquirer_id.id,
-            tx.reference, tx.amount, tx.currency_id,
-            tx_custom_values=tx_data,
-            context=context
-        )
 
     def _ogone_form_get_tx_from_data(self, cr, uid, data, context=None):
         """ Given a data dict coming from ogone, verify it and find the related
