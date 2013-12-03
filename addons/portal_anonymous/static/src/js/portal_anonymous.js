@@ -71,7 +71,7 @@ openerp.portal_anonymous = function(instance) {
             this.$el.find('a.login').click(function() {
                 var p = self.getParent();
                 var am = p.action_manager;
-                p.$el.find('.oe_leftbar, .oe_topbar').hide();
+                p.$el.find('.oe_leftbar, .navbar').hide(); // .oe_topbar is replaced with .navbar of bootstrap3 
                 self.session.session_logout().done(function () {
                     am.do_action({
                         type:'ir.actions.client',
