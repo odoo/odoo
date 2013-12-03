@@ -1428,14 +1428,16 @@
         var output = [];
         for(var i=0; i<nodes.length; ++i) {
             var node = nodes[i];
-            if (node.nodeName === 'BR' && node.getAttribute('type') === '_moz') {
-                // <br type="_moz"> appears when focusing RTE in FF, ignore
-                continue;
-            }
-            if (node.className.indexOf('image-edit-button') !== -1) {
-                // [Edit] button added and removed on image hover, don't count
-                // as making parent node dirty
-                continue;
+            if (node.nodeType === document.ELEMENT_NODE) {
+                if (node.nodeName === 'BR' && node.getAttribute('type') === '_moz') {
+                    // <br type="_moz"> appears when focusing RTE in FF, ignore
+                    continue;
+                }
+                if (node.className.indexOf('image-edit-button') !== -1) {
+                    // [Edit] button added and removed on image hover, don't count
+                    // as making parent node dirty
+                    continue;
+                }
             }
 
             output.push(node);
