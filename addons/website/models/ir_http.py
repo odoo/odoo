@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import traceback
 
 import werkzeug.routing
@@ -8,6 +9,8 @@ from openerp.addons.base import ir
 from openerp.addons.website.models.website import slug
 from openerp.http import request
 from openerp.osv import orm
+
+logger = logging.getLogger(__name__)
 
 class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
@@ -77,6 +80,7 @@ class ir_http(orm.AbstractModel):
 
     def _handle_403(self, exception):
         if getattr(request, 'cms', False) and request.website:
+            logger.warn("403 Forbidden:\n\n%s", traceback.format_exc(exception))
             self._auth_method_public()
             return self._render_error(403, {
                 'error': exception.message
@@ -90,6 +94,7 @@ class ir_http(orm.AbstractModel):
 
     def _handle_500(self, exception):
         if getattr(request, 'cms', False) and request.website:
+            logger.error("500 Internal Server Error:\n\n%s", traceback.format_exc(exception))
             return self._render_error(500, {
                 'exception': exception,
                 'traceback': traceback.format_exc(),
