@@ -441,11 +441,20 @@ ul.oe_menu_editor .disclose {
   box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 0px 0px 0px 1px rgba(255, 255, 255, 0.3) inset;
   border-color: rgba(0, 0, 0, 0.5);
 }
-.oe_overlay.oe_active .oe_handle {
+.oe_overlay .oe_handle {
   display: block !important;
   pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  margin: -2px;
 }
-.oe_overlay.oe_active .oe_handle:before {
+.oe_overlay .oe_handle:before {
   position: relative;
   top: 50%;
   left: 50%;
@@ -470,23 +479,49 @@ ul.oe_menu_editor .disclose {
   -o-transition: background 100ms linear;
   transition: background 100ms linear;
 }
-.oe_overlay.oe_active .oe_handle:hover:before {
+.oe_overlay .oe_handle:hover:before {
   background: rgba(0, 0, 0, 0.5);
   color: white;
   -webkit-box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
   -moz-box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
   box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
 }
-.oe_overlay.oe_active .oe_handle.e:before {
+.oe_overlay .oe_handle.e {
+  left: auto;
+  top: 2px;
+  height: 100%;
+  right: -4px;
+  cursor: w-resize;
+}
+.oe_overlay .oe_handle.e:before {
   content: "\F061";
 }
-.oe_overlay.oe_active .oe_handle.s:before {
+.oe_overlay .oe_handle.s {
+  top: auto;
+  left: 2px;
+  width: 100%;
+  bottom: -4px;
+  cursor: n-resize;
+}
+.oe_overlay .oe_handle.s:before {
   content: "\F063";
 }
-.oe_overlay.oe_active .oe_handle.w:before {
+.oe_overlay .oe_handle.w {
+  top: 2px;
+  height: 100%;
+  left: -4px;
+  cursor: e-resize;
+}
+.oe_overlay .oe_handle.w:before {
   content: "\F060";
 }
-.oe_overlay.oe_active .oe_handle.n:before {
+.oe_overlay .oe_handle.n {
+  left: 2px;
+  width: 100%;
+  top: -4px;
+  cursor: s-resize;
+}
+.oe_overlay .oe_handle.n:before {
   content: "\F062";
 }
 .oe_overlay .icon.btn {
@@ -526,36 +561,6 @@ ul.oe_menu_editor .disclose {
   width: 8px;
   height: 8px;
   margin: -4px;
-}
-
-.oe_handle.n {
-  left: 2px;
-  width: 100%;
-  top: 0px;
-  cursor: s-resize;
-}
-
-.oe_handle.e {
-  left: auto;
-  top: 2px;
-  height: 100%;
-  right: 0px;
-  cursor: w-resize;
-}
-
-.oe_handle.s {
-  top: auto;
-  left: 2px;
-  width: 100%;
-  bottom: 0px;
-  cursor: n-resize;
-}
-
-.oe_handle.w {
-  top: 2px;
-  height: 100%;
-  left: 0px;
-  cursor: e-resize;
 }
 
 .s-resize-important, .s-resize-important * {

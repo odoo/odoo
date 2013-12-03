@@ -184,23 +184,24 @@
         bind_snippet_click_editor: function () {
             var self = this;
             var snipped_event_flag = false;
-            $("body").on('click', "[data-oe-model] [data-snippet-id], [data-oe-model][data-snippet-id]", function (event) {
-                    if (snipped_event_flag) {
-                        return;
-                    }
-                    snipped_event_flag = true;
-                    setTimeout(function () {snipped_event_flag = false;}, 0);
-                    var $target = $(event.currentTarget);
-                    if (self.$active_snipped_id && self.$active_snipped_id.is($target)) {
-                        return;
-                    }
-                    self.make_active($target);
-                });
-            $("[data-oe-model]").on('click', function () {
-                    if (!snipped_event_flag && self.$active_snipped_id && !self.$active_snipped_id.parents("[data-snippet-id]:first")) {
-                        self.make_active(false);
-                    }
-                });
+            $("#wrapwrap").on('click', function (event) {
+                if (snipped_event_flag) {
+                    return;
+                }
+                snipped_event_flag = true;
+                setTimeout(function () {snipped_event_flag = false;}, 0);
+                var $target = $(event.srcElement);
+                if (!$target.attr("data-snippet-id")) {
+                    $target = $target.parents("[data-snippet-id]:first");
+                }
+                if (!$target.attr("data-oe-model") && !$target.parents("[data-oe-model]:first").length) {
+                    $target = false;
+                }
+                if (self.$active_snipped_id && self.$active_snipped_id.is($target)) {
+                    return;
+                }
+                self.make_active($target);
+            });
         },
         snippet_blur: function ($snipped_id) {
             if ($snipped_id) {
@@ -233,7 +234,7 @@
                 this.snippet_blur(this.$active_snipped_id);
                 this.$active_snipped_id = false;
             }
-            if ($snipped_id) {
+            if ($snipped_id && $snipped_id.length) {
                 if(_.indexOf(this.snippets, $snipped_id.get(0)) === -1) {
                     this.snippets.push($snipped_id.get(0));
                 }
