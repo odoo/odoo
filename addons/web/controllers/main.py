@@ -569,7 +569,6 @@ class Home(http.Controller):
             return redirect(guessed_db)
 
         if db is not None and db != request.session.db:
-            # temp hack until fixed in trunk
             request.session.logout()
             request.session.db = db
             guessed_db = db
