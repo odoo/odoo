@@ -21,10 +21,9 @@
 ##############################################################################
 
 from reportlab import rl_config
-from reportlab.lib import fonts
-from reportlab.pdfbase import pdfmetrics, ttfonts
 import logging
-import os,platform
+import glob
+import os
 
 # .apidoc title: TTF Font Table
 
@@ -95,10 +94,8 @@ def list_all_sysfonts():
     # TTFOpenFile is not very good at it.
     searchpath = list(set(TTFSearchPath + rl_config.TTFSearchPath))
     for dirname in searchpath:
-        dirname = os.path.expanduser(dirname)
-        if os.path.exists(dirname):
-            for filename in [x for x in os.listdir(dirname) if x.lower().endswith('.ttf')]:
-                filepath.append(os.path.join(dirname, filename))
+        for filename in glob.glob(os.path.expanduser(dirname)+'/*.[Tt][Tt][Ff]'):
+            filepath.append(filename)
     return filepath
 
 def SetCustomFonts(rmldoc):
