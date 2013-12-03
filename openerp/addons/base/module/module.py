@@ -803,6 +803,7 @@ class module_dependency(osv.Model):
         compute='_compute_state', readonly=True, store=False)
 
     @api.multi
+    @api.depends('name')
     def _compute_depend(self):
         # retrieve all modules corresponding to the dependency names
         names = list(set(dep.name for dep in self))
