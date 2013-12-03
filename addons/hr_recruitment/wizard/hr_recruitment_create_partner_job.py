@@ -48,7 +48,7 @@ class hr_recruitment_partner_create(osv.osv_memory):
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
+        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)[0]
 
         for case in case_obj.browse(cr, uid, context['active_ids'], context=context):
             partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)], context=context)
@@ -76,7 +76,7 @@ class hr_recruitment_partner_create(osv.osv_memory):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
-                }
+        }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
