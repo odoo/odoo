@@ -207,8 +207,14 @@ class one2many_mod2(fields.one2many):
         for id in ids:
             res[id] = []
         ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids), ('appears_on_payslip', '=', True)], limit=self._limit)
-        for r in obj.pool[self._obj]._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append( r['id'] )
+        for r in obj.pool[self._obj].read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+            key = r[self._fields_id]
+            if isinstance(key, tuple):
+                # Read return a tuple in the case where the field is a many2one
+                # but we want to get the id of this field.
+                key = key[0]
+
+            res[key].append( r['id'] )
         return res
 
 class hr_payslip_run(osv.osv):
