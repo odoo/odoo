@@ -189,6 +189,9 @@ class res_company(osv.osv):
             
             default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
             return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
+        
+        if not font:
+            return True
         fontname = self.pool.get('res.font').browse(cr, uid, font, context=context).name
         return {'value':{
                         'rml_header': _change_header(rml_header,fontname),
@@ -294,12 +297,12 @@ class res_company(osv.osv):
 
     def _get_font(self, cr, uid, ids):
         font_obj = self.pool.get('res.font')
-        res = font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)
+        res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'normal')], limit=1)
         if res:
             return res[0]
         
         font_obj.init_scan(cr, uid)
-        res = font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)
+        res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'normal')], limit=1)
         return res and res[0] or False
 
     _header = """
