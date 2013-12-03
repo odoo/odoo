@@ -298,8 +298,9 @@ class res_company(osv.osv):
         if res:
             return res[0]
         
-        font_obj.init_no_scan(cr, uid)
-        return font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)[0]
+        font_obj.init_scan(cr, uid)
+        res = font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)
+        return res and res[0] or False
 
     _header = """
 <header>
@@ -396,7 +397,7 @@ class res_company(osv.osv):
         return {'value': {'rml_header': self._header_a4}}
 
     def act_discover_fonts(self, cr, uid, ids, context=None):
-        return self.pool.get("res.font").discover_fonts(cr, uid, ids, context)
+        return self.pool.get("res.font").init_scan(cr, uid, context)
 
     _defaults = {
         'currency_id': _get_euro,

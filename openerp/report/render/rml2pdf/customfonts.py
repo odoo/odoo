@@ -47,7 +47,7 @@ BasePDFFonts = [
 ]
 
 # List of fonts found on the disk
-CustomTTFonts = BaseCustomTTFonts = [ ('Helvetica', "DejaVu Sans", "DejaVuSans.ttf", 'normal'),
+BaseCustomTTFonts = [ ('Helvetica', "DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Helvetica', "DejaVu Sans Bold", "DejaVuSans-Bold.ttf", 'bold'),
         ('Helvetica', "DejaVu Sans Oblique", "DejaVuSans-Oblique.ttf", 'italic'),
         ('Helvetica', "DejaVu Sans BoldOblique", "DejaVuSans-BoldOblique.ttf", 'bolditalic'),
@@ -60,14 +60,14 @@ CustomTTFonts = BaseCustomTTFonts = [ ('Helvetica', "DejaVu Sans", "DejaVuSans.t
         ('Courier', "FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
         ('Courier', "FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),
 ]
-
+CustomTTFonts = list(BaseCustomTTFonts)
 
 # Search path for TTF files, in addition of rl_config.TTFSearchPath
 TTFSearchPath = [
             '/usr/share/fonts/truetype', # SuSE
             '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
             '/usr/share/fonts/truetype/*','/usr/local/share/fonts' # Ubuntu,
-            '/usr/share/fonts/TTF/*', # at Mandriva/Mageia
+            '/usr/share/fonts/TTF/*', # Mandriva/Mageia
             '/usr/share/fonts/TTF', # Arch Linux
             '/usr/lib/openoffice/share/fonts/truetype/',
             '~/.fonts',
