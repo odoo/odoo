@@ -583,9 +583,10 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     start: function() {
         this._super();
         var self = this;
+        this.$el.find('.oe_view_manager_switch a').attr('data-toggle', 'tooltip');
         this.$el.find('.oe_view_manager_switch a').click(function() {
             self.switch_mode($(this).data('view-type'));
-        }).tooltip();
+        }).tooltip({'placement': 'bottom'});
         var views_ids = {};
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
