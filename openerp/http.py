@@ -991,11 +991,9 @@ class Root(object):
                         result = ir_http._dispatch()
                         openerp.modules.registry.RegistryManager.signal_caches_change(db)
                 else:
-                    # fallback to non-db handlers
-                    func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
-                    request.set_handler(func, arguments, "none")
-                    result = request.dispatch()
-                response = self.get_response(httprequest, result, explicit_session)
+                    result = _dispatch_nodb()
+
+            response = self.get_response(httprequest, result, explicit_session)
             return response(environ, start_response)
 
         except werkzeug.exceptions.HTTPException, e:
