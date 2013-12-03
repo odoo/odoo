@@ -76,7 +76,7 @@ class base_config_settings(osv.osv_memory):
         return {}
 
     def act_discover_fonts(self, cr, uid, ids, context=None):
-        return self.pool.get("res.font").discover_fonts(cr, uid, ids, context)
+        return self.pool.get("res.font").init_scan(cr, uid, context)
 
 # Preferences wizard for Sales & CRM.
 # It is defined here because it is inherited independently in modules sale, crm,
