@@ -38,8 +38,23 @@
                             self.moveToNextStep();
                         });
                     };
-               } else {
-                   step.onShow = step.triggers;
+               } else if (step.triggers) {
+                   step.onShow = (function () {
+                       var executed = false;
+                       return function () {
+                           if (!executed) {
+                               step.triggers();
+                               executed = true;
+                           }
+                       };
+                   }());
+               } else if (step.reflex) {
+                   step.onShow = function () {
+                       $(step.element).one('click', function () {
+                           self.moveToNextStep();
+                       });
+                   };
+                   delete step.reflex;
                }
                return step;
             }));
@@ -77,6 +92,7 @@
                 this.stop();
             } else if (index >= 0) {
                 var self = this;
+                self.tourStorage.setItem(step.id+'_current_step', index);
                 setTimeout(function () {
                     $('.popover.tour').remove();
                     self.tour.goto(index);
@@ -84,17 +100,18 @@
             }
         },
         moveToNextStep: function () {
-            this.moveToStep(this.currentStepIndex() + 1);
+            var nextStepIndex = this.currentStepIndex() + 1;
+            this.moveToStep(nextStepIndex);
         },
         stop: function () {
             this.tour.end();
         },
         redirect: function (url) {
             url = url || new website.UrlParser(window.location.href);
-            if (this.startPath && url.pathname !== this.startPath) {
-                var newUrl = this.startPath + (url.search ? (url.search + "&") : "?") + this.id + "=true";
-                window.location.replace(newUrl);
-            }
+            var path = (this.startPath && url.pathname !== this.startPath) ? this.startPath : url.pathname;
+            var search = url.addToSearch(this.id + "=true");
+            var newUrl = path + search;
+            window.location.replace(newUrl);
         },
         ended: function () {
             return this.tourStorage.getItem(this.id+'_end') === "yes";
@@ -146,6 +163,18 @@
             this.origin = a.origin;
             this.search = a.search;
             this.hash = a.hash;
+            this.addToSearch= function (query) {
+                var querystring = _.filter(this.search.split('?'), function (str) {
+                    return str;
+                });
+                if (querystring.length > 0) {
+                    var queries = querystring[0].split("&");
+                    queries.push(query);
+                    return "?" + _.uniq(queries).join("&");
+                } else {
+                    return "?"+query;
+                }
+            };
         },
     });
 

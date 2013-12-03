@@ -103,7 +103,7 @@
                 },
                 {
                     stepId: 'activate-text-block-title',
-                    element: '#wrap [data-snippet-id=three-columns] .text-center[data-snippet-id=colmd]',
+                    element: '#wrap [data-snippet-id=three-columns]:first .text-center[data-snippet-id=colmd]',
                     placement: 'top',
                     title: "Edit an Area",
                     content: "Select any area of the page to modify it. Click on this subtitle.",
