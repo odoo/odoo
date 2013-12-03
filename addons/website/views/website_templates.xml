@@ -128,10 +128,12 @@
                                                 <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                                     <t t-call="website.submenu"/>
                                                 </t>
-                                                <li class="active dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
+                                                <li class="dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
                                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                                        <span t-esc="user_id.name"/>
-                                                        <span class="caret"></span>
+                                                        <span class="badge">
+                                                            <span t-esc="user_id.name"/>
+                                                            <span class="caret"></span>
+                                                        </span>
                                                     </a>
                                                     <ul class="dropdown-menu js_usermenu" role="menu">
                                                         <li><a href="/web" role="menuitem">Administration</a></li>
@@ -224,9 +226,9 @@
 
         <template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
             <xpath expr="//ul[@id='top_menu']" position="inside">
-                <li class="active" t-if="user_id.id == website.public_user.id">
+                <li t-if="user_id.id == website.public_user.id">
                     <a t-attf-href="/web#redirect=#{ url_for('') }">
-                        Sign in
+                        <span class="badge">Sign in</span>
                     </a>
                 </li>
             </xpath>
