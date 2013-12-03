@@ -138,7 +138,7 @@
                                                     <ul class="dropdown-menu js_usermenu" role="menu">
                                                         <li><a href="/web" role="menuitem">Administration</a></li>
                                                         <li class="divider"/>
-                                                        <li><a t-attf-href="/web/session/logout?redirect=#{ url_for('') }" role="menuitem">Logout</a></li>
+                                                        <li><a t-attf-href="/web/session/logout?redirect=#{ quote_plus(url_for('', keep_query='*')) }" role="menuitem">Logout</a></li>
                                                     </ul>
                                                 </li>
                                             </ul>
@@ -227,7 +227,7 @@
         <template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
             <xpath expr="//ul[@id='top_menu']" position="inside">
                 <li t-if="user_id.id == website.public_user.id">
-                    <a t-attf-href="/web#redirect=#{ url_for('') }">
+                    <a t-attf-href="/web#redirect=#{ quote_plus(url_for('', keep_query='*')) }">
                         <span class="badge">Sign in</span>
                     </a>
                 </li>

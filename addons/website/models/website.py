@@ -77,6 +77,9 @@ def urlplus(url, params):
         for k, v in params.iteritems()
     ))
 
+def quote_plus(value):
+    return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
+
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
         # IF a menu is changed, update all websites
@@ -226,6 +229,7 @@ class website(osv.osv):
             slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
+            quote_plus=quote_plus,
         )
 
         context.update(
