@@ -4001,8 +4001,7 @@ class BaseModel(object):
 
         # put the values of pure new-style fields into cache, and inverse them
         if new_vals:
-            for record in self:
-                record._update_cache(new_vals)
+            self._update_cache(new_vals)
             for key in new_vals:
                 self._fields[key].determine_inverse(self)
 
@@ -5445,14 +5444,15 @@ class BaseModel(object):
         return values
 
     def _update_cache(self, values):
-        """ Update the cache of record `self[0]` with `values`. Only the cache
-            is updated, no side effect happens.
+        """ Update the cache of all records in `self` with `values`.
+            Only the cache is updated, no side effect happens.
         """
         with self._scope:
             cache = self._scope.cache
             for name, value in values.iteritems():
                 field = self._fields[name]
-                cache[field][self._id] = field.convert_to_cache(value)
+                value = field.convert_to_cache(value)
+                cache[field].update(dict.fromkeys(self._ids, value))
 
     def _mark_failed(self, exception, fnames=None):
         """ Update the caches of all records in `self` in order to raise the
