@@ -32,11 +32,7 @@
                     title: "Edit this page",
                     content: "Every page of your website can be modified through the <i>Edit</i> button.",
                     triggers: function () {
-                        function advance () {
-                            self.moveToNextStep();
-                            editor.off('tour:editor_bar_loaded', self, advance);
-                        }
-                        editor.on('tour:editor_bar_loaded', self, advance);
+                        editor.on('tour:editor_bar_loaded', self, self.moveToNextStep);
                     },
                 },
                 {
