@@ -114,7 +114,7 @@ class website(osv.osv):
     }
 
     def write(self, cr, uid, ids, vals, context=None):
-        self.get_languages.clear_cache(self)
+        self._get_languages.clear_cache(self)
         return super(website, self).write(cr, uid, ids, vals, context)
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
