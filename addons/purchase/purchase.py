@@ -596,7 +596,8 @@ class purchase_order(osv.osv):
                 .signal_button_cancel(cr, uid, map(attrgetter('id'), purchase.picking_ids))
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel','draft'):
-                    raise osv.except_osv(_('Unable to cancel this purchase order.'),
+                    raise osv.except_osv(
+                        _('Unable to cancel this purchase order.'),
                         _('You must first cancel all invoices related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_invoice_cancel(cr, uid, map(attrgetter('id'), purchase.invoice_ids))
