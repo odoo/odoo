@@ -162,16 +162,16 @@
                                                 <li><a href="/page/website.contactus">Contact us</a></li>
                                             </ul>
                                             <ul class="list-unstyled">
-                                                <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
-                                                <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
+                                                <li><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
+                                                <li><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
                                             </ul>
                                             <h2>
-                                                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="icon-facebook-sign"/></a>
-                                                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="icon-twitter-sign"/></a>
-                                                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="icon-linkedin-sign"/></a>
-                                                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="icon-youtube-sign"/></a>
-                                                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="icon-google-plus-sign"/></a>
-                                                <a t-att-href="website.social_github" t-if="website.social_github"><i class="icon-github-sign"/></a>
+                                                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
+                                                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
+                                                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
+                                                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
+                                                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
+                                                <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
                                             </h2>
                                         </div>
                                         <div class="col-md-5 col-lg-offset-1" name="about_us">
@@ -201,7 +201,7 @@
                                                 <li t-if="editable">
                                                     <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]')"/>
                                                     <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
-                                                        <i class="icon-plus-sign"/>
+                                                        <i class="fa fa-plus-circle"/>
                                                         Add a language...
                                                     </a>
                                                 </li>
@@ -528,7 +528,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 <div t-field="res_company.partner_id">Name</div>
                 <br />
                 <div>&amp;#x2706; <span t-field="res_company.phone"></span></div>
-                <div class="icon-envelope" t-field="res_company.email"></div>
+                <div class="fa fa-envelope" t-field="res_company.email"></div>
             </address>
              <a t-att-href="res_company.google_map_link()" target="_BLANK">
                 <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
