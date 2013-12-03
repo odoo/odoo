@@ -3836,6 +3836,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this.$el
             .off('mousedown.handleButtons')
             .on('mousedown.handleButtons', 'table button', this.proxy('_button_down'));
+        this.$el.off('mousedown.handleAnchor').on('mousedown.handleAnchor', 'div a', this.proxy('_button_down'))
         return ret;
     },
     changed_records: function () {
@@ -3995,6 +3996,12 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         } finally {
             window.confirm = confirm;
         }
+    },
+    reload_record: function (record) {
+        // Evict record.id from cache to ensure it will be reloaded correctly
+        this.dataset.evict_record(record.get('id'));
+
+        return this._super(record);
     }
 });
 instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
