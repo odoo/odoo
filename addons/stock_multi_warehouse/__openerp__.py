@@ -32,7 +32,7 @@ It creates 3 warehouses
     """,
     'author': 'OpenERP SA',
     'images': [],
-    'depends': ['stock_complex_routes'],
+    'depends': ['stock_dropshipping'],
     'data': [],
     'demo': [
         'stock_multi_warehouse.yml'

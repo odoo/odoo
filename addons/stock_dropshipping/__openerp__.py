@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    'name': 'Complex routes when using stock locations, purchase and sale',
+    'name': 'Dropship route when using stock locations, purchase and sale',
     'version': '1.0',
     'category': 'Hidden',
-    'summary': 'Complex routes',
+    'summary': 'Dropship route',
     'description': """
 Manage sales quotations and stock_location
 ==========================================
@@ -36,7 +36,7 @@ This adds a route on the sales order and sales order line (mini module)
     'images': [],
     'depends': ['purchase', 'sale_stock'],
     'init_xml': [],
-    'data': ['stock_complex_routes.xml'],
+    'data': ['stock_dropshipping.xml'],
     'demo_xml': [],
     'test': [
         'test/cancellation_propagated.yml',
