@@ -608,10 +608,10 @@ class FloatConverter(osv.AbstractModel):
         precision = self.precision(cr, uid, column, options=options, context=context)
         fmt = '%f' if precision is None else '%.{precision}f'
 
-        lang = self.user_lang(cr, uid, context)
+        lang_code = context.get('lang') or 'en_US'
+        lang = self.pool['res.lang']
+        formatted = lang.format(cr, uid, [lang_code], fmt.format(precision=precision), value, grouping=True)
 
-        formatted = lang.format(fmt.format(precision=precision),
-                                value, grouping=True)
         # %f does not strip trailing zeroes. %g does but its precision causes
         # it to switch to scientific notation starting at a million *and* to
         # strip decimals. So use %f and if no precision was specified manually
@@ -767,8 +767,9 @@ class MonetaryConverter(osv.AbstractModel):
         precision = int(round(math.log10(display.rounding)))
         fmt = "%.{0}f".format(-precision if precision < 0 else 0)
 
-        lang = self.user_lang(cr, uid, context=context)
-        formatted_amount = lang.format(
+        lang_code = context.get('lang') or 'en_US'
+        lang = self.pool['res.lang']
+        formatted_amount = lang.format(cr, uid, [lang_code], 
             fmt, Currency.round(cr, uid, display, record[field_name]),
             grouping=True, monetary=True)
 

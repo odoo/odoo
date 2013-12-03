@@ -162,9 +162,13 @@ class lang(osv.osv):
     ]
 
     @tools.ormcache(skiparg=3)
-    def _lang_data_get(self, cr, uid, lang_id, monetary=False):
+    def _lang_data_get(self, cr, uid, lang, monetary=False):
+        if type(lang) in (str, unicode):
+            lang = self.search(cr, uid, [('code', '=', lang)]) or \
+                self.search(cr, uid, [('code', '=', 'en_US')])
+            lang = lang[0]
         conv = localeconv()
-        lang_obj = self.browse(cr, uid, lang_id)
+        lang_obj = self.browse(cr, uid, lang)
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
         decimal_point = lang_obj.decimal_point
         grouping = lang_obj.grouping
@@ -192,6 +196,9 @@ class lang(osv.osv):
             trans_obj.unlink(cr, uid, trans_ids, context=context)
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
+    #
+    # IDS: can be a list of IDS or a list of XML_IDS
+    #
     def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False, context=None):
         """ Format() will return the language-specific output for float values"""
         if percent[0] != '%':
