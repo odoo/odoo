@@ -185,7 +185,7 @@ class website(osv.osv):
             return werkzeug.utils.redirect(url_for(url))
         request.redirect = redirect
         is_website_publisher = self.pool.get('ir.model.access').check_groups(cr, uid, 'base.group_website_publisher')
-        is_website_publisher = self.pool.get('ir.model.access').check(cr, uid, 'ir.ui.view', 'write', raise_exception=False, context=context)
+        is_website_publisher = self.pool.get('ir.model.access').check(cr, uid, 'ir.ui.view', 'write', False, context)
         lang = request.context['lang']
         is_master_lang = lang == request.website.default_lang_code
         request.context.update({
