@@ -79,7 +79,7 @@ class BlogPost(osv.Model):
                         'oe_expand_container_tag': 'div',
                         'oe_expand_container_class': 'oe_mail_expand text-center',
                         'oe_expand_container_content': '',
-                        'oe_expand_a_href': '/blog/%d/' % page.id,
+                        'oe_expand_a_href': '/blogpost/%d' % page.id,
                         'oe_expand_a_class': 'oe_mail_expand btn btn-info',
                         'oe_expand_separator_node': 'br',
                     },
