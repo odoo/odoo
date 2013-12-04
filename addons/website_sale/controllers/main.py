@@ -580,21 +580,23 @@ class Ecommerce(http.Controller):
 
         # fetch all registered payment means
         if tx:
-            payment_ids = [tx.acquirer_id.id]
+            acquirer_ids = [tx.acquirer_id.id]
         else:
-            payment_ids = payment_obj.search(cr, SUPERUSER_ID, [('portal_published', '=', True)], context=context)
-        values['payments'] = payment_obj.browse(cr, uid, payment_ids, context=context)
-        for pay in values['payments']:
-            pay._content = payment_obj.render(
-                cr, uid, pay.id,
+            acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('portal_published', '=', True)], context=context)
+        values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
+        render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
+        for acquirer in values['acquirers']:
+            render_ctx['tx_url'] = '/shop/payment/transaction/%s' % acquirer.id
+            acquirer.button = payment_obj.render(
+                cr, uid, acquirer.id,
                 order.name,
                 order.amount_total,
-                order.pricelist_id.currency_id,
+                order.pricelist_id.currency_id.id,
                 partner_id=shipping_partner_id,
-                tx_custom_values={
+                tx_values={
                     'return_url': '/shop/payment/validate',
                 },
-                context=context)
+                context=render_ctx)
 
         return request.website.render("website_sale.payment", values)
 

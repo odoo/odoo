@@ -7,13 +7,6 @@ $(document).ready(function () {
         $(".oe_website_sale .js_shipping").toggle();
     });
 
-    var $payment = $(".oe_website_sale .js_payment");
-    $payment.find("input[name='payment_type']").click(function (ev) {
-        var payment_id = $(ev.currentTarget).val();
-        $("div[data-id]", $payment).addClass("hidden");
-        $("a.btn:last, div[data-id='"+payment_id+"']", $payment).removeClass("hidden");
-    });
-
     // change for css
     $(document).on('mouseup', '.js_publish', function (ev) {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");

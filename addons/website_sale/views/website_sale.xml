@@ -878,20 +878,22 @@
                   </div>
                 </div>
 
-                <div class="js_payment mb64" t-if="not payment_acquirer_id and payments" id="payment_method">
+                <div class="js_payment mb64" t-if="acquirers" id="payment_method">
                     <h3>Choose your payment method</h3>
                     <div class="col-lg-5 col-sm-6">
-                        <t t-foreach="payments or []" t-as="payment">
-                            <label t-if="payment._content">
-                                <input t-att-value="payment.id" type="radio" name="payment_type"/> <span t-field="payment.name"/>
+                        <t t-foreach="acquirers or []" t-as="acquirer">
+                            <label t-if="acquirer.button" class="oe_sale_acquirer_logo" style="display: block;">
+                                <input t-att-value="acquirer.id" type="radio" name="acquirer"/>
+                                <img class="media-object" style="width: 60px; display: inline-block;"
+                                    t-att-title="acquirer.name"
+                                    t-att-src="'/payment_acquirer_%s/static/src/img/%s_icon.png' % (acquirer.name, acquirer.name)"/>
                             </label>
-                        </t>
-                        <t t-foreach="payments" t-as="payment">
-                            <div t-att-data-id="payment.id" t-raw="payment._content" class="oe_payment_acquirer hidden"/>
                         </t>
                     </div>
                     <div class="col-lg-3 col-sm-3">
-                        <button class="btn btn-primary pull-right">Pay Now !!!</button>
+                        <t t-foreach="acquirers or []" t-as="acquirer">
+                            <div t-att-data-id="acquirer.id" t-raw="acquirer.button" class="oe_sale_acquirer_button hidden"/>
+                        </t>
                     </div>
                 </div>
 
