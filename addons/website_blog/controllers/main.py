@@ -110,7 +110,7 @@ class WebsiteBlog(http.Controller):
         domain = []
 
         if category:
-            path_filter += "cat/%s/" % category.id
+            path_filter += "%s/" % category.id
             domain += [("id", "in", [blog.id for blog in category.blog_post_ids])]
         if tag:
             path_filter += 'tag/%s/' % tag.id
@@ -178,7 +178,7 @@ class WebsiteBlog(http.Controller):
          - 'nav_list': a dict [year][month] for archives navigation
         """
 
-        pager_url = "/blog/%s" % blog_post.id
+        pager_url = "/blogpost/%s" % blog_post.id
 
         pager = request.website.pager(
             url=pager_url,
