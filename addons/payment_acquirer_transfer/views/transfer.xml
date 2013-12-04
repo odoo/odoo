@@ -3,16 +3,19 @@
     <data noupdate="0">
 
         <template id="transfer_acquirer_button">
-            <div t-field="acquirer.message"/>
-            <form t-if="acquirer" action="/payment/transfer/feedback" method="post" target="_self">
+            <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
                 <t t-if="tx_values.get('return_url')">
                     <input type='hidden' name='return_url' t-att-value='tx_values["return_url"]'/>
                 </t>
                 <input type='hidden' name='reference' t-att-value='reference'/>
                 <input type='hidden' name='amount' t-att-value='amount'/>
                 <input type='hidden' name='currency' t-att-value='currency.name'/>
-                <input type="submit" name="submit" id="payment_submit"
-                    class="btn btn-primary" value="Confirmer"/>
+                <!-- submit -->
+                <button type="image" name="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_acquirer_transfer/static/src/img/transfer_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/></span>
+                </button>
             </form>
         </template>
 

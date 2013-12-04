@@ -21,10 +21,22 @@ _logger = logging.getLogger(__name__)
 class AcquirerPaypal(osv.Model):
     _inherit = 'payment.acquirer'
 
+    def _get_paypal_urls(self, cr, uid, env, context=None):
+        """ Paypal URLS """
+        if env == 'prod':
+            return {
+                'paypal_form_url': 'https://www.sandbox.paypal.com/cgi-bin/webscr',
+                'paypal_rest_url': 'https://api.sandbox.paypal.com/v1/oauth2/token',
+            }
+        else:
+            return {
+                'paypal_form_url': 'https://www.sandbox.paypal.com/cgi-bin/webscr',
+                'paypal_rest_url': 'https://api.sandbox.paypal.com/v1/oauth2/token',
+            }
+
     _columns = {
         'paypal_email_id': fields.char('Email ID', required_if_provider='paypal'),
         'paypal_username': fields.char('Username', required_if_provider='paypal'),
-        'paypal_tx_url': fields.char('Transaction URL', required_if_provider='paypal'),
         'paypal_use_ipn': fields.boolean('Use IPN'),
         # Server 2 server
         'paypal_api_enabled': fields.boolean('Use Rest API'),
@@ -35,7 +47,6 @@ class AcquirerPaypal(osv.Model):
     }
 
     _defaults = {
-        'paypal_tx_url': 'https://www.sandbox.paypal.com/cgi-bin/webscr',
         'paypal_use_ipn': True,
         'fees_active': False,
         'fees_dom_fixed': 0.35,
@@ -95,7 +106,7 @@ class AcquirerPaypal(osv.Model):
 
     def paypal_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return acquirer.paypal_tx_url
+        return self._get_paypal_urls(cr, uid, acquirer.env, context=context)['paypal_form_url']
 
     def _paypal_s2s_get_access_token(self, cr, uid, ids, context=None):
         """

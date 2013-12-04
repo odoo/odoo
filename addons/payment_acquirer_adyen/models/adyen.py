@@ -21,26 +21,24 @@ _logger = logging.getLogger(__name__)
 class AcquirerAdyen(osv.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_adyen_urls(self, cr, uid, ids, name, args, context=None):
+    def _get_adyen_urls(self, cr, uid, env, context=None):
         """ Adyen URLs
 
          - yhpp: hosted payment page: pay.shtml for single, select.shtml for multiple
         """
-        res = {}
-        for acquirer in self.browse(cr, uid, ids, context=context):
-            qualif = acquirer.env
-            res[acquirer.id] = {
-                'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % qualif,
+        if env == 'prod':
+            return {
+                'adyen_form_url': 'https://prod.adyen.com/hpp/pay.shtml',
             }
-        return res
+        else:
+            return {
+                'adyen_form_url': 'https://test.adyen.com/hpp/pay.shtml',
+            }
 
     _columns = {
         'adyen_merchant_account': fields.char('Merchant Account', required_if_provider='adyen'),
         'adyen_skin_code': fields.char('Skin Code', required_if_provider='adyen'),
         'adyen_skin_hmac_key': fields.char('Skin HMAC Key', required_if_provider='adyen'),
-        'adyen_form_url': fields.function(
-            _get_adyen_urls, multi='_get_adyen_urls',
-            type='char', string='Transaction URL', required_if_provider='adyen'),
     }
 
     def _adyen_generate_merchant_sig(self, acquirer, inout, values):
@@ -99,7 +97,7 @@ class AcquirerAdyen(osv.Model):
 
     def adyen_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return acquirer.adyen_form_url
+        return self._get_adyen_urls(cr, uid, acquirer.env, context=context)['adyen_form_url']
 
 
 class TxAdyen(osv.Model):
