@@ -1148,13 +1148,7 @@
  
     website.snippet.editorRegistry.slider = website.snippet.editorRegistry.resize.extend({
         drop_and_build_snippet: function() {
-            var id = 0;
-            $(".carousel").each(function () {
-                var _id = +$(this).attr("id").replace(/^[^a-z]+/i, '');
-                if (id <= _id) {
-                    id = _id + 1;
-                }
-            });
+            var id = $(".carousel").length;
             this.id = "myCarousel" + id;
             this.$target.attr("id", this.id);
             this.$target.find(".carousel-control").attr("href", "#myCarousel" + id);
