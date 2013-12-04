@@ -244,12 +244,12 @@ class website(osv.osv):
         result = view.render(qweb_context, engine='website.qweb', context=context)
         return result
 
-    def render(self, cr, uid, ids, template, values=None, context=None):
+    def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
         def callback(template, values, context):
             return self._render(cr, uid, ids, template, values, context)
         if values is None:
             values = {}
-        return LazyResponse(callback, template=template, values=values, context=context)
+        return LazyResponse(callback, status_code=status_code, template=template, values=values, context=context)
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
