@@ -798,8 +798,10 @@ class LazyResponse(werkzeug.wrappers.Response):
     """ Lazy werkzeug response.
     API not yet frozen"""
 
-    def __init__(self, callback, **kwargs):
+    def __init__(self, callback, status_code=None, **kwargs):
         super(LazyResponse, self).__init__(mimetype='text/html')
+        if status_code:
+            self.status_code = status_code
         self.callback = callback
         self.params = kwargs
     def process(self):
