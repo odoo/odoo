@@ -1,10 +1,6 @@
 # -*- coding: utf-'8' "-*-"
 
 from hashlib import sha1
-try:
-    import simplejson as json
-except ImportError:
-    import json
 import logging
 from lxml import etree, objectify
 from pprint import pformat
@@ -18,6 +14,7 @@ from openerp.addons.payment_acquirer_ogone.controllers.main import OgoneControll
 from openerp.addons.payment_acquirer_ogone.data import ogone
 from openerp.osv import osv, fields
 from openerp.tools import float_round
+from openerp.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
 
@@ -40,16 +37,11 @@ class PaymentAcquirerOgone(osv.Model):
         }
 
     _columns = {
-        'ogone_pspid': fields.char(
-            'PSPID', required_if_provider='ogone'),
-        'ogone_userid': fields.char(
-            'API User id', required_if_provider='ogone'),
-        'ogone_password': fields.char(
-            'Password', required_if_provider='ogone'),
-        'ogone_shakey_in': fields.char(
-            'SHA Key IN', size=32, required_if_provider='ogone'),
-        'ogone_shakey_out': fields.char(
-            'SHA Key OUT', size=32, required_if_provider='ogone'),
+        'ogone_pspid': fields.char('PSPID', required_if_provider='ogone'),
+        'ogone_userid': fields.char('API User ID', required_if_provider='ogone'),
+        'ogone_password': fields.char('API User Password', required_if_provider='ogone'),
+        'ogone_shakey_in': fields.char('SHA Key IN', size=32, required_if_provider='ogone'),
+        'ogone_shakey_out': fields.char('SHA Key OUT', size=32, required_if_provider='ogone'),
     }
 
     def _ogone_generate_shasign(self, acquirer, inout, values):
@@ -85,7 +77,7 @@ class PaymentAcquirerOgone(osv.Model):
         acquirer = self.browse(cr, uid, id, context=context)
 
         ogone_tx_values = dict(tx_values)
-        ogone_tx_values.update({
+        temp_ogone_tx_values = {
             'PSPID': acquirer.ogone_pspid,
             'ORDERID': tx_values['reference'],
             'AMOUNT': '%d' % int(float_round(tx_values['amount'], 2) * 100),
@@ -102,11 +94,12 @@ class PaymentAcquirerOgone(osv.Model):
             'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),
             'EXCEPTIONURL': '%s' % urlparse.urljoin(base_url, OgoneController._exception_url),
             'CANCELURL': '%s' % urlparse.urljoin(base_url, OgoneController._cancel_url),
-        })
+        }
         if ogone_tx_values.get('return_url'):
-            ogone_tx_values['PARAMPLUS'] = json.dumps('{"return_url": %s}' % ogone_tx_values.pop('return_url'))
-        shasign = self._ogone_generate_shasign(acquirer, 'in', tx_values)
-        ogone_tx_values['SHASIGN'] = shasign
+            temp_ogone_tx_values['PARAMPLUS'] = 'return_url=%s' % ogone_tx_values.pop('return_url')
+        shasign = self._ogone_generate_shasign(acquirer, 'in', temp_ogone_tx_values)
+        temp_ogone_tx_values['SHASIGN'] = shasign
+        ogone_tx_values.update(temp_ogone_tx_values)
         return partner_values, ogone_tx_values
 
     def ogone_get_form_action_url(self, cr, uid, id, context=None):
@@ -163,29 +156,42 @@ class PaymentTxOgone(osv.Model):
 
         return tx
 
-    def ogone_form_feedback(self, cr, uid, data, context=None):
-        tx = self._ogone_form_get_tx_from_data(cr, uid, data, context)
-        if not tx:
-            raise ValidationError('Ogone: feedback: tx not found')
+    def _ogone_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+        invalid_parameters = []
+
+        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
+        if tx.acquirer_reference and data.get('PAYID') != tx.acquirer_reference:
+            invalid_parameters.append(('PAYID', data.get('PAYID'), tx.acquirer_reference))
+        # check what is buyed
+        if float_compare(float(data.get('amount', '0.0')), tx.amount, 2) != 0:
+            invalid_parameters.append(('amount', data.get('amount'), '%.2f' % tx.amount))
+        if data.get('currency') != tx.currency_id.name:
+            invalid_parameters.append(('currency', data.get('currency'), tx.currency_id.name))
+
+        return invalid_parameters
+
+    def _ogone_form_validate(self, cr, uid, tx, data, context=None):
         if tx.state == 'done':
-            _logger.warning('Ogone: trying to validate an already validated tx (ref %s' % tx.reference)
-            return False
+            _logger.warning('Ogone: trying to validate an already validated tx (ref %s)' % tx.reference)
+            return True
 
         status = int(data.get('STATUS', '0'))
         if status in self._ogone_valid_tx_status:
             tx.write({
                 'state': 'done',
                 'date_validate': data['TRXDATE'],
-                'ogone_payid': data['PAYID'],
+                'acquirer_reference': data['PAYID'],
             })
             return True
         elif status in self._ogone_cancel_tx_status:
             tx.write({
                 'state': 'cancel',
+                'acquirer_reference': data.get('PAYID'),
             })
         elif status in self._ogone_pending_tx_status:
             tx.write({
                 'state': 'pending',
+                'acquirer_reference': data.get('PAYID'),
             })
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
@@ -194,7 +200,11 @@ class PaymentTxOgone(osv.Model):
                 'error_msg': ogone.OGONE_ERROR_MAP.get(data.get('NCERRORPLUS')),
             }
             _logger.info(error)
-            tx.write({'state': 'error', 'state_message': error})
+            tx.write({
+                'state': 'error',
+                'state_message': error,
+                'acquirer_reference': data.get('PAYID'),
+            })
             return False
 
     # --------------------------------------------------

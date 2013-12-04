@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 def _partner_format_address(address1=False, address2=False):
-    return ' '.join((address1 or '', address2 or ''))
+    return ' '.join((address1 or '', address2 or '')).strip()
 
 
 def _partner_split_name(partner_name):
