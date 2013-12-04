@@ -1851,9 +1851,6 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         widget = widget || this;
         trigger = trigger || this.$el;
         options = _.extend({
-                //delayIn: 500,
-                //delayOut: 0,
-                //fade: true,
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
@@ -1864,11 +1861,10 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
                         widget: widget
                     });
                 },
-                //gravity: $.fn.tooltip.autoBounds(50, 'nw'),
-                placement: 'right',
+                container: 'body',
+                placement: 'bottom',
                 html: true,
-                //opacity: 0.85,
-                //trigger: 'hover'
+                opacity: 0.85,
             }, options || {});
         $(trigger).attr('data-toggle', 'tooltip');
         $(trigger).tooltip(options);
