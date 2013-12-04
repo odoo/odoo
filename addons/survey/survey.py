@@ -940,7 +940,7 @@ class survey_user_input_line(osv.osv):
             'survey_id': question.survey_id.id,
         }
         if answer_tag in post:
-            vals.update({'answer_type': 'date', 'value_number': post[answer_tag]})
+            vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
         else:
             vals.update({'skipped': True})
         old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),

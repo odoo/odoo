@@ -17,6 +17,7 @@
 */
 
 $(document).ready(function () {
+    'use strict';
 
     console.debug("[survey] Custom JS for survey is loading...");
 
