@@ -371,7 +371,7 @@
                                 menu.append('<li class="dropdown-header">' + item.name + '</li>');
                             } else {
                                 menu.append(_.str.sprintf('<li role="presentation"><a href="#" data-view-id="%s" role="menuitem"><strong class="fa fa%s-square-o"></strong> %s</a></li>',
-                                    item.id, item.active ? '' : '-check', item.name));
+                                    item.id, item.active ? '-check' : '', item.name));
                             }
                         });
                         // Adding Static Menus

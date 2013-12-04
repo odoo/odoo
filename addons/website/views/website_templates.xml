@@ -28,7 +28,7 @@
             </li>
         </template>
 
-        <template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
+        <template id="secure_layout" name="Main: Don't Edit This Layout">&lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang and lang.replace('_', '-')"
                       t-att-data-website-id="website.id if editable else None"
                       t-att-data-editable="'1' if editable else None"
@@ -111,117 +111,123 @@
                     </head>
                     <body>
                         <div id="wrapwrap">
-                            <header>
-                                <div class="navbar navbar-default navbar-static-top">
-                                    <div class="container">
-                                        <div class="navbar-header">
-                                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
-                                                <span class="sr-only">Toggle navigation</span>
-                                                <span class="icon-bar"></span>
-                                                <span class="icon-bar"></span>
-                                                <span class="icon-bar"></span>
-                                            </button>
-                                            <a class="navbar-brand" href="/">Your<b>Company</b></a>
-                                        </div>
-                                        <div class="collapse navbar-collapse navbar-top-collapse">
-                                            <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                                <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                                                    <t t-call="website.submenu"/>
-                                                </t>
-                                                <li class="dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
-                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                                        <span class="badge">
-                                                            <span t-esc="user_id.name"/>
-                                                            <span class="caret"></span>
-                                                        </span>
-                                                    </a>
-                                                    <ul class="dropdown-menu js_usermenu" role="menu">
-                                                        <li><a href="/web" role="menuitem">Administration</a></li>
-                                                        <li class="divider"/>
-                                                        <li><a t-attf-href="/web/session/logout?redirect=#{ quote_plus(url_for('', keep_query='*')) }" role="menuitem">Logout</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </header>
                             <t t-raw="0"/>
-                            <footer>
-                                <div class="container" id="footer_container">
-                                    <div class="row">
-                                        <div class="col-md-3" name="product">
-                                            <h4>Our products &amp; Services</h4>
-                                            <ul class="list-unstyled" name="products">
-                                                <li><a href="/">Home</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-md-3" name="info">
-                                            <h4 name="info_title">Connect with us</h4>
-                                            <ul class="list-unstyled">
-                                                <li><a href="/page/website.contactus">Contact us</a></li>
-                                            </ul>
-                                            <ul class="list-unstyled">
-                                                <li><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
-                                                <li><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
-                                            </ul>
-                                            <h2>
-                                                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
-                                                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
-                                                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
-                                                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
-                                                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
-                                                <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
-                                            </h2>
-                                        </div>
-                                        <div class="col-md-5 col-lg-offset-1" name="about_us">
-                                            <div>
-                                                <h4>
-                                                    <span t-field="res_company.name">Your Company</span>
-                                                    <small> - <a href="/page/website.aboutus">About us</a></small>
-                                                </h4>
-                                                <p>
-                                                    We are a team of passionated people whose goal is to improve everyone's
-                                                    life through disruptive products. We build great products to solve your
-                                                    business problems.
-                                                </p>
-                                                <p>
-                                                    Our products are designed for small to medium companies willing to optimize
-                                                    their performance.
-                                                </p>
-                                            </div>
-                                            <t t-set="languages" t-value="website.get_languages()"/>
-                                            <ul class="nav nav-pills js_language_selector" t-if="(len(languages) &gt; 1 or editable)">
-                                                <li t-foreach="languages" t-as="lg">
-                                                    <a t-att-href="url_for('', lang=lg[0], keep_query='*')"
-                                                       t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
-                                                        <t t-esc="lg[1].split('/').pop()"/>
-                                                    </a>
-                                                </li>
-                                                <li t-if="editable">
-                                                    <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]', keep_query='*')"/>
-                                                    <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
-                                                        <i class="fa fa-plus-circle"/>
-                                                        Add a language...
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="container mt16">
-                                    <div class="pull-right" t-ignore="true" t-if="not editable">
-                                        Create a <a href="http://openerp.com/apps/website">free website</a> with
-                                        <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
-                                    </div>
-                                    <div class="pull-left text-muted">
-                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
-                                    </div>
-                                </div>
-                            </footer>
                         </div>
                     </body>
                 </html>
+        </template>
+
+        <template id="layout" name="Main layout">
+            <t t-call="website.secure_layout">
+                <header>
+                    <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="/">Your<b>Company</b></a>
+                            </div>
+                            <div class="collapse navbar-collapse navbar-top-collapse">
+                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                                        <t t-call="website.submenu"/>
+                                    </t>
+                                    <li class="dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            <span class="badge">
+                                                <span t-esc="user_id.name"/>
+                                                <span class="caret"></span>
+                                            </span>
+                                        </a>
+                                        <ul class="dropdown-menu js_usermenu" role="menu">
+                                            <li><a href="/web" role="menuitem">Administration</a></li>
+                                            <li class="divider"/>
+                                            <li><a t-attf-href="/web/session/logout?redirect=#{ quote_plus(url_for('', keep_query='*')) }" role="menuitem">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <t t-raw="0"/>
+                <footer>
+                    <div class="container" id="footer_container">
+                        <div class="row">
+                            <div class="col-md-3" name="product">
+                                <h4>Our products &amp; Services</h4>
+                                <ul class="list-unstyled" name="products">
+                                    <li><a href="/">Home</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-3" name="info">
+                                <h4 name="info_title">Connect with us</h4>
+                                <ul class="list-unstyled">
+                                    <li><a href="/page/website.contactus">Contact us</a></li>
+                                </ul>
+                                <ul class="list-unstyled">
+                                    <li><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
+                                    <li><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
+                                </ul>
+                                <h2>
+                                    <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
+                                    <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
+                                    <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
+                                    <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
+                                    <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
+                                    <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
+                                </h2>
+                            </div>
+                            <div class="col-md-5 col-lg-offset-1" name="about_us">
+                                <div>
+                                    <h4>
+                                        <span t-field="res_company.name">Your Company</span>
+                                        <small> - <a href="/page/website.aboutus">About us</a></small>
+                                    </h4>
+                                    <p>
+                                        We are a team of passionated people whose goal is to improve everyone's
+                                        life through disruptive products. We build great products to solve your
+                                        business problems.
+                                    </p>
+                                    <p>
+                                        Our products are designed for small to medium companies willing to optimize
+                                        their performance.
+                                    </p>
+                                </div>
+                                <t t-set="languages" t-value="website.get_languages()"/>
+                                <ul class="nav nav-pills js_language_selector" t-if="(len(languages) &gt; 1 or editable)">
+                                    <li t-foreach="languages" t-as="lg">
+                                        <a t-att-href="url_for('', lang=lg[0], keep_query='*')"
+                                           t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
+                                            <t t-esc="lg[1].split('/').pop()"/>
+                                        </a>
+                                    </li>
+                                    <li t-if="editable">
+                                        <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]', keep_query='*')"/>
+                                        <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                                            <i class="fa fa-plus-circle"/>
+                                            Add a language...
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container mt16">
+                        <div class="pull-right" t-ignore="true" t-if="not editable">
+                            Create a <a href="http://openerp.com/apps/website">free website</a> with
+                            <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
+                        </div>
+                        <div class="pull-left text-muted">
+                            Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+                        </div>
+                    </div>
+                </footer>
+            </t>
         </template>
 
         <template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">

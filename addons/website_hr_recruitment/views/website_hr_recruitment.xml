@@ -7,7 +7,7 @@
             <field name="description">Job Posts on your website</field>
         </record>
 
-        <template id="website_hr_recruitment_script" inherit_id="website.layout" name="Website Hr Recruitment script">
+        <template id="website.secure_layout">
             <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
                 <script type="text/javascript" src="/website_hr_recruitment/static/src/js/website_hr_recruitment.editor.js" t-ignore="true"></script>
             </xpath>
