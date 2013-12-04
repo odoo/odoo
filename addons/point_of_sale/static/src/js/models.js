@@ -669,25 +669,30 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         model: module.Orderline,
     });
 
-    // Every PaymentLine contains a cashregister and an amount of money.
+    // Every Paymentline contains a cashregister and an amount of money.
     module.Paymentline = Backbone.Model.extend({
         initialize: function(attributes, options) {
             this.amount = 0;
             this.cashregister = options.cashRegister;
+            this.name = this.cashregister.get('journal_id')[1];
+            this.selected = false;
         },
         //sets the amount of money on this payment line
         set_amount: function(value){
-            this.amount = parseFloat(value) || 0;
-            this.trigger('change');
+            this.amount = round_di(parseFloat(value) || 0, 2);
+            this.trigger('change:amount',this);
         },
         // returns the amount of money on this paymentline
         get_amount: function(){
             return this.amount;
         },
-        // returns the associated cashRegister
-        get_cashregister: function(){
-            return this.cashregister;
+        set_selected: function(selected){
+            if(this.selected !== selected){
+                this.selected = selected;
+                this.trigger('change:selected',this);
+            }
         },
+        // returns the associated cashRegister
         //exports as JSON for server communication
         export_as_JSON: function(){
             return {
@@ -713,7 +718,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     
 
     // An order more or less represents the content of a client's shopping cart (the OrderLines) 
-    // plus the associated payment information (the PaymentLines) 
+    // plus the associated payment information (the Paymentlines) 
     // there is always an active ('selected') order in the Pos, a new one is created
     // automaticaly once an order is completed and sent to the server.
     module.Order = Backbone.Model.extend({
@@ -727,8 +732,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 name:           "Order " + this.uid,
                 client:         null,
             });
-            this.pos =     attributes.pos; 
-            this.selected_orderline = undefined;
+            this.pos = attributes.pos; 
+            this.selected_orderline   = undefined;
+            this.selected_paymentline = undefined;
             this.screen_data = {};  // see ScreenSelector
             this.receipt_type = 'receipt';  // 'receipt' || 'invoice'
             return this;
@@ -765,13 +771,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getLastOrderline: function(){
             return this.get('orderLines').at(this.get('orderLines').length -1);
         },
-        addPaymentLine: function(cashRegister) {
+        addPaymentline: function(cashRegister) {
             var paymentLines = this.get('paymentLines');
             var newPaymentline = new module.Paymentline({},{cashRegister:cashRegister});
             if(cashRegister.get('journal').type !== 'cash'){
-                newPaymentline.set_amount( this.getDueLeft() );
+                newPaymentline.set_amount( Math.max(this.getDueLeft(),0) );
             }
             paymentLines.add(newPaymentline);
+            this.selectPaymentline(newPaymentline);
+
+        },
+        removePaymentline: function(line){
+            if(this.selected_paymentline === line){
+                this.selectPaymentline(undefined);
+            }
+            this.get('paymentLines').remove(line);
         },
         getName: function() {
             return this.get('name');
@@ -944,6 +958,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             if(this.selected_orderline){
                 this.selected_orderline.set_selected(false);
                 this.selected_orderline = undefined;
+            }
+        },
+        selectPaymentline: function(line){
+            console.log("SELECT_PAYMENTLINE",line);
+            if(line !== this.selected_paymentline){
+                if(this.selected_paymentline){
+                    this.selected_paymentline.set_selected(false);
+                }
+                this.selected_paymentline = line;
+                if(this.selected_paymentline){
+                    this.selected_paymentline.set_selected(true);
+                }
+                this.trigger('change:selected_paymentline',this.selected_paymentline);
             }
         },
     });

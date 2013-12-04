@@ -157,6 +157,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         barcode_product_screen:         'products',     //if defined, this screen will be loaded when a product is scanned
         barcode_product_error_popup:    'error-product',    //if defined, this popup will be loaded when there's an error in the popup
 
+        hotkeys_handlers: {},
+
         // what happens when a product is scanned : 
         // it will add the product to the order and go to barcode_product_screen. Or show barcode_product_error_popup if 
         // there's an error.
@@ -634,7 +636,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                             }
 
                             var cashregister = selfCheckoutRegisters[0] || self.pos.get('cashRegisters').models[0];
-                            currentOrder.add_payment_line(cashregister);
+                            currentOrder.addPaymentline(cashregister);
                             self.pos.push_order(currentOrder)
                             currentOrder.destroy();
                             self.pos.proxy.transaction_end();
@@ -802,15 +804,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         init: function(parent, options) {
             this._super(parent,options);
-            this.model = options.model;
             this.user = this.pos.get('user');
             this.company = this.pos.get('company');
             this.shop_obj = this.pos.get('shop');
         },
         renderElement: function() {
             this._super();
-            this.pos.bind('change:selectedOrder', this.change_selected_order, this);
-            this.change_selected_order();
         },
         show: function(){
             this._super();
@@ -828,6 +827,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     click: function() { self.finishOrder(); },
                 });
 
+            this.refresh();
             this.print();
 
             // THIS IS THE HACK OF THE CENTURY
@@ -859,22 +859,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         finishOrder: function() {
             this.pos.get('selectedOrder').destroy();
         },
-        change_selected_order: function() {
-            if (this.currentOrderLines)
-                this.currentOrderLines.unbind();
-            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('add', this.refresh, this);
-            this.currentOrderLines.bind('change', this.refresh, this);
-            this.currentOrderLines.bind('remove', this.refresh, this);
-            if (this.currentPaymentLines)
-                this.currentPaymentLines.unbind();
-            this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
-            this.currentPaymentLines.bind('all', this.refresh, this);
-            this.refresh();
-        },
         refresh: function() {
-            this.currentOrder = this.pos.get('selectedOrder');
-            $('.pos-receipt-container', this.$el).html(QWeb.render('PosTicket',{widget:this}));
+            var order = this.pos.get('selectedOrder');
+            $('.pos-receipt-container', this.$el).html(QWeb.render('PosTicket',{
+                    widget:this,
+                    order: order,
+                    orderlines: order.get('orderLines').models,
+                    paymentlines: order.get('paymentLines').models,
+                }));
         },
         close: function(){
             this._super();
@@ -886,17 +878,68 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         back_screen: 'products',
         next_screen: 'receipt',
         init: function(parent, options) {
+            var self = this;
             this._super(parent,options);
-            this.model = options.model;
-            this.pos.bind('change:selectedOrder', this.change_selected_order, this);
-            this.bind_payment_line_events();
-            this.bind_orderline_events();
-            this.paymentlinewidgets = [];
-            this.focusedLine = null;
+
+            this.pos.bind('change:selectedOrder',function(){
+                    this.bind_events();
+                    this.renderElement();
+                },this);
+
+            this.bind_events();
+
+            this.line_delete_handler = function(event){
+                var node = this;
+                while(node && !node.classList.contains('paymentline')){
+                    node = node.parentNode;
+                }
+                if(node){
+                    self.pos.get('selectedOrder').removePaymentline(node.line)   
+                }
+                event.stopPropagation();
+            };
+
+            this.line_change_handler = function(event){
+                var node = this;
+                while(node && !node.classList.contains('paymentline')){
+                    node = node.parentNode;
+                }
+                if(node){
+                    node.line.set_amount(this.value);
+                }
+                
+            };
+
+            this.line_click_handler = function(event){
+                console.log('click');
+                var node = this;
+                while(node && !node.classList.contains('paymentline')){
+                    node = node.parentNode;
+                }
+                if(node){
+                    self.pos.get('selectedOrder').selectPaymentline(node.line);
+                }
+            };
+
         },
         show: function(){
             this._super();
             var self = this;
+            
+            this.enable_numpad();
+            this.update_payment_summary();
+            this.focus_selected_line();
+            window.removeall = function(){
+                self.remove_empty_lines();
+            };
+            window.listlines = function(){
+                var lines = self.pos.get('selectedOrder').get('paymentLines').models;
+                for(var i = 0; i < lines.length; i++){
+                    console.log('LINE:',lines[i]);
+                }
+            };
+
+            /*
 
             this.hotkey_handler = function(event){
                 if(event.which === 13){
@@ -907,13 +950,16 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             };
 
             $('body').on('keyup',this.hotkey_handler);
+            
+            */
 
-
-            if( this.pos.iface_cashdrawer && this.pos.get('selectedOrder').get('paymentLines').find(                function(pl){ return pl.cashregister.get('journal').type === 'cash'; })){
+            if(    this.pos.iface_cashdrawer 
+                && this.pos.get('selectedOrder').get('paymentLines').find( function(pl){ 
+                           return pl.cashregister.get('journal').type === 'cash'; 
+                   })){
                     this.pos.proxy.open_cashbox();
             }
 
-            this.enable_numpad();
 
             this.add_action_button({
                     label: _t('Back'),
@@ -928,17 +974,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     name: 'validation',
                     icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
                     click: function(){
-                        self.validate();
+                        self.validate_order();
                     },
                 });
            
-            if(this.pos.iface_invoicing){
+            if( this.pos.iface_invoicing ){
                 this.add_action_button({
                         label: 'Invoice',
                         name: 'invoice',
                         icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
                         click: function(){
-                            self.validate({invoice: true});
+                            self.validate_order({invoice: true});
                         },
                     });
             }
@@ -954,23 +1000,163 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     });
             }
 
-            this.update_payment_summary();
-            this.line_refocus();
         },
         close: function(){
             this._super();
             this.disable_numpad();
-            $('body').off('keyup',this.hotkey_handler);
+            //$('body').off('keyup',this.hotkey_handler);
+        },
+        remove_empty_lines: function(){
+            var order = this.pos.get('selectedOrder');
+            var lines = order.get('paymentLines').models.slice(0);
+            for(var i = 0; i < lines.length; i++){ 
+                var line = lines[i];
+                if(line.get_amount() === 0){
+                    order.removePaymentline(line);
+                }
+            }
         },
         back: function() {
-            _.each(this.paymentlinewidgets, function(widget){
-                if( widget.payment_line.get_amount() === 0 ){
-                    widget.payment_line.destroy();
-                }
-            });
+            this.remove_empty_lines();
             this.pos_widget.screen_selector.set_current_screen(this.back_screen);
         },
-        validate: function(options) {
+        bind_events: function() {
+            if(this.old_order){
+                this.old_order.unbind(null,null,this);
+            }
+            var order = this.pos.get('selectedOrder');
+                order.bind('change:selected_paymentline',this.focus_selected_line,this);
+
+            this.old_order = order;
+
+            if(this.old_paymentlines){
+                this.old_paymentlines.unbind(null,null,this);
+            }
+            var paymentlines = order.get('paymentLines');
+                paymentlines.bind('add', this.add_paymentline, this);
+                paymentlines.bind('change:selected', this.rerender_paymentline, this);
+                paymentlines.bind('change:amount', function(line){
+                        if(!line.selected && line.node){
+                            line.node.value = line.amount.toFixed(2);
+                        }
+                        this.update_payment_summary();
+                    },this);
+                paymentlines.bind('remove', this.remove_paymentline, this);
+                paymentlines.bind('all', this.update_payment_summary, this);
+
+            this.old_paymentlines = paymentlines;
+
+            if(this.old_orderlines){
+                this.old_orderlines.unbind(null,null,this);
+            }
+            var orderlines = order.get('orderLines');
+                orderlines.bind('all', this.update_payment_summary, this);
+
+            this.old_orderlines = orderlines;
+        },
+        focus_selected_line: function(){
+            var line = this.pos.get('selectedOrder').selected_paymentline;
+            if(line){
+                debugger;
+                if(!line.node){
+                    debugger;
+                }
+                var input = line.node.querySelector('input');
+                if(!input){
+                    return;
+                }
+                var value = input.value;
+                input.focus();
+
+                if(this.numpad_state){
+                    this.numpad_state.reset();
+                }
+
+                if(Number(value) === 0){
+                    input.value = '';
+                }else{
+                    input.value = value;
+                    input.select();
+                }
+            }
+        },
+        add_paymentline: function(line) {
+            var list_container = this.el.querySelector('.payment-lines');
+                list_container.appendChild(this.render_paymentline(line));
+            
+            if(this.numpad_state){
+                this.numpad_state.reset();
+            }
+        },
+        render_paymentline: function(line){
+            var el_html  = openerp.qweb.render('Paymentline',{widget: this, line: line});
+                el_html  = _.str.trim(el_html);
+
+            var el_node  = document.createElement('tbody');
+                el_node.innerHTML = el_html;
+                el_node = el_node.childNodes[0];
+                el_node.line = line;
+                el_node.querySelector('.paymentline-delete')
+                    .addEventListener('click', this.line_delete_handler);
+                el_node.addEventListener('click', this.line_click_handler);
+                el_node.querySelector('input')
+                    .addEventListener('keyup', this.line_change_handler);
+
+            line.node = el_node;
+
+            return el_node;
+        },
+        rerender_paymentline: function(line){
+            var old_node = line.node;
+            var new_node = this.render_paymentline(line);
+            
+            old_node.parentNode.replaceChild(new_node,old_node);
+            console.log('RERENDER',line);
+        },
+        remove_paymentline: function(line){
+            console.log('Removing line from DOM:',line);
+            line.node.parentNode.removeChild(line.node);
+            line.node = undefined;
+        },
+        renderElement: function(){
+            this._super();
+
+            var paymentlines   = this.pos.get('selectedOrder').get('paymentLines').models;
+            var list_container = this.el.querySelector('.payment-lines');
+
+            for(var i = 0; i < paymentlines.length; i++){
+                list_container.appendChild(this.render_paymentline(paymentlines[i]));
+            }
+            
+            //this.update_payment_summary();
+        },
+        update_payment_summary: function() {
+            var currentOrder = this.pos.get('selectedOrder');
+            var paidTotal = currentOrder.getPaidTotal();
+            var dueTotal = currentOrder.getTotalTaxIncluded();
+            var remaining = dueTotal > paidTotal ? dueTotal - paidTotal : 0;
+            var change = paidTotal > dueTotal ? paidTotal - dueTotal : 0;
+
+            this.$('.payment-due-total').html(this.format_currency(dueTotal));
+            this.$('.payment-paid-total').html(this.format_currency(paidTotal));
+            this.$('.payment-remaining').html(this.format_currency(remaining));
+            this.$('.payment-change').html(this.format_currency(change));
+            if(currentOrder.selected_orderline === undefined){
+                remaining = 1;  // What is this ? 
+            }
+                
+            if(this.pos_widget.action_bar){
+                this.pos_widget.action_bar.set_button_disabled('validation', !this.is_paid());
+                this.pos_widget.action_bar.set_button_disabled('invoice', !this.is_paid());
+            }
+        },
+        is_paid: function(){
+            var currentOrder = this.pos.get('selectedOrder');
+            return (currentOrder.getTotalTaxIncluded() >= 0.000001 
+                   && currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
+
+        },
+        validate_order: function(options) {
             var self = this;
             options = options || {};
 
@@ -1012,96 +1198,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     this.pos_widget.screen_selector.set_current_screen(this.next_screen);
                 }
             }
+
             // hide onscreen (iOS) keyboard 
             setTimeout(function(){
                 document.activeElement.blur();
                 $("input").blur();
             },250);
-        },
-        bind_payment_line_events: function() {
-            this.currentPaymentLines = (this.pos.get('selectedOrder')).get('paymentLines');
-            this.currentPaymentLines.bind('add', this.add_payment_line, this);
-            this.currentPaymentLines.bind('remove', this.renderElement, this);
-            this.currentPaymentLines.bind('all', this.update_payment_summary, this);
-        },
-        bind_orderline_events: function() {
-            this.currentOrderLines = (this.pos.get('selectedOrder')).get('orderLines');
-            this.currentOrderLines.bind('all', this.update_payment_summary, this);
-        },
-        change_selected_order: function() {
-            this.currentPaymentLines.unbind();
-            this.bind_payment_line_events();
-            this.currentOrderLines.unbind();
-            this.bind_orderline_events();
-            this.renderElement();
-        },
-        line_refocus: function(lineWidget){
-            if(lineWidget){
-                if(this.focusedLine !== lineWidget){
-                    this.focusedLine = lineWidget;
-                }
-            }
-            if(this.focusedLine){
-                this.focusedLine.focus();
-            }
-        },
-        add_payment_line: function(newPaymentLine) {
-            var self = this;
-            var l = new module.PaymentlineWidget(this, {
-                    payment_line: newPaymentLine,
-            });
-            l.on('delete_payment_line', self, function(r) {
-                self.deleteLine(r);
-            });
-            l.appendTo(this.$('.paymentlines'));
-            this.paymentlinewidgets.push(l);
-            if(this.numpadState){
-                this.numpadState.resetValue();
-            }
-            this.line_refocus(l);
-        },
-        renderElement: function() {
-            this._super();
-            this.$('.paymentlines').empty();
-            for(var i = 0, len = this.paymentlinewidgets.length; i < len; i++){
-                this.paymentlinewidgets[i].destroy();
-            }
-            this.paymentlinewidgets = [];
-            
-            this.currentPaymentLines.each(_.bind( function(paymentLine) {
-                this.add_payment_line(paymentLine);
-            }, this));
-            this.update_payment_summary();
-        },
-        deleteLine: function(lineWidget) {
-        	this.currentPaymentLines.remove([lineWidget.payment_line]);
-            lineWidget.destroy();
-        },
-        is_paid: function(){
-            var currentOrder = this.pos.get('selectedOrder');
-            return (currentOrder.getTotalTaxIncluded() >= 0.000001 
-                   && currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
-
-        },
-        update_payment_summary: function() {
-            var currentOrder = this.pos.get('selectedOrder');
-            var paidTotal = currentOrder.getPaidTotal();
-            var dueTotal = currentOrder.getTotalTaxIncluded();
-            var remaining = dueTotal > paidTotal ? dueTotal - paidTotal : 0;
-            var change = paidTotal > dueTotal ? paidTotal - dueTotal : 0;
-
-            this.$('.payment-due-total').html(this.format_currency(dueTotal));
-            this.$('.payment-paid-total').html(this.format_currency(paidTotal));
-            this.$('.payment-remaining').html(this.format_currency(remaining));
-            this.$('.payment-change').html(this.format_currency(change));
-            if(currentOrder.selected_orderline === undefined){
-                remaining = 1;  // What is this ? 
-            }
-                
-            if(this.pos_widget.action_bar){
-                this.pos_widget.action_bar.set_button_disabled('validation', !this.is_paid());
-                this.pos_widget.action_bar.set_button_disabled('invoice', !this.is_paid());
-            }
         },
         enable_numpad: function(){
             this.disable_numpad();  //ensure we don't register the callbacks twice
@@ -1124,7 +1226,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     		this.numpad_state.set({mode: 'payment'});
     	},
         set_value: function(val) {
-        	this.currentPaymentLines.last().set_amount(val);
+            var selected_line =this.pos.get('selectedOrder').selected_paymentline;
+            if(selected_line){
+                selected_line.set_amount(val);
+                selected_line.node.querySelector('input').value = selected_line.amount.toFixed(2);
+            }
         },
     });
 }

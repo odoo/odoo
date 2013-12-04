@@ -705,37 +705,60 @@
 
 /* b) The payment screen */
 
-.pos .pos-step-container {
-    display: inline-block;
-    font-size: 1.5em;
-}
-.pos .greyed-out{
-    color: #AAA;
-}
-.pos .pos-step-container input{
-    font-size: 1em;
-    outline: none;
-    border: none;
-    padding: 0px 8px;
-    padding-top: 8px;
-    margin-left: 16px;
-    background: white;
-    color: #4c4c4c; 
-    box-shadow: 0px 2px rgba(143, 143, 143, 0.3) inset;
-    -webkit-animation: all 250ms linear;
-}
-
-.pos .pos-step-container input:focus{
-    color: rgb(130, 124, 255);
-    box-shadow: 0px 2px rgba(130, 124, 255, 0.3) inset;
-    -webkit-animation: all 250ms linear;
-}
 
 .pos .pos-payment-container {
+    display: inline-block;
+    font-size: 16px;
     text-align: left;
-    min-width: 320px;
-    margin-top: 40px;
+    width: 360px;
 }
+.pos .payment-due-total {
+    text-align: center;
+    font-weight: bold;
+    font-size: 48px;
+    margin: 27px;
+    text-shadow: 0px 2px rgb(202, 202, 202);
+}
+.pos .paymentline{
+    position: relative;
+    padding: 8px;
+    border-box: 3px;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.pos .paymentline-input{
+    font-size: 20px;
+    font-family: Lato;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    padding: 6px 8px;
+    background: white;
+    color: #484848;
+    text-align: right;
+    box-shadow: 0px 2px rgba(143, 143, 143, 0.3) inset;
+}
+
+.pos .paymentline-input:focus{
+    color: rgb(130, 124, 255);
+    box-shadow: 0px 2px rgba(219, 219, 219, 0.3) inset;
+    -webkit-animation: all 250ms linear;
+}
+
+.paymentline-delete {
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    text-align: center;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 10px;
+    left: 8px;
+    cursor: pointer;
+}
+
 .pos .pos-payment-container .left-block{
     display: inline-block;
     width:49%;
@@ -743,14 +766,15 @@
     padding:0;
     text-align:left;
 }
-.pos .pos-payment-container .header{
-    margin-top: 0px;
-    margin-bottom:20px;
-    font-weight: bold;
-}
 .pos .pos-payment-container .infoline{
     margin-top:5px;
     margin-bottom:5px;
+    padding: 0px 8px;
+    opacity: 0.5;
+}
+.pos .pos-payment-container .infoline.bigger{
+    opacity: 1;
+    font-size: 20px;
 }
 .pos .pos-payment-container .right-block{
     display: inline-block;
@@ -759,17 +783,8 @@
     padding:0;
     text-align:right;
 }
-.pos .pos-payment-container table {
-    width: 100%;
-    margin-bottom: 20px;
-}
-.pos .pos-payment-container td {
-    vertical-align: middle;
-}
-.pos .pos-payment-container .paymentline-type {
-    font-size: 1em;
-    font-weight: bold;
-    margin-right:10px;
+.pos .paymentline.selected{
+    background: rgb(220,220,220);
 }
 
 /* c) The receipt screen */
@@ -784,6 +799,7 @@
     background-color: white;
     margin: 20px;
     padding: 15px;
+    font-size: 14px;
     padding-bottom:30px;
     display: inline-block;
     font-family: "Inconsolata";

@@ -246,41 +246,32 @@
     <t t-name="PaymentScreenWidget">
         <div class="payment-screen screen">
             <header><h2>Payment</h2></header>
-            <div class="pos-step-container">
-                <div class="pos-payment-container">
-                    <br />
-                    <div class="header">
-                        <span class="left-block">
-                            Total:
+            <div class="pos-payment-container">
+                <div class='payment-due-total'></div>
+                <div class='payment-lines'></div>
+                <div class='payment-info'>
+                    <div class="infoline">
+                        <span class='left-block'>
+                            Paid:
                         </span>
-                        <span class="right-block payment-due-total"></span>
+                        <span class="right-block payment-paid-total"></span>
                     </div>
-                    <table class="paymentlines">
-                    </table>
-                    <div class="footer">
-                        <div class="infoline">
-                            <span class='left-block'>
-                                Paid:
-                            </span>
-                            <span class="right-block payment-paid-total"></span>
-                        </div>
-                        <div class="infoline">
-                            <span class='left-block'>
-                                Remaining:
-                            </span>
-                            <span class="right-block payment-remaining"></span>
-                        </div>
-                        <div class="infoline" >
-                            <span class='left-block'>
-                                Change:
-                            </span>
-                            <span class="right-block payment-change"></span>
-                        </div>
+                    <div class="infoline">
+                        <span class='left-block'>
+                            Remaining:
+                        </span>
+                        <span class="right-block payment-remaining"></span>
+                    </div>
+                    <div class="infoline bigger" >
+                        <span class='left-block'>
+                            Change:
+                        </span>
+                        <span class="right-block payment-change"></span>
                     </div>
                 </div>
             </div>
         </div>
-    </t> <!-- pos-payment-screen -->
+    </t>
 
     <t t-name="ReceiptScreenWidget">
         <div class="receipt-screen screen" >
@@ -556,14 +547,26 @@
         </li>
     </t>
 
-    <t t-name="PaymentlineWidget">
-        <tr class="paymentline">
+    <t t-name="Paymentline">
+        <div t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
+            <div class='paymentline-name'>
+                <t t-esc="line.name"/>
+            </div>
+            <input class='paymentline-input' type="number" step="0.01" t-att-value="line.get_amount().toFixed(2)" />
+            <span  class='paymentline-delete'>
+                <img src="/point_of_sale/static/src/img/search_reset.gif" />
+            </span>
+        </div>
+    </t>
+
+    <t t-name="PaymentlineOld">
+        <tr t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
             <td class="paymentline-type">
-                <t t-esc="widget.name"/>
+                <t t-esc="line.name"/>
             </td>
             <td class="paymentline-amount pos-right-align">
-                <input type="number" step="0.01" t-att-value="widget.payment_line.get_amount().toFixed(2)" />
-                <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
+                <input type="number" step="0.01" t-att-value="line.get_amount().toFixed(2)" />
+                <span class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></span>
             </td>
         </tr>
     </t>
@@ -590,7 +593,7 @@
         <div class="pos-sale-ticket">
             
             <div class="pos-center-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
-                Date.CultureInfo.formatPatterns.longTime)"/> <t t-esc="widget.currentOrder.attributes.name"/></div>
+                Date.CultureInfo.formatPatterns.longTime)"/> <t t-esc="order.get('name')"/></div>
             <br />
             <t t-esc="widget.company.name"/><br />
             Phone: <t t-esc="widget.company.phone || ''"/><br />
@@ -603,7 +606,7 @@
                     <col width='25%' />
                     <col width='25%' />
                 </colgroup>
-                <tr t-foreach="widget.currentOrderLines.toArray()" t-as="orderline">
+                <tr t-foreach="orderlines" t-as="orderline">
                     <td>
                         <t t-esc="orderline.get_product().name"/>
                          <t t-if="orderline.get_discount() > 0">
@@ -623,33 +626,33 @@
             <br />
             <table>
                 <tr><td>Subtotal:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getSubtotal())"/>
+                    <t t-esc="widget.format_currency(order.getSubtotal())"/>
                     </td></tr>
                 <tr><td>Tax:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getTax())"/>
+                    <t t-esc="widget.format_currency(order.getTax())"/>
                     </td></tr>
                 <tr><td>Discount:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getDiscountTotal())"/>
+                    <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
                     </td></tr>
                 <tr class="emph"><td>Total:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getTotalTaxIncluded())"/>
+                    <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
                     </td></tr>
             </table>
             <br />
             <table>
-                <tr t-foreach="widget.currentPaymentLines.toArray()" t-as="pline">
+                <tr t-foreach="paymentlines" t-as="line">
                     <td>
-                        <t t-esc="pline.get_cashregister().get('journal_id')[1]"/>
+                        <t t-esc="line.name"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(pline.get_amount())"/>
+                        <t t-esc="widget.format_currency(line.get_amount())"/>
                     </td>
                 </tr>
             </table>
             <br />
             <table>
                 <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotalTaxIncluded())"/>
+                    <t t-esc="widget.format_currency(order.getPaidTotal() - order.getTotalTaxIncluded())"/>
                     </td></tr>
             </table>
         </div>

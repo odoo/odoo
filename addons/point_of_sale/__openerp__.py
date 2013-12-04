@@ -89,13 +89,11 @@ Main Features
     'installable': True,
     'application': True,
     'js': [
-        'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
         'static/lib/fastclick.js',
         'static/src/js/db.js',
         'static/src/js/models.js',
         'static/src/js/widget_base.js',
         'static/src/js/widget_keyboard.js',
-        'static/src/js/widget_scrollbar.js',
         'static/src/js/widgets.js',
         'static/src/js/devices.js',
         'static/src/js/screens.js',

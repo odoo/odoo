@@ -60,9 +60,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.state = new module.NumpadState();
             window.numpadstate = this.state;
             var self = this;
-            this.state.bind('change:buffer',function(){
-                console.log('BUFFER:',self.state.get('buffer'));
-            })
         },
         start: function() {
             this.state.bind('change:mode', this.changedMode, this);
@@ -128,7 +125,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     console.warn('TODO should not get there...?');
                     return;
                 }
-                self.pos.get('selectedOrder').addPaymentLine(self.cashRegister);
+                self.pos.get('selectedOrder').addPaymentline(self.cashRegister);
                 self.pos_widget.screen_selector.set_current_screen('payment');
             });
         },
@@ -208,11 +205,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                         this.update_summary();
                     },this);
         },
-        update_numpad: function() {
-            this.selected_line = this.pos.get('selectedOrder').getSelectedLine();
-            if (this.numpadState)
-                this.numpadState.reset();
-        },
         render_orderline: function(orderline){
             var el_str  = openerp.qweb.render('Orderline',{widget:this, line:orderline}); 
             var el_node = document.createElement('div');
@@ -236,6 +228,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var replacement_line = this.render_orderline(order_line);
             node.parentNode.replaceChild(replacement_line,node);
         },
+        // overriding the openerp framework replace method for performance reasons
         replace: function($target){
             this.renderElement();
             var target = $target[0];
@@ -275,58 +268,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.el.querySelector('.summary .total > .value').innerText = this.format_currency(total);
             this.el.querySelector('.summary .total .subentry .value').innerText = this.format_currency(taxes);
-        },
-    });
-
-    module.PaymentlineWidget = module.PosBaseWidget.extend({
-        template: 'PaymentlineWidget',
-        init: function(parent, options) {
-            this._super(parent,options);
-            this.payment_line = options.payment_line;
-            this.payment_line.bind('change', this.changedAmount, this);
-        },
-        changeAmount: function(event) {
-            var newAmount = event.currentTarget.value;
-            var amount = parseFloat(newAmount);
-            if(!isNaN(amount)){
-                this.amount = amount;
-                this.payment_line.set_amount(amount);
-            }
-        },
-        checkAmount: function(e){
-            if (e.which !== 0 && e.charCode !== 0) {
-                if(isNaN(String.fromCharCode(e.charCode))){
-                    return (String.fromCharCode(e.charCode) === "." && e.currentTarget.value.toString().split(".").length < 2)?true:false;
-                }
-            }
-            return true
-        },
-        changedAmount: function() {
-        	if (this.amount !== this.payment_line.get_amount()){
-        		this.renderElement();
-            }
-        },
-        renderElement: function() {
-            var self = this;
-            this.name =   this.payment_line.get_cashregister().get('journal_id')[1];
-            this._super();
-            this.$('input').keypress(_.bind(this.checkAmount, this))
-			.keyup(function(event){
-                self.changeAmount(event);
-            });
-            this.$('.delete-payment-line').click(function() {
-                self.trigger('delete_payment_line', self);
-            });
-        },
-        focus: function(){
-            var val = this.$('input')[0].value;
-            this.$('input')[0].focus();
-            if(Number(val) === 0){
-                this.$('input')[0].value = '';
-            }else{
-                this.$('input')[0].value = val;
-                this.$('input')[0].select();
-            }
         },
     });
 
@@ -916,12 +857,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 self.$('.deleteorder-button').click(function(){
                     self.pos.delete_current_order();
-                });
-                
-                $('body').on('keyup',function(event){
-                    if(event.which === 13){
-                        self.set_fullscreen();
-                    }
                 });
                 
                 //when a new order is created, add an order button widget
