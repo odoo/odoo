@@ -17,10 +17,10 @@
                             <strong t-field="partner.assigned_partner_id.name"/>
                             <p t-field="partner.assigned_partner_id"/>
                             <div t-if="partner.assigned_partner_id.phone">
-                                <span class="icon-phone"/> <span t-field="partner.assigned_partner_id.phone"/>
+                                <span class="fa fa-phone"/> <span t-field="partner.assigned_partner_id.phone"/>
                             </div>
                             <div t-if="partner.assigned_partner_id.email">
-                                <span class="icon-envelope"/>
+                                <span class="fa fa-envelope"/>
                                 <a t-att-href="'mailto:'+partner.assigned_partner_id.email">
                                   <span t-field="partner.assigned_partner_id.email"/>
                                 </a>

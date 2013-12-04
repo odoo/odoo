@@ -529,12 +529,15 @@ class product_product(osv.osv):
                 pricelist_ids = self.pool.get('product.pricelist').name_search(
                     cr, uid, pricelist, operator='=', context=context, limit=1)
                 pricelist = pricelist_ids[0][0] if pricelist_ids else pricelist
+
+            qtys = map(lambda x: (x, quantity, partner), ids)
+            price = self.pool.get('product.pricelist').price_get_multi(cr,uid, [pricelist], 
+                qtys, context=context)
             for id in ids:
                 try:
-                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
+                    res[id] = price[id][pricelist]
                 except:
                     price = 0.0
-                res[id] = price
         for id in ids:
             res.setdefault(id, 0.0)
         return res

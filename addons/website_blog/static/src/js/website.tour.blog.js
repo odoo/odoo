@@ -87,7 +87,7 @@
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
                     title: "Layout Your Blog Post",
-                    content: "Use well designed building blocks to structure the content of your blog.",
+                    content: "Use well designed building blocks to structure the content of your blog. Click 'Insert Blocks' to add new content.",
                     triggers: function () {
                         $('button[data-action=snippet]').one('click', function () {
                             self.moveToNextStep();

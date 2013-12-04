@@ -134,10 +134,10 @@
                         <strong t-field="partner.name"/>
                         <p t-field="partner.commercial_partner_id"/>
                         <div t-if="partner.phone">
-                            <span class="icon-phone"/> <span t-field="partner.phone"/>
+                            <span class="fa fa-phone"/> <span t-field="partner.phone"/>
                         </div>
                         <div t-if="partner.email">
-                            <span class="icon-envelope"/>
+                            <span class="fa fa-envelope"/>
                             <a t-att-href="'mailto:'+partner.email">
                               <span t-field="partner.email"/>
                             </a>

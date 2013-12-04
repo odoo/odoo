@@ -406,29 +406,33 @@ ul.nav-stacked > li > a {
 }
 
 /* Parallax Theme */
-.parallax_quote, [data-snippet-id="slider"] {
-  background: center center no-repeat fixed;
-  background-size: contain;
-}
-.parallax_quote .carousel-indicators li, [data-snippet-id="slider"] .carousel-indicators li {
+div.carousel[data-snippet-id="slider"] .carousel-indicators li {
   border: 1px solid grey;
 }
-.parallax_quote .carousel-indicators .active, [data-snippet-id="slider"] .carousel-indicators .active {
+div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
   background-color: grey;
 }
 
 .parallax {
   position: relative;
   background-size: 100%;
+  display: table;
+  width: 100%;
+  min-height: 100px;
 }
 .parallax.oe_small {
-  height: 200px;
+  min-height: 200px;
 }
 .parallax.oe_medium {
-  height: 300px;
+  min-height: 300px;
 }
 .parallax.oe_big {
-  height: 450px;
+  min-height: 450px;
+}
+.parallax > div {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 32px 0;
 }
 
 /* Background */

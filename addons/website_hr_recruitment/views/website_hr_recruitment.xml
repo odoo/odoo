@@ -68,32 +68,20 @@
                                             </h3>
 
                                             <div t-if="job.address_id">
-                                                <i class="icon-map-marker"/>
+                                                <i class="fa fa-map-marker"/>
                                                 <span t-field="job.address_id.city"/>
                                                 <span t-if="job.address_id.state_id" t-field="job.address_id.state_id"/>
                                                 , <span t-field="job.address_id.country_id.name"/>
                                                 <span t-if="not job.website_published" class="label label-danger">not published</span>
                                             </div>
                                             <div class="text-muted">
-                                                <i class="icon-time"/> <span t-field="job.write_date"/>
+                                                <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
                                             </div>
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="oe_structure">
-                        <section data-snippet-id="cta" class="oe_dark mb32">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12 text-center mt16 mb16">
-                                        <a href="/job/apply" class="btn btn-primary btn-lg">Apply</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
                     </div>
                 </div>
             </t>
@@ -125,10 +113,10 @@
                 <div class="oe_structure" style="clear:both;">
                     <h1 class="text-center" t-field="job.name"/>
                     <h5 class="text-center">
-                        <i class="icon-map-marker"/> <span t-field="job.address_id.city"/> <span t-if="job.address_id.state_id" t-field="job.address_id.state_id.name"/>, <span t-field="job.address_id.country_id.name"/>
+                        <i class="fa fa-map-marker"/> <span t-field="job.address_id.city"/> <span t-if="job.address_id.state_id" t-field="job.address_id.state_id.name"/>, <span t-field="job.address_id.country_id.name"/>
                     </h5>
                     <h5 class="text-center text-muted">
-                        <i class="icon-time"/> <span t-field="job.write_date"/>
+                        <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
                     </h5>
                 </div>
                 <div t-field="job.website_description"/>
@@ -257,7 +245,7 @@
                     <t t-foreach="offices" t-as="thisoffice">
                         <li t-att-class="thisoffice.id == office and 'active' or ''">
                             <a t-href="/jobs/office/#{ slug(thisoffice) }/" >
-                                <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">, 
+                                <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">,
                                     <span t-field="thisoffice.country_id.name"/>
                                 </t>
                             </a>

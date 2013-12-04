@@ -304,9 +304,7 @@ ul.nav-stacked > li > a
 
 /* Parallax Theme */
 
-.parallax_quote, [data-snippet-id="slider"]
-    background: center center no-repeat fixed
-    background-size: contain
+div.carousel[data-snippet-id="slider"]
     .carousel-indicators
         li
             border: 1px solid grey
@@ -316,12 +314,19 @@ ul.nav-stacked > li > a
 .parallax
     position: relative
     background-size: 100%
+    display: table
+    width: 100%
+    min-height: 100px
     &.oe_small
-        height: 200px
+        min-height: 200px
     &.oe_medium
-        height: 300px
+        min-height: 300px
     &.oe_big
-        height: 450px
+        min-height: 450px
+    > div
+        display: table-cell
+        vertical-align: middle
+        padding: 32px 0
 
 /* Background */
  

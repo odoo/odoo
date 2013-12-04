@@ -77,6 +77,9 @@ def urlplus(url, params):
         for k, v in params.iteritems()
     ))
 
+def quote_plus(value):
+    return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
+
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
         # IF a menu is changed, update all websites
@@ -181,10 +184,12 @@ class website(osv.osv):
         return self.pool['website'].browse(cr, uid, 1, context=context)
 
     def preprocess_request(self, cr, uid, ids, request, context=None):
+        # TODO FP: is_website_publisher and editable in context should be removed
+        # for performance reasons (1 query per image to load) but also to be cleaner
+        # I propose to replace this by a group 'base.group_website_publisher' on the
+        # view that requires it.
         Access = request.registry['ir.model.access']
-        is_website_publisher = (
-                Access.check_groups(cr, uid, 'base.group_website_publisher')
-            and Access.check(cr, uid, 'ir.ui.view', 'write', False, context))
+        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
 
         lang = request.context['lang']
         is_master_lang = lang == request.website.default_lang_code
@@ -224,6 +229,7 @@ class website(osv.osv):
             slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
+            quote_plus=quote_plus,
         )
 
         context.update(

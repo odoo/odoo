@@ -288,26 +288,33 @@ class Ecommerce(http.Controller):
 
         request.context = dict(request.context, pricelist=self.get_pricelist())
 
-        quantity = 0
+        # set order_line_id and product_id
+        if order_line_id:
+            order_line = order_line_obj.browse(request.cr, SUPERUSER_ID, order_line_id, context=request.context)
+            if order_line.order_id.id == order.id:
+                product_id = order_line.product_id.id
+            else:
+                order_line_id = None
+        else:
+            order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, 
+                [('order_id', '=', order.id),('product_id', '=', product_id)], context=request.context)
+            if order_line_ids:
+                order_line_id = order_line_ids[0]
+
+        if not order_line_id and not product_id:
+            return 0
 
         # values initialisation
+        quantity = 0
         values = {}
-
-        domain = [('order_id', '=', order.id)]
         if order_line_id:
-            domain += [('id', '=', order_line_id)]
-        else:
-            domain += [('product_id', '=', product_id)]
-
-        order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, domain, context=request.context)
-        if order_line_ids:
-            order_line = order_line_obj.read(request.cr, SUPERUSER_ID, order_line_ids, [], context=request.context)[0]
+            order_line_val = order_line_obj.read(request.cr, SUPERUSER_ID, [order_line_id], [], context=request.context)[0]
             if not product_id:
-                product_id = order_line['product_id'][0]
+                product_id = order_line_val['product_id'][0]
             if set_number >= 0:
                 quantity = set_number
             else:
-                quantity = order_line['product_uom_qty'] + number
+                quantity = order_line_val['product_uom_qty'] + number
             if quantity < 0:
                 quantity = 0
         else:
@@ -316,17 +323,17 @@ class Ecommerce(http.Controller):
             quantity = 1
 
         # change and record value
-        vals = order_line_obj._recalculate_product_values(request.cr, request.uid, order_line_ids, product_id, context=request.context)
+        vals = order_line_obj._recalculate_product_values(request.cr, request.uid, [order_line_id], product_id, context=request.context)
         values.update(vals)
 
         values['product_uom_qty'] = quantity
         values['product_id'] = product_id
         values['order_id'] = order.id
 
-        if order_line_ids:
-            order_line_obj.write(request.cr, SUPERUSER_ID, order_line_ids, values, context=request.context)
+        if order_line_id:
+            order_line_obj.write(request.cr, SUPERUSER_ID, [order_line_id], values, context=request.context)
             if not quantity:
-                order_line_obj.unlink(request.cr, SUPERUSER_ID, order_line_ids, context=request.context)
+                order_line_obj.unlink(request.cr, SUPERUSER_ID, [order_line_id], context=request.context)
         else:
             order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=request.context)
             order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
@@ -338,7 +345,7 @@ class Ecommerce(http.Controller):
         prod_obj = request.registry.get('product.product')
 
         # must have a draft sale order with lines at this point, otherwise reset
-        order = context.get('website_sale_order')
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         if order and order.state != 'draft':
             request.registry['website'].sale_reset_order(cr, uid, context=context)
             return request.redirect('/shop/')
@@ -367,9 +374,14 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.mycart", values)
 
-    @website.route(['/shop/add_cart/'], type='http', auth="public", multilang=True)
-    def add_cart(self, product_id=None, order_line_id=None, remove=None, **kw):
-        self.add_product_to_cart(product_id=product_id and int(product_id), order_line_id=order_line_id and int(order_line_id), number=(remove and -1 or 1))
+    @website.route(['/shop/add_cart/', '/shop/add_cart/<model("product.product"):product>/'], type='http', auth="public", multilang=True, methods=['POST'])
+    def add_cart(self, product=None, product_id=None, remove=None, **kw):
+        self.add_product_to_cart(product_id=int(product_id or product.id))
+        return request.redirect("/shop/mycart/")
+
+    @website.route(['/shop/change_cart/<model("sale.order.line"):order_line>/'], type='http', auth="public", multilang=True)
+    def add_cart_order_line(self, order_line=None, remove=None, **kw):
+        self.add_product_to_cart(order_line_id=int(order_line.id), number=(remove and -1 or 1))
         return request.redirect("/shop/mycart/")
 
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
@@ -390,7 +402,7 @@ class Ecommerce(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         # must have a draft sale order with lines at this point, otherwise reset
-        order = context.get('website_sale_order')
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         if not order or order.state != 'draft' or not order.order_line:
             request.registry['website'].sale_reset_order(cr, uid, context=context)
             return request.redirect('/shop/')
@@ -421,14 +433,20 @@ class Ecommerce(http.Controller):
         checkout = values['checkout']
         error = values['error']
 
-        if not request.uid == request.registry['website'].get_public_user(cr, uid, context):
+        partner = None
+        public_id = request.registry['website'].get_public_user(cr, uid, context)
+        if not request.uid == public_id:
             partner = orm_user.browse(cr, uid, uid, context).partner_id
+        elif order.partner_id and order.partner_id.id != public_id:
+            partner = orm_partner.browse(cr, SUPERUSER_ID, order.partner_id.id, context)
+
+        if partner:
             partner_info = info.from_partner(partner)
             checkout.update(partner_info)
-            shipping_ids = orm_partner.search(cr, uid, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
+            shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
             if shipping_ids:
                 values['shipping'] = "true"
-                shipping_partner = orm_partner.browse(cr, uid, shipping_ids[0], context)
+                shipping_partner = orm_partner.browse(cr, SUPERUSER_ID, shipping_ids[0], context)
                 checkout['shipping_name'] = getattr(shipping_partner, 'name')
                 checkout['shipping_phone'] = getattr(shipping_partner, 'phone')
                 checkout['shipping_street'] = getattr(shipping_partner, 'street')
@@ -446,6 +464,7 @@ class Ecommerce(http.Controller):
     @website.route(['/shop/confirm_order/'], type='http', auth="public", multilang=True)
     def confirm_order(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        order_line_obj = request.registry.get('sale.order')
 
         # must have a draft sale order with lines at this point, otherwise redirect to shop
         order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
@@ -534,7 +553,8 @@ class Ecommerce(http.Controller):
             'partner_shipping_id': shipping_id or partner_id
         }
         order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], order.partner_id.id, context=context)['value'])
-        order.write(order_info)
+
+        order_line_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
         return request.redirect("/shop/payment/")
 
@@ -553,7 +573,7 @@ class Ecommerce(http.Controller):
         payment_obj = request.registry.get('payment.acquirer')
 
         # if no sale order at this stage: back to checkout beginning
-        order = context.get('website_sale_order')
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         if not order or not order.state == 'draft' or not order.order_line:
             request.registry['website'].sale_reset_order(cr, uid, context=context)
             return request.redirect("/shop/")
@@ -677,11 +697,13 @@ class Ecommerce(http.Controller):
 
         if transaction_id is None:
             tx = context.get('website_sale_transaction')
+            if not tx:
+                return request.redirect('/shop/')
         else:
             tx = request.registry['payment.transaction'].browse(cr, uid, transaction_id, context=context)
 
         if sale_order_id is None:
-            order = context.get('website_sale_order')
+            order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         else:
             order = request.registry['sale.order'].browse(cr, uid, sale_order_id, context=context)
 

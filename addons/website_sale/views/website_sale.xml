@@ -8,7 +8,7 @@
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <li t-att-class="(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''">
                 <a href="/shop/mycart/">
-                    <i class="icon-shopping-cart"></i>
+                    <i class="fa fa-shopping-cart"></i>
                     My cart <sup t-attf-class="my_cart_quantity label label-primary"
                                   t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
                 </a>
@@ -42,8 +42,8 @@
     </template>
 
     <template id="products_cart" name="Shopping cart">
-      <div class="ribbon-wrapper" contentEditable="false">
-        <div class="ribbon"><span contentEditable="true">Promo</span></div>
+      <div class="ribbon-wrapper">
+        <div class="ribbon">Promo</div>
       </div>
       <div class="oe_product_description">
           <a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filter_domain">
@@ -202,8 +202,8 @@
 
     <template id="add_to_basket" inherit_option_id="website_sale.products_cart" name="Add to Cart">
         <xpath expr="//div[@class='product_price']" position="inside">
-            <a t-href="/shop/add_cart/?product_id=#{ product.id }" class="js_add_cart_json">
-                <span class="icon-shopping-cart"/>
+            <a t-href="/shop/add_cart/#{ product.product_variant_ids[0].id }/" class="js_add_cart_json">
+                <span class="fa fa-shopping-cart"/>
             </a>
         </xpath>
     </template>
@@ -268,7 +268,7 @@
                   </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                       <h1 t-field="product.name">Product Name</h1>
 
-                      <form action="/shop/add_cart/" class="js_add_cart_json">
+                      <form action="/shop/add_cart/" class="js_add_cart_json" method="POST">
                           <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                           <t t-if="len(product.product_variant_ids) &gt; 1">
                               <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
@@ -403,6 +403,7 @@
                                         <div>
                                             <a t-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }/">
                                                 <strong t-field="line.product_id.name"/>
+                                                <t t-if="line.product_id.variants">(<t t-esc="line.product_id.variants"/>)</t>
                                             </a>
                                         </div>
                                         <div class="text-muted" t-field="line.product_id.description_sale"/>
@@ -422,15 +423,15 @@
                                     <td>
                                         <div class="input-group">
                                             <span class="input-group-addon">
-                                                <a t-href="./add_cart/?remove=True&amp;order_line_id=#{ line.id }" class="mb8 js_add_cart_json">
-                                                    <span class="icon-minus"/>
+                                                <a t-href="./change_cart/#{ line.id }/?remove=True" class="mb8 js_add_cart_json">
+                                                    <i class="fa fa-minus-square"></i>
                                                 </a>
                                             </span>
                                             <input type="text" class="js_quantity form-control"
                                                 t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
                                             <span class="input-group-addon">
-                                                <a t-href="./add_cart/?order_line_id=#{ line.id }" class="mb8 float_left js_add_cart_json">
-                                                    <span class="icon-plus"/>
+                                                <a t-href="./change_cart/#{ line.id }/" class="mb8 float_left js_add_cart_json">
+                                                    <i class="fa fa-plus-square"></i>
                                                 </a>
                                             </span>
                                         </div>
@@ -463,8 +464,8 @@
                             </thead>
                         </table>
                         <div class="clearfix"/>
-                        <a href="/shop" class="btn btn-default mb32"><span class="icon-long-arrow-left"/> Continue Shopping</a>
-                        <a t-if="website_sale_order and website_sale_order.order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="icon-long-arrow-right"/></a>
+                        <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Continue Shopping</a>
+                        <a t-if="website_sale_order and website_sale_order.order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="fa fa-long-arrow-right"/></a>
                         <div class="oe_structure"/>
                     </div>
                     <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
@@ -590,7 +591,7 @@
                             }'/>
                         </td>
                         <td class="text-center">
-                            <a t-href="./add_cart/?product_id=#{ product.id }"><strong>Add to Cart</strong></a>
+                            <a t-href="./add_cart/#{ product.id }/"><strong>Add to Cart</strong></a>
                         </td>
                     </tr>
                 </tbody>
@@ -749,10 +750,10 @@
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-default btn-primary pull-right mb32">Confirm <span class="icon-long-arrow-right"/></button>
+                        <button type="submit" class="btn btn-default btn-primary pull-right mb32">Confirm <span class="fa fa-long-arrow-right"/></button>
                 </div>
                 <div class="col-lg-offset-1 col-lg-3 text-muted">
-                    <h3 class="page-header mt16">Your Order <small><a href="/shop/mycart"><span class="icon-arrow-right"/> change</a></small></h3>
+                    <h3 class="page-header mt16">Your Order <small><a href="/shop/mycart"><span class="fa fa-arrow-right"/> change</a></small></h3>
                     <div class="row">
                         <div class="col-sm-6 text-right">Subtotal:</div>
                         <div class="col-sm-6"><span t-esc="website_sale_order.amount_untaxed" t-field-options='{
@@ -866,13 +867,13 @@
                       <h4>Bill To:</h4>
                       <div t-field="website_sale_order.partner_invoice_id"/>
                       <div>
-                        <a href="/shop/checkout"><span class="icon-arrow-right"/> Change Address</a>
+                        <a href="/shop/checkout"><span class="fa fa-arrow-right"/> Change Address</a>
                       </div>
 
                       <h4 class="mt32">Ship To:</h4>
                       <div t-field="website_sale_order.partner_shipping_id"/>
                       <div>
-                        <a href="/shop/checkout"><span class="icon-arrow-right"/> Change Address</a>
+                        <a href="/shop/checkout"><span class="fa fa-arrow-right"/> Change Address</a>
                       </div>
 
                   </div>
@@ -938,7 +939,7 @@
                         <div t-field="order.partner_shipping_id"/>
 
                         <h4 class="mt32">Amount:</h4>
-<!--                         <div t-field="order.amount_total" t-field-options='{
+                        <!--<div t-field="order.amount_total" t-field-options='{
                             "widget": "monetary",
                             "display_currency": "website.pricelist_id.currency_id"
                         }'/> -->
