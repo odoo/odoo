@@ -140,12 +140,18 @@ class TxAdyen(osv.Model):
         return tx
 
     def _adyen_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
-        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
         invalid_parameters = []
+
+        # reference at acquirer: pspReference
+        if tx.acquirer_reference and data.get('pspReference') != tx.acquirer_reference:
+            invalid_parameters.append(('pspReference', data.get('pspReference'), tx.acquirer_reference))
+        # seller
         if data.get('skinCode') != tx.acquirer_id.adyen_skin_code:
             invalid_parameters.append(('skinCode', data.get('skinCode'), tx.acquirer_id.adyen_skin_code))
+        # result
         if not data.get('authResult'):
             invalid_parameters.append(('authResult', data.get('authResult'), 'something'))
+
         return invalid_parameters
 
     def _adyen_form_validate(self, cr, uid, tx, data, context=None):
