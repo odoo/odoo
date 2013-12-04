@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-12-01 21:43+0000\n"
+"PO-Revision-Date: 2013-12-03 07:06+0000\n"
 "Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-02 05:52+0000\n"
-"X-Generator: Launchpad (build 16856)\n"
+"X-Launchpad-Export-Date: 2013-12-04 05:56+0000\n"
+"X-Generator: Launchpad (build 16861)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -132,7 +132,7 @@ msgid ""
 "both belong to different Category!."
 msgstr ""
 "Konversio tuotteen yksiköstä %s oletusyksikköön %s ei ole mahdollista koska "
-"ne kuuluvat eri kategorioihin."
+"ne kuuluvat eri tuoteryhmiin (kategorioihin)."
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -210,7 +210,7 @@ msgstr ""
 #. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
-msgstr "Yläkategoria"
+msgstr "Ylempi ryhmä"
 
 #. module: product
 #: model:product.template,description:product.product_product_33_product_template
@@ -284,7 +284,7 @@ msgstr ""
 #: field:product.template,categ_id:0
 #: field:product.uom,category_id:0
 msgid "Category"
-msgstr "Kategoria"
+msgstr "Ryhmä"
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -326,7 +326,7 @@ msgstr "Tila"
 #. module: product
 #: help:product.template,categ_id:0
 msgid "Select category for the current product"
-msgstr "Valitse nykyisen tuotteen kategoria"
+msgstr "Valitse nykyiselle tuotteelle ryhmä (kategoria)"
 
 #. module: product
 #: field:product.product,outgoing_qty:0
@@ -541,7 +541,7 @@ msgstr ""
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr "Virhe: oletusyksikkö ja ostoksikkö pitää kuulua samaan kategoriaan."
+msgstr "Virhe: oletusyksikkö ja ostoksikkö pitää kuulua samaan ryhmään."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -596,7 +596,7 @@ msgstr "Pakkauksen leveys"
 #: code:addons/product/product.py:361
 #, python-format
 msgid "Unit of Measure categories Mismatch!"
-msgstr "Yksikkökategoriat eivät ole keskenään yhteensopivia!"
+msgstr "Yksikköryhmät eivät ole keskenään yhteensopivia!"
 
 #. module: product
 #: model:product.template,name:product.product_product_36_product_template
@@ -799,12 +799,12 @@ msgstr "Hinnastot hallitaan"
 #. module: product
 #: field:product.category,child_id:0
 msgid "Child Categories"
-msgstr "Alakategoriat"
+msgstr "Aliryhmät"
 
 #. module: product
 #: field:product.pricelist.version,date_end:0
 msgid "End Date"
-msgstr "Lopetuspäivämäärä"
+msgstr "Loppupäivä"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -921,7 +921,7 @@ msgstr ""
 #: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
-msgstr "Tuotteiden kategoriat"
+msgstr "Tuoteryhmät"
 
 #. module: product
 #: view:product.template:0
@@ -1192,7 +1192,7 @@ msgstr "Kulut"
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr "Antaa järjestyksen näytettäessä tuotekategorialistaa."
+msgstr "Antaa järjestyksen näytettäessä tuoteryhmäluettelon."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -1242,7 +1242,7 @@ msgstr "Lukemattomia viestejä"
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr "Mittayksiköiden kategoriat"
+msgstr "Yksiköiden ryhmät"
 
 #. module: product
 #: help:product.product,seller_id:0
@@ -1533,8 +1533,8 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
-"Oletusmittayksikkö jota käytetään ostotilauksilla. Täytyy olla samaa "
-"kategoriaa kuin oletusmittayksikkö."
+"Oletusyksikkö jota käytetään ostotilauksilla. Täytyy olla samassa ryhmässä "
+"(kategoriassa) kuin oletusyksikkö."
 
 #. module: product
 #: view:product.pricelist:0
@@ -1759,7 +1759,7 @@ msgstr "Variaatiot"
 #: model:ir.actions.act_window,name:product.product_category_action
 #: model:ir.ui.menu,name:product.menu_products_category
 msgid "Products by Category"
-msgstr "Tuotteet kategorioittain"
+msgstr "Tuotteet ryhmittäin (kategorioittain)"
 
 #. module: product
 #: model:product.template,name:product.product_product_16_product_template
@@ -1847,7 +1847,7 @@ msgstr ""
 #: code:addons/product/product.py:208
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
-msgstr "Olemassa olevan yksikön  \"%s\" kategoriaa ei voi muuttaa."
+msgstr "Olemassa olevan yksikön  \"%s\" ryhmää (kategoriaa) ei voi muuttaa."
 
 #. module: product
 #: help:product.packaging,height:0
@@ -2161,8 +2161,8 @@ msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
 msgstr ""
-"Näytettävän tyypin kategoria on virtuaalinen eli sitä voi käyttää mallina "
-"toiselle kategorialle luotaessa hierarkkista rakennetta."
+"Näytettävän tyypin ryhmä (kategoria) on virtuaalinen eli sitä voi käyttää "
+"mallina toiselle ryhmälle (kategorialle) luotaessa hierarkkista rakennetta."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2193,7 +2193,7 @@ msgstr "kuva"
 #. module: product
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
-msgstr "Yksiköiden kategoriat"
+msgstr "Yksiköiden ryhmät"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -2391,7 +2391,7 @@ msgstr "Viiveet"
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr "Kategorian tyyppi"
+msgstr "Ryhmän tyyppi"
 
 #. module: product
 #: model:process.node,note:product.process_node_product0
@@ -2439,7 +2439,7 @@ msgstr "Windows 8.2"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
-msgstr "Referenssiyksikkö tälle kategorialle"
+msgstr "Referenssiyksikkö tälle ryhmälle"
 
 #. module: product
 #: field:product.supplierinfo,product_uom:0
@@ -2507,7 +2507,7 @@ msgstr "Arvotuskäytäntö"
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
-msgstr "Tuotteen kategoria"
+msgstr "Tuoteryhmä"
 
 #. module: product
 #: model:product.template,description:product.product_product_19_product_template
@@ -2517,7 +2517,7 @@ msgstr "Tarvittaessa kiintolevyn kapasiteetti asiakasvaatimusten mukaan."
 #. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
-msgstr "Elinkaaren lopussa"
+msgstr "Elinkaaren loppu"
 
 #. module: product
 #: model:product.template,name:product.product_product_15_product_template
@@ -2563,13 +2563,13 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Yksiköiden välinen muunnos onnistuu vain saman kategorian sisällä. Konversio "
-"tehdään käyttäen kertoimena suhdetta."
+"Yksiköiden välinen muunnos onnistuu vain saman ryhmän (kategorian) sisällä. "
+"Konversio tehdään käyttäen kertoimena suhdetta."
 
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr "Virhe! Et voi luoda rekursiivisia kategoroita."
+msgstr "Virhe! Et voi luoda rekursiivisia ryhmiä."
 
 #. module: product
 #: help:product.product,image_medium:0

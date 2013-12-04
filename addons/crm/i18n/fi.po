@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-12-02 22:04+0000\n"
+"PO-Revision-Date: 2013-12-03 06:48+0000\n"
 "Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-03 06:15+0000\n"
-"X-Generator: Launchpad (build 16856)\n"
+"X-Launchpad-Export-Date: 2013-12-04 05:56+0000\n"
+"X-Generator: Launchpad (build 16861)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -317,8 +317,8 @@ msgid ""
 "The partner category that will be added to partners that match the "
 "segmentation criterions after computation."
 msgstr ""
-"Kumppanikategoria joka lisätään kumppaneille, jotka täsmäävät "
-"jaotteluominaisuuksiin laskennan jälkeen."
+"Kumppaniryhmä joka lisätään kumppaneille, jotka täsmäävät "
+"segmentointikriteereihin laskennan jälkeen."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_segmentation_tree-act
@@ -333,6 +333,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikkaa luodaksesi uusi asiakasegmentointi.\n"
+"              </p><p>\n"
+"                Luo erityiset asiakasryhmät, joihin voit kiinnittää "
+"asiakaskontaktisi.\n"
+"                Tämä mahdollistaa paremman asiakkaiden hallinnan ja "
+"kommunikaation.\n"
+"                Segmentointityökalu kykenee yhdistämään asiakasryhmät "
+"kontakteihin.\n"
+"                asettamillasi kriteereillä.\n"
+"              </p>\n"
+"            "
 
 #. module: crm
 #: field:crm.opportunity2phonecall,contact_name:0
@@ -445,7 +457,7 @@ msgstr ""
 #: field:crm.phonecall.report,categ_id:0
 #: field:crm.phonecall2phonecall,categ_id:0
 msgid "Category"
-msgstr "Kategoria"
+msgstr "Ryhmä"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -583,7 +595,7 @@ msgstr "Yhdistä"
 #. module: crm
 #: view:crm.case.categ:0
 msgid "Case Category"
-msgstr "Asiakategoria"
+msgstr "Asiaryhmä"
 
 #. module: crm
 #: field:crm.lead,partner_address_name:0
@@ -649,6 +661,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klikkaa luodaksesi uuden ryhmän.\n"
+"          </p><p>\n"
+"            Luo erityiset puheluryhmät, jotta voit paremmin määritellä "
+"erilaiset \n"
+"            seurattavat soittotyypit.\n"
+"          </p>\n"
+"        "
 
 #. module: crm
 #: help:crm.case.section,reply_to:0
@@ -878,7 +898,7 @@ msgstr "Mahdollisuudet"
 #. module: crm
 #: field:crm.segmentation,categ_id:0
 msgid "Partner Category"
-msgstr "Kumppanin katerogia"
+msgstr "Kumppaniryhmä"
 
 #. module: crm
 #: field:crm.lead,probability:0
@@ -2557,6 +2577,10 @@ msgid ""
 "If checked, remove the category from partners that doesn't match "
 "segmentation criterions"
 msgstr ""
+"Merkitse onko ryhmä rajattu vain segmentointikriteerit täyttäville "
+"kumppaneille.                        \n"
+"Jos on merkitty aktiiviseksi, niin poista ryhmä kumppaneilta, jotka eivät "
+"täytä mainittua segmentointikriteereitä."
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadopportunity0
@@ -2778,7 +2802,7 @@ msgstr "Kokous"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
 msgid "Category of Case"
-msgstr "Tapauksen kategoria"
+msgstr "Asiaryhmä"
 
 #. module: crm
 #: view:board.board:0
