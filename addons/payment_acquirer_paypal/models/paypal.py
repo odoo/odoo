@@ -27,6 +27,7 @@ class AcquirerPaypal(osv.Model):
         'paypal_username': fields.char('Username', required_if_provider='paypal'),
         'paypal_tx_url': fields.char('Transaction URL', required_if_provider='paypal'),
         'paypal_use_ipn': fields.boolean('Use IPN'),
+        # Server 2 server
         'paypal_api_enabled': fields.boolean('Use Rest API'),
         'paypal_api_username': fields.char('Rest API Username'),
         'paypal_api_password': fields.char('Rest API Password'),
@@ -35,10 +36,34 @@ class AcquirerPaypal(osv.Model):
     }
 
     _defaults = {
-        'paypal_use_ipn': True,
-        'paypal_api_enabled': False,
         'paypal_tx_url': 'https://www.sandbox.paypal.com/cgi-bin/webscr',
+        'paypal_use_ipn': True,
+        'fees_active': False,
+        'fees_dom_fixed': 0.35,
+        'fees_dom_var': 3.4,
+        'fees_int_fixed': 0.35,
+        'fees_int_var': 3.9,
+        'paypal_api_enabled': False,
     }
+
+    def paypal_compute_fees(self, cr, uid, id, amount, currency_id, country_id, context=None):
+        """ Compute paypal fees.
+
+            :param float amount: the amount to pay
+            :param integer country_id: an ID of a res.country, or None. This is
+                                       the customer's country, to be compared to
+                                       the acquirer company country.
+            :return float fees: computed fees
+        """
+        acquirer = self.browse(cr, uid, id, context=context)
+        if not acquirer.fees_active:
+            return 0.0
+        country = self.pool['res.country'].browse(cr, uid, country_id, context=context)
+        if country and acquirer.company_id.country_id.id == country.id:
+            fees = amount * (1 + acquirer.fees_dom_var / 100.0) + acquirer.fees_dom_fixed - amount
+        else:
+            fees = amount * (1 + acquirer.fees_int_var / 100.0) + acquirer.fees_int_fixed - amount
+        return fees
 
     def paypal_form_generate_values(self, cr, uid, id, reference, amount, currency, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
         if partner_values is None:
@@ -48,6 +73,7 @@ class AcquirerPaypal(osv.Model):
         partner = None
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+
         tx_values = {
             'cmd': '_xclick',
             'business': acquirer.paypal_email_id,
@@ -66,6 +92,8 @@ class AcquirerPaypal(osv.Model):
             'notify_url': '%s' % urlparse.urljoin(base_url, PaypalController._notify_url),
             'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
         }
+        if acquirer.fees_active:
+            tx_values['handling'] = '%.2f' % tx_custom_values.pop('fees', 0.0)
         if tx_custom_values and tx_custom_values.get('return_url'):
             tx_values['custom'] = json.dumps({'return_url': '%s' % tx_custom_values.pop('return_url')})
         if tx_custom_values:

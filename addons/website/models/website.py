@@ -14,7 +14,7 @@ import werkzeug.exceptions
 import werkzeug.wrappers
 
 import openerp
-from openerp.osv import osv, fields
+from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
 
 from openerp.addons.web import http
@@ -36,8 +36,8 @@ def url_for(path_or_uri, lang=None, keep_query=None):
     if request and not url.netloc and not url.scheme:
         location = urlparse.urljoin(request.httprequest.path, location)
         lang = lang or request.context.get('lang')
-        langs = [lg.code for lg in request.website.language_ids]
-        if location[0] == '/' and len(langs) > 1 and lang != request.website.default_lang_id.code:
+        langs = [lg[0] for lg in request.website.get_languages()]
+        if location[0] == '/' and len(langs) > 1 and lang != request.website.default_lang_code:
             ps = location.split('/')
             if ps[1] in langs:
                 ps[1] = lang
@@ -58,6 +58,15 @@ def url_for(path_or_uri, lang=None, keep_query=None):
 
     return location
 
+def slug(value):
+    if isinstance(value, orm.browse_record):
+        # [(id, name)] = value.name_get()
+        id, name = value.id, value[value._rec_name]
+    else:
+        # assume name_search result tuple
+        id, name = value
+    return "%s-%d" % (slugify(name), id)
+
 def urlplus(url, params):
     if not params:
         return url
@@ -67,6 +76,9 @@ def urlplus(url, params):
         k + '=' + urllib.quote_plus(v.encode('utf-8') if isinstance(v, unicode) else str(v))
         for k, v in params.iteritems()
     ))
+
+def quote_plus(value):
+    return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
 
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
@@ -90,6 +102,7 @@ class website(osv.osv):
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
         'default_lang_id': fields.many2one('res.lang', string="Default language"),
+        'default_lang_code': fields.related('default_lang_id', 'code', type="char", string="Default language code", store=True),
         'social_twitter': fields.char('Twitter Account'),
         'social_facebook': fields.char('Facebook Account'),
         'social_github': fields.char('GitHub Account'),
@@ -102,6 +115,10 @@ class website(osv.osv):
                 'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
             })
     }
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self._get_languages.clear_cache(self)
+        return super(website, self).write(cr, uid, ids, vals, context)
 
     def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
         context=context or {}
@@ -155,22 +172,34 @@ class website(osv.osv):
         res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
         return res and res[1] or False
 
+    @openerp.tools.ormcache(skiparg=3)
+    def _get_languages(self, cr, uid, id, context=None):
+        website = self.browse(cr, uid, id)
+        return [(lg.code, lg.name) for lg in website.language_ids]
+    def get_languages(self, cr, uid, ids, context=None):
+        return self._get_languages(cr, uid, ids[0])
+
     def get_current_website(self, cr, uid, context=None):
         # TODO: Select website, currently hard coded
         return self.pool['website'].browse(cr, uid, 1, context=context)
 
     def preprocess_request(self, cr, uid, ids, request, context=None):
-        def redirect(url):
-            return werkzeug.utils.redirect(url_for(url))
-        request.redirect = redirect
-        is_website_publisher = self.pool.get('ir.model.access').check_groups(cr, uid, 'base.group_website_publisher')
+        # TODO FP: is_website_publisher and editable in context should be removed
+        # for performance reasons (1 query per image to load) but also to be cleaner
+        # I propose to replace this by a group 'base.group_website_publisher' on the
+        # view that requires it.
+        Access = request.registry['ir.model.access']
+        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
+
         lang = request.context['lang']
-        is_master_lang = lang == request.website.default_lang_id.code
-        request.context.update({
-            'is_master_lang': is_master_lang,
-            'editable': is_website_publisher,
-            'translatable': not is_master_lang,
-        })
+        is_master_lang = lang == request.website.default_lang_code
+
+        request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
+        request.context.update(
+            is_master_lang=is_master_lang,
+            editable=is_website_publisher,
+            translatable=not is_master_lang,
+        )
 
     def get_template(self, cr, uid, ids, template, context=None):
         IMD = self.pool["ir.model.data"]
@@ -197,8 +226,10 @@ class website(osv.osv):
             json=simplejson,
             website=request.website,
             url_for=url_for,
+            slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
+            quote_plus=quote_plus,
         )
 
         context.update(
@@ -268,7 +299,6 @@ class website(osv.osv):
             ]
         }
 
-
     def rule_is_enumerable(self, rule):
         """ Checks that it is possible to generate sensible GET queries for
         a given rule (if the endpoint matches its own requirements)
@@ -299,16 +329,7 @@ class website(osv.osv):
         :type rule: werkzeug.routing.Rule
         :rtype: bool
         """
-
-        # apparently the decorator package makes getargspec work correctly
-        # on functions it decorates. That's not the case for
-        # @functools.wraps, so hack around to get the original function
-        # (and hope a single decorator was applied or we're hosed)
-        # FIXME: this is going to blow up if we want/need to use multiple @route (with various configurations) on a method
-        undecorated_func = rule.endpoint.func_closure[0].cell_contents
-
-        # If this is ever ported to py3, use signatures, it doesn't suck as much
-        spec = inspect.getargspec(undecorated_func)
+        spec = inspect.getargspec(rule.endpoint)
 
         # if *args bail the fuck out, only dragons can live there
         if spec.varargs:
@@ -343,7 +364,7 @@ class website(osv.osv):
         """
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
-        uid = self.get_public_user(cr, uid, context=context)[1].id
+        uid = self.get_public_user(cr, uid, context=context)
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue

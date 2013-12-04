@@ -87,7 +87,7 @@
                     element: 'button[data-action=snippet]',
                     placement: 'bottom',
                     title: "Layout Your Blog Post",
-                    content: "Use well designed building blocks to structure the content of your blog.",
+                    content: "Use well designed building blocks to structure the content of your blog. Click 'Insert Blocks' to add new content.",
                     triggers: function () {
                         $('button[data-action=snippet]').one('click', function () {
                             self.moveToNextStep();
@@ -101,7 +101,7 @@
                     title: "Drag & Drop a Block",
                     content: "Drag the <em>'Image-Text'</em> block and drop it in your page.",
                     triggers: function () {
-                        self.onSnippetDraggedAdvance('image-text');
+                        self.onSnippetDraggedAdvance();
                     },
                 },
                 {
@@ -123,7 +123,7 @@
                     title: "Drag & Drop a block",
                     content: "Drag the <em>'Text Block'</em> block and drop it below the image block.",
                     triggers: function () {
-                        self.onSnippetDraggedAdvance('text-block');
+                        self.onSnippetDraggedAdvance();
                     },
                 },
                 {

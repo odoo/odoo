@@ -48,6 +48,7 @@ class PaymentAcquirer(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'message': fields.html('Message', help='Message displayed to help payment and validation'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
         'env': fields.selection(
@@ -55,11 +56,18 @@ class PaymentAcquirer(osv.Model):
             string='Environment'),
         'portal_published': fields.boolean('Visible in Portal',
                                            help="Make this payment acquirer available (Customer invoices, etc.)"),
+        # Fees
+        'fees_active': fields.boolean('Compute fees'),
+        'fees_dom_fixed': fields.float('Fixed domestic fees'),
+        'fees_dom_var': fields.float('Variable domestic fees (in percents)'),
+        'fees_int_fixed': fields.float('Fixed international fees'),
+        'fees_int_var': fields.float('Variable international fees (in percents)'),
     }
 
     _defaults = {
-        'portal_published': True,
+        'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'env': 'test',
+        'portal_published': True,
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
@@ -74,9 +82,36 @@ class PaymentAcquirer(osv.Model):
         (_check_required_if_provider, 'Required fields not filled', ['required for this provider']),
     ]
 
-    def render(self, cr, uid, id, reference, amount, currency, tx_id=None, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
+    def get_form_action_url(self, cr, uid, id, context=None):
+        """ Returns the form action URL, for form-based acquirer implementations. """
+        acquirer = self.browse(cr, uid, id, context=context)
+        if hasattr(self, '%s_get_form_action_url' % acquirer.name):
+            return getattr(self, '%s_get_form_action_url' % acquirer.name)(cr, uid, id, context=context)
+        return False
+
+    def form_preprocess_values(self, cr, uid, id, reference, amount, currency_id, tx_id, partner_id, partner_values, tx_custom_values, context=None):
+        acquirer = self.browse(cr, uid, id, context=context)
+        tx_values = tx_custom_values
+
+        # compute country
+        if partner_id:
+            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+            tx_values['country_id'] = partner.country_id.id
+        elif partner_values and partner_values.get('country_name'):
+            country_ids = self.pool['res.country'].search(cr, uid, [('name', '=', partner_values.get('country_name'))], context=context)
+            tx_values['country_id'] = country_ids and country_ids[0] or None
+        else:
+            tx_values['country_id'] = False
+
+        # compute fees
+        if hasattr(self, '%s_compute_fees' % acquirer.name):
+            tx_values['fees'] = getattr(self, '%s_compute_fees' % acquirer.name)(cr, uid, id, amount, currency_id, tx_values.get('country_id'), context=None)
+
+        return tx_values
+
+    def render(self, cr, uid, id, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
         """ Renders the form template of the given acquirer as a qWeb template.
-        All templates should handle:
+        All templates will receive:
 
          - acquirer: the payment.acquirer browse record
          - user: the current user browse record
@@ -90,11 +125,11 @@ class PaymentAcquirer(osv.Model):
                              in each provider, depending on the features it offers:
 
           - 'feedback_url': feedback URL, controler that manage answer of the acquirer
-                            (without base url)
+                            (without base url) -> FIXME
           - 'return_url': URL for coming back after payment validation (wihout
-                          base url)
-          - 'cancel_url': URL if the client cancels the payment
-          - 'error_url': URL if there is an issue with the payment
+                          base url) -> FIXME
+          - 'cancel_url': URL if the client cancels the payment -> FIXME
+          - 'error_url': URL if there is an issue with the payment -> FIXME
 
          - context: OpenERP context dictionary
 
@@ -112,20 +147,25 @@ class PaymentAcquirer(osv.Model):
         """
         if context is None:
             context = {}
+        if tx_custom_values is None:
+            tx_custom_values = {}
         partner = None
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         acquirer = self.browse(cr, uid, id, context=context)
-        method_name = '%s_form_generate_values' % (acquirer.name)
+        currency = self.pool['res.currency'].browse(cr, uid, currency_id, context=context)
 
-        if tx_id and hasattr(self.pool['payment.transaction'], method_name):
-            method = getattr(self.pool['payment.transaction'], method_name)
-            tx_values = method(cr, uid, tx_id, tx_custom_values, context=context)
-        elif hasattr(self, method_name):
-            method = getattr(self, method_name)
-            tx_values = method(cr, uid, id, reference, amount, currency, partner_id, partner_values, tx_custom_values, context=context)
-        else:
-            tx_values = tx_custom_values
+        # pre-process values
+        tx_values = self.form_preprocess_values(cr, uid, id, reference, amount, currency, tx_id, partner_id, partner_values, tx_custom_values, context=context)
+
+        # call <name>_form_generate_values to update the tx dict with acqurier specific values
+        cust_method_name = '%s_form_generate_values' % (acquirer.name)
+        if tx_id and hasattr(self.pool['payment.transaction'], cust_method_name):
+            method = getattr(self.pool['payment.transaction'], cust_method_name)
+            tx_values = method(cr, uid, tx_id, tx_values, context=context)
+        elif hasattr(self, cust_method_name):
+            method = getattr(self, cust_method_name)
+            tx_values = method(cr, uid, id, reference, amount, currency, partner_id, partner_values, tx_values, context=context)
 
         qweb_context = {
             'acquirer': acquirer,
@@ -140,12 +180,6 @@ class PaymentAcquirer(osv.Model):
         }
         # because render accepts view ids but not qweb -> need to find the xml_id
         return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.xml_id, qweb_context, engine='ir.qweb', context=context)
-
-    def get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
-        if hasattr(self, '%s_get_form_action_url' % acquirer.name):
-            return getattr(self, '%s_get_form_action_url' % acquirer.name)(cr, uid, id, context=context)
-        return False
 
 
 class PaymentTransaction(osv.Model):
@@ -198,6 +232,7 @@ class PaymentTransaction(osv.Model):
         'amount': fields.float('Amount', required=True,
                                help='Amount in cents',
                                track_visibility='always'),
+        'fees': fields.float('Fees', help='Fees amount; set by the system because depends on the acquirer'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'reference': fields.char('Order Reference', required=True),
         # duplicate partner / transaction data to store the values at transaction time
@@ -225,12 +260,22 @@ class PaymentTransaction(osv.Model):
     }
 
     def create(self, cr, uid, values, context=None):
+        Acquirer = self.pool['payment.acquirer']
+
         if values.get('partner_id'):  # @TDENOTE: not sure
             values.update(self.on_change_partner_id(cr, uid, None, values.get('partner_id'), context=context)['values'])
 
         # call custom create method if defined (i.e. ogone_create for ogone)
         if values.get('acquirer_id'):
             acquirer = self.pool['payment.acquirer'].browse(cr, uid, values.get('acquirer_id'), context=context)
+
+            # compute fees
+            custom_method_name = '%s_compute_fees' % acquirer.name
+            if hasattr(Acquirer, custom_method_name):
+                values['fees'] = getattr(Acquirer, custom_method_name)(
+                    cr, uid, acquirer.id, values.get('amount', 0.0), values.get('currency_id'), values.get('country_id'), context=None)
+
+            # custom create
             custom_method_name = '%s_create' % acquirer.name
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(cr, uid, values, context=context))

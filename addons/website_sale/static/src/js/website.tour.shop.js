@@ -123,7 +123,7 @@
                     title: "Drag & Drop a block",
                     content: "Drag the 'Big Picture' block and drop it in your page.",
                     triggers: function () {
-                        self.onSnippetDraggedAdvance('big-picture');
+                        self.onSnippetDraggedAdvance();
                     },
                 },
                 {

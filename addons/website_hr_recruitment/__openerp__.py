@@ -13,6 +13,7 @@ OpenERP Contact Form
     'data': [
         'data/website_hr_recruitment_data.xml',
         'views/website_hr_recruitment.xml',
+        'views/hr_recruitment_backend.xml',
         'security/ir.model.access.csv',
         'security/website_hr_recruitment_security.xml',
     ],

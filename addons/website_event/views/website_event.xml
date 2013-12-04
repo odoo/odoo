@@ -72,7 +72,7 @@
                                         </span>
                                     </t>
                                     <h4 class="media-heading">
-                                        <a t-href="/event/#{ event.id }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
+                                        <a t-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
                                         <small t-if="not event.website_published" class="label label-danger">not published</small>
                                     </h4>
                                     <div>
@@ -81,13 +81,13 @@
                                         </t>
                                     </div>
                                     <div>
-                                        <i class="icon-time"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
+                                        <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
                                     </div>
                                     <div t-if="event.country_id">
-                                        <i class="icon-map-marker"></i> <span t-field="event.city"/>, <span t-field="event.country_id"/>
+                                        <i class="fa fa-map-marker"></i> <span t-field="event.city"/>, <span t-field="event.country_id"/>
                                     </div>
                                     <div class="text-muted">
-                                        <i class="icon-tag"></i> <span t-field="event.type"/>
+                                        <i class="fa fa-tag"></i> <span t-field="event.type"/>
                                     </div>
                                 </div>
                             </li>
@@ -228,11 +228,11 @@
             <div class="container">
                 <h1 class="text-center" t-field="event.name"></h1>
                 <h4 class="text-center text-muted">
-                    <i class="icon-time"></i> <span t-field="event.date_begin"/> to
+                    <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"/> to
                     <span t-field="event.date_end"/>
                 </h4>
                 <h4 t-if="event.city and event.country_id" class="text-center text-muted">
-                    <i class="icon-map-marker"/>
+                    <i class="fa fa-map-marker"/>
                     <span t-field="event.city"/>,
                     <span t-field="event.country_id"/>
                 </h4>
@@ -326,10 +326,10 @@
                            <!--  <strong t-field="event.address_id"/>
                             <p t-field="event.address_id"/>
                             <div t-if="event.address_id.phone">
-                                <span class="icon-phone"/> <span t-field="event.address_id.phone"/>
+                                <span class="fa fa-phone"/> <span t-field="event.address_id.phone"/>
                             </div>
                             <div t-if="event.address_id.email">
-                                <span class="icon-envelope"/>
+                                <span class="fa fa-envelope"/>
                                 <a t-att-href="'mailto:'+event.address_id.email">
                                   <span t-field="event.address_id.email"/>
                                 </a>
@@ -343,8 +343,8 @@
                         <h4>When</h4>
                     </div>
                     <div class="panel-body">
-                        <i class="icon-time"></i> <span t-field="event.date_begin"> </span><br/>
-                        <i class="icon-time"></i> <span t-field="event.date_end"> </span>
+                        <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"> </span><br/>
+                        <i class="fa fa-clock-o"></i> <span t-field="event.date_end"> </span>
                     </div>
                 </div>
 
@@ -355,10 +355,10 @@
                     <div class="panel-body" t-field="event.organizer_id">  <!-- TODO: use widget contact -->
                       <!--   <p><strong t-field="event.organizer_id.display_name"/></p>
                         <div t-if="event.phone">
-                            <span class="icon-phone"/> <span t-field="event.phone"/>
+                            <span class="fa fa-phone"/> <span t-field="event.phone"/>
                         </div>
                         <div t-if="event.email">
-                            <i class="icon-envelope"/> <span t-field="event.email"/>
+                            <i class="fa fa-envelope"/> <span t-field="event.email"/>
                         </div> -->
                     </div>
                 </div>

@@ -135,7 +135,7 @@ class product_uom(osv.osv):
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=(12,12),
             fnct_inv=_factor_inv_write,
-            string='Ratio',
+            string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
         'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
@@ -529,12 +529,15 @@ class product_product(osv.osv):
                 pricelist_ids = self.pool.get('product.pricelist').name_search(
                     cr, uid, pricelist, operator='=', context=context, limit=1)
                 pricelist = pricelist_ids[0][0] if pricelist_ids else pricelist
+
+            qtys = map(lambda x: (x, quantity, partner), ids)
+            price = self.pool.get('product.pricelist').price_get_multi(cr,uid, [pricelist], 
+                qtys, context=context)
             for id in ids:
                 try:
-                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
+                    res[id] = price[id][pricelist]
                 except:
                     price = 0.0
-                res[id] = price
         for id in ids:
             res.setdefault(id, 0.0)
         return res

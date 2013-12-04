@@ -36,7 +36,7 @@ class event_tag(osv.osv):
 
 #
 # Tracks: conferences
-# 
+#
 
 class event_track_stage(osv.osv):
     _name = "event.track.stage"
@@ -74,6 +74,7 @@ class event_track(osv.osv):
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'color': fields.integer('Color Index'),
         'priority': fields.selection([('3','Low'),('2','Medium (*)'),('1','High (**)'),('0','Highest (***)')], 'Priority', required=True),
+        'website_published': fields.boolean('Available in the website'),
     }
     def set_priority(self, cr, uid, ids, priority, context={}):
         return self.write(cr, uid, ids, {'priority' : priority})
@@ -141,7 +142,7 @@ class event_event(osv.osv):
 
 #
 # Sponsors
-# 
+#
 
 class event_sponsors_type(osv.osv):
     _name = "event.sponsor.type"

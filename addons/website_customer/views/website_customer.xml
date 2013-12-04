@@ -41,12 +41,12 @@
                             <div class="row">
                                 <t t-foreach="partner_ids" t-as="partner" class="media">
                                     <div class="col-md-2">
-                                        <a t-href="/customers/#{ partner.id }/">
+                                        <a t-href="/customers/#{ slug(partner) }/">
                                             <img class="img img-thumbnail" t-att-src="partner.img('image_medium')"/>
                                         </a>
                                     </div><div class="col-md-10">
                                         <h4>
-                                            <a t-href="/customers/#{ partner.id }/" t-field="partner.name"/>
+                                            <a t-href="/customers/#{ slug(partner) }/" t-field="partner.name"/>
                                         </h4>
                                         <div t-field="partner.website_short_description"/>
                                     </div>
@@ -134,10 +134,10 @@
                         <strong t-field="partner.name"/>
                         <p t-field="partner.commercial_partner_id"/>
                         <div t-if="partner.phone">
-                            <span class="icon-phone"/> <span t-field="partner.phone"/>
+                            <span class="fa fa-phone"/> <span t-field="partner.phone"/>
                         </div>
                         <div t-if="partner.email">
-                            <span class="icon-envelope"/>
+                            <span class="fa fa-envelope"/>
                             <a t-att-href="'mailto:'+partner.email">
                               <span t-field="partner.email"/>
                             </a>

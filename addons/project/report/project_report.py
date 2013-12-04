@@ -75,7 +75,7 @@ class report_project_task_user(osv.osv):
                     date_trunc('day',t.date_last_stage_update) as date_last_stage_update,
                     to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_deadline,
 --                    sum(cast(to_char(date_trunc('day',t.date_end) - date_trunc('day',t.date_start),'DD') as int)) as no_of_days,
-                    abs((extract('epoch' from (t.date_end-t.date_start)))/(3600*24))  as no_of_days,
+                    abs((extract('epoch' from (t.write_date-t.date_start)))/(3600*24))  as no_of_days,
                     t.user_id,
                     progress as progress,
                     t.project_id,
@@ -89,9 +89,9 @@ class report_project_task_user(osv.osv):
                     total_hours as total_hours,
                     t.delay_hours as hours_delay,
                     planned_hours as hours_planned,
-                    (extract('epoch' from (t.date_end-t.create_date)))/(3600*24)  as closing_days,
+                    (extract('epoch' from (t.write_date-t.create_date)))/(3600*24)  as closing_days,
                     (extract('epoch' from (t.date_start-t.create_date)))/(3600*24)  as opening_days,
-                    abs((extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24))  as delay_endings_days
+                    abs((extract('epoch' from (t.date_deadline-t.write_date)))/(3600*24))  as delay_endings_days
               FROM project_task t
                 WHERE t.active = 'true'
                 GROUP BY
@@ -106,6 +106,7 @@ class report_project_task_user(osv.osv):
                     month,
                     day,
                     create_date,
+                    write_date,
                     date_start,
                     date_end,
                     date_deadline,

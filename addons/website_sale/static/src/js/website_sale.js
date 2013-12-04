@@ -45,12 +45,13 @@ $(document).ready(function () {
     $('.oe_website_sale a.js_add_cart_json').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var product = $link.attr("href").match(/product_id=([0-9]+)/);
-        var product_id = product ? +product[1] : 0;
-        if (!product) {
-            var line = $link.attr("href").match(/order_line_id=([0-9]+)/);
-            order_line_id = line ? +line[1] : 0;
-        }
+        var href = $link.attr("href");
+        
+        var add_cart = href.match(/add_cart\/([0-9]+)/);
+        var product_id = add_cart && +add_cart[1] || false;
+
+        var change_cart = href.match(/change_cart\/([0-9]+)/);
+        var order_line_id = change_cart && +change_cart[1] || false;
         openerp.jsonRpc("/shop/add_cart_json/", 'call', {
                 'product_id': product_id,
                 'order_line_id': order_line_id,

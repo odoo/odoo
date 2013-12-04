@@ -95,6 +95,9 @@ class PaypalForm(PaypalCommon):
 
     def test_10_paypal_form_render(self):
         cr, uid, context = self.cr, self.uid, {}
+        # be sure not to do stupid things
+        paypal = self.payment_acquirer.browse(cr, uid, self.paypal_id, context)
+        self.assertEqual(paypal.env, 'test', 'test without test env')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -139,9 +142,40 @@ class PaypalForm(PaypalCommon):
                 'paypal: wrong value for form: received %s instead of %s' % (form_input.get('value'), form_values[form_input.get('name')])
             )
 
+    def test_11_paypal_form_with_fees(self):
+        cr, uid, context = self.cr, self.uid, {}
+        self.payment_acquirer.write(cr, uid, self.paypal_id, {
+            'fees_active': True,
+        }, context)
+
+        # be sure not to do stupid things
+        paypal = self.payment_acquirer.browse(self.cr, self.uid, self.paypal_id, None)
+        self.assertEqual(paypal.env, 'test', 'test without test env')
+
+        # render the button
+        res = self.payment_acquirer.render(
+            cr, uid, self.paypal_id,
+            'test_ref0', 12.50, self.currency_euro,
+            partner_id=None,
+            partner_values=self.buyer_values,
+            context=context)
+
+        # check form result
+        handling_found = False
+        tree = objectify.fromstring(res)
+        self.assertEqual(tree.get('action'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
+        for form_input in tree.input:
+            if form_input.get('name') in ['handling']:
+                handling_found = True
+                self.assertEqual(form_input.get('value'), '0.84', 'paypal: wrong computed fees')
+        self.assertTrue(handling_found, 'paypal: fees_active did not add handling input in rendered form')
+
     @mute_logger('openerp.addons.payment_acquirer_paypal.models.paypal', 'ValidationError')
     def test_20_paypal_form_management(self):
         cr, uid, context = self.cr, self.uid, {}
+        # be sure not to do stupid things
+        paypal = self.payment_acquirer.browse(cr, uid, self.paypal_id, context)
+        self.assertEqual(paypal.env, 'test', 'test without test env')
 
         # typical data posted by paypal after client has successfully paid
         paypal_post_data = {

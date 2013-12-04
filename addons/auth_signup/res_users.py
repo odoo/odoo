@@ -234,6 +234,9 @@ class res_users(osv.Model):
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
+        if 'alias_name' not in values:      # allow behavior change via inheritance (like using the name)
+            values['alias_name'] = False
+        context = dict(context or {}, no_reset_password=True)
         return self.copy(cr, uid, template_user_id, values, context=context)
 
     def reset_password(self, cr, uid, login, context=None):

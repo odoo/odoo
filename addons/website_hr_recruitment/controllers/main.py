@@ -39,7 +39,7 @@ class website_hr_recruitment(http.Controller):
             'jobs': jobs,
             'departments': departments,
             'offices': offices,
-            'active': department and department.id or None, 
+            'active': department and department.id or None,
             'office': office and office.id or None
         })
 
@@ -88,11 +88,6 @@ class website_hr_recruitment(http.Controller):
         return request.website.render("website_hr_recruitment.applyjobpost", {
             'job': job_object
         })
-
-    @website.route('/job/publish', type='json', auth="admin", multilang=True)
-    def publish(self, id, object):
-        res = controllers.publish(id, object)
-        return res
 
     @website.route('/job/add_job_offer/', type='http', auth="user", multilang=True, methods=['POST'])
     def add_job_offer(self, **kwargs):

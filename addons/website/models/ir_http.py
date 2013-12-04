@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
+import logging
 import traceback
 
+import werkzeug
 import werkzeug.routing
 
 import openerp
 from openerp.addons.base import ir
+from openerp.addons.website.models.website import slug
 from openerp.http import request
 from openerp.osv import orm
 
-from ..utils import slugify
+logger = logging.getLogger(__name__)
 
 class ir_http(orm.AbstractModel):
     _inherit = 'ir.http'
@@ -30,6 +33,7 @@ class ir_http(orm.AbstractModel):
             request.uid = request.session.uid
 
     def _dispatch(self):
+        first_pass = not hasattr(request, 'website')
         request.website = None
         func = None
         try:
@@ -46,13 +50,13 @@ class ir_http(orm.AbstractModel):
             else:
                 self._auth_method_public()
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
-            langs = [lg.code for lg in request.website.language_ids]
-            if not hasattr(request, 'lang'):
-                request.lang = request.website.default_lang_id.code
+            if first_pass:
+                request.lang = request.website.default_lang_code
             request.context['lang'] = request.lang
             request.website.preprocess_request(request)
             if not func:
                 path = request.httprequest.path.split('/')
+                langs = [lg[0] for lg in request.website.get_languages()]
                 if path[1] in langs:
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
@@ -77,6 +81,7 @@ class ir_http(orm.AbstractModel):
 
     def _handle_403(self, exception):
         if getattr(request, 'cms', False) and request.website:
+            logger.warn("403 Forbidden:\n\n%s", traceback.format_exc(exception))
             self._auth_method_public()
             return self._render_error(403, {
                 'error': exception.message
@@ -90,6 +95,7 @@ class ir_http(orm.AbstractModel):
 
     def _handle_500(self, exception):
         if getattr(request, 'cms', False) and request.website:
+            logger.error("500 Internal Server Error:\n\n%s", traceback.format_exc(exception))
             return self._render_error(500, {
                 'exception': exception,
                 'traceback': traceback.format_exc(),
@@ -111,12 +117,7 @@ class ModelConverter(ir.ir_http.ModelConverter):
         self.regex = r'(?:[A-Za-z0-9-_]+?-)?(\d+)(?=$|/)'
 
     def to_url(self, value):
-        if isinstance(value, orm.browse_record):
-            [(id, name)] = value.name_get()
-        else:
-            # assume name_search result tuple
-            id, name = value
-        return "%s-%d" % (slugify(name), id)
+        return slug(value)
 
     def generate(self, cr, uid, query=None, context=None):
         return request.registry[self.model].name_search(

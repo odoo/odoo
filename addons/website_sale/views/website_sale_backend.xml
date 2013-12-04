@@ -9,21 +9,13 @@
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <xpath expr="//sheet" position="before">
-                <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
-                    <p attrs="{'invisible': [('website_published', '=', True)]}">
-                        This product is <b>not available</b> for public user in your ecommerce.
-                    </p>
-                    <p attrs="{'invisible': [('website_published', '=', False)]}">
-                        This product is <b>available</b> for public user in your ecommerce.
-                    </p>
-                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
-                </div>
+            <xpath expr="//sheet/div" position="before">
+                <field name="website_url" invisible="1"/>
+                <field name="website_published" class="pull-right" widget="website_button"/>
             </xpath>
 
             <group name="sale" position="inside">
                 <group name="website" string="Website">
-                    <field name="website_published"/>
                     <field name="suggested_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>
                 </group>
@@ -48,20 +40,9 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <xpath expr="//sheet" position="before">
-                <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('sale_ok', '=', False)]}">
-                    <p attrs="{'invisible': [('website_published', '=', True)]}">
-                        This product is <b>not available</b> for public user in your ecommerce.
-                    </p>
-                    <p attrs="{'invisible': [('website_published', '=', False)]}">
-                        This product is <b>available</b> for public user in your ecommerce.
-                    </p>
-                    <p>Website view: <field class="oe_inline" name="website_url" widget="url"/></p>
-                </div>
-            </xpath>
-
-            <xpath expr="//group[@string='Product Type']" position="inside">
-                    <field name="website_published"/>
+            <xpath expr="//sheet/div" position="before">
+                <field name="website_url" invisible="1"/>
+                <field name="website_published" class="pull-right" widget="website_button"/>
             </xpath>
             <xpath expr="//page[@string='Information']" position="inside">
                 <group colspan="4" string="Website Options">

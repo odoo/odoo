@@ -44,7 +44,6 @@
     <!-- Exentas IVA -->
         <record id="base_assoc_sop_ex" model="account.tax.code.template">
             <field name="name">Base adquisiciones exentas</field>
-            <field name="company_id" model="res.company"  search="[]"/>
             <field name="parent_id" ref="vat_code_chart_assoc_root"/>
             <field name="code">--</field>
             <field name="sign">1.0</field>
@@ -53,7 +52,6 @@
         <record id="base_assoc_rep_ex" model="account.tax.code.template">
             <field name="name">Base ventas exentas</field>
             <field name="code">--</field>
-            <field name="company_id" model="res.company"  search="[]"/>
             <field name="parent_id" ref="vat_code_chart_assoc_root"/>
             <field name="sign">1.0</field>
         </record>             
