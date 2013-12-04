@@ -323,6 +323,7 @@
             init: function (editor) {
                 editor.widgets.add('oeref', {
                     editables: { text: '*' },
+                    draggable: false,
 
                     upcast: function (el) {
                         return el.attributes['data-oe-type']
@@ -331,6 +332,7 @@
                 });
                 editor.widgets.add('monetary', {
                     editables: { text: 'span.oe_currency_value' },
+                    draggable: false,
 
                     upcast: function (el) {
                         return el.attributes['data-oe-type'] === 'monetary';
