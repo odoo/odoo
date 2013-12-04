@@ -83,18 +83,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="oe_structure">
-                        <section data-snippet-id="cta" class="oe_dark mb32">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12 text-center mt16 mb16">
-                                        <a href="/job/apply" class="btn btn-primary btn-lg">Apply</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
                 </div>
             </t>
         </template>
@@ -257,7 +245,7 @@
                     <t t-foreach="offices" t-as="thisoffice">
                         <li t-att-class="thisoffice.id == office and 'active' or ''">
                             <a t-href="/jobs/office/#{ slug(thisoffice) }/" >
-                                <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">, 
+                                <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">,
                                     <span t-field="thisoffice.country_id.name"/>
                                 </t>
                             </a>
