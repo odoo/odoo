@@ -73,57 +73,6 @@
                     link_dialog(editor);
                 }, null, null, 500);
 
-                var previousSelection;
-                $(editor.element.$).on('mouseenter', 'img', function () {
-                    if (previousSelection) { return; }
-                    var selected = new CKEDITOR.dom.element(this);
-                    if (!selected.is('img')
-                            || selected.data('cke-realelement')
-                            || selected.isReadOnly()
-                            || selected.data('oe-model') === 'ir.ui.view') {
-                        return;
-                    }
-
-                    // display button
-                    var $el = $((previousSelection = selected).$);
-                    var $btn = $('<button type="button" class="btn btn-primary image-edit-button" contenteditable="false">Edit</button>')
-                        .insertAfter($el)
-                        .click(function (e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            image_dialog(editor, selected);
-                        });
-
-                    var position = $el.position();
-                    // http://bugs.jquery.com/ticket/5445#comment:6
-                    // if the image has margin: x auto for centering, FF & IE
-                    // will report top/left as the "correct" value and
-                    // marginTop/marginLeft at "0px", webkit browsers will
-                    // report top/left as 0-ish and set marginTop and
-                    // marginLeft
-                    var image_top = position.top + parseInt($el.css('marginTop'), 10);
-                    var image_left = position.left + parseInt($el.css('marginLeft'), 10);
-                    $btn.css({
-                        position: 'absolute',
-                        top: $el.height() / 2 + image_top - $btn.outerHeight() / 2,
-                        left: $el.width() / 2 + image_left - $btn.outerWidth() / 2,
-                    });
-                }).on('mouseleave', 'img', function (e) {
-                    if (!previousSelection) { return; }
-                    var $previous = $(previousSelection.$);
-                    var $button = $previous.next('button');
-                    $button.css('visibility', 'hidden');
-                    var el = document.elementFromPoint(e.clientX, e.clientY);
-                    $button.css('visibility', '');
-                    if (el === this) { return; }
-                    $button.remove();
-                    previousSelection = null;
-                });
-                editor.on('destroy', function () {
-                    if (!previousSelection) { return; }
-                    $('.image-edit-button').remove();
-                });
-
                 //noinspection JSValidateTypes
                 editor.addCommand('link', {
                     exec: function (editor) {
@@ -463,6 +412,7 @@
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
             this.rte.on('rte:ready', this, function () {
+                self.setup_hover_buttons();
                 self.trigger('rte:ready');
             });
 
@@ -586,6 +536,97 @@
                 }
             });
         },
+
+        /**
+         * Creates a "hover" button for image and link edition
+         *
+         * @param {String} label the button's label
+         * @param {Function} editfn edition function, called when clicking the button
+         * @param {String} [classes] additional classes to set on the button
+         * @returns {jQuery}
+         */
+        make_hover_button: function (label, editfn, classes) {
+            return $(openerp.qweb.render('website.editor.hoverbutton', {
+                label: label,
+                classes: classes,
+            })).hide().appendTo(document.body).click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                editfn.call(this, e);
+            });
+        },
+        /**
+         * For UI clarity, during RTE edition when the user hovers links and
+         * images a small button should appear to make the capability clear,
+         * as not all users think of double-clicking the image or link.
+         */
+        setup_hover_buttons: function () {
+            var editor = this.rte.editor;
+            var $link_button = this.make_hover_button(_t("Edit Link"), function () {
+                var sel = new CKEDITOR.dom.element(previous);
+                editor.getSelection().selectElement(sel);
+                link_dialog(editor);
+                $link_button.hide();
+                previous = null;
+            }, 'btn-xs');
+            var $image_button = this.make_hover_button(_t("Edit Image"), function () {
+                image_dialog(editor, new CKEDITOR.dom.element(previous));
+                $image_button.hide();
+                previous = null;
+            });
+
+            // previous is the state of the button-trigger: it's the
+            // currently-ish hovered element which can trigger a button showing.
+            // -ish, because when moving to the button itself ``previous`` is
+            // still set to the element having triggered showing the button.
+            var previous;
+            $(editor.element.$).on('mouseover', 'a, img', function (e) {
+                // Back from edit button -> ignore
+                if (previous && previous === this) { return; }
+
+                var selected = new CKEDITOR.dom.element(this);
+                if (selected.data('oe-model') === 'ir.ui.view'
+                 || selected.data('cke-realelement')
+                 || selected.isReadOnly()) {
+                    return;
+                }
+
+                previous = this;
+                var $selected = $(this);
+                var position = $selected.offset();
+                if ($selected.is('img')) {
+                    var image_top = position.top + parseInt($selected.css('marginTop'), 10);
+                    var image_left = position.left + parseInt($selected.css('marginLeft'), 10);
+                    $link_button.hide();
+                    // center button on image
+                    $image_button.show().offset({
+                        top: $selected.outerHeight() / 2
+                                + image_top
+                                - $image_button.outerHeight() / 2,
+                        left: $selected.outerWidth() / 2
+                                + image_left
+                                - $image_button.outerWidth() / 2,
+                    });
+                } else {
+                    $image_button.hide();
+                    // put button below link, horizontally centered
+                    $link_button.show().offset({
+                        top: $selected.outerHeight()
+                                + position.top,
+                        left: $selected.outerWidth() / 2
+                                + position.left
+                                - $link_button.outerWidth() / 2
+                    })
+                }
+            }).on('mouseleave', 'a, img', function (e) {
+                var current = document.elementFromPoint(e.clientX, e.clientY);
+                if (current === $link_button[0] || current === $image_button[0]) {
+                    return;
+                }
+                $image_button.add($link_button).hide();
+                previous = null;
+            });
+        }
     });
 
     var blocks_selector = _.keys(CKEDITOR.dtd.$block).join(',');
@@ -1436,11 +1477,6 @@
             if (node.nodeType === document.ELEMENT_NODE) {
                 if (node.nodeName === 'BR' && node.getAttribute('type') === '_moz') {
                     // <br type="_moz"> appears when focusing RTE in FF, ignore
-                    continue;
-                }
-                if (node.className.indexOf('image-edit-button') !== -1) {
-                    // [Edit] button added and removed on image hover, don't count
-                    // as making parent node dirty
                     continue;
                 }
             }

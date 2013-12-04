@@ -194,4 +194,11 @@
         </div>
     </t>
 
+    <t t-name="website.editor.hoverbutton">
+        <button type="button" contenteditable="false"
+                t-attf-class="btn btn-primary hover-edition-button #{classes or ''}">
+            <t t-esc="label"/>
+        </button>
+    </t>
+
 </templates>
