@@ -301,7 +301,11 @@
 
                         $toInsert = $snippet.find('.oe_snippet_body').clone();
                         $toInsert.removeClass('oe_snippet_body');
-                        $toInsert.attr('data-snippet-id', snipped_id);
+                        if (!$toInsert.data('snippet-id')) {
+                            $toInsert.attr('data-snippet-id', snipped_id);
+                        } else {
+                            snipped_id = $toInsert.data('snippet-id');
+                        }
 
                     } else if( action === 'mutate' ){
                         if (!$snippet.data('selector')) {
@@ -936,7 +940,8 @@
         *  function called just before save vue
         */
         clean_for_save: function () {
-            this.$target.find(".row:empty").remove();
+            this.$target.removeAttr('contentEditable')
+                .find('*').removeAttr('contentEditable');
         },
     });
 
@@ -1104,7 +1109,7 @@
         },
         on_clone: function () {
             var $clone = this.$target.clone(false);
-            var _class = $clone.attr("class").replace(/\s*(col-md-|col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
+            var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
             _class += ' col-md-1';
             $clone.attr("class", _class);
             this.$target.after($clone);
@@ -1174,8 +1179,6 @@
             if(!this.$target.find(".item.active").length) {
                 this.$target.find(".item:first").addClass("active");
             }
-            this.$target.removeAttr('contentEditable')
-                .find('*').removeAttr('contentEditable');
         },
         onFocus: function () {
             this._super();
@@ -1186,13 +1189,14 @@
             this.$target.carousel('cycle');
         },
         start : function () {
+            var self = this;
             this._super();
             this.id = this.$target.attr("id");
             this.$inner = this.$target.find('.carousel-inner');
             this.$indicators = this.$target.find('.carousel-indicators');
 
-            this.$editor.find(".js_add").on('click', _.bind(this.on_add_slide, this));
-            this.$editor.find(".js_remove").on('click', _.bind(this.on_remove_slide, this));
+            this.$editor.find(".js_add").on('click', function () {self.on_add_slide(); return false;});
+            this.$editor.find(".js_remove").on('click', function () {self.on_remove_slide(); return false;});
 
             this.rebind_event();
         },
@@ -1318,6 +1322,8 @@
             this.$target.on('snippet-style-change snippet-style-preview', function () {
                 self.$target.data("snippet-view").set_values();
             });
+            this.$target.attr('contentEditable', 'false');
+            this.$target.find('> div > .oe_structure').attr('contentEditable', 'true');
         },
         scroll: function () {
             var self = this;

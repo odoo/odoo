@@ -106,6 +106,7 @@
                 $(window).scroll();
             };
             img.src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
+            $(window).scroll();
         }
     });
 

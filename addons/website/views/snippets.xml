@@ -711,10 +711,11 @@
                 <li data-value="1.7"><a>Very Fast</a></li>
             </ul>
         </li>
-        <div class="oe_snippet_body parallax oe_small oe_structure"
-                style="background-image: url('/website/static/src/img/parallax/parallax_bg.jpg')"
+        <section class="oe_snippet_body parallax oe_medium"
+                style="background-image: url('/website/static/src/img/banner/mountains.jpg')"
                 data-scroll-background-ratio="0.3">
-        </div>
+                <div><div class="oe_structure"/></div>
+        </section>
     </div>
 
     <div data-snippet-id="parallax_quote" data-selector-children=".oe_structure, [data-oe-type=html]">
@@ -722,50 +723,56 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
             <span class="oe_snippet_thumbnail_title">Parallax Slider</span>        
         </div>
-        <section class="oe_snippet_body parallax_quote oe_structure" style="background-image: url('/website/static/src/img/parallax/quote.png')">
-            <div id="myQuoteCarousel" class="carousel slide oe_medium mb32" data-snippet-id="slider">
-                <!-- Indicators -->
-                <ol class="carousel-indicators mb0">
-                    <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
-                </ol>
-                <div class="carousel-inner">
+        <section class="oe_snippet_body parallax oe_medium" data-snippet-id="parallax"
+                style="background-image: url('/website/static/src/img/parallax/quote.png')"
+                data-scroll-background-ratio="0.3">
+            <div>
+                <div class="oe_structure">
+                    <div id="myQuoteCarousel" class="carousel slide oe_small mb0" data-snippet-id="slider">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators mb0">
+                            <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
+                        </ol>
+                        <div class="carousel-inner">
 
-                    <div class="item text_only active">
-                        <div class="container">
-                            <div class="content">
+                            <div class="item text_only active">
+                                <div class="container">
+                                    <div class="content">
 
-                                <div class="row">
-                                    <blockquote class="col-md-5 col-md-offset-4 mt64">
-                                            <p>
-                                                Write here a quote from one of your customer. Quotes are are
-                                                great way to give confidence in your products or services.
-                                            </p>
-                                            <small>Author of this quote</small>
-                                    </blockquote>
+                                        <div class="row">
+                                            <blockquote class="col-md-5 col-md-offset-4 mt64">
+                                                    <p>
+                                                        Write here a quote from one of your customer. Quotes are are
+                                                        great way to give confidence in your products or services.
+                                                    </p>
+                                                    <small>Author of this quote</small>
+                                            </blockquote>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="item text_only">
+                                <div class="container">
+                                    <div class="content">
+
+                                        <div class="row">
+                                            <blockquote class="col-md-5 col-md-offset-4 mt64">
+                                                    <p>
+                                                        OpenERP provides essential platform for our project management.
+                                                        Things are better organized and more visible with it.
+                                                    </p>
+                                                    <small>John Doe, CEO</small>
+                                            </blockquote>
+                                        </div>
+
+                                    </div>
                                 </div>
 
                             </div>
                         </div>
-                    </div>
-
-                    <div class="item text_only">
-                        <div class="container">
-                            <div class="content">
-
-                                <div class="row">
-                                    <blockquote class="col-md-5 col-md-offset-4 mt64">
-                                            <p>
-                                                OpenERP provides essential platform for our project management.
-                                                Things are better organized and more visible with it.
-                                            </p>
-                                            <small>John Doe, CEO</small>
-                                    </blockquote>
-                                </div>
-
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -794,18 +801,19 @@
         </li>
     </div>
 
-    <div data-snippet-style-id='size' data-selector='div[data-snippet-id="parallax"], div[data-snippet-id="carousel"], div[data-snippet-id="slider"]'>
+    <div data-snippet-style-id='size' data-selector='section[data-snippet-id="parallax"], div[data-snippet-id="carousel"], div[data-snippet-id="slider"]'>
         <li class="dropdown-submenu" data-required="true">
             <a tabindex="-1" href="#">Size</a>
             <ul class="dropdown-menu">
                 <li data-class='oe_small'><a>Small</a></li>
                 <li data-class='oe_medium'><a>Medium</a></li>
                 <li data-class='oe_big'><a>Big</a></li>
+                <li data-class=''><a>Auto</a></li>
             </ul>
         </li>
     </div>
 
-    <div data-snippet-style-id='background' data-selector='section, div[data-snippet-id="parallax"], div[data-snippet-id="carousel"]'>
+    <div data-snippet-style-id='background' data-selector='section, section[data-snippet-id="parallax"], div[data-snippet-id="carousel"]'>
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Background</a>
             <ul class="dropdown-menu">
@@ -837,7 +845,6 @@
                 <li class="dropdown-submenu">
                     <a tabindex="-1" href="#">Various</a>
                     <ul class="dropdown-menu">
-                        <li data-class="oe_img_bg" data-src="/website/static/src/img/parallax/quote.png"><a>Aqua</a></li>
                         <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
                         <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
                         <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
@@ -848,6 +855,7 @@
                         <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
                         <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
                         <li data-class="oe_img_bg" data-src="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
+                        <li data-class="oe_img_bg" data-src="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
                     </ul>
                 </li>
                 <li><a style="background: none; padding: 5px; border-top: 1px solid #ddd;"></a></li>
