@@ -455,8 +455,8 @@ class hr_job(osv.osv):
         res = {}
         attachment_obj = self.pool.get('ir.attachment')
         for job_id in ids:
-            res_ids = [job_id] + self.pool.get('hr.applicant').search(cr, uid, [('job_id', '=', job_id)], context=context)
-            res[job_id] = attachment_obj.search(cr, uid, [('res_model', 'in', ['hr.job', 'hr.applicant']), ('res_id', 'in', res_ids)], count=True, context=context)
+            applicant_ids = self.pool.get('hr.applicant').search(cr, uid, [('job_id', '=', job_id)], context=context)
+            res[job_id] = attachment_obj.search(cr, uid, ['|', '&',('res_model', '=', 'hr.job'), ('res_id', '=', job_id), '&',('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)], count=True, context=context)
         return res
 
     _columns = {
@@ -512,8 +512,8 @@ class hr_job(osv.osv):
         }
 
     def attachment_tree_view(self, cr, uid, ids, context):
-        res_ids = ids + self.pool.get('hr.applicant').search(cr, uid, [('job_id', 'in', ids)], context=context)
-        domain = ['&', ('res_model', 'in', ['hr.job', 'hr.applicant']), ('res_id', 'in', res_ids)]
+        applicant_ids = self.pool.get('hr.applicant').search(cr, uid, [('job_id', 'in', ids)], context=context)
+        domain = ['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', ids), '&',('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)]
         res_id = ids and ids[0] or False
         return {
             'name': _('Attachments'),
