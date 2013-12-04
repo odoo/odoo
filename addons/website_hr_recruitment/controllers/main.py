@@ -39,7 +39,7 @@ class website_hr_recruitment(http.Controller):
             'jobs': jobs,
             'departments': departments,
             'offices': offices,
-            'active': department and department.id or None, 
+            'active': department and department.id or None,
             'office': office and office.id or None
         })
 
@@ -81,7 +81,7 @@ class website_hr_recruitment(http.Controller):
         return request.website.render("website_hr_recruitment.thankyou", {})
 
     @website.route(['/job/apply'], type='http', auth="public", multilang=True)
-    def applyjobpost(self, job=None):
+    def applyjobpost(self, job):
         [job_object] = request.registry['hr.job'].browse(
             request.cr, request.uid, [int(job)], context=request.context)
 
