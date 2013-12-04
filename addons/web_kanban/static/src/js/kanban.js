@@ -666,7 +666,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             return (new instance.web.Model(field.relation)).query([options.tooltip_on_group_by])
                     .filter([["id", "=", this.value]]).first().then(function(res) {
                 self.tooltip = res[options.tooltip_on_group_by];
-                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip || self.title || "").tooltip({html: true});
+                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip || self.title || "").tooltip({html: true, placement: 'bottom'});
             });
         }
     },
@@ -895,9 +895,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         var self = this;
         this.setup_color_picker();
         this.$el.find('[tooltip]').tooltip({
-            delayIn: 500,
-            delayOut: 0,
-            fade: true,
             title: function() {
                 var template = $(this).attr('tooltip');
                 if (!self.view.qweb.has_template(template)) {
@@ -905,10 +902,9 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 }
                 return self.view.qweb.render(template, self.qweb_context);
             },
-            gravity: 's',
+            placement: 'bottom',
             html: true,
             opacity: 0.8,
-            trigger: 'hover'
         });
 
         // If no draghandle is found, make the whole card as draghandle (provided one can edit)
