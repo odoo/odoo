@@ -36,7 +36,7 @@ class AcquirerPaypal(osv.Model):
 
     _columns = {
         'paypal_email_id': fields.char('Email ID', required_if_provider='paypal'),
-        'paypal_username': fields.char('Username', required_if_provider='paypal'),
+        'paypal_seller_id': fields.char('Seller ID', required_if_provider='paypal'),
         'paypal_use_ipn': fields.boolean('Use IPN'),
         # Server 2 server
         'paypal_api_enabled': fields.boolean('Use Rest API'),
@@ -168,9 +168,8 @@ class TxPaypal(osv.Model):
         return self.browse(cr, uid, tx_ids[0], context=context)
 
     def _paypal_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
-        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
         invalid_parameters = []
-        if data.get('notify_version')[0] != '2.6':
+        if data.get('notify_version')[0] != '3.4':
             _logger.warning(
                 'Received a notification from Paypal with version %s instead of 2.6. This could lead to issues when managing it.' %
                 data.get('notify_version')
@@ -179,60 +178,48 @@ class TxPaypal(osv.Model):
             _logger.warning(
                 'Received a notification from Paypal using sandbox'
             ),
+
+        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
+        if tx.acquirer_reference and data.get('txn_id') != tx.acquirer_reference:
+            invalid_parameters.append(('txn_id', data.get('txn_id'), tx.acquirer_reference))
         # check what is buyed
-        if float_compare(float(data.get('mc_gross', '0.0')), tx.amount, 2) != 0:
-            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % tx.amount))
+        if float_compare(float(data.get('mc_gross', '0.0')), (tx.amount + tx.fees), 2) != 0:
+            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % tx.amount))  # mc_gross is amount + fees
         if data.get('mc_currency') != tx.currency_id.name:
-            invalid_parameters.append(('mc_currency',  data.get('mc_currency'), tx.currency_id.name))
-        # if parameters.get('payment_fee') != tx.payment_fee:
-            # invalid_parameters.append(('payment_fee',  tx.payment_fee))
-        # if parameters.get('quantity') != tx.quantity:
-            # invalid_parameters.append(('mc_currency',  tx.quantity))
-        # if parameters.get('shipping') != tx.shipping:
-            # invalid_parameters.append(('shipping',  tx.shipping))
+            invalid_parameters.append(('mc_currency', data.get('mc_currency'), tx.currency_id.name))
+        if 'handling_amount' in data and float_compare(float(data.get('handling_amount')), tx.fees, 2) != 0:
+            invalid_parameters.append(('handling_amount', data.get('handling_amount'), tx.fees))
         # check buyer
-        # if parameters.get('payer_id') != tx.payer_id:
-            # invalid_parameters.append(('mc_gross', tx.payer_id))
-        # if parameters.get('payer_email') != tx.payer_email:
-            # invalid_parameters.append(('payer_email', tx.payer_email))
+        if tx.partner_reference and data.get('payer_id') != tx.partner_reference:
+            invalid_parameters.append(('payer_id', data.get('payer_id'), tx.partner_reference))
         # check seller
-        # if parameters.get('receiver_email') != tx.receiver_email:
-            # invalid_parameters.append(('receiver_email', tx.receiver_email))
-        # if parameters.get('receiver_id') != tx.receiver_id:
-            # invalid_parameters.append(('receiver_id', tx.receiver_id))
+        if data.get('receiver_email') != tx.acquirer_id.paypal_email_id:
+            invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_id))
+        if data.get('receiver_id') != tx.acquirer_id.paypal_seller_id:
+            invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_id))
 
         return invalid_parameters
 
     def _paypal_form_validate(self, cr, uid, tx, data, context=None):
         status = data.get('payment_status')
+        data = {
+            'acquirer_reference': data.get('txn_id'),
+            'paypal_txn_type': data.get('payment_type'),
+            'partner_reference': data.get('payer_id')
+        }
         if status in ['Completed', 'Processed']:
             _logger.info('Validated Paypal payment for tx %s: set as done' % (tx.reference))
-            tx.write({
-                'state': 'done',
-                'date_validate': data.get('payment_date', fields.datetime.now()),
-                'paypal_txn_id': data['txn_id'],
-                'paypal_txn_type': data.get('express_checkout'),
-            })
-            return True
+            data.update(state='done', date_validate=data.get('payment_date', fields.datetime.now()))
+            return tx.write(data)
         elif status in ['Pending', 'Expired']:
             _logger.info('Received notification for Paypal payment %s: set as pending' % (tx.reference))
-            tx.write({
-                'state': 'pending',
-                'state_message': data.get('pending_reason', ''),
-                'paypal_txn_id': data['txn_id'],
-                'paypal_txn_type': data.get('express_checkout'),
-            })
-            return True
+            data.udpate(state='pending', state_message=data.get('pending_reason', ''))
+            return tx.write(data)
         else:
             error = 'Received unrecognized status for Paypal payment %s: %s, set as error' % (tx.reference, status)
             _logger.info(error)
-            tx.write({
-                'state': 'error',
-                'state_message': error,
-                'paypal_txn_id': data['txn_id'],
-                'paypal_txn_type': data.get('express_checkout'),
-            })
-            return False
+            data.update(state='error', state_message=error)
+            return tx.write(data)
 
     # --------------------------------------------------
     # SERVER2SERVER RELATED METHODS
