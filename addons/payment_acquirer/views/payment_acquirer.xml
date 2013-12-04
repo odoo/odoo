@@ -38,10 +38,10 @@
                             <div>
                                 <field name="view_template_id" nolabel="1"/>
                                 <div>
-                                    This is an HTML form template to submit a payment through this acquirer.
-                                    The template will be rendered with qWeb, so it may use qWeb expressions.
-                                    The qWeb evaluation context provides:
+                                    This template renders the acquirer button with all necessary values.
+                                    It is be rendered with qWeb with the following evaluation context:
                                     <ul>
+                                        <li>tx_url: transaction URL to post the form</li>
                                         <li>acquirer: payment.acquirer browse record</li>
                                         <li>user: current user browse record</li>
                                         <li>reference: the transaction reference number</li>
@@ -49,7 +49,7 @@
                                         <li>amount: the transaction amount, a float</li>
                                         <li>partner: the buyer partner browse record, not necessarily set</li>
                                         <li>partner_values: specific values about the buyer, for example coming from a shipping form</li>
-                                        <li>tx_values: specific transaction values</li>
+                                        <li>tx_values: transaction values</li>
                                         <li>context: the current context dictionary</li>
                                     </ul>
                                 </div>
@@ -112,6 +112,7 @@
                                 <field name="date_create"/>
                                 <field name="date_validate"/>
                                 <field name="acquirer_id"/>
+                                <field name="acquirer_reference"/>
                                 <field name="state"/>
                                 <field name="state_message"/>
                             </group>
