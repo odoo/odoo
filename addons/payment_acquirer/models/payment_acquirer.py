@@ -3,6 +3,7 @@
 import logging
 
 from openerp.osv import osv, fields
+from openerp.tools import float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -172,9 +173,9 @@ class PaymentAcquirer(osv.Model):
         # compute fees
         fees_method_name = '%s_compute_fees' % acquirer.name
         if hasattr(self, fees_method_name):
-            tx_data['fees'] = getattr(self, fees_method_name)(
-                cr, uid, id, tx_data['amount'], tx_data['currency_id'],
-                partner_data['country_id'], context=None)
+            fees = getattr(self, fees_method_name)(
+                cr, uid, id, tx_data['amount'], tx_data['currency_id'], partner_data['country_id'], context=None)
+            tx_data['fees'] = float_round(fees, 2)
 
         return (partner_data, tx_data)
 
@@ -223,6 +224,7 @@ class PaymentAcquirer(osv.Model):
         acquirer = self.browse(cr, uid, id, context=context)
 
         # pre-process values
+        amount = float_round(amount, 2)
         partner_values, tx_values = self.form_preprocess_values(
             cr, uid, id, reference, amount, currency_id, tx_id, partner_id,
             partner_values, tx_values, context=context)
@@ -294,15 +296,19 @@ class PaymentTransaction(osv.Model):
                                      help='Field used to store error and/or validation messages for information'),
         # payment
         'amount': fields.float('Amount', required=True,
-                               help='Amount in cents',
-                               track_visibility='always'),
-        'fees': fields.float('Fees', help='Fees amount; set by the system because depends on the acquirer'),
+                               digits=(16, 2),
+                               track_visibility='always',
+                               help='Amount in cents'),
+        'fees': fields.float('Fees',
+                             digits=(16, 2),
+                             track_visibility='always',
+                             help='Fees amount; set by the system because depends on the acquirer'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'reference': fields.char('Order Reference', required=True),
         'acquirer_reference': fields.char('Acquirer Order Reference',
                                           help='Reference of the TX as stored in the acquirer database'),
         # duplicate partner / transaction data to store the values at transaction time
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner', track_visibility='onchange',),
         'partner_name': fields.char('Partner Name'),
         'partner_lang': fields.char('Lang'),
         'partner_email': fields.char('Email'),
@@ -311,7 +317,8 @@ class PaymentTransaction(osv.Model):
         'partner_city': fields.char('City'),
         'partner_country_id': fields.many2one('res.country', 'Country', required=True),
         'partner_phone': fields.char('Phone'),
-        'partner_reference': fields.char('Buyer Reference'),
+        'partner_reference': fields.char('Partner Reference',
+                                         help='Reference of the customer in the acquirer database'),
     }
 
     _sql_constraints = [
@@ -338,8 +345,9 @@ class PaymentTransaction(osv.Model):
             # compute fees
             custom_method_name = '%s_compute_fees' % acquirer.name
             if hasattr(Acquirer, custom_method_name):
-                values['fees'] = getattr(Acquirer, custom_method_name)(
+                fees = getattr(Acquirer, custom_method_name)(
                     cr, uid, acquirer.id, values.get('amount', 0.0), values.get('currency_id'), values.get('country_id'), context=None)
+                values['fees'] = float_round(fees, 2)
 
             # custom create
             custom_method_name = '%s_create' % acquirer.name
