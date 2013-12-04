@@ -40,7 +40,7 @@
 -
   !python {model: stock.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average1")).picking_ids
-    self.do_partial(cr, uid, [pick_ids[0].id])
+    self.do_transfer(cr, uid, [pick_ids[0].id])
 - 
   Check the standard price of the product (average icecream). 
 - 
@@ -70,7 +70,7 @@
 - 
   !python {model: stock.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average2")).picking_ids
-    self.do_partial(cr, uid, [pick_ids[0].id])
+    self.do_transfer(cr, uid, [pick_ids[0].id])
 - 
   Check the standard price
 - 
@@ -96,7 +96,7 @@
 - 
   !python {model: stock.picking}: |
     self.action_assign(cr, uid, [ref("outgoing_average_shipment")])
-    self.do_partial(cr, uid, [ref("outgoing_average_shipment")])
+    self.do_transfer(cr, uid, [ref("outgoing_average_shipment")])
 - 
   Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
 - 
@@ -125,7 +125,7 @@
 - 
   !python {model: stock.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average3")).picking_ids
-    self.do_partial(cr, uid, [pick_ids[0].id])
+    self.do_transfer(cr, uid, [pick_ids[0].id])
 - 
   Check price is (75.0*20 + 200*0.5) / 20.5 = 78.04878
 - 

@@ -100,7 +100,6 @@ class procurement_order(osv.osv):
                 procurement.sale_line_id.order_id.message_post(body=body)
 
 
-
 class ProjectTaskStageMrp(osv.Model):
     """ Override project.task.type model to add a 'closed' boolean field allowing
         to know that tasks in this stage are considered as closed. Indeed since

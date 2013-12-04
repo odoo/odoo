@@ -48,7 +48,9 @@
 
     <t t-name='PickingEditorWidget'>
         <div class='oe_pick_list'>
-            <div class='oe_pick_list_header'><t t-esc="widget.get_header()" /></div>
+            <div class='oe_pick_list_header'>
+                Operations To Process
+            </div>
             <table class='oe_pick_list_table'>
 
                 <colgroup>
@@ -57,7 +59,7 @@
                     <col class='oe_pick_col_small'></col>
                     <col class='oe_pick_col_small'></col>
                     <col class='oe_pick_col_expand'></col>
-                    <col class='oe_pick_col_expand'></col>
+                    <col class='oe_pick_col_small'></col>
                 </colgroup>
 
                 <thead>
@@ -67,7 +69,7 @@
                         <th class='oe_centeralign'>Rem</th> 
                         <th class='oe_centeralign'>UoM</th> 
                         <th>Location</th> 
-                        <th>Status</th>
+                        <th>Scan</th>
                     </tr>
                 </thead>
 
@@ -79,7 +81,7 @@
                             <td class='oe_centeralign'> <t t-esc="row.cols.rem" /> </td>
                             <td class='oe_centeralign'> <t t-esc="row.cols.uom" /> </td>
                             <td> <t t-esc="row.cols.loc" /> </td>
-                            <td> <t t-esc="row.cols.stat" /> </td>
+                            <td><span class='oe_row_button oe_expanded js_pack_scan' t-att-op-id='row.cols.id'>➔</span></td>
                         </tr>
                     </t>
                 </tbody>
@@ -109,7 +111,7 @@
 
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
-                        <tr t-att-class="row.classes">
+                        <tr t-att-class="row.classes" t-att-op-id="row.att_op_id">
                             <td> <t t-esc="row.cols.product" /> </td>
                             <td class='oe_centeralign'> <t t-esc="row.cols.qty" /> </td>
                             <td class='oe_centeralign'> <t t-esc="row.cols.uom" /> </td>
@@ -123,7 +125,7 @@
 
     <t t-name='PackageSelectorWidget'>
         <div class='oe_pick_list'>
-            <div class='oe_pick_list_header'> <t t-esc="widget.get_header()" /> </div>
+            <div class='oe_pick_list_header'><t t-esc="widget.get_header()" /></div>
             <table class='oe_pick_list_table'>
 
                 <colgroup>
@@ -153,6 +155,20 @@
             </table>
         </div>
     </t>
+    <t t-name="PickingSearchResults">
+        <t t-if="results.length === 0">
+            <div class='oe_search_empty'>
+                No picking found.
+            </div>
+        </t>
+        <t t-if="results.length > 0">
+            <t t-foreach="results" t-as="picking">
+                <div class="oe_picking" t-att-data-id="picking.id">
+                    <span class='oe_picking_name'><t t-esc="picking.name" /></span>
+                </div>
+            </t>
+        </t>
+    </t>
 
     <t t-name="PickingMenuWidget">
         <div class='oe_pick_widget'>
@@ -170,18 +186,41 @@
                     <td class='oe_pick_body_cont'> 
                         <div class='oe_pick_body'>
                             <div class='oe_pick_app'>
+
+                                <div class='oe_searchbox'>
+                                    <input type='text' placeholder='Search'/>
+                                </div>
+
                                 <h3 class='oe_pick_app_title'>Pickings</h3>
 
-                                <t t-foreach="widget.picking_types" t-as="type">
-                                    <h4 class='oe_pick_app_subtitle'> <t t-esc="type.name" /> </h4>
-                                    <t t-if="widget.pickings_by_type[type.id].length > 0">
-                                        <span class='oe_pick_button oe_medium js_pick_last' t-att-data-id="type.id">Last Picking</span>
-                                        <span class='oe_pick_button oe_medium js_pick_scan' t-att-data-id="type.id">Scan</span>
+                                <div class='oe_picking_not_found oe_hidden'>
+                                    Scanned picking could not be found
+                                </div>
+
+                                <div class='oe_picking_search_results'>
+                                </div>
+
+                                <div class='oe_picking_categories'>
+                                    <p>
+                                        Select the type of picking you want to process.
+                                    </p>
+                                    <t t-foreach="widget.picking_types" t-as="type">
+                                        <div t-att-class="'oe_picking ' + (widget.pickings_by_type[type.id].length === 0 ? 'oe_empty':'js_pick_last') " 
+                                             t-att-data-id="type.id">
+
+                                            <span class='oe_picking_name'><t t-esc="type.name" /></span>
+                                            <t t-if="widget.pickings_by_type[type.id].length === 0">
+                                                <span class='oe_pick_app_info'>Nothing to do</span>
+                                            </t>
+                                            <t t-if="widget.pickings_by_type[type.id].length === 1">
+                                                <span class='oe_pick_app_info'>1 picking</span>
+                                            </t>
+                                            <t t-if="widget.pickings_by_type[type.id].length > 1">
+                                                <span class='oe_pick_app_info'><t t-esc="widget.pickings_by_type[type.id].length" /> pickings </span>
+                                            </t>
+                                        </div>
                                     </t>
-                                    <t t-if="widget.pickings_by_type[type.id].length === 0">
-                                        <p class='oe_pick_app_info'>Nothing to process.</p>
-                                    </t>
-                                </t>
+                                </div>
                             </div>
                         </div>
                     </td>
@@ -214,6 +253,9 @@
                     <td class='oe_pick_body_cont'> 
                         <div class='oe_pick_body'>
                             <div class='oe_pick_app'>
+                                <div class='oe_pick_app_header'>
+                                    <t t-esc='widget.get_header()' />
+                                </div>
 
                                 <div class='oe_placeholder_picking_editor'></div>
                                 <div class='oe_placeholder_package_editor'></div>

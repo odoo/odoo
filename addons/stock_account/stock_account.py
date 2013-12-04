@@ -85,7 +85,7 @@ class stock_quant(osv.osv):
     """
     def _account_entry_move(self, cr, uid, quant, move, context=None):
         location_from = move.location_id
-        location_to = move.location_dest_id
+        location_to = quant.location_id
         if context is None:
             context = {}
         if quant.product_id.valuation != 'real_time':
@@ -126,9 +126,9 @@ class stock_quant(osv.osv):
                 self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
 
-    def move_single_quant(self, cr, uid, quant, qty, move, lot_id=False, owner_id=False, package_id= False, context=None):
-        quant_record = super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, lot_id = lot_id, owner_id = owner_id, package_id = package_id, context=context)
-        self._account_entry_move(cr, uid, quant_record, move, context=context)
+    def move_single_quant(self, cr, uid, quant, location_to, qty, move, context=None):
+        quant_record = super(stock_quant, self).move_single_quant(cr, uid, quant, location_to, qty, move, context=context)
+        self._account_entry_move(cr, uid, quant, move, context=context)
         return quant_record
 
 
@@ -172,10 +172,14 @@ class stock_quant(osv.osv):
         """
         if context is None:
             context = {}
+        currency_obj = self.pool.get('res.currency')
         if context.get('force_valuation_amount'):
             valuation_amount = context.get('force_valuation_amount')
         else:
             valuation_amount = quant.product_id.cost_method == 'real' and quant.cost or quant.product_id.standard_price
+        #the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
+        #the company currency... so we need to use round() before creating the accounting entries.
+        valuation_amount = currency_obj.round(cr, uid, quant.company_id.currency_id, valuation_amount * quant.qty)
         partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
         debit_line_vals = {
                     'name': move.name,
@@ -185,8 +189,8 @@ class stock_quant(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'debit': valuation_amount > 0 and valuation_amount * quant.qty or 0,
-                    'credit': valuation_amount < 0 and -valuation_amount * quant.qty or 0,
+                    'debit': valuation_amount > 0 and valuation_amount or 0,
+                    'credit': valuation_amount < 0 and -valuation_amount or 0,
                     'account_id': debit_account_id,
         }
         credit_line_vals = {
@@ -197,12 +201,11 @@ class stock_quant(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'credit': valuation_amount > 0 and valuation_amount * quant.qty or 0,
-                    'debit': valuation_amount < 0 and -valuation_amount * quant.qty or 0,
+                    'credit': valuation_amount > 0 and valuation_amount or 0,
+                    'debit': valuation_amount < 0 and -valuation_amount or 0,
                     'account_id': credit_account_id,
         }
-        res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
-        return res
+        return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
 
     def _create_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, journal_id, context=None):
         move_obj = self.pool.get('account.move')
@@ -226,9 +229,9 @@ class stock_quant(osv.osv):
 class stock_move(osv.osv):
     _inherit = "stock.move"
 
-    def action_done(self, cr, uid, ids, negatives = False, context=None):
+    def action_done(self, cr, uid, ids, context=None):
         self.product_price_update_before_done(cr, uid, ids, context=context)
-        super(stock_move, self).action_done(cr, uid, ids, negatives=negatives, context=context)
+        super(stock_move, self).action_done(cr, uid, ids, context=context)
         self.product_price_update_after_done(cr, uid, ids, context=context)
 
     def _store_average_cost_price(self, cr, uid, move, context=None):
@@ -260,7 +263,7 @@ class stock_move(osv.osv):
                     new_std_price = move.price_unit
                 else:
                     # Get the standard price
-                    amount_unit = product.price_get('standard_price', context=ctx)[product.id]
+                    amount_unit = product.standard_price
                     new_std_price = ((amount_unit * product_avail) + (move.price_unit * move.product_qty)) / (product_avail + move.product_qty)
                 # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
                 product_obj.write(cr, SUPERUSER_ID, [product.id], {'standard_price': new_std_price}, context=context)

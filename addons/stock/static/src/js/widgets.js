@@ -1,16 +1,31 @@
 
 function openerp_picking_widgets(instance){
+
     var module = instance.stock;
-    var _t = instance.web._t;
+    var _t     = instance.web._t;
+    var QWeb   = instance.web.qweb;
+
+    // This widget makes sure that the scaling is disabled on mobile devices.
+    // Widgets that want to display fullscreen on mobile phone need to extend this
+    // widget.
+
+    module.MobileWidget = instance.web.Widget.extend({
+        start: function(){
+            if(!$('#oe-mobilewidget-viewport').length){
+                $('head').append('<meta id="oe-mobilewidget-viewport" name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">');
+            }
+            return this._super();
+        },
+        destroy: function(){
+            $('#oe-mobilewidget-viewport').remove();
+            return this._super();
+        },
+    });
 
     module.PickingEditorWidget = instance.web.Widget.extend({
         template: 'PickingEditorWidget',
         init: function(parent,options){
             this._super(parent,options);
-        },
-        get_header: function(){
-            var model = this.getParent();
-            return 'Picking: '+model.picking.name;
         },
         get_rows: function(){
             var model = this.getParent();
@@ -23,13 +38,22 @@ function openerp_picking_widgets(instance){
                             rem: moveline.remaining_qty,
                             uom: moveline.product_uom[1],
                             loc: moveline.location_id[1],
-                            stat: moveline.state 
+                            id:  moveline.product_id[0],
                     },
                     classes: (moveline.qty_remaining < 0 ? 'oe_invalid' : '')
                 });
             });
             
             return rows;
+        },
+        renderElement: function(){
+            var self = this;
+            this._super();
+            this.$('.js_pack_scan').click(function(){
+                var id = parseInt($(this).attr('op-id'));
+                console.log('Id:',id);
+                self.getParent().scan_product_id(id);
+            });
         },
     });
 
@@ -51,11 +75,23 @@ function openerp_picking_widgets(instance){
                         product: op.product_id[1],
                         uom: op.product_uom ? product_uom[1] : '',
                         qty: op.product_qty,
-                    }
+                    },
+                    classes: 'js_pack_op '+ (op.id === model.get_selected_operation() ? 'oe_selected' : ''),
+                    att_op_id: op.id,
                 });
             });
 
             return rows;
+        },
+        renderElement: function(){
+            var self = this;
+            this._super();
+            var model = this.getParent();
+            this.$('.js_pack_op').click(function(){
+                self.$('.js_pack_op').removeClass('oe_selected');
+                $(this).addClass('oe_selected');
+                model.set_selected_operation(parseInt($(this).attr('op-id')));
+            });
         },
     });
 
@@ -97,7 +133,7 @@ function openerp_picking_widgets(instance){
         },
     });
 
-    module.PickingMenuWidget = instance.web.Widget.extend({
+    module.PickingMenuWidget = module.MobileWidget.extend({
         template: 'PickingMenuWidget',
         init: function(parent, params){
             this._super(parent,params);
@@ -108,7 +144,9 @@ function openerp_picking_widgets(instance){
             this.scanning_type = 0;
             this.barcode_scanner = new module.BarcodeScanner();
             this.pickings_by_type = {};
-
+            this.pickings_by_id = {};
+            this.picking_search_string = "";
+            
         },
         load: function(){
             var self = this;
@@ -129,7 +167,10 @@ function openerp_picking_widgets(instance){
                     for(var i = 0; i < pickings.length; i++){
                         var picking = pickings[i];
                         self.pickings_by_type[picking.picking_type_id[0]].push(picking);
+                        self.pickings_by_id[picking.id] = picking;
+                        self.picking_search_string += '' + picking.id + ':' + picking.name.toUpperCase() + '\n'
                     }
+
                 });
         },
         renderElement: function(){
@@ -137,9 +178,13 @@ function openerp_picking_widgets(instance){
             var self = this;
             this.$('.js_pick_quit').click(function(){ self.quit(); });
             this.$('.js_pick_scan').click(function(){ self.scan_picking($(this).data('id')); });
-            this.$('.js_pick_last').click(function(){ self.goto_picking($(this).data('id')); });
+            this.$('.js_pick_last').click(function(){ self.goto_last_picking_of_type($(this).data('id')); });
+            this.$('.oe_searchbox input').keyup(function(event){
+                self.on_searchbox($(this).val());
+            });
         },
         start: function(){
+            this._super();
             var self = this;
             this.barcode_scanner.connect(function(barcode){
                 self.on_scan(barcode);
@@ -148,7 +193,17 @@ function openerp_picking_widgets(instance){
                 self.renderElement();
             });
         },
-        goto_picking: function(type_id){
+        goto_picking: function(picking_id){
+            this.do_action({
+                type:   'ir.actions.client',
+                tag:    'stock.ui',
+                target: 'current',
+                context: { picking_id: picking_id },
+            },{
+                clear_breadcrumbs: true,
+            });
+        },
+        goto_last_picking_of_type: function(type_id){
             this.do_action({
                 type:   'ir.actions.client',
                 tag:    'stock.ui',
@@ -158,30 +213,60 @@ function openerp_picking_widgets(instance){
                 clear_breadcrumbs: true,
             });
         },
-        scan_picking: function(id){
-            this.$('.js_pick_scan.oe_active').text(_t('Scan')).removeClass('oe_active');
-            if(id !== this.scanning_type){
-                this.$('.js_pick_scan[data-id='+id+']').text(_t('Please scan a barcode ...')).addClass('oe_active');
-                this.scanning_type = id;
-            }else{
-                this.scanning_type = 0;
-            }
-        },
-        on_scan: function(barcode){
-            for(var i = 0, len = this.pickings.length; i < len; i++){
-                var picking = this.pickings[i];
-                if(picking.picking_type_id[0] === this.scanning_type && picking.name.toUpperCase() === barcode.toUpperCase()){
-                    this.do_action({
-                        type:   'ir.actions.client',
-                        tag:    'stock.ui',
-                        target: 'current',
-                        context: { picking_id: picking.id },
-                    },{
-                        clear_breadcrumbs: true,
-                    });
+        search_picking: function(barcode){
+            var re = RegExp("([0-9]+):.*?"+barcode.toUpperCase(),"gi");
+            var results = [];
+            for(var i = 0; i < 100; i++){
+                r = re.exec(this.picking_search_string);
+                if(r){
+                    var picking = this.pickings_by_id[Number(r[1])];
+                    if(picking){
+                        results.push(picking);
+                    }
+                }else{
+                    break;
                 }
             }
-            this.$('.js_pick_scan.oe_active').text(_t('Scanned picking not found'));
+            return results;
+        },
+        on_scan: function(barcode){
+            var self = this;
+
+            for(var i = 0, len = this.pickings.length; i < len; i++){
+                var picking = this.pickings[i];
+                if(picking.name.toUpperCase() === barcode.toUpperCase()){
+                    this.goto_picking(picking.id);
+                    break;
+                }
+            }
+            this.$('.oe_picking_not_found').removeClass('oe_hidden');
+
+            clearTimeout(this.picking_not_found_timeout);
+            this.picking_not_found_timeout = setTimeout(function(){
+                self.$('.oe_picking_not_found').addClass('oe_hidden');
+            },2000);
+
+        },
+        on_searchbox: function(query){
+            var self = this;
+
+            clearTimeout(this.searchbox_timeout);
+            this.searchbox_timout = setTimeout(function(){
+                if(query){
+                    self.$('.oe_picking_not_found').addClass('oe_hidden');
+                    self.$('.oe_picking_categories').addClass('oe_hidden');
+                    self.$('.oe_picking_search_results').html(
+                        QWeb.render('PickingSearchResults',{results:self.search_picking(query)})
+                    );
+                    self.$('.oe_picking_search_results .oe_picking').click(function(){
+                        self.goto_picking($(this).data('id'));
+                    });
+                    self.$('.oe_picking_search_results').removeClass('oe_hidden');
+                }else{
+                    self.$('.oe_picking_categories').removeClass('oe_hidden');
+                    self.$('.oe_picking_search_results').addClass('oe_hidden');
+                }
+            },100);
         },
         quit: function(){
             instance.webclient.set_content_full_screen(false);
@@ -195,7 +280,7 @@ function openerp_picking_widgets(instance){
     });
     openerp.web.client_actions.add('stock.menu', 'instance.stock.PickingMenuWidget');
 
-    module.PickingMainWidget = instance.web.Widget.extend({
+    module.PickingMainWidget = module.MobileWidget.extend({
         template: 'PickingMainWidget',
         init: function(parent,params){
             this._super(parent,params);
@@ -205,6 +290,7 @@ function openerp_picking_widgets(instance){
             this.pickings = [];
             this.movelines = null;
             this.operations = null;
+            this.selected_operation = { id: null, picking_id: null};
             this.packages = null;
             this.barcode_scanner = new module.BarcodeScanner();
             this.picking_type_id = params.context.active_id || 0;
@@ -215,6 +301,7 @@ function openerp_picking_widgets(instance){
             }else{
                 this.loaded =  this.load();
             }
+
         },
 
         // load the picking data from the server. If picking_id is undefined, it will take the first picking
@@ -227,7 +314,7 @@ function openerp_picking_widgets(instance){
                 var pickings = new $.Deferred();
 
                 new instance.web.Model('stock.picking')
-                    .call('get_picking_for_packing_ui',[{'default_picking_type_id':type_id}])
+                    .call('get_next_picking_for_ui',[{'default_picking_type_id':type_id}])
                     .then(function(picking_ids){
                         if(!picking_ids || picking_ids.length === 0){
                             (new instance.web.Dialog(self,{
@@ -301,6 +388,7 @@ function openerp_picking_widgets(instance){
 
         },
         start: function(){
+            this._super();
             var self = this;
             instance.webclient.set_content_full_screen(true);
             this.connect_numpad();
@@ -314,6 +402,16 @@ function openerp_picking_widgets(instance){
             this.$('.js_pick_prev').click(function(){ self.picking_prev(); });
             this.$('.js_pick_next').click(function(){ self.picking_next(); });
             this.$('.js_pick_menu').click(function(){ self.menu(); });
+
+            this.hotkey_handler = function(event){
+                if(event.keyCode === 37 ){  // Left Arrow
+                    self.picking_prev();
+                }else if(event.keyCode === 39){ // Right Arrow
+                    self.picking_next();
+                }
+            };
+
+            $('body').on('keyup',this.hotkey_handler);
 
             $.when(this.loaded).done(function(){
                 self.picking_editor = new module.PickingEditorWidget(self);
@@ -337,6 +435,8 @@ function openerp_picking_widgets(instance){
                     self.$('.js_pick_next').removeClass('oe_disabled');
                 }
 
+                self.$('.oe_pick_app_header').text(self.get_header());
+
             });
 
 
@@ -351,6 +451,7 @@ function openerp_picking_widgets(instance){
                     self.picking_editor.renderElement();
                     self.package_editor.renderElement();
                     self.package_selector.renderElement();
+
                     if( self.picking.id === self.pickings[0]){
                         self.$('.js_pick_prev').addClass('oe_disabled');
                     }else{
@@ -362,7 +463,16 @@ function openerp_picking_widgets(instance){
                     }else{
                         self.$('.js_pick_next').removeClass('oe_disabled');
                     }
+
+                    self.$('.oe_pick_app_header').text(self.get_header());
                 });
+        },
+        get_header: function(){
+            if(this.picking){
+                return _t('Picking:') +' '+this.picking.name;
+            }else{
+                return _t('Picking:');
+            }
         },
         menu: function(){
             this.do_action({
@@ -374,11 +484,21 @@ function openerp_picking_widgets(instance){
             });
 
         },
-        scan: function(ean){
+        scan: function(ean){ //scans a barcode, sends it to the server, then reload the ui
             var self = this;
             new instance.web.Model('stock.picking')
-                .call('get_barcode_and_return_todo_stuff', [self.picking.id, ean])
+                .call('process_barcode_from_ui', [self.picking.id, ean])
                 .then(function(){
+                    self.reset_selected_operation();
+                    return self.refresh_ui(self.picking.id);
+                });
+        },
+        scan_product_id: function(product_id){ //performs the same operation as a scan, but with product id instead
+            var self = this;
+            new instance.web.Model('stock.picking')
+                .call('process_product_id_from_ui', [self.picking.id, product_id])
+                .then(function(){
+                    self.reset_selected_operation();
                     return self.refresh_ui(self.picking.id);
                 });
         },
@@ -395,7 +515,7 @@ function openerp_picking_widgets(instance){
         done: function(){
             var self = this;
             new instance.web.Model('stock.picking')
-                .call('action_done_from_packing_ui',[self.picking.id])
+                .call('action_done_from_ui',[self.picking.id])
                 .then(function(new_picking_id){
                     return self.refresh_ui(new_picking_id);
                 });
@@ -478,15 +598,38 @@ function openerp_picking_widgets(instance){
                 }
                 ops.push(op);
             });
+            console.log('Current Operations:',ops);
             return ops;
+        },
+        get_selected_operation: function(){
+            if(   this.selected_operation.picking_id === this.picking.id && this.selected_operation.id ){
+                return this.selected_operation.id;
+            }else{
+                this.selected_operation.picking_id = this.picking.id;
+                var ops = this.get_current_operations();
+                if(ops.length === 0){
+                    this.selected_operation.id = null;
+                }else{
+                    this.selected_operation.id = ops[ops.length - 1].id;
+                }
+                return this.selected_operation.id;
+            }
+        },
+        reset_selected_operation: function(){
+            if(this.selected_operation.picking_id === this.picking.id){
+                this.selected_operation.id = null;
+            }
+        },
+        set_selected_operation: function(id){
+            this.selected_operation.picking_id = this.picking.id;
+            this.selected_operation.id = id;
         },
         set_operation_quantity: function(quantity){
             var self = this;
-            var ops = this.get_current_operations();
-            if( !ops || ops.length === 0){
+            var op = this.get_selected_operation();
+            if( !op ){
                 return;
             }
-            var op = ops[ops.length-1];
 
             if(quantity === '++'){
                 quantity = op.product_qty + 1;
@@ -548,6 +691,7 @@ function openerp_picking_widgets(instance){
             this._super();
             this.disconnect_numpad();
             this.barcode_scanner.disconnect();
+            $('body').off('keyup',this.hotkey_handler);
             instance.webclient.set_content_full_screen(false);
         },
     });

@@ -30,9 +30,13 @@
                         <button name="run" states="confirmed,exception" string="Run Procurement" class="oe_highlight" type="object"/>
                         <button name="check" states="running" string="Check Procurement" class="oe_highlight" type="object"/>
                         <button name="cancel" states="exception,confirmed,running" string="Cancel Procurement" type="object"/>
+                        <button name="reset_to_confirmed" states="cancel" string="Reconfirm Procurement" type="object"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,running,done" />
                     </header>
                     <sheet>
+                    <div class="oe_right oe_button_box" name="button_box">
+                        <button name="do_view_procurements" string="Group's Procurements" type="object"/>
+                    </div>
                     <group>
                         <group>
                             <field name="product_id" on_change="onchange_product_id(product_id)"/>
@@ -49,24 +53,27 @@
                                 <field name="product_uos" class="oe_inline"/>
                             </div>
                         </group>
-                        <newline/>
-                        <group>
-                            <field name="rule_id"/>
+                        <group name="scheduling" string="Scheduling">
                             <field name="date_planned"/>
                             <field name="priority"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                        </group>
-                        <group>
-                            <field name="group_id"/>
-                            <field name="origin" class="oe_inline" placeholder="e.g. SO005"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Extra Information">
+                        <page string="Notes">
                             <label for="name" class="oe_edit_only"/>
                             <field name="name" placeholder="External note..."/>
-                            <label for="message" class="oe_edit_only"/>
-                            <field name="message"/>
+                        </page>
+                        <page string="Extra Information">
+                            <group>
+                                <group>
+                                    <field name="origin" placeholder="e.g. SO005"/>
+                                    <field name="group_id" groups="base.group_no_one"/>
+                                </group>
+                                <group>
+                                    <field name="rule_id"/>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                     </sheet>
@@ -79,11 +86,11 @@
         </record>
 
         <record id="do_view_procurements" model="ir.actions.act_window">
-            <field name="name">Procurement for Groups  </field>
+            <field name="name">Group's Procurements</field>
             <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-			<field name="domain">[('group_id','=',active_id)]</field>			
+            <field name="domain">[('group_id','=',active_id)]</field>            
         </record>
         
         <record id="procurement_group_form_view" model="ir.ui.view">
@@ -92,9 +99,9 @@
             <field name="arch" type="xml">
                 <form string="Procurement group" version="7.0">
                     <sheet>
-						<div class="oe_right oe_button_box">
-							<button name="%(do_view_procurements)d" string="View related procurements" type="action" />
-            			</div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <button name="%(do_view_procurements)d" string="Procurements" type="action"/>
+                        </div>
                         <group>
                             <field name="name"/>
                             <field name="move_type"/>
@@ -136,13 +143,15 @@
             <field name="context">{'search_default_current':1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a procurement order. 
-              </p><p>
-                A procurement order is used to record a need for a specific
-                product at a specific location.  Procurement orders are usually
-                created automatically from sales orders, pull logistic rules or
-                minimum stock rules.
-              </p><p>
+                 Click to create a procurement order.  
+              </p>
+              <p>
+                A <b>procurement order</b> is used to record a need for a specific
+                product at a specific location. Procurement orders are usually
+                created automatically from <i>sales orders, pull logistic rules or
+                minimum stock rules.</i>
+              </p>
+              <p>
                 When the procurement order is confirmed, it automatically
                 creates the necessary operations to fullfil the need: purchase
                 order proposition, manufacturing order, etc.
@@ -159,9 +168,19 @@
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="help" type="html">
-                <p>
-                Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sales Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message).
-                </p>
+              <p class="oe_view_nocontent_create">
+                 Click to create a Procurement.
+              </p>
+              <p>
+                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.
+              </p>
+              <p>
+                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). 
+                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...
+              </p>
+              <p>
+                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).
+              </p>
             </field>
         </record>
 
@@ -172,6 +191,46 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
+        </record>
+
+        <!-- Procurement Rules -->
+        <record model="ir.ui.view" id="view_procurement_rule_tree">
+            <field name="name">procurement.rule.tree</field>
+            <field name="model">procurement.rule</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Pull Rules">
+                    <field name="name"/>
+                    <field name="action"/>
+                    <field name='company_id' groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_procurement_rule_form">
+            <field name="name">procurement.rule.form</field>
+            <field name="model">procurement.rule</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Pull Rule" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                        <group>
+                            <group string="General Information">
+                                <field name="action"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group name="propagation_group" string="Propagation Options" groups="base.group_no_one">
+                                <field name="group_propagation_option"/>
+                                <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
         </record>
     </data>
 </openerp>

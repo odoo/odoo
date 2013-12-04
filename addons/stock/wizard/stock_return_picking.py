@@ -94,13 +94,14 @@ class stock_return_picking(osv.osv_memory):
 
         #Create new picking for returned products
         pick_type_id = pick.picking_type_id.return_picking_type_id and pick.picking_type_id.return_picking_type_id.id or pick.picking_type_id.id
+        
         new_picking = pick_obj.copy(cr, uid, pick.id, {
             'move_lines': [],
             'picking_type_id': pick_type_id,
             'state': 'draft',
             'origin': pick.name,
-        })
-
+        },context=context)
+                
         for data_get in data_obj.browse(cr, uid, data['product_return_moves'], context=context):
             move = data_get.move_id
             if not move:
@@ -140,7 +141,15 @@ class stock_return_picking(osv.osv_memory):
          @return: A dictionary which of fields with values.
         """
         new_picking_id, pick_type_id = self._create_returns(cr, uid, ids, context=context)
-        ctx = {'default_picking_type_id': pick_type_id}
+        ctx = {
+               'default_picking_type_id': pick_type_id,
+               # Probably a more beautiful way to do that ??? QDP ? (feedback please)
+               'search_default_draft': 0,
+               'search_default_assigned': 0,
+               'search_default_confirmed': 0,
+               'search_default_ready': 0,
+               'search_default_late': 0,
+        }
         return {
             'domain': "[('id', 'in', [" + str(new_picking_id) + "])]",
             'name': _('Returned Picking'),

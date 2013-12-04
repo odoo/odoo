@@ -33,7 +33,7 @@ class stock_change_product_qty(osv.osv_memory):
         'lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
-
+    
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None: context = {}
         fvg = super(stock_change_product_qty, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
@@ -65,7 +65,7 @@ class stock_change_product_qty(osv.osv_memory):
             try:
                 model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
                 self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-            except (orm.except_orm, ValueError):
+            except (orm.except_orm, ValueError):                
                 location_id = False
             res.update({'location_id': location_id})
         return res

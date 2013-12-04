@@ -52,18 +52,10 @@
     new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'lot_id': lot_a, 'result_package_id': package2, 'product_qty': 120}, context=context)
     new_pack2 = stock_pack.create(cr, uid, {'product_id': ref('product1'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick1'), 'result_package_id': package3, 'product_qty': 60}, context=context)
 - 
-  Use button rereserve and check the qtyremaining on the moves are correct (=original quantities)
-- 
-  !python {model: stock.picking}: |
-    self.rereserve(cr, uid, [ref('pick1')], context=context)
-    picking = self.browse(cr, uid, ref('pick1'), context=context)
-    move_reco = picking.move_lines[0]
-    assert move_reco.remaining_qty == 300.0, "Remaining quantities should not change upon receiving"
-- 
   Transfer the reception
 - 
   !python {model: stock.picking}: |
-    self.do_partial(cr, uid, [ref('pick1')], context=context)
+    self.do_transfer(cr, uid, [ref('pick1')], context=context)
 - 
   Check the system created 3 quants one with 120 pieces on pallet 1, one with 120 pieces on pallet 2 with lot A and 60 pieces on pallet 3
 - 
@@ -114,14 +106,14 @@
     for rec in delivery_id.pack_operation_ids:
       if rec.package_id.name == 'Pallet 2':
         lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product1')), ('name','=','Lot A')])
-        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'), 'product_qty': 20, 'lot_id': lot_ids[0]}, context=context)
+        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'), 'product_qty': 20, 'lot_id': lot_ids[0], 'package_id': False, 'product_uom_id': ref('product.product_uom_unit')}, context=context)
       if rec.package_id.name == 'Pallet 3':
-        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'),'product_qty': 10}, context=context)
+        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product1'),'product_qty': 10, 'product_uom_id': ref('product.product_uom_unit')}, context=context)
 - 
   Process this picking
 - 
   !python {model: stock.picking}: |
-    self.do_partial(cr, uid, [ref('delivery_order1')], context=context)
+    self.do_transfer(cr, uid, [ref('delivery_order1')], context=context)
 - 
   Check the quants that you have 120 pieces pallet 1 in customers, 100 pieces pallet 2 in stock and 20 with customers and 50 in stock, 10 in customers from pallet 3 
 - 
@@ -141,24 +133,15 @@
       else:
         assert False, "Unrecognized quant"
 - 
-  Check a backorder was created and on that backorder, prepare partial
+  Check a backorder was created and on that backorder, prepare partial and process backorder
 - 
   !python {model: stock.picking}: |
-    picking = self.browse(cr, uid, ref('delivery_order1'), context=context)
-    backorder = self.search(cr, uid, [('backorder_id.id', '=', picking.id)], context=context)
-    assert backorder, "Backorder should have been created"
-    backorder_id = self.browse(cr, uid, backorder, context=context)
-    self.do_prepare_partial(cr, uid, backorder, context=context)
-    stock_pack = self.pool.get('stock.pack.operation').create(cr, uid, {'picking_id': backorder_id[0].id, 'product_qty': 20})
-- 
-  Process this backorder
-- 
-  !python {model: stock.picking}: |
-    picking = self.browse(cr, uid, ref('delivery_order1'), context=context)
-    backorder = self.search(cr, uid, [('backorder_id.id', '=', picking.id)], context=context)
-    backorder_id = self.browse(cr, uid, backorder, context=context)
-    self.rereserve(cr, uid, [backorder_id[0].id], context=context)
-    self.do_partial(cr, uid, [backorder_id[0].id], context=context)
+    backorder_ids = self.search(cr, uid, [('backorder_id', '=', ref('delivery_order1'))], context=context)
+    assert backorder_ids, "Backorder should have been created"
+    self.do_prepare_partial(cr, uid, backorder_ids, context=context)
+    stock_pack = self.pool.get('stock.pack.operation').create(cr, uid, {'picking_id': backorder_ids[0], 'product_qty': 20})
+    self.action_assign(cr, uid, backorder_ids, context=context)
+    self.do_transfer(cr, uid, backorder_ids, context=context)
 - 
   Check there are still 0 pieces in stock 
 - 

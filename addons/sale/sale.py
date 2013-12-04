@@ -26,7 +26,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 import openerp.addons.decimal_precision as dp
-from openerp import netsvc
+from openerp import workflow
 
 class sale_order(osv.osv):
     _name = "sale.order"
@@ -47,6 +47,7 @@ class sale_order(osv.osv):
             'state': 'draft',
             'invoice_ids': [],
             'date_confirm': False,
+            'client_order_ref': '',
             'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
@@ -316,7 +317,7 @@ class sale_order(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
-            context = {}
+            context = {}        
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
         context.update({'mail_create_nolog': True})
@@ -922,9 +923,8 @@ class sale_order_line(osv.osv):
                 sales.add(line.order_id.id)
                 create_ids.append(inv_id)
         # Trigger workflow events
-        wf_service = netsvc.LocalService("workflow")
         for sale_id in sales:
-            wf_service.trg_write(uid, 'sale.order', sale_id, cr)
+            workflow.trg_write(uid, 'sale.order', sale_id, cr)
         return create_ids
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -937,10 +937,9 @@ class sale_order_line(osv.osv):
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
     def button_done(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         res = self.write(cr, uid, ids, {'state': 'done'})
         for line in self.browse(cr, uid, ids, context=context):
-            wf_service.trg_write(uid, 'sale.order', line.order_id.id, cr)
+            workflow.trg_write(uid, 'sale.order', line.order_id.id, cr)
         return res
 
     def uos_change(self, cr, uid, ids, product_uos, product_uos_qty=0, product_id=None):
@@ -966,15 +965,15 @@ class sale_order_line(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        default.update({'state': 'draft',  'invoice_lines': []})
+        default.update({'state': 'draft', 'invoice_lines': [], 'procurement_ids': []})
         return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         context = context or {}
-        lang = lang or context.get('lang',False)
-        if not  partner_id:
+        lang = lang or context.get('lang', False)
+        if not partner_id:
             raise osv.except_osv(_('No Customer Defined!'), _('Before choosing a product,\n select a customer in the sales form.'))
         warning = {}
         product_uom_obj = self.pool.get('product.uom')
@@ -1108,9 +1107,9 @@ class mail_compose_message(osv.Model):
 
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
-        if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
+        if context.get('active_model') == 'sale.order' and context.get('active_ids') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
-            self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
+            self.pool.get('sale.order').signal_quotation_sent(cr, uid, context['active_ids'])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 
@@ -1132,9 +1131,8 @@ class account_invoice(osv.Model):
         if len(invoice_ids) == len(ids):
             #Cancel invoice(s) first before deleting them so that if any sale order is associated with them
             #it will trigger the workflow to put the sale order in an 'invoice exception' state
-            wf_service = netsvc.LocalService("workflow")
             for id in ids:
-                wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
+                workflow.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
         return super(account_invoice, self).unlink(cr, uid, ids, context=context)
 
 class procurement_order(osv.osv):

@@ -82,10 +82,17 @@ class procurement_rule(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True,
             help="This field will fill the packing origin and the name of its moves"),
-        'group_id': fields.many2one('procurement.group', 'Procurement Group'),
+        'group_propagation_option': fields.selection([('none', 'Leave Empty'), ('propagate', 'Propagate'), ('fixed', 'Fixed')], string="Propagation of Procurement Group"),
+        'group_id': fields.many2one('procurement.group', 'Fixed Procurement Group'),
         'action': fields.selection(selection=lambda s, cr, uid, context=None: s._get_action(cr, uid, context=context),
             string='Action', required=True),
+        'sequence': fields.integer('Sequence'),
         'company_id': fields.many2one('res.company', 'Company'),
+    }
+
+    _defaults = {
+        'group_propagation_option': 'propagate',
+        'sequence': 20,
     }
 
 
@@ -95,7 +102,7 @@ class procurement_order(osv.osv):
     """
     _name = "procurement.order"
     _description = "Procurement"
-    _order = 'priority desc,date_planned'
+    _order = 'priority desc, date_planned, id asc'
     _inherit = ['mail.thread']
     _log_create = False
     _columns = {
@@ -107,11 +114,11 @@ class procurement_order(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
 
         # These two fields are used for shceduling
-        'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True),
-        'date_planned': fields.datetime('Scheduled date', required=True, select=True),
+        'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True, track_visibility='onchange'),
+        'date_planned': fields.datetime('Scheduled Date', required=True, select=True, track_visibility='onchange'),
 
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
-        'rule_id': fields.many2one('procurement.rule', 'Rule'),
+        'rule_id': fields.many2one('procurement.rule', 'Rule', track_visibility='onchange'),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
@@ -127,7 +134,6 @@ class procurement_order(osv.osv):
             ('running', 'Running'),
             ('done', 'Done')
         ], 'Status', required=True, track_visibility='onchange'),
-        'message': fields.text('Latest error', help="Exception occurred while computing procurement orders.", track_visibility='onchange'),
     }
 
     _defaults = {
@@ -141,13 +147,26 @@ class procurement_order(osv.osv):
         procurements = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for s in procurements:
-            if s['state'] in ['draft','cancel']:
+            if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid Action!'),
-                        _('Cannot delete Procurement Order(s) which are in %s state.') % \
-                        s['state'])
+                        _('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+
+    def do_view_procurements(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing procurement orders
+        of same procurement group of given ids.
+        '''
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        result = mod_obj.get_object_reference(cr, uid, 'procurement', 'do_view_procurements')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        group_ids = set([proc.group_id.id for proc in self.browse(cr, uid, ids, context=context) if proc.group_id])
+        result['domain'] = "[('group_id','in',[" + ','.join(map(str, list(group_ids))) + "])]"
+        return result
 
     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
         """ Finds UoM and UoS of changed product.
@@ -164,8 +183,10 @@ class procurement_order(osv.osv):
         return {}
 
     def cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+
+    def reset_to_confirmed(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
 
     def run(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
@@ -213,8 +234,6 @@ class procurement_order(osv.osv):
         if procurement.product_id.type != 'service':
             rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
             if rule_id:
-                rule = self.pool.get('procurement.rule').browse(cr, uid, rule_id, context=context)
-                self.message_post(cr, uid, [procurement.id], body=_('Following rule %s for the procurement resolution.') % (rule.name), context=context)
                 self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
                 return True
         return False

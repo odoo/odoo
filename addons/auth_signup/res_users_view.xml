@@ -2,11 +2,6 @@
 <openerp>
     <data>
 
-        <!-- add context in action to enable automatic reset password -->
-        <record id="base.action_res_users" model="ir.actions.act_window">
-            <field name="context">{'reset_password': True}</field>
-        </record>
-
         <record id="res_users_form_view" model="ir.ui.view">
             <field name="name">user.form.state</field>
             <field name="model">res.users</field>

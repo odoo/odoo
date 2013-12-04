@@ -189,6 +189,7 @@
     product_id: product_A
     product_qty: 6
     location_id: wh1_stock_id
+    product_uom_id: product.product_uom_unit
 
 -
   !record {model: stock.inventory.line, id: inventory_stock1line_productB}:
@@ -196,6 +197,7 @@
     product_id: product_B
     product_qty: 12
     location_id: wh1_stock_id
+    product_uom_id: product.product_uom_unit
 -
   I confirm Stock1 inventory
 -
@@ -215,6 +217,7 @@
     product_id: product_A
     product_qty: 8
     location_id: wh2_stock_id
+    product_uom_id: product.product_uom_unit
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productB}:
@@ -222,6 +225,7 @@
     product_id: product_B
     product_qty: 120
     location_id: wh2_stock_id
+    product_uom_id: product.product_uom_unit
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productC_1}:
@@ -230,6 +234,7 @@
     product_qty: 5
     location_id: wh2_stock_id
     prod_lot_id: lot003
+    product_uom_id: product.product_uom_unit
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productC_2}:
@@ -238,6 +243,7 @@
     product_qty: 15
     location_id: wh2_stock_id
     prod_lot_id: lot004
+    product_uom_id: product.product_uom_unit
 -
   I confirm Stock2 inventory
 -
@@ -258,6 +264,7 @@
     product_qty: 4
     location_id: wh1_stock_id_area1
     partner_id: customer_1
+    product_uom_id: product.product_uom_unit
 
 -
   !record {model: stock.inventory.line, id: inventory_stock1line_productD_2}:
@@ -266,6 +273,7 @@
     product_qty: 5
     location_id: wh1_stock_id_area1
     partner_id: customer_2
+    product_uom_id: product.product_uom_unit
 -
   I confirm Area1 inventory
 -
@@ -286,6 +294,7 @@
     product_qty: 2
     location_id: wh2_stock_id_area2
     partner_id: customer_1
+    product_uom_id: product.product_uom_unit
 
 -
   !record {model: stock.inventory.line, id: inventory_stock2line_productD_2}:
@@ -294,6 +303,7 @@
     product_qty: 3
     location_id: wh2_stock_id_area2
     partner_id: customer_2
+    product_uom_id: product.product_uom_unit
 -
   I confirm Area2 inventory
 -
@@ -315,6 +325,7 @@
     product_qty: 3
     location_id: wh1_stock_id_area1_bin1
     prod_lot_id: lot001
+    product_uom_id: product.product_uom_unit
 
 -
   !record {model: stock.inventory.line, id: inventory_stock1line_productC_2}:
@@ -323,6 +334,7 @@
     product_qty: 14
     location_id: wh1_stock_id_area1_bin1
     prod_lot_id: lot002
+    product_uom_id: product.product_uom_unit
 -
   I confirm Bin1 inventory
 -

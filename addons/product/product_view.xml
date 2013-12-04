@@ -13,7 +13,7 @@
                    <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                    <separator/>
                    <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <field name="categ_id"/>
+                   <field name="categ_id" operator="child_of"/>
                    <group expand="0" string="Context...">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                        <field name="company_id" groups="base.group_multi_company"/>
@@ -102,6 +102,8 @@
                                         <field name="uom_po_id"/>
                                     </group>
                                 </group>
+                                <label for="active"/>
+                                <field name="active"/>
                                 <separator string="Description for Suppliers"/>
                                 <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
                             </page>
@@ -738,11 +740,7 @@
                         </page>
                         <page string="Procurement &amp; Locations">
                             <group>
-                                <group name="delay" string="Delays">
-                                    <label for="produce_delay"/>
-                                    <div>
-                                        <field name="produce_delay" class="oe_inline"/> days
-                                    </div>
+                                <group name="delay" string="Delays">                                    
                                     <field name="warranty"/>
                                 </group>
                             </group>

@@ -43,6 +43,7 @@
                 </form>
             </field>
         </record>
+
         <record model='ir.ui.view' id='fleet_vehicle_model_tree'>
             <field name="name">fleet.vehicle.model.tree</field>
             <field name="model">fleet.vehicle.model</field>
@@ -565,7 +566,7 @@
                 </tree>
             </field>
         </record>
-        <!--
+        
         <record model='ir.ui.view' id='fleet_vehicle_odometer_search'>
             <field name="name">fleet.vehicle.odometer.search</field>
             <field name="model">fleet.vehicle.odometer</field>
@@ -575,11 +576,12 @@
                     <field name="value"/>
                     <field name="unit"/>
                     <field name="date"/>
-                    <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    </group>
                 </search>
             </field>
         </record>
-        -->
 
         <record model="ir.ui.view" id="fleet_vehicle_odometer_graph">
            <field name="name">fleet.vehicle.odometer.graph</field>
@@ -671,6 +673,23 @@
                 </tree>
             </field>
         </record>
+        
+        <record model='ir.ui.view' id='fleet_vehicle_log_fuel_search'>
+            <field name="name">fleet.vehicle.log.fuel.search</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="arch" type="xml">
+                <search string="Vehicles Fuel Logs" >
+                    <field name="vehicle_id" />
+                    <field name="date"/>
+                    <field name="purchaser_id" />
+                    <field name="liter" />
+                    <field name="amount" sum="Price"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="fleet_vehicle_log_fuel_graph">
            <field name="name">fleet.vehicle.log.fuel.graph</field>
@@ -690,6 +709,7 @@
             <field name="res_model">fleet.vehicle.log.fuel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="context">{"search_default_groupby_vehicle" : True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new fuel log. 

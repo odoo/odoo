@@ -134,7 +134,7 @@
   <story>
   <pto>
   <pto_header>
-    <blockTable colWidths="184.0,73.0,59.0,59.0,71.0,71" repeatRows="1" style="Move_Line_Header">
+    <blockTable colWidths="155.0,73.0,59.0,59.0,71.0,100" repeatRows="1" style="Move_Line_Header">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -152,13 +152,13 @@
           <para style="terp_tblheader_Details_Right">Quantity</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Barcode</para>
+          <para style="terp_tblheader_Details_Centre">Barcode</para>
         </td>
       </tr>
     </blockTable>
   </pto_header>
     <para style="terp_default_8">[[repeatIn(objects,'picking')]] </para>
-    <para style="terp_default_8">[[picking.type == 'out' and picking.partner_id and setLang(picking.partner_id.lang) or '']]</para>
+    <para style="terp_default_8">[[picking.picking_type_id.code == 'outgoing' and picking.partner_id and setLang(picking.partner_id.lang) or '']]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
@@ -168,12 +168,15 @@
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="538.0" style="Table_Title_String">
+    <blockTable colWidths="400,124" style="Table_Title_String">
       <tr>
         <td>
-          <para style="terp_header">Delivery Order : [[ (picking.type == 'out' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
-          <para style="terp_header">Incoming Shipment : [[ (picking.type == 'in' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
-          <para style="terp_header">Internal Shipment : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Delivery Order : [[ (picking.picking_type_id.code == 'outgoing' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Incoming Shipment : [[ (picking.picking_type_id.code == 'incoming' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Internal Shipment : [[ (picking.picking_type_id.code == 'internal' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+        </td>
+        <td>
+            <barCode code="code128" quiet="9" fontName="Times-Roman" fontSize="50" alignment="CENTER"> [[ picking.name ]] </barCode>
         </td>
       </tr>
     </blockTable>
@@ -196,10 +199,10 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="100.0,154.0,162.0,109.0" style="Content_Order_Reference_Table">
+    <blockTable colWidths="100.0,154.0,161.0,109.0" style="Content_Order_Reference_Table">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ picking.stock_journal_id.name]]</para>
+          <para style="terp_default_Centre_8">[[ picking.picking_type_id.name]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ picking.origin or '']]</para>
@@ -215,7 +218,7 @@
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="184.0,73.0,59.0,59.0,71.0,71" repeatRows="1" style="Move_Line_Header">
+      <blockTable colWidths="155.0,73.0,59.0,59.0,71.0,100" repeatRows="1" style="Move_Line_Header">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -233,20 +236,20 @@
           <para style="terp_tblheader_Details_Right">Quantity</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Barcode</para>
+          <para style="terp_tblheader_Details_Centre">Barcode</para>
         </td>
       </tr>
     </blockTable>
     <section>
       <para style="terp_default_2">[[ repeatIn([line for line in picking.move_lines if ((line.state == 'confirmed' or line.state=='done' or line.state=='assigned') and not line.scrapped)],'move_lines') ]]</para>
       <para style="terp_default_2">[[ (picking.move_lines!=[] and removeParentNode('para')) or removeParentNode('section')]]</para>
-      <blockTable colWidths="184.0,74.0,58.0,60.0,73.0,71.0" style="Move_Line_Contect_Assign_State">
+      <blockTable colWidths="155.0,74.0,58.0,60.0,73.0,100.0" style="Move_Line_Contect_Assign_State">
         <tr>
           <td>
             <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
+            <para style="terp_default_Centre_9">[[ move_lines.quant_ids and ','.join(map(str, [q.lot_id.name for q in move_lines.quant_ids if q.lot_id])) or '' ]]</para>
           </td>
           <td>
             <para style="terp_default_9">Waiting Availability[[ move_lines.state == 'confirmed' and ' ' or removeParentNode('para') ]]</para>
@@ -260,7 +263,7 @@
             <para style="terp_default_Right_9">[[ formatLang(move_lines.product_qty) ]] [[ move_lines.product_uom.name ]]</para>
           </td>
           <td>
-            <barCode code="code128" quiet="9" fontName="Times-Roman" fontSize="50" alignment="CENTER"> [[ move_lines.product_id.ean13 ]] </barCode>
+            <barCode code="code128" quiet="9" fontName="Times-Roman" fontSize="50" alignment="CENTER">[[ move_lines.product_id.ean13 or removeParentNode('barCode')]]</barCode>
           </td>
         </tr>
       </blockTable>
@@ -270,7 +273,7 @@
     <section>
       <para style="terp_default_2">[[ repeatIn([line for line in picking.move_lines if (line.state == 'draft' or line.state=='waiting')],'move_lines') ]]</para>
       <para style="terp_default_2">[[ (picking.move_lines!=[] and removeParentNode('para')) or removeParentNode('section')]]</para>
-      <blockTable colWidths="184.0,74.0,57.0,61.0,72.0,72.0" style="Table1">
+      <blockTable colWidths="155.0,73.0,59.0,59.0,71.0,100.0" style="Table1">
         <tr>
           <td>
             <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
@@ -279,9 +282,9 @@
             <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ (picking.type == 'in' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Received' or move_lines.state]]</para>
-            <para style="terp_default_9">[[ (picking.type == 'out' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Delivered' or move_lines.state]]</para>
-            <para style="terp_default_9">[[ (picking.type == 'internal' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Transferred' or move_lines.state]]</para>
+            <para style="terp_default_9">[[ (picking.picking_type_id.code == 'incoming' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Received' or move_lines.state]]</para>
+            <para style="terp_default_9">[[ (picking.picking_type_id.code == 'outgoing' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Delivered' or move_lines.state]]</para>
+            <para style="terp_default_9">[[ (picking.picking_type_id.code == 'internal' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Transferred' or move_lines.state]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]] </para>
@@ -290,7 +293,7 @@
             <para style="terp_default_Right_9">[[ formatLang(move_lines.product_qty) ]] [[ move_lines.product_uom.name ]]</para>
           </td>
           <td>
-            <barCode code="code128" quiet="9" fontName="Times-Roman" fontSize="50" alignment="CENTER"> [[ move_lines.product_id.ean13 ]] </barCode>
+            <barCode code="code128" quiet="9" fontName="Times-Roman" fontSize="50" alignment="CENTER">[[ move_lines.product_id.ean13 or removeParentNode('barCode')]]</barCode>
           </td>
         </tr>
       </blockTable>
