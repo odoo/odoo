@@ -17,6 +17,11 @@
             website.form(this.pathname, 'POST');
         });
 
+        $(document).on('submit', '.cke_editable form', function (ev) {
+            // Disable form submition in editable mode
+            ev.preventDefault();
+        });
+
         $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
             // Prevent dropdown closing when a contenteditable children is focused
             if (ev.originalEvent
