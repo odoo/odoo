@@ -25,7 +25,7 @@
     'category': 'Hidden',
     'summary': 'Dropship route',
     'description': """
-Manage sales quotations and stock_location
+Manage sales quotations and stock locations
 ==========================================
 
 This adds a route on the sales order and sales order line (mini module)
