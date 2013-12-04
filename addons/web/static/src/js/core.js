@@ -561,8 +561,8 @@ instance.web.TranslationDataBase.include({
 });
 
 /** Custom jQuery plugins */
+$.browser = $.browser || {};
 if(navigator.appVersion.indexOf("MSIE") !== -1) {
-    $.browser = $.browser || {};
     $.browser.msie = 1;
 }
 $.fn.getAttributes = function() {

@@ -320,7 +320,7 @@
 </t>
 <t t-name="DatabaseManager.menu">
     <div class="oe_secondary_menu_section">Database Management</div>
-    <ul class="oe_secondary_submenu">
+    <ul class="oe_secondary_submenu nav nav-pills nav-stacked">
         <li><a href="#db_create">Create</a></li>
         <li><a href="#db_duplicate">Duplicate</a></li>
         <li><a href="#db_drop">Drop</a></li>
@@ -362,15 +362,13 @@
 </t>
 
 <t t-name="Menu">
-    <ul class="oe_menu" t-if="widget.data">
+    <ul class="nav navbar-nav navbar-left" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
             <t t-call="Menu.link"/>
         </li>
-        <li class="oe_menu_more_container" style="display: none;">
-            <span class="oe_topbar_item oe_menu_more_link oe_dropdown_toggle oe_dropdown_arrow">
-                More
-                <ul class="oe_menu_more oe_dropdown_menu"/>
-            </span>
+        <li id="menu_more_container" class="dropdown" style="display: none;">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+            <ul id="menu_more" class="dropdown-menu"></ul>
         </li>
     </ul>
 </t>
@@ -389,7 +387,7 @@
     </div>
 </t>
 <t t-name="Menu.secondary.submenu">
-    <ul t-if="menu.children.length" class="oe_secondary_submenu">
+    <ul t-if="menu.children.length" class="oe_secondary_submenu nav nav-pills nav-stacked">
         <li t-foreach="menu.children" t-as="menu">
             <t t-call="Menu.link"/>
             <!--<span class="oe_menu_label">8</span>-->
@@ -410,24 +408,28 @@
 </t>
 
 <t t-name="Menu.needaction_counter">
-    <div class="oe_tag oe_tag_dark oe_menu_counter">
+    <div id="menu_counter" class="badge pull-right">
         <t t-if="widget.needaction_counter &gt; 99"> 99+ </t>
         <t t-if="widget.needaction_counter &lt;= 99"> <t t-esc="widget.needaction_counter"/> </t>
     </div>
 </t>
 
 <t t-name="UserMenu">
-    <span class="oe_user_menu oe_topbar_item oe_dropdown_toggle oe_dropdown_arrow">
-        <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
-        <span class="oe_topbar_name"/>
-        <ul class="oe_dropdown_menu">
-            <li><a href="#" data-menu="settings">Preferences</a></li>
-            <li><a href="#" data-menu="account">My OpenERP.com account</a></li>
-            <li><a href="#" data-menu="about">About OpenERP</a></li>
-            <li><a href="#" data-menu="help">Help</a></li>
-            <li><a href="#" data-menu="logout">Log out</a></li>
-        </ul>
-    </span>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
+                <span class="oe_topbar_name"/> <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#" data-menu="settings">Preferences</a></li>
+                <li><a href="#" data-menu="account">My OpenERP.com account</a></li>
+                <li><a href="#" data-menu="about">About OpenERP</a></li>
+                <li><a href="#" data-menu="help">Help</a></li>
+                <li><a href="#" data-menu="logout">Log out</a></li>
+            </ul>
+        </li>
+    </ul>
 </t>
 <t t-name="UserMenu.about">
 
@@ -450,7 +452,7 @@
     <div class="openerp openerp_webclient_container">
     <table class="oe_webclient">
         <tr>
-            <td colspan="2" class="oe_topbar">
+            <td colspan="2" class="navbar navbar-default navbar-static-top" role="navigation">
                 <div class="oe_menu_placeholder"/>
                 <div class="oe_user_menu_placeholder"/>
                 <div class="oe_systray"/>
