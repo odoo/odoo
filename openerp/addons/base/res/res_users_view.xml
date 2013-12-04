@@ -246,7 +246,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
-                    <field name="image" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_small"}'/>
+                    <field name="image" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_small"}'/>
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
                         (<field name="login" readonly="1" class="oe_inline"/>)
