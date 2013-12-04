@@ -98,23 +98,31 @@
             <field name="arch" type="xml">
                 <form string="Payment Transactions" version="7.0">
                     <sheet>
-                        <group>
+                        <group col="6">
                             <group>
                                 <field name="reference"/>
                                 <field name="amount"/>
+                                <field name="date_create"/>
                                 <field name="fees"/>
                                 <field name="currency_id"/>
                                 <field name="partner_id"/>
-                                <field name="partner_name"/>
-                                <field name="partner_email"/>
+                                <field name="partner_reference"/>
                             </group>
                             <group>
-                                <field name="date_create"/>
-                                <field name="date_validate"/>
                                 <field name="acquirer_id"/>
                                 <field name="acquirer_reference"/>
+                                <field name="date_validate"/>
                                 <field name="state"/>
                                 <field name="state_message"/>
+                            </group>
+                            <group>
+                                <field name="partner_name"/>
+                                <field name="partner_address"/>
+                                <field name="partner_email"/>
+                                <field name="partner_lang"/>
+                                <field name="partner_zip"/>
+                                <field name="partner_city"/>
+                                <field name="partner_country_id"/>
                             </group>
                         </group>
                         <notebook>
