@@ -10,14 +10,16 @@
                 <xpath expr='//group[@name="acquirer_display"]' position='after'>
                     <group attrs="{'invisible': [('name', '!=', 'paypal')]}">
                         <group>
-                            <field name="paypal_email_id"/>
-                            <field name="paypal_username"/>
-                            <field name="paypal_use_ipn"/>
-                            <field name="paypal_api_enabled"/>
-                            <field name="paypal_api_username"
-                                attrs="{'invisible': [('paypal_api_enabled', '=', False)]}"/>
-                            <field name="paypal_api_password"
-                                attrs="{'invisible': [('paypal_api_enabled', '=', False)]}"/>
+                            <group>
+                                <field name="paypal_email_id"/>
+                                <field name="paypal_seller_id"/>
+                                <field name="paypal_use_ipn"/>
+                                <field name="paypal_api_enabled"/>
+                                <field name="paypal_api_username"
+                                    attrs="{'invisible': [('paypal_api_enabled', '=', False)]}"/>
+                                <field name="paypal_api_password"
+                                    attrs="{'invisible': [('paypal_api_enabled', '=', False)]}"/>
+                            </group>
                         </group>
                     </group>
                 </xpath>

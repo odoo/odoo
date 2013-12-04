@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from lxml import objectify
+import urlparse
+
 from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
 from openerp.addons.payment_acquirer.tests.common import PaymentAcquirerCommon
 from openerp.addons.payment_acquirer_adyen.controllers.main import AdyenController
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
-
-from lxml import objectify
-import urlparse
 
 
 class AdyenCommon(PaymentAcquirerCommon):
@@ -15,20 +15,10 @@ class AdyenCommon(PaymentAcquirerCommon):
     def setUp(self):
         super(AdyenCommon, self).setUp()
         cr, uid = self.cr, self.uid
-
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        model, self.paypal_view_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_acquirer_adyen', 'adyen_acquirer_button')
 
-        # create a new ogone account
-        self.adyen_id = self.payment_acquirer.create(
-            cr, uid, {
-                'name': 'adyen',
-                'env': 'test',
-                'view_template_id': self.paypal_view_id,
-                'adyen_merchant_account': 'OpenERPCOM',
-                'adyen_skin_code': 'cbqYWvVL',
-                'adyen_skin_hmac_key': 'cbqYWvVL',
-            })
+        # get the adyen account
+        model, self.adyen_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_acquirer_adyen', 'payment_acquirer_adyen')
 
         # some CC (always use expiration date 06 / 2016, cvc 737, cid 7373 (amex))
         self.amex = (('370000000000002', '7373'))
@@ -57,6 +47,9 @@ class AdyenForm(AdyenCommon):
 
     def test_10_adyen_form_render(self):
         cr, uid, context = self.cr, self.uid, {}
+        # be sure not to do stupid things
+        adyen = self.payment_acquirer.browse(self.cr, self.uid, self.adyen_id, None)
+        self.assertEqual(adyen.env, 'test', 'test without test env')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -74,7 +67,7 @@ class AdyenForm(AdyenCommon):
         # render the button
         res = self.payment_acquirer.render(
             cr, uid, self.adyen_id,
-            'test_ref0', 0.01, self.currency_euro,
+            'test_ref0', 0.01, self.currency_euro_id,
             partner_id=None,
             partner_values=self.buyer_values,
             context=context)
@@ -88,12 +81,15 @@ class AdyenForm(AdyenCommon):
             self.assertEqual(
                 form_input.get('value'),
                 form_values[form_input.get('name')],
-                'adyen: wrong value for form: received %s instead of %s' % (form_input.get('value'), form_values[form_input.get('name')])
+                'adyen: wrong value for input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
             )
 
     @mute_logger('openerp.addons.payment_acquirer_paypal.models.paypal', 'ValidationError')
     def test_20_paypal_form_management(self):
         cr, uid, context = self.cr, self.uid, {}
+        # be sure not to do stupid things
+        adyen = self.payment_acquirer.browse(self.cr, self.uid, self.adyen_id, None)
+        self.assertEqual(adyen.env, 'test', 'test without test env')
 
 # {'authResult': u'AUTHORISED',
 #  'merchantReference': u'SO014',

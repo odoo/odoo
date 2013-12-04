@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from lxml import objectify
+import time
+import urlparse
+
 from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
 from openerp.addons.payment_acquirer.tests.common import PaymentAcquirerCommon
 from openerp.addons.payment_acquirer_ogone.controllers.main import OgoneController
 from openerp.tools import mute_logger
-
-from lxml import objectify
-# import requests
-import time
-import urlparse
 
 
 class OgonePayment(PaymentAcquirerCommon):
@@ -16,30 +15,16 @@ class OgonePayment(PaymentAcquirerCommon):
     def setUp(self):
         super(OgonePayment, self).setUp()
         cr, uid = self.cr, self.uid
-
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        model, self.ogone_view_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_acquirer_ogone', 'ogone_acquirer_button')
 
-        # create a new ogone account
-        self.ogone_id = self.payment_acquirer.create(
-            cr, uid, {
-                'name': 'ogone',
-                'env': 'test',
-                'view_template_id': self.ogone_view_id,
-                'ogone_pspid': 'dummy',
-                'ogone_userid': 'dummy',
-                'ogone_password': 'dummy',
-                'ogone_shakey_in': 'tINY4Yv14789gUix1130',
-                'ogone_shakey_out': 'tINYj885Tfvd4P471464',
-            })
-        self.ogone_url = self.payment_acquirer._get_ogone_urls(cr, uid, [self.ogone_id], None, None)[self.ogone_id]['ogone_standard_order_url']
-
-    def test_00_ogone_acquirer(self):
-        ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
-        self.assertEqual(ogone.env, 'test', 'test without test env')
+        # get the adyen account
+        model, self.ogone_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_acquirer_ogone', 'payment_acquirer_ogone')
 
     def test_10_ogone_form_render(self):
         cr, uid, context = self.cr, self.uid, {}
+        # be sure not to do stupid thing
+        ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
+        self.assertEqual(ogone.env, 'test', 'test without test env')
 
         # ----------------------------------------
         # Test: button direct rendering + shasign
@@ -68,7 +53,7 @@ class OgonePayment(PaymentAcquirerCommon):
         # render the button
         res = self.payment_acquirer.render(
             cr, uid, self.ogone_id,
-            'test_ref0', 0.01, self.currency_euro,
+            'test_ref0', 0.01, self.currency_euro_id,
             partner_id=None,
             partner_values=self.buyer_values,
             context=context)
@@ -82,7 +67,7 @@ class OgonePayment(PaymentAcquirerCommon):
             self.assertEqual(
                 form_input.get('value'),
                 form_values[form_input.get('name')],
-                'ogone: wrong value for form: received %s instead of %s' % (form_input.get('value'), form_values[form_input.get('name')])
+                'ogone: wrong value for input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
             )
 
         # ----------------------------------------
@@ -123,6 +108,9 @@ class OgonePayment(PaymentAcquirerCommon):
     @mute_logger('openerp.addons.payment_acquirer_ogone.models.ogone', 'ValidationError')
     def test_20_ogone_form_management(self):
         cr, uid, context = self.cr, self.uid, {}
+        # be sure not to do stupid thing
+        ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
+        self.assertEqual(ogone.env, 'test', 'test without test env')
 
         # typical data posted by ogone after client has successfully paid
         ogone_post_data = {
@@ -155,6 +143,7 @@ class OgonePayment(PaymentAcquirerCommon):
                 'currency_id': self.currency_euro_id,
                 'reference': 'test_ref_2',
                 'partner_name': 'Norbert Buyer',
+                'partner_country_id': self.country_france_id,
             }, context=context
         )
         # validate it
@@ -183,6 +172,9 @@ class OgonePayment(PaymentAcquirerCommon):
     def test_30_ogone_s2s(self):
         test_ref = 'test_ref_%.15f' % time.time()
         cr, uid, context = self.cr, self.uid, {}
+        # be sure not to do stupid thing
+        ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
+        self.assertEqual(ogone.env, 'test', 'test without test env')
 
         # create a new draft tx
         tx_id = self.payment_transaction.create(
