@@ -129,7 +129,17 @@ class PaymentAcquirer(osv.Model):
         else:
             if partner_id:
                 partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-                partner_data = self.pool['payment.transaction'].on_change_partner_id(cr, uid, None, partner_id, context=context)['values']
+                partner_data = {
+                    'name': partner.name,
+                    'lang': partner.lang,
+                    'email': partner.email,
+                    'zip': partner.zip,
+                    'city': partner.city,
+                    'address': _partner_format_address(partner.street, partner.street2),
+                    'country_id': partner.country_id.id,
+                    'country': partner.country_id,
+                    'phone': partner.phone,
+                }
             else:
                 partner, partner_data = False, {}
             partner_data.update(partner_values)
@@ -224,6 +234,9 @@ class PaymentAcquirer(osv.Model):
             partner_values, tx_values = method(cr, uid, id, partner_values, tx_values, context=context)
 
         qweb_context = {
+            'tx_url': context.get('tx_url', self.get_form_action_url(cr, uid, id, context=context)),
+            'submit_class': context.get('submit_class', 'btn btn-link'),
+            'submit_txt': context.get('submit_txt'),
             'acquirer': acquirer,
             'user': self.pool.get("res.users").browse(cr, uid, uid, context=context),
             'reference': tx_values['reference'],
@@ -286,6 +299,8 @@ class PaymentTransaction(osv.Model):
         'fees': fields.float('Fees', help='Fees amount; set by the system because depends on the acquirer'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'reference': fields.char('Order Reference', required=True),
+        'acquirer_reference': fields.char('Acquirer Order Reference',
+                                          help='Reference of the TX as stored in the acquirer database'),
         # duplicate partner / transaction data to store the values at transaction time
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_name': fields.char('Partner Name'),
@@ -342,7 +357,7 @@ class PaymentTransaction(osv.Model):
             'partner_lang': partner and partner.lang or 'en_US',
             'partner_email': partner and partner.email or False,
             'partner_zip': partner and partner.zip or False,
-            'partner_address': _partner_format_address(partner.street, partner.street2),
+            'partner_address': _partner_format_address(partner and partner.street or '', partner and partner.street2 or ''),
             'partner_city': partner and partner.city or False,
             'partner_country_id': partner and partner.country_id.id or False,
             'partner_phone': partner and partner.phone or False,
