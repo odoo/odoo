@@ -71,7 +71,7 @@
            <field name="domain">[('type','=', 'lead'),('section_id', '=', active_id)]</field>
            <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
        </record>
-       <record model="ir.actions.act_window.view" id="action_report_crm_lead_salesteam_tree">
+<!--        <record model="ir.actions.act_window.view" id="action_report_crm_lead_salesteam_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_report_crm_lead_tree"/>
@@ -82,7 +82,7 @@
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_report_crm_lead_graph"/>
             <field name="act_window_id" ref="action_report_crm_lead_salesteam"/>
-       </record>
+       </record> -->
 
        <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
             <field name="name">Opportunities Analysis</field>
@@ -94,7 +94,7 @@
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
 
-       <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_salesteam_tree">
+<!--        <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_salesteam_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_report_crm_opportunity_tree"/>
@@ -106,7 +106,7 @@
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_report_crm_opportunity_graph"/>
             <field name="act_window_id" ref="action_report_crm_opportunity_salesteam"/>
-       </record>
+       </record> -->
 
         <!-- Case Sections Salesteams kanban view -->
 
