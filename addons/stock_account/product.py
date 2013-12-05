@@ -250,10 +250,6 @@ class product_product(osv.osv):
                                         , required=True),
     }
 
-    _defaults = {
-        'valuation': 'manual_periodic',
-    }
-
 
 class product_template(osv.osv):
     _name = 'product.template'
@@ -276,10 +272,6 @@ class product_template(osv.osv):
             string='Stock Output Account',
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
-    }
-
-    _defaults = {
-        'cost_method': 'standard',
     }
 
 
