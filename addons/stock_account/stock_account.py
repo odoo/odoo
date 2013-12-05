@@ -247,8 +247,8 @@ class stock_move(osv.osv):
             average_valuation_price += q.qty * q.cost
         average_valuation_price = average_valuation_price / move.product_qty
         # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
-        product_obj.write(cr, SUPERUSER_ID, move.product_id.id, {'standard_price': average_valuation_price}, context=context)
-        self.write(cr, uid, move.id, {'price_unit': average_valuation_price}, context=context)
+        product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=context)
+        self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
