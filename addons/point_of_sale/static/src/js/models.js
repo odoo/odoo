@@ -961,7 +961,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },
         selectPaymentline: function(line){
-            console.log("SELECT_PAYMENTLINE",line);
             if(line !== this.selected_paymentline){
                 if(this.selected_paymentline){
                     this.selected_paymentline.set_selected(false);

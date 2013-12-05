@@ -289,7 +289,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 self.selectOrder();
             });
             if( this.order === this.pos.get('selectedOrder') ){
-                this.$el.addClass('selected-order');
+                this.$el.addClass('selected');
             }
         },
         selectOrder: function(event) {
@@ -402,9 +402,26 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.product_list_widget = options.product_list_widget || null;
             this.category_cache = {};
             this.set_category();
+            
             this.switch_category_handler = function(event){
                 self.set_category(self.pos.db.get_category_by_id(Number(this.dataset['categoryId'])));
                 self.renderElement();
+            };
+            
+            this.clear_search_handler = function(event){
+                console.log("CLEAR SEARCH");
+                self.clear_search();
+            };
+
+            var search_timeout  = null;
+            this.search_handler = function(event){
+                clearTimeout(search_timeout);
+
+                var query = this.value;
+
+                search_timeout = setTimeout(function(){
+                    self.perform_search(self.category, query, event.which === 13);
+                },70);
             };
         },
 
@@ -499,8 +516,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 buttons[i].addEventListener('click',this.switch_category_handler);
             }
 
+            var products = this.pos.db.get_product_by_category(this.category.id);
+            this.product_list_widget.set_product_list(products);
 
-            this.search_and_categories();
+            this.el.querySelector('.searchbox input').addEventListener('keyup',this.search_handler);
+
+            this.el.querySelector('.search-clear').addEventListener('click',this.clear_search_handler);
 
             if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
                 this.pos_widget.onscreen_keyboard.connect(this.$('.searchbox input'));
@@ -517,53 +538,25 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         clear_search: function(){
             var products = this.pos.db.get_product_by_category(this.category.id);
             this.product_list_widget.set_product_list(products);
-            this.$('.searchbox input').val('').focus();
-            this.$('.search-clear').fadeOut();
+            var input = this.el.querySelector('.searchbox input');
+                input.value = '';
+                input.focus();
+        },
+        perform_search: function(category, query, buy_result){
+            if(query){
+                var products = this.pos.db.search_product_in_category(category.id,query)
+                if(buy_result && products.length === 1){
+                        this.pos.get('selectedOrder').addProduct(products[0]);
+                        this.clear_search();
+                }else{
+                    this.product_list_widget.set_product_list(products);
+                }
+            }else{
+                var products = this.pos.db.get_product_by_category(this.category.id);
+                this.product_list_widget.set_product_list(products);
+            }
         },
 
-        // filters the products, and sets up the search callbacks
-        search_and_categories: function(category){
-            var self = this;
-
-            // find all products belonging to the current category
-            var products = this.pos.db.get_product_by_category(this.category.id);
-            this.product_list_widget.set_product_list(products);
-
-
-            /*
-            var searchtimeout = null;
-            // filter the products according to the search string
-            this.$('.searchbox input').keyup(function(event){
-
-                clearTimeout(searchtimeout);
-
-                var query = $(this).val().toLowerCase();
-                
-                searchtimeout = setTimeout(function(){
-                    if(query){
-                        if(event.which === 13){
-                            if( self.pos.get('products').size() === 1 ){
-                                self.pos.get('selectedOrder').addProduct(self.pos.get('products').at(0)); // FIXME
-                                self.clear_search();
-                            }
-                        }else{
-                            var products = self.pos.db.search_product_in_category(self.category.id, query);
-                            this.product_list_widget.set_product_list(products);
-                            self.$('.search-clear').fadeIn();
-                        }
-                    }else{
-                        var products = self.pos.db.get_product_by_category(self.category.id);
-                        this.product_list_widget.set_product_list(products);
-                        self.$('.search-clear').fadeOut();
-                    }
-                },200);
-            });
-
-            //reset the search when clicking on reset
-            this.$('.search-clear').click(function(){
-                self.clear_search();
-            });*/
-        },
     });
 
     module.ProductListWidget = module.PosBaseWidget.extend({
@@ -847,6 +840,21 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             return self.pos.ready.done(function() {
                 $('.oe_tooltip').remove();  // remove tooltip from the start session button
+                
+                // remove default webclient handlers that induce click delay
+                $(document).off();
+                $(window).off();
+                $('html').off();
+                $('body').off();
+                $(self.$el).parent().off();
+                $('document').off();
+                $('.oe_web_client').off();
+                $('.openerp_webclient_container').off();
+
+                /*this.el.addEventHandler('click',function(event){
+                    event.stopPropagation();
+                    event.preventDefault();
+                });*/
 
                 self.build_currency_template();
                 self.renderElement();

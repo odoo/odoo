@@ -32,8 +32,7 @@ html_template = """<!DOCTYPE html>
         <link rel="apple-touch-icon" sizes="152x152" href="/point_of_sale/static/src/img/touch-icon-ipad-retina.png">
 
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/web/static/src/css/full.css" />
-        %(css)s
+        <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" />
         %(js)s
         <script type="text/javascript">
             $(function() {
@@ -64,10 +63,10 @@ class PosController(http.Controller):
         print js_list
 
         js = "\n".join('<script type="text/javascript" src="%s"></script>' % i for i in js_list)
-        css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in css_list)
+        #css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in css_list)
         r = html_template % {
             'js': js,
-            'css': css,
+         #   'css': css,
             'modules': simplejson.dumps(module_boot(request.db)),
             'init': """
                      console.log('LOADED');

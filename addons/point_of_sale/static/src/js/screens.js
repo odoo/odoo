@@ -911,7 +911,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             };
 
             this.line_click_handler = function(event){
-                console.log('click');
                 var node = this;
                 while(node && !node.classList.contains('paymentline')){
                     node = node.parentNode;
@@ -921,38 +920,24 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 }
             };
 
+            this.hotkey_handler = function(event){
+                if(event.which === 13){
+                    self.validate_order();
+                }else if(event.which === 27){
+                    self.back();
+                }
+            };
+
         },
         show: function(){
             this._super();
             var self = this;
             
             this.enable_numpad();
-            this.update_payment_summary();
             this.focus_selected_line();
-            window.removeall = function(){
-                self.remove_empty_lines();
-            };
-            window.listlines = function(){
-                var lines = self.pos.get('selectedOrder').get('paymentLines').models;
-                for(var i = 0; i < lines.length; i++){
-                    console.log('LINE:',lines[i]);
-                }
-            };
-
-            /*
-
-            this.hotkey_handler = function(event){
-                if(event.which === 13){
-                    self.validate();
-                }else if(event.which === 27){
-                    self.back();
-                }
-            };
-
-            $('body').on('keyup',this.hotkey_handler);
             
-            */
-
+            document.body.addEventListener('keyup', this.hotkey_handler);
+            
             if(    this.pos.iface_cashdrawer 
                 && this.pos.get('selectedOrder').get('paymentLines').find( function(pl){ 
                            return pl.cashregister.get('journal').type === 'cash'; 
@@ -1000,11 +985,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     });
             }
 
+            this.update_payment_summary();
+
         },
         close: function(){
             this._super();
             this.disable_numpad();
-            //$('body').off('keyup',this.hotkey_handler);
+            document.body.removeEventListener('keyup',this.hotkey_handler);
         },
         remove_empty_lines: function(){
             var order = this.pos.get('selectedOrder');
@@ -1057,10 +1044,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         focus_selected_line: function(){
             var line = this.pos.get('selectedOrder').selected_paymentline;
             if(line){
-                debugger;
-                if(!line.node){
-                    debugger;
-                }
                 var input = line.node.querySelector('input');
                 if(!input){
                     return;
@@ -1111,10 +1094,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var new_node = this.render_paymentline(line);
             
             old_node.parentNode.replaceChild(new_node,old_node);
-            console.log('RERENDER',line);
         },
         remove_paymentline: function(line){
-            console.log('Removing line from DOM:',line);
             line.node.parentNode.removeChild(line.node);
             line.node = undefined;
         },
@@ -1128,7 +1109,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 list_container.appendChild(this.render_paymentline(paymentlines[i]));
             }
             
-            //this.update_payment_summary();
+            this.update_payment_summary();
         },
         update_payment_summary: function() {
             var currentOrder = this.pos.get('selectedOrder');

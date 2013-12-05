@@ -1,34 +1,35 @@
+/* --- Fonts --- */
+
 @font-face{
     font-family: 'Inconsolata';
     src: url(../fonts/Inconsolata.otf);
 }
 
+/* --- Generic Restyling and Resets --- */
+
+html {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+td {
+    padding: 0px;
+}
+
 .oe_hidden{
     display: none !important;
 }
-
-.pos {
-    padding: 0;
-    margin: 0;
-    background-color: #f0eeee;
-    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
-    color: #555555;
-    font-size: 12px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-            user-select: none;
-    text-shadow: none;
-    overflow: hidden;
+.clearfix:after {
+    content:" ";
+    display: block;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+    clear: both;
 }
 
-.pos * {
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
 
 .pos input::-webkit-outer-spin-button,
 .pos input::-webkit-inner-spin-button {
@@ -55,6 +56,25 @@
     list-style-type: none;
 }
 
+.pos {
+    padding: 0;
+    margin: 0;
+    background-color: #f0eeee;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    color: #555555;
+    font-size: 12px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+    text-shadow: none;
+    overflow: hidden;
+}
+
 /*  ********* The black loading screen ********* */
 
 .pos .loader{
@@ -66,6 +86,7 @@
     height:100%;
     z-index: 999;
     text-align: center;
+    font-family: Lato;
 }
 
 /*  ********* Generic Layout Constructs  ********* */
@@ -143,6 +164,7 @@
     font-size: 11px;
     border: 1px solid #cacaca;
     background: #e2e2e2;
+    border-radius: 3px;
 }
 .pos ul, .pos ol {
     padding: 0;
@@ -156,10 +178,6 @@
 }
 .pos .pos-center-align {
     text-align: center;
-}
-.pos .pos-right-align input {
-    text-align: right;
-    border: 1px solid #cecbcb;
 }
 .pos .pos-disc-font {
     font-size: 12px;
@@ -198,7 +216,7 @@
     line-height:100%;
     vertical-align: middle;
 }
-.pos .pos-branding img {
+.pos .pos-logo {
     height: 32px;
     width: 116px;
     margin-left:5px;
@@ -223,7 +241,7 @@
     height:100%;
 }
 
-.pos .pos-rightheader button {
+.pos .order-button{
     color: #273072;
     height:27px;
     margin:3px;
@@ -231,27 +249,26 @@
     border: 1px solid #353A7E;
     background: #7f82ac;
     text-shadow: none;
+    border-radius: 3px;
+}
+.pos .order-button.selected{
+    font-weight: 900;
+    background: #666997;
+    color: rgb(236, 237, 255);
 }
 
-.pos .pos-rightheader button.square{
+.pos .order-button.square{
     width: 32px;
     margin-left:4px;
 }
 
 .pos .order-selector {
-    display: inline;
+    display: inline-block;
 }
 .pos .orders {
-    display: inline;
+    display: inline-block;
+    vertical-align: top;
     margin-left: 8px;
-}
-.pos .order-selector-button {
-    display: inline;
-}
-.pos .selected-order button {
-    font-weight: 900;
-    background: #7174A8 !important;
-    color: rgb(236, 237, 255) !important;
 }
 
 /*  c) The session buttons */
@@ -261,8 +278,8 @@
     height:32px;
     padding-left:10px;
     padding-right:10px;
-    border-right:  1px solid #3a3a3a;
-    border-left:  1px solid #3a3a3a;
+    border-right:  1px solid #292929;
+    border-left:  1px solid #292929;
     color:#DDD;
     line-height:32px;
     text-align:center;
@@ -392,7 +409,7 @@
 
 /*  ********* The right pane contains the screens and headers ********* */
 
-.pos .pos-rightpane {
+.pos .rightpane {
     position: absolute;
     top: 0;
     /*bottom: 105px;*/
@@ -400,19 +417,22 @@
     left: 440px;
     right: 0;
     vertical-align: top;
+    -webkit-transform: translate3d(0,0,0);
 }
 
-.pos .pos-rightpane header {
+.pos .rightpane-header {
     padding: 0;
-    height: 32px;
+    height: 48px;
     border-bottom: 1px solid #c7c7c7;
     background: #d3d3d3;
+    text-align: center;
 }
 
 /*  ********* The product list  ********* */
 
 .pos .product-list {
-    padding:10px !important;
+    padding: 10px;
+    text-align: left;
     -webkit-transform: translate3d(0,0,0);
 }
 
@@ -439,29 +459,36 @@
 
 /*  a) the product list navigation bar */
 
-.pos .breadcrumb li {
-    float: left;
-    line-height: 32px;
-    height: 32px;
+.pos .breadcrumbs{
+    display: inline-block;
+    text-align: left;
+    float:left;
 }
-.pos .breadcrumb li:last-child {
+.pos .breadcrumb{
+    float: left;
+    display: inline-block;
+    line-height: 48px;
+    height: 48px;
+    min-width: 48px;
+}
+.pos .breadcrumb:last-child {
     padding-right: 3px;
     border-right: 1px solid #c5c5c5;
 }
-.pos .breadcrumb a {
+.pos .breadcrumb-button {
     display: inline-block;
     padding: 0 9px;
     vertical-align: top;
-    color: #555555;
-    font-weight: bold;
+    color: #808080;
+    font-size: 14px;
+    cursor: pointer;
 }
-.pos .bc-arrow {
-    height: 33px;
+.pos .breadcrumb-arrow{
+    width: 28px;
 }
-.pos .homeimg {
-    width: 19px;
-    height: 19px;
-    margin: 6px 0;
+.pos .breadcrumb-homeimg {
+    width: 27px;
+    margin: 12px 6px;
 }
 
 /*  b) the search box */
@@ -471,19 +498,28 @@
     right: 2px;
 }
 .pos .searchbox input {
-    width: 130px;
+    width: 100px;
     border: 1px solid #cecbcb;
-    padding: 3px 19px;
+    padding: 10px 20px;
+    padding-left: 38px;
     margin: 6px;
-    background: url("../img/search.png") no-repeat 5px;
+    background: url("../img/search.png") no-repeat 15px;
     background-color: white;
+    border-radius: 20px;
+    font-family: Lato;
+}
+.pos .searchbox input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
+    color: rgb(153, 153, 255);
 }
 .pos .search-clear {
     position: absolute;
+    width: 30px;
+    height: 30px;
     top: 11px;
-    right: 11px;
+    left: 11px;
     cursor: pointer;
-    display: none;
 }
 
 /*  c) the categories list */
@@ -498,7 +534,8 @@
 }
 
 .pos .category-list{
-    padding:10px !important;
+    text-align: left;
+    padding: 10px;
 }
 /*  d) the category button */
 
@@ -726,6 +763,9 @@
     box-sizing: border-box;
     border-radius: 3px;
 }
+.pos .paymentline-name{
+    margin-bottom: 8px;
+}
 .pos .paymentline-input{
     font-size: 20px;
     font-family: Lato;
@@ -738,6 +778,7 @@
     background: white;
     color: #484848;
     text-align: right;
+    border-radius: 3px;
     box-shadow: 0px 2px rgba(143, 143, 143, 0.3) inset;
 }
 
@@ -803,6 +844,8 @@
     padding-bottom:30px;
     display: inline-block;
     font-family: "Inconsolata";
+    border: solid 1px rgb(220,220,220);
+    border-radius: 3px;
 }
 .pos .pos-sale-ticket .emph{
     font-size: 20px;
@@ -829,7 +872,7 @@
     .pos .pos-content {
         top: 0px !important;
     }
-    .pos .pos-rightpane {
+    .pos .rightpane {
         left: 0px !important;
         background-color: white;
     }
@@ -1133,6 +1176,7 @@
     cursor: pointer;
 
     border: 1px solid #cacaca;
+    border-radius: 3px;
 
     background: #e2e2e2;
 }
