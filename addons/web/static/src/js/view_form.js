@@ -5552,23 +5552,23 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var self = this;
         var selection_unfolded = [];
         var selection_folded = [];
+        var fold_field = this.options.fold_field;
 
         var calculation = _.bind(function() {
             if (this.field.type == "many2one") {
-                /* :deprecated: fold feature will probably be removed */
-                // return self.get_distant_fields().then(function(fields) {
-                self.distant_fields = {};
-                return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
-                    .read_slice(_.union(_.keys(self.distant_fields), ['id']), {}).then(function (records) {
-                        var ids = _.pluck(records, 'id');
-                        return self.dataset.name_get(ids).then(function (records_name) {
-                            _.each(records, function (record) {
-                                var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
-                                if (record.fold && record.id != self.get('value')) {
-                                    selection_folded.push([record.id, name]);
-                                } else {
-                                    selection_unfolded.push([record.id, name]);
-                                }
+                return self.get_distant_fields().then(function (fields) {
+                    return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
+                        .read_slice(_.union(_.keys(self.distant_fields), ['id']), {}).then(function (records) {
+                            var ids = _.pluck(records, 'id');
+                            return self.dataset.name_get(ids).then(function (records_name) {
+                                _.each(records, function (record) {
+                                    var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
+                                    if (fold_field && record[fold_field] && record.id != self.get('value')) {
+                                        selection_folded.push([record.id, name]);
+                                    } else {
+                                        selection_unfolded.push([record.id, name]);
+                                    }
+                                });
                             });
                         });
                     });
@@ -5598,10 +5598,13 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      */
     get_distant_fields: function() {
         var self = this;
+        if (! this.options.fold_field) {
+            this.distant_fields = {}
+        }
         if (this.distant_fields) {
             return $.when(this.distant_fields);
         }
-        return new instance.web.Model(self.field.relation).call("fields_get", [["fold"]]).then(function(fields) {
+        return new instance.web.Model(self.field.relation).call("fields_get", [[this.options.fold_field]]).then(function(fields) {
             self.distant_fields = fields;
             return fields;
         });
