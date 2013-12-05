@@ -61,7 +61,7 @@ class ir_http(orm.AbstractModel):
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
                     return self.reroute(path)
-                return self._handle_404()
+                return self._handle_exception(code=404)
         return super(ir_http, self)._dispatch()
 
     def reroute(self, path):
@@ -79,37 +79,44 @@ class ir_http(orm.AbstractModel):
 
         return self._dispatch()
 
-    def _handle_403(self, exception):
+    def _handle_exception(self, exception=None, code=500):
+        if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.response:
+            return exception.response
         if getattr(request, 'cms', False) and request.website:
-            logger.warn("403 Forbidden:\n\n%s", traceback.format_exc(exception))
-            self._auth_method_public()
-            return self._render_error(403, {
-                'error': exception.message
-            })
-        raise exception
+            values = dict(
+                exception=exception,
+                traceback=traceback.format_exc(exception),
+            )
+            if exception:
+                if isinstance(exception, openerp.exceptions.AccessError):
+                    code = 403
+                else:
+                    code = getattr(exception, 'code', code)
+                values.update(
+                    qweb_template=getattr(exception, 'qweb_template', None),
+                    qweb_node=getattr(exception, 'qweb_node', None),
+                    qweb_eval=getattr(exception, 'qweb_eval', None),
+                )
+            if code == 500:
+                logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
+            elif code == 403:
+                logger.warn("403 Forbidden:\n\n%s", values['traceback'])
 
-    def _handle_404(self, exception=None):
-        if getattr(request, 'cms', False) and request.website:
-            return self._render_error(404)
-        raise request.not_found()
+            values.update(
+                status_message=werkzeug.http.HTTP_STATUS_CODES[code],
+                status_code=code,
+            )
 
-    def _handle_500(self, exception):
-        if getattr(request, 'cms', False) and request.website:
-            logger.error("500 Internal Server Error:\n\n%s", traceback.format_exc(exception))
-            return self._render_error(500, {
-                'exception': exception,
-                'traceback': traceback.format_exc(),
-                'qweb_template': getattr(exception, 'qweb_template', None),
-                'qweb_node': getattr(exception, 'qweb_node', None),
-                'qweb_eval': getattr(exception, 'qweb_eval', None),
-            })
-        raise exception
+            if not request.uid:
+                self._auth_method_public()
 
-    def _render_error(self, code, values=None):
-        return werkzeug.wrappers.Response(
-            request.website._render('website.%s' % code, values),
-            status=code,
-            content_type='text/html;charset=utf-8')
+            try:
+                html = request.website._render('website.%s' % code, values)
+            except:
+                html = request.website._render('website.http_error', values)
+            return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+
+        return super(ir_http, self)._handle_exception(exception)
 
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False):
