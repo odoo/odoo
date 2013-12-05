@@ -1841,7 +1841,10 @@ instance.web.search.Filters = instance.web.search.Input.extend({
 
         return $.when(
             this.render_column(col1, $('<div>').appendTo(this.$el)),
-            this.render_column(col2, $('<div>').appendTo(this.$el)));
+            this.render_column(col2, $('<div>').appendTo(this.$el))).then(function () {
+                self.$el.children().find('[title]').attr('data-toggle', 'tooltip');
+                self.$el.children().find('[title]').tooltip({placement: 'bottom', html: true, container: 'body'});
+            });
     },
     render_column: function (column, $el) {
         return $.when.apply(null, _(column).map(function (group) {

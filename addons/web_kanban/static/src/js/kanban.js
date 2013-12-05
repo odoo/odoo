@@ -894,7 +894,8 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     bind_events: function() {
         var self = this;
         this.setup_color_picker();
-        this.$el.find('[tooltip]').tooltip({
+        this.$el.find('[title]').attr('data-toggle', 'tooltip');
+        this.$el.find('[data-toggle]').tooltip({
             title: function() {
                 var template = $(this).attr('tooltip');
                 if (!self.view.qweb.has_template(template)) {
