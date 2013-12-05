@@ -33,12 +33,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
+
+        this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
         this.dataset = dataset;
+
+        this.pivot_table = new openerp.web_graph.PivotTable(this.model, dataset.domain);
         this.set_default_options(options);
         this.dropdown = null;
-        this.pivot_table = null;
-        this.heat_map_mode = false;
-        this.mode = 'pivot';
+        this.mode = 'pivot'; // pivot, bar_chart, line_chart, pie_chart, heatmap, row_heatmap, col_heatmap
         this.measure = null;
         this.measure_list = [];
         this.important_fields = [];
@@ -48,6 +50,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
                         get_domain: function () { },
                         get_groupby: function () { },
                     };
+        this.groupby_mode = 'default';  // 'default' or 'manual'
+        this.default_row_groupby = [];
     },
 
     start: function () {
@@ -64,8 +68,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     view_loading: function (fields_view_get) {
         var self = this,
-            model = new instance.web.Model(fields_view_get.model, {group_by_no_leaf: true}),
-            row_groupby = [];
+            measure = null;
 
         if (fields_view_get.arch.attrs.type === 'bar') {
             this.mode = 'bar_chart';
@@ -77,17 +80,18 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 if ('operator' in field.attrs) {
                     self.measure_list.push(field.attrs.name);
                 } else {
-                    row_groupby.push(field.attrs.name);
+                    self.default_row_groupby.push(field.attrs.name);
                 }
             }
         });
         if (this.measure_list.length > 0) {
-            this.measure = this.measure_list[0];
+            measure = this.measure_list[0];
+            this.pivot_table.set_measure(measure);
         }
 
         // get the most important fields (of the model) by looking at the
         // groupby filters defined in the search view
-        var options = {model:model, view_type: 'search'},
+        var options = {model:this.model, view_type: 'search'},
             deferred1 = instance.web.fields_view_get(options).then(function (search_view) {
                 var groups = _.select(search_view.arch.children, function (c) {
                     return (c.tag == 'group') && (c.attrs.string != 'Display');
@@ -103,8 +107,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
             });
 
         // get the fields descriptions from the model
-        var deferred2 = model.call('fields_get', []).then(function (fs) { 
-            self.fields = fs; 
+        var deferred2 = this.model.call('fields_get', []).then(function (fs) {
+            self.fields = fs;
             var measure_selection = self.$('.graph_measure_selection');
             _.each(self.measure_list, function (measure) {
                 var choice = $('<a></a>').attr('data-choice', measure)
@@ -115,51 +119,41 @@ instance.web_graph.GraphView = instance.web.View.extend({
             });
         });
 
-        return $.when(deferred1, deferred2).then(function () {
-            var data = {
-                model: model,
-                domain: [],
-                measure: self.measure,
-                col_groupby: [],
-                row_groupby: row_groupby,
-            };
-            self.pivot_table = new openerp.web_graph.PivotTable(data);
-        });
+        return $.when(deferred1, deferred2);
     },
 
     do_search: function (domain, context, group_by) {
-        console.log("START DO SEARCH",group_by);
-        var self = this;
+        var self = this,
+            col_groupby = get_col_groupby('ColGroupBy');
 
-        this.pivot_table.domain = domain;
-        if (group_by.length > 0) {
-            this.pivot_table.set_groupby(this.pivot_table.rows, group_by)
-                    .done(this.proxy('display_data'));
+        if (group_by.length || col_groupby.length) {
+            this.groupby_mode = 'manual';
+            if (!group_by.length) {
+                group_by = this.default_row_groupby;
+            }
+        }
+
+        this.pivot_table.set_domain(domain);
+        if (this.groupby_mode === 'manual') {
+            this.pivot_table.set_row_groupby(group_by);
+            this.pivot_table.set_col_groupby(col_groupby);
         } else {
-            this.pivot_table.update_values().done(this.proxy('display_data'));
+            this.pivot_table.set_row_groupby(this.default_row_groupby);
+            this.pivot_table.set_col_groupby([]);
         }
+        this.display_data();
 
-        var colgroupby = get_search_col_groupby();
-        console.log ("colgroupby", colgroupby);
-        console.log("pivot cbh",this.pivot_table.cols.groupby);
-
-        if (!_.isEqual(colgroupby, this.pivot_table.cols.groupby)) {
-            // console.log ('yop');
-            // this.pivot_table.set_groupby(this.pivot_table.cols, colgroupby)
-            //     .done(this.proxy('display_data'));
-        }
-        // console.log("query",this.search_view.query.models);
-        function get_search_col_groupby() {
-            var colgroupby = [],
+        function get_col_groupby() {
+            var groupby = [],
                 search = _.find(self.search_view.query.models, function (model) {
                 return model.attributes.category == 'ColGroupBy';
             });
             if (search) {
-                colgroupby = _.map(search.values.models, function (val) {
+                groupby = _.map(search.values.models, function (val) {
                     return val.attributes.value;
                 });
             }
-            return colgroupby;
+            return groupby;
         }
     },
 
@@ -169,21 +163,25 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     display_data: function () {
-        console.log('displaying data');
-        this.$('.graph_main_content svg').remove();
-        this.table.empty();
-
-        if (this.pivot_table.no_data) {
-            var msg = 'No data available. Try to remove any filter or add some data.';
-            this.table.append($('<tr><td>' + msg + '</td></tr>'));
+        var pivot = this.pivot_table;
+        if (pivot.stale_data) {
+            pivot.update_data().done(this.proxy('display_data'));
         } else {
-            var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
-            if (_.contains(table_modes, this.mode)) {
-                this.draw_table();
+            this.$('.graph_main_content svg').remove();
+            this.table.empty();
+
+            if (pivot.no_data) {
+                var msg = 'No data available. Try to remove any filter or add some data.';
+                this.table.append($('<tr><td>' + msg + '</td></tr>'));
             } else {
-                this.$('.graph_main_content').append($('<div><svg></svg></div>'));
-                var svg = this.$('.graph_main_content svg')[0];
-                openerp.web_graph.draw_chart(this.mode, this.pivot_table, svg);
+                var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
+                if (_.contains(table_modes, this.mode)) {
+                    this.draw_table();
+                } else {
+                    this.$('.graph_main_content').append($('<div><svg></svg></div>'));
+                    var svg = this.$('.graph_main_content svg')[0];
+                    openerp.web_graph.draw_chart(this.mode, this.pivot_table, svg);
+                }
             }
         }
     },
@@ -221,8 +219,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.mode = mode;
         this.display_data();
         // console.log('yop');
-        // var self = this;
-        //     var attr = [{label: self.fields['user_id'].string, value: 'user_id'}];
         //     var attr2 = [{label: self.fields['user_id'].string, value: {
         //         attrs: {domain: [], context: {'group_by':'user_id'}}
         //     }}];
@@ -234,24 +230,48 @@ instance.web_graph.GraphView = instance.web.View.extend({
         //     };
 
         //     // console.log("rnst",self.search_view);
+        // var self = this;
+        //     var attr = [{label: self.fields['user_id'].string, value: 'user_id'}];
         //     var test = {
         //         values: attr,
         //         icon: 'u',
         //         field: self.search_field,
         //         category: _t("ColGroupBy"),
         //     };
-            // self.search_view.query.add(test);
+        //     self.search_view.query.add(test);
             // self.search_view.query.add(groupbytest, {});
 
     },
 
+    register_groupby: function (category, field) {
+        var groupby;
+        if (category === 'ColGroupBy') {
+            groupby = {
+                category: 'ColGroupBy',
+                values: [{label: this.fields[field].string, value: field}],
+                icon: 'u',
+                field: this.search_field,
+            };
+            this.search_view.query.add(groupby);
+        }
+        if (category === 'GroupBy') {
+            var value = {attrs: {domain: [], context: {'group_by':field}}};
+            groupby = {
+                category: 'GroupBy',
+                values: [{label: this.fields[field].string, value: value}],
+                icon: 'u',
+                field: this.search_view._s_groupby,
+            };
+            this.search_view.query.add(groupby);
+        }
+    },
 
     measure_selection: function (event) {
         event.preventDefault();
         var measure = event.target.attributes['data-choice'].nodeValue;
         this.measure = (measure === '__count') ? null : measure;
-        this.pivot_table.set_measure(this.measure)
-            .then(this.proxy('display_data'));
+        this.pivot_table.set_measure(this.measure);
+        this.display_data();
     },
 
     expand_selection: function (event) {
@@ -270,7 +290,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 this.display_data();
                 break;
             case 'expand_all':
-                this.pivot_table.expand_all().then(this.proxy('display_data'));
+                this.pivot_table.invalidate_data();
+                this.display_data();
                 break;
         }
     },
@@ -283,7 +304,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 this.display_data();
                 break;
             case 'update_values':
-                this.pivot_table.update_values().then(this.proxy('display_data'));
+                this.pivot_table.stale_data = true;
+                this.display_data();
                 break;
             case 'export_data':
                 // Export code...  To do...
@@ -306,32 +328,38 @@ instance.web_graph.GraphView = instance.web.View.extend({
         event.preventDefault();
         this.pivot_table.expand(id, field_id).then(function () {
 
-            var attr = [{label: self.fields[field_id].string, value: field_id}];
-            var attr2 = [{label: self.fields[field_id].string, value: {
-                attrs: {domain: [], context: {'group_by':'stage_id'}}
-            }}];
+            if (self.pivot_table.is_col(id)) {
+                self.register_groupby('ColGroupBy', field_id);
+            } else {
+                self.register_groupby('GroupBy', field_id);
+                // self.display_data();
+            }
+            // var attr = [{label: self.fields[field_id].string, value: field_id}];
+            // var attr2 = [{label: self.fields[field_id].string, value: {
+            //     attrs: {domain: [], context: {'group_by':'stage_id'}}
+            // }}];
 
-            var test = {
-                values: attr,
-                icon: 'u',
-                field: self.search_field,
-                category: _t("ColGroupBy"),
-            };
+            // var test = {
+            //     values: attr,
+            //     icon: 'u',
+            //     field: self.search_field,
+            //     category: _t("ColGroupBy"),
+            // };
 
-            var groupbytest = {
-                category: 'GroupBy',
-                values: attr2,
-                icon: 'u',
-                field: self.search_view._s_groupby,
-            };
+            // var groupbytest = {
+            //     category: 'GroupBy',
+            //     values: attr2,
+            //     icon: 'u',
+            //     field: self.search_view._s_groupby,
+            // };
 
-            // console.log("rnst",self.search_view);
-            console.log('BEF ADD CGB');
-            // self.search_view.query.add(test);
-            console.log('BEF ADD RGB');
-            // self.search_view.query.add(groupbytest, {});
-            console.log('AFTER ADD GB');
-            self.display_data();
+            // // console.log("rnst",self.search_view);
+            // console.log('BEF ADD CGB');
+            // // self.search_view.query.add(test);
+            // console.log('BEF ADD RGB');
+            // // self.search_view.query.add(groupbytest, {});
+            // console.log('AFTER ADD GB');
+            // self.display_data();
         });
     },
 

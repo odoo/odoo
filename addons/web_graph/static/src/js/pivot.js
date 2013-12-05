@@ -8,19 +8,17 @@
 'use strict';
 
 openerp.web_graph.PivotTable = openerp.web.Class.extend({
-	init: function (options) {
-		this.rows = { groupby: options.row_groupby };
-		this.cols = { groupby: [] };
+	init: function (model, domain) {
+		this.rows = { groupby: [], main: null, headers: null };
+		this.cols = { groupby: [], main: null, headers: null };
 		this.cells = [];
-		this.model = options.model;
-		this.domain = options.domain;
-		this.measure = options.measure;
+		this.model = model;
+		this.domain = domain;
+		this.measure = null;
+
 		this.id_seed = 0;
 		this.no_data = true;
-	},
-
-	start: function () {
-		return this.expand_all();
+		this.stale_data = true;
 	},
 
 	generate_id: function () {
@@ -34,6 +32,34 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			result = result.concat(this.measure);
 		}
 		return result;
+	},
+
+	set_domain: function (domain) {
+		if (!_.isEqual(domain, this.domain)) {
+			this.domain = domain;
+			this.stale_data = true;
+		}
+	},
+
+	set_measure: function (measure) {
+		if (measure !== this.measure) {
+			this.measure = measure;
+			this.stale_data = true;
+		}
+	},
+
+	set_row_groupby: function (groupby) {
+		if (!_.isEqual(groupby, this.rows.groupby)) {
+			this.rows.groupby = groupby;
+			this.stale_data = true;
+		}
+	},
+
+	set_col_groupby: function (groupby) {
+		if (!_.isEqual(groupby, this.cols.groupby)) {
+			this.cols.groupby = groupby;
+			this.stale_data = true;
+		}
 	},
 
 	set_value: function (id1, id2, value) {
@@ -56,11 +82,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			return ((c.x == x) && (c.y == y));
 		});
 		return (cell === undefined) ? undefined : cell.value;
-	},
-
-	set_measure: function (measure) {
-		this.measure = measure;
-		return this.update_values();
 	},
 
 	is_row: function (id) {
@@ -118,26 +139,26 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 						var other = _.find(otherDim.headers, function (h) {
 							if (header.root === self.cols) {
 								return _.isEqual(data.path.slice(1), h.path);
-		                    } else {
-								return _.isEqual(_.rest(data.path), h.path);
-		                    }
-		                });
-		                if (other) {
-		                	if (self.measure) {
-		                    	self.set_value(new_header_id, other.id, data.attributes.aggregates[self.measure]);
-		                    } else {
-		                    	self.set_value(new_header_id, other.id, data.attributes.length);
-		                    }
-	                   }
-	            	});
-            	});
-            	header.is_expanded = true;
-        	});
+                            } else {
+                                return _.isEqual(_.rest(data.path), h.path);
+                            }
+                        });
+                        if (other) {
+                            if (self.measure) {
+                                self.set_value(new_header_id, other.id, data.attributes.aggregates[self.measure]);
+                            } else {
+                                self.set_value(new_header_id, other.id, data.attributes.length);
+                            }
+                        }
+                    });
+                });
+                header.is_expanded = true;
+            });
 	},
 
 	make_header: function (groups, parent) {
 		var name = groups[0].attributes.value[1],
-		    new_header = {
+            new_header = {
 				id: this.generate_id(),
 				path: parent.path.concat(name),
 				title: name,
@@ -169,21 +190,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	fold_all: function () {
 		this.fold_rows();
 		this.fold_cols();
-	},
-
-	expand_all: function () {
-		var self = this;
-		return this.query_all_values().then(function (result) {
-			if (result) {
-				self.no_data = false;
-				self.expand_headers(self.rows, result.row_headers);
-				self.expand_headers(self.cols, result.col_headers);
-				self.cells = result.cells;
-			} else {
-				self.no_data = true;
-			}
-
-		});
 	},
 
 	expand_headers: function (root, new_headers) {
@@ -229,27 +235,36 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		}
 	},
 
+	invalidate_data: function () {
+		this.cells = null;
+		this.rows.main = null;
+		this.cols.main = null;
+		this.rows.headers = null;
+		this.cols.headers = null;
+		this.stale_data = true;
+	},
 
-	update_values: function () {
-		if (!this.rows.headers) {
-			return this.expand_all();
-		}
+	update_data: function () {
 		var self = this;
 		return this.query_all_values().then(function (result) {
-			if (!result) {
-				return undefined;
+			self.stale_data = false;
+			if (result) {
+				self.no_data = false;
+				if (self.cols.headers) {
+					self.update_headers(self.cols, result.col_headers);
+					self.update_headers(self.rows, result.row_headers);					
+				} else {
+					self.expand_headers(self.cols, result.col_headers);
+					self.expand_headers(self.rows, result.row_headers);					
+				}
+				self.cells = result.cells;
+			} else {
+				self.no_data = true;
 			}
-			self.no_data = false;			
-			self.update_headers(self.cols, result.col_headers);
-			self.update_headers(self.rows, result.row_headers);
-			self.cells = result.cells;
 		});
 	},
 
 	update_headers: function (root, new_headers) {
-		if (!root.main) {
-			return this.expand_headers(root, new_headers);
-		}
 		_.each(root.headers, function (header) {
 			var corresponding_header = _.find(new_headers, function (h) {
 				return _.isEqual(h.path, header.path);
@@ -279,7 +294,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 	// this method is a little tricky.  In order to obtain all the values 
 	// required to draw the full table, we have to do at least 
-	// 			2 + min(row.groupby.length, col.groupby.length)
+	//             2 + min(row.groupby.length, col.groupby.length)
 	// calls to readgroup.  For example, if row.groupby = [r1, r2, r3] and 
 	// col.groupby = [c1, c2, c3, c4], then a minimal set of calls is done 
 	// with the following groupby:
@@ -317,10 +332,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				row_data = _.last(_.initial(args)),
 				cell_data = args;
 
-			if (total === undefined) { self.no_data = true;}
-			return (total === undefined) 
-					? undefined
-					: self.format_data(total, col_data, row_data, cell_data);
+			return (total === undefined) ? undefined
+                    : self.format_data(total, col_data, row_data, cell_data);
 		});
 
 	},
@@ -343,8 +356,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		}
 
 		return {col_headers: col_headers,
-			    row_headers: row_headers,
-			    cells: cells};
+                row_headers: row_headers,
+                cells: cells};
 
 		function make_headers (data, depth) {
 			var main = {
