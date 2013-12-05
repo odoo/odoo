@@ -14,10 +14,6 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
             var value = _.pluck(self.field.value, 'value');
             var tooltips = _.pluck(self.field.value, 'tooltip');
             var suffix = self.options.tooltip_suffix || "";
-            if (self.options.tooltip_suffix_field) {
-                suffix = self.getParent().record[self.options.tooltip_suffix_field].raw_value;
-            }
-            var tooltipformat = _.str.sprintf("{{offset:offset}}: {{value}} %s", suffix);
             var sparkline_options = _.extend({
                     type: 'bar',
                     barWidth: 5,
@@ -25,7 +21,7 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
                     barWidth: 4,
                     barSpacing: 1,
                     barColor: '#96d854',
-                    tooltipFormat: tooltipformat,
+                    tooltipFormat: '{{offset:offset}} {{value}} ' + suffix,
                     chartRangeMin: 0,
                     tooltipValueLookups: {
                         'offset': tooltips
