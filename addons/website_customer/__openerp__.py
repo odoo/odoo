@@ -40,5 +40,5 @@ OpenERP Customer References
         'views/website_customer.xml',
     ],
     'qweb': [],
-    'installable': False,
+    'installable': True,
 }

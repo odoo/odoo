@@ -39,16 +39,16 @@
                             </div>
 
                             <div class="row">
-                                <t t-foreach="partner_ids" t-as="partner" class="media">
+                                <t t-foreach="partners_data" t-as="partner_data" class="media">
                                     <div class="col-md-2">
-                                        <a t-href="/customers/#{ slug(partner) }/">
-                                            <img class="img img-thumbnail" t-att-src="partner.img('image_medium')"/>
+                                        <a t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                                            <img class="img img-thumbnail" t-attf-src="data:image/png;base64,#{partner_data.get('image')}"/>
                                         </a>
                                     </div><div class="col-md-10">
                                         <h4>
-                                            <a t-href="/customers/#{ slug(partner) }/" t-field="partner.name"/>
+                                            <a t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/" t-esc="partner_data.get('name')"/>
                                         </h4>
-                                        <div t-field="partner.website_short_description"/>
+                                        <div t-raw="partner_data.get('website_short_description')"/>
                                     </div>
                                     <div class="clearfix mb8"/>
                                 </t>
@@ -66,7 +66,7 @@
     <template id="opt_country" inherit_option_id="website_customer.index" name="Show Map">
         <xpath expr="//div[@id='ref_left_column']" position="inside">
 
-            <iframe t-attf-src="/google_map/?partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/&amp;output=embed"
+            <iframe t-attf-src="/google_map/?partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/&amp;output=embed/"
                 style="width:100%; border:0; padding:0; margin:0;"></iframe>
         </xpath>
     </template>
@@ -78,7 +78,7 @@
                 <t t-foreach="countries" t-as="country_dict">
                     <t t-if="country_dict['country_id']">
                         <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                            <a t-href="/customers/country/#{ country_dict['country_id'][0] }">
+                            <a t-href="/customers/country/#{ slug(country_dict['country_id']) }/">
                                 <span class="badge pull-right" t-esc="country_dict['country_id_count']"/>
                                 <t t-esc="country_dict['country_id'][1]"/>
                             </a>
@@ -99,20 +99,17 @@
                     <div class="col-md-5">
                         <ol class="breadcrumb">
                             <li><a href="/customers">Our References</a></li>
-                            <li class="active"><span t-field="partner.name"/></li>
+                            <li class="active"><span t-esc="partner_data.get('name')"/></li>
                         </ol>
                     </div>
-                    <div class="col-md-7">
-                        <t t-call="website.publish_management"><t t-set="object" t-value="partner"/></t>
-                    </div>
-                    <div class="col-md-12">
-                        <h1 class="text-center" t-field="partner.name"/>
-                    </div>
-                    <div class="col-md-9">
-                        <div t-field="partner.website_description"/>
-                    </div>
-                    <div class="col-md-3" id="ref_right_column">
-                    </div>
+                    <t t-call="website_partner.partner_detail">
+                        <t t-set="left_column">
+                            <div id="left_column"></div>
+                        </t>
+                        <t t-set="right_column">
+                            <div id="right_column"></div>
+                        </t>
+                    </t>
                 </div>
             </div>
             <div class="oe_structure"/>
@@ -121,30 +118,85 @@
     </template>
 
     <template id="customer_contact" inherit_id="website_customer.details" inherit_option_id="website_customer.details" name="Customer Contacts">
-        <xpath expr="//div[@id='ref_right_column']" position="inside">
+        <xpath expr="//div[@id='left_column']" position="inside">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>Customer Reference</h4>
                 </div>
                 <div class="panel-body">
                     <div class="text-center">
-                        <img t-att-src="partner.img('image')" class="img img-shadow"/>
+                        <img class="img img-shadow" t-attf-src="data:image/png;base64,#{partner_data.get('image_medium')}"/>
                     </div>
                     <address class="mt16 mb8">
-                        <strong t-field="partner.name"/>
-                        <p t-field="partner.commercial_partner_id"/>
-                        <div t-if="partner.phone">
-                            <span class="fa fa-phone"/> <span t-field="partner.phone"/>
+                        <strong t-esc="partner_data.get('name')"/>
+                        <t t-if="partner_data.get('commercial_partner_id')">
+                            <p t-raw="'&lt;br/&gt;'.join(partner_data.get('commercial_partner_id')[1].split('\n')[1:])"/>
+                        </t>
+                        <div t-if="partner_data.get('phone')">
+                            <span class="fa fa-phone"/> <span t-esc="partner_data.get('phone')"/>
                         </div>
-                        <div t-if="partner.email">
+                        <div t-if="partner_data.get('email')">
                             <span class="fa fa-envelope"/>
-                            <a t-att-href="'mailto:'+partner.email">
-                              <span t-field="partner.email"/>
+                            <a t-att-href="'mailto:'+partner_data.get('email')">
+                              <span t-esc="partner_data.get('email')"/>
                             </a>
                         </div>
                     </address>
                 </div>
             </div>
+        </xpath>
+    </template>
+
+    <template id="partner_assign" inherit_option_id="website_customer.details" inherit_id="website_customer.details" name="Implemented By">
+        <xpath expr="//div[@id='left_column']" position="inside">
+            <t t-if="assigned_partner_data">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Implemented By</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="text-center">
+                        <img class="img img-shadow" t-attf-src="data:image/png;base64,#{assigned_partner_data.get('image_medium')}"/>
+                        </div>
+                        <address class="mt16 mb8">
+                            <strong t-esc="assigned_partner_data.get('name')"/>
+                            <div t-if="assigned_partner_data.get('phone')">
+                                <span class="fa fa-phone"/> <span t-esc="assigned_partner_data.get('phone')"/>
+                            </div>
+                            <div t-if="assigned_partner_data.get('email')">
+                                <span class="fa fa-envelope"/>
+                                <a t-att-href="'mailto:'+assigned_partner_data.get('email')">
+                                  <span t-esc="assigned_partner_data.get('email')"/>
+                                </a>
+                            </div>
+                        </address>
+                        <div>
+                            <a t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/#references/" t-if="implemented_partner_ids">
+                                <t t-esc="len(implemented_partner_ids)"/> references
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="references" inherit_id="website_customer.details" name="Partner References">
+        <xpath expr="//div[@id='right_column']" position="inside">
+            <t t-if="implemented_partners_data">
+                <h3 id="references">References</h3>
+                <div t-foreach="implemented_partners_data" t-as="partner_data" class="media thumbnail">
+                    <a class="pull-left" t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                        <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
+                    </a>
+                    <div class="media-body" style="min-height: 64px;">
+                        <a class="media-heading" t-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                            <t t-if="partner_data.get('parent_id')"><span t-esc="partner_data.get('parent_id')[1]"/></t> <span t-esc="partner_data.get('name')"/>
+                        </a>
+                        <div t-if="partner_data.get('website_short_description')" t-raw="partner_data.get('website_short_description')"/>
+                    </div>
+                </div>
+            </t>
         </xpath>
     </template>
 
