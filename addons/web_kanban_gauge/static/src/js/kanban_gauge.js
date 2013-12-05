@@ -83,7 +83,6 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                                 $div.remove();
                             } else {
                                 if (event.keyCode == 13 || event.keyCode == 9) {
-                                    var val = self.parse_client($input.val());
                                     if ($input.val() != value) {
                                         parent.view.dataset.call(self.options.action_change, [parent.id, $input.val()]).then(function () {
                                             parent.do_reload();
@@ -119,11 +118,6 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
             }
         }
     },
-
-    parse_client: function(value) {
-        return openerp.web.parse_value(value, { type:"float" });
-    },
-
 });
 
 instance.web_kanban.fields_registry.add("gauge", "instance.web_kanban.GaugeWidget");
