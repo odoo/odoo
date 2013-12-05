@@ -1,7 +1,7 @@
 
 from openerp import tools
 from openerp.osv import fields, osv
-
+from openerp.tools.translate import _
 
 class wizard_valuation_history(osv.osv_memory):
 
@@ -24,7 +24,7 @@ class wizard_valuation_history(osv.osv_memory):
         ctx['group_by'] = ['product_id']
         return {
             'domain': "[('date', '<=', '" + data['date'] + "')]",
-            'name': 'Stock Valuation History',
+            'name': _('Stock Value At Date'),
             'view_type': 'form',
             'view_mode': 'tree',
             'res_model': 'stock.history',

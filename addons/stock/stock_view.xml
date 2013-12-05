@@ -1750,9 +1750,12 @@
         </record>
         
         <record model="ir.actions.act_window" id="quantsact">
-            <field name="name">Quants</field>
+            <field name="name">Current Stock</field>
             <field name="context">{'search_default_productgroup':'1', 'search_default_internal_loc': 1}</field>
             <field name="res_model">stock.quant</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="help">This analysis gives you a fast overview on the current stock level of your products and their today's inventory value.</field>
         </record>
 
         <record model="ir.ui.view" id="view_stock_quant_form">
@@ -1784,7 +1787,7 @@
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Quants" create="0">
-                    <field name="product_id" invisible="1"/>
+                    <field name="product_id"/>
                     <field name="qty"/>
                     <field name="location_id"/>
                     <field name="owner_id" groups="stock.group_tracking_owner"/>
@@ -1792,24 +1795,39 @@
                     <field name="package_id" groups="stock.group_tracking_lot"/>
                     <field name="packaging_type_id" invisible="1"/>
                     <field name="in_date"/>
+                    <field name="inventory_value"/>
                     <field name="reservation_id" invisible='1'/>
                     <field name="propagated_from_id" invisible='1'/>
+                    <field name='company_id' groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
 
+       <record model="ir.ui.view" id="view_stock_quant_graph_value">
+            <field name="name">stock.quant.graph</field>
+            <field name="model">stock.quant</field>
+            <field eval="12" name="priority"/>
+            <field name="arch" type="xml">
+                <graph string="Quants">
+                    <field name="product_id"/>
+                    <field name="qty"/>
+                    <field name="location_id"/>
+                    <field name="inventory_value"/>
+                </graph>
+            </field>
+        </record>
 
         <!-- Procurements are located in Warehouse menu hierarchy, MRP users should come to Stock application to use it.  -->
         <menuitem id="menu_stock_sched" name="Schedulers" parent="stock.menu_stock_root" sequence="4" groups="stock.group_stock_manager"/>
-            <menuitem action="action_procurement_compute" id="menu_procurement_compute" parent="menu_stock_sched" groups="base.group_no_one"/>
-            <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="20" groups="stock.group_stock_manager"/>
-            <menuitem action="procurement.procurement_exceptions" id="menu_stock_procurement_action" parent="menu_stock_sched" sequence="50" groups="stock.group_stock_manager"/>
+        <menuitem action="action_procurement_compute" id="menu_procurement_compute" parent="menu_stock_sched" groups="base.group_no_one"/>
+        <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="20" groups="stock.group_stock_manager"/>
+        <menuitem action="procurement.procurement_exceptions" id="menu_stock_procurement_action" parent="menu_stock_sched" sequence="50" groups="stock.group_stock_manager"/>
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
-            <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
-        <menuitem id="menu_quants" name="Current Inventory" parent="stock.menu_stock_inventory_control" sequence="20" action="quantsact"/>
-    <menuitem id="menu_procurement_rules" name="Procurement Rules" parent="stock.menu_stock_configuration" action="procrules" groups="base.group_no_one"/>
-    <menuitem id="menu_pickingtype" name="Types of Operation" parent="stock.menu_stock_configuration" action="action_picking_type_list"/>
-
+        <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
+        <menuitem id="stock.next_id_61" name="Warehouse" sequence="15" parent="base.menu_reporting" groups="group_stock_manager"/>
+        <menuitem id="menu_quants" name="Current Stock Value" parent="stock.next_id_61" sequence="20" action="quantsact"/>
+        <menuitem id="menu_procurement_rules" name="Procurement Rules" parent="stock.menu_stock_configuration" action="procrules" groups="base.group_no_one"/>
+        <menuitem id="menu_pickingtype" name="Types of Operation" parent="stock.menu_stock_configuration" action="action_picking_type_list"/>
 
 
         <record model="ir.actions.act_window" id="product_open_orderpoint">

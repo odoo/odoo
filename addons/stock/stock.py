@@ -204,6 +204,22 @@ class stock_quant(osv.osv):
             res[q.id] += ': ' + str(q.qty) + q.product_id.uom_id.name
         return res
 
+    def _calc_inventory_value(self, cr, uid, ids, name, attr, context=None):
+        res = {}
+        uid_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        for quant in self.browse(cr, uid, ids, context=context):
+            context.pop('force_company', None)
+            if quant.company_id.id != uid_company_id:
+                #if the company of the quant is different than the current user company, force the company in the context
+                #then re-do a browse to read the property fields for the good company.
+                context['force_company'] = quant.company_id.id
+                quant = self.browse(cr, uid, quant.id, context=context)
+            res[quant.id] = self._get_inventory_value(cr, uid, quant, context=context)
+        return res
+
+    def _get_inventory_value(self, cr, uid, quant, context=None):
+        return quant.product_id.standard_price * quant.qty
+
     _columns = {
         'name': fields.function(_get_quant_name, type='char', string='Identifier'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
@@ -226,11 +242,25 @@ class stock_quant(osv.osv):
         # Used for negative quants to reconcile after compensated by a new positive one
         'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from'),
         'negative_dest_location_id': fields.many2one('stock.location', 'Destination Location', help='Technical field used to record the destination location of a move that created a negative quant'),
+        'inventory_value': fields.function(_calc_inventory_value, string="Inventory Value", type='float', readonly=True),
     }
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.quant', context=c),
     }
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        ''' Overwrite the read_group in order to sum the function field 'inventory_value' in group by'''
+        res = super(stock_quant, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+        if 'inventory_value' in fields:
+            for line in res:
+                if '__domain' in line:
+                    lines = self.search(cr, uid, line['__domain'], context=context)
+                    inv_value = 0.0
+                    for line2 in self.browse(cr, uid, lines, context=context):
+                        inv_value += line2.inventory_value
+                    line['inventory_value'] = inv_value
+        return res
 
     def action_view_quant_history(self, cr, uid, ids, context=None):
         '''

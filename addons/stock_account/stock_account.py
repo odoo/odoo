@@ -54,11 +54,10 @@ class stock_location(osv.osv):
 class stock_quant(osv.osv):
     _inherit = "stock.quant"
 
-    def _get_inventory_value(self, cr, uid, line, prodbrow, context=None):
-        #TODO: what in case of partner_id
-        if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('real'):
-            return line.cost * line.qty
-        return super(stock_quant, self)._get_inventory_value(cr, uid, line, prodbrow, context=context)
+    def _get_inventory_value(self, cr, uid, quant, context=None):
+        if quant.product_id.cost_method in ('real'):
+            return quant.cost * quant.qty
+        return super(stock_quant, self)._get_inventory_value(cr, uid, quant, context=context)
 
     def _price_update(self, cr, uid, quant_ids, newprice, context=None):
         ''' This function is called at the end of negative quant reconciliation and does the accounting entries adjustemnts and the update of the product cost price if needed
