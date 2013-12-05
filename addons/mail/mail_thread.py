@@ -834,19 +834,18 @@ class mail_thread(osv.AbstractModel):
 
         # 1. message is a reply to an existing message (exact match of message_id)
         msg_references = thread_references.split()
-        for msg_reference in msg_references:
-            mail_message_ids = mail_msg_obj.search(cr, uid, [('message_id', '=', msg_reference)], context=context)
-            if mail_message_ids:
-                original_msg = mail_msg_obj.browse(cr, SUPERUSER_ID, mail_message_ids[0], context=context)
-                model, thread_id = original_msg.model, original_msg.res_id
-                _logger.info(
-                    'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                    email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                route = self.message_route_verify(
-                    cr, uid, message, message_dict,
-                    (model, thread_id, custom_values, uid, None),
-                    update_author=True, assert_model=True, create_fallback=True, context=context)
-                return route and [route] or []
+        mail_message_ids = mail_msg_obj.search(cr, uid, [('message_id', 'in', msg_references)], context=context)
+        if mail_message_ids:
+            original_msg = mail_msg_obj.browse(cr, SUPERUSER_ID, mail_message_ids[0], context=context)
+            model, thread_id = original_msg.model, original_msg.res_id
+            _logger.info(
+                'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                email_from, email_to, message_id, model, thread_id, custom_values, uid)
+            route = self.message_route_verify(
+                cr, uid, message, message_dict,
+                (model, thread_id, custom_values, uid, None),
+                update_author=True, assert_model=True, create_fallback=True, context=context)
+            return route and [route] or []
 
         # 2. message is a reply to an existign thread (6.1 compatibility)
         ref_match = thread_references and tools.reference_re.search(thread_references)
@@ -861,7 +860,6 @@ class mail_thread(osv.AbstractModel):
                         ('model', '=', model),
                         ('res_id', '=', thread_id),
                     ], context=context)
-                print 'cacaprout', compat_mail_msg_ids
                 if compat_mail_msg_ids and model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
                     _logger.info(
                         'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
