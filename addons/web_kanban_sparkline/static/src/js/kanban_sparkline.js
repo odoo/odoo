@@ -27,7 +27,7 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
                     }
                 }, self.options);
             self.$el.sparkline(value, sparkline_options);
-            self.$el.tooltip({'html': true, 'title': function(){return title}, 'placement': 'bottom'});
+            self.$el.tooltip({'html': true, 'title': function(){return title}, 'placement': 'bottom', 'container': 'body'});
         }, 0);
     },
 });

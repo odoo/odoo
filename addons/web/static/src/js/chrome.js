@@ -1262,7 +1262,7 @@ instance.web.Client = instance.web.Widget.extend({
     bind_events: function() {
         var self = this;
         this.$el.on('mouseenter', '.oe_systray > div:not([data-toggle=tooltip])', function() {
-            $(this).attr('data-toggle', 'tooltip').tooltip({placement: 'bottom', html: true}).trigger('mouseenter');
+            $(this).attr('data-toggle', 'tooltip').tooltip({placement: 'bottom', html: true, container: 'body'}).trigger('mouseenter');
         });
         this.$el.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();

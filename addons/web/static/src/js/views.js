@@ -1159,6 +1159,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
 
         self.$("[title]").tooltip({
             'html': true,
+            'container': 'body',
             'delayIn': 500,
         });
     },
