@@ -1156,7 +1156,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.$('.oe_form_dropdown_section').each(function() {
             $(this).toggle(!!$(this).find('li').length);
         });
-
+        self.$("[title]").attr('data-toggle', 'tooltip');
         self.$("[title]").tooltip({
             'html': true,
             'container': 'body',
