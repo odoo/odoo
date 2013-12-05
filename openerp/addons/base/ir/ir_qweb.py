@@ -537,7 +537,7 @@ class FieldConverter(osv.AbstractModel):
         HTML
         """
         return self.value_to_html(
-            cr, uid, record[field_name], column, options=None, context=context)
+            cr, uid, record[field_name], column, options=options, context=context)
 
     def to_html(self, cr, uid, field_name, record, options,
                 source_element, t_att, g_att, qweb_context, context=None):
