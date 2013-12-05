@@ -117,11 +117,17 @@
                                     <div class="oe_items_list">
                                         <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
                                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                                            <a name="%(action_report_crm_lead_salesteam)d" type="action" class="oe_sparkline_bar_link"><field name="monthly_open_leads" widget="sparkline_bar" options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': 'Lead(s)'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field></a>
+                                            <a name="%(action_report_crm_lead_salesteam)d" type="action" class="oe_sparkline_bar_link">
+                                                <field name="monthly_open_leads" widget="sparkline_bar"
+                                                    options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': 'Leads'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field>
+                                            </a>
                                         </div>
                                         <div class="oe_salesteams_opportunities">
                                             <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                                            <a name="%(action_report_crm_opportunity_salesteam)d" type="action"><field name="monthly_planned_revenue" widget="sparkline_bar" options="{'height': '20px', 'barWidth': '4', 'barSpacing': '1', 'delayIn': '3000'}">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field></a>
+                                            <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
+                                                <field name="monthly_planned_revenue" widget="sparkline_bar"
+                                                    options="{'height': '20px', 'barWidth': '4', 'barSpacing': '1', 'delayIn': '3000', 'tooltip_suffix': 'Opportunities'}">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="oe_clear"></div>
