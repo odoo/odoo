@@ -227,6 +227,19 @@
 
 
     <!-- product -->
+    <template id="404">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure oe_empty">
+                    <div class="container">
+                        <h1 class="mt32">Product not found!</h1>
+                        <p>Sorry, this product is not available anymore.</p>
+                        <p><a t-href="/shop/">Return to the product list.</a></p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
 
     <template id="product" name="Product">
         <t t-call="website.layout">

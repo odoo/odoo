@@ -243,6 +243,8 @@ class Ecommerce(http.Controller):
 
     @website.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", multilang=True)
     def product(self, product, search='', category='', filter_domain='', **kwargs):
+        website.preload_records(product, on_error="website_sale.404")
+
         category_obj = request.registry.get('product.public.category')
 
         category_ids = category_obj.search(request.cr, request.uid, [], context=request.context)

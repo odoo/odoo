@@ -163,13 +163,15 @@ class website_event(http.Controller):
 
     @website.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", multilang=True)
     def event_page(self, event, page, **post):
+        website.preload_records(event, on_error="website_event.404")
         values = {
             'event': event,
         }
         return request.website.render(page, values)
 
     @website.route(['/event/<model("event.event"):event>'], type='http', auth="public", multilang=True)
-    def event(self, event=None, **post):
+    def event(self, event, **post):
+        website.preload_records(event, on_error="website_event.404")
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url
         else:
@@ -179,7 +181,8 @@ class website_event(http.Controller):
         return request.redirect(target_url);
 
     @website.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", multilang=True)
-    def event_register(self, event=None, **post):
+    def event_register(self, event, **post):
+        website.preload_records(event, on_error="website_event.404")
         values = {
             'event': event,
             'range': range,

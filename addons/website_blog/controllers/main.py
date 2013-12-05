@@ -97,6 +97,7 @@ class WebsiteBlog(http.Controller):
         """
         BYPAGE = 10
 
+        website.preload_records(category, tag)
         cr, uid, context = request.cr, request.uid, request.context
         blog_post_obj = request.registry['blog.post']
 
@@ -177,6 +178,8 @@ class WebsiteBlog(http.Controller):
          - 'tag': current tag, if tag_id
          - 'nav_list': a dict [year][month] for archives navigation
         """
+
+        website.preload_records(blog_post)
 
         pager_url = "/blogpost/%s" % blog_post.id
 
