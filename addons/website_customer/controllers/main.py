@@ -15,10 +15,10 @@ class WebsiteCustomer(http.Controller):
     @website.route([
         '/customers/',
         '/customers/page/<int:page>/',
-        '/customers/country/<int:country_id>',
-        '/customers/country/<int:country_id>/page/<int:page>/'
+        '/customers/country/<model("res.country"):country>',
+        '/customers/country/<model("res.country"):country>/page/<int:page>/'
     ], type='http', auth="public", multilang=True)
-    def customers(self, country_id=None, page=0, **post):
+    def customers(self, country=None, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         partner_obj = request.registry['res.partner']
         partner_name = post.get('search', '')
@@ -31,8 +31,10 @@ class WebsiteCustomer(http.Controller):
                 ('name', 'ilike', "%%%s%%" % post.get("search")),
                 ('website_description', 'ilike', "%%%s%%" % post.get("search"))
             ]
-        if country_id:
-            domain += [('country_id', '=', country_id)]
+        country_id = None
+        if country:
+            domain += [('country_id', '=', country.id)]
+            country_id = country.id
 
         # group by country, based on all customers (base domain)
         countries = partner_obj.read_group(
