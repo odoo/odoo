@@ -75,22 +75,20 @@
                         </div>
                     </div>
                     <div>
-                        <t t-foreach="partners" t-as="partner_id">
-                            <t t-if="internal_gid != partner_id.grade_id.id">
-                                <t t-set="internal_gid" t-value="partner_id.grade_id.id"/>
+                        <t t-foreach="partners_data" t-as="partner_data">
+                            <t t-if="internal_gid != partner_data['grade_id'][1]">
                                 <h3 class="text-center">
-                                    <span t-field="partner_id.grade_id"/> Partners
+                                    <span t-esc="partner_data['grade_id'][1]"/> Partners
                                     <t t-if="current_country"> in <t t-esc="current_country.name"/></t>
                                 </h3>
                             </t>
                             <div class="media thumbnail">
-                                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
-                                <a class="pull-left" t-href="/partners/#{ partner_id.id }/">
-                                    <img class="media-object" t-att-src="partner_id.img('image_small')"/>
+                                <a class="pull-left" t-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                                    <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data['image_small']}"/>
                                 </a>
                                 <div class="media-body" style="min-height: 64px;">
-                                    <a class="media-heading" t-href="/partners/#{ partner_id.id }/"><span t-field="partner_id.parent_id"/> <span t-field="partner_id.name"/></a> - <span t-field="partner_id.grade_id"/>
-                                    <div t-field="partner_id.website_short_description"/>
+                                    <a class="media-heading" t-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/"><t t-if="partner_data['parent_id']"><span t-esc="partner_data['parent_id'][1]"/></t> <span t-esc="partner_data['name']"/></a> - <span t-esc="partner_data['grade_id'][1]"/>
+                                    <div t-esc="partner_data['website_short_description']"/>
                                 </div>
                             </div>
                         </t>

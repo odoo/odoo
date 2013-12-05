@@ -30,7 +30,6 @@
     'data': [
         'views/res_partner_view.xml',
         'views/website_partner_view.xml',
-        'security/website_partner_security.xml',
         'data/website_data.xml',
     ],
     'demo': ['website_partner_demo.xml'],
