@@ -40,7 +40,7 @@
 
     <template id="search" name="Search hidden fields">
         <input type="hidden" name="category" t-att-value="search.get('category') or ''"/>
-        <input type="hidden" name="filter_domain" t-att-value="search.get('filter_domain') or ''"/>
+        <input type="hidden" name="filters" t-att-value="search.get('filters') or ''"/>
         <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
     </template>
 
@@ -49,7 +49,7 @@
         <div class="ribbon">Promo</div>
       </div>
       <div class="oe_product_description">
-          <a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filter_domain">
+          <a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filters">
               <b t-field="product.name"/>
           </a>
       </div>
@@ -69,7 +69,7 @@
           </b>
       </div>
       <div class="oe_product_image text-center">
-          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filter_domain">
+          <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filters">
               <span t-field="product.image" t-field-options='{"widget": "image"}'/>
           </a>
       </div>
@@ -105,12 +105,14 @@
                   <div class="col-md-12" id="products_grid">
                     <table width="100%">
                       <tbody>
+                        <tr>
+                          <td t-foreach="range(0,rows)" t-as="row" t-attf-width="#{100/rows}%"></td>
+                        </tr>
                         <tr t-foreach="bins" t-as="tr_product">
                           <t t-foreach="tr_product" t-as="td_product">
                             <t t-if="td_product">
                             <t t-set="product" t-value="td_product['product']"/>
                             <td t-att-colspan="td_product['x']"
-                                t-attf-width="#{td_product['x']*25}%"
                                 t-att-rowspan="td_product['y']"
                                 t-attf-class="oe_product oe-height-#{td_product['y']*2} #{ td_product['class'] }">
 
@@ -254,7 +256,7 @@
                   <div class="col-sm-5">
                       <ol class="breadcrumb">
                           <li><a href="/shop">Products</a></li>
-                          <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filter_domain"><span t-field="category.name"/></a></li>
+                          <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filters"><span t-field="category.name"/></a></li>
                           <li class="active"><span t-field="product.name"/></li>
                       </ol>
                   </div><div class="col-sm-3">
@@ -525,7 +527,7 @@
 
     <template id="products_attributes" inherit_option_id="website_sale.products" name="Product Filters and Attributes">
         <xpath expr="//div[@id='products_grid_before']" position="inside">
-            <form t-action="/shop/filter/" method="post" t-keep-query="category,search">
+            <form t-action="/shop/filters/" method="post" t-keep-query="category,search">
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-set="attribute_ids" t-value="Ecommerce.get_attribute_ids()"/>
                     <t t-foreach="attribute_ids" t-as="attribute_id">
@@ -558,7 +560,7 @@
                     </t>
                 </ul>
                 <button class="btn btn-xs btn-primary mt16">Apply filter</button>
-                <a t-href="/shop/" t-keep-query="category,search,add_filter" class="btn btn-xs btn-default mt16">Cancel filter</a>
+                <a t-href="/shop/" t-keep-query="category,search" class="btn btn-xs btn-default mt16">Cancel filter</a>
             </form>
         </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="attributes">

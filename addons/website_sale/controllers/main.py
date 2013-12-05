@@ -121,19 +121,19 @@ class Ecommerce(http.Controller):
         return product_obj.browse(request.cr, request.uid, product_ids, context=request.context)
 
     def has_search_filter(self, attribute_id, value_id=None):
-        if request.httprequest.args.get('filter'):
-            filter = simplejson.loads(request.httprequest.args['filter'])
+        if request.httprequest.args.get('filters'):
+            filters = simplejson.loads(request.httprequest.args['filters'])
         else:
-            filter = []
-        for key_val in filter:
+            filters = []
+        for key_val in filters:
             if key_val[0] == attribute_id and (not value_id or value_id in key_val[1:]):
                 return key_val
         return False
 
-    @website.route(['/shop/filter/'], type='http', auth="public", multilang=True)
-    def filter(self, **post):
+    @website.route(['/shop/filters/'], type='http', auth="public", multilang=True)
+    def filters(self, **post):
         index = []
-        filter = []
+        filters = []
         for key, val in post.items():
             cat = key.split("-")
             if len(cat) < 3 or cat[2] in ('max','minmem','maxmem'):
@@ -145,19 +145,19 @@ class Ecommerce(http.Controller):
                 _max = int(post.pop("att-%s-max" % cat[1]))
                 _min = int(val)
                 if (minmem != _min or maxmem != _max) and cat_id not in index:
-                    filter.append([cat_id , [_min, _max] ])
+                    filters.append([cat_id , [_min, _max] ])
                     index.append(cat_id)
             elif cat_id not in index:
-                filter.append([ cat_id, int(cat[2]) ])
+                filters.append([ cat_id, int(cat[2]) ])
                 index.append(cat_id)
             else:
                 cat[2] = int(cat[2])
-                if cat[2] not in filter[index.index(cat_id)][1:]:
-                    filter[index.index(cat_id)].append( cat[2] )
+                if cat[2] not in filters[index.index(cat_id)][1:]:
+                    filters[index.index(cat_id)].append( cat[2] )
             post.pop(key)
 
-        return request.redirect("/shop/?filter=%s%s%s" % (
-                simplejson.dumps(filter),
+        return request.redirect("/shop/?filters=%s%s%s" % (
+                simplejson.dumps(filters),
                 post.get("search") and ("&search=%s" % post.get("search")) or "",
                 post.get("category") and ("&category=%s" % post.get("category")) or ""
             ))
@@ -188,7 +188,7 @@ class Ecommerce(http.Controller):
         '/shop/category/<int:category>/',
         '/shop/category/<int:category>/page/<int:page>/'
     ], type='http', auth="public", multilang=True)
-    def shop(self, category=0, page=0, filter_domain='', search='', **post):
+    def shop(self, category=0, page=0, filters='', search='', **post):
         cr, uid, context = request.cr, request.uid, request.context
         product_obj = request.registry.get('product.template')
         domain = request.registry.get('website').get_website_sale_domain()
@@ -198,10 +198,10 @@ class Ecommerce(http.Controller):
                 ('description', 'ilike', "%%%s%%" % search)]
         if category:
             domain.append(('product_variant_ids.public_categ_id', 'child_of', category))
-        if filter_domain:
-            filter_domain = simplejson.loads(filter_domain)
-            if filter_domain:
-                ids = self.attributes_to_ids(filter_domain)
+        if filters:
+            filters = simplejson.loads(filters)
+            if filters:
+                ids = self.attributes_to_ids(filters)
                 domain.append(('id', 'in', ids or [0]))
 
         product_count = product_obj.search_count(cr, uid, domain, context=context)
@@ -228,10 +228,12 @@ class Ecommerce(http.Controller):
         values = {
             'products': products,
             'bins': table_compute().process(products),
+            'rows': PPR,
+            'range': range,
             'search': {
                 'search': search,
                 'category': category,
-                'filter_domain': filter_domain,
+                'filters': filters,
             },
             'pager': pager,
             'styles': styles,
@@ -242,7 +244,7 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.products", values)
 
     @website.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", multilang=True)
-    def product(self, product, search='', category='', filter_domain='', **kwargs):
+    def product(self, product, search='', category='', filters='', **kwargs):
         website.preload_records(product, on_error="website_sale.404")
 
         category_obj = request.registry.get('product.public.category')
@@ -265,7 +267,7 @@ class Ecommerce(http.Controller):
             'search': {
                 'search': search,
                 'category': category and str(category.id),
-                'filter': filter_domain,
+                'filters': filters,
             }
         }
         return request.website.render("website_sale.product", values)
