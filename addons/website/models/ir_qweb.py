@@ -121,33 +121,49 @@ class Date(orm.AbstractModel):
     _name = 'website.qweb.field.date'
     _inherit = ['website.qweb.field', 'ir.qweb.field.date']
 
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        attrs = super(Date, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=None)
+        return itertools.chain(attrs, [('data-oe-original', record[field_name])])
+
     def from_html(self, cr, uid, model, column, element, context=None):
-        lang = self.user_lang(cr, uid, context=context)
-        in_format = lang.date_format.encode('utf-8')
-
         value = element.text_content().strip()
-        try:
-            dt = datetime.datetime.strptime(in_format, value)
-        except ValueError:
-            dt = parse_fuzzy(in_format, value)
+        if not value: return False
 
-        return dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        datetime.datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT)
+        return value
 
 class DateTime(orm.AbstractModel):
     _name = 'website.qweb.field.datetime'
     _inherit = ['website.qweb.field', 'ir.qweb.field.datetime']
 
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        column = record._model._all_columns[field_name].column
+        value = record[field_name]
+        if isinstance(value, basestring):
+            value = datetime.datetime.strptime(
+                value, DEFAULT_SERVER_DATETIME_FORMAT)
+        value = column.context_timestamp(
+            cr, uid, timestamp=value, context=context)
+
+        attrs = super(DateTime, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=None)
+        return itertools.chain(attrs, [
+            ('data-oe-original', value.strftime(openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT))
+        ])
+
     def from_html(self, cr, uid, model, column, element, context=None):
-        lang = self.user_lang(cr, uid, context=context)
-        in_format = (u"%s %s" % (lang.date_format, lang.time_format)).encode('utf-8')
-
         value = element.text_content().strip()
-        try:
-            dt = datetime.datetime.strptime(in_format, value)
-        except ValueError:
-            dt = parse_fuzzy(in_format, value)
+        if not value: return False
 
-        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        datetime.datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
+        return value
 
 class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'
@@ -302,3 +318,34 @@ class Monetary(orm.AbstractModel):
 
         return float(value.replace(lang.thousands_sep, '')
                           .replace(lang.decimal_point, '.'))
+
+class Duration(orm.AbstractModel):
+    _name = 'website.qweb.field.duration'
+    _inherit = [
+        'ir.qweb.field.duration',
+        'website.qweb.field.float',
+    ]
+
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        attrs = super(Duration, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=None)
+        return itertools.chain(attrs, [('data-oe-original', record[field_name])])
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        value = element.text_content().strip()
+
+        # non-localized value
+        return float(value)
+
+
+class RelativeDatetime(orm.AbstractModel):
+    _name = 'website.qweb.field.relative'
+    _inherit = [
+        'ir.qweb.field.relative',
+        'website.qweb.field.datetime',
+    ]
+
+    # get formatting from ir.qweb.field.relative but edition/save from datetime

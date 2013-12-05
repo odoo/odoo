@@ -326,8 +326,18 @@
                     draggable: false,
 
                     upcast: function (el) {
-                        return el.attributes['data-oe-type']
-                            && el.attributes['data-oe-type'] !== 'monetary';
+                        var matches = el.attributes['data-oe-type'] && el.attributes['data-oe-type'] !== 'monetary';
+                        if (!matches) { return false; }
+
+                        if (el.attributes['data-oe-original']) {
+                            while (el.children.length) {
+                                el.children[0].remove();
+                            }
+                            el.add(new CKEDITOR.htmlParser.text(
+                                el.attributes['data-oe-original']
+                            ));
+                        }
+                        return true;
                     },
                 });
                 editor.widgets.add('monetary', {
