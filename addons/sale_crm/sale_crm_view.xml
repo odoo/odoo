@@ -296,10 +296,12 @@
                         </a>
                     </div>
                 </xpath>
-                <xpath expr="//div[@class='oe_kanban_salesteams_avatars']" position="replace">
-                    <div class="oe_center oe_salesteams_justgage" t-if="record.invoiced_target.raw_value">
-                        <field name="monthly_invoiced" widget="gauge" style="width:160px; height: 120px;" options="{'max_field': 'invoiced_target'}">Invoiced</field>
-                        <field name="invoiced_forecast" widget="gauge" style="width:160px; height: 120px; cursor: pointer;" options="{'max_field': 'invoiced_target', 'action_change': 'action_forecast'}">Forecast</field>
+                <xpath expr="//div[@class='oe_clear']" position="after">
+                    <div class="oe_center" t-if="record.invoiced_target.raw_value">
+                        <field name="monthly_invoiced" widget="gauge" style="width:160px; height: 120px; cursor: pointer;"
+                            options="{'max_field': 'invoiced_target'}">Invoiced</field>
+                        <field name="invoiced_forecast" widget="gauge" style="width:160px; height: 120px; cursor: pointer;"
+                            options="{'max_field': 'invoiced_target', 'action_change': 'action_forecast'}">Forecast</field>
                     </div>
                     <div class="oe_center oe_salesteams_help" style="color:#bbbbbb;" t-if="!record.invoiced_target.raw_value">
                         <br/>Define an invoicing target in the sales team settings to see the period's achievement and forecast at a glance.
