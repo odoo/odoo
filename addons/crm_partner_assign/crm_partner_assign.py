@@ -179,23 +179,27 @@ class crm_lead(osv.osv):
         return res
 
     def assign_geo_localize(self, cr, uid, ids, latitude=False, longitude=False, context=None):
-        # Don't pass context to browse()! We need country name in english below
-        for lead in self.browse(cr, uid, ids):
-            if not lead.country_id:
-                continue
-            result = geo_find(geo_query_address(street=lead.street,
-                                                zip=lead.zip,
-                                                city=lead.city,
-                                                state=lead.state_id.name,
-                                                country=lead.country_id.name))
-            if not latitude and result:
-                latitude = result[0]
-            if not longitude and result:
-                longitude = result[1]
-            self.write(cr, uid, [lead.id], {
+        if latitude and longitude:
+            self.write(cr, uid, ids, {
                 'partner_latitude': latitude,
                 'partner_longitude': longitude
             }, context=context)
+            return True
+        # Don't pass context to browse()! We need country name in english below
+        for lead in self.browse(cr, uid, ids):
+            if lead.partner_latitude and lead.partner_longitude:
+                continue
+            if lead.country_id:
+                result = geo_find(geo_query_address(street=lead.street,
+                                                    zip=lead.zip,
+                                                    city=lead.city,
+                                                    state=lead.state_id.name,
+                                                    country=lead.country_id.name))
+                if result:
+                    self.write(cr, uid, [lead.id], {
+                        'partner_latitude': result[0],
+                        'partner_longitude': result[1]
+                    }, context=context)
         return True
 
     def search_geo_partner(self, cr, uid, ids, context=None):

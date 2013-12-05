@@ -149,7 +149,8 @@ class hr_holidays(osv.osv):
                 ('date_from', '<=', holiday.date_to),
                 ('date_to', '>=', holiday.date_from),
                 ('employee_id', '=', holiday.employee_id.id),
-                ('id', '!=', holiday.id)
+                ('id', '!=', holiday.id),
+                ('state', 'not in', ['cancel', 'refuse']),
             ]
             nholidays = self.search_count(cr, uid, domain, context=context)
             if nholidays:

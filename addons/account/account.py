@@ -1451,6 +1451,8 @@ class account_move(osv.osv):
     def unlink(self, cr, uid, ids, context=None, check=True):
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         toremove = []
         obj_move_line = self.pool.get('account.move.line')
         for move in self.browse(cr, uid, ids, context=context):
@@ -1934,7 +1936,7 @@ class account_tax(osv.osv):
         'child_depend':fields.boolean('Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
-        'python_applicable':fields.text('Python Code'),
+        'python_applicable':fields.text('Applicable Code'),
 
         #
         # Fields used for the Tax declaration
@@ -1948,8 +1950,8 @@ class account_tax(osv.osv):
 
         'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the tax declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-        'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1."),
+        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code'),
@@ -2839,7 +2841,7 @@ class account_tax_template(osv.osv):
         'child_depend':fields.boolean('Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
-        'python_applicable':fields.text('Python Code'),
+        'python_applicable':fields.text('Applicable Code'),
 
         #
         # Fields used for the Tax declaration
@@ -2853,8 +2855,8 @@ class account_tax_template(osv.osv):
 
         'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the tax declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-        'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1."),
+        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
         'description': fields.char('Internal Name'),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
@@ -3418,6 +3420,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         all the provided information to create the accounts, the banks, the journals, the taxes, the tax codes, the
         accounting properties... accordingly for the chosen company.
         '''
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         obj_data = self.pool.get('ir.model.data')
         ir_values_obj = self.pool.get('ir.values')
         obj_wizard = self.browse(cr, uid, ids[0])
@@ -3434,7 +3438,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         self.pool[tmp2[0]].write(cr, uid, tmp2[1], {
                             'currency_id': obj_wizard.currency_id.id
                         })
-                except ValueError, e:
+                except ValueError:
                     pass
 
         # If the floats for sale/purchase rates have been filled, create templates from them

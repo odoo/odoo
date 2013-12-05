@@ -72,10 +72,11 @@ class crm_lead(format_address, osv.osv):
 
     _track = {
         'stage_id': {
-            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.sequence == 1,
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: (obj.stage_id and obj.stage_id.sequence != 1) and obj.probability < 100,
-            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.probability == 100 and obj.stage_id and obj.stage_id.on_change,
-            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.sequence != 1,
+            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
+            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.sequence <= 1,
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: (obj.stage_id and obj.stage_id.sequence > 1) and obj.probability < 100,
+            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.probability == 100 and obj.stage_id and obj.stage_id.fold,
+            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.fold and obj.stage_id.sequence > 1,
         },
     }
 
@@ -93,7 +94,7 @@ class crm_lead(format_address, osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('sequence', '=', '1')], context=context)
+        return self.stage_find(cr, uid, [], section_id, [('fold', '=', False)], context=context)
 
     def _resolve_section_id_from_context(self, cr, uid, context=None):
         """ Returns ID of section based on the value of 'section_id'
@@ -382,34 +383,52 @@ class crm_lead(format_address, osv.osv):
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, search_domain, order=order, context=context)
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, search_domain, order=order, limit=1, context=context)
         if stage_ids:
             return stage_ids[0]
         return False
 
     def case_mark_lost(self, cr, uid, ids, context=None):
-        """ Mark the case as lost: state=cancel and probability=0 """
-        for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0), ('on_change', '=', True), ('sequence', '>', 1)], context=context)
+        """ Mark the case as lost: state=cancel and probability=0
+            :deprecated: this method will be removed in OpenERP v8.
+        """
+        stages_leads = {}
+        for lead in self.browse(cr, uid, ids, context=context):
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0), ('fold', '=', True), ('sequence', '>', 1)], context=context)
             if stage_id:
-                return self.write(cr, uid, [lead.id], {'stage_id': stage_id}, context=context)
+                if stages_leads.get(stage_id):
+                    stages_leads[stage_id].append(lead.id)
+                else:
+                    stages_leads[stage_id] = [lead.id]
             else:
                 raise osv.except_osv(_('Warning!'),
                     _('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n'
                         'probability = 0 %, select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
+        for stage_id, lead_ids in stages_leads.items():
+            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
+        return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
-        """ Mark the case as won: state=done and probability=100 """
-        for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0), ('on_change', '=', True), ('sequence', '>', 1)], context=context)
+        """ Mark the case as won: state=done and probability=100
+            :deprecated: this method will be removed in OpenERP v8.
+        """
+        stages_leads = {}
+        for lead in self.browse(cr, uid, ids, context=context):
+            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0), ('fold', '=', True)], context=context)
             if stage_id:
-                return self.write(cr, uid, [lead.id], {'stage_id': stage_id}, context=context)
+                if stages_leads.get(stage_id):
+                    stages_leads[stage_id].append(lead.id)
+                else:
+                    stages_leads[stage_id] = [lead.id]
             else:
                 raise osv.except_osv(_('Warning!'),
                     _('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n'
                         'probability = 100 % and select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
+        for stage_id, lead_ids in stages_leads.items():
+            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
+        return True
 
     def case_escalate(self, cr, uid, ids, context=None):
         """ Escalates case to parent level """
@@ -617,7 +636,7 @@ class crm_lead(format_address, osv.osv):
         # An Opportunity always has higher confidence level than a lead, unless its stage probability is 0.0
         for opportunity in opportunities:
             sequence = -1
-            if opportunity.stage_id and (opportunity.stage_id.probability != 0 or opportunity.stage_id.sequence == 1):
+            if opportunity.stage_id and not opportunity.stage_id.fold:
                 sequence = opportunity.stage_id.sequence
             sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
 
@@ -678,7 +697,7 @@ class crm_lead(format_address, osv.osv):
             'phone': customer and customer.phone or lead.phone,
         }
         if not lead.stage_id or lead.stage_id.type=='lead':
-            val['stage_id'] = self.stage_find(cr, uid, [lead], section_id, [('sequence', '=', '1'), ('type', 'in', ('opportunity','both'))], context=context)
+            val['stage_id'] = self.stage_find(cr, uid, [lead], section_id, [('type', 'in', ('opportunity', 'both'))], context=context)
         return val
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
@@ -688,7 +707,7 @@ class crm_lead(format_address, osv.osv):
             customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
             # TDE: was if lead.state in ('done', 'cancel'):
-            if (lead.probability == '100') or (lead.probability == '0' and lead.stage_id.sequence != '1'):
+            if lead.probability == 100 or (lead.probability == 0 and lead.stage_id.fold):
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
@@ -818,9 +837,11 @@ class crm_lead(format_address, osv.osv):
         model_data = self.pool.get('ir.model.data')
         phonecall_dict = {}
         if not categ_id:
-            res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
-            if res_id:
+            try:
+                res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
                 categ_id = model_data.browse(cr, uid, res_id, context=context).res_id
+            except ValueError:
+                pass
         for lead in self.browse(cr, uid, ids, context=context):
             if not section_id:
                 section_id = lead.section_id and lead.section_id.id or False
@@ -926,6 +947,23 @@ class crm_lead(format_address, osv.osv):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        if not context:
+            context = {}
+        lead = self.browse(cr, uid, id, context=context)
+        local_context = dict(context)
+        local_context.setdefault('default_type', lead.type)
+        local_context.setdefault('default_section_id', lead.section_id)
+        if lead.type == 'opportunity':
+            default['date_open'] = fields.datetime.now()
+        else:
+            default['date_open'] = False
+        default['date_closed'] = False
+        default['stage_id'] = self._get_default_stage_id(cr, uid, local_context)
+        return super(crm_lead, self).copy(cr, uid, id, default, context=context)
 
     # ----------------------------------------
     # Mail Gateway
