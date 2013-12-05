@@ -27,7 +27,7 @@ from itertools import groupby
 
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
-from openerp import netsvc
+from openerp import workflow
 from openerp import tools
 from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
@@ -786,11 +786,10 @@ class stock_picking(osv.osv):
         """ Changes state of picking to available if moves are confirmed or waiting.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed','waiting']]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
-            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+            workflow.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
     def draft_force_assign(self, cr, uid, ids, *args):
@@ -807,23 +806,21 @@ class stock_picking(osv.osv):
         """ Validates picking directly from draft state.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
         for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
-            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+            workflow.trg_write(uid, 'stock.picking', pick.id, cr)
         return self.action_process(
             cr, uid, ids, context=context)
     def cancel_assign(self, cr, uid, ids, *args):
         """ Cancels picking and moves.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').cancel_assign(cr, uid, move_ids)
-            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+            workflow.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
     def action_assign_wkf(self, cr, uid, ids, context=None):
@@ -1238,7 +1235,6 @@ class stock_picking(osv.osv):
         currency_obj = self.pool.get('res.currency')
         uom_obj = self.pool.get('product.uom')
         sequence_obj = self.pool.get('ir.sequence')
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
             complete, too_many, too_few = [], [], []
@@ -1364,10 +1360,10 @@ class stock_picking(osv.osv):
                 self.write(cr, uid, [pick.id], {'backorder_id': new_picking})
                 self.action_move(cr, uid, [new_picking], context=context)
                 self.signal_button_done(cr, uid, [new_picking])
-                wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
-                delivered_pack_id = new_picking
+                workflow.trg_write(uid, 'stock.picking', pick.id, cr)
+                delivered_pack_id = pick.id
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
-                self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
+                self.message_post(cr, uid, new_picking, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
             else:
                 self.action_move(cr, uid, [pick.id], context=context)
                 self.signal_button_done(cr, uid, [pick.id])
@@ -2140,10 +2136,9 @@ class stock_move(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'assigned'})
-        wf_service = netsvc.LocalService('workflow')
         for move in self.browse(cr, uid, ids, context):
             if move.picking_id:
-                wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
+                workflow.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
         return True
 
     def cancel_assign(self, cr, uid, ids, context=None):
@@ -2155,10 +2150,9 @@ class stock_move(osv.osv):
         # fix for bug lp:707031
         # called write of related picking because changing move availability does
         # not trigger workflow of picking in order to change the state of picking
-        wf_service = netsvc.LocalService('workflow')
         for move in self.browse(cr, uid, ids, context):
             if move.picking_id:
-                wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
+                workflow.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
         return True
 
     #
@@ -2205,8 +2199,7 @@ class stock_move(osv.osv):
 
         if count:
             for pick_id in pickings:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
+                workflow.trg_write(uid, 'stock.picking', pick_id, cr)
         return count
 
     def setlast_tracking(self, cr, uid, ids, context=None):
@@ -2233,7 +2226,6 @@ class stock_move(osv.osv):
             return True
         if context is None:
             context = {}
-        wf_service = netsvc.LocalService("workflow")
         pickings = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('confirmed', 'waiting', 'assigned', 'draft'):
@@ -2242,7 +2234,7 @@ class stock_move(osv.osv):
             if move.move_dest_id and move.move_dest_id.state == 'waiting':
                 self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
                 if context.get('call_unlink',False) and move.move_dest_id.picking_id:
-                    wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
+                    workflow.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
         self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
         if not context.get('call_unlink',False):
             for pick in self.pool.get('stock.picking').browse(cr, uid, list(pickings), context=context):
@@ -2250,7 +2242,7 @@ class stock_move(osv.osv):
                     self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'})
 
         for id in ids:
-            wf_service.trg_trigger(uid, 'stock.move', id, cr)
+            workflow.trg_trigger(uid, 'stock.move', id, cr)
         return True
 
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
@@ -2378,7 +2370,6 @@ class stock_move(osv.osv):
         """
         picking_ids = []
         move_ids = []
-        wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
 
@@ -2406,7 +2397,7 @@ class stock_move(osv.osv):
                     if move.move_dest_id.state in ('waiting', 'confirmed'):
                         self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
                         if move.move_dest_id.picking_id:
-                            wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
+                            workflow.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
                         if move.move_dest_id.auto_validate:
                             self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
@@ -2419,10 +2410,10 @@ class stock_move(osv.osv):
 
         self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         for id in move_ids:
-             wf_service.trg_trigger(uid, 'stock.move', id, cr)
+             workflow.trg_trigger(uid, 'stock.move', id, cr)
 
         for pick_id in picking_ids:
-            wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
+            workflow.trg_write(uid, 'stock.picking', pick_id, cr)
 
         return True
 

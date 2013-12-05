@@ -1,5 +1,8 @@
 .openerp .oe_kanban_view .oe_kanban_crm_salesteams {
-    width: 345px;
+    /* Customize width and height of kanban according bootstrap3 */
+    width: 357px;
+    min-height: 254px !important;
+    /* End of customize */
     cursor: default;
 }
 .openerp .oe_kanban_view .oe_kanban_salesteams_avatars {
@@ -21,7 +24,7 @@
 
 .openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_items_list {
     position: relative;
-    margin: 10px;
+    margin: 10px 0 10px 9px; /* Improved margin to set alignment of list items according bootstrap3 */
     min-height: 10px;
 }
 .openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_items_list div {
