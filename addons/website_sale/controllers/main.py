@@ -489,7 +489,7 @@ class Ecommerce(http.Controller):
         values = {
             'countries': countries,
             'states': states,
-            'checkout': info.from_partner(  ),
+            'checkout': info.empty(),
             'shipping': post.get("shipping_different"),
             'error': {},
         }

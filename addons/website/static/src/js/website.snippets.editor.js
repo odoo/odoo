@@ -136,6 +136,10 @@
 
             this.$modal = $(openerp.qweb.render('website.snippets_modal'));
             this.$modal.appendTo("body");
+
+            $(document).on('click', '.dropdown-submenu a[tabindex]', function (e) {
+                e.preventDefault();
+            });
         },
         fetch_snippet_templates: function () {
             var self = this;

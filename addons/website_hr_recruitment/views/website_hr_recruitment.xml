@@ -7,7 +7,7 @@
             <field name="description">Job Posts on your website</field>
         </record>
 
-        <template id="website_hr_recruitment_script" inherit_id="website.layout" name="Website Hr Recruitment script">
+        <template id="website.secure_layout">
             <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
                 <script type="text/javascript" src="/website_hr_recruitment/static/src/js/website_hr_recruitment.editor.js" t-ignore="true"></script>
             </xpath>
@@ -82,18 +82,6 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="oe_structure">
-                        <section data-snippet-id="cta" class="oe_dark mb32">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12 text-center mt16 mb16">
-                                        <a href="/job/apply" class="btn btn-primary btn-lg">Apply</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
                     </div>
                 </div>
             </t>
@@ -257,7 +245,7 @@
                     <t t-foreach="offices" t-as="thisoffice">
                         <li t-att-class="thisoffice.id == office and 'active' or ''">
                             <a t-href="/jobs/office/#{ slug(thisoffice) }/" >
-                                <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">, 
+                                <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">,
                                     <span t-field="thisoffice.country_id.name"/>
                                 </t>
                             </a>

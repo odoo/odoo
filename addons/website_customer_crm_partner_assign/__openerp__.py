@@ -37,6 +37,6 @@ OpenERP Customer References + Partner Assign
         'views/website_customer.xml',
     ],
     'qweb': [],
-    'installable': True,
-    'auto_install': True,
+    'installable': False,
+    'auto_install': False,
 }

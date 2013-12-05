@@ -4,6 +4,13 @@
 
     <!-- Layout add nav and footer -->
 
+    <template id="website.secure_layout">
+        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
+              <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js" t-ignore="true"></script>
+              <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js" t-ignore="true"></script>
+        </xpath>
+    </template>
+
     <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <li t-att-class="(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''">
@@ -13,10 +20,6 @@
                                   t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
                 </a>
             </li>
-        </xpath>
-        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
-              <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js" t-ignore="true"></script>
-              <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js" t-ignore="true"></script>
         </xpath>
     </template>
 
@@ -937,7 +940,7 @@
                         <div t-field="order.partner_shipping_id"/>
 
                         <h4 class="mt32">Amount:</h4>
-<!--                         <div t-field="order.amount_total" t-field-options='{
+                        <!--<div t-field="order.amount_total" t-field-options='{
                             "widget": "monetary",
                             "display_currency": "website.pricelist_id.currency_id"
                         }'/> -->

@@ -119,12 +119,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         view_model, view_theme_id = imd.get_object_reference(
             request.cr, request.uid, 'website', 'theme')
 
+        view_secure_layout = imd.get_object_reference(
+            request.cr, request.uid, 'website', 'secure_layout')[1]
+
         view = request.registry.get("ir.ui.view")
         views = view._views_get(request.cr, request.uid, xml_id, request.context)
         done = {}
         result = []
         for v in views:
-            if v.inherit_option_id and v.inherit_option_id.id != view_theme_id or not optional:
+            if v.id != view_secure_layout and (v.inherit_option_id and v.inherit_option_id.id != view_theme_id or not optional):
                 if v.inherit_option_id.id not in done:
                     result.append({
                         'name': v.inherit_option_id.name,
