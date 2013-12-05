@@ -3636,11 +3636,6 @@ class BaseModel(object):
         if fields_to_read is None:
             fields_to_read = self._columns.keys()
 
-        # Construct a clause for the security rules.
-        # 'tables' hold the list of tables necessary for the SELECT including the ir.rule clauses,
-        # or will at least contain self._table.
-        rule_clause, rule_params, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
-
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
                            f == self.CONCURRENCY_CHECK_FIELD
@@ -3661,6 +3656,11 @@ class BaseModel(object):
                     return 'length(%s) as "%s"' % (f_qual, f)
                 return f_qual
 
+            # Construct a clause for the security rules.
+            # 'tables' hold the list of tables necessary for the SELECT including the ir.rule clauses,
+            # or will at least contain self._table.
+            rule_clause, rule_params, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
+
             fields_pre2 = map(convert_field, fields_pre)
             order_by = self._parent_order or self._order
             select_fields = ','.join(fields_pre2 + ['%s.id' % self._table])
@@ -3675,6 +3675,7 @@ class BaseModel(object):
                 self._check_record_rules_result_count(cr, user, sub_ids, result_ids, 'read', context=context)
                 res.extend(results)
         else:
+            self.check_access_rule(cr, user, ids, 'read', context=context)
             res = map(lambda x: {'id': x}, ids)
 
         if context.get('lang'):
