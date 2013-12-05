@@ -1,6 +1,0 @@
-- 
-  Write on all products valuation and cost method (temporary patch for default value problems for properties in demo data)
-- 
-  !python {model: product.product}: |
-    prod_ids = self.search(cr, uid, [])
-    self.write(cr, uid, prod_ids, {'cost_method':'real', 'valuation':'manual_periodic'})

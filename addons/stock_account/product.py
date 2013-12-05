@@ -21,9 +21,54 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+import time
+
+class prices_history(osv.osv):
+    """
+    Keep track of the ``product.product`` standard prices as they are changed.
+    """
+
+    _name = 'prices.history'
+    _rec_name = 'datetime'
+    _order = 'datetime desc'
+
+    _columns = {
+        'company_id': fields.many2one('res.company', required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'datetime': fields.datetime('Historization Time'),
+        'cost': fields.float('Historized Cost'),
+        'reason': fields.char('Reason'),
+        # TODO 'origin': openerp.osv.fields.reference(),
+        #'quant_id': openerp.osv.fields.many2one('stock.quant'),
+    }
+
+    def _get_default_company(self, cr, uid, context=None):
+        if 'force_company' in context:
+            return context['force_company']
+        else:
+            company = self.pool['res.users'].browse(cr, uid, uid,
+                context=context).company_id
+            return company.id if company else False
+
+    _defaults = {
+        #'quant_id': False,
+        'datetime': fields.datetime.now,
+        'company_id': _get_default_company,
+    }
+
 
 class product_product(osv.osv):
     _inherit = "product.product"
+
+    def get_history_price(self, cr, uid, product_id, company_id, context=None):
+        if context is None:
+            context = {}
+        date = context.get('history_date', time.strftime('%Y-%m-%d %H:%M:%s'))
+        prices_history_obj = self.pool.get('prices.history')
+        history_ids = prices_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_id', '=', product_id), ('datetime', '<=', date)], limit=1)
+        if history_ids:
+            return prices_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
+        raise osv.except_osv(_('Error!'), _("No standard price associated for product with ID %d for the given date" % (product_id)))
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
@@ -118,8 +163,7 @@ class product_product(osv.osv):
                                     property_stock_account_input_categ.id
                         if not stock_input_acc:
                             raise osv.except_osv(_('Error!'),
-                                    _('Please define stock input account ' \
-                                            'for this product: "%s" (id: %d).') % \
+                                    _('Please define stock input account for this product: "%s" (id: %d).') % \
                                             (product.name,
                                                 product.id,))
                         amount_diff = qty * diff
@@ -166,16 +210,35 @@ class product_product(osv.osv):
 
         return move_ids
 
+    def create(self, cr, uid, vals, context=None):
+        ''' Store the initial standard price in order to be able to retrieve the cost of a product for a given date (to make stock valuation at date)'''
+        product_id = super(product_product, self).create(cr, uid, vals, context=context)
+        price_history_obj = self.pool['prices.history']
+        price_history_obj.create(cr, uid, {
+            'product_id': product_id,
+            'cost': vals.get('standard_price', 0.0),
+            'reason': _('Product created and standard price set'),
+        }, context=context)
+        return product_id
+
+    def write(self, cr, uid, ids, values, context=None):
+        ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date (to make stock valuation at date)'''
+        if 'standard_price' in values:
+            price_history_obj = self.pool['prices.history']
+            for product in self.browse(cr, uid, ids, context=context):
+                price_history_obj.create(cr, uid, {
+                    'product_id': product.id,
+                    'cost': values['standard_price'],
+                    'reason': _('standard price is changed.'),
+                }, context=context)
+        return super(product_product, self).write(cr, uid, ids, values, context=context)
+
     _columns = {
-        'valuation':fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
-                                        ('real_time','Real Time (automated)'),], string = 'Inventory Valuation',
+        'valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
+                                        ('real_time', 'Real Time (automated)')], string='Inventory Valuation',
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
                                         , required=True),
-    }
-
-    _defaults = {
-        'valuation': 'manual_periodic',
     }
 
 
@@ -200,10 +263,6 @@ class product_template(osv.osv):
             string='Stock Output Account',
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
-    }
-
-    _defaults = {
-        'cost_method': 'standard',
     }
 
 

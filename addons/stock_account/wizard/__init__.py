@@ -21,3 +21,4 @@
 
 import stock_change_standard_price
 import stock_invoice_onshipping
+import stock_valuation_history

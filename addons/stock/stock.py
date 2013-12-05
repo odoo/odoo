@@ -1164,6 +1164,12 @@ class stock_move(osv.osv):
             res.append((line.id, name))
         return res
 
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('product_id') and not vals.get('price_unit'):
+            prod_obj = self.pool.get('product.product')
+            vals['price_unit'] = prod_obj.browse(cr, uid, vals['product_id'], context=context).standard_price
+        return super(stock_move, self).create(cr, uid, vals, context=context)
+
     def _quantity_normalize(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
         res = {}
@@ -1266,7 +1272,7 @@ class stock_move(osv.osv):
                        "* Available: When products are reserved, it is set to \'Available\'.\n"\
                        "* Done: When the shipment is processed, the state is \'Done\'."),
 
-        'price_unit': fields.float('Unit Price', help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used). Value given in company currency and in product uom."),  # as it's a technical field, we intentionally don't provide the digits attribute
+        'price_unit': fields.float('Unit Price', help="Technical field used to record the product cost set by the user during a picking confirmation (when costing method used is 'average price' or 'real'). Value given in company currency and in product uom."),  # as it's a technical field, we intentionally don't provide the digits attribute
 
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'backorder_id': fields.related('picking_id', 'backorder_id', type='many2one', relation="stock.picking", string="Back Order of", select=True),

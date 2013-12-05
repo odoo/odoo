@@ -25,9 +25,9 @@
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Valuation, Accounting',
     'description': """
-TODO
+#TODO
 ======================
-TODO
+#TODO
 
 Key Features
 ------------
@@ -52,10 +52,10 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_account_data.xml',
         'wizard/stock_change_standard_price_view.xml',
         'wizard/stock_invoice_onshipping_view.xml',
+        'wizard/stock_valuation_history_view.xml',
         'product_data.xml',
         'product_view.xml',
         'stock_account_view.xml',
-        'valuationandcostmethod.yml',
     ],
     'test': [
 
