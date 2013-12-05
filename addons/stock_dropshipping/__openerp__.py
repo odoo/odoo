@@ -20,15 +20,15 @@
 ##############################################################################
 
 {
-    'name': 'Complex routes when using stock locations, purchase and sale',
+    'name': 'Dropshipping Module',
     'version': '1.0',
     'category': 'Hidden',
-    'summary': 'Complex routes',
+    'summary': 'Dropshipping',
     'description': """
-Manage sales quotations and stock_location
+Manage sales quotations and stock locations
 ==========================================
 
-This adds a route on the sales order and sales order line (mini module)
+This adds the route to make dropshipping sales orders in which the product sold are directly transfered from the reseller to the customer (direct delivery) without creating any internal document for the transfer.
 
 """,
     'author': 'OpenERP SA',
@@ -36,7 +36,7 @@ This adds a route on the sales order and sales order line (mini module)
     'images': [],
     'depends': ['purchase', 'sale_stock'],
     'init_xml': [],
-    'data': ['stock_complex_routes.xml'],
+    'data': ['stock_dropshipping.xml'],
     'demo_xml': [],
     'test': [
         'test/cancellation_propagated.yml',

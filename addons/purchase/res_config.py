@@ -63,6 +63,9 @@ class purchase_config_settings(osv.osv_memory):
         'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
             help="Allows you to specify an analytic account on purchase orders."),
+        'module_stock_dropshipping': fields.boolean("Manage dropshipping",
+            help='\nCreates the dropship route and add more complex tests'
+                 '-This installs the module stock_dropshipping.'),
     }
 
     _defaults = {

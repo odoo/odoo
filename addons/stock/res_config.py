@@ -75,6 +75,9 @@ This installs the module product_expiry."""),
             implied_group='stock.group_adv_location', 
             help="""This option supplements the warehouse application by effectively implementing Push and Pull inventory flows. """),
         'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
+        'module_stock_dropshipping': fields.boolean("Manage dropshipping",
+            help='\nCreates the dropship route and add more complex tests'
+                 '-This installs the module stock_dropshipping.'),
     }
 
     def get_default_dp(self, cr, uid, fields, context=None):
