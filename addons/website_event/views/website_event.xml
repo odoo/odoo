@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-    <template id="website.secure_layout">
+    <template id="secure_layout" inherit_id="website.secure_layout">
         <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
             <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js" t-ignore="true"></script>
             <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js" t-ignore="true"></script>
