@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-12 05:37+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2013-12-03 05:36+0000\n"
+"X-Generator: Launchpad (build 16856)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -1139,7 +1139,7 @@ msgstr "Preferencias de email"
 #: code:addons/base/ir/ir_fields.py:195
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
-msgstr "'%s' no parece ser una fecha valida para el campo '%%(field)s'"
+msgstr "'%s' no parece ser una fecha válida para el campo '%%(field)s'"
 
 #. module: base
 #: view:res.partner:0
@@ -1718,7 +1718,7 @@ msgstr "Haití"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
 msgid "French Payroll"
-msgstr "Nomina de Francia"
+msgstr "Nómina de Francia"
 
 #. module: base
 #: view:ir.ui.view:0
@@ -5047,6 +5047,26 @@ msgid ""
 "      and iban account numbers\n"
 "    "
 msgstr ""
+"\n"
+"Módulo que extiende el objeto estándar account_bank_statement_line para un "
+"mejor soporte de banca electrónica.\n"
+"============================================================================="
+"======================\n"
+"\n"
+"Este módulo añade:\n"
+"-----------------\n"
+"    - fecha de cambio de divisa\n"
+"    - pagos por lotes\n"
+"    - trazabilidad de los cambios en las líneas de extractos bancarios\n"
+"    - vistas de líneas de extractos bancarios\n"
+"    - informe de saldos de extractos bancarios\n"
+"    - mejoras en el rendimiento para la importación digital de extractos "
+"bancarios \n"
+"      (mediante el flag de contexto 'ebanking_import')\n"
+"    - name_search en res.partner.bank mejorada para permitir buscar tanto en "
+"el código de cuenta bancaria \n"
+"      como en el código IBAN.\n"
+"    "
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -7260,7 +7280,7 @@ msgstr "El nombre del grupo no puede empezar con \"-\""
 #: view:ir.module.module:0
 #: model:ir.ui.menu,name:base.module_mi
 msgid "Apps"
-msgstr "Tienda de aplicaciones"
+msgstr "Aplicaciones en línea"
 
 #. module: base
 #: view:ir.ui.view_sc:0
