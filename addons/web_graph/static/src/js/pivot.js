@@ -1,6 +1,9 @@
 
 /* jshint undef: false  */
 
+
+// TO DO : use _.uniqueID()
+
 (function () {
 'use strict';
 
@@ -58,6 +61,18 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	set_measure: function (measure) {
 		this.measure = measure;
 		return this.update_values();
+	},
+
+	is_row: function (id) {
+		return !!_.find(this.rows.headers, function (header) {
+			return header.id == id;
+		});
+	},
+
+	is_col: function (id) {
+		return !!_.find(this.cols.headers, function (header) {
+			return header.id == id;
+		});
 	},
 
 	get_header: function (id) {

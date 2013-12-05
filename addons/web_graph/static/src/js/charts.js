@@ -18,7 +18,6 @@ openerp.web_graph.draw_chart = function (mode, pivot, svg) {
             pie_chart();
             break;
     }
-
     function bar_chart () {
         nv.addGraph(function () {
           var chart = nv.models.discreteBarChart()

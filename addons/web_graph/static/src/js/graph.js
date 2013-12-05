@@ -15,8 +15,7 @@ var QWeb = instance.web.qweb;
 instance.web.views.add('graph', 'instance.web_graph.GraphView');
 
  /**
-  * GraphView view.  It mostly contains a widget (PivotTable), some data, and 
-  * calls to charts function.
+  * GraphView 
   */
 instance.web_graph.GraphView = instance.web.View.extend({
     template: 'GraphView',
@@ -24,72 +23,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
     view_type: 'graph',
 
     events: {
-        'click .graph_mode_selection li' : function (event) {
-            event.preventDefault();
-            var mode = event.target.attributes['data-mode'].nodeValue;
-            this.mode = mode;
-            this.display_data();
-        },
-
-        'click .graph_measure_selection li' : function (event) {
-            event.preventDefault();
-            var measure = event.target.attributes['data-choice'].nodeValue;
-            this.measure = (measure === '__count') ? null : measure;
-            this.pivot_table.set_measure(this.measure)
-                .then(this.proxy('display_data'));
-        },
-
-        'click .graph_expand_selection li' : function (event) {
-            event.preventDefault();
-            switch (event.target.attributes['data-choice'].nodeValue) {
-                case 'fold_columns':
-                    this.pivot_table.fold_cols();
-                    this.display_data();
-                    break;
-                case 'fold_rows':
-                    this.pivot_table.fold_rows();
-                    this.display_data();
-                    break;
-                case 'fold_all':
-                    this.pivot_table.fold_all();
-                    this.display_data();
-                    break;
-                case 'expand_all':
-                    this.pivot_table.expand_all().then(this.proxy('display_data'));
-                    break;
-            }
-        },
-
-        'click .graph_options_selection li' : function (event) {
-            event.preventDefault();
-            switch (event.target.attributes['data-choice'].nodeValue) {
-                case 'swap_axis':
-                    this.pivot_table.swap_axis();
-                    this.display_data();
-                    break;
-                case 'update_values':
-                    this.pivot_table.update_values().then(this.proxy('display_data'));
-                    break;
-                case 'export_data':
-                    // Export code...  To do...
-                    break;
-            }
-        },
-
-        'click .web_graph_click' : function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            var id = event.target.attributes['data-id'].nodeValue;
-            this.handle_header_event({id:id, event:event});
-        },
-
-        'click a.field-selection' : function (event) {
-            var id = event.target.attributes['data-id'].nodeValue,
-                field_id = event.target.attributes['data-field-id'].nodeValue;
-            event.preventDefault();
-            this.pivot_table.expand(id, field_id)
-                .then(this.proxy('display_data'));
-        },
+        'click .graph_mode_selection li' : 'mode_selection',
+        'click .graph_measure_selection li' : 'measure_selection',
+        'click .graph_expand_selection li' : 'expand_selection',
+        'click .graph_options_selection li' : 'option_selection',
+        'click .web_graph_click' : 'cell_click_callback',
+        'click a.field-selection' : 'field_selection',
     },
 
     init: function(parent, dataset, view_id, options) {
@@ -103,6 +42,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.measure = null;
         this.measure_list = [];
         this.important_fields = [];
+        this.search_view = parent.searchview;
+        this.search_field = {
+                        get_context: function () { },
+                        get_domain: function () { },
+                        get_groupby: function () { },
+                    };
     },
 
     start: function () {
@@ -183,12 +128,38 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
+        console.log("START DO SEARCH",group_by);
+        var self = this;
+
         this.pivot_table.domain = domain;
         if (group_by.length > 0) {
             this.pivot_table.set_groupby(this.pivot_table.rows, group_by)
                     .done(this.proxy('display_data'));
         } else {
-            this.pivot_table.update_values().done(this.proxy('display_data'));            
+            this.pivot_table.update_values().done(this.proxy('display_data'));
+        }
+
+        var colgroupby = get_search_col_groupby();
+        console.log ("colgroupby", colgroupby);
+        console.log("pivot cbh",this.pivot_table.cols.groupby);
+
+        if (!_.isEqual(colgroupby, this.pivot_table.cols.groupby)) {
+            // console.log ('yop');
+            // this.pivot_table.set_groupby(this.pivot_table.cols, colgroupby)
+            //     .done(this.proxy('display_data'));
+        }
+        // console.log("query",this.search_view.query.models);
+        function get_search_col_groupby() {
+            var colgroupby = [],
+                search = _.find(self.search_view.query.models, function (model) {
+                return model.attributes.category == 'ColGroupBy';
+            });
+            if (search) {
+                colgroupby = _.map(search.values.models, function (val) {
+                    return val.attributes.value;
+                });
+            }
+            return colgroupby;
         }
     },
 
@@ -198,6 +169,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     display_data: function () {
+        console.log('displaying data');
         this.$('.graph_main_content svg').remove();
         this.table.empty();
 
@@ -215,6 +187,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
         }
     },
+
+
+/******************************************************************************
+ * Event handling methods...
+ ******************************************************************************/
 
     handle_header_event: function (options) {
         var pivot = this.pivot_table,
@@ -237,6 +214,127 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
     },
 
+
+    mode_selection: function (event) {
+        event.preventDefault();
+        var mode = event.target.attributes['data-mode'].nodeValue;
+        this.mode = mode;
+        this.display_data();
+        // console.log('yop');
+        // var self = this;
+        //     var attr = [{label: self.fields['user_id'].string, value: 'user_id'}];
+        //     var attr2 = [{label: self.fields['user_id'].string, value: {
+        //         attrs: {domain: [], context: {'group_by':'user_id'}}
+        //     }}];
+        //     var groupbytest = {
+        //         category: 'GroupBy',
+        //         values: attr2,
+        //         icon: 'u',
+        //         field: self.search_view._s_groupby,
+        //     };
+
+        //     // console.log("rnst",self.search_view);
+        //     var test = {
+        //         values: attr,
+        //         icon: 'u',
+        //         field: self.search_field,
+        //         category: _t("ColGroupBy"),
+        //     };
+            // self.search_view.query.add(test);
+            // self.search_view.query.add(groupbytest, {});
+
+    },
+
+
+    measure_selection: function (event) {
+        event.preventDefault();
+        var measure = event.target.attributes['data-choice'].nodeValue;
+        this.measure = (measure === '__count') ? null : measure;
+        this.pivot_table.set_measure(this.measure)
+            .then(this.proxy('display_data'));
+    },
+
+    expand_selection: function (event) {
+        event.preventDefault();
+        switch (event.target.attributes['data-choice'].nodeValue) {
+            case 'fold_columns':
+                this.pivot_table.fold_cols();
+                this.display_data();
+                break;
+            case 'fold_rows':
+                this.pivot_table.fold_rows();
+                this.display_data();
+                break;
+            case 'fold_all':
+                this.pivot_table.fold_all();
+                this.display_data();
+                break;
+            case 'expand_all':
+                this.pivot_table.expand_all().then(this.proxy('display_data'));
+                break;
+        }
+    },
+
+    option_selection: function (event) {
+        event.preventDefault();
+        switch (event.target.attributes['data-choice'].nodeValue) {
+            case 'swap_axis':
+                this.pivot_table.swap_axis();
+                this.display_data();
+                break;
+            case 'update_values':
+                this.pivot_table.update_values().then(this.proxy('display_data'));
+                break;
+            case 'export_data':
+                // Export code...  To do...
+                break;
+        }
+    },
+
+
+    cell_click_callback: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var id = event.target.attributes['data-id'].nodeValue;
+        this.handle_header_event({id:id, event:event});
+    },
+
+    field_selection: function (event) {
+        var self = this,
+            id = event.target.attributes['data-id'].nodeValue,
+            field_id = event.target.attributes['data-field-id'].nodeValue;
+        event.preventDefault();
+        this.pivot_table.expand(id, field_id).then(function () {
+
+            var attr = [{label: self.fields[field_id].string, value: field_id}];
+            var attr2 = [{label: self.fields[field_id].string, value: {
+                attrs: {domain: [], context: {'group_by':'stage_id'}}
+            }}];
+
+            var test = {
+                values: attr,
+                icon: 'u',
+                field: self.search_field,
+                category: _t("ColGroupBy"),
+            };
+
+            var groupbytest = {
+                category: 'GroupBy',
+                values: attr2,
+                icon: 'u',
+                field: self.search_view._s_groupby,
+            };
+
+            // console.log("rnst",self.search_view);
+            console.log('BEF ADD CGB');
+            // self.search_view.query.add(test);
+            console.log('BEF ADD RGB');
+            // self.search_view.query.add(groupbytest, {});
+            console.log('AFTER ADD GB');
+            self.display_data();
+        });
+    },
+
     display_dropdown: function (options) {
         var self = this,
             pivot = this.pivot_table,
@@ -256,15 +354,19 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.$('.field-selection').next('.dropdown-menu').toggle();
     },
 
-    measure_label: function () {
-        return (this.measure) ? this.fields[this.measure].string : 'Quantity';
-    },
+/******************************************************************************
+ * Drawing pivot table methods...
+ ******************************************************************************/
 
     draw_table: function () {
         this.pivot_table.rows.main.title = 'Total';
         this.pivot_table.cols.main.title = this.measure_label();
         this.draw_top_headers();
         _.each(this.pivot_table.rows.headers, this.proxy('draw_row'));
+    },
+
+    measure_label: function () {
+        return (this.measure) ? this.fields[this.measure].string : 'Quantity';
     },
 
     make_border_cell: function (colspan, rowspan) {
@@ -391,5 +493,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
     },
 });
+
+
 
 };
