@@ -202,6 +202,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         }
         // Fix for IE to display the content of gantt view.
         this.$el.find(".oe_gantt td:first > div, .oe_gantt td:eq(1) > div > div").css("overflow", "");
+        this.$el.children().find('[title]').attr('data-toggle', 'tooltip').tooltip({placement: 'bottom', container: 'body', html: true});
     },
     on_task_changed: function(task_obj) {
         var self = this;
