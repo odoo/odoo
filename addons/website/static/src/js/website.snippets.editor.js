@@ -245,9 +245,7 @@
                 this.create_overlay(this.$active_snipped_id);
                 this.snippet_focus($snippet);
             }
-            if (_.isFunction($snippet.trigger)) {
-                $snippet.trigger('snippet-activated');
-            }
+            $("#oe_snippets").trigger('snippet-activated', $snippet);
         },
         create_overlay: function ($snippet) {
             if (typeof $snippet.data("snippet-editor") === 'undefined') {
@@ -384,7 +382,7 @@
                             }
                         }
                         setTimeout(function () {
-                            $snippet.trigger('snippet-dropped');
+                            $("#oe_snippets").trigger('snippet-dropped', $target);
                             self.make_active($target);
                         },0);
                     } else {
