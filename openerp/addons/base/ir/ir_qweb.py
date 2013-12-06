@@ -754,6 +754,8 @@ class MonetaryConverter(osv.AbstractModel):
             source_element, t_att, g_att, qweb_context, context=context)
 
     def record_to_html(self, cr, uid, field_name, record, column, options, context=None):
+        if context is None:
+            context = {}
         Currency = self.pool['res.currency']
         display = self.display_currency(cr, uid, options)
 
