@@ -260,9 +260,7 @@
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px">
-                                            <t t-raw="record.task_ids.raw_value.length"/>
-                                            <span t-if="record.task_ids.raw_value.length == 1">Task</span>
-                                            <span t-if="record.task_ids.raw_value.length > 1">Tasks</span>
+                                            <t t-raw="record.task_ids.raw_value.length"/> Tasks
                                         </a>
                                     </div>
                                     <div class="oe_kanban_project_list">
@@ -370,7 +368,8 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                     <header>
-                        <field name="stage_id" widget="statusbar" clickable="True"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"
+                            options="{'fold_field': 'fold'}"/>
                     </header>
                     <sheet string="Task">
                     <h1>

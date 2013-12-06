@@ -24,7 +24,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import netsvc
+from openerp import workflow
 import openerp.addons.decimal_precision as dp
 
 # Procurement
@@ -441,9 +441,8 @@ class procurement_order(osv.osv):
         if len(to_assign):
             move_obj.write(cr, uid, to_assign, {'state': 'assigned'})
         self.write(cr, uid, ids, {'state': 'cancel'})
-        wf_service = netsvc.LocalService("workflow")
         for id in ids:
-            wf_service.trg_trigger(uid, 'procurement.order', id, cr)
+            workflow.trg_trigger(uid, 'procurement.order', id, cr)
         return True
 
     def action_check_finished(self, cr, uid, ids):
@@ -477,9 +476,8 @@ class procurement_order(osv.osv):
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
-        wf_service = netsvc.LocalService("workflow")
         for id in ids:
-            wf_service.trg_trigger(uid, 'procurement.order', id, cr)
+            workflow.trg_trigger(uid, 'procurement.order', id, cr)
         return res
 
 class StockPicking(osv.osv):

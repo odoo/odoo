@@ -26,7 +26,7 @@ from operator import itemgetter
 
 from lxml import etree
 
-from openerp import netsvc
+from openerp import workflow
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -932,11 +932,10 @@ class account_move_line(osv.osv):
             'line_id': map(lambda x: (4, x, False), ids),
             'line_partial_ids': map(lambda x: (3, x, False), ids)
         })
-        wf_service = netsvc.LocalService("workflow")
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
         for id in ids:
-            wf_service.trg_trigger(uid, 'account.move.line', id, cr)
+            workflow.trg_trigger(uid, 'account.move.line', id, cr)
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False

@@ -81,6 +81,12 @@ class res_users(osv.Model):
         self._create_welcome_message(cr, uid, user, context=context)
         return user_id
 
+    def copy_data(self, *args, **kwargs):
+        data = super(res_users, self).copy_data(*args, **kwargs)
+        if data.get('alias_name'):
+            data['alias_name'] = data['login']
+        return data
+
     def _create_welcome_message(self, cr, uid, user, context=None):
         if not self.has_group(cr, uid, 'base.group_user'):
             return False

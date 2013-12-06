@@ -424,12 +424,8 @@ property or property parameter."),
             event.add('location').value = event_obj.location
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
-        if event_obj.organizer:
-            # deprecated: will be removed with OpenERP v8: use organizer_id instead
-            event_org = event.add('organizer')
-            event_org.params['CN'] = [event_obj.organizer]
-            event_org.value = 'MAILTO:' + (event_obj.organizer)
-        elif event_obj.user_id or event_obj.organizer_id:
+
+        if event_obj.user_id or event_obj.organizer_id:
             event_org = event.add('organizer')
             organizer = event_obj.organizer_id
             if not organizer:

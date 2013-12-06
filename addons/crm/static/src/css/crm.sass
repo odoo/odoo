@@ -1,0 +1,55 @@
+@charset "utf-8"
+
+.openerp
+    .oe_kanban_view
+        .oe_kanban_crm_salesteams
+            /* Customize width and height of kanban according bootstrap3 */
+            width: 357px
+            min-height: 254px !important
+            /* End of customize */
+            cursor: default
+            .oe_items_list
+                position: relative
+                /* Improved margin to set alignment of list items according bootstrap3 */
+                margin: 10px 0 10px 9px
+                min-height: 10px
+                div
+                    width: 160px
+                    height: 22px
+                    margin: 0 !important
+                    position: relative
+                    display: inline-block
+                    float: left
+                    a:nth-child(2n)
+                        position: absolute
+                        left: 90px
+                        top: 0
+                div:nth-child(2n)
+                    a:nth-child(2n)
+                        left: 110px
+                a:hover
+                    text-decoration: underline !important
+            .oe_center
+                text-align: center
+                margin: 3px 0
+                .oe_sum
+                    margin: 0
+                    font-size: 40px
+                .oe_subsum
+                    font-size: 10px
+        .oe_salesteams_help
+            display: inline-block
+        .oe_kanban_salesteams_avatars
+            margin-top: 20px
+        .oe_kanban_salesteams_avatars
+            img
+                width: 30px
+                height: 30px
+                padding-left: 0px
+                margin-top: 3px
+                -moz-border-radius: 2px
+                -webkit-border-radius: 2px
+                border-radius: 2px
+                -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2)
+                -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2)
+                -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2)

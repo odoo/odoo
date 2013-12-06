@@ -49,13 +49,14 @@ Main Features
         'board'
     ],
     'data' : [
+        'security/fleet_security.xml',
+        'security/ir.model.access.csv',
         'fleet_view.xml',
         'fleet_cars.xml',
         'fleet_data.xml',
         'fleet_board_view.xml',
     ],
     'images': ['images/costs_analysis.jpeg','images/indicative_costs_analysis.jpeg','images/vehicles.jpeg','images/vehicles_contracts.jpeg','images/vehicles_fuel.jpeg','images/vehicles_odometer.jpeg','images/vehicles_services.jpeg'],
-    'update_xml' : ['security/fleet_security.xml','security/ir.model.access.csv'],
 
     'demo': ['fleet_demo.xml'],
 
