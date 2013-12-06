@@ -36,7 +36,7 @@ class website_hr_recruitment(http.Controller):
             for job in jobs:
                 if (department and job.department_id.id == department.id) or \
                     (office and job.address_id.id == office.id):
-                    _jobs.add(job)
+                    _jobs.append(job)
             jobs = _jobs
 
         return request.website.render("website_hr_recruitment.index", {
