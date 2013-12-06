@@ -4,7 +4,6 @@
 
 /* jshint undef: false  */
 
-
 openerp.web_graph = function (instance) {
 'use strict';
 
@@ -33,10 +32,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
-
         this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
         this.dataset = dataset;
-
         this.pivot_table = new openerp.web_graph.PivotTable(this.model, dataset.domain);
         this.set_default_options(options);
         this.dropdown = null;
@@ -45,13 +42,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.measure_list = [];
         this.important_fields = [];
         this.search_view = parent.searchview;
-        this.search_field = {
-                        get_context: function () { },
-                        get_domain: function () { },
-                        get_groupby: function () { },
-                    };
         this.groupby_mode = 'default';  // 'default' or 'manual'
         this.default_row_groupby = [];
+        this.search_field = {
+            get_context: function () { },
+            get_domain: function () { },
+            get_groupby: function () { },
+        };
     },
 
     start: function () {
@@ -123,12 +120,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
-        console.log('dgb', this.default_row_groupby);
-        if (this.groupby_mode === 'getting_ready') {
-            this.groupby_mode = 'manual';
-            return;
-        }
-
         var self = this,
             col_groupby = get_col_groupby('ColGroupBy');
 
@@ -156,7 +147,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             });
             if (search) {
                 groupby = _.map(search.values.models, function (val) {
-                    return val.attributes.value;
+                    return val.attributes.value.attrs.context.col_group_by;
                 });
             }
             return groupby;
@@ -202,35 +193,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
             header = pivot.get_header(id),
             dim = header.root.groupby.length;
 
-        console.log('test');     
-        // debugger;
         if (header.is_expanded) {
-            this.groupby_mode = 'manual';
             pivot.fold(header);
-            if (header.root.groupby.length < dim) {
-                if (pivot.is_row(header.id)) {
-                    this.clear_groupby('GroupBy');
-                    if (header.root.groupby.length) {
-                        this.register_groupby('GroupBy', header.root.groupby);
-                    } else {
-
-                        this.display_data();
-                    }
-                } else {
-                    this.clear_groupby('ColGroupBy');
-                    if (header.root.groupby.length) {
-                        this.register_groupby('ColGroupBy', header.root.groupby);
-                    } else {
-                        this.display_data();
-                    }
-                }
-            } else {
-                this.display_data();                
-            }
+            this.register_groupby();
         } else {
             if (header.path.length < header.root.groupby.length) {
                 var field = header.root.groupby[header.path.length];
-                pivot.expand(id, field).then(this.proxy('display_data'));
+                pivot.expand(id, field).then(this.proxy('register_groupby'));
             } else {
                 this.display_dropdown({id:header.id,
                                        target: $(options.event.target),
@@ -248,50 +217,43 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     },
 
-    register_groupby: function (category, field) {
+    register_groupby: function() {
         var self = this,
-            values,
-            groupby;
-        if (category === 'ColGroupBy') {
-            if (!(field instanceof Array)) {
-                field = [field];
-            }
-            values = _.map(field, function (f) {
-                return {label: self.fields[f].string, value: f};
-            });
-            // values = [{label: this.fields[field].string, value: field}];
-            groupby = {
-                category: 'ColGroupBy',
-                values: values,
-                icon: 'f',
-                field: this.search_field,
-            };
-            this.search_view.query.add(groupby);
-        }
-        if (category === 'GroupBy') {
-            if (!(field instanceof Array)) {
-                field = [field];
-            }
-            values = _.map(field, function (f) {
-                return {label: self.fields[f].string, value: {attrs:{domain: [], context: {'group_by':f}}}};
-            });
-            // var value = {attrs: {domain: [], context: {'group_by':field}}};
-            // var value2 = {attrs: {domain: [], context: {'group_by':'user_id'}}}; [{label: this.fields[field].string, value: value}, {label: 'test', value:value2}]
-            groupby = {
-                category: 'GroupBy',
-                values: values,
-                icon: 'w',
-                field: this.search_view._s_groupby,
-            };
-            this.search_view.query.add(groupby);
-        }
-    },
+            query = this.search_view.query;
+        this.groupby_mode = 'manual';
 
-    clear_groupby: function (category) {
-        // debugger;
-        this.search_view.query.models =  _.filter(this.search_view.query.models, function (model) {
-            return model.attributes.category !== category;
+
+        var rows = _.map(this.pivot_table.rows.groupby, function (group) {
+            return make_facet('GroupBy', group);
         });
+        var cols = _.map(this.pivot_table.cols.groupby, function (group) {
+            return make_facet('ColGroupBy', group);
+        });
+
+        query.reset(rows.concat(cols));
+
+        function make_facet (category, fields) {
+            var values,
+                icon,
+                backbone_field,
+                cat_name;
+            if (!(fields instanceof Array)) { fields = [fields]; }
+            if (category === 'GroupBy') {
+                cat_name = 'group_by';
+                icon = 'w';
+                backbone_field = self.search_view._s_groupby;
+            } else {
+                cat_name = 'col_group_by';
+                icon = 'f';
+                backbone_field = self.search_field;
+            }
+            values =  _.map(fields, function (field) {
+                var context = {};
+                context[cat_name] = field;
+                return {label: self.fields[field].string, value: {attrs:{domain: [], context: context}}};
+            });
+            return {category:category, values: values, icon:icon, field: backbone_field};
+        }
     },
 
     measure_selection: function (event) {
@@ -307,15 +269,15 @@ instance.web_graph.GraphView = instance.web.View.extend({
         switch (event.target.attributes['data-choice'].nodeValue) {
             case 'fold_columns':
                 this.pivot_table.fold_cols();
-                this.display_data();
+                this.register_groupby();
                 break;
             case 'fold_rows':
                 this.pivot_table.fold_rows();
-                this.display_data();
+                this.register_groupby();
                 break;
             case 'fold_all':
                 this.pivot_table.fold_all();
-                this.display_data();
+                this.register_groupby();
                 break;
             case 'expand_all':
                 this.pivot_table.invalidate_data();
@@ -330,28 +292,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
         switch (event.target.attributes['data-choice'].nodeValue) {
             case 'swap_axis':
                 this.pivot_table.swap_axis();
-                this.clear_groupby('GroupBy');
-                this.clear_groupby('ColGroupBy');
-                if (pivot.rows.groupby.length && pivot.cols.groupby.length) {
-                    this.groupby_mode = 'getting_ready';
-                    this.register_groupby('GroupBy', pivot.rows.groupby);
-                    this.register_groupby('ColGroupBy', pivot.cols.groupby);                    
-                } else {
-                    this.groupby_mode = 'manual';
-                    if (pivot.rows.groupby.length) {
-                        this.register_groupby('GroupBy', pivot.rows.groupby);                        
-                    } else {
-                        this.register_groupby('ColGroupBy', pivot.cols.groupby);                                                
-                    }
-                }
-
-                // this.display_data();
+                this.register_groupby();
                 break;
             case 'update_values':
                 this.pivot_table.stale_data = true;
                 this.display_data();
                 break;
             case 'export_data':
+                this.register_groupby();
                 // Export code...  To do...
                 break;
         }
@@ -371,22 +319,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             field_id = event.target.attributes['data-field-id'].nodeValue;
         event.preventDefault();
         this.pivot_table.expand(id, field_id).then(function () {
-
-
-            if (self.pivot_table.is_row(id)) {
-                if (self.groupby_mode === 'default') {
-                    self.groupby_mode = 'manual';
-                    self.register_groupby('GroupBy', self.default_row_groupby.concat([field_id]));
-                } else {
-                    self.register_groupby('GroupBy', field_id);
-                }
-            } else {
-                if (self.groupby_mode === 'default') {
-                    self.groupby_mode = 'getting_ready';
-                    self.register_groupby('GroupBy', self.default_row_groupby);
-                }
-                self.register_groupby('ColGroupBy', field_id);
-            }
+            self.register_groupby();
         });
     },
 

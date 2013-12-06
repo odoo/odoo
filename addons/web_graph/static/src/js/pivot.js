@@ -240,7 +240,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	update_headers: function (root, new_headers) {
-        console.log('updateheader', root, new_headers);
 		_.each(root.headers, function (header) {
 			var corresponding_header = _.find(new_headers, function (h) {
 				return _.isEqual(h.path, header.path);

@@ -82,7 +82,7 @@ my.SearchQuery = B.Collection.extend({
                     && facet.get('field') === model.get('field');
             });
             if (previous) {
-                previous.values.add(model.get('values'));
+                previous.values.add(model.get('values'), options);
                 return;
             }
             B.Collection.prototype.add.call(this, model, options);
