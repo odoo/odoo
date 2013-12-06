@@ -3980,7 +3980,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }
         this.cancel_edition();
     },
-    keyup_ENTER: function () {
+    keypress_ENTER: function () {
         // blurring caused by hitting the [Return] key, should skip the
         // autosave-on-blur and let the handler for [Return] do its thing (save
         // the current row *anyway*, then create a new one/edit the next one)
