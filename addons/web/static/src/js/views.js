@@ -586,6 +586,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.$el.find('.oe_view_manager_switch a').attr('data-toggle', 'tooltip');
         this.$el.find('.oe_view_manager_switch a').click(function() {
             self.switch_mode($(this).data('view-type'));
+            $(this).tooltip('destroy');
         }).tooltip({
             container: 'body',
             html: true,

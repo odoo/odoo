@@ -423,7 +423,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
         var self = this;
-        $.fn.tooltip('destroy');
+        record.$el.children().find('[title]').tooltip('destroy');
         $(old_group.$el).add(new_group.$el).find('.oe_kanban_aggregates, .oe_kanban_group_length').hide();
         if (old_group === new_group) {
             new_group.records.splice(old_index, 1);
