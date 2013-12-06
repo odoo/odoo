@@ -123,14 +123,20 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
+        console.log('dgb', this.default_row_groupby);
+        if (this.groupby_mode === 'getting_ready') {
+            this.groupby_mode = 'manual';
+            return;
+        }
+
         var self = this,
             col_groupby = get_col_groupby('ColGroupBy');
 
         if (group_by.length || col_groupby.length) {
             this.groupby_mode = 'manual';
-            if (!group_by.length) {
-                group_by = this.default_row_groupby;
-            }
+            // if (!group_by.length) {
+            //     group_by = this.default_row_groupby;
+            // }
         }
 
         this.pivot_table.set_domain(domain);
@@ -138,7 +144,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.pivot_table.set_row_groupby(group_by);
             this.pivot_table.set_col_groupby(col_groupby);
         } else {
-            this.pivot_table.set_row_groupby(this.default_row_groupby);
+            this.pivot_table.set_row_groupby(_.toArray(this.default_row_groupby));
             this.pivot_table.set_col_groupby([]);
         }
         this.display_data();
@@ -190,15 +196,37 @@ instance.web_graph.GraphView = instance.web.View.extend({
 /******************************************************************************
  * Event handling methods...
  ******************************************************************************/
-
     handle_header_event: function (options) {
         var pivot = this.pivot_table,
             id = options.id,
-            header = pivot.get_header(id);
+            header = pivot.get_header(id),
+            dim = header.root.groupby.length;
 
+        console.log('test');     
+        // debugger;
         if (header.is_expanded) {
+            this.groupby_mode = 'manual';
             pivot.fold(header);
-            this.display_data();
+            if (header.root.groupby.length < dim) {
+                if (pivot.is_row(header.id)) {
+                    this.clear_groupby('GroupBy');
+                    if (header.root.groupby.length) {
+                        this.register_groupby('GroupBy', header.root.groupby);
+                    } else {
+
+                        this.display_data();
+                    }
+                } else {
+                    this.clear_groupby('ColGroupBy');
+                    if (header.root.groupby.length) {
+                        this.register_groupby('ColGroupBy', header.root.groupby);
+                    } else {
+                        this.display_data();
+                    }
+                }
+            } else {
+                this.display_data();                
+            }
         } else {
             if (header.path.length < header.root.groupby.length) {
                 var field = header.root.groupby[header.path.length];
@@ -212,58 +240,58 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
     },
 
-
     mode_selection: function (event) {
         event.preventDefault();
         var mode = event.target.attributes['data-mode'].nodeValue;
         this.mode = mode;
         this.display_data();
-        // console.log('yop');
-        //     var attr2 = [{label: self.fields['user_id'].string, value: {
-        //         attrs: {domain: [], context: {'group_by':'user_id'}}
-        //     }}];
-        //     var groupbytest = {
-        //         category: 'GroupBy',
-        //         values: attr2,
-        //         icon: 'u',
-        //         field: self.search_view._s_groupby,
-        //     };
-
-        //     // console.log("rnst",self.search_view);
-        // var self = this;
-        //     var attr = [{label: self.fields['user_id'].string, value: 'user_id'}];
-        //     var test = {
-        //         values: attr,
-        //         icon: 'u',
-        //         field: self.search_field,
-        //         category: _t("ColGroupBy"),
-        //     };
-        //     self.search_view.query.add(test);
-            // self.search_view.query.add(groupbytest, {});
 
     },
 
     register_groupby: function (category, field) {
-        var groupby;
+        var self = this,
+            values,
+            groupby;
         if (category === 'ColGroupBy') {
+            if (!(field instanceof Array)) {
+                field = [field];
+            }
+            values = _.map(field, function (f) {
+                return {label: self.fields[f].string, value: f};
+            });
+            // values = [{label: this.fields[field].string, value: field}];
             groupby = {
                 category: 'ColGroupBy',
-                values: [{label: this.fields[field].string, value: field}],
-                icon: 'u',
+                values: values,
+                icon: 'f',
                 field: this.search_field,
             };
             this.search_view.query.add(groupby);
         }
         if (category === 'GroupBy') {
-            var value = {attrs: {domain: [], context: {'group_by':field}}};
+            if (!(field instanceof Array)) {
+                field = [field];
+            }
+            values = _.map(field, function (f) {
+                return {label: self.fields[f].string, value: {attrs:{domain: [], context: {'group_by':f}}}};
+            });
+            // var value = {attrs: {domain: [], context: {'group_by':field}}};
+            // var value2 = {attrs: {domain: [], context: {'group_by':'user_id'}}}; [{label: this.fields[field].string, value: value}, {label: 'test', value:value2}]
             groupby = {
                 category: 'GroupBy',
-                values: [{label: this.fields[field].string, value: value}],
-                icon: 'u',
+                values: values,
+                icon: 'w',
                 field: this.search_view._s_groupby,
             };
             this.search_view.query.add(groupby);
         }
+    },
+
+    clear_groupby: function (category) {
+        // debugger;
+        this.search_view.query.models =  _.filter(this.search_view.query.models, function (model) {
+            return model.attributes.category !== category;
+        });
     },
 
     measure_selection: function (event) {
@@ -297,11 +325,27 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     option_selection: function (event) {
+        var pivot = this.pivot_table;
         event.preventDefault();
         switch (event.target.attributes['data-choice'].nodeValue) {
             case 'swap_axis':
                 this.pivot_table.swap_axis();
-                this.display_data();
+                this.clear_groupby('GroupBy');
+                this.clear_groupby('ColGroupBy');
+                if (pivot.rows.groupby.length && pivot.cols.groupby.length) {
+                    this.groupby_mode = 'getting_ready';
+                    this.register_groupby('GroupBy', pivot.rows.groupby);
+                    this.register_groupby('ColGroupBy', pivot.cols.groupby);                    
+                } else {
+                    this.groupby_mode = 'manual';
+                    if (pivot.rows.groupby.length) {
+                        this.register_groupby('GroupBy', pivot.rows.groupby);                        
+                    } else {
+                        this.register_groupby('ColGroupBy', pivot.cols.groupby);                                                
+                    }
+                }
+
+                // this.display_data();
                 break;
             case 'update_values':
                 this.pivot_table.stale_data = true;
@@ -328,38 +372,21 @@ instance.web_graph.GraphView = instance.web.View.extend({
         event.preventDefault();
         this.pivot_table.expand(id, field_id).then(function () {
 
-            if (self.pivot_table.is_col(id)) {
-                self.register_groupby('ColGroupBy', field_id);
+
+            if (self.pivot_table.is_row(id)) {
+                if (self.groupby_mode === 'default') {
+                    self.groupby_mode = 'manual';
+                    self.register_groupby('GroupBy', self.default_row_groupby.concat([field_id]));
+                } else {
+                    self.register_groupby('GroupBy', field_id);
+                }
             } else {
-                self.register_groupby('GroupBy', field_id);
-                // self.display_data();
+                if (self.groupby_mode === 'default') {
+                    self.groupby_mode = 'getting_ready';
+                    self.register_groupby('GroupBy', self.default_row_groupby);
+                }
+                self.register_groupby('ColGroupBy', field_id);
             }
-            // var attr = [{label: self.fields[field_id].string, value: field_id}];
-            // var attr2 = [{label: self.fields[field_id].string, value: {
-            //     attrs: {domain: [], context: {'group_by':'stage_id'}}
-            // }}];
-
-            // var test = {
-            //     values: attr,
-            //     icon: 'u',
-            //     field: self.search_field,
-            //     category: _t("ColGroupBy"),
-            // };
-
-            // var groupbytest = {
-            //     category: 'GroupBy',
-            //     values: attr2,
-            //     icon: 'u',
-            //     field: self.search_view._s_groupby,
-            // };
-
-            // // console.log("rnst",self.search_view);
-            // console.log('BEF ADD CGB');
-            // // self.search_view.query.add(test);
-            // console.log('BEF ADD RGB');
-            // // self.search_view.query.add(groupbytest, {});
-            // console.log('AFTER ADD GB');
-            // self.display_data();
         });
     },
 
@@ -385,7 +412,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
 /******************************************************************************
  * Drawing pivot table methods...
  ******************************************************************************/
-
     draw_table: function () {
         this.pivot_table.rows.main.title = 'Total';
         this.pivot_table.cols.main.title = this.measure_label();
@@ -521,7 +547,5 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
     },
 });
-
-
 
 };

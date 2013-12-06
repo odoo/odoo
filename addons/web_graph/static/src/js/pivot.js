@@ -51,14 +51,14 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	set_row_groupby: function (groupby) {
 		if (!_.isEqual(groupby, this.rows.groupby)) {
 			this.rows.groupby = groupby;
-			this.stale_data = true;
+			this.invalidate_data();
 		}
 	},
 
 	set_col_groupby: function (groupby) {
 		if (!_.isEqual(groupby, this.cols.groupby)) {
 			this.cols.groupby = groupby;
-			this.stale_data = true;
+            this.invalidate_data();
 		}
 	},
 
@@ -201,31 +201,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		});
 	},
 
-	set_groupby: function (root, groupby) {
-		var self = this;
-		var other_root = (root === this.cols) ? this.rows : this.cols;
-
-		root.groupby = groupby;
-		return this.query_all_values().then(function (result) {
-			if (result) {
-				var new_root_headers, new_other_root_headers;
-				if (root === this.cols) {
-					new_root_headers = result.col_headers;
-					new_other_root_headers = result.how_headers;
-				} else {
-					new_root_headers = result.row_headers;
-					new_other_root_headers = result.col_headers;
-				}
-				self.no_data = false;
-				self.expand_headers(root, new_root_headers);
-				self.update_headers(other_root, new_other_root_headers);
-				self.cells = result.cells;
-			} else {
-				self.no_data = true;
-			}
-		});
-	},
-
 	get_total: function (header) {
 		if (header) {
 			var main = (header.root === this.rows) ? this.cols.main : this.rows.main;
@@ -265,6 +240,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	update_headers: function (root, new_headers) {
+        console.log('updateheader', root, new_headers);
 		_.each(root.headers, function (header) {
 			var corresponding_header = _.find(new_headers, function (h) {
 				return _.isEqual(h.path, header.path);
