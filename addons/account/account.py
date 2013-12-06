@@ -1583,11 +1583,6 @@ class account_move(osv.osv):
         obj_analytic_line = self.pool.get('account.analytic.line')
         obj_move_line = self.pool.get('account.move.line')
         for move in self.browse(cr, uid, ids, context):
-            # Unlink old analytic lines on move_lines
-            for obj_line in move.line_id:
-                for obj in obj_line.analytic_lines:
-                    obj_analytic_line.unlink(cr,uid,obj.id)
-
             journal = move.journal_id
             amount = 0
             line_ids = []
