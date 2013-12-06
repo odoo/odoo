@@ -517,6 +517,7 @@ class product_product(osv.osv):
         return res
 
     def _product_price(self, cr, uid, ids, name, arg, context=None):
+        plobj = self.pool.get('product.pricelist')
         res = {}
         if context is None:
             context = {}
@@ -526,18 +527,16 @@ class product_product(osv.osv):
         if pricelist:
             # Support context pricelists specified as display_name or ID for compatibility
             if isinstance(pricelist, basestring):
-                pricelist_ids = self.pool.get('product.pricelist').name_search(
+                pricelist_ids = plobj.name_search(
                     cr, uid, pricelist, operator='=', context=context, limit=1)
                 pricelist = pricelist_ids[0][0] if pricelist_ids else pricelist
 
-            qtys = map(lambda x: (x, quantity, partner), ids)
-            price = self.pool.get('product.pricelist').price_get_multi(cr,uid, [pricelist], 
-                qtys, context=context)
+            products = self.browse(cr, uid, ids, context=context)
+            qtys = map(lambda x: (x, quantity, partner), products)
+            pl = plobj.browse(cr, uid, pricelist, context=context)
+            price = plobj._price_get_multi(cr,uid, pl, qtys, context=context)
             for id in ids:
-                try:
-                    res[id] = price[id][pricelist]
-                except:
-                    price = 0.0
+                res[id] = price.get(id, 0.0)
         for id in ids:
             res.setdefault(id, 0.0)
         return res
@@ -790,6 +789,10 @@ class product_product(osv.osv):
     # Could be overrided for variants matrices prices
     #
     def price_get(self, cr, uid, ids, ptype='list_price', context=None):
+        products = self.browse(cr, uid, ids, context=context)
+        return self._price_get(cr, uid, products, ptype=ptype, context=context)
+
+    def _price_get(self, cr, uid, products, ptype='list_price', context=None):
         if context is None:
             context = {}
 
@@ -800,7 +803,7 @@ class product_product(osv.osv):
 
         res = {}
         product_uom_obj = self.pool.get('product.uom')
-        for product in self.browse(cr, uid, ids, context=context):
+        for product in products:
             res[product.id] = product[ptype] or 0.0
             if ptype == 'list_price':
                 res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
