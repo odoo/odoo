@@ -79,7 +79,7 @@ class stock_history(osv.osv):
         cr.execute("""
             CREATE OR REPLACE VIEW stock_history AS (
                 (SELECT
-                    quant.id AS id,
+                    stock_move.id::text || '-' || quant.id::text AS id,
                     stock_move.id AS move_id,
                     stock_move.location_dest_id AS location_id,
                     stock_move.product_id AS product_id,
@@ -103,7 +103,7 @@ class stock_history(osv.osv):
                 WHERE stock_move.state = 'done' AND location.usage = 'internal'
                 ) UNION
                 (SELECT
-                    - quant.id AS id,
+                    '-' || stock_move.id::text || '-' || quant.id::text AS id,
                     stock_move.id AS move_id,
                     stock_move.location_id AS location_id,
                     stock_move.product_id AS product_id,
