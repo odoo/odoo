@@ -48,60 +48,39 @@ class sale_order(osv.osv):
         'is_template': fields.boolean('Is Template'),
     }
 
-    def new_quotation_token(self, cr, uid, record_id):
+    def new_quotation_token(self, cr, uid, record_id,context=None):
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
         quotation_token = hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, record_id)).hexdigest()
-        return self.write(cr, uid, [record_id],{'access_token': quotation_token} )
+        return self.write(cr, uid, [record_id],{'access_token': quotation_token,'quote_url': self.get_signup_url(cr, uid, quotation_token, context)} )
 
     def create(self, cr, uid, vals, context=None):
-        new_id = super(sale_order, self).create(cr, uid, vals, context=context)
-        self.new_quotation_token(cr, uid, new_id)
-        return new_id
-    
-    def write(self, cr, uid, ids, vals, context=None):
         template_id = vals.get('template_id', False)
-        lines = []
-        line_pool = self.pool.get('sale.order.line')
-        if template_id:
-            order_template = self.browse(cr, uid, template_id, context)
-            for line in order_template.order_line:
-                line_pool.create(cr, uid,{
-                'name': line.name,
-                'sequence': line.sequence,
-                'order_id': ids[0],
-                'price_unit': line.price_unit,
-                'product_uom_qty': line.product_uom_qty,
-                'discount': line.discount,
-                'product_id': line.product_id.id,
-                'tax_id': [(6, 0, [x.id for x in line.tax_id])],
-                'website_description':line.website_description,
-                }, context=context)
-            vals.update({
-                'quote_url': self.get_signup_url(cr, uid, ids, context),
-                'website_description': order_template.website_description,
-            })
-        res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
-        return res
+        new_id = super(sale_order, self).create(cr, uid, vals, context=context)
+        self.new_quotation_token(cr, uid, new_id,context)
+        return new_id
 
-    def action_quotation_send(self, cr, uid, ids, context=None):
-        quote = super(sale_order, self).action_quotation_send(cr, uid,ids, context)
-        sale_quote = self.pool.get('sale.quote')
-        for order in self.browse(cr, uid, ids, context):
-            q_id = sale_quote.search(cr, uid, [('order_id','=', order.id)], context=context)
-            if not q_id:
-                new_id = sale_quote.create(cr, uid,{
-                    'order_id' : order.id,
-                    'state' : 'draft',
-                    'to_email': order.partner_id.email,
-                })
-                self.write(cr, uid, order.id, {'quote_url': self.get_signup_url(cr, uid, [order.id], context)})
-        return quote
-
-    def get_signup_url(self, cr, uid, ids, context=None):
-        url = False
-        order = self.browse(cr, uid, ids, context=context)[0]
+    def get_signup_url(self, cr, uid, token, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-        url = "%s/quote/%s" % (base_url, order.access_token)
+        url = "%s/quote/%s" % (base_url ,token)
         return url
 
+    def _get_sale_order_line(self, cr, uid,template_id, context=None):
+        line_pool = self.pool.get('sale.order.line')
+        lines = []
+        order_template = self.browse(cr, uid, template_id, context)
+        for line in order_template.order_line:
+            lines.append((0,0,{
+            'name': line.name,
+            'sequence': line.sequence,
+            'price_unit': line.price_unit,
+            'product_uom_qty': line.product_uom_qty,
+            'discount': line.discount,
+            'product_id': line.product_id.id,
+            'tax_id': [(6, 0, [x.id for x in line.tax_id])],
+            'website_description':line.website_description,
+            }))
+        return {'order_line':lines,'website_description': order_template.website_description}
 
+    def onchange_template_id(self, cr, uid,ids, template_id, context=None):
+        data = self._get_sale_order_line(cr, uid, template_id, context)
+        return {'value':data}

@@ -7,13 +7,13 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header" position="after">
-                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('quote_url', '=', False)]}">
+                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': ['|',('quote_url', '=', False),('template_id','=',False)]}">
                         <field name="quote_url" widget="url"/>
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="is_template"/>
-                    <field name="template_id" domain ="[('is_template','=',True)]" attrs="{'invisible': [('is_template', '=', True  )]}"/>
+                    <field name="template_id" domain ="[('is_template','=',True)]" attrs="{'invisible': [('is_template', '=', True  )]}" on_change="onchange_template_id(template_id)"/>
                 </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page string="Introduction">

@@ -48,7 +48,7 @@ class sale_quote(http.Controller):
         if 'body' in request.session and request.session.body:
             request.registry.get('sale.order').message_post(request.cr, SUPERUSER_ID, self.get_quote(token),
                     body=request.session.body,
-                    type='comment',
+                    type='email',
                     subtype='mt_comment',
                 )
             request.session.body = False

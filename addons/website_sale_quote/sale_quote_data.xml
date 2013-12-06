@@ -1,6 +1,5 @@
 <openerp>
     <data>
-
         <!--Email template -->
         <record id="email_template_sale_quote" model="email.template">
             <field name="name">Sales Quotation - Send by Email (Quote)</field>
@@ -16,7 +15,7 @@
                 
                     <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>
 
-                    <% set signup_url = object.get_quote_url() %>
+                    <% set signup_url = object.get_signup_url(object.access_token) %>
                     <p>
                         You can access this document and pay online via our Customer Portal:
                     </p>

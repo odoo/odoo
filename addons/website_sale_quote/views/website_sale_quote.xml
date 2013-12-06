@@ -207,9 +207,10 @@
                         <li>
                             <a href="#chat">
                                 <span class="fa-stack">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-circle fa-stack-2x main-color"></i>
                                     <i class="fa fa-comment fa-stack-1x fa-inverse"></i>
                                 </span>Discuss
+                                <sup class="label label-info"><t t-esc="len(quotation.message_ids)"/></sup>
                             </a>
                         </li>
                     </ul>
@@ -225,21 +226,23 @@
                 <div class="panel-body">
                     <ul class="list-group">
                         <t t-foreach="quotation.message_ids" t-as="message">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-2 col-md-1">
-                                        <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
-                                    <div class="col-xs-10 col-md-11">
-                                        <div>
-                                            <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html"/>
-                                                <t t-raw="message.body"/>
-                                            <div class="mic-info">
-                                                By: <a href="#"><t t-esc="message.author_id.name"/></a> on <t t-esc="message.date"/>
+                            <t t-if="message.type == 'email'">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-xs-2 col-md-1">
+                                            <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
+                                        <div class="col-xs-10 col-md-11">
+                                            <div>
+                                                <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html"/>
+                                                    <t t-raw="message.body"/>
+                                                <div class="mic-info">
+                                                    By: <a href="#"><t t-esc="message.author_id.name"/></a> on <t t-esc="message.date"/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
+                                </li>
+                            </t>
                         </t>
                     </ul>
                 </div>
@@ -253,8 +256,7 @@
             <t t-call="website_sale_quote.static_layout">
                 <div class="col-xs-12 col-md-8 tab-content">
                     <t t-call="website_sale_quote.quote_status"/>
-                    <section id="introduction11" class="tab-pane active oe_section jumbotron">
-                        <div t-field="quotation.website_description"/>
+                    <section id="introduction11" class="tab-pane active oe_section jumbotron" t-field="quotation.website_description">
                     </section>
                     <t t-foreach="quotation.order_line" t-as="line">
                         <section class="tab-pane oe_section jumbotron" t-att-id="line.id">
