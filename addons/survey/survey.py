@@ -28,7 +28,6 @@ import datetime
 import logging
 import re
 import uuid
-import traceback
 
 _logger = logging.getLogger(__name__)
 
@@ -387,7 +386,7 @@ class survey_question(osv.osv):
                                             oldname='validation_valid_err_msg',
                                             translate=True),
 
-        # Constraints on number of answers
+        # Constraints on number of answers (matrices)
         'constr_mandatory': fields.boolean('Mandatory question',
             oldname="is_require_answer"),
         'constr_type': fields.selection([('all', 'all'),
@@ -411,6 +410,7 @@ class survey_question(osv.osv):
         'display_mode': 'dropdown',
         'constr_type': 'at least',
         'constr_minimum_req_ans': 1,
+        'constr_maximum_req_ans': 1,
         'constr_error_msg': lambda s, cr, uid, c:
                 _('This question requires an answer.'),
         'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
@@ -422,7 +422,8 @@ class survey_question(osv.osv):
         ('validation_length', 'CHECK (validation_length_min <= validation_length_max)', 'Max length cannot be smaller than min length!'),
         ('validation_float', 'CHECK (validation_min_float_value <= validation_max_float_value)', 'Max value cannot be smaller than min value!'),
         ('validation_int', 'CHECK (validation_min_int_value <= validation_max_int_value)', 'Max value cannot be smaller than min value!'),
-        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!')
+        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!'),
+        ('constr_number', 'CHECK (constr_minimum_req_ans <= constr_maximum_req_ans)', 'Max number of answers cannot be smaller than min number!')
     ]
 
     # def write(self, cr, uid, ids, vals, context=None):
@@ -641,12 +642,19 @@ class survey_question(osv.osv):
         return errors
 
     # def validate_multiple_choice(self, cr, uid, question, post, answer_tag, context=None):
-    #     problems = []
-    #     return problems
+    #     errors = {}
+    #     if question.constr_mandatory:
+    #         # extraire les réponses
+    #         # vérifier qu'elles sont ok
+    #     return errors
 
     # def validate_matrix(self, cr, uid, question, post, answer_tag, context=None):
-    #     problems = []
-    #     return problems
+    #     errors = {}
+    #     if question.constr_mandatory:
+    #         # compter le nombre de lignes qui ont une réponse (cas des matrices à choix multiple)
+    #         # valider selon les contraintes de lignes
+    #         # retourner des erreurs si c'est caca
+    #     return errors
 
 
 class survey_label(osv.osv):
@@ -717,7 +725,7 @@ class survey_user_input(osv.osv):
         #     return werkzeug.utils.redirect("/survey/")
 
         # # In case of auth required, block public user
-        # if survey.auth_required and uid == request.registry['website'].get_public_user(request.cr, SUPERUSER_ID, request.context).id:
+        # if survey.auth_required and uid == request.registry['website'].get_public_user(request.cr, SUPERUSER_ID, request.context):
         #     return request.website.render("website.401")
 
         # # In case of non open surveys
@@ -810,7 +818,7 @@ class survey_user_input(osv.osv):
         })
         return {
             'view_type': 'form',
-            "view_mode": 'form',
+            'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',

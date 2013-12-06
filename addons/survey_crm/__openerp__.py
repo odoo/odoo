@@ -22,8 +22,8 @@
 
 {
     'name': 'Survey CRM',
-    'version': '0.1',
-    'category': 'Tools',
+    'version': '2.0',
+    'category': 'Marketing',
     'complexity': 'easy',
     'description': """
 This module adds a survey mass mailing button inside the more option of lead view
@@ -35,7 +35,6 @@ This module adds a survey mass mailing button inside the more option of lead vie
         'crm_view.xml',
     ],
     'installable': True,
-    'auto_install': True,
-    'category': 'Survey',
+    'auto_install': True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

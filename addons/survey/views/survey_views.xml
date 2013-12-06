@@ -219,7 +219,7 @@
                     <filter string="Closed" domain="[('state','=','close')]"/>
                     <filter string="Cancelled" domain="[('state','=','cancel')]"/>
                     <separator/>
-                    <filter string="Not completed yet" name="unread_message" domain="['&amp;', ('response_ids.state', 'in', ['new', 'skip']), ('response_ids.partner_id.user_id', '=', uid)]"/>
+                    <filter string="Not completed yet" name="unread_message" domain="[('user_input_ids.state', 'in', ['new', 'skip'])]"/>
                     <group expand="1" string="Group by...">
                        <filter string="Status" name="group_status" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
                    </group>
@@ -541,31 +541,29 @@
         </record>
 
         <!--
-            Survey Response Line
+            Survey User Input Line
+            .. note:: these views are useful mainly for technical users/administrators
         -->
-
-<!--         <record model="ir.ui.view" id= "survey_response_line_form">
-            <field name="name">survey_response_line_form</field>
+        <record model="ir.ui.view" id="survey_user_input_line_form">
+            <field name="name">survey_user_input_line_form</field>
             <field name="model">survey.user_input_line</field>
             <field name="arch" type="xml">
-                <form string="Survey Answer">
-                    <field name="question_id"/>
-                    <field name="date_create"/>
-                    <notebook colspan="4">
-                        <page string="Answer">
-                            <field name="response_answer_ids" colspan="4" nolabel="1"/>
-                            <group col="5" colspan="4">
-                                <field name="state"/>
-                            </group>
-                        </page>
-                        <page string="Single Textboxes">
-                            <field name="single_text" colspan="4"/>
-                        </page>
-                        <page string="Comment">
-                            <separator string="Description" colspan="4"/>
-                            <field name="comment" nolabel="1" colspan="4"/>
-                        </page>
-                    </notebook>
+                <form string="User input line details" version="7.0">
+                    <sheet>
+                        <group col="4">
+                            <field name="question_id"/>
+                            <field name="date_create"/>
+                            <field name="answer_type"/>
+                            <field name="skipped" />
+                        </group>
+                        <group>
+                            <field name="value_text" colspan='2' attrs="{'invisible': [('answer_type','!=','text')]}"/>
+                            <field name="value_number" colspan='2' attrs="{'invisible': [('answer_type','!=','number')]}"/>
+                            <field name="value_date" colspan='2' attrs="{'invisible': [('answer_type','!=','date')]}"/>
+                            <field name="value_free_text" colspan='2' attrs="{'invisible': [('answer_type','!=','free_text')]}"/>
+                            <field name="value_suggested" colspan='2' attrs="{'invisible': [('answer_type','!=','suggested')]}"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -575,20 +573,21 @@
             <field name="model">survey.user_input_line</field>
             <field name="arch" type="xml">
                 <tree string="Survey Answer Line">
+                    <field name="survey_id"/>
+                    <field name="user_input_id"/>
                     <field name="page_id"/>
                     <field name="question_id"/>
                     <field name="date_create"/>
-                    <field name="state"/>
+                    <field name="answer_type"/>
+                    <field name="skipped"/>
                 </tree>
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_survey_user_input_form">
+        <record model="ir.actions.act_window" id="action_survey_user_input_line">
             <field name="name">Survey User Input lines</field>
             <field name="res_model">survey.user_input_line</field>
-            <field name="view_type">tree</field>
-            <field name="view_mode">tree</field>
-            <field name="context">{'default_group_by_question': True}</field>
+            <field name="view_mode">tree,form</field>
         </record> -->
 
 
@@ -610,7 +609,7 @@
     <!-- Left menu categories-->
     <menuitem name="Surveys" id="menu_surveys" parent="survey_main" sequence="10" groups="base.group_survey_user"/>
     <menuitem name="Statistics" id="menu_statistics" parent="survey_main" sequence="20" groups="base.group_survey_manager"/>
-    <menuitem name="Advanced Configuration" id="menu_surveys_configuration" parent="survey_main" sequence="30" groups="base.group_no_one"/>
+    <menuitem name="Technical Settings" id="menu_surveys_configuration" parent="survey_main" sequence="30" groups="base.group_no_one"/>
 
     <!-- Left menu elements: Survey -->
     <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
@@ -618,14 +617,14 @@
     <!-- Left menu elements: Statistics -->
     <menuitem name="Survey User inputs" id="menu_survey_type_form1" action="action_survey_user_input" parent="menu_statistics" sequence="1"/>
 
-    <!-- Left menu elements: Advanced Configuration -->
+    <!-- Left menu elements: Technical Configuration -->
     <menuitem name="Survey Pages" id="menu_survey_page_form1" action="action_survey_page_form" parent="menu_surveys_configuration" sequence="1"/>
 
     <menuitem name="Survey Questions" id="menu_survey_question_form1" action="action_survey_question_form" parent="menu_surveys_configuration" sequence="2"/>
 
     <menuitem name="Survey Labels" id="menu_survey_label_form1" action="action_survey_label_form" parent="menu_surveys_configuration" sequence="3"/>
 
-<!--     <menuitem name="Survey User input lines" id="menu_survey_response_line_form" action="action_survey_user_input_form" parent="menu_surveys_configuration" sequence="4"/>
- -->
+    <menuitem name="Survey User Input Lines" id="menu_survey_response_line_form" action="action_survey_user_input_line" parent="menu_surveys_configuration" sequence="4"/>
+
     </data>
 </openerp>

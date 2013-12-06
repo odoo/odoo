@@ -22,7 +22,7 @@
 {
     'name': 'Survey',
     'version': '2.0',
-    'category': 'Survey',
+    'category': 'Marketing',
     'description': """
 This module is used for surveying.
 ==================================
@@ -35,7 +35,7 @@ sent mails with user name and password for the invitation of the survey.
     """,
     'summary': 'Create surveys, collect answers and print statistics',
     'author': 'OpenERP SA',
-    'website': 'https://www.openerp.com/',
+    'website': 'https://www.openerp.com/apps/survey/',
     'depends': ['email_template', 'mail', 'website'],
     'data': [
         'survey_cron.xml',
