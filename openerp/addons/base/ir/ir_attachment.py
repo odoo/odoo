@@ -242,6 +242,8 @@ class ir_attachment(osv.osv):
         # performed in batch as much as possible.
         ima = self.pool.get('ir.model.access')
         for model, targets in model_attachments.iteritems():
+            if model not in self.pool:
+                continue
             if not ima.check(cr, uid, model, 'read', False):
                 # remove all corresponding attachment ids
                 for attach_id in itertools.chain(*targets.values()):
