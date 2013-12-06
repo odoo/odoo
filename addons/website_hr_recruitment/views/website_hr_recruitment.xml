@@ -67,13 +67,12 @@
                                                 </small>
                                             </h3>
 
-                                            <div t-if="job.address_id">
-                                                <i class="fa fa-map-marker"/>
-                                                <span t-field="job.address_id.city"/>
-                                                <span t-if="job.address_id.state_id" t-field="job.address_id.state_id"/>
-                                                , <span t-field="job.address_id.country_id.name"/>
-                                                <span t-if="not job.website_published" class="label label-danger">not published</span>
-                                            </div>
+                                            <span t-field="job.address_id" t-field-options='{
+                                                "widget": "contact",
+                                                "fields": ["address"],
+                                                "no_tag_br": true
+                                                }'/>
+                                            <span t-if="not job.website_published" class="label label-danger">not published</span>
                                             <div class="text-muted">
                                                 <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
                                             </div>
@@ -112,9 +111,11 @@
 
                 <div class="oe_structure" style="clear:both;">
                     <h1 class="text-center" t-field="job.name"/>
-                    <h5 class="text-center">
-                        <i class="fa fa-map-marker"/> <span t-field="job.address_id.city"/> <span t-if="job.address_id.state_id" t-field="job.address_id.state_id.name"/>, <span t-field="job.address_id.country_id.name"/>
-                    </h5>
+                    <h5 class="text-center" t-field="job.address_id" t-field-options='{
+                        "widget": "contact",
+                        "fields": ["address"],
+                        "no_tag_br": true
+                        }'/>
                     <h5 class="text-center text-muted">
                         <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
                     </h5>

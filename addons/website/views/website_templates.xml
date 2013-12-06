@@ -686,5 +686,20 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             </t>
         </template>
 
+        <template id="contact">
+            <address t-ignore="true">
+                <div t-att-class='"" if "name" in fields else "css_non_editable_mode_hidden"'><span t-esc="name"/></div>
+                <div class='css_editable_mode_hidden'>
+                    <div t-if="address and 'address' in fields">
+                        <i class='fa fa-map-marker'/>
+                        <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
+                    </div>
+                    <div t-if="phone and 'phone' in fields"><i class='fa fa-phone'/> <span t-esc="phone"/></div>
+                    <div t-if="mobile and 'mobile' in fields"><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
+                    <div t-if="fax and 'fax' in fields"><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
+                    <div t-if="email and 'email' in fields"><i class='fa fa-envelope'/> <span t-esc="email"/></div>
+                </div>
+            </address>
+        </template>
      </data>
 </openerp>
