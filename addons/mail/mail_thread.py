@@ -724,8 +724,8 @@ class mail_thread(osv.AbstractModel):
         # Private message: should not contain any thread_id
         if not model and thread_id:
             if assert_model:
-                assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message).'
-            _warn('posting a message without model should be with a null res_id (private message), resetting thread_id')
+                assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message), received %s.' % thread_id
+            _warn('posting a message without model should be with a null res_id (private message), received %s, resetting thread_id' % thread_id)
             thread_id = 0
         # Private message: should have a parent_id (only answers)
         if not model and not message_dict.get('parent_id'):
@@ -822,6 +822,7 @@ class mail_thread(osv.AbstractModel):
            :return: list of [model, thread_id, custom_values, user_id, alias]
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
+        mail_msg_obj = self.pool['mail.message']
         fallback_model = model
 
         # Get email.message.Message variables for future processing
@@ -830,31 +831,54 @@ class mail_thread(osv.AbstractModel):
         email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
-
-        # 1. Verify if this is a reply to an existing thread
         thread_references = references or in_reply_to
+
+        # 1. message is a reply to an existing message (exact match of message_id)
+        msg_references = thread_references.split()
+        mail_message_ids = mail_msg_obj.search(cr, uid, [('message_id', 'in', msg_references)], context=context)
+        if mail_message_ids:
+            original_msg = mail_msg_obj.browse(cr, SUPERUSER_ID, mail_message_ids[0], context=context)
+            model, thread_id = original_msg.model, original_msg.res_id
+            _logger.info(
+                'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                email_from, email_to, message_id, model, thread_id, custom_values, uid)
+            route = self.message_route_verify(
+                cr, uid, message, message_dict,
+                (model, thread_id, custom_values, uid, None),
+                update_author=True, assert_model=True, create_fallback=True, context=context)
+            return route and [route] or []
+
+        # 2. message is a reply to an existign thread (6.1 compatibility)
         ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
             thread_id = int(ref_match.group(1))
             model = ref_match.group(2) or fallback_model
             if thread_id and model in self.pool:
                 model_obj = self.pool[model]
-                if model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
-                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                                    email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                    route = self.message_route_verify(cr, uid, message, message_dict,
-                                    (model, thread_id, custom_values, uid, None),
-                                    update_author=True, assert_model=True, create_fallback=True, context=context)
+                compat_mail_msg_ids = mail_msg_obj.search(
+                    cr, uid, [
+                        ('message_id', '=', False),
+                        ('model', '=', model),
+                        ('res_id', '=', thread_id),
+                    ], context=context)
+                if compat_mail_msg_ids and model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
+                    _logger.info(
+                        'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                        email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                    route = self.message_route_verify(
+                        cr, uid, message, message_dict,
+                        (model, thread_id, custom_values, uid, None),
+                        update_author=True, assert_model=True, create_fallback=True, context=context)
                     return route and [route] or []
 
         # 2. Reply to a private message
         if in_reply_to:
-            mail_message_ids = self.pool.get('mail.message').search(cr, uid, [
+            mail_message_ids = mail_msg_obj.search(cr, uid, [
                                 ('message_id', '=', in_reply_to),
                                 '!', ('message_id', 'ilike', 'reply_to')
                             ], limit=1, context=context)
             if mail_message_ids:
-                mail_message = self.pool.get('mail.message').browse(cr, uid, mail_message_ids[0], context=context)
+                mail_message = mail_msg_obj.browse(cr, uid, mail_message_ids[0], context=context)
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
                                 email_from, email_to, message_id, mail_message.id, custom_values, uid)
                 route = self.message_route_verify(cr, uid, message, message_dict,

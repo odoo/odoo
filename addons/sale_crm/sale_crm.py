@@ -53,10 +53,10 @@ class crm_case_section(osv.osv):
         date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             res[id] = dict()
-            created_domain = [('section_id', '=', id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
+            created_domain = [('section_id', '=', id), ('state', '=', ['draft']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
             res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
-            validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', date_begin), ('date_order', '<=', date_end)]
-            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_confirm'], 'amount_total', 'date_confirm', context=context)
+            validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent', 'cancel']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
+            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
         return res
 
     def _get_invoices_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -90,7 +90,7 @@ class crm_case_section(osv.osv):
     }
 
     def action_forecast(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'invoiced_forecast': value}, context=context)
+        return self.write(cr, uid, [id], {'invoiced_forecast': round(float(value))}, context=context)
 
 
 class res_users(osv.Model):
