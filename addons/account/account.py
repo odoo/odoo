@@ -28,7 +28,7 @@ import time
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import pooler, tools
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round
 
@@ -582,15 +582,18 @@ class account_account(osv.osv):
         except:
             pass
         if name:
-            ids = self.search(cr, user, [('code', '=like', name+"%")]+args, limit=limit)
-            if not ids:
-                ids = self.search(cr, user, [('shortcut', '=', name)]+ args, limit=limit)
-            if not ids:
-                ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
-            if not ids and len(name.split()) >= 2:
-                #Separating code and name of account for searching
-                operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
-                ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
+            if operator not in expression.NEGATIVE_TERM_OPERATORS:
+                ids = self.search(cr, user, ['|', ('code', '=like', name+"%"), '|',  ('shortcut', '=', name), ('name', operator, name)]+args, limit=limit)
+                if not ids and len(name.split()) >= 2:
+                    #Separating code and name of account for searching
+                    operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
+                    ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2)]+ args, limit=limit)
+            else:
+                ids = self.search(cr, user, ['&','!', ('code', '=like', name+"%"), ('name', operator, name)]+args, limit=limit)
+                # as negation want to restric, do if already have results
+                if ids and len(name.split()) >= 2:
+                    operand1,operand2 = name.split(' ',1) #name can contain spaces e.g. OpenERP S.A.
+                    ids = self.search(cr, user, [('code', operator, operand1), ('name', operator, operand2), ('id', 'in', ids)]+ args, limit=limit)
         else:
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
