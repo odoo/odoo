@@ -33,7 +33,7 @@
                     trigger: {
                         emitter: editor,
                         type: 'openerp',
-                        id: 'tour:editor_bar_loaded',
+                        id: 'rte:ready',
                     },
                 },
                 {
@@ -97,7 +97,7 @@
                     title: "Edit an Area",
                     content: "Select any area of the page to modify it. Click on this subtitle.",
                     trigger: {
-                        id: 'tour:snippet_activated'
+                        id: 'snippet-activated'
                     },
                 },
                 {

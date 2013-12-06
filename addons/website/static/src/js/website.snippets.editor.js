@@ -26,7 +26,6 @@
                 self.snippets.$button.removeClass("hidden");
                 website.snippet.stop_animation();
                 website.snippet.start_animation();
-                self.trigger('tour:editor_bar_loaded');
             });
 
             return this._super.apply(this, arguments);
@@ -247,7 +246,7 @@
                 this.snippet_focus($snippet);
             }
             if (_.isFunction($snippet.trigger)) {
-                $snippet.trigger('tour:snippet_activated');
+                $snippet.trigger('snippet-activated');
             }
         },
         create_overlay: function ($snippet) {
@@ -384,7 +383,10 @@
                                 snippet.drop_and_build_snippet($target);
                             }
                         }
-                        setTimeout(function () {self.make_active($target);},0);
+                        setTimeout(function () {
+                            $snippet.trigger('snippet-dropped');
+                            self.make_active($target);
+                        },0);
                     } else {
                         $toInsert.remove();
                         if (self.$modal.find('input:not(:checked)').length) {
