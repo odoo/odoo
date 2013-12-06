@@ -165,7 +165,7 @@ class mail_thread(osv.AbstractModel):
 
     def read_followers_data(self, cr, uid, follower_ids, context=None):
         result = []
-        technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one')
+        technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one', context=context, check_existence_and_raise=True)
         for follower in self.pool.get('res.partner').browse(cr, uid, follower_ids, context=context):
             is_editable = uid in map(lambda x: x.id, technical_group.users)
             is_uid = uid in map(lambda x: x.id, follower.user_ids)
@@ -496,9 +496,9 @@ class mail_thread(osv.AbstractModel):
 
             posted = False
             for subtype in subtypes:
-                subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, subtype.split('.')[0], subtype.split('.')[1], context=context)
+                subtype_rec = self.pool.get('ir.model.data').get_object(cr, uid, subtype.split('.')[0], subtype.split('.')[1], context=context, check_existence_and_raise=False)
                 if not subtype_rec.exists():
-                    _logger.debug('subtype %s not found, giving error "%s"' % (subtype, e))
+                    _logger.debug('subtype %s not found' % subtype)
                     continue
                 message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
                 self.message_post(cr, uid, browse_record.id, body=message, subtype=subtype, context=context)
