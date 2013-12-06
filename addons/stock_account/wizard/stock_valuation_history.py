@@ -21,7 +21,8 @@ class wizard_valuation_history(osv.osv_memory):
         data = self.read(cr, uid, ids, context=context)[0]
         ctx = context.copy()
         ctx['history_date'] = data['date']
-        ctx['group_by'] = ['product_id']
+        ctx['search_default_group_by_product'] = True
+        ctx['search_default_group_by_location'] = True
         return {
             'domain': "[('date', '<=', '" + data['date'] + "')]",
             'name': _('Stock Value At Date'),
