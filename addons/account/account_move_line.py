@@ -193,6 +193,8 @@ class account_move_line(osv.osv):
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
                     raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
+                if obj_line.analytic_lines:
+                    acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
                 vals_line = self._prepare_analytic_line(cr, uid, obj_line, context=context)
                 acc_ana_line_obj.create(cr, uid, vals_line)
         return True
@@ -1208,20 +1210,6 @@ class account_move_line(osv.osv):
                     account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
         if not ok:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
-
-        if vals.get('analytic_account_id',False):
-            if journal.analytic_journal_id:
-                vals['analytic_lines'] = [(0,0, {
-                        'name': vals['name'],
-                        'date': vals.get('date', time.strftime('%Y-%m-%d')),
-                        'account_id': vals.get('analytic_account_id', False),
-                        'unit_amount': vals.get('quantity', 1.0),
-                        'amount': vals.get('debit', 0.0) or vals.get('credit', 0.0),
-                        'general_account_id': vals.get('account_id', False),
-                        'journal_id': journal.analytic_journal_id.id,
-                        'ref': vals.get('ref', False),
-                        'user_id': uid
-            })]
 
         result = super(account_move_line, self).create(cr, uid, vals, context=context)
         # CREATE Taxes
