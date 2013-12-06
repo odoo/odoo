@@ -404,6 +404,74 @@
             </t>
         </template>
 
+       <template id="http_error">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
+                    </div>
+
+                    <t t-if="editable or request.debug">
+                        <t t-call="website.http_error_debug"/>
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="http_error_debug">
+            <div class="container panel-group mb32 mt32" id="debug_infos">
+                <div class="panel panel-default" t-if="exception">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">
+                                Error
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="error_main" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
+                            <p><strong>Error message:</strong> <pre t-esc="exception.message"/></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default" t-if="qweb_template">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
+                                QWeb
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="error_qweb" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>
+                                The error occured while rendering the template <code t-esc="qweb_template"/>
+                                <t t-if="qweb_eval">and evaluating the following expression: <code t-esc="qweb_eval"/></t>
+                            </p>
+                            <t t-if="qweb_node">
+                                <pre id="exception_node" t-esc="qweb_node.toxml()"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default" t-if="traceback">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">
+                                Traceback
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="error_traceback" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <pre id="exception_traceback" t-esc="traceback"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
         <template id="404">
             <t t-call="website.layout">
                 <div id="wrap">
@@ -423,70 +491,16 @@
                             </ul>
                         </div>
                     </div>
+
+                    <t t-if="request.debug">
+                        <t t-call="website.http_error_debug"/>
+                    </t>
                 </div>
             </t>
         </template>
 
         <template id="500">
-            <t t-call="website.layout">
-                <div id="wrap">
-                    <div class="oe_structure">
-                        <h1 class="container mt32">500: Internal Server Error!</h1>
-                    </div>
-
-                    <div class="container panel-group" id="debug_infos" t-if="editable">
-                        <div class="panel panel-default" t-if="exception">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">
-                                        Error
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="error_main" class="panel-collapse collapse in">
-                                <div class="panel-body">
-                                    <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
-                                    <p><strong>Error message:</strong> <t t-esc="exception.message"/></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default" t-if="qweb_template">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
-                                        QWeb
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="error_qweb" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <p>
-                                        The error occured while rendering the template <code t-esc="qweb_template"/>
-                                        <t t-if="qweb_eval">and evaluating the following expression: <code t-esc="qweb_eval"/></t>
-                                    </p>
-                                    <t t-if="qweb_node">
-                                        <pre id="exception_node" t-esc="qweb_node.toxml()"/>
-                                    </t>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default" t-if="traceback">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">
-                                        Traceback
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="error_traceback" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <pre id="exception_traceback" t-esc="traceback"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
+            <t t-call="website.http_error"/>
         </template>
 
         <template id="403">
@@ -498,9 +512,6 @@
                         The page you were looking for could not be
                         authorized.
                     </p>
-                    <t t-if="error and editable">
-                        <pre t-esc="error"/>
-                    </t>
                     <p>
                         Maybe you were looking for one of these
                         popular pages ?
@@ -510,6 +521,9 @@
                         <li><a href="/page/website.contactus/">Contact Us</a></li>
                     </ul>
                 </div>
+                <t t-if="editable or request.debug">
+                    <t t-call="website.http_error_debug"/>
+                </t>
               </div>
             </t>
         </template>

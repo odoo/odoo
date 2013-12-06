@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-    <template id="website.secure_layout">
+    <template id="secure_layout" inherit_id="website.secure_layout">
         <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
             <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js" t-ignore="true"></script>
             <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js" t-ignore="true"></script>
@@ -238,6 +238,20 @@
                 </h4>
                 <div class="row mt32 mb32">
                     <t t-raw="0"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="404">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure oe_empty">
+                    <div class="container">
+                        <h1 class="mt32">Event not found!</h1>
+                        <p>Sorry, the requested event is not available anymore.</p>
+                        <p><a t-href="/event/">Return to the event list.</a></p>
+                    </div>
                 </div>
             </div>
         </t>

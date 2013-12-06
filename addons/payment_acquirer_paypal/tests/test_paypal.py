@@ -15,22 +15,10 @@ class PaypalCommon(PaymentAcquirerCommon):
     def setUp(self):
         super(PaypalCommon, self).setUp()
         cr, uid = self.cr, self.uid
-
         self.base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        model, self.paypal_view_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_acquirer_paypal', 'paypal_acquirer_button')
 
-        # create a new ogone account
-        self.paypal_id = self.payment_acquirer.create(
-            cr, uid, {
-                'name': 'paypal',
-                'env': 'test',
-                'view_template_id': self.paypal_view_id,
-                'paypal_email_id': 'dummy',
-                'paypal_username': 'dummy',
-                'paypal_api_enabled': True,
-                'paypal_api_username': 'dummy',
-                'paypal_api_password': 'dummy',
-            })
+        # get the paypal account
+        model, self.paypal_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_acquirer_paypal', 'payment_acquirer_paypal')
         # tde+seller@openerp.com - tde+buyer@openerp.com - tde+buyer-it@openerp.com
 
         # some CC
@@ -50,6 +38,9 @@ class PaypalServer2Server(PaypalCommon):
 
     def test_00_tx_management(self):
         cr, uid, context = self.cr, self.uid, {}
+        # be sure not to do stupid things
+        paypal = self.payment_acquirer.browse(self.cr, self.uid, self.paypal_id, None)
+        self.assertEqual(paypal.env, 'test', 'test without test env')
 
         res = self.payment_acquirer._paypal_s2s_get_access_token(cr, uid, [self.paypal_id], context=context)
         self.assertTrue(res[self.paypal_id] is not False, 'paypal: did not generate access token')
@@ -78,30 +69,24 @@ class PaypalServer2Server(PaypalCommon):
 
 class PaypalForm(PaypalCommon):
 
-    def test_00_paypal_acquirer(self):
-        cr, uid, context = self.cr, self.uid, {}
-        # forgot some mandatory fields: should crash
-        with self.assertRaises(except_orm):
-            self.payment_acquirer.create(
-                cr, uid, {
-                    'name': 'paypal',
-                    'env': 'test',
-                    'view_template_id': self.paypal_view_id,
-                    'paypal_email_id': 'tde+paypal-facilitator@openerp.com',
-                }, context=context)
-
-        paypal = self.payment_acquirer.browse(self.cr, self.uid, self.paypal_id, None)
-        self.assertEqual(paypal.env, 'test', 'test without test env')
-
     def test_10_paypal_form_render(self):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
+        self.payment_acquirer.write(cr, uid, self.paypal_id, {'fees_active': False}, context)
         paypal = self.payment_acquirer.browse(cr, uid, self.paypal_id, context)
         self.assertEqual(paypal.env, 'test', 'test without test env')
 
         # ----------------------------------------
         # Test: button direct rendering
         # ----------------------------------------
+
+        # render the button
+        res = self.payment_acquirer.render(
+            cr, uid, self.paypal_id,
+            'test_ref0', 0.01, self.currency_euro_id,
+            partner_id=None,
+            partner_values=self.buyer_values,
+            context=context)
 
         form_values = {
             'cmd': '_xclick',
@@ -122,14 +107,6 @@ class PaypalForm(PaypalCommon):
             'cancel_return': '%s' % urlparse.urljoin(self.base_url, PaypalController._cancel_url),
         }
 
-        # render the button
-        res = self.payment_acquirer.render(
-            cr, uid, self.paypal_id,
-            'test_ref0', 0.01, self.currency_euro,
-            partner_id=None,
-            partner_values=self.buyer_values,
-            context=context)
-
         # check form result
         tree = objectify.fromstring(res)
         self.assertEqual(tree.get('action'), 'https://www.sandbox.paypal.com/cgi-bin/webscr', 'paypal: wrong form POST url')
@@ -139,18 +116,23 @@ class PaypalForm(PaypalCommon):
             self.assertEqual(
                 form_input.get('value'),
                 form_values[form_input.get('name')],
-                'paypal: wrong value for form: received %s instead of %s' % (form_input.get('value'), form_values[form_input.get('name')])
+                'paypal: wrong value for input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
             )
 
     def test_11_paypal_form_with_fees(self):
         cr, uid, context = self.cr, self.uid, {}
-        self.payment_acquirer.write(cr, uid, self.paypal_id, {
-            'fees_active': True,
-        }, context)
-
         # be sure not to do stupid things
         paypal = self.payment_acquirer.browse(self.cr, self.uid, self.paypal_id, None)
         self.assertEqual(paypal.env, 'test', 'test without test env')
+
+        # update acquirer: compute fees
+        self.payment_acquirer.write(cr, uid, self.paypal_id, {
+            'fees_active': True,
+            'fees_dom_fixed': 1.0,
+            'fees_dom_var': 0.35,
+            'fees_int_fixed': 1.5,
+            'fees_int_var': 0.50,
+        }, context)
 
         # render the button
         res = self.payment_acquirer.render(
@@ -167,7 +149,7 @@ class PaypalForm(PaypalCommon):
         for form_input in tree.input:
             if form_input.get('name') in ['handling']:
                 handling_found = True
-                self.assertEqual(form_input.get('value'), '0.84', 'paypal: wrong computed fees')
+                self.assertEqual(form_input.get('value'), '1.56', 'paypal: wrong computed fees')
         self.assertTrue(handling_found, 'paypal: fees_active did not add handling input in rendered form')
 
     @mute_logger('openerp.addons.payment_acquirer_paypal.models.paypal', 'ValidationError')
@@ -233,6 +215,7 @@ class PaypalForm(PaypalCommon):
                 'currency_id': self.currency_euro_id,
                 'reference': 'test_ref_2',
                 'partner_name': 'Norbert Buyer',
+                'partner_country_id': self.country_france_id,
             }, context=context
         )
         # validate it

@@ -80,6 +80,23 @@ def urlplus(url, params):
 def quote_plus(value):
     return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
 
+def preload_records(*args, **kwargs):
+    """ This helper allows to check the existence and prefetch one or many browse_records at once.
+        If the browse record(s) does not exists in the db it will raise a LazyResponse
+    """
+    field = kwargs.pop('field', 'name')
+    on_error = kwargs.pop('on_error', 'website.404')
+    error_code = kwargs.pop('error_code', 404)
+    try:
+        for arg in args:
+            if isinstance(arg, orm.browse_record):
+                arg[field]
+            elif isinstance(arg, orm.browse_record_list):
+                [record[field] for record in arg]
+    except:
+        lazy_error = request.website.render(on_error, status_code=error_code)
+        raise werkzeug.exceptions.HTTPException(response=lazy_error)
+
 class website(osv.osv):
     def _get_menu_website(self, cr, uid, ids, context=None):
         # IF a menu is changed, update all websites

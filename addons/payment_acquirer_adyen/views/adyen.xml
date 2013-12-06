@@ -3,7 +3,7 @@
     <data noupdate="0">
 
         <template id="adyen_acquirer_button">
-            <form t-if="acquirer.adyen_merchant_account" t-att-action="acquirer.adyen_form_url" method="post" target="_self">
+            <form t-if="acquirer.adyen_merchant_account" t-att-action="tx_url" method="post" target="_self">
                 <input type="hidden" name="merchantReference" t-att-value="tx_values['merchantReference']"/>
                 <input type="hidden" name="paymentAmount" t-att-value="tx_values['paymentAmount']"/>
                 <input type="hidden" name="currencyCode" t-att-value="tx_values['currencyCode']"/>
@@ -19,10 +19,12 @@
                 <!-- custom -->
                 <input t-if="tx_values.get('merchantReturnData')" type='hidden' name='merchantReturnData'
                     t-att-value="tx_values.get('merchantReturnData')"/>
-                <!-- button -->
-                <input type="image" name="submit" id="payment_submit"
-                    width="100px"
-                    src="/payment_acquirer_adyen/static/src/img/logo.jpg"/>
+                <!-- submit -->
+                <button type="image" name="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_acquirer_adyen/static/src/img/adyen_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/></span>
+                </button>
             </form>
         </template>
 

@@ -22,7 +22,8 @@ class OgoneController(http.Controller):
         '/payment/ogone/cancel', '/payment/ogone/test/cancel',
     ], type='http', auth='admin')
     def ogone_form_feedback(self, **post):
+        """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['payment.transaction'].ogone_form_feedback(cr, uid, post, context)
+        request.registry['payment.transaction'].form_feedback(cr, uid, post, 'ogone', context=context)
         return request.redirect(post.pop('return_url', '/'))

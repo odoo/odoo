@@ -21,26 +21,24 @@ _logger = logging.getLogger(__name__)
 class AcquirerAdyen(osv.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_adyen_urls(self, cr, uid, ids, name, args, context=None):
+    def _get_adyen_urls(self, cr, uid, env, context=None):
         """ Adyen URLs
 
          - yhpp: hosted payment page: pay.shtml for single, select.shtml for multiple
         """
-        res = {}
-        for acquirer in self.browse(cr, uid, ids, context=context):
-            qualif = acquirer.env
-            res[acquirer.id] = {
-                'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % qualif,
+        if env == 'prod':
+            return {
+                'adyen_form_url': 'https://prod.adyen.com/hpp/pay.shtml',
             }
-        return res
+        else:
+            return {
+                'adyen_form_url': 'https://test.adyen.com/hpp/pay.shtml',
+            }
 
     _columns = {
         'adyen_merchant_account': fields.char('Merchant Account', required_if_provider='adyen'),
         'adyen_skin_code': fields.char('Skin Code', required_if_provider='adyen'),
         'adyen_skin_hmac_key': fields.char('Skin HMAC Key', required_if_provider='adyen'),
-        'adyen_form_url': fields.function(
-            _get_adyen_urls, multi='_get_adyen_urls',
-            type='char', string='Transaction URL', required_if_provider='adyen'),
     }
 
     def _adyen_generate_merchant_sig(self, acquirer, inout, values):
@@ -72,9 +70,7 @@ class AcquirerAdyen(osv.Model):
         key = acquirer.adyen_skin_hmac_key.encode('ascii')
         return base64.b64encode(hmac.new(key, sign, sha1).digest())
 
-    def adyen_form_generate_values(self, cr, uid, id, reference, amount, currency, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
-        if partner_values is None:
-            partner_values = {}
+    def adyen_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
         # tmp
@@ -82,31 +78,26 @@ class AcquirerAdyen(osv.Model):
         from dateutil import relativedelta
         tmp_date = datetime.date.today() + relativedelta.relativedelta(days=1)
 
-        partner = None
-        if partner_id:
-            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        tx_values = {
-            'merchantReference': reference,
-            'paymentAmount': '%d' % int(float_round(amount, 2) * 100),
-            'currencyCode': currency and currency.name or 'EUR',
+        adyen_tx_values = dict(tx_values)
+        adyen_tx_values.update({
+            'merchantReference': tx_values['reference'],
+            'paymentAmount': '%d' % int(float_round(tx_values['amount'], 2) * 100),
+            'currencyCode': tx_values['currency'] and tx_values['currency'].name or '',
             'shipBeforeDate': tmp_date,
             'skinCode': acquirer.adyen_skin_code,
             'merchantAccount': acquirer.adyen_merchant_account,
-            'shopperLocale': partner and partner.lang or partner_values.get('lang', 'en_US'),
+            'shopperLocale': partner_values['lang'],
             'sessionValidity': tmp_date,
-            'merchantSig': 'oij',
             'resURL': '%s' % urlparse.urljoin(base_url, AdyenController._return_url),
-        }
-        if tx_custom_values and tx_custom_values.get('return_url'):
-            tx_values['merchantReturnData'] = json.dumps({'return_url': '%s' % tx_custom_values.pop('return_url')})
-        if tx_custom_values:
-            tx_values.update(tx_custom_values)
-        tx_values['merchantSig'] = self._adyen_generate_merchant_sig(acquirer, 'in', tx_values)
-        return tx_values
+        })
+        if adyen_tx_values.get('return_url'):
+            adyen_tx_values['merchantReturnData'] = json.dumps({'return_url': '%s' % adyen_tx_values.pop('return_url')})
+        adyen_tx_values['merchantSig'] = self._adyen_generate_merchant_sig(acquirer, 'in', adyen_tx_values)
+        return partner_values, adyen_tx_values
 
     def adyen_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return acquirer.adyen_form_url
+        return self._get_adyen_urls(cr, uid, acquirer.env, context=context)['adyen_form_url']
 
 
 class TxAdyen(osv.Model):
@@ -119,21 +110,6 @@ class TxAdyen(osv.Model):
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
-
-    def adyen_form_generate_values(self, cr, uid, id, tx_custom_values=None, context=None):
-        tx = self.browse(cr, uid, id, context=context)
-
-        tx_data = {
-            'shopperLocale': tx.partner_lang,
-        }
-        if tx_custom_values:
-            tx_data.update(tx_custom_values)
-        return self.pool['payment.acquirer'].paypal_form_generate_values(
-            cr, uid, tx.acquirer_id.id,
-            tx.reference, tx.amount, tx.currency_id,
-            tx_custom_values=tx_data,
-            context=context
-        )
 
     def _adyen_form_get_tx_from_data(self, cr, uid, data, context=None):
         reference, pspReference = data.get('merchantReference'), data.get('pspReference')
@@ -164,12 +140,18 @@ class TxAdyen(osv.Model):
         return tx
 
     def _adyen_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
-        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
         invalid_parameters = []
+
+        # reference at acquirer: pspReference
+        if tx.acquirer_reference and data.get('pspReference') != tx.acquirer_reference:
+            invalid_parameters.append(('pspReference', data.get('pspReference'), tx.acquirer_reference))
+        # seller
         if data.get('skinCode') != tx.acquirer_id.adyen_skin_code:
             invalid_parameters.append(('skinCode', data.get('skinCode'), tx.acquirer_id.adyen_skin_code))
+        # result
         if not data.get('authResult'):
             invalid_parameters.append(('authResult', data.get('authResult'), 'something'))
+
         return invalid_parameters
 
     def _adyen_form_validate(self, cr, uid, tx, data, context=None):

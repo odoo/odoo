@@ -14,6 +14,7 @@ from openerp.addons.payment_acquirer_ogone.controllers.main import OgoneControll
 from openerp.addons.payment_acquirer_ogone.data import ogone
 from openerp.osv import osv, fields
 from openerp.tools import float_round
+from openerp.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
 
@@ -21,48 +22,26 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerOgone(osv.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_ogone_urls(self, cr, uid, ids, name, args, context=None):
+    def _get_ogone_urls(self, cr, uid, env, context=None):
         """ Ogone URLS:
 
          - standard order: POST address for form-based
 
         @TDETODO: complete me
         """
-        res = {}
-        for acquirer in self.browse(cr, uid, ids, context=context):
-            qualif = acquirer.env
-            res[acquirer.id] = {
-                'ogone_standard_order_url': 'https://secure.ogone.com/ncol/%s/orderstandard.asp' % qualif,
-                'ogone_direct_order_url': 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % qualif,
-                'ogone_direct_query_url': 'https://secure.ogone.com/ncol/%s/querydirect.asp' % qualif,
-                'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % qualif,
-            }
-        return res
+        return {
+            'ogone_standard_order_url': 'https://secure.ogone.com/ncol/%s/orderstandard.asp' % env,
+            'ogone_direct_order_url': 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % env,
+            'ogone_direct_query_url': 'https://secure.ogone.com/ncol/%s/querydirect.asp' % env,
+            'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % env,
+        }
 
     _columns = {
-        'ogone_pspid': fields.char(
-            'PSPID', required_if_provider='ogone'),
-        'ogone_userid': fields.char(
-            'API User id', required_if_provider='ogone'),
-        'ogone_password': fields.char(
-            'Password', required_if_provider='ogone'),
-        'ogone_shakey_in': fields.char(
-            'SHA Key IN', size=32, required_if_provider='ogone'),
-        'ogone_shakey_out': fields.char(
-            'SHA Key OUT', size=32, required_if_provider='ogone'),
-        # store ogone contact URLs -> not necessary IMHO
-        'ogone_standard_order_url': fields.function(
-            _get_ogone_urls, type='char', multi='_get_ogone_urls',
-            string='Stanrd Order URL (form)'),
-        'ogone_direct_order_url': fields.function(
-            _get_ogone_urls, type='char', multi='_get_ogone_urls',
-            string='Direct Order URL (2)'),
-        'ogone_direct_query_url': fields.function(
-            _get_ogone_urls, type='char', multi='_get_ogone_urls',
-            string='Direct Query URL'),
-        'ogone_afu_agree_url': fields.function(
-            _get_ogone_urls, type='char', multi='_get_ogone_urls',
-            string='AFU Agree URL'),
+        'ogone_pspid': fields.char('PSPID', required_if_provider='ogone'),
+        'ogone_userid': fields.char('API User ID', required_if_provider='ogone'),
+        'ogone_password': fields.char('API User Password', required_if_provider='ogone'),
+        'ogone_shakey_in': fields.char('SHA Key IN', size=32, required_if_provider='ogone'),
+        'ogone_shakey_out': fields.char('SHA Key OUT', size=32, required_if_provider='ogone'),
     }
 
     def _ogone_generate_shasign(self, acquirer, inout, values):
@@ -93,43 +72,39 @@ class PaymentAcquirerOgone(osv.Model):
         shasign = sha1(sign).hexdigest()
         return shasign
 
-    def ogone_form_generate_values(self, cr, uid, id, reference, amount, currency, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
-        if partner_values is None:
-            partner_values = {}
+    def ogone_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
-        partner = None
-        if partner_id:
-            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        tx_values = {
+
+        ogone_tx_values = dict(tx_values)
+        temp_ogone_tx_values = {
             'PSPID': acquirer.ogone_pspid,
-            'ORDERID': reference,
-            'AMOUNT': '%d' % int(float_round(amount, 2) * 100),
-            'CURRENCY': currency and currency.name or 'EUR',
-            'LANGUAGE': partner and partner.lang or partner_values.get('lang', ''),
-            'CN': partner and partner.name or partner_values.get('name', ''),
-            'EMAIL': partner and partner.email or partner_values.get('email', ''),
-            'OWNERZIP': partner and partner.zip or partner_values.get('zip', ''),
-            'OWNERADDRESS': partner and ' '.join((partner.street or '', partner.street2 or '')).strip() or ' '.join((partner_values.get('street', ''), partner_values.get('street2', ''))).strip(),
-            'OWNERTOWN': partner and partner.city or partner_values.get('city', ''),
-            'OWNERCTY': partner and partner.country_id and partner.country_id.name or partner_values.get('country_name', ''),
-            'OWNERTELNO': partner and partner.phone or partner_values.get('phone', ''),
+            'ORDERID': tx_values['reference'],
+            'AMOUNT': '%d' % int(float_round(tx_values['amount'], 2) * 100),
+            'CURRENCY': tx_values['currency'] and tx_values['currency'].name or '',
+            'LANGUAGE':  partner_values['lang'],
+            'CN':  partner_values['name'],
+            'EMAIL':  partner_values['email'],
+            'OWNERZIP':  partner_values['zip'],
+            'OWNERADDRESS':  partner_values['address'],
+            'OWNERTOWN':  partner_values['city'],
+            'OWNERCTY':  partner_values['country'] and partner_values['country'].name or '',
+            'OWNERTELNO': partner_values['phone'],
             'ACCEPTURL': '%s' % urlparse.urljoin(base_url, OgoneController._accept_url),
             'DECLINEURL': '%s' % urlparse.urljoin(base_url, OgoneController._decline_url),
             'EXCEPTIONURL': '%s' % urlparse.urljoin(base_url, OgoneController._exception_url),
             'CANCELURL': '%s' % urlparse.urljoin(base_url, OgoneController._cancel_url),
         }
-        if tx_custom_values and tx_custom_values.get('return_url'):
-            tx_values['PARAMPLUS'] = 'return_url=%s' % tx_custom_values.pop('return_url')
-        if tx_custom_values:
-            tx_values.update(tx_custom_values)
-        shasign = self._ogone_generate_shasign(acquirer, 'in', tx_values)
-        tx_values['SHASIGN'] = shasign
-        return tx_values
+        if ogone_tx_values.get('return_url'):
+            temp_ogone_tx_values['PARAMPLUS'] = 'return_url=%s' % ogone_tx_values.pop('return_url')
+        shasign = self._ogone_generate_shasign(acquirer, 'in', temp_ogone_tx_values)
+        temp_ogone_tx_values['SHASIGN'] = shasign
+        ogone_tx_values.update(temp_ogone_tx_values)
+        return partner_values, ogone_tx_values
 
     def ogone_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return acquirer.ogone_standard_order_url
+        return self._get_ogone_urls(cr, uid, acquirer.env, context=context)['ogone_standard_order_url']
 
 
 class PaymentTxOgone(osv.Model):
@@ -141,10 +116,8 @@ class PaymentTxOgone(osv.Model):
     _ogone_cancel_tx_status = [1]
 
     _columns = {
-        'ogone_3ds': fields.dummy('3ds Activated'),
+        'ogone_3ds': fields.boolean('3DS Activated'),
         'ogone_3ds_html': fields.html('3DS HTML'),
-        'ogone_feedback_model': fields.char(),
-        'ogone_feedback_eval': fields.char(),
         'ogone_complus': fields.char('Complus'),
         'ogone_payid': fields.char('PayID', help='Payment ID, generated by Ogone')
     }
@@ -152,30 +125,6 @@ class PaymentTxOgone(osv.Model):
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
-
-    def ogone_form_generate_values(self, cr, uid, id, tx_custom_values=None, context=None):
-        """ Ogone-specific value generation for rendering a transaction-based
-        form button. """
-        tx = self.browse(cr, uid, id, context=context)
-
-        tx_data = {
-            'LANGUAGE': tx.partner_lang,
-            'CN': tx.partner_name,
-            'EMAIL': tx.partner_email,
-            'OWNERZIP': tx.partner_zip,
-            'OWNERADDRESS': tx.partner_address,
-            'OWNERTOWN': tx.partner_city,
-            'OWNERCTY': tx.partner_country_id and tx.partner_country_id.name or '',
-            'OWNERTELNO': tx.partner_phone,
-        }
-        if tx_custom_values:
-            tx_data.update(tx_custom_values)
-        return self.pool['payment.acquirer'].ogone_form_generate_values(
-            cr, uid, tx.acquirer_id.id,
-            tx.reference, tx.amount, tx.currency_id,
-            tx_custom_values=tx_data,
-            context=context
-        )
 
     def _ogone_form_get_tx_from_data(self, cr, uid, data, context=None):
         """ Given a data dict coming from ogone, verify it and find the related
@@ -207,29 +156,42 @@ class PaymentTxOgone(osv.Model):
 
         return tx
 
-    def ogone_form_feedback(self, cr, uid, data, context=None):
-        tx = self._ogone_form_get_tx_from_data(cr, uid, data, context)
-        if not tx:
-            raise ValidationError('Ogone: feedback: tx not found')
+    def _ogone_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
+        invalid_parameters = []
+
+        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
+        if tx.acquirer_reference and data.get('PAYID') != tx.acquirer_reference:
+            invalid_parameters.append(('PAYID', data.get('PAYID'), tx.acquirer_reference))
+        # check what is buyed
+        if float_compare(float(data.get('amount', '0.0')), tx.amount, 2) != 0:
+            invalid_parameters.append(('amount', data.get('amount'), '%.2f' % tx.amount))
+        if data.get('currency') != tx.currency_id.name:
+            invalid_parameters.append(('currency', data.get('currency'), tx.currency_id.name))
+
+        return invalid_parameters
+
+    def _ogone_form_validate(self, cr, uid, tx, data, context=None):
         if tx.state == 'done':
-            _logger.warning('Ogone: trying to validate an already validated tx (ref %s' % tx.reference)
-            return False
+            _logger.warning('Ogone: trying to validate an already validated tx (ref %s)' % tx.reference)
+            return True
 
         status = int(data.get('STATUS', '0'))
         if status in self._ogone_valid_tx_status:
             tx.write({
                 'state': 'done',
                 'date_validate': data['TRXDATE'],
-                'ogone_payid': data['PAYID'],
+                'acquirer_reference': data['PAYID'],
             })
             return True
         elif status in self._ogone_cancel_tx_status:
             tx.write({
                 'state': 'cancel',
+                'acquirer_reference': data.get('PAYID'),
             })
         elif status in self._ogone_pending_tx_status:
             tx.write({
                 'state': 'pending',
+                'acquirer_reference': data.get('PAYID'),
             })
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
@@ -238,7 +200,11 @@ class PaymentTxOgone(osv.Model):
                 'error_msg': ogone.OGONE_ERROR_MAP.get(data.get('NCERRORPLUS')),
             }
             _logger.info(error)
-            tx.write({'state': 'error', 'state_message': error})
+            tx.write({
+                'state': 'error',
+                'state_message': error,
+                'acquirer_reference': data.get('PAYID'),
+            })
             return False
 
     # --------------------------------------------------
@@ -268,6 +234,7 @@ class PaymentTxOgone(osv.Model):
             'PROCESS_MODE': 'CHECKANDPROCESS',
         }
 
+        # TODO: fix URL computation
         request = urllib2.Request(tx.acquirer_id.ogone_afu_agree_url, urlencode(tx_data))
         result = urllib2.urlopen(request).read()
 
