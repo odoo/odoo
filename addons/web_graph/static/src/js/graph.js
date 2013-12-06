@@ -38,7 +38,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.set_default_options(options);
         this.dropdown = null;
         this.mode = 'pivot'; // pivot, bar_chart, line_chart, pie_chart, heatmap, row_heatmap, col_heatmap
-        this.measure = null;
         this.measure_list = [];
         this.important_fields = [];
         this.search_view = parent.searchview;
@@ -125,9 +124,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         if (group_by.length || col_groupby.length) {
             this.groupby_mode = 'manual';
-            // if (!group_by.length) {
-            //     group_by = this.default_row_groupby;
-            // }
         }
 
         this.pivot_table.set_domain(domain);
@@ -214,14 +210,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var mode = event.target.attributes['data-mode'].nodeValue;
         this.mode = mode;
         this.display_data();
-
     },
 
     register_groupby: function() {
         var self = this,
             query = this.search_view.query;
         this.groupby_mode = 'manual';
-
 
         var rows = _.map(this.pivot_table.rows.groupby, function (group) {
             return make_facet('GroupBy', group);
@@ -259,8 +253,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     measure_selection: function (event) {
         event.preventDefault();
         var measure = event.target.attributes['data-choice'].nodeValue;
-        this.measure = (measure === '__count') ? null : measure;
-        this.pivot_table.set_measure(this.measure);
+        this.pivot_table.set_measure((measure === '__count') ? null : measure);
         this.display_data();
     },
 
@@ -276,7 +269,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 this.register_groupby();
                 break;
             case 'fold_all':
-                this.pivot_table.fold_all();
+                this.pivot_table.fold_cols();
+                this.pivot_table.fold_rows();
                 this.register_groupby();
                 break;
             case 'expand_all':
@@ -287,7 +281,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     option_selection: function (event) {
-        var pivot = this.pivot_table;
         event.preventDefault();
         switch (event.target.attributes['data-choice'].nodeValue) {
             case 'swap_axis':
@@ -299,7 +292,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 this.display_data();
                 break;
             case 'export_data':
-                this.register_groupby();
                 // Export code...  To do...
                 break;
         }
@@ -353,7 +345,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     measure_label: function () {
-        return (this.measure) ? this.fields[this.measure].string : 'Quantity';
+        var pivot = this.pivot_table;
+        return (pivot.measure) ? this.fields[pivot.measure].string : 'Quantity';
     },
 
     make_border_cell: function (colspan, rowspan) {

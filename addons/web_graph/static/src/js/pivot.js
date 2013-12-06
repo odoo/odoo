@@ -1,9 +1,6 @@
 
 /* jshint undef: false  */
 
-
-// TO DO : use _.uniqueID()
-
 (function () {
 'use strict';
 
@@ -19,11 +16,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.id_seed = 0;
 		this.no_data = true;
 		this.stale_data = true;
-	},
-
-	generate_id: function () {
-		this.id_seed += 1;
-		return this.id_seed;
 	},
 
 	visible_fields: function () {
@@ -159,7 +151,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	make_header: function (groups, parent) {
 		var name = groups[0].attributes.value[1],
             new_header = {
-				id: this.generate_id(),
+				id: _.uniqueId(),
 				path: parent.path.concat(name),
 				title: name,
 				is_expanded: false,
@@ -185,11 +177,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 	fold_cols: function () {
 		this.fold(this.cols.main);
-	},
-
-	fold_all: function () {
-		this.fold_rows();
-		this.fold_cols();
 	},
 
 	expand_headers: function (root, new_headers) {
@@ -336,7 +323,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 		function make_headers (data, depth) {
 			var main = {
-				id: self.generate_id(),
+				id: _.uniqueId(),
 				path: [],
 				parent: null,
 				children: [],
@@ -367,7 +354,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 		function make_tree_headers (data_pt, parent, max_depth) {
 			var node = {
-				id: self.generate_id(),
+				id: _.uniqueId(),
 				path: parent.path.concat(data_pt.attributes.value[1]),
 				title: data_pt.attributes.value[1],
 				domain: data_pt.model._domain,
