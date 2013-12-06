@@ -226,14 +226,7 @@
             <field eval="1" name="active"/>
             <field name="name">Your Company, Chicago shop</field>
         </record>
-        <record id="stock_location_shop1" model="stock.location">
-            <field model="res.partner" name="partner_id" search="[('name','=','Eric')]"/>
-            <field name="company_id" ref="res_company_2"/>
-            <field name="location_id" ref="stock.stock_location_locations"/>
-            <field name="usage">internal</field>
-            <field eval="1" name="active"/>
-            <field name="name">Your Company, Birmingham shop</field>
-        </record>
+
         <record id="stock_location_intermediatelocation0" model="stock.location">
             <field name="partner_id" ref="base.main_partner"/>
             <field name="location_id" ref="stock.stock_location_locations_partner"/>
@@ -248,13 +241,6 @@
             <field name="partner_id" ref="res_partner_address_41"/>
             <field name="company_id" ref="res_company_1"/>
             <field name="code">Chic</field>
-        </record>
-        <record id="stock_warehouse_shop1" model="stock.warehouse">
-            <field name="name">Birmingham Warehouse</field>
-            <field name="lot_stock_id" ref="stock_location_shop1"/>
-            <field name="partner_id" ref="res_partner_address_40"/>
-            <field name="company_id" ref="res_company_1"/>
-            <field name="code">Birm</field>
         </record>
 
     </data>
