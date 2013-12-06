@@ -343,6 +343,13 @@ class survey_question(osv.osv):
             'question_id', 'Suggested answers', oldname='answer_choice_ids'),
         'labels_ids_2': fields.one2many('survey.label',
             'question_id_2', 'Suggested answers'),
+        # labels are used for proposed choices
+        # if question.type == simple choice | multiple choice
+        #                    -> only labels_ids is used
+        # if question.type == matrix
+        #                    -> labels_ids are the columns of the matrix
+        #                    -> labels_ids_2 are the rows of the matrix
+
 
         # Display options
         'column_nb': fields.selection([('12', '1 column choices'),
@@ -645,16 +652,31 @@ class survey_question(osv.osv):
     #     errors = {}
     #     if question.constr_mandatory:
     #         # extraire les réponses
-    #         # vérifier qu'elles sont ok
+    #         # vérifier qu'il y a au moins une réponse
+    #         # vérifier sinon que la réponse n'est pas un commentaire
+    #         # valider les commentaires
     #     return errors
 
-    # def validate_matrix(self, cr, uid, question, post, answer_tag, context=None):
-    #     errors = {}
-    #     if question.constr_mandatory:
-    #         # compter le nombre de lignes qui ont une réponse (cas des matrices à choix multiple)
-    #         # valider selon les contraintes de lignes
-    #         # retourner des erreurs si c'est caca
-    #     return errors
+    def validate_matrix(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        if question.constr_mandatory:
+            answer_candidates = dict_keys_startswith(post, answer_tag)
+            lines_number = len(question.labels_ids_2)
+            answer_number = len(answer_candidates)
+            if question.matrix_subtype == 'simple':
+                if question.constr_type == 'all' and answer_number != lines_number:
+                    errors.update({answer_tag: question.constr_error_msg})
+                elif question.constr_type == 'at least' and answer_number < question.constr_minimum_req_ans:
+                    errors.update({answer_tag: question.constr_error_msg})
+                elif question.constr_type == 'at most' and answer_number > question.constr_maximum_req_ans:
+                    errors.update({answer_tag: question.constr_error_msg})
+                elif question.constr_type == 'exactly' and answer_number != question.constr_maximum_req_ans:
+                    errors.update({answer_tag: question.constr_error_msg})
+                elif question.constr_type == 'a range' and not (question.constr_minimum_req_ans <= answer_number <= question.constr_maximum_req_ans):
+                    errors.update({answer_tag: question.constr_error_msg})
+            # elif question.matrix_subtype == 'multiple':
+
+        return errors
 
 
 class survey_label(osv.osv):
@@ -941,6 +963,27 @@ class survey_user_input_line(osv.osv):
         return True
 
     def save_line_datetime(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+        }
+        if answer_tag in post:
+            vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
+        else:
+            vals.update({'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
+        return True
+
+    def save_line_simple_choice(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
         vals = {
             'user_input_id': user_input_id,
             'question_id': question.id,
