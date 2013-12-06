@@ -41,6 +41,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	set_row_groupby: function (groupby) {
+        if ((!groupby.length) && (this.rows.main)) {
+            this.fold(this.rows.main);
+        }
 		if (!_.isEqual(groupby, this.rows.groupby)) {
 			this.rows.groupby = groupby;
 			this.invalidate_data();
@@ -48,6 +51,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	set_col_groupby: function (groupby) {
+        if ((!groupby.length) && (this.cols.main)) {
+            this.fold(this.cols.main);
+        }
 		if (!_.isEqual(groupby, this.cols.groupby)) {
 			this.cols.groupby = groupby;
             this.invalidate_data();
