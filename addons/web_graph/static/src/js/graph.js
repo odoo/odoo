@@ -179,7 +179,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
     },
 
-
 /******************************************************************************
  * Event handling methods...
  ******************************************************************************/
@@ -318,11 +317,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
     display_dropdown: function (options) {
         var self = this,
             pivot = this.pivot_table,
-            already_grouped = pivot.rows.groupby.concat(pivot.cols.groupby),
-            possible_groups = _.difference(self.important_fields, already_grouped),
+            // already_grouped = pivot.rows.groupby.concat(pivot.cols.groupby),
+            // possible_groups = _.difference(self.important_fields, already_grouped),
             dropdown_options = {
                 header_id: options.id,
-                fields: _.map(possible_groups, function (field) {
+                fields: _.map(self.important_fields, function (field) {
                     return {id: field, value: self.fields[field].string};
             })};
 
