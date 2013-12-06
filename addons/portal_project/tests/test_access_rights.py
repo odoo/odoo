@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.project.tests.test_project_base import TestProjectBase
+from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
@@ -93,13 +94,13 @@ class TestPortalProject(TestPortalProjectBase):
         self.project_task.write(cr, self.user_projectuser_id, task_ids, {'description': 'TestDescription'})
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
         # Test: no project task visible
-        self.assertRaises(except_orm, self.project_task.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
+        self.assertRaises(AccessError, self.project_task.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
         # Test: no project task readable
-        self.assertRaises(except_orm, self.project_task.read, cr, self.user_none_id, task_ids, ['name'])
+        self.assertRaises(AccessError, self.project_task.read, cr, self.user_none_id, task_ids, ['name'])
         # Test: no project task writable
-        self.assertRaises(except_orm, self.project_task.write, cr, self.user_none_id, task_ids, {'description': 'TestDescription'})
+        self.assertRaises(AccessError, self.project_task.write, cr, self.user_none_id, task_ids, {'description': 'TestDescription'})
 
         # Do: Chell reads project -> ok (portal ok public)
         self.project_project.read(cr, self.user_portal_id, pigs_id, ['name'])
@@ -110,7 +111,7 @@ class TestPortalProject(TestPortalProjectBase):
         # Test: all project tasks readable
         self.project_task.read(cr, self.user_portal_id, task_ids, ['name'])
         # Test: no project task writable
-        self.assertRaises(except_orm, self.project_task.write, cr, self.user_portal_id, task_ids, {'description': 'TestDescription'})
+        self.assertRaises(AccessError, self.project_task.write, cr, self.user_portal_id, task_ids, {'description': 'TestDescription'})
 
         # Do: Donovan reads project -> ok (public)
         self.project_project.read(cr, self.user_public_id, pigs_id, ['name'])
@@ -121,7 +122,7 @@ class TestPortalProject(TestPortalProjectBase):
         # Test: all project tasks readable
         self.project_task.read(cr, self.user_public_id, task_ids, ['name'])
         # Test: no project task writable
-        self.assertRaises(except_orm, self.project_task.write, cr, self.user_public_id, task_ids, {'description': 'TestDescription'})
+        self.assertRaises(AccessError, self.project_task.write, cr, self.user_public_id, task_ids, {'description': 'TestDescription'})
 
         # ----------------------------------------
         # CASE2: portal project
@@ -136,9 +137,9 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: project user cannot see all tasks of a portal project')
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
         # Test: no project task searchable
-        self.assertRaises(except_orm, self.project_task.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
+        self.assertRaises(AccessError, self.project_task.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
 
         # Data: task follower
         self.project_task.message_subscribe_users(cr, self.user_projectuser_id, [self.task_1_id, self.task_3_id], [self.user_portal_id])
@@ -174,7 +175,7 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: project user cannot see all tasks of an employees project')
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
 
         # Do: Chell reads project -> ko (portal ko employee)
         self.assertRaises(except_orm, self.project_project.read, cr, self.user_portal_id, pigs_id, ['name'])
@@ -202,7 +203,7 @@ class TestPortalProject(TestPortalProjectBase):
                          'access rights: employee user should not see tasks of a not-followed followers project, only assigned')
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(except_orm, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
+        self.assertRaises(AccessError, self.project_project.read, cr, self.user_none_id, pigs_id, ['name'])
 
         # Do: Chell reads project -> ko (portal ko employee)
         self.assertRaises(except_orm, self.project_project.read, cr, self.user_portal_id, pigs_id, ['name'])
