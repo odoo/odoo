@@ -1,17 +1,27 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
-        <!--  Add payment options to sale.order and invoice forms -->
         <record model="ir.ui.view" id="sale_order_form_quote">
-                <field name="name">sale.order.form.payment</field>
-                <field name="model">sale.order</field>
-                <field name="inherit_id" ref="sale.view_order_form"/>
-                <field name="arch" type="xml">
-                    <notebook version="7.0" position="before">
-                        <field name="quote_url"/>
-                    </notebook>
-                </field>
+            <field name="name">sale.order.form.payment</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="after">
+                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('quote_url', '=', False)]}">
+                        <field name="quote_url" widget="url"/>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='client_order_ref']" position="after">
+                    <field name="is_template"/>
+                    <field name="template_id" domain ="[('is_template','=',True)]" attrs="{'invisible': [('is_template', '=', True  )]}"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Introduction">
+                        <field name="website_description"/>
+                    </page>
+                </xpath>
+
+            </field>
         </record>
     </data>
 </openerp>

@@ -91,232 +91,189 @@
                     </body>
             </html>
         </template>
-         <template id="quotation" name="Your Quotation">
-            <t t-call="website_sale_quote.static_layout">
-            <div class="col-xs-12 col-md-8 tab-content">
-                <section id="main" class="tab-pane active oe_section">
-                    <div class="container panel panel-default">
-                        <div class="row panel-body">
-                            <div class="text-center">
-                                <h1>What does Quickstart cover ?</h1>
-                            </div>
-                            <div>
-                                <p class="lead"><small>1. The OpenERP Enterprise Contract (1 year coverage): unlimited bugfix, security alerts, migration</small></p>
-
-                                <p class="lead"><small>2. The “Get on Board” Hands-on Training (choice between our core modules)</small></p>
-
-                                <p class="lead"><small>3. On-site consulting (minimum 2 days)</small></p>
-
-                            </div>
-                            <div class="text-center">
-                                <h1>How does it work?</h1>
-                            </div>
-                            <div>
-                                <p class="lead"><small>1. OpenERP qualifies your main business needs</small></p>
-
-                                <p class="lead"><small>2. You get a tailored demo</small></p>
-
-                                <p class="lead"><small>3. We train you on your chosen module
-    </small></p>
-                                <p class="lead"><small>4. We deploy your chosen module with a dedicated functional consultant</small></p>
-                                <p class="lead"><small>5. We get you involved in the deployment of OpenERP in your company</small></p>
-
-                            </div>
-                            <p class="lead">
-                                <small>
-                                    The QuickStart offer simply enables any SME to start using OpenERP in just a few days. Since we launched this approach, we already deployed 50 customers in production. <a href="http://v6.openerp.com/node/1390">Check out some of the <strong>testimonials</strong>!</a>
-                                </small>
+        <template id="pricing" name="Quotation Pricing">
+            <section id="quote" class="tab-pane oe_section">
+                <div class="well">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <address>
+                                <strong t-field="quotation.partner_id.name"/>
+                                <br/>
+                                <t t-esc="quotation.partner_id.street"/>
+                                <br/>
+                                <t t-esc="quotation.partner_id.city"/>, <t t-esc="quotation.partner_id.state_id.name"/> <t t-esc="quotation.partner_id.zip"/>
+                                <br/>
+                                <abbr title="Phone">P:</abbr> <t t-esc="quotation.partner_id.phone"/>
+                            </address>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 text-right">
+                            <p>
+                                <em>Date: <t t-esc="quotation.date_order"/></em>
+                            </p>
+                            <p>
+                                <em>Quotation #: <t t-esc="quotation.name"/></em>
                             </p>
                         </div>
                     </div>
-                </section>
-                <section id="quote" class="tab-pane oe_section">
-                    <div class="well">
-                        <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-md-6">
-                                <address>
-                                    <strong t-field="quotation.order_id.partner_id.name"/>
-                                    <br/>
-                                    <t t-esc="quotation.order_id.partner_id.street"/>
-                                    <br/>
-                                    <t t-esc="quotation.order_id.partner_id.city"/>, <t t-esc="quotation.order_id.partner_id.state_id.name"/> <t t-esc="quotation.order_id.partner_id.zip"/>
-                                    <br/>
-                                    <abbr title="Phone">P:</abbr> <t t-esc="quotation.order_id.partner_id.phone"/>
-                                </address>
-                            </div>
-                            <div class="col-xs-6 col-sm-6 col-md-6 text-right">
-                                <p>
-                                    <em>Date: <t t-esc="quotation.order_id.date_order"/></em>
-                                </p>
-                                <p>
-                                    <em>Quotation #: <t t-esc="quotation.order_id.name"/></em>
-                                </p>
-                            </div>
+                    <div class="row">
+                        <div class="text-center">
+                            <h1>Quotation</h1>
                         </div>
-                        <div class="row">
-                            <div class="text-center">
-                                <h1>Quotation</h1>
-                            </div>
-                            <table class="table table-hover">
-                                <thead>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Description</th>
+                                    <th>#</th>
+                                    <th class="text-center">Unit Price</th>
+                                    <th class="text-center">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="quotation.order_line" t-as="line">
                                     <tr>
-                                        <th>Product</th>
-                                        <th>Description</th>
-                                        <th>#</th>
-                                        <th class="text-center">Unit Price</th>
-                                        <th class="text-center">Subtotal</th>
+                                        <td class="col-md-9"><em><t t-esc="line.product_id.name"/></em></td>
+                                        <td class="col-md-9"><em><t t-esc="line.name"/></em></td>
+                                        <td class="col-md-1" style="text-align: center"><t t-esc="line.product_uom_qty"/></td>
+                                        <td class="col-md-1 text-center"><t t-esc="line.price_unit"/></td>
+                                        <td class="col-md-1 text-center"><t t-esc="line.price_subtotal"/></td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="quotation.order_id.order_line" t-as="line">
-                                        <tr>
-                                            <td class="col-md-9"><em><t t-esc="line.product_id.name"/></em></td>
-                                            <td class="col-md-9"><em><t t-esc="line.name"/></em></td>
-                                            <td class="col-md-1" style="text-align: center"><t t-esc="line.product_uom_qty"/></td>
-                                            <td class="col-md-1 text-center"><t t-esc="line.price_unit"/></td>
-                                            <td class="col-md-1 text-center"><t t-esc="line.price_subtotal"/></td>
-                                        </tr>
-                                    </t>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="text-right">
-                                            <p>
-                                                <strong>Untaxed Amount: </strong>
-                                            </p>
-                                            <p>
-                                                <strong>Tax: </strong>
-                                            </p></td>
-                                            <td class="text-center">
-                                            <p>
-                                                <strong t-field="quotation.order_id.amount_untaxed"
-                                                t-field-options='{
-                                                   "widget": "monetary",
-                                                   "display_currency": "website.pricelist_id.currency_id"
-                                               }'></strong>
-                                            </p>
-                                            <p>
-<!--                                                <strong><t t-esc="quotation.amount_taxed"/></strong>-->
-                                            </p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="text-right"><strong>Total: </strong></td>
-                                        <td class="text-center text-success">
-                                            <strong
-                                                t-field="quotation.order_id.amount_total"
-                                                t-field-options='{"widget": "monetary",
-                                               "display_currency":"website.pricelist_id.currency_id"
+                                </t>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <p>
+                                            <strong>Untaxed Amount: </strong>
+                                        </p>
+                                        <p>
+                                            <strong>Tax: </strong>
+                                        </p></td>
+                                        <td class="text-center">
+                                        <p>
+                                            <strong t-field="quotation.amount_untaxed"
+                                            t-field-options='{
+                                               "widget": "monetary",
+                                               "display_currency": "website.pricelist_id.currency_id"
                                            }'></strong>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="text-center">
-                               <a type="submit" t-if="quotation.state != 'accept'" t-href="/quote/#{ quotation.access_token }/accept" class="btn btn-labeled btn-success"><span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>Accept</a>
-                                <a type="submit" t-if="quotation.state != 'cancel'" t-href="/quote/#{ quotation.access_token }/decline" class="btn btn-labeled btn-danger"><span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>Decline</a>
-                            </div>
-                        </div>
+                                        </p>
+                                        <p>
+<!--                                                <strong><t t-esc="quotation.amount_taxed"/></strong>-->
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right"><strong>Total: </strong></td>
+                                    <td class="text-center text-success">
+                                        <strong
+                                            t-field="quotation.amount_total"
+                                            t-field-options='{"widget": "monetary",
+                                           "display_currency":"website.pricelist_id.currency_id"
+                                       }'></strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </section>
-                <section id="accouting" class="tab-pane oe_section">
-                    <div class="container">
-                        <div class="text-center">
-                            <h1>What am i looking for ?</h1>
-                        </div>
-                        <div class="media">
-                            <a class="pull-right" href="#">
-                                <img class="media-object" src="/crm/static/description/icon.png" alt="..."/>
+                </div>
+            </section>
+        </template>
+        <template id="quote_status">
+            <div class="navbar navbar-default  navbar-fix-top">
+                <div class="collapse navbar-collapse navbar-top-collapse">
+                    <ul class="nav navbar-nav" id="top_menu">
+                        <li>
+                            <a type="submit" t-if="quotation.state != 'accept'" t-href="/quote/#{ quotation.access_token }/accept">
+                                <span class="fa-stack">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-check fa-stack-1x fa-inverse fa-success"></i>
+                                </span>
+                                Accept
                             </a>
-                            <div class="media-body">
-                                <h4 class="media-heading">Customer Relationship Management</h4>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Manage my leads</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Optimize my Sales Cycle</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Create customize dashboard</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Improve my Sales reporting</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Communicate with customers and colleagues</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Controll and manage my sales forcastes</i></small></p>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <a class="pull-left" href="#">
-                                <img class="media-object" src="/hr_timesheet_sheet/static/description/icon.png" alt="..."/>
+                        </li>
+                        <li>
+                            <a type="submit" t-if="quotation.state != 'cancel'" t-href="/quote/#{ quotation.access_token }/decline">
+                                <span class="fa-stack">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+                                </span>
+                                Decline
                             </a>
-                            <div class="media-body pull-right">
-                                <h4 class="media-heading">Service Management</h4>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Manage my customer contracts</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Optimize and analyze my time management</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Manage , analysis and trace my issue</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Create customize dashboard</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Perform project management</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Trace my invoices</i></small></p>
-                                <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Manage my helpdesk</i></small></p>
-                            </div>
-                        </div>
-                      </div>
-                </section>
-                <section id="sales" class="tab-pane oe_section">
-                    <div class="container">
-                        <div class="text-center">
-                            <h1>What's in it for me ?</h1>
-                        </div>
-                        <div>
-                            <h4>The OpenERP Enterprise contract(1 year) convering</h4>
-                            <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Unlimited Bugfix service</i></small></p>
-                            <p class="lead"><small><i class="glyphicon glyphicon-pencil">"One Click" Update</i></small></p>
-                            <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Functional Support</i></small></p>
-                            <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Migration</i></small></p>
-
-                            <p class="lead"><small><i class="glyphicon glyphicon-pencil"> Online Hosting</i></small></p>
-                        </div>
-                    </div>
-                </section>
-                <div class="panel panel-default widget">
-                    <div class="panel-heading">
-                        <span class="glyphicon glyphicon-comment"></span>
-                        <h3 class="panel-title">Recent Comments</h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-group">
-                            <t t-foreach="quotation.message_ids" t-as="message">
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1">
-                                            <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
-                                        <div class="col-xs-10 col-md-11">
-                                            <div>
-                                                <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html"/>
-                                                    <t t-raw="message.body"/>
-                                                <div class="mic-info">
-                                                    By: <a href="#"><t t-esc="message.author_id.name"/></a> on <t t-esc="message.date"/>
-                                                </div>
+                        </li>
+                        <li>
+                            <a href="#chat">
+                                <span class="fa-stack">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-comment fa-stack-1x fa-inverse"></i>
+                                </span>Discuss
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </template>
+        <template id="chatter">
+            <div id="chat" class="panel panel-default widget">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-comment"></span>
+                    <h3 class="panel-title">Recent Comments</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <t t-foreach="quotation.message_ids" t-as="message">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">
+                                        <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
+                                    <div class="col-xs-10 col-md-11">
+                                        <div>
+                                            <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html"/>
+                                                <t t-raw="message.body"/>
+                                            <div class="mic-info">
+                                                By: <a href="#"><t t-esc="message.author_id.name"/></a> on <t t-esc="message.date"/>
                                             </div>
                                         </div>
                                     </div>
-                                </li>
-                            </t>
-                        </ul>
-                    </div>
+                                </div>
+                            </li>
+                        </t>
+                    </ul>
                 </div>
-                <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% quotation.access_token">
-                    <textarea rows="3" id="new_message" name="new_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
-                    <button type="submit" t-att-id="quotation.access_token" class="btn btn-info">Post your Comment</button>
-                </form>
             </div>
-            <div class="col-xs-6 col-md-4 sidebar oe_section" id="sidebar">
-                <ul class="nav nav-pills nav-stacked" data-spy="affix">
-                    <li class="active"><a href="#main" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
-                    <li ><a href="#crm" data-toggle="tab"><i class="icon-chevron-right"></i> CRM and Marketing</a></li>
-                    <li><a href="#sales" data-toggle="tab"><i class="icon-chevron-right"></i> Sales and Warehouse</a></li>
-                    <li ><a href="#crm" data-toggle="tab"><i class="icon-chevron-right"></i> Manufacturing</a></li>
-                    <li><a href="#accouting" data-toggle="tab"><i class="icon-chevron-right"></i> Accounting</a></li>
-                    <li><a href="#quote" data-toggle="tab"><i class="icon-chevron-right"></i> Quotation</a></li>
-                </ul>
-            </div></t>
+            <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% quotation.access_token">
+                <textarea rows="3" id="new_message" name="new_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
+                <button type="submit" t-att-id="quotation.access_token" class="btn btn-info">Post your Comment</button>
+            </form>
+        </template>
+        <template id="so_quotation" name="Product Quotation">
+            <t t-call="website_sale_quote.static_layout">
+                <div class="col-xs-12 col-md-8 tab-content">
+                    <t t-call="website_sale_quote.quote_status"/>
+                    <section id="introduction11" class="tab-pane active oe_section jumbotron">
+                        <div t-field="quotation.website_description"/>
+                    </section>
+                    <t t-foreach="quotation.order_line" t-as="line">
+                        <section class="tab-pane oe_section jumbotron" t-att-id="line.id">
+                            <div t-field="line.website_description" class="oe_structure"/>
+                        </section>
+                    </t>
+                    <t t-call="website_sale_quote.pricing"/>
+                    <t t-call="website_sale_quote.chatter"/>
+                </div>
+                <div class="col-xs-6 col-md-4 sidebar oe_section" id="sidebar">
+                    <ul class="nav nav-pills nav-stacked" data-spy="affix">
+                        <li class="active"><a href="#introduction11" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
+                        <t t-foreach="quotation.order_line" t-as="line">
+                            <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><i class="icon-chevron-right"></i><t t-raw="line.product_id.name_template"/> </a></li>
+                        </t>
+                        <li><a href="#quote" data-toggle="tab"><i class="icon-chevron-right"></i> Quotation</a></li>
+                    </ul>
+                </div>
+            </t>
         </template>
     </data>
 </openerp>

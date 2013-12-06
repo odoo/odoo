@@ -23,22 +23,29 @@ from openerp.osv import osv, fields
 import hashlib
 import time
 
-class sale_quote(osv.Model):
-    _name = "sale.quote"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = "Sales Quotations"
+class sale_order_line(osv.osv):
+    _inherit = "sale.order.line"
+    _description = "Sales Order Line"
     _columns = {
-#            'template_id': fields.many2one('ir.ui.view', 'Template'),
-            'order_id': fields.many2one('sale.order', 'Order', required=True),
-            'state': fields.selection([
-            ('draft', 'Draft Quotation'),
-            ('sent', 'Quotation Sent'),
-            ('accept', 'Accept'),
-            ('cancel', 'Cancelled'),
-            ('done', 'Done'),
-            ], 'Status'),
-            'to_email': fields.char('Customers Email'),
-            'access_token':fields.char('Quotation Token', size=256),
+        'website_description':fields.html('Line Description'),
+    }
+
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,uom=False, qty_uos=0, uos=False, name='', partner_id=False,lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,uom, qty_uos, uos, name, partner_id,lang, update_tax, date_order, packaging, fiscal_position, flag, context)
+        if product:
+            desc = self.pool.get('product.product').browse(cr, uid, product, context).website_description
+            res.get('value').update({'website_description': desc})
+        print res
+        return res
+
+class sale_order(osv.osv):
+    _inherit = 'sale.order'
+    _columns = {
+        'quote_url': fields.char('URL'),
+        'access_token':fields.char('Quotation Token', size=256),
+        'template_id': fields.many2one('sale.order','Quote Template'),
+        'website_description': fields.html('Description'),
+        'is_template': fields.boolean('Is Template'),
     }
 
     def new_quotation_token(self, cr, uid, record_id):
@@ -47,56 +54,34 @@ class sale_quote(osv.Model):
         return self.write(cr, uid, [record_id],{'access_token': quotation_token} )
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        new_id = super(sale_quote, self).create(cr, uid, vals, context=context)
+        new_id = super(sale_order, self).create(cr, uid, vals, context=context)
         self.new_quotation_token(cr, uid, new_id)
         return new_id
-
-
-class sale_order(osv.osv):
-    _inherit = 'sale.order'
-    _columns = {
-        'quote_url': fields.char('URL'),
-    }
-
-#    def action_quotation_send(self, cr, uid, ids, context=None):
-#        '''
-#        This function opens a window to compose an email, with the edi sale template message loaded by default
-#        '''
-#        data_pool = self.pool.get('ir.model.data')
-#        sale_quote = self.pool.get('sale.quote')
-#        try:
-#            compose_form_id = data_pool.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
-#        except ValueError:
-#            compose_form_id = False
-#        model,template_id = data_pool.get_object_reference(cr, uid, 'website_sale_quote', "email_template_sale_quote")
-#        ctx = dict(context)
-#        for order in self.browse(cr, uid, ids, context):
-#            if not order.quote_id:
-#                new_id = sale_quote.create(cr, uid,{
-#                    'state' : 'draft',
-#                    'to_email': order.partner_id.email,
-#                })
-#                self.write(cr, uid, [order.id] ,{'quote_id': new_id}, context)
-#            ctx.update({
-#                'default_model': 'sale.order',
-#                'default_res_id': order.id,
-#                'default_use_template': bool(template_id),
-#                'default_template_id': template_id,
-#                'default_composition_mode': 'comment',
-#                'mark_so_as_sent': True
-#            })
-#        return {
-#            'type': 'ir.actions.act_window',
-#            'view_type': 'form',
-#            'view_mode': 'form',
-#            'res_model': 'mail.compose.message',
-#            'views': [(compose_form_id, 'form')],
-#            'view_id': compose_form_id,
-#            'target': 'new',
-#            'context': ctx,
-#        }
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        template_id = vals.get('template_id', False)
+        lines = []
+        line_pool = self.pool.get('sale.order.line')
+        if template_id:
+            order_template = self.browse(cr, uid, template_id, context)
+            for line in order_template.order_line:
+                line_pool.create(cr, uid,{
+                'name': line.name,
+                'sequence': line.sequence,
+                'order_id': ids[0],
+                'price_unit': line.price_unit,
+                'product_uom_qty': line.product_uom_qty,
+                'discount': line.discount,
+                'product_id': line.product_id.id,
+                'tax_id': [(6, 0, [x.id for x in line.tax_id])],
+                'website_description':line.website_description,
+                }, context=context)
+            vals.update({
+                'quote_url': self.get_signup_url(cr, uid, ids, context),
+                'website_description': order_template.website_description,
+            })
+        res = super(sale_order, self).write(cr, uid, ids, vals, context=context)
+        return res
 
     def action_quotation_send(self, cr, uid, ids, context=None):
         quote = super(sale_order, self).action_quotation_send(cr, uid,ids, context)
@@ -114,8 +99,9 @@ class sale_order(osv.osv):
 
     def get_signup_url(self, cr, uid, ids, context=None):
         url = False
-        quote_id = self.pool.get('sale.quote').search(cr, uid, [('order_id','=', ids[0])], context=context)
-        for quote in self.pool.get('sale.quote').browse(cr, uid, quote_id, context=context):
-            base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-            url = "%s/quote/%s" % (base_url, quote.access_token)
+        order = self.browse(cr, uid, ids, context=context)[0]
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
+        url = "%s/quote/%s" % (base_url, order.access_token)
         return url
+
+

@@ -16,6 +16,7 @@ OpenERP Sale Quote Roller
         'sale_quote_data.xml'
     ],
     'demo': [
+        'sale_quote_demo.xml'
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
