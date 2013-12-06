@@ -446,7 +446,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         ir_module = self.pool['ir.module.module']
         def ref(xml_id):
             mod, xml = xml_id.split('.', 1)
-            return ir_model_data.get_object(cr, uid, mod, xml, context)
+            return ir_model_data.get_object(cr, uid, mod, xml, context=context, check_existence_and_raise=True)
 
         defaults, groups, modules, others = [], [], [], []
         for name, field in self._columns.items():
