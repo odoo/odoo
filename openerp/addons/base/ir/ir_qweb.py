@@ -605,6 +605,8 @@ class FloatConverter(osv.AbstractModel):
         return precision
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
+        if context is None:
+            context = {}
         precision = self.precision(cr, uid, column, options=options, context=context)
         fmt = '%f' if precision is None else '%.{precision}f'
 
