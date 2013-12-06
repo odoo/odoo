@@ -31,7 +31,7 @@
                     if (step.trigger === 'click') {
                         step.triggers = function (callback) {
                             $(step.element).one('click', function () {
-                                (callback || self.moveToNextStep).call(self);
+                                (callback || self.moveToNextStep).apply(self);
                             });
                         };
                     } else if (step.trigger === 'drag') {
@@ -68,7 +68,7 @@
                                     $doc.off('hide.bs.modal', onStop);
                                     self.moveToStep(step.trigger.modal.afterSubmit);
                                 });
-                                (callback || self.moveToNextStep).call(self);
+                                (callback || self.moveToNextStep).apply(self);
                             });
                         };
                     }

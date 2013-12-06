@@ -37,9 +37,11 @@
                     placement: 'left',
                     title: "Create a new product",
                     content: "Select 'New Product' to create it and manage its properties to boost your sales.",
-                    modal: {
-                        stopOnClose: true,
-                        afterSubmit: 'product-page',
+                    trigger: {
+                        modal: {
+                            stopOnClose: true,
+                            afterSubmit: 'product-page',
+                        },
                     },
                 },
                 {
@@ -48,7 +50,6 @@
                     placement: 'right',
                     title: "Choose name",
                     content: "Enter a name for your new product then click 'Continue'.",
-
                 },
                 {
                     stepId: 'product-page',
@@ -73,7 +74,7 @@
                     content: "Click here to set an image describing your product.",
                     triggers: function () {
                         function registerClick () {
-                            $('button.image-edit-button').one('click', function () {
+                            $('button.hover-edition-button').one('click', function () {
                                 $('#wrap img.img:first').off('hover', registerClick);
                                 self.moveToNextStep();
                             });
