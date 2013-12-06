@@ -305,6 +305,7 @@
 
                         $toInsert = $snippet.find('.oe_snippet_body').clone();
                         $toInsert.removeClass('oe_snippet_body');
+                        $toInsert.data('src-snippet-id', snipped_id);
                         if (!$toInsert.data('snippet-id')) {
                             $toInsert.attr('data-snippet-id', snipped_id);
                         } else {
