@@ -100,11 +100,6 @@ Main Features
         'static/src/js/tests.js',
         'static/src/js/main.js',
     ],
-    'css': [
-        'static/src/css/pos.css', # this is the default css with hover effects
-        #'static/src/css/pos_nohover.css', # this css has no hover effects (for resistive touchscreens)
-        'static/src/css/keyboard.css'
-    ],
     'qweb': ['static/src/xml/pos.xml'],
     'auto_install': False,
 }

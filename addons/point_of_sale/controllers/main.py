@@ -32,7 +32,9 @@ html_template = """<!DOCTYPE html>
         <link rel="apple-touch-icon" sizes="152x152" href="/point_of_sale/static/src/img/touch-icon-ipad-retina.png">
 
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        <!-- <link rel="stylesheet" href="/point_of_sale/static/src/fonts/lato/stylesheet.css" /> -->
         <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" />
+        <!-- <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css" />-->
         %(js)s
         <script type="text/javascript">
             $(function() {
@@ -69,18 +71,14 @@ class PosController(http.Controller):
          #   'css': css,
             'modules': simplejson.dumps(module_boot(request.db)),
             'init': """
-                     console.log('LOADED');
                      var wc = new s.web.WebClient();
                      wc.show_application = function(){
-                         console.log('SHOW APPLICATION');
                          wc.action_manager.do_action("pos.ui");
                      };
                      wc.show_login = function(){
-                         console.log('SHOW LOGIN');
                          window.location.href = '/';
                      }
                      wc.appendTo($(document.body));
-                     console.log('APPENDED');
                      """
         }
         return r

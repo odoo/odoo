@@ -380,10 +380,9 @@ class pos_session(osv.osv):
         context.update(active_id=this_record.id)
 
         return {
-            'type' : 'ir.actions.client',
-            'name' : _('Start Point Of Sale'),
-            'tag' : 'pos.ui',
-            'context' : context,
+            'type' : 'ir.actions.act_url',
+            'url'  : '/pos/web/',
+            'target': 'self',
         }
 
     def wkf_action_open(self, cr, uid, ids, context=None):
@@ -486,10 +485,9 @@ class pos_session(osv.osv):
                         _("You cannot use the session of another users. This session is owned by %s. Please first close this one to use this point of sale." % session.user_id.name))
         context.update({'active_id': ids[0]})
         return {
-            'type' : 'ir.actions.client',
-            'name' : _('Start Point Of Sale'),
-            'tag' : 'pos.ui',
-            'context' : context,
+            'type' : 'ir.actions.act_url',
+            'target': 'self',
+            'url':   '/pos/web/',
         }
 
 class pos_order(osv.osv):

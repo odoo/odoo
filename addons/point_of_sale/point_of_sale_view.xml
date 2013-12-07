@@ -744,9 +744,10 @@
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
                 id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 
-        <record model="ir.actions.client" id="action_pos_pos">
+        <record model="ir.actions.act_url" id="action_pos_pos">
             <field name="name">Start Point of Sale</field>
-            <field name="tag">pos.ui</field>
+            <field name="url">/pos/web/</field>
+            <field name="target">self</field>
         </record>
 
         <!-- Top menu item -->
