@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-10-25 10:54+0000\n"
+"PO-Revision-Date: 2013-12-07 14:07+0000\n"
 "Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:21+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2013-12-08 05:46+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -198,7 +198,7 @@ msgstr "Za nabavljeni materijal"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "Planiranje proizvodnje"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -209,7 +209,7 @@ msgstr "Detaljno planiranje radova za radne naloge"
 #: code:addons/mrp/mrp.py:633
 #, python-format
 msgid "Cannot cancel manufacturing order!"
-msgstr ""
+msgstr "Nije moguće otkazati proizvodni nalog!"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -739,6 +739,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje nove komponente sastavnice.\n"
+"              </p><p>\n"
+"                Komponente sastavnice su dijelovi sastavnica koje se koriste "
+"za\n"
+"                kreiranje glavnih sastavnica. Kroz ovaj izbornik možete "
+"pronaći\n"
+"                u kojim se sastavnicama koristi određena komponenta.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -962,7 +972,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
-msgstr "BoM Type"
+msgstr "Tip sastavnice"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:57
@@ -1612,6 +1622,26 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje grupe svojstava.\n"
+"              </p><p>\n"
+"                Definirajte specifične grupe svojstava koje se mogu "
+"dodijeliti\n"
+"                vašim sastavnicama i prodajnim nalozima. Svojstva "
+"dozvoljavaju\n"
+"                OpenERP-u da automatski odabere ispravnu sastavnicu "
+"sukladno\n"
+"                svojstvima odabranim u prodajnim nalozima.\n"
+"              </p><p>\n"
+"                Na primjer, grupi svojstava \"Garancija\", imate dva "
+"svojstva:\n"
+"                Garancija 1 godinu,i Garancija 3 godine. Ovisno o odabranom "
+"svojstvu\n"
+"                u prodajnom nalogu, OpenERP će zakazati proizvodnju "
+"koristeći\n"
+"                odgovarajuću sastavnicu.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1845,7 +1875,7 @@ msgstr "Time for 1 cycle (hour)"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Cancel Production"
-msgstr ""
+msgstr "Otkaži proizvodnju"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
@@ -1885,7 +1915,7 @@ msgstr "Greška!"
 #: view:mrp.bom:0
 #, python-format
 msgid "Components"
-msgstr "Components"
+msgstr "Komponente"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -1901,12 +1931,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,date_stop:0
 msgid "Valid Until"
-msgstr "Valid Until"
+msgstr "Vrijedi do"
 
 #. module: mrp
 #: field:mrp.bom,date_start:0
 msgid "Valid From"
-msgstr "Valid From"
+msgstr "Vrijedi od"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1932,7 +1962,7 @@ msgstr "Količina JP"
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
-msgstr ""
+msgstr "Prijenos"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2066,6 +2096,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje nove sastavnice. \n"
+"              </p><p>\n"
+"                Sastavnice omogućuju definiranje liste potrenih sirovina\n"
+"                koje se koriste u procesu proizvodnje;\n"
+"              </p><p>\n"
+"                OpenERP koristi ove sastavnice kako bi automatski predložio "
+"proizvodni\n"
+"                nalog sukladno potrebama nabavke.\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -2179,7 +2220,7 @@ msgstr "Product type is Stockable or Consumable."
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "Započeta proizvodnja"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
