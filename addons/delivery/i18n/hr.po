@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-11-16 17:25+0000\n"
-"Last-Translator: Ivica Perić <ivica.peric@ipsoft-tg.com>\n"
+"PO-Revision-Date: 2013-12-07 13:21+0000\n"
+"Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:07+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2013-12-08 05:46+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -133,6 +133,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje cjenika dostave za određenu regiju.\n"
+"              </p><p>\n"
+"                Cjenik dostave omogućava izračun nabavne i prodajne cijene\n"
+"                dostave sukladno težini proizvoda i ostalim kriterijima.\n"
+"                Možete definirati nekoliko cjenika za svaku vrstu dostave:\n"
+"                za državu ili regiju u određenoj državi\n"
+"                </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -170,12 +179,12 @@ msgstr "Način Dostave"
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No price available!"
-msgstr ""
+msgstr "Cijena nije dostupna !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Skladišni prijenos"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -237,7 +246,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Dostavljačka tvrtka"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -247,12 +256,12 @@ msgstr "Dostavna Mreža"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "Fakturirano na"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Skladišni dokument"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -299,12 +308,12 @@ msgstr "Na Pošt. Broj"
 #: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Predefinirana cijena"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Standardna cijena"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -379,7 +388,7 @@ msgstr "Aktivno"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "Datum Otpreme"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
@@ -427,6 +436,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Pritisnite za kreiranje novog načina dostave. \n"
+"              </p><p>\n"
+"                Svaki dostavljač (npr. UPS, Overseas ...) može imati više "
+"vrsta dostave (npr.\n"
+"                Ekspresna dostava, Standardna dostava) sa različitim "
+"cijenama.\n"
+"              </p><p>\n"
+"                Svaka metoda dostave omogućava automatski izračun cijene "
+"dostave\n"
+"                sukladno postavkama; na prodajnom nalogu (baziranom na "
+"ponudi) \n"
+"                ili računu (baziran na otpremnicama).\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -526,7 +550,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Napredna cijene po odredištu"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -542,7 +566,7 @@ msgstr "Prijevoznik"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Načini dostave"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57

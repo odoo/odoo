@@ -767,7 +767,7 @@ class mail_thread(osv.AbstractModel):
                 encoding = part.get_content_charset()  # None if attachment
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+                    attachments.append((decode(filename) or 'attachment', part.get_payload(decode=True)))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):

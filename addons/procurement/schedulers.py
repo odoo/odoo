@@ -197,7 +197,6 @@ class procurement_order(osv.osv):
                 'company_id': orderpoint.company_id.id,
                 'product_uom': orderpoint.product_uom.id,
                 'location_id': orderpoint.location_id.id,
-                'warehouse_id': orderpoint.warehouse_id.id,
                 'procure_method': 'make_to_order',
                 'origin': orderpoint.name}
         
