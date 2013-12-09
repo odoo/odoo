@@ -3,7 +3,7 @@
     <data>
 
         <record id="view_wizard_valuation_history" model="ir.ui.view">
-            <field name="name">Stock Value At Date</field>
+            <field name="name">Stock Valuation</field>
             <field name="model">wizard.valuation.history</field>
             <field name="arch" type="xml">
                 <form string="Choose your date" version="7.0">
@@ -25,14 +25,14 @@
             </field>
         </record>
         <record id="action_wizard_stock_valuation_history" model="ir.actions.act_window">
-            <field name="name">Stock Value At Date</field>
+            <field name="name">Stock Valuation</field>
             <field name="res_model">wizard.valuation.history</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wizard_valuation_history"/>
             <field name="target">new</field>
         </record>
-        <menuitem id="menu_action_wizard_valuation_history" action="action_wizard_stock_valuation_history" parent="stock.next_id_61"/>
+        <menuitem id="menu_action_wizard_valuation_history" action="action_wizard_stock_valuation_history" parent="stock.next_id_61" sequence="1"/>
 
     <record id="view_stock_history_report_tree" model="ir.ui.view">
         <field name="name">Stock Value At Date</field>

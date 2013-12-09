@@ -249,7 +249,7 @@
         </record>
 
         <record id="action_production_lot_form" model="ir.actions.act_window">
-            <field name="name">Serial Number</field>
+            <field name="name">Serial Numbers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.production.lot</field>
             <field name="view_type">form</field>
@@ -1750,8 +1750,7 @@
         </record>
         
         <record model="ir.actions.act_window" id="quantsact">
-            <field name="name">Current Stock</field>
-            <field name="context">{'search_default_productgroup':'1', 'search_default_internal_loc': 1}</field>
+            <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
@@ -1825,7 +1824,7 @@
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
         <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
         <menuitem id="stock.next_id_61" name="Warehouse" sequence="15" parent="base.menu_reporting" groups="group_stock_manager"/>
-        <menuitem id="menu_quants" name="Current Stock Value" parent="stock.next_id_61" sequence="20" action="quantsact"/>
+        <menuitem id="menu_quants" name="Quants" parent="menu_traceability" sequence="20" action="quantsact" groups="base.group_no_one"/>
         <menuitem id="menu_procurement_rules" name="Procurement Rules" parent="stock.menu_stock_configuration" action="procrules" groups="base.group_no_one"/>
         <menuitem id="menu_pickingtype" name="Types of Operation" parent="stock.menu_stock_configuration" action="action_picking_type_list"/>
 
