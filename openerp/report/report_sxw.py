@@ -427,15 +427,16 @@ class report_sxw(report_rml, preprocess.report):
         ir_obj = registry['ir.actions.report.xml']
         font_obj = registry['res.font']
         
+        # lazy loading 
         found_fonts_ids = font_obj.search(cr, uid, [('path', '!=', '/dev/null')], context=context)
         if not found_fonts_ids:
             # no scan yet or no font found on the system, scan the filesystem
             font_obj.font_scan(cr, uid, context=context)
         else:
-            customfonts.CustomTTFonts = []
-            for font in font_obj.browse(cr, uid, found_fonts_ids, context=context):
-                customfonts.CustomTTFonts.append((font.family, font.name, font.path, font.mode))
-
+            if len(customfonts.CustomTTFonts) == 0:
+                # CustomTTFonts list is empty
+                for font in font_obj.browse(cr, uid, found_fonts_ids, context=context):
+                    customfonts.CustomTTFonts.append((font.family, font.name, font.path, font.mode))
 
         report_xml_ids = ir_obj.search(cr, uid,
                 [('report_name', '=', self.name[7:])], context=context)
