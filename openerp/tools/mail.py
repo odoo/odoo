@@ -75,22 +75,15 @@ def html_sanitize(src, silent=True):
     else:
         kwargs['remove_tags'] = tags_to_kill + tags_to_remove
 
-    if etree.LXML_VERSION >= (3, 1, 0):
-        kwargs.update({
-            'safe_attrs_only': True,
-            'safe_attrs': safe_attrs,
-        })
-    else:
-        # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
-        kwargs['safe_attrs_only'] = False
+    kwargs['safe_attrs_only'] = False
 
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = clean.Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
     except etree.ParserError, e:
-    	if 'empty' in str(e):
-    	    return ""
+        if 'empty' in str(e):
+            return ""
         if not silent:
             raise
         logger.warning('ParserError obtained when sanitizing %r', src, exc_info=True)
