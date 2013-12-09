@@ -79,6 +79,9 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
+# TODO for trunk, raise the value to 1000
+AUTOINIT_RECALCULATE_STORED_FIELDS = 40
+
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
     state_exceptions = {}
@@ -2794,8 +2797,8 @@ class BaseModel(object):
         cr.execute('select id from '+self._table)
         ids_lst = map(lambda x: x[0], cr.fetchall())
         while ids_lst:
-            iids = ids_lst[:40]
-            ids_lst = ids_lst[40:]
+            iids = ids_lst[:AUTOINIT_RECALCULATE_STORED_FIELDS]
+            ids_lst = ids_lst[AUTOINIT_RECALCULATE_STORED_FIELDS:]
             res = f.get(cr, self, iids, k, SUPERUSER_ID, {})
             for key, val in res.items():
                 if f._multi:
