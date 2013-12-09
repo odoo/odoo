@@ -535,8 +535,8 @@ class website_menu(osv.osv):
         'new_window': False,
     }
     _parent_store = True
-    _parent_order = 'sequence, name'
-    _order = "parent_left"
+    _parent_order = 'sequence'
+    _order = "sequence"
 
     # would be better to take a menu_id as argument
     def get_tree(self, cr, uid, website_id, context=None):
