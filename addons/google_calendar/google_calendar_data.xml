@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <openerp>
-    <data>
-     <!-- 
-        <record id="google_calendar_template" model="google.drive.config">
-            <field name="name">Base Spreadsheet Template</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="google_drive_template_url">https://docs.google.com/spreadsheet/ccc?key=0ApGVjjwUC-ygdDZ0TG5EQnRlLVFQNlFGdFN5b1ZrY1E</field>
-            <field name="name_template">Reporting %(name)s</field>
-            <field name="active" eval="0" />
+    <data noupdate="1">
+        <record id="config_calendar_id" model="ir.config_parameter">
+            <field name="key">google_calendar_client_id</field>
+            <field name="value"> </field>
         </record>
-    -->
+        <record id="config_calendar_secret" model="ir.config_parameter">
+            <field name="key">google_calendar_client_secret</field>
+            <field name="value"> </field>
+        </record>
     </data>
 </openerp>

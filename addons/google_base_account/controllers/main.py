@@ -16,54 +16,62 @@ class google_auth(http.Controller):
         
         state = simplejson.loads(kw['state'])
 
-        #action = state.get('a')
-        #menu = state.get('m')
         dbname = state.get('d')
-        #service = state.get('s')
         url_return = state.get('from')
         
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             #TODO CHECK IF REQUEST OK
             registry.get('google.calendar').set_all_tokens(cr,request.session.uid,kw['code'])
-            registry.get('google.calendar').set_primary_id(cr,request.session.uid)
+            #registry.get('google.calendar').set_primary_id(cr,request.session.uid)
             
         return werkzeug.utils.redirect(url_return)        
 
-    #@openerp.addons.web.http.route('/web_calendar_sync/sync_calendar/sync_data', type='json', auth='user')
     @http.route('/web_calendar_sync/sync_calendar/sync_data', type='json', auth='user')
     def sync_data(self, arch, fields, model,**kw):
-        calendar_info = {
-            'field_data':{},
-            'date_start':arch['attrs'].get('date_start'),
-            'date_stop':arch['attrs'].get('date_stop'),
-            'calendar_string':arch['attrs'].get('string'),
-            'model':model
-        }
-        for field, data in fields.items():
-            calendar_info['field_data'][field] = {
-                 'type': data.get('type'),
-                 'string': data.get('string')
-                 }
+       
                     
         if model == 'crm.meeting':
-            model_obj = request.registry.get('crm.meeting.synchronize')
+            gs_obj = request.registry.get('google.service')
             gc_obj = request.registry.get('google.calendar')
-             
-            #We check that user has already accepted openerp to acces his calendar !
-            if not gc_obj.get_refresh_token(request.cr, request.uid,context=kw.get('LocalContext')):
+            
+            #We check that admin has already configure api for google synchronization !
+            client_id = gs_obj.get_client_id(request.cr, request.uid,'calendar',context=kw.get('LocalContext'))
+
+            if not client_id or client_id == '':
+                return {
+                        "status" :  "NeedConfigFromAdmin",
+                        "url" : '' 
+                        }
+                        
+            #We check that user has already accepted openerp to access his calendar !
+            if gc_obj.need_authorize(request.cr, request.uid,context=kw.get('LocalContext')):
                 url =  gc_obj.authorize_google_uri(request.cr, request.uid, from_url=kw.get('fromurl'),context=kw.get('LocalContext'))
                 return {
                         "status" :  "NeedAuth",
                         "url" : url 
                         }
             
-            #We lunch th synchronization    
-            print "ORI COONTEXT = ",kw.get('LocalContext')
-            model_obj.synchronize_events(request.cr, request.uid, [], kw.get('LocalContext'))
-        else:
-            model_obj = request.registry.get('google.calendar')
-            model_obj.synchronize_calendar(request.cr, request.uid, calendar_info, kw.get('LocalContext'))
+            #We launch the synchronization
+            result = gc_obj.synchronize_events(request.cr, request.uid, [], kw.get('LocalContext'))
+            return result
+        else:            
+            calendar_info = {
+               'field_data':{},
+               'date_start':arch['attrs'].get('date_start'),
+               'date_stop':arch['attrs'].get('date_stop'),
+               'calendar_string':arch['attrs'].get('string'),
+               'model':model
+            }
+            for field, data in fields.items():
+                calendar_info['field_data'][field] = {
+                     'type': data.get('type'),
+                     'string': data.get('string')
+                }            
+            
+            print "@@@@@@@@@@@@@@@@@  Is still used !!!!"
+            import ipdb; ipdb.set_trace()
+            gc_obj.synchronize_calendar(request.cr, request.uid, calendar_info, kw.get('LocalContext'))
         
         
         return { "status" : "SUCCESS" }
@@ -90,6 +98,31 @@ class google_auth(http.Controller):
 
 
 
+
+    @http.route('/gmail/delete_all', type='http', auth='user')
+    def delete_all(self, **kw):
+        gs_obj = request.registry.get('google.service')
+        gc_obj = request.registry.get('google.calendar')
+        
+        #We check that admin has already configure api for google synchronization !
+        client_id = gs_obj.get_client_id(request.cr, request.uid,'calendar',context=kw.get('LocalContext'))
+
+        if not client_id or client_id == '':
+            return {
+                    "status" :  "NeedConfigFromAdmin",
+                    "url" : '' 
+                    }
+                    
+        #We check that user has already accepted openerp to access his calendar !
+        if gc_obj.need_authorize(request.cr, request.uid,context=kw.get('LocalContext')):
+            url =  gc_obj.authorize_google_uri(request.cr, request.uid, from_url=kw.get('fromurl'),context=kw.get('LocalContext'))
+            return {
+                    "status" :  "NeedAuth",
+                    "url" : url 
+                    }
+        
+        #We launch the synchronization
+        gc_obj.delete_all(request.cr, request.uid, kw.get('LocalContext'))
 
 
 

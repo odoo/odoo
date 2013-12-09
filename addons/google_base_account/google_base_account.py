@@ -65,14 +65,10 @@ class google_service(osv.osv_memory):
     
     #If no scope is passed, we use service by default to get a default scope
        
-    def _get_authorize_uri(self, cr, uid, from_url, service, scope = False, context=None): #authorize_API
-        if not service:
-            print 'please specify a service (Calendar for example)!'
+    def _get_authorize_uri(self, cr, uid, from_url, service, scope = False, context=None): 
         
         state_obj = {}
         state_obj['d'] = cr.dbname
-        state_obj['a'] = request and request.params.get('action') or False
-        state_obj['m'] = request and request.params.get('menu_id') or False
         state_obj['s'] = service
         state_obj['from'] = from_url
                 
@@ -155,23 +151,32 @@ class google_service(osv.osv_memory):
         if type=='GET':
             print "###  PARAMS : %s ###" % urllib.urlencode(params)
         else:
-            print "###  PARAMS : %s ###" % (params)
-        
+            print "###  PARAMS : %s ###" % (params)        
         print "#########################################"
         
         try:
-            if type.upper() == 'GET':
+            if type.upper() == 'GET' or type.upper() == 'DELETE':
                 data = urllib.urlencode(params)
-                req = urllib2.Request(self.get_uri_api() + uri + "?" + data)#,headers)
-            elif type.upper() == 'POST':
-                req = urllib2.Request(self.get_uri_api() + uri, params, headers)
+                req = urllib2.Request(self.get_uri_api() + uri + "?" + data)                
+            elif type.upper() == 'POST'  or type.upper() == 'PATCH' or type.upper() == 'PUT':
+                req = urllib2.Request(self.get_uri_api() + uri, params, headers)                
             else:
-                raise ('Method not supported [GET or POST] not in [%s]!' % (type))
-                
-            content = urllib2.urlopen(req).read()
-            res = simplejson.loads(content)
+                raise ('Method not supported [%s] not in [GET, POST, PUT or PATCH]!' % (type))
+            req.get_method = lambda: type.upper()            
+            req.add_header('Pragma', 'no-cache')
+            request = urllib2.urlopen(req)
+            
+            if request.getcode() == 204:
+                res = True
+            else:
+                content=request.read()
+                res = simplejson.loads(content)
+                print "RESPONSE"
+                print "=========="
+                print res
+                print "=========="
         except urllib2.HTTPError,e:
-            print e.read()
+            print "ERROR CATCHED : ",e.read()
             raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"), context=context)
           
         return res
@@ -180,10 +185,10 @@ class google_service(osv.osv_memory):
         return self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url',default='http://www.openerp.com?NoBaseUrl',context=context)
         
     def get_client_id(self, cr, uid, service, context=None):
-        return self.pool.get('ir.config_parameter').get_param(cr, uid, 'google_%s_client_id' % (service,),context=context)
+        return self.pool.get('ir.config_parameter').get_param(cr, uid, 'google_%s_client_id' % (service,),context=context).strip()
         
     def get_client_secret(self, cr, uid, service, context=None):
-        return self.pool.get('ir.config_parameter').get_param(cr, uid, 'google_%s_client_secret' % (service,),context=context)
+        return self.pool.get('ir.config_parameter').get_param(cr, uid, 'google_%s_client_secret' % (service,),context=context).strip()
     
     def get_uri_oauth(self,a=''): #a = optionnal action
         return "https://accounts.google.com/o/oauth2/%s" % (a,)
