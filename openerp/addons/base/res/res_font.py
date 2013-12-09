@@ -41,6 +41,7 @@ class res_font(osv.Model):
     _name = "res.font"
     _description = 'Fonts available'
     _order = 'name,family,id'
+    _rec_name = 'family'
 
     _columns = {
         'family': fields.char("Font family", required=True),
