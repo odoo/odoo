@@ -228,7 +228,7 @@ class TestAPI(common.TransactionCase):
                     self.assertEqual(scope.user, user)
                     self.assertEqual(scope.context, {'lang': user.lang})
 
-                    with scope.SUDO():
+                    with scope.sudo():
                         self.assertEqual(scope.uid, SUPERUSER_ID)
 
                     self.assertEqual(scope.current, scope2)
@@ -237,7 +237,7 @@ class TestAPI(common.TransactionCase):
                     # root scope should be with self.uid
                     self.assertEqual(scope.root.uid, self.uid)
 
-                    with scope.SUDO():
+                    with scope.sudo():
                         self.assertEqual(scope.uid, SUPERUSER_ID)
                         raise Exception()       # exit scope with an exception
 
@@ -309,7 +309,7 @@ class TestAPI(common.TransactionCase):
                 demo_partners[0].company_id.write({'name': 'Pricks'})
 
             # remove demo user from all groups, such that it cannot read partner data
-            with scope.SUDO():
+            with scope.sudo():
                 demo.write({'groups_id': [(5,)]})
 
             # demo user can no longer access partner data

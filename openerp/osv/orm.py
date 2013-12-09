@@ -936,7 +936,7 @@ class BaseModel(object):
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
         ir_model_data = self.pool['ir.model.data']
-        with scope_proxy.SUDO():
+        with scope_proxy.sudo():
             data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
             if data:
                 if data.module:

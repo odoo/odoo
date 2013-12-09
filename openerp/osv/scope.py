@@ -213,7 +213,7 @@ class Scope(object):
 
         return Scope(cr, uid, context)
 
-    def SUDO(self):
+    def sudo(self):
         """ Return a scope based on `self`, with the superuser. """
         return self(user=SUPERUSER_ID)
 
@@ -225,7 +225,7 @@ class Scope(object):
     @property
     def user(self):
         """ return the current user (as an instance) """
-        with proxy.SUDO():
+        with proxy.sudo():
             return self.registry['res.users'].browse(self.uid)
 
     @property

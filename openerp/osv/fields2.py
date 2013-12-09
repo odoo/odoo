@@ -67,7 +67,7 @@ def default(value):
 
 def compute_related(field, records):
     """ Compute the related `field` on `records`. """
-    sudo_scope = scope.SUDO()
+    sudo_scope = scope.sudo()
     for record in records:
         # bypass access rights check when traversing the related path
         value = record.scoped(sudo_scope) if record.id else record
