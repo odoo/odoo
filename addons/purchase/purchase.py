@@ -958,7 +958,6 @@ class purchase_order_line(osv.osv):
         product_product = self.pool.get('product.product')
         product_uom = self.pool.get('product.uom')
         res_partner = self.pool.get('res.partner')
-        product_supplierinfo = self.pool.get('product.supplierinfo')
         product_pricelist = self.pool.get('product.pricelist')
         account_fiscal_position = self.pool.get('account.fiscal.position')
         account_tax = self.pool.get('account.tax')

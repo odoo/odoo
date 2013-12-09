@@ -172,9 +172,7 @@ class product_pricelist(osv.osv):
         products = map(lambda x: x[0], products_by_qty_by_partner)
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')
-        product_category_obj = self.pool.get('product.category')
         product_uom_obj = self.pool.get('product.uom')
-        supplierinfo_obj = self.pool.get('product.supplierinfo')
         price_type_obj = self.pool.get('product.price.type')
 
         version = False
