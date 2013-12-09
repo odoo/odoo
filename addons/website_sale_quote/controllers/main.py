@@ -54,4 +54,16 @@ class sale_quote(http.Controller):
             request.session.body = False
         return request.redirect("/quote/%s" % token)
 
-
+    @website.route(['/quote/update_line'], type='json', auth="public")
+    def update(self, line_id=None, qty=None, remove=False,unlink=False,**post):
+        if unlink:
+            request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID,[int(line_id)], context=request.context)
+        else:
+            val = self._update_order_line(line_id=int(line_id), number=(remove and -1 or 1), qty=int(qty))
+#            order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        return {}
+    
+    def _update_order_line(self,line_id, number,qty):
+        qty += number
+        request.registry.get('sale.order.line').write(request.cr, SUPERUSER_ID, [int(line_id)], {'product_uom_qty':(qty)}, context=request.context)
+        return qty

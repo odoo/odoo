@@ -1,32 +1,23 @@
-openerp.base_calendar = function(instance) {
-var _t = instance.web._t;
-var QWeb = instance.web.qweb;
-instance.base_calendar = {}
-
-    instance.sale_quote.quotation = instance.web.Widget.extend({
-
-        init: function(parent, db, action, id, view, quotation) {
-            this._super();
-            this.db =  db;
-            this.action =  action;
-            this.id = id;
-            this.view = view;
-            this.quotation = quotation;
-        },
-        start: function() {
-            var self = this;
-            self.open_invitation_form(self.quotation);
-        },
-        open_quotation : function(quotation){
-            alert('aaa');
-            this.$el.html(QWeb.render('quotation_view', {'quotation': JSON.parse(quotation)}));
-        },
+$(document).ready(function () {
+    $('a.js_update_line_json').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        var href = $link.attr("href");
+        var qty = $link.attr("href").match(/qty=([0-9]+)/);
+        var line_id = href.match(/update_line\/([0-9]+)/);
+        console.log(line_id);
+        openerp.jsonRpc("/quote/update_line/", 'call', {
+                'line_id': line_id[1],
+                'qty': qty[1],
+                'remove': $link.is('[href*="remove"]'),
+                'unlink': $link.is('[href*="unlink"]'),
+                })
+                .then(function (data) {
+                    location.reload();
+//                    $link.parent('.input-group:first').find('.js_line_qty').val(data[0]);
+//                    $('[data-oe-model="sale.order"][data-oe-field="amount_total"]').replaceWith(data[1]);
+                });
+        return false;
     });
-
-    instance.sale_quote.view = function (db, action, id, view, quotation) {
-        instance.session.session_bind(instance.session.origin).done(function () {
-            new instance.sale_quote.quotation(null,db,action,id,view,quotation).appendTo($("body").addClass('openerp'));
-        });
-    }
-};
+});
 //vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

@@ -83,6 +83,7 @@
                             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
                             <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
                         </t>
+                        <script type="text/javascript" src="/website_sale_quote/static/src/js/sale_quote.js"></script>
                     </head>
                     <body>
                         <div id="wrapwrap">
@@ -93,93 +94,87 @@
         </template>
         <template id="pricing" name="Quotation Pricing">
             <section id="quote" class="tab-pane oe_section">
-                <div class="well">
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <address>
-                                <strong t-field="quotation.partner_id.name"/>
-                                <br/>
-                                <t t-esc="quotation.partner_id.street"/>
-                                <br/>
-                                <t t-esc="quotation.partner_id.city"/>, <t t-esc="quotation.partner_id.state_id.name"/> <t t-esc="quotation.partner_id.zip"/>
-                                <br/>
-                                <abbr title="Phone">P:</abbr> <t t-esc="quotation.partner_id.phone"/>
-                            </address>
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6 text-right">
-                            <p>
-                                <em>Date: <t t-esc="quotation.date_order"/></em>
-                            </p>
-                            <p>
-                                <em>Quotation #: <t t-esc="quotation.name"/></em>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="text-center">
-                            <h1>Quotation</h1>
-                        </div>
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Description</th>
-                                    <th>#</th>
-                                    <th class="text-center">Unit Price</th>
-                                    <th class="text-center">Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="quotation.order_line" t-as="line">
-                                    <tr>
-                                        <td class="col-md-9"><em><t t-esc="line.product_id.name"/></em></td>
-                                        <td class="col-md-9"><em><t t-esc="line.name"/></em></td>
-                                        <td class="col-md-1" style="text-align: center"><t t-esc="line.product_uom_qty"/></td>
-                                        <td class="col-md-1 text-center"><t t-esc="line.price_unit"/></td>
-                                        <td class="col-md-1 text-center"><t t-esc="line.price_subtotal"/></td>
-                                    </tr>
-                                </t>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-right">
-                                        <p>
-                                            <strong>Untaxed Amount: </strong>
-                                        </p>
-                                        <p>
-                                            <strong>Tax: </strong>
-                                        </p></td>
-                                        <td class="text-center">
-                                        <p>
-                                            <strong t-field="quotation.amount_untaxed"
-                                            t-field-options='{
-                                               "widget": "monetary",
-                                               "display_currency": "website.pricelist_id.currency_id"
-                                           }'></strong>
-                                        </p>
-                                        <p>
-<!--                                                <strong><t t-esc="quotation.amount_taxed"/></strong>-->
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td class="text-right"><strong>Total: </strong></td>
-                                    <td class="text-center text-success">
-                                        <strong
-                                            t-field="quotation.amount_total"
-                                            t-field-options='{"widget": "monetary",
-                                           "display_currency":"website.pricelist_id.currency_id"
-                                       }'></strong>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>#</th>
+                            <th class="text-center">Unit Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="quotation.order_line" t-as="line">
+                            <tr>
+                                <td class="col-sm-8 col-md-6">
+                                    <div class="media">
+                                        <span class="thumbnail pull-left media-object" t-field="line.product_id.image" style="width: 72px; height: 72px;" t-field-options='{"widget": "image", "class": "img img-responsive"}'/>
+                                        <div class="media-body">
+                                            <h4 class="media-heading"><a href="#"><b t-field="line.product_id.name"/></a></h4>
+                                            <h5 class="media-heading" t-field="line.name"></h5>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-sm-1 col-md-1" style="text-align: center">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <a t-href="./update_line/#{ line.id }/?qty=#{line.product_uom_qty}&amp;remove=True" class="mb8 js_update_line_json">
+                                                <span class="fa fa-minus"/>
+                                            </a>
+                                        </span>
+                                        <input type="text" class="form-control js_line_qty" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
+                                        <span class="input-group-addon">
+                                            <a t-href="./update_line/#{ line.id }/?qty=#{line.product_uom_qty}" class="mb8 js_update_line_json">
+                                                <span class="fa fa-plus"/>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="col-sm-1 col-md-1 text-center">
+                                    <strong t-field="line.price_unit" t-field-options='{"widget": "monetary","display_currency": "website.pricelist_id.currency_id"}'></strong>
+                                </td>
+                                <td class="col-sm-1 col-md-1">
+                                    <a t-href="./update_line/#{ line.id }/??qty=#{line.product_uom_qty}&amp;unlink=True" class="mb8 js_update_line_json pull-right">
+                                        <span class="fa fa-trash-o"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </t>
+                        <tr>
+                            <td>   </td>
+                            <td><h5>Subtotal</h5></td>
+                            <td class="text-right">
+                                <h5>
+                                    <strong t-field="quotation.amount_untaxed" t-field-options='{"widget": "monetary","display_currency": "website.pricelist_id.currency_id"}'></strong>
+                                </h5>
+                            </td>
+                            <td>   </td>
+                        </tr>
+                        <tr>
+                            <td>   </td>
+                            <td><h5>Tax</h5></td>
+                            <td class="text-right">
+                                <h5>
+    <!--                                <strong t-field="quotation.amount_taxed"-->
+    <!--                                            t-field-options='{-->
+    <!--                                               "widget": "monetary",-->
+    <!--                                               "display_currency": "website.pricelist_id.currency_id"}'>-->
+    <!--                                </strong>-->
+                                </h5>
+                            </td>
+                            <td>   </td>
+                        </tr>
+                        <tr>
+                            <td>   </td>
+                            <td><h3>Total</h3></td>
+                            <td class="text-right">
+                                <h3>
+                                    <strong t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "website.pricelist_id.currency_id"}'></strong>
+                                </h3>
+                            </td>
+                            <td>   </td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
         </template>
         <template id="quote_status">

@@ -41,7 +41,7 @@ class sale_order_line(osv.osv):
 class sale_order(osv.osv):
     _inherit = 'sale.order'
     _columns = {
-        'quote_url': fields.char('URL'),
+        'quote_url': fields.char('URL', readonly=True),
         'access_token':fields.char('Quotation Token', size=256),
         'template_id': fields.many2one('sale.order','Quote Template'),
         'website_description': fields.html('Description'),
@@ -78,6 +78,7 @@ class sale_order(osv.osv):
             'product_id': line.product_id.id,
             'tax_id': [(6, 0, [x.id for x in line.tax_id])],
             'website_description':line.website_description,
+            'state':'draft',
             }))
         return {'order_line':lines,'website_description': order_template.website_description}
 
