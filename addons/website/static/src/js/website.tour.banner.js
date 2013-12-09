@@ -46,7 +46,7 @@
                 },
                 {
                     stepId: 'drag-banner',
-                    element: '#website-top-navbar [data-snippet-id=carousel].ui-draggable',
+                    snippet: 'carousel',
                     placement: 'bottom',
                     title: "Drag & Drop a Banner",
                     content: "Drag the Banner block and drop it in your page.",
@@ -84,7 +84,7 @@
                 },
                 {
                     stepId: 'drag-three-columns',
-                    element: '#website-top-navbar [data-snippet-id=three-columns].ui-draggable',
+                    snippet: 'three-columns',
                     placement: 'bottom',
                     title: "Drag & Drop a Block",
                     content: "Drag the <em>'3 Columns'</em> block and drop it below the banner.",
@@ -97,7 +97,8 @@
                     title: "Edit an Area",
                     content: "Select any area of the page to modify it. Click on this subtitle.",
                     trigger: {
-                        id: 'snippet-activated'
+                        emitter: '#wrap [data-snippet-id=three-columns]:first .text-center[data-snippet-id=colmd]',
+                        id: 'snippet-activated',
                     },
                 },
                 {

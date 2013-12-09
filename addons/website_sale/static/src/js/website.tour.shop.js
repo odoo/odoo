@@ -113,7 +113,7 @@
                 },
                 {
                     stepId: 'drag-big-picture',
-                    element: '#website-top-navbar [data-snippet-id=big-picture].ui-draggable',
+                    snippet: 'big-picture',
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Big Picture' block and drop it in your page.",

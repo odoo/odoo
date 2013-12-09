@@ -27,6 +27,9 @@
                 if (!step.element) {
                     step.orphan = true;
                 }
+                if (step.snippet) {
+                    step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                }
                 if (step.trigger) {
                     if (step.trigger === 'click') {
                         step.triggers = function (callback) {
@@ -48,8 +51,9 @@
                             };
                         } else {
                             step.triggers = function (callback) {
-                                var emitter = step.trigger.emitter || $(step.element);
-                                emitter.one(step.trigger.id, function customHandler () {
+                                var emitter = _.isString(step.trigger.emitter) ? $(step.trigger.emitter) : (step.trigger.emitter || $(step.element));
+                                emitter.on(step.trigger.id, function customHandler () {
+                                    console.log(arguments);
                                     (callback || self.moveToNextStep).apply(self, arguments);
                                 });
                             };
@@ -164,7 +168,7 @@
                 $('.popover.tour').remove();
                 function advance () {
                     if (_.isFunction(callback)) {
-                        callback.call(self);
+                        callback.apply(self);
                     }
                 }
                 $(document.body).one('mouseup', advance);
@@ -215,7 +219,17 @@
     });
 
     var TestConsole = website.TestConsole = {
-        tests: []
+        dragAndDropSnippet: function (snippetId) {
+            var selector = '#oe_snippets div.oe_snippet[data-snippet-id="'+snippetId+'"] .oe_snippet_thumbnail';
+            var $thumbnail = $(selector).first();
+            var thumbnailPosition = $thumbnail.position();
+            $thumbnail.trigger($.Event( "mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
+            $thumbnail.trigger($.Event( "mousemove", { which: 1, pageX: thumbnailPosition.left+100, pageY: thumbnailPosition.top+700 }));
+            var $dropZone = $(".oe_drop_zone").first();
+            var dropPosition = $dropZone.position();
+            $dropZone.trigger($.Event( "mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
+        },
+        tests: [],
     };
 
     website.EditorBar.include({
@@ -247,16 +261,22 @@
                 id: tour.id,
                 run: function runTest () {
                     var actionSteps = _.filter(tour.steps, function (step) {
-                       return step.triggers;
+                       return step.trigger;
                     });
                     var currentIndex = 0;
                     function executeStep (step) {
-                       var $element = $(step.element);
-                       step.triggers(function () {
-                           currentIndex = currentIndex + 1;
-                           executeStep(actionSteps[currentIndex]);
-                       });
-                       $element.click();
+                        var $element = $(step.element);
+                        step.triggers(function () {
+                            currentIndex = currentIndex + 1;
+                            executeStep(actionSteps[currentIndex]);
+                        });
+                        if (step.snippet && step.trigger === 'drag') {
+                            setTimeout(function () {
+                                TestConsole.dragAndDropSnippet(step.snippet);
+                            }, 50);
+                        } else {
+                            $element.click();
+                        }
                     }
                     executeStep(actionSteps[currentIndex]);
                 },

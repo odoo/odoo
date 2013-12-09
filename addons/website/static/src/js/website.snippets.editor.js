@@ -246,6 +246,9 @@
                 this.snippet_focus($snippet);
             }
             $("#oe_snippets").trigger('snippet-activated', $snippet);
+            if ($snippet) {
+                $snippet.trigger('snippet-activated', $snippet);
+            }
         },
         create_overlay: function ($snippet) {
             if (typeof $snippet.data("snippet-editor") === 'undefined') {

@@ -75,7 +75,7 @@
                 },
                 {
                     stepId: 'drag-banner',
-                    element: '#website-top-navbar [data-snippet-id=carousel].ui-draggable',
+                    snippet: 'carousel',
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Banner' block and drop it in your page.",
@@ -91,7 +91,7 @@
                 },
                 {
                     stepId: 'drag-text-block',
-                    element: '#website-top-navbar [data-snippet-id=text-block].ui-draggable',
+                    snipet: 'text-block',
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Text Block' block below the banner.",
@@ -107,7 +107,7 @@
                 },
                 {
                     stepId: 'drag-three-columns',
-                    element: '#website-top-navbar [data-snippet-id=three-columns].ui-draggable',
+                    snippet: 'three-columns',
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Three Columns' block at the bottom.",
