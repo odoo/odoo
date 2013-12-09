@@ -680,7 +680,7 @@
                             <group>
                                 <group string="Products to Consume">
                                     <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
-                                        <tree colors="red:state in ('confirmed','waiting');blue:state == 'draft';black:state in ('picking_except','ready','assigned','in_production');gray:state in ('cancel','done') " string="Products to Consume">
+                                        <tree colors="blue:state == 'draft';black:state in ('ready','assigned','in_production');gray:state in ('cancel','done');red:state in ('confirmed','picking_except','waiting')" string="Products to Consume">
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
