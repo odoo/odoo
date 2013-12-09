@@ -44,10 +44,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.groupby_mode = 'default';  // 'default' or 'manual'
         this.default_row_groupby = [];
         this.search_field = {
-            get_context: function () { },
-            get_domain: function () { },
+            get_context: this.proxy('get_context'),
+            get_domain: function () {},
             get_groupby: function () { },
         };
+    },
+
+    get_context: function (facet) {
+        var col_group_by = _.map(facet.values.models, function (model) {
+            return model.attributes.value.attrs.context.col_group_by;
+        });
+        return {col_group_by : col_group_by};
     },
 
     start: function () {
@@ -120,7 +127,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     do_search: function (domain, context, group_by) {
         var self = this,
-            col_groupby = get_col_groupby('ColGroupBy');
+            col_groupby = context.col_group_by || []; // get_col_groupby('ColGroupBy');
 
         if (group_by.length || col_groupby.length) {
             this.groupby_mode = 'manual';
@@ -135,19 +142,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.pivot_table.set_col_groupby([]);
         }
         this.display_data();
-
-        function get_col_groupby() {
-            var groupby = [],
-                search = _.find(self.search_view.query.models, function (model) {
-                return model.attributes.category == 'ColGroupBy';
-            });
-            if (search) {
-                groupby = _.map(search.values.models, function (val) {
-                    return val.attributes.value.attrs.context.col_group_by;
-                });
-            }
-            return groupby;
-        }
     },
 
     do_show: function () {
