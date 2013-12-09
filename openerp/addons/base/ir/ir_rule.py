@@ -78,7 +78,7 @@ class ir_rule(osv.osv):
         'global': fields.function(_get_value, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
         'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
         'domain_force': fields.text('Domain'),
-        'domain': fields.function(_domain_force_get, string='Domain', type='text'),
+        'domain': fields.function(_domain_force_get, string='Domain', type='binary'),
         'perm_read': fields.boolean('Apply for Read'),
         'perm_write': fields.boolean('Apply for Write'),
         'perm_create': fields.boolean('Apply for Create'),

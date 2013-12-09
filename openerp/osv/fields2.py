@@ -604,6 +604,9 @@ class Text(_String):
     """ Text field. """
     type = 'text'
 
+    def convert_to_cache(self, value):
+        return bool(value) and ustr(value)
+
 
 class Html(_String):
     """ Html field. """
@@ -644,9 +647,6 @@ class Datetime(Field):
 class Binary(Field):
     """ Binary field. """
     type = 'binary'
-
-    def convert_to_cache(self, value):
-        return value or False
 
 
 class Selection(Field):
