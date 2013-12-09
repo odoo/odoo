@@ -160,7 +160,7 @@
             });
             _.each(index, function (view) {
                 var parentId = view.inherit_id;
-                if (parentId) {
+                if (parentId && index[parentId]) {
                     index[parentId].children.push(view);
                 } else {
                     roots.push(view);
