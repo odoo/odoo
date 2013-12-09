@@ -1180,7 +1180,7 @@ class function(_column):
 
     def to_field_args(self):
         args = super(function, self).to_field_args()
-        if self._type in ('float'):
+        if self._type in ('float',):
             args['digits'] = self.digits_compute or self.digits
         elif self._type in ('selection', 'reference'):
             args['selection'] = self.selection
