@@ -319,8 +319,6 @@ class survey_question(osv.osv):
             relation='survey.survey', string='Survey', store=True),
         'parent_id': fields.many2one('survey.question', 'Parent question',
             ondelete='cascade'),
-        'children_ids': fields.one2many('survey.question', 'parent_id',
-            'Children questions'),
         'sequence': fields.integer(string='Sequence'),
 
         # Question
@@ -349,7 +347,6 @@ class survey_question(osv.osv):
         # if question.type == matrix
         #                    -> labels_ids are the columns of the matrix
         #                    -> labels_ids_2 are the rows of the matrix
-
 
         # Display options
         'column_nb': fields.selection([('12', '1 column choices'),
@@ -643,40 +640,49 @@ class survey_question(osv.osv):
         # Answer is a comment and is empty
         if question.constr_mandatory and answer_tag in post and post[answer_tag] == "-1" and question.comment_count_as_answer and comment_tag in post and not post[comment_tag].strip():
             errors.update({answer_tag: question.constr_error_msg})
-        # There is a comment and it should be validated
-        # if question.comment_children_ids[0].validation_required:
-        #     _logger.warning("No validation of the comments was implemented")
         return errors
 
-    # def validate_multiple_choice(self, cr, uid, question, post, answer_tag, context=None):
-    #     errors = {}
-    #     if question.constr_mandatory:
-    #         # extraire les réponses
-    #         # vérifier qu'il y a au moins une réponse
-    #         # vérifier sinon que la réponse n'est pas un commentaire
-    #         # valider les commentaires
-    #     return errors
+    def validate_multiple_choice(self, cr, uid, question, post, answer_tag, context=None):
+        errors = {}
+        if question.constr_mandatory:
+            answer_candidates = dict_keys_startswith(post, answer_tag)
+            comment_flag = answer_candidates.pop(("%s_%s" % (answer_tag, -1)), None)
+            comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), '').strip()
+            # There is no answer neither comments (if comments count as answer)
+            if not answer_candidates and question.comment_count_as_answer and comment_flag and comment_answer == '':
+                errors.update({answer_tag: question.constr_error_msg})
+            # There is no answer at all
+            if not answer_candidates and not comment_flag:
+                errors.update({answer_tag: question.constr_error_msg})
+        return errors
 
     def validate_matrix(self, cr, uid, question, post, answer_tag, context=None):
         errors = {}
         if question.constr_mandatory:
-            answer_candidates = dict_keys_startswith(post, answer_tag)
             lines_number = len(question.labels_ids_2)
-            answer_number = len(answer_candidates)
+            answer_candidates = dict_keys_startswith(post, answer_tag)
+            comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), None)
+            # Number of lines that have been answered
             if question.matrix_subtype == 'simple':
-                if question.constr_type == 'all' and answer_number != lines_number:
-                    errors.update({answer_tag: question.constr_error_msg})
-                elif question.constr_type == 'at least' and answer_number < question.constr_minimum_req_ans:
-                    errors.update({answer_tag: question.constr_error_msg})
-                elif question.constr_type == 'at most' and answer_number > question.constr_maximum_req_ans:
-                    errors.update({answer_tag: question.constr_error_msg})
-                elif question.constr_type == 'exactly' and answer_number != question.constr_maximum_req_ans:
-                    errors.update({answer_tag: question.constr_error_msg})
-                elif question.constr_type == 'a range' and not (question.constr_minimum_req_ans <= answer_number <= question.constr_maximum_req_ans):
-                    errors.update({answer_tag: question.constr_error_msg})
-            # elif question.matrix_subtype == 'multiple':
-
-        return errors
+                answer_number = len(answer_candidates)
+            elif question.matrix_subtype == 'multiple':
+                answer_number = len(set([sk.rsplit('_', 1)[0] for sk in answer_candidates.keys()]))
+            else:
+                raise RuntimeError("Invalid matrix subtype")
+            # Validate lines
+            if question.constr_type == 'all' and answer_number != lines_number:
+                errors.update({answer_tag: question.constr_error_msg})
+            elif question.constr_type == 'at least' and answer_number < question.constr_minimum_req_ans:
+                errors.update({answer_tag: question.constr_error_msg})
+            elif question.constr_type == 'at most' and answer_number > question.constr_maximum_req_ans:
+                errors.update({answer_tag: question.constr_error_msg})
+            elif question.constr_type == 'exactly' and answer_number != question.constr_maximum_req_ans:
+                errors.update({answer_tag: question.constr_error_msg})
+            elif question.constr_type == 'a range' and not (question.constr_minimum_req_ans <= answer_number <= question.constr_maximum_req_ans):
+                errors.update({answer_tag: question.constr_error_msg})
+            else:
+                pass  # Everything is okay
+            return errors
 
 
 class survey_label(osv.osv):
