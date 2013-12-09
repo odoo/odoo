@@ -1254,7 +1254,7 @@ class stock_move(osv.osv):
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
-        'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
+        'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
         # TODO: improve store to add dependency on product UoM
         'product_qty': fields.function(_quantity_normalize, type='float', store=True, string='Quantity',
@@ -2532,7 +2532,6 @@ class stock_warehouse(osv.osv):
             output_loc = warehouse.lot_stock_id
         picking_type_obj.write(cr, uid, warehouse.in_type_id.id, {'default_location_dest_id': input_loc.id}, context=context)
         picking_type_obj.write(cr, uid, warehouse.out_type_id.id, {'default_location_src_id': output_loc.id}, context=context)
-        picking_type_obj.write(cr, uid, warehouse.int_type_id.id, {'active': new_reception_step != 'one_step'}, context=context)
         picking_type_obj.write(cr, uid, warehouse.pick_type_id.id, {'active': new_delivery_step != 'ship_only'}, context=context)
         picking_type_obj.write(cr, uid, warehouse.pack_type_id.id, {'active': new_delivery_step == 'pick_pack_ship'}, context=context)
 
@@ -2666,7 +2665,7 @@ class stock_warehouse(osv.osv):
             'sequence_id': int_seq_id,
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_stock_loc.id,
-            'active': reception_steps != 'one_step',
+            'active': True,
             'pack': False,
             'color': color}, context=context)
         pack_type_id = picking_type_obj.create(cr, uid, vals={
