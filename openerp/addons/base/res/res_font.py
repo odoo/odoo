@@ -63,9 +63,23 @@ class res_font(osv.Model):
                 }, context=context)
         return True
 
-    def font_scan(self, cr, uid, context=None):
-        self._discover_fonts(cr, uid, context=context)
-        return self._register_fonts(cr, uid, context=context)
+    def font_scan(self, cr, uid, lazy=False, context=None):
+        if lazy:
+            # lazy loading, scan only if no fonts in db
+            found_fonts_ids = self.search(cr, uid, [('path', '!=', '/dev/null')], context=context)
+            if not found_fonts_ids:
+                # no scan yet or no font found on the system, scan the filesystem
+                self._discover_fonts(cr, uid, context=context)
+                self._register_fonts(cr, uid, context=context)
+            else:
+                if len(customfonts.CustomTTFonts) == 0:
+                    # CustomTTFonts list is empty
+                    for font in self.browse(cr, uid, found_fonts_ids, context=context):
+                        customfonts.CustomTTFonts.append((font.family, font.name, font.path, font.mode))
+        else:
+            self._discover_fonts(cr, uid, context=context)
+            self._register_fonts(cr, uid, context=context)
+        return True
 
     def _discover_fonts(self, cr, uid, context=None):
         """Scan fonts on the file system, add them to the list of known fonts

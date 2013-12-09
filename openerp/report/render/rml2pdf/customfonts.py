@@ -92,9 +92,9 @@ def SetCustomFonts(rmldoc):
         This function is called once per report, so it should
         avoid system-wide processing (cache it, instead).
     """
-    for name, font, filename, mode in CustomTTFonts:
+    for family, font, filename, mode in CustomTTFonts:
         if os.path.isabs(filename) and os.path.exists(filename):
-            rmldoc.setTTFontMapping(name, font, filename, mode)
+            rmldoc.setTTFontMapping(font, family, filename, mode)
     return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
