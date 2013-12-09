@@ -45,20 +45,6 @@ BasePDFFonts = [
     ('Courier', 'Courier', '/dev/null', 'all'),
 ]
 
-# List of fonts found on the disk
-BaseCustomTTFonts = [ ('Helvetica', "DejaVu Sans", "DejaVuSans.ttf", 'normal'),
-        ('Helvetica', "DejaVu Sans Bold", "DejaVuSans-Bold.ttf", 'bold'),
-        ('Helvetica', "DejaVu Sans Oblique", "DejaVuSans-Oblique.ttf", 'italic'),
-        ('Helvetica', "DejaVu Sans BoldOblique", "DejaVuSans-BoldOblique.ttf", 'bolditalic'),
-        ('Times', "Liberation Serif", "LiberationSerif-Regular.ttf", 'normal'),
-        ('Times', "Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
-        ('Times', "Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
-        ('Times', "Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
-        ('Courier', "FreeMono", "FreeMono.ttf", 'normal'),
-        ('Courier', "FreeMono Bold", "FreeMonoBold.ttf", 'bold'),
-        ('Courier', "FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
-        ('Courier', "FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),
-]
 CustomTTFonts = []
 
 # Search path for TTF files, in addition of rl_config.TTFSearchPath
@@ -94,7 +80,7 @@ def list_all_sysfonts():
     # TTFOpenFile is not very good at it.
     searchpath = list(set(TTFSearchPath + rl_config.TTFSearchPath))
     for dirname in searchpath:
-        for filename in glob.glob(os.path.expanduser(dirname)+'/*.[Tt][Tt][Ff]'):
+        for filename in glob.glob(os.path.join(os.path.expanduser(dirname), '*.[Tt][Tt][Ff]')):
             filepath.append(filename)
     return filepath
 
