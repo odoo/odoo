@@ -238,20 +238,15 @@ class mail_thread(osv.AbstractModel):
         if context is None:
             context = {}
 
-        # subscribe uid unless asked not to
-        if not context.get('mail_create_nosubscribe'):
-            pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id.id
-            message_follower_ids = values.get('message_follower_ids')
-            if message_follower_ids is False or message_follower_ids is None:  # web client seems to send False as message_follower_ids value
-                message_follower_ids = []
-            message_follower_ids.append([4, pid])
-            values['message_follower_ids'] = message_follower_ids
-
         thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
             self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
+
+        # subscribe uid unless asked not to
+        if not context.get('mail_create_nosubscribe'):
+            self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
