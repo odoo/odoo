@@ -4487,7 +4487,9 @@ class BaseModel(object):
         self._validate(cr, user, [id_new], context)
 
         if not context.get('no_store_function', False):
-            result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
+            result += self._store_get_values(cr, user, [id_new],
+                list(set(vals.keys() + self._inherits.values())),
+                context)
             result.sort()
             done = []
             for order, object, ids, fields2 in result:
