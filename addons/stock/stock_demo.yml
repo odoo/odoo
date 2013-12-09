@@ -85,6 +85,7 @@
     picking_type_id: stock.picking_type_out
     origin: 'outgoing shipment'
     partner_id: base.res_partner_6
+    date: !eval "'%s-%s-15' %(datetime.now().year,datetime.now().month-2)"
     move_lines:
       - product_id: product.product_product_6
         product_uom: product.product_uom_unit
@@ -101,6 +102,7 @@
     picking_type_id: stock.picking_type_out
     origin: 'outgoing shipment your_company warehouse'
     partner_id: base.res_partner_6
+    date: !eval "'%s-%s-15' %(datetime.now().year,datetime.now().month-1)"
     move_lines:
       - product_id: product.product_product_31
         product_uom: product.product_uom_unit
@@ -231,6 +233,7 @@
     picking_type_id: chi_picking_type_in
     origin: 'chicago_warehouse'
     partner_id: base.res_partner_6
+    date: !eval "'%s-%s-2' %(datetime.now().year,datetime.now().month-1)"
     move_lines:
       - product_id: product.product_product_22
         product_uom: product.product_uom_unit
@@ -299,4 +302,5 @@
     record_chi_in = self.browse(cr, uid, ref('incomming_chicago_warehouse1'), context=context)
     record_chi_out = self.browse(cr, uid, ref('outgoing_chicago_warehouse1'), context=context)
     if record.state != 'done' and record_chi_in.state != 'done' and record_chi_out.state != 'done':
+      self.force_assign(cr, uid, [ref('outgoing_shipment_main_warehouse'),ref('outgoing_chicago_warehouse3'),ref('outgoing_shipment_main_warehouse2')], context=context)
       self.do_transfer(cr, uid, [ref('outgoing_shipment_main_warehouse1'),ref('incomming_chicago_warehouse1'),ref('outgoing_chicago_warehouse1')], context=context)
