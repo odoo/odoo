@@ -438,6 +438,10 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             // The barcode readers acts as a keyboard, we catch all keyup events and try to find a 
             // barcode sequence in the typed keys, then act accordingly.
             this.handler = function(e){
+                if(e.which === 13){ //ignore returns
+                    e.preventDefault();
+                    return;
+                }
                 //We only care about numbers
                 if (e.which >= 48 && e.which < 58){
 
