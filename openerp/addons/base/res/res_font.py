@@ -20,6 +20,7 @@
 ##############################################################################
 
 from reportlab.pdfbase import ttfonts
+from openerp.modules.registry import RegistryManager
 from openerp.osv import fields, osv
 from openerp.report.render.rml2pdf import customfonts
 
@@ -74,7 +75,7 @@ class res_font(osv.Model):
 
     def _scan_disk(self, cr, uid, context=None):
         """Scan the file system and register the result in database"""
-        found_fonts = []        
+        found_fonts = []
         for font_path in customfonts.list_all_sysfonts():
             try:
                 font = ttfonts.TTFontFile(font_path)
@@ -96,7 +97,7 @@ class res_font(osv.Model):
         if inexistant_fonts:
             self.unlink(cr, uid, inexistant_fonts, context=context)
 
-        self.clear_caches()
+        RegistryManager.signal_caches_change(cr.dbname)
         self._sync(cr, uid, context=context)
         return True
 
