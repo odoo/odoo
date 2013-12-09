@@ -40,9 +40,9 @@ _logger = logging.getLogger(__name__)
 
 # Basic fonts family included in PDF standart, will always be in the font list
 BasePDFFonts = [
-    'Helvetica',
-    'Times',
-    'Courier'
+    ('Helvetica', 'Helvetica', '/dev/null', 'all'),
+    ('Times', 'Times', '/dev/null', 'all'),
+    ('Courier', 'Courier', '/dev/null', 'all'),
 ]
 
 # List of fonts found on the disk
@@ -59,7 +59,7 @@ BaseCustomTTFonts = [ ('Helvetica', "DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Courier', "FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
         ('Courier', "FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),
 ]
-CustomTTFonts = list(BaseCustomTTFonts)
+CustomTTFonts = []
 
 # Search path for TTF files, in addition of rl_config.TTFSearchPath
 TTFSearchPath = [

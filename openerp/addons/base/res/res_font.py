@@ -53,14 +53,24 @@ class res_font(osv.Model):
         ('name_font_uniq', 'unique(family, name)', 'You can not register two fonts with the same name'),
     ]
 
-    def init_scan(self, cr, uid, context=None):
-        self.discover_fonts(cr, uid, context=context)
-        return self.register_fonts(cr, uid, context=context)
+    def _base_populate_font(self, cr, uid, context=None):
+        if not self.search(cr, uid, [('path', '=', '/dev/null')], context=context):
+            # populate db with basic pdf fonts
+            for family, name, path, mode in customfonts.BasePDFFonts:
+                self.create(cr, uid, {
+                    'family': family, 'name': name,
+                    'path': path, 'mode': mode,
+                }, context=context)
+        return True
 
-    def discover_fonts(self, cr, uid, context=None):
+    def font_scan(self, cr, uid, context=None):
+        self._discover_fonts(cr, uid, context=context)
+        return self._register_fonts(cr, uid, context=context)
+
+    def _discover_fonts(self, cr, uid, context=None):
         """Scan fonts on the file system, add them to the list of known fonts
         and create font object for the new ones"""
-        customfonts.CustomTTFonts = list(customfonts.BaseCustomTTFonts)
+        customfonts.CustomTTFonts = []
 
         found_fonts = {}
         for font_path in customfonts.list_all_sysfonts():
@@ -76,16 +86,18 @@ class res_font(osv.Model):
             except ttfonts.TTFError:
                 _logger.warning("Could not register Font %s", font_path)
 
-    def register_fonts(self, cr, uid, context=None):
+    def _register_fonts(self, cr, uid, context=None):
         # add new custom fonts
         for family, name, path, mode in customfonts.CustomTTFonts:
             if not self.search(cr, uid, [('family', '=', family), ('name', '=', name)], context=context):
                 self.create(cr, uid, {
-                        'family': family, 'name': name,
-                        'path': path, 'mode': mode,
-                    }, context=context)
+                    'family': family, 'name': name,
+                    'path': path, 'mode': mode,
+                }, context=context)
 
         # remove fonts not present on disk
         existing_font_names = [name for (family, name, path, mode) in customfonts.CustomTTFonts]
         inexistant_fonts = self.search(cr, uid, [('name', 'not in', existing_font_names)], context=context)
-        return self.unlink(cr, uid, inexistant_fonts, context=context)
+        if inexistant_fonts:
+            return self.unlink(cr, uid, inexistant_fonts, context=context)
+        return True

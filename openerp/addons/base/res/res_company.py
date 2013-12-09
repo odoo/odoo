@@ -27,7 +27,6 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
-from openerp.report.render.rml2pdf import customfonts
   
 class multi_company_default(osv.osv):
     """
@@ -297,12 +296,12 @@ class res_company(osv.osv):
 
     def _get_font(self, cr, uid, ids):
         font_obj = self.pool.get('res.font')
-        res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'normal')], limit=1)
+        res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'all')], limit=1)
         if res:
             return res[0]
-        
-        font_obj.init_scan(cr, uid)
-        res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'normal')], limit=1)
+        # not even the basic pdf fonts, initiate the db
+        font_obj._base_populate_font(cr, uid)
+        res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'all')], limit=1)
         return res and res[0] or False
 
     _header = """
@@ -400,7 +399,7 @@ class res_company(osv.osv):
         return {'value': {'rml_header': self._header_a4}}
 
     def act_discover_fonts(self, cr, uid, ids, context=None):
-        return self.pool.get("res.font").init_scan(cr, uid, context)
+        return self.pool.get("res.font").font_scan(cr, uid, context)
 
     _defaults = {
         'currency_id': _get_euro,
