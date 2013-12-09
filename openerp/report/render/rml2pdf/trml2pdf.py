@@ -56,8 +56,11 @@ def select_fontname(fontname, default_fontname):
         try:
             pdfmetrics.getFont(fontname)
         except Exception:
-            _logger.warning('Could not locate font %s, substituting default: %s',
-                fontname, default_fontname)
+            addition = ""
+            if " " in fontname:
+                addition = ". Your font contains spaces which is not valid in RML."
+            _logger.warning('Could not locate font %s, substituting default: %s%s',
+                fontname, default_fontname, addition)
             fontname = default_fontname
     return fontname
 

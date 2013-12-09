@@ -297,12 +297,7 @@ class res_company(osv.osv):
     def _get_font(self, cr, uid, ids):
         font_obj = self.pool.get('res.font')
         res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'all')], limit=1)
-        if res:
-            return res[0]
-        # not even the basic pdf fonts, initiate the db
-        font_obj._base_populate_font(cr, uid)
-        res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'all')], limit=1)
-        return res and res[0] or False
+        return res and res[0] or False       
 
     _header = """
 <header>

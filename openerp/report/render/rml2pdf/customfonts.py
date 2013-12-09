@@ -38,13 +38,6 @@ and Ubuntu distros, we have to override the search path, too.
 """
 _logger = logging.getLogger(__name__)
 
-# Basic fonts family included in PDF standart, will always be in the font list
-BasePDFFonts = [
-    ('Helvetica', 'Helvetica', '/dev/null', 'all'),
-    ('Times', 'Times', '/dev/null', 'all'),
-    ('Courier', 'Courier', '/dev/null', 'all'),
-]
-
 CustomTTFonts = []
 
 # Search path for TTF files, in addition of rl_config.TTFSearchPath
