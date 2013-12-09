@@ -94,7 +94,7 @@ def SetCustomFonts(rmldoc):
     """
     for family, font, filename, mode in CustomTTFonts:
         if os.path.isabs(filename) and os.path.exists(filename):
-            rmldoc.setTTFontMapping(font, family, filename, mode)
+            rmldoc.setTTFontMapping(family, font, filename, mode)
     return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
