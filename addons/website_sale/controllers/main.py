@@ -173,8 +173,8 @@ class Ecommerce(http.Controller):
             else:
                 domain.append(("value_id", "in", key_val[1:]))
         att_ids = obj.search(request.cr, request.uid, domain, context=request.context)
-        att = obj.read(request.cr, request.uid, att_ids, ["product_id"], context=request.context)
-        return [r["product_id"][0] for r in att]
+        att = obj.read(request.cr, request.uid, att_ids, ["product_tmpl_id"], context=request.context)
+        return [r["product_tmpl_id"][0] for r in att]
 
     @website.route(['/shop/pricelist'], type='http', auth="public", multilang=True)
     def shop_promo(self, code, **post):

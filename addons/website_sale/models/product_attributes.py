@@ -40,7 +40,7 @@ class attributes(osv.Model):
         'name': fields.char('Name', size=64, translate=True, required=True),
         'type': fields.selection([('distinct', 'Textual Value'), ('float', 'Numeric Value')], "Type", required=True),
         'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values'),
-        'product_ids': fields.one2many('product.attribute.product', 'attribute_id', 'Products'),
+        'attr_product_ids': fields.one2many('product.attribute.product', 'attribute_id', 'Products'),
 
         'float_max': fields.function(_get_float_max, type='float', string="Max", store={
                 'product.attribute.product': (_get_min_max, ['value','attribute_id'], 20),
@@ -60,7 +60,7 @@ class attributes_value(osv.Model):
     _columns = {
         'name': fields.char('Value', size=64, translate=True, required=True),
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True),
-        'product_ids': fields.one2many('product.attribute.product', 'value_id', 'Products'),
+        'atr_product_ids': fields.one2many('product.attribute.product', 'value_id', 'Products'),
     }
 
 class attributes_product(osv.Model):
@@ -70,7 +70,7 @@ class attributes_product(osv.Model):
         'value': fields.float('Numeric Value'),
         'value_id': fields.many2one('product.attribute.value', 'Textual Value'),
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True),
-        'product_id': fields.many2one('product.template', 'Product', required=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product', required=True),
 
         'type': fields.related('attribute_id', 'type', type='selection',
             selection=[('distinct', 'Distinct'), ('float', 'Float')], string='Type'),
@@ -83,5 +83,5 @@ class attributes_product(osv.Model):
 class product_template(osv.Model):
     _inherit = "product.template"
     _columns = {
-        'website_attribute_ids': fields.one2many('product.attribute.product', 'product_id', 'Product Attributes'),
+        'website_attribute_ids': fields.one2many('product.attribute.product', 'product_tmpl_id', 'Product Attributes'),
     }

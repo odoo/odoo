@@ -944,7 +944,7 @@ class product_supplierinfo(osv.osv):
         'product_uom': fields.related('product_id', 'uom_po_id', type='many2one', relation='product.uom', string="Supplier Unit of Measure", readonly="1", help="This comes from the product form."),
         'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
-        'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
+        'product_id' : fields.many2one('product.product', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
         'company_id':fields.many2one('res.company','Company',select=1),
@@ -970,10 +970,10 @@ class product_supplierinfo(osv.osv):
         pricelist_pool = self.pool.get('product.pricelist')
         currency_pool = self.pool.get('res.currency')
         currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+        # Compute price from standard price of product
+        product_price = product_pool.price_get(cr, uid, [product_id], 'standard_price', context=context)[product_id]
         for supplier in partner_pool.browse(cr, uid, supplier_ids, context=context):
-            # Compute price from standard price of product
-            price = product_pool.price_get(cr, uid, [product_id], 'standard_price', context=context)[product_id]
-
+            price = product_price
             # Compute price from Purchase pricelist of supplier
             pricelist_id = supplier.property_product_pricelist_purchase.id
             if pricelist_id:
