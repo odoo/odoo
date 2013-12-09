@@ -111,7 +111,7 @@ class res_font(osv.Model):
 
         # remove fonts not present on disk
         existing_font_names = [name for (family, name, path, mode) in customfonts.CustomTTFonts]
-        inexistant_fonts = self.search(cr, uid, [('name', 'not in', existing_font_names)], context=context)
+        inexistant_fonts = self.search(cr, uid, [('name', 'not in', existing_font_names), ('path', '!=', '/dev/null')], context=context)
         if inexistant_fonts:
             return self.unlink(cr, uid, inexistant_fonts, context=context)
         return True
