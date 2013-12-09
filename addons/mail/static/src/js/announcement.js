@@ -20,7 +20,7 @@ openerp_announcement = function(instance) {
                 var $css = $('<link />').attr({ 
                     rel : 'stylesheet',
                     type: 'text/css',
-                    media: 'all',
+                    media: 'screen',
                     href: self._ab_location(dbuuid)
                 });
                 $css.on('load', function() {
