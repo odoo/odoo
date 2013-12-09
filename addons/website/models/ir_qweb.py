@@ -21,6 +21,7 @@ from lxml import etree, html
 from PIL import Image as I
 import openerp.modules
 
+import openerp
 from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.web.http import request
@@ -197,6 +198,7 @@ class ManyToOne(orm.AbstractModel):
         matches = self.pool[column._obj].name_search(
             cr, uid, name=element.text_content().strip(), context=context)
         # FIXME: no match? More than 1 match?
+        print element.text_content().strip()
         assert len(matches) == 1
         return matches[0][0]
 
@@ -349,3 +351,43 @@ class RelativeDatetime(orm.AbstractModel):
     ]
 
     # get formatting from ir.qweb.field.relative but edition/save from datetime
+
+
+class Contact(orm.AbstractModel):
+    _name = 'website.qweb.field.contact'
+    _inherit = ['website.qweb.field', 'website.qweb.field.many2one']
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        # FIXME: this behavior is really weird, what if the user wanted to edit the name of the related thingy? Should m2os really be editable without a widget?
+        divs = element.xpath(".//div")
+        for div in divs:
+            if div != divs[0]:
+                div.getparent().remove(div)
+        return super(Contact, self).from_html(cr, uid, model, column, element, context=context)
+
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
+
+        if not getattr(record, field_name):
+            return None
+
+        id = getattr(record, field_name).id
+        field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
+        value = werkzeug.utils.escape( field_browse.name_get()[0][1] )
+
+        IMD = self.pool["ir.model.data"]
+        model, id = IMD.get_object_reference(cr, uid, "website", "contact")
+        view = self.pool["ir.ui.view"].browse(cr, uid, id, context=context)
+
+        html = view.render({
+            'name': value.split("\n")[0],
+            'address': werkzeug.utils.escape("\n".join(value.split("\n")[1:])),
+            'phone': field_browse.phone,
+            'mobile': field_browse.mobile,
+            'fax': field_browse.fax,
+            'email': field_browse.email,
+            'fields': opf,
+            'options': options
+        }, engine='website.qweb', context=context)
+
+        return html

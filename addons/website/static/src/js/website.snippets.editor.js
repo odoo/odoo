@@ -26,7 +26,6 @@
                 self.snippets.$button.removeClass("hidden");
                 website.snippet.stop_animation();
                 website.snippet.start_animation();
-                self.trigger('tour:editor_bar_loaded');
             });
 
             return this._super.apply(this, arguments);
@@ -207,17 +206,17 @@
                 self.make_active($target);
             });
         },
-        snippet_blur: function ($snipped_id) {
-            if ($snipped_id) {
-                if ($snipped_id.data("snippet-editor")) {
-                    $snipped_id.data("snippet-editor").onBlur();
+        snippet_blur: function ($snippet) {
+            if ($snippet) {
+                if ($snippet.data("snippet-editor")) {
+                    $snippet.data("snippet-editor").onBlur();
                 }
             }
         },
-        snippet_focus: function ($snipped_id) {
-            if ($snipped_id) {
-                if ($snipped_id.data("snippet-editor")) {
-                    $snipped_id.data("snippet-editor").onFocus();
+        snippet_focus: function ($snippet) {
+            if ($snippet) {
+                if ($snippet.data("snippet-editor")) {
+                    $snippet.data("snippet-editor").onFocus();
                 }
             }
         },
@@ -230,31 +229,32 @@
                 }
             }
         },
-        make_active: function ($snipped_id) {
-            if ($snipped_id && this.$active_snipped_id && this.$active_snipped_id.get(0) === $snipped_id.get(0)) {
+        make_active: function ($snippet) {
+            if ($snippet && this.$active_snipped_id && this.$active_snipped_id.get(0) === $snippet.get(0)) {
                 return;
             }
             if (this.$active_snipped_id) {
                 this.snippet_blur(this.$active_snipped_id);
                 this.$active_snipped_id = false;
             }
-            if ($snipped_id && $snipped_id.length) {
-                if(_.indexOf(this.snippets, $snipped_id.get(0)) === -1) {
-                    this.snippets.push($snipped_id.get(0));
+            if ($snippet && $snippet.length) {
+                if(_.indexOf(this.snippets, $snippet.get(0)) === -1) {
+                    this.snippets.push($snippet.get(0));
                 }
-                this.$active_snipped_id = $snipped_id;
+                this.$active_snipped_id = $snippet;
                 this.create_overlay(this.$active_snipped_id);
-                this.snippet_focus($snipped_id);
+                this.snippet_focus($snippet);
             }
+            $("#oe_snippets").trigger('snippet-activated', $snippet);
         },
-        create_overlay: function ($snipped_id) {
-            if (typeof $snipped_id.data("snippet-editor") === 'undefined') {
-                var $targets = this.activate_overlay_zones($snipped_id);
+        create_overlay: function ($snippet) {
+            if (typeof $snippet.data("snippet-editor") === 'undefined') {
+                var $targets = this.activate_overlay_zones($snippet);
                 if (!$targets.length) return;
-                var editor = website.snippet.editorRegistry[$snipped_id.data("snippet-id")] || website.snippet.editorRegistry.resize;
-                $snipped_id.data("snippet-editor", new editor(this, $snipped_id));
+                var editor = website.snippet.editorRegistry[$snippet.data("snippet-id")] || website.snippet.editorRegistry.resize;
+                $snippet.data("snippet-editor", new editor(this, $snippet));
             }
-            this.cover_target($snipped_id.data('overlay'), $snipped_id);
+            this.cover_target($snippet.data('overlay'), $snippet);
         },
 
         path_eval: function(path){
@@ -305,6 +305,7 @@
 
                         $toInsert = $snippet.find('.oe_snippet_body').clone();
                         $toInsert.removeClass('oe_snippet_body');
+                        $toInsert.data('src-snippet-id', snipped_id);
                         if (!$toInsert.data('snippet-id')) {
                             $toInsert.attr('data-snippet-id', snipped_id);
                         } else {
@@ -381,7 +382,10 @@
                                 snippet.drop_and_build_snippet($target);
                             }
                         }
-                        setTimeout(function () {self.make_active($target);},0);
+                        setTimeout(function () {
+                            $("#oe_snippets").trigger('snippet-dropped', $target);
+                            self.make_active($target);
+                        },0);
                     } else {
                         $toInsert.remove();
                         if (self.$modal.find('input:not(:checked)').length) {
@@ -869,7 +873,7 @@
                 var editor = new Editor(self, self.$target, val['snippet-style-id']);
                 $ul.prepend(editor.$el);
             });
-            
+
             if ($ul.find("li").length) {
                 $styles.removeClass("hidden");
             }
@@ -1149,7 +1153,7 @@
             }
         },
     });
- 
+
     website.snippet.editorRegistry.slider = website.snippet.editorRegistry.resize.extend({
         drop_and_build_snippet: function() {
             var id = $(".carousel").length;
@@ -1224,7 +1228,7 @@
             var new_index = 0;
             var cycle = this.$inner.find('.item').length - 1;
             var index = this.$inner.find('.item.active').index();
-            
+
             if (cycle > 0) {
                 this.remove_process = true;
                 var $el = this.$inner.find('.item.active');

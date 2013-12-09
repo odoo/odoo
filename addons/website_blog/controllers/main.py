@@ -154,7 +154,7 @@ class WebsiteBlog(http.Controller):
     @website.route([
         '/blogpost/<model("blog.post"):blog_post>/',
     ], type='http', auth="public", multilang=True)
-    def blog_post(self, blog_post=None, tag=None, date=None, page=1, enable_editor=None):
+    def blog_post(self, blog_post, tag=None, date=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
 
         :param blog_post: blog post currently browsed. If not set, the user is

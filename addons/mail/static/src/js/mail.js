@@ -725,6 +725,7 @@ openerp.mail = function (session) {
             var values = {
                 'body': this.$('textarea').val(),
                 'subject': false,
+                'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
                 'partner_ids': partner_ids,
                 'context': _.extend(this.parent_thread.context, {

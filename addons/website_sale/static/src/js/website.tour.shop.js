@@ -11,26 +11,25 @@
     });
 
     website.EditorShopTour = website.Tour.extend({
-        id: 'shop-tutorial',
+        id: 'shop',
         name: "Create a product",
         init: function (editor) {
             var self = this;
             self.steps = [
                 {
                     stepId: 'welcome-shop',
-                    orphan: true,
-                    backdrop: true,
                     title: "Welcome to your shop",
                     content: "You successfully installed the e-commerce. This guide will help you to create your product and promote your sales.",
                     template: self.popover({ next: "Start Tutorial", end: "Skip It" }),
+                    backdrop: true,
                 },
                 {
                     stepId: 'content-menu',
                     element: '#content-menu-button',
                     placement: 'left',
-                    reflex: true,
                     title: "Create your first product",
                     content: "Click here to add a new product.",
+                    trigger: 'click',
                 },
                 {
                     stepId: 'edit-entry',
@@ -38,9 +37,11 @@
                     placement: 'left',
                     title: "Create a new product",
                     content: "Select 'New Product' to create it and manage its properties to boost your sales.",
-                    modal: {
-                        stopOnClose: true,
-                        afterSubmit: 'product-page',
+                    trigger: {
+                        modal: {
+                            stopOnClose: true,
+                            afterSubmit: 'product-page',
+                        },
                     },
                 },
                 {
@@ -49,15 +50,13 @@
                     placement: 'right',
                     title: "Choose name",
                     content: "Enter a name for your new product then click 'Continue'.",
-
                 },
                 {
                     stepId: 'product-page',
-                    orphan: true,
-                    backdrop: true,
                     title: "New product created",
                     content: "This page contains all the information related to the new product.",
                     template: self.popover({ next: "OK" }),
+                    backdrop: true,
                 },
                 {
                     stepId: 'edit-price',
@@ -75,7 +74,7 @@
                     content: "Click here to set an image describing your product.",
                     triggers: function () {
                         function registerClick () {
-                            $('button.image-edit-button').one('click', function () {
+                            $('button.hover-edition-button').one('click', function () {
                                 $('#wrap img.img:first').off('hover', registerClick);
                                 self.moveToNextStep();
                             });
@@ -110,11 +109,7 @@
                     placement: 'bottom',
                     title: "Describe the product for your audience",
                     content: "Insert blocks like text-image, or gallery to fully describe the product and make your visitors want to buy this product.",
-                    triggers: function () {
-                        $('button[data-action=snippet]').one('click', function () {
-                            self.moveToNextStep();
-                        });
-                    },
+                    trigger: 'click',
                 },
                 {
                     stepId: 'drag-big-picture',
@@ -122,9 +117,7 @@
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Big Picture' block and drop it in your page.",
-                    triggers: function () {
-                        self.onSnippetDraggedAdvance();
-                    },
+                    trigger: 'drag',
                 },
                 {
                     stepId: 'save-changes',
@@ -132,27 +125,19 @@
                     placement: 'right',
                     title: "Save your modifications",
                     content: "Once you click on save, your product is updated.",
-                    triggers: function () {
-                        var $publish = $('button.js_publish_btn');
-                        if ($publish.length > 0 && $publish.is(":visible")) {
-                            self.moveToNextStep();
-                        }
-                    },
+                    trigger: 'click',
 
                 },
                 {
                     stepId: 'publish-product',
                     element: 'button.js_publish_btn',
                     placement: 'top',
-                    reflex: true,
                     title: "Publish your product",
                     content: "Click to publish your product so your customers can see it.",
+                    trigger: 'click',
                 },
             ];
             return this._super();
-        },
-        resume: function () {
-            return (this.isCurrentStep('product-page') || this.isCurrentStep('save-changes')) && this._super();
         },
         trigger: function () {
             return (this.resume() && this.testUrl(/^\/shop\/product\/[0-9]+\//)) || this._super();
