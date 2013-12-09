@@ -38,7 +38,6 @@ openerp_announcement = function(instance) {
 
                         $bar.slideUp('slow');
                     };
-                    $bar.on('dblclick', close);
                     $bar.find('.close').on('click', close);
                     self.trigger('ab_loaded', $bar);
                 });
