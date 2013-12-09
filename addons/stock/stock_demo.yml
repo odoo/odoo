@@ -71,7 +71,7 @@
 -
  !record {model: stock.picking, id: outgoing_shipment_main_warehouse}:
     picking_type_id: stock.picking_type_out
-    origin: 'back'
+    origin: 'outgoing shipment main_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_27
@@ -83,7 +83,7 @@
 -
  !record {model: stock.picking, id: outgoing_shipment_main_warehouse1}:
     picking_type_id: stock.picking_type_out
-    origin: 'back'
+    origin: 'outgoing shipment'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_6
@@ -93,13 +93,13 @@
         location_id: stock.stock_location_stock
         location_dest_id: stock.stock_location_customers
     pack_operation_ids:
-      - product_id: product.product_product_48
+      - product_id: product.product_product_6
         product_qty: 100
         product_uom_id: product.product_uom_unit
 -
  !record {model: stock.picking, id: outgoing_shipment_main_warehouse2}:
     picking_type_id: stock.picking_type_out
-    origin: 'back'
+    origin: 'outgoing shipment your_company warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_31
@@ -111,7 +111,7 @@
 -
  !record {model: stock.picking, id: outgoing_shipment_main_warehouse3}:
     picking_type_id: stock.picking_type_out
-    origin: 'back'
+    origin: 'your company warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_5
@@ -138,7 +138,7 @@
 -
  !record {model: stock.picking, id: incomming_shipment1}:
     picking_type_id: stock.picking_type_in
-    origin: 'back'
+    origin: 'incomming_shipment'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_48
@@ -150,7 +150,7 @@
 -
  !record {model: stock.picking, id: incomming_shipment2}:
     picking_type_id: stock.picking_type_in
-    origin: 'back'
+    origin: 'incomming_shipment main_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_22
@@ -162,7 +162,7 @@
 -
  !record {model: stock.picking, id: incomming_shipment3}:
     picking_type_id: stock.picking_type_in
-    origin: 'back'
+    origin: 'incomming_shipment your_company warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_10
@@ -174,7 +174,7 @@
 -
  !record {model: stock.picking, id: incomming_shipment4}:
     picking_type_id: stock.picking_type_in
-    origin: 'back'
+    origin: 'incomming_shipment_main_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_31
@@ -188,7 +188,7 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse}:
     picking_type_id: chi_picking_type_in
-    origin: 'back'
+    origin: 'incomming_chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_9
@@ -200,7 +200,7 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse1}:
     picking_type_id: chi_picking_type_in
-    origin: 'back'
+    origin: 'incomming_shipment_chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_48
@@ -217,7 +217,7 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse2}:
     picking_type_id: chi_picking_type_in
-    origin: 'back'
+    origin: 'incomming_shipment chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_32
@@ -229,7 +229,7 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse3}:
     picking_type_id: chi_picking_type_in
-    origin: 'back'
+    origin: 'chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_22
@@ -243,7 +243,7 @@
 -
  !record {model: stock.picking, id: outgoing_chicago_warehouse}:
     picking_type_id: chi_picking_type_out
-    origin: 'back'
+    origin: 'outgoing_chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_27
@@ -255,7 +255,7 @@
 -
  !record {model: stock.picking, id: outgoing_chicago_warehouse1}:
     picking_type_id: chi_picking_type_out
-    origin: 'back'
+    origin: 'outgoing_shipment_chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_6
@@ -265,13 +265,13 @@
         location_id: stock.stock_location_stock
         location_dest_id: stock.stock_location_customers
     pack_operation_ids:
-      - product_id: product.product_product_48
+      - product_id: product.product_product_6
         product_qty: 100
         product_uom_id: product.product_uom_unit
 -
  !record {model: stock.picking, id: outgoing_chicago_warehouse2}:
     picking_type_id: chi_picking_type_out
-    origin: 'back'
+    origin: 'chicago_warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_31
@@ -283,7 +283,7 @@
 -
  !record {model: stock.picking, id: outgoing_chicago_warehouse3}:
     picking_type_id: chi_picking_type_out
-    origin: 'back'
+    origin: 'outgoing chicago warehouse'
     partner_id: base.res_partner_6
     move_lines:
       - product_id: product.product_product_5
@@ -292,3 +292,11 @@
         picking_type_id: chi_picking_type_out
         location_id: stock.stock_location_stock
         location_dest_id: stock.stock_location_customers
+-
+ !python {model: stock.picking}: |
+    self.action_confirm(cr, uid, [ref('outgoing_shipment_main_warehouse'),ref('outgoing_shipment_main_warehouse1'),ref('incomming_shipment2'),ref('incomming_shipment1'),ref('incomming_shipment3'),ref('outgoing_chicago_warehouse3'),ref('outgoing_chicago_warehouse2'),ref('outgoing_chicago_warehouse1'),ref('incomming_chicago_warehouse1'),ref('incomming_chicago_warehouse2'),ref('incomming_chicago_warehouse3')], context=context)
+    record = self.browse(cr, uid, ref('outgoing_shipment_main_warehouse1'), context=context)
+    record_chi_in = self.browse(cr, uid, ref('incomming_chicago_warehouse1'), context=context)
+    record_chi_out = self.browse(cr, uid, ref('outgoing_chicago_warehouse1'), context=context)
+    if record.state != 'done' and record_chi_in.state != 'done' and record_chi_out.state != 'done':
+      self.do_transfer(cr, uid, [ref('outgoing_shipment_main_warehouse1'),ref('incomming_chicago_warehouse1'),ref('outgoing_chicago_warehouse1')], context=context)
