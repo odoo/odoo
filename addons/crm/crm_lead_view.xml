@@ -412,7 +412,7 @@
                                     on_change="onchange_partner_id(partner_id, email_from)"
                                     string="Customer"
                                     context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
-                                <field name="email_from" string="Email"/>
+                                <field name="email_from" string="Email" widget="email"/>
                                 <field name="phone"/>
                             </group>
 
