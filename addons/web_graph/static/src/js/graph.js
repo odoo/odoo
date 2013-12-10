@@ -43,6 +43,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.search_view = parent.searchview;
         this.groupby_mode = 'default';  // 'default' or 'manual'
         this.default_row_groupby = [];
+        this.default_col_groupby = [];
         this.search_field = {
             get_context: this.proxy('get_context'),
             get_domain: function () {},
@@ -83,7 +84,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 if ('operator' in field.attrs) {
                     self.measure_list.push(field.attrs.name);
                 } else {
-                    self.default_row_groupby.push(field.attrs.name);
+                    if (self.measure_list.length) {
+                        self.default_col_groupby.push(field.attrs.name);
+                    } else {
+                        self.default_row_groupby.push(field.attrs.name);
+                    }
                 }
             }
         });
@@ -139,7 +144,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.pivot_table.set_col_groupby(col_groupby);
         } else {
             this.pivot_table.set_row_groupby(_.toArray(this.default_row_groupby));
-            this.pivot_table.set_col_groupby([]);
+            this.pivot_table.set_col_groupby(_.toArray(this.default_col_groupby));
         }
         this.display_data();
     },
