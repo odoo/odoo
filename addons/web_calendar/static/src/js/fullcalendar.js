@@ -586,31 +586,44 @@ openerp.web_calendar = function(instance) {
         get_event_data: function(event) {
 
             // Normalize event_end without changing fullcalendars event.
-            var event_end = event.end;
-            if (event.allDay) {
-                // Sometimes fullcalendar doesn't give any event.end.
-                if (event_end === null || typeof event_end === "undefined")
-                    event_end = event.start;
-                // Avoid inplace changes
-                event_end = (new Date(event_end.getTime())).addDays(1);
-            }
-
             var data = {
                 name: event.title
             };
-            data[this.date_start] = instance.web.parse_value(event.start, this.fields[this.date_start]);
-    
-            //Bug whenmove a all_day event from week or day, we don't have a dateend or duration...            
+            
+            
+            var event_end = event.end;
+            //Bug when we move an all_day event from week or day view, we don't have a dateend or duration...            
             if (event_end == null) {
-                event_end = event.start.addHours(2);
+                debugger;
+                event_end = new Date(event.start).addHours(2);
+            }
+                
+            
+            if (event.allDay) {
+                // Sometimes fullcalendar doesn't give any event.end.
+                if (event_end === null || typeof event_end === "undefined")
+                    event_end = new Date(event.start);
+                // Avoid inplace changes
+                event_end = (new Date(event_end.getTime())).addDays(1);
+                
+                data[this.date_start] = instance.web.parse_value(new Date(event.start.setUTCHours(0,0,0,0)), this.fields[this.date_start]);
+                data[this.date_stop] = instance.web.parse_value(new Date(event_end.setUTCHours(0,0,0,0)), this.fields[this.date_stop]);
+                                
+            }
+            else {
+                
+                data[this.date_start] = instance.web.parse_value(event.start, this.fields[this.date_start]);
+                if (this.date_stop) {
+                    data[this.date_stop] = instance.web.parse_value(event_end, this.fields[this.date_stop]);
+                }            
+
             }
 
-            if (this.date_stop) {
-                data[this.date_stop] = instance.web.parse_value(event_end, this.fields[this.date_stop]);
-            }
+
             if (this.all_day) {
-                data[this.all_day] = event.allDay;
+                data[this.all_day] = event.allDay;                
             }
+
             if (this.date_delay) {
                 var diff_seconds = Math.round((event_end.getTime() - event.start.getTime()) / 1000);
                 data[this.date_delay] = diff_seconds / 3600;
@@ -1424,7 +1437,7 @@ openerp.web_calendar = function(instance) {
         },
         addUpdateButton: function() {
             var self=this;
-            var button = "<button class='oe_button oe_form_button oe_link' style='margin-top:7px'><span class='add_contacts_link' >Manage contacts</span></button>";
+            var button = "<button class='oe_button oe_form_button oe_link' style='margin-top:10px'><span class='add_contacts_link' >Manage coworker's calendar</span></button>";
             this.$('div.oe_calendar_all_responsibles').append(button);
             this.$(".add_contacts_link").on('click', function() {  
                 self.rpc("/web/action/load", { 
