@@ -81,16 +81,19 @@ Main Features
     'css': [
         'static/src/css/mail.css',
         'static/src/css/mail_group.css',
+        'static/src/css/announcement.css',
     ],
     'js': [
         'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
         'static/src/js/mail_followers.js',
         'static/src/js/many2many_tags_email.js',
+        'static/src/js/announcement.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',
         'static/src/xml/mail_followers.xml',
+        'static/src/xml/announcement.xml',
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
