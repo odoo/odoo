@@ -365,6 +365,7 @@ class Field(object):
                 if self._compute_one:
                     self.compute_value(record)
                 else:
+                    record._in_cache()
                     recs = record._in_cache_without(self.name)
                     self.compute_value(recs, check_exists=True)
 
