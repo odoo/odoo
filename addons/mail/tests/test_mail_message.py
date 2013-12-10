@@ -402,7 +402,7 @@ class TestMailMessage(TestMail):
         # Do: Bert reads Jobs basic fields, ok because public = read access on the group
         self.mail_group.read(cr, user_bert_id, [self.group_jobs_id], ['name', 'description'])
         # Do: Bert reads Jobs messages, ok because read access on the group => read access on its messages
-        jobs_message_ids = self.mail_group.read(cr, user_bert_id, [self.group_jobs_id], ['message_ids'])['message_ids']
+        jobs_message_ids = self.mail_group.read(cr, user_bert_id, [self.group_jobs_id], ['message_ids'])[0]['message_ids']
         self.mail_message.read(cr, user_bert_id, jobs_message_ids)
         # Do: Bert browses Jobs, ok (no direct browse of partners), ok for messages, ko for followers (accessible to employees or partner manager)
         bert_jobs = self.mail_group.browse(cr, user_bert_id, self.group_jobs_id)
