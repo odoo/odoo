@@ -202,10 +202,12 @@ ul.nav-stacked > li > a
     text-transform: uppercase
 
 /* ---- PUBLISH ---- */
-.css_unpublish, .css_publish
-    display: none
-.css_published .css_unpublish, .css_unpublished .css_publish
-    display: block
+.css_published
+    .btn-danger, .css_publish
+        display: none
+.css_unpublished
+    .btn-success, .css_unpublish
+        display: none
 
 [data-publish='off']
     +opacity(0.5)
