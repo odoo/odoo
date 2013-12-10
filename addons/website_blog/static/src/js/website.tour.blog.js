@@ -53,9 +53,6 @@
                     trigger: {
                         emitter: '.modal select',
                         id: 'change',
-                        predicate: function ($el, value) {
-                            return $el.find('[value='+value+']').text().toLowerCase() === 'news';
-                        },
                     },
                 },
                 {

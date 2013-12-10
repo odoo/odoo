@@ -52,8 +52,7 @@
                         } else {
                             step.triggers = function (callback) {
                                 var emitter = _.isString(step.trigger.emitter) ? $(step.trigger.emitter) : (step.trigger.emitter || $(step.element));
-                                emitter.on(step.trigger.id, function customHandler () {
-                                    console.log(arguments);
+                                emitter.on(step.trigger.id, function () {
                                     (callback || self.moveToNextStep).apply(self, arguments);
                                 });
                             };
@@ -219,6 +218,12 @@
     });
 
     var TestConsole = website.TestConsole = {
+        tests: [],
+        test: function (id) {
+            return _.find(this.tests, function (tour) {
+               return tour.id === id;
+            });
+        },
         dragAndDropSnippet: function (snippetId) {
             var selector = '#oe_snippets div.oe_snippet[data-snippet-id="'+snippetId+'"] .oe_snippet_thumbnail';
             var $thumbnail = $(selector).first();
@@ -229,7 +234,6 @@
             var dropPosition = $dropZone.position();
             $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
         },
-        tests: [],
     };
 
     website.EditorBar.include({
@@ -260,7 +264,14 @@
             this.tours.push(tour);
             TestConsole.tests.push({
                 id: tour.id,
-                run: function runTest () {
+                run: function (force) {
+                    var url = new website.UrlParser(window.location.href);
+                    if (tour.startPath && url.pathname !== tour.startPath) {
+                        throw new Error(tour.startPath);
+                    }
+                    if (force === true) {
+                        this.reset();
+                    }
                     var actionSteps = _.filter(tour.steps, function (step) {
                        return step.trigger;
                     });
@@ -271,7 +282,7 @@
                             if (nextStep) {
                                 setTimeout(function () {
                                     executeStep(nextStep);
-                                }, 10);
+                                }, 100);
                             }
                         });
                         if (step.snippet && step.trigger === 'drag') {
