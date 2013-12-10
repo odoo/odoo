@@ -62,16 +62,12 @@
             this.user_search_dm = new instance.web.DropMisordered();
         },
         start: function() {
+            var self = this;
             this.$el.css("right", -this.$el.outerWidth());
             $(window).scroll(_.bind(this.calc_box, this));
             $(window).resize(_.bind(this.calc_box, this));
             this.calc_box();
-
             this.on("change:current_search", this, this.search_changed);
-            this.search_changed();
-
-            var self = this;
-
             return this.c_manager.start_polling().then(function() {
                 self.c_manager.on("new_conversation", self, function(conv) {
                     conv.$el.droppable({
@@ -80,10 +76,11 @@
                         }
                     });
                 });
+                self.search_changed();
             });
         },
         calc_box: function() {
-            var $topbar = instance.client.$(".navbar");
+            var $topbar = instance.client.$(".navbar"); // .oe_topbar is replaced with .navbar of bootstrap3
             var top = $topbar.offset().top + $topbar.height();
             top = Math.max(top - $(window).scrollTop(), 0);
             this.$el.css("top", top);

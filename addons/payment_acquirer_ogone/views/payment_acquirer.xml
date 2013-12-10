@@ -7,9 +7,8 @@
             <field name="model">payment.acquirer</field>
             <field name="inherit_id" ref="payment_acquirer.acquirer_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//group[@name="acquirer_base"]' position='after'>
-                    <group string="Ogone Details"
-                            attrs="{'invisible': [('name', '!=', 'ogone')]}">
+                <xpath expr='//group[@name="acquirer_display"]' position='after'>
+                    <group attrs="{'invisible': [('name', '!=', 'ogone')]}">
                         <field name="ogone_pspid"/>
                         <field name="ogone_userid"/>
                         <field name="ogone_password"/>
@@ -29,8 +28,10 @@
                     <page string="Ogone TX Details">
                         <group>
                             <field name="ogone_payid"/>
-                            <!-- <field name="ogone_3ds"/>
-                            <field name="ogone_3ds_html"/> -->
+                            <field name="ogone_3ds"/>
+                            <field name="ogone_3ds_html"/>
+                            <field name="ogone_complus"/>
+                            <field name="ogone_payid"/>
                         </group>
                     </page>
                 </xpath>

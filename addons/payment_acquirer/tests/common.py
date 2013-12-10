@@ -14,8 +14,10 @@ class PaymentAcquirerCommon(common.TransactionCase):
             self.cr, self.uid, [('name', '=', 'EUR')], limit=1)[0]
         self.currency_euro = self.registry('res.currency').browse(
             self.cr, self.uid, self.currency_euro_id)
-        country_belgium_id = self.registry('res.country').search(
+        self.country_belgium_id = self.registry('res.country').search(
             self.cr, self.uid, [('code', 'like', 'BE')], limit=1)[0]
+        self.country_france_id = self.registry('res.country').search(
+            self.cr, self.uid, [('code', 'like', 'FR')], limit=1)[0]
 
         # dict partner values
         self.buyer_values = {
@@ -27,7 +29,7 @@ class PaymentAcquirerCommon(common.TransactionCase):
             'phone': '0032 12 34 56 78',
             'city': 'Sin City',
             'zip': '1000',
-            'country_id': country_belgium_id,
+            'country_id': self.country_belgium_id,
             'country_name': 'Belgium',
         }
 
@@ -42,6 +44,6 @@ class PaymentAcquirerCommon(common.TransactionCase):
                 'phone': '0032 12 34 56 78',
                 'city': 'Sin City',
                 'zip': '1000',
-                'country_id': country_belgium_id,
+                'country_id': self.country_belgium_id,
             }
         )

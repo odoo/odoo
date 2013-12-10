@@ -28,7 +28,7 @@
             </li>
         </template>
 
-        <template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
+        <template id="secure_layout" name="Main: Don't Edit This Layout">&lt;!DOCTYPE html&gt;
                 <html t-att-lang="lang and lang.replace('_', '-')"
                       t-att-data-website-id="website.id if editable else None"
                       t-att-data-editable="'1' if editable else None"
@@ -111,121 +111,130 @@
                     </head>
                     <body>
                         <div id="wrapwrap">
-                            <header>
-                                <div class="navbar navbar-default navbar-static-top">
-                                    <div class="container">
-                                        <div class="navbar-header">
-                                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
-                                                <span class="sr-only">Toggle navigation</span>
-                                                <span class="icon-bar"></span>
-                                                <span class="icon-bar"></span>
-                                                <span class="icon-bar"></span>
-                                            </button>
-                                            <a class="navbar-brand" href="/">Your<b>Company</b></a>
-                                        </div>
-                                        <div class="collapse navbar-collapse navbar-top-collapse">
-                                            <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                                <t t-foreach="website.get_menu().child_id" t-as="submenu">
-                                                    <t t-call="website.submenu"/>
-                                                </t>
-                                                <li class="active dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
-                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                                        <span t-esc="user_id.name"/>
-                                                        <span class="caret"></span>
-                                                    </a>
-                                                    <ul class="dropdown-menu js_usermenu" role="menu">
-                                                        <li><a href="/web" role="menuitem">Administration</a></li>
-                                                        <li class="divider"/>
-                                                        <li><a t-attf-href="/web/session/logout?redirect=#{ url_for('') }" role="menuitem">Logout</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </header>
                             <t t-raw="0"/>
-                            <footer>
-                                <div class="container" id="footer_container">
-                                    <div class="row">
-                                        <div class="col-md-3" name="product">
-                                            <h4>Our products &amp; Services</h4>
-                                            <ul class="list-unstyled" name="products">
-                                                <li><a href="/">Home</a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-md-3" name="info">
-                                            <h4 name="info_title">Connect with us</h4>
-                                            <ul class="list-unstyled">
-                                                <li><a href="/page/website.contactus">Contact us</a></li>
-                                            </ul>
-                                            <ul class="list-unstyled">
-                                                <li><i class="icon-phone"></i> <span t-field="res_company.phone"></span></li>
-                                                <li><i class="icon-envelope"></i>  <span t-field="res_company.email"></span></li>
-                                            </ul>
-                                            <h2>
-                                                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="icon-facebook-sign"/></a>
-                                                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="icon-twitter-sign"/></a>
-                                                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="icon-linkedin-sign"/></a>
-                                                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="icon-youtube-sign"/></a>
-                                                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="icon-google-plus-sign"/></a>
-                                                <a t-att-href="website.social_github" t-if="website.social_github"><i class="icon-github-sign"/></a>
-                                            </h2>
-                                        </div>
-                                        <div class="col-md-5 col-lg-offset-1" name="about_us">
-                                            <div>
-                                                <h4>
-                                                    <span t-field="res_company.name">Your Company</span>
-                                                    <small> - <a href="/page/website.aboutus">About us</a></small>
-                                                </h4>
-                                                <p>
-                                                    We are a team of passionated people whose goal is to improve everyone's
-                                                    life through disruptive products. We build great products to solve your
-                                                    business problems.
-                                                </p>
-                                                <p>
-                                                    Our products are designed for small to medium companies willing to optimize
-                                                    their performance.
-                                                </p>
-                                            </div>
-                                            <ul class="nav nav-pills js_language_selector" t-if="(len(website.language_ids) &gt; 1 or editable)">
-                                                <li t-foreach="website.language_ids" t-as="lg">
-                                                    <a t-att-href="url_for('', lang=lg.code)"
-                                                       t-att-data-default-lang="editable and 'true' if lg.code == website.default_lang_id.code else None">
-                                                        <t t-esc="lg.name.split('/').pop()"/>
-                                                    </a>
-                                                </li>
-                                                <li t-if="editable">
-                                                    <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]')"/>
-                                                    <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
-                                                        <i class="icon-plus-sign"/>
-                                                        Add a language...
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="container mt16">
-                                    <div class="pull-right" t-ignore="true" t-if="not editable">
-                                        Create a <a href="http://openerp.com/apps/website">free website</a> with
-                                        <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
-                                    </div>
-                                    <div class="pull-left text-muted">
-                                        Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
-                                    </div>
-                                </div>
-                            </footer>
                         </div>
                     </body>
                 </html>
         </template>
 
+        <template id="layout" name="Main layout">
+            <t t-call="website.secure_layout">
+                <header>
+                    <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="/">Your<b>Company</b></a>
+                            </div>
+                            <div class="collapse navbar-collapse navbar-top-collapse">
+                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                                        <t t-call="website.submenu"/>
+                                    </t>
+                                    <li class="dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            <span class="badge">
+                                                <span t-esc="user_id.name"/>
+                                                <span class="caret"></span>
+                                            </span>
+                                        </a>
+                                        <ul class="dropdown-menu js_usermenu" role="menu">
+                                            <li><a href="/web" role="menuitem">Administration</a></li>
+                                            <li class="divider"/>
+                                            <li><a t-attf-href="/web/session/logout?redirect=#{ quote_plus(url_for('', keep_query='*')) }" role="menuitem">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <t t-raw="0"/>
+                <footer>
+                    <div class="container" id="footer_container">
+                        <div class="row">
+                            <div class="col-md-3" name="product">
+                                <h4>Our products &amp; Services</h4>
+                                <ul class="list-unstyled" name="products">
+                                    <li><a href="/">Home</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-3" name="info">
+                                <h4 name="info_title">Connect with us</h4>
+                                <ul class="list-unstyled">
+                                    <li><a href="/page/website.contactus">Contact us</a></li>
+                                </ul>
+                                <ul class="list-unstyled">
+                                    <li><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
+                                    <li><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
+                                </ul>
+                                <h2>
+                                    <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
+                                    <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
+                                    <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
+                                    <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
+                                    <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
+                                    <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
+                                </h2>
+                            </div>
+                            <div class="col-md-5 col-lg-offset-1" name="about_us">
+                                <div>
+                                    <h4>
+                                        <span t-field="res_company.name">Your Company</span>
+                                        <small> - <a href="/page/website.aboutus">About us</a></small>
+                                    </h4>
+                                    <p>
+                                        We are a team of passionated people whose goal is to improve everyone's
+                                        life through disruptive products. We build great products to solve your
+                                        business problems.
+                                    </p>
+                                    <p>
+                                        Our products are designed for small to medium companies willing to optimize
+                                        their performance.
+                                    </p>
+                                </div>
+                                <t t-set="languages" t-value="website.get_languages()"/>
+                                <ul class="nav nav-pills js_language_selector" t-if="(len(languages) &gt; 1 or editable)">
+                                    <li t-foreach="languages" t-as="lg">
+                                        <a t-att-href="url_for('', lang=lg[0], keep_query='*')"
+                                           t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
+                                            <t t-esc="lg[1].split('/').pop()"/>
+                                        </a>
+                                    </li>
+                                    <li t-if="editable">
+                                        <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]', keep_query='*')"/>
+                                        <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                                            <i class="fa fa-plus-circle"/>
+                                            Add a language...
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container mt16">
+                        <div class="pull-right" t-ignore="true" t-if="not editable">
+                            Create a <a href="http://openerp.com/apps/website">free website</a> with
+                            <a class="label label-danger" href="https://openerp.com/apps/website">OpenERP</a>
+                        </div>
+                        <div class="pull-left text-muted">
+                            Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+                        </div>
+                    </div>
+                </footer>
+            </t>
+        </template>
+
         <template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
             <xpath expr="//ul[@id='top_menu']" position="inside">
-                <li class="active" t-if="user_id.id == website.public_user.id">
-                    <a t-attf-href="/web#redirect=#{ url_for('') }">
-                        Sign in
+                <li t-if="user_id.id == website.public_user.id">
+                    <a t-attf-href="/web#redirect=#{ quote_plus(url_for('', keep_query='*')) }">
+                        <span class="badge">Sign in</span>
                     </a>
                 </li>
             </xpath>
@@ -376,6 +385,74 @@
             </t>
         </template>
 
+       <template id="http_error">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
+                    </div>
+
+                    <t t-if="editable or request.debug">
+                        <t t-call="website.http_error_debug"/>
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="http_error_debug">
+            <div class="container panel-group mb32 mt32" id="debug_infos">
+                <div class="panel panel-default" t-if="exception">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">
+                                Error
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="error_main" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
+                            <p><strong>Error message:</strong> <pre t-esc="exception.message"/></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default" t-if="qweb_template">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
+                                QWeb
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="error_qweb" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>
+                                The error occured while rendering the template <code t-esc="qweb_template"/>
+                                <t t-if="qweb_eval">and evaluating the following expression: <code t-esc="qweb_eval"/></t>
+                            </p>
+                            <t t-if="qweb_node">
+                                <pre id="exception_node" t-esc="qweb_node.toxml()"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default" t-if="traceback">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">
+                                Traceback
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="error_traceback" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <pre id="exception_traceback" t-esc="traceback"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
         <template id="404">
             <t t-call="website.layout">
                 <div id="wrap">
@@ -395,70 +472,16 @@
                             </ul>
                         </div>
                     </div>
+
+                    <t t-if="request.debug">
+                        <t t-call="website.http_error_debug"/>
+                    </t>
                 </div>
             </t>
         </template>
 
         <template id="500">
-            <t t-call="website.layout">
-                <div id="wrap">
-                    <div class="oe_structure">
-                        <h1 class="container mt32">500: Internal Server Error!</h1>
-                    </div>
-
-                    <div class="container panel-group" id="debug_infos" t-if="editable">
-                        <div class="panel panel-default" t-if="exception">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">
-                                        Error
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="error_main" class="panel-collapse collapse in">
-                                <div class="panel-body">
-                                    <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
-                                    <p><strong>Error message:</strong> <t t-esc="exception.message"/></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default" t-if="qweb_template">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
-                                        QWeb
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="error_qweb" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <p>
-                                        The error occured while rendering the template <code t-esc="qweb_template"/>
-                                        <t t-if="qweb_eval">and evaluating the following expression: <code t-esc="qweb_eval"/></t>
-                                    </p>
-                                    <t t-if="qweb_node">
-                                        <pre id="exception_node" t-esc="qweb_node.toxml()"/>
-                                    </t>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default" t-if="traceback">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">
-                                        Traceback
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="error_traceback" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <pre id="exception_traceback" t-esc="traceback"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
+            <t t-call="website.http_error"/>
         </template>
 
         <template id="403">
@@ -470,9 +493,6 @@
                         The page you were looking for could not be
                         authorized.
                     </p>
-                    <t t-if="error and editable">
-                        <pre t-esc="error"/>
-                    </t>
                     <p>
                         Maybe you were looking for one of these
                         popular pages ?
@@ -482,6 +502,9 @@
                         <li><a href="/page/website.contactus/">Contact Us</a></li>
                     </ul>
                 </div>
+                <t t-if="editable or request.debug">
+                    <t t-call="website.http_error_debug"/>
+                </t>
               </div>
             </t>
         </template>
@@ -522,13 +545,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
         <template id="company_description" name="Company Description">
             <address>
-                <strong t-field="res_company.name">Name</strong><br />
-                <span t-field="res_company.street"></span> <span t-field="res_company.state_id"></span><br />
-                <span t-field="res_company.zip"></span> <span t-field="res_company.city"></span><br />
-                <span t-field="res_company.country_id"> </span><br />
+                <div t-field="res_company.partner_id">Name</div>
                 <br />
-                <span>&amp;#x2706; <span t-field="res_company.phone"></span></span><br />
-                <i class="icon-envelope"></i> <span t-field="res_company.email"></span>
+                <div>&amp;#x2706; <span t-field="res_company.phone"></span></div>
+                <div class="fa fa-envelope" t-field="res_company.email"></div>
             </address>
              <a t-att-href="res_company.google_map_link()" target="_BLANK">
                 <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
@@ -666,5 +686,20 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             </t>
         </template>
 
+        <template id="contact">
+            <address t-ignore="true">
+                <div t-att-class='"" if "name" in fields else "css_non_editable_mode_hidden"'><span t-esc="name"/></div>
+                <div class='css_editable_mode_hidden'>
+                    <div t-if="address and 'address' in fields">
+                        <i class='fa fa-map-marker'/>
+                        <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
+                    </div>
+                    <div t-if="phone and 'phone' in fields"><i class='fa fa-phone'/> <span t-esc="phone"/></div>
+                    <div t-if="mobile and 'mobile' in fields"><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
+                    <div t-if="fax and 'fax' in fields"><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
+                    <div t-if="email and 'email' in fields"><i class='fa fa-envelope'/> <span t-esc="email"/></div>
+                </div>
+            </address>
+        </template>
      </data>
 </openerp>

@@ -1,14 +1,15 @@
 # -*- coding: utf-'8' "-*-"
 
-from openerp.osv import osv, fields
-
 import logging
+
+from openerp.osv import osv, fields
+from openerp.tools import float_round
 
 _logger = logging.getLogger(__name__)
 
 
 def _partner_format_address(address1=False, address2=False):
-    return ' '.join((address1 or '', address2 or ''))
+    return ' '.join((address1 or '', address2 or '')).strip()
 
 
 def _partner_split_name(partner_name):
@@ -22,8 +23,9 @@ class ValidationError(ValueError):
 
 class PaymentAcquirer(osv.Model):
     """ Acquirer Model. Each specific acquirer can extend the model by adding
-    its own fields. Using the required_if_provider='<name>' attribute on fields
-    it is possible to have required fields that depend on a specific acquirer.
+    its own fields, using the acquirer_name as a prefix for the new fields.
+    Using the required_if_provider='<name>' attribute on fields it is possible
+    to have required fields that depend on a specific acquirer.
 
     Each acquirer has a link to an ir.ui.view record that is a template of
     a button used to display the payment form. See examples in ``payment_acquirer_ogone``
@@ -36,7 +38,10 @@ class PaymentAcquirer(osv.Model):
        method that generates the values used to render the form button template.
      - ``<name>_get_form_action_url(self, cr, uid, id, context=None):``: method
        that returns the url of the button form. It is used for example in
-       ecommerce application, if you want to repost some data to the acquirer.
+       ecommerce application, if you want to post some data to the acquirer.
+     - ``<name>_compute_fees(self, cr, uid, id, amount, currency_id, country_id,
+       context=None)``: computed the fees of the acquirer, using generic fields
+       defined on the acquirer model (see fields definition).
 
     Each acquirer should also define controllers to handle communication between
     OpenERP and the acquirer. It generally consists in return urls given to the
@@ -48,18 +53,27 @@ class PaymentAcquirer(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'message': fields.html('Message', help='Message displayed to help payment and validation'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
         'env': fields.selection(
             [('test', 'Test'), ('prod', 'Production')],
             string='Environment'),
-        'portal_published': fields.boolean('Visible in Portal',
-                                           help="Make this payment acquirer available (Customer invoices, etc.)"),
+        'portal_published': fields.boolean(
+            'Visible in Portal',
+            help="Make this payment acquirer available (Customer invoices, etc.)"),
+        # Fees
+        'fees_active': fields.boolean('Compute fees'),
+        'fees_dom_fixed': fields.float('Fixed domestic fees'),
+        'fees_dom_var': fields.float('Variable domestic fees (in percents)'),
+        'fees_int_fixed': fields.float('Fixed international fees'),
+        'fees_int_var': fields.float('Variable international fees (in percents)'),
     }
 
     _defaults = {
-        'portal_published': True,
+        'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'env': 'test',
+        'portal_published': True,
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
@@ -74,9 +88,100 @@ class PaymentAcquirer(osv.Model):
         (_check_required_if_provider, 'Required fields not filled', ['required for this provider']),
     ]
 
-    def render(self, cr, uid, id, reference, amount, currency, tx_id=None, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
+    def get_form_action_url(self, cr, uid, id, context=None):
+        """ Returns the form action URL, for form-based acquirer implementations. """
+        acquirer = self.browse(cr, uid, id, context=context)
+        if hasattr(self, '%s_get_form_action_url' % acquirer.name):
+            return getattr(self, '%s_get_form_action_url' % acquirer.name)(cr, uid, id, context=context)
+        return False
+
+    def form_preprocess_values(self, cr, uid, id, reference, amount, currency_id, tx_id, partner_id, partner_values, tx_values, context=None):
+        """  Pre process values before giving them to the acquirer-specific render
+        methods. Those methods will receive:
+
+             - partner_values: will contain name, lang, email, zip, address, city,
+               country_id (int or False), country (browse or False), phone, reference
+             - tx_values: will contain refernece, amount, currency_id (int or False),
+               currency (browse or False), partner (browse or False)
+        """
+        acquirer = self.browse(cr, uid, id, context=context)
+
+        if tx_id:
+            tx = self.browse(cr, uid, id, context=context)
+            tx_data = {
+                'reference': tx.reference,
+                'amount': tx.amount,
+                'currency_id': tx.currency_id.id,
+                'currency': tx.currency_id,
+                'partner': tx.partner_id,
+            }
+            partner_data = {
+                'name': tx.partner_name,
+                'lang': tx.partner_lang,
+                'email': tx.partner_email,
+                'zip': tx.partner_zip,
+                'address': tx.partner_address,
+                'city': tx.partner_city,
+                'country_id': tx.partner_country_id.id,
+                'country': tx.partner_country_id,
+                'phone': tx.partner_phone,
+                'reference': tx.partner_reference,
+            }
+        else:
+            if partner_id:
+                partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+                partner_data = {
+                    'name': partner.name,
+                    'lang': partner.lang,
+                    'email': partner.email,
+                    'zip': partner.zip,
+                    'city': partner.city,
+                    'address': _partner_format_address(partner.street, partner.street2),
+                    'country_id': partner.country_id.id,
+                    'country': partner.country_id,
+                    'phone': partner.phone,
+                }
+            else:
+                partner, partner_data = False, {}
+            partner_data.update(partner_values)
+
+            if currency_id:
+                currency = self.pool['res.currency'].browse(cr, uid, currency_id, context=context)
+            else:
+                currency = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id
+            tx_data = {
+                'reference': reference,
+                'amount': amount,
+                'currency_id': currency.id,
+                'currency': currency,
+                'partner': partner,
+            }
+
+        # update tx values
+        tx_data.update(tx_values)
+
+        # update partner values
+        if not partner_data.get('address'):
+            partner_data['address'] = _partner_format_address(partner_data.get('street', ''), partner_data.get('street2', ''))
+        if not partner_data.get('country') and partner_data.get('country_id'):
+            partner_data['country'] = self.pool['res.country'].browse(cr, uid, partner_data.get('country_id'), context=context)
+        partner_data.update({
+            'first_name': _partner_split_name(partner_data['name'])[0],
+            'last_name': _partner_split_name(partner_data['name'])[1],
+        })
+
+        # compute fees
+        fees_method_name = '%s_compute_fees' % acquirer.name
+        if hasattr(self, fees_method_name):
+            fees = getattr(self, fees_method_name)(
+                cr, uid, id, tx_data['amount'], tx_data['currency_id'], partner_data['country_id'], context=None)
+            tx_data['fees'] = float_round(fees, 2)
+
+        return (partner_data, tx_data)
+
+    def render(self, cr, uid, id, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_values=None, context=None):
         """ Renders the form template of the given acquirer as a qWeb template.
-        All templates should handle:
+        All templates will receive:
 
          - acquirer: the payment.acquirer browse record
          - user: the current user browse record
@@ -85,16 +190,16 @@ class PaymentAcquirer(osv.Model):
          - reference: reference of the transaction
          - partner: the current partner browse record, if any (not necessarily set)
          - partner_values: a dictionary of partner-related values
-         - tx_custom_values: a dictionary of transaction related values that depends
-                             on the acquirer. Some specific keys should be managed
-                             in each provider, depending on the features it offers:
+         - tx_values: a dictionary of transaction related values that depends on
+                      the acquirer. Some specific keys should be managed in each
+                      provider, depending on the features it offers:
 
           - 'feedback_url': feedback URL, controler that manage answer of the acquirer
-                            (without base url)
+                            (without base url) -> FIXME
           - 'return_url': URL for coming back after payment validation (wihout
-                          base url)
-          - 'cancel_url': URL if the client cancels the payment
-          - 'error_url': URL if there is an issue with the payment
+                          base url) -> FIXME
+          - 'cancel_url': URL if the client cancels the payment -> FIXME
+          - 'error_url': URL if there is an issue with the payment -> FIXME
 
          - context: OpenERP context dictionary
 
@@ -112,51 +217,46 @@ class PaymentAcquirer(osv.Model):
         """
         if context is None:
             context = {}
-        partner = None
-        if partner_id:
-            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+        if tx_values is None:
+            tx_values = {}
+        if partner_values is None:
+            partner_values = {}
         acquirer = self.browse(cr, uid, id, context=context)
-        method_name = '%s_form_generate_values' % (acquirer.name)
 
-        if tx_id and hasattr(self.pool['payment.transaction'], method_name):
-            method = getattr(self.pool['payment.transaction'], method_name)
-            tx_values = method(cr, uid, tx_id, tx_custom_values, context=context)
-        elif hasattr(self, method_name):
-            method = getattr(self, method_name)
-            tx_values = method(cr, uid, id, reference, amount, currency, partner_id, partner_values, tx_custom_values, context=context)
-        else:
-            tx_values = tx_custom_values
+        # pre-process values
+        amount = float_round(amount, 2)
+        partner_values, tx_values = self.form_preprocess_values(
+            cr, uid, id, reference, amount, currency_id, tx_id, partner_id,
+            partner_values, tx_values, context=context)
+
+        # call <name>_form_generate_values to update the tx dict with acqurier specific values
+        cust_method_name = '%s_form_generate_values' % (acquirer.name)
+        if hasattr(self, cust_method_name):
+            method = getattr(self, cust_method_name)
+            partner_values, tx_values = method(cr, uid, id, partner_values, tx_values, context=context)
 
         qweb_context = {
+            'tx_url': context.get('tx_url', self.get_form_action_url(cr, uid, id, context=context)),
+            'submit_class': context.get('submit_class', 'btn btn-link'),
+            'submit_txt': context.get('submit_txt'),
             'acquirer': acquirer,
             'user': self.pool.get("res.users").browse(cr, uid, uid, context=context),
-            'reference': reference,
-            'amount': amount,
-            'currency': currency,
-            'partner': partner,
+            'reference': tx_values['reference'],
+            'amount': tx_values['amount'],
+            'currency': tx_values['currency'],
+            'partner': tx_values.get('partner'),
             'partner_values': partner_values,
             'tx_values': tx_values,
             'context': context,
         }
-        # because render accepts view ids but not qweb -> need to find the xml_id
-        return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.xml_id, qweb_context, engine='ir.qweb', context=context)
 
-    def get_form_action_url(self, cr, uid, id, context=None):
-        acquirer = self.browse(cr, uid, id, context=context)
-        if hasattr(self, '%s_get_form_action_url' % acquirer.name):
-            return getattr(self, '%s_get_form_action_url' % acquirer.name)(cr, uid, id, context=context)
-        return False
+        # because render accepts view ids but not qweb -> need to use the xml_id
+        return self.pool['ir.ui.view'].render(cr, uid, acquirer.view_template_id.xml_id, qweb_context, engine='ir.qweb', context=context)
 
 
 class PaymentTransaction(osv.Model):
     """ Transaction Model. Each specific acquirer can extend the model by adding
     its own fields.
-
-    Methods that should be added in an acquirer-specific implementation:
-
-     - ``<name>_form_generate_values(self, cr, uid, id, tx_custom_values=None,
-       context=None)``: method that generates the values used to render the
-       form button template.
 
     Methods that can be added in an acquirer-specific implementation:
 
@@ -196,21 +296,29 @@ class PaymentTransaction(osv.Model):
                                      help='Field used to store error and/or validation messages for information'),
         # payment
         'amount': fields.float('Amount', required=True,
-                               help='Amount in cents',
-                               track_visibility='always'),
+                               digits=(16, 2),
+                               track_visibility='always',
+                               help='Amount in cents'),
+        'fees': fields.float('Fees',
+                             digits=(16, 2),
+                             track_visibility='always',
+                             help='Fees amount; set by the system because depends on the acquirer'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'reference': fields.char('Order Reference', required=True),
+        'acquirer_reference': fields.char('Acquirer Order Reference',
+                                          help='Reference of the TX as stored in the acquirer database'),
         # duplicate partner / transaction data to store the values at transaction time
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner', track_visibility='onchange',),
         'partner_name': fields.char('Partner Name'),
         'partner_lang': fields.char('Lang'),
         'partner_email': fields.char('Email'),
         'partner_zip': fields.char('Zip'),
         'partner_address': fields.char('Address'),
         'partner_city': fields.char('City'),
-        'partner_country_id': fields.many2one('res.country', 'Country'),
+        'partner_country_id': fields.many2one('res.country', 'Country', required=True),
         'partner_phone': fields.char('Phone'),
-        'partner_reference': fields.char('Buyer Reference'),
+        'partner_reference': fields.char('Partner Reference',
+                                         help='Reference of the customer in the acquirer database'),
     }
 
     _sql_constraints = [
@@ -225,12 +333,23 @@ class PaymentTransaction(osv.Model):
     }
 
     def create(self, cr, uid, values, context=None):
+        Acquirer = self.pool['payment.acquirer']
+
         if values.get('partner_id'):  # @TDENOTE: not sure
             values.update(self.on_change_partner_id(cr, uid, None, values.get('partner_id'), context=context)['values'])
 
         # call custom create method if defined (i.e. ogone_create for ogone)
         if values.get('acquirer_id'):
             acquirer = self.pool['payment.acquirer'].browse(cr, uid, values.get('acquirer_id'), context=context)
+
+            # compute fees
+            custom_method_name = '%s_compute_fees' % acquirer.name
+            if hasattr(Acquirer, custom_method_name):
+                fees = getattr(Acquirer, custom_method_name)(
+                    cr, uid, acquirer.id, values.get('amount', 0.0), values.get('currency_id'), values.get('country_id'), context=None)
+                values['fees'] = float_round(fees, 2)
+
+            # custom create
             custom_method_name = '%s_create' % acquirer.name
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(cr, uid, values, context=context))
@@ -238,30 +357,19 @@ class PaymentTransaction(osv.Model):
         return super(PaymentTransaction, self).create(cr, uid, values, context=context)
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
+        partner = None
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-            values = {
-                'partner_name': partner.name,
-                'partner_lang': partner.lang,
-                'partner_email': partner.email,
-                'partner_zip': partner.zip,
-                'partner_address': _partner_format_address(partner.street, partner.street2),
-                'partner_city': partner.city,
-                'partner_country_id': partner.country_id.id,
-                'partner_phone': partner.phone,
-            }
-        else:
-            values = {
-                'partner_name': False,
-                'partner_lang': 'en_US',
-                'partner_email': False,
-                'partner_zip': False,
-                'partner_address': False,
-                'partner_city': False,
-                'partner_country_id': False,
-                'partner_phone': False,
-            }
-        return {'values': values}
+        return {'values': {
+            'partner_name': partner and partner.name or False,
+            'partner_lang': partner and partner.lang or 'en_US',
+            'partner_email': partner and partner.email or False,
+            'partner_zip': partner and partner.zip or False,
+            'partner_address': _partner_format_address(partner and partner.street or '', partner and partner.street2 or ''),
+            'partner_city': partner and partner.city or False,
+            'partner_country_id': partner and partner.country_id.id or False,
+            'partner_phone': partner and partner.phone or False,
+        }}
 
     # --------------------------------------------------
     # FORM RELATED METHODS

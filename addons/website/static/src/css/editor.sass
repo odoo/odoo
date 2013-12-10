@@ -120,9 +120,9 @@ div.oe_menu_buttons
     right: -8px
 
 ul.oe_menu_editor
-    .icon-home
+    .fa-home
         display: none
-    > li:first-child > div > span > .icon-home
+    > li:first-child > div > span > .fa-home
         display: block
     .oe_menu_placeholder
         outline: 1px dashed #4183C4
@@ -161,13 +161,13 @@ ul.oe_menu_editor
         display: inline-block !important
         visibility: visible !important
 
+.existing-attachments .pager .disabled
+    display: none
+
 // wrapper positioned relatively for drag&drop widget which is disabled below.
 // Breaks completely horribly crazy products listing page, so take it out.
 .cke_widget_wrapper
     position: static !important
-// "remove" drag & drop of CKE widgets
-.cke_widget_drag_handler_container
-    display: none !important
 // prevent inline widgets from entirely disappearing when their (textual)
 // content is removed
 .cke_widget_editable:empty:after
@@ -177,6 +177,12 @@ ul.oe_menu_editor
 .oe_carlos_danger
     outline: 1px solid red !important
     background-color: #ffd9dd !important
+
+.hover-edition-button
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 42
 
 /* ---- SNIPPET EDITOR ---- */
 
@@ -331,37 +337,66 @@ ul.oe_menu_editor
         border-width: 1px
         +box-shadow(0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset)
         border-color: rgba(0, 0, 0, 0.5)
-        .oe_handle
-            display: block !important
-            pointer-events: auto
-            &:before
-                position: relative
-                top: 50%
-                left: 50%
-                display: block
-                background: rgba(255, 255, 255, 1)
-                border: solid 1px rgba(0, 0, 0, .2)
-                +border-radius(5px)
-                width: 18px
-                height: 18px
-                margin: -9px
-                padding-left: 1px
-                font-size: 14px
-                line-height: 14px
-                font-family: FontAwesome
-                color: rgba(0,0,0,.5)
-                @include transition(background 100ms linear)
-            &:hover:before
-                background: rgba(0, 0, 0, .5)
-                color: #fff
-                +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
-        .oe_handle.e:before
+    .oe_handle
+        display: block !important
+        pointer-events: auto
+        position: absolute
+        top: 50%
+        left: 50%
+        +box-sizing(border-box)
+        width: 12px
+        height: 12px
+        margin: -2px
+        &:before
+            position: relative
+            top: 50%
+            left: 50%
+            display: block
+            background: rgba(255, 255, 255, 1)
+            border: solid 1px rgba(0, 0, 0, .2)
+            +border-radius(5px)
+            width: 18px
+            height: 18px
+            margin: -9px
+            padding-left: 1px
+            font-size: 14px
+            line-height: 14px
+            font-family: FontAwesome
+            color: rgba(0,0,0,.5)
+            @include transition(background 100ms linear)
+        &:hover:before
+            background: rgba(0, 0, 0, .5)
+            color: #fff
+            +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
+    .oe_handle.e
+        left: auto
+        top: 2px
+        height: 100%
+        right: -4px
+        cursor: w-resize
+        &:before
             content: "\F061"
-        .oe_handle.s:before
+    .oe_handle.s
+        top: auto
+        left: 2px
+        width: 100%
+        bottom: -4px
+        cursor: n-resize
+        &:before
             content: "\F063"
-        .oe_handle.w:before
+    .oe_handle.w
+        top: 2px
+        height: 100%
+        left: -4px
+        cursor: e-resize
+        &:before
             content: "\F060"
-        .oe_handle.n:before
+    .oe_handle.n
+        left: 2px
+        width: 100%
+        top: -4px
+        cursor: s-resize
+        &:before
             content: "\F062"
 
     .icon.btn
@@ -394,29 +429,6 @@ ul.oe_menu_editor
     width: 8px
     height: 8px
     margin: -4px
-
-.oe_handle.n
-    left: 2px
-    width: 100%
-    top: 0px
-    cursor: s-resize
-.oe_handle.e
-    left: auto
-    top: 2px
-    height: 100%
-    right: 0px
-    cursor: w-resize
-.oe_handle.s
-    top: auto
-    left: 2px
-    width: 100%
-    bottom: 0px
-    cursor: n-resize
-.oe_handle.w
-    top: 2px
-    height: 100%
-    left: 0px
-    cursor: e-resize
 
 .s-resize-important, .s-resize-important *
     cursor: s-resize !important

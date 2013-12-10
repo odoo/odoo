@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-    <template id="website_event_script" inherit_id="website.layout" name="Website Event script">
+    <template id="secure_layout" inherit_id="website.secure_layout">
         <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
             <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js" t-ignore="true"></script>
             <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js" t-ignore="true"></script>
@@ -72,7 +72,7 @@
                                         </span>
                                     </t>
                                     <h4 class="media-heading">
-                                        <a t-href="/event/#{ event.id }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
+                                        <a t-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register/' or ''}"><span t-field="event.name"> </span></a>
                                         <small t-if="not event.website_published" class="label label-danger">not published</small>
                                     </h4>
                                     <div>
@@ -81,13 +81,13 @@
                                         </t>
                                     </div>
                                     <div>
-                                        <i class="icon-time"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
+                                        <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"> </span> <i>to</i> <span t-field="event.date_end"> </span>
                                     </div>
                                     <div t-if="event.country_id">
-                                        <i class="icon-map-marker"></i> <span t-field="event.city"/>, <span t-field="event.country_id"/>
+                                        <i class="fa fa-map-marker"></i> <span t-field="event.city"/>, <span t-field="event.country_id"/>
                                     </div>
                                     <div class="text-muted">
-                                        <i class="icon-tag"></i> <span t-field="event.type"/>
+                                        <i class="fa fa-tag"></i> <span t-field="event.type"/>
                                     </div>
                                 </div>
                             </li>
@@ -228,16 +228,30 @@
             <div class="container">
                 <h1 class="text-center" t-field="event.name"></h1>
                 <h4 class="text-center text-muted">
-                    <i class="icon-time"></i> <span t-field="event.date_begin"/> to
+                    <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"/> to
                     <span t-field="event.date_end"/>
                 </h4>
                 <h4 t-if="event.city and event.country_id" class="text-center text-muted">
-                    <i class="icon-map-marker"/>
+                    <i class="fa fa-map-marker"/>
                     <span t-field="event.city"/>,
                     <span t-field="event.country_id"/>
                 </h4>
                 <div class="row mt32 mb32">
                     <t t-raw="0"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="404">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure oe_empty">
+                    <div class="container">
+                        <h1 class="mt32">Event not found!</h1>
+                        <p>Sorry, the requested event is not available anymore.</p>
+                        <p><a t-href="/event/">Return to the event list.</a></p>
+                    </div>
                 </div>
             </div>
         </t>
@@ -322,19 +336,10 @@
                         <a t-att-href="event.google_map_link()" target="_BLANK">
                             <img t-att-src="event.google_map_img()" width="100%%"/>
                         </a>
-                        <address class="mt16 mb8" t-field="event.address_id"> <!-- TODO: use widget contact -->
-                           <!--  <strong t-field="event.address_id"/>
-                            <p t-field="event.address_id"/>
-                            <div t-if="event.address_id.phone">
-                                <span class="icon-phone"/> <span t-field="event.address_id.phone"/>
-                            </div>
-                            <div t-if="event.address_id.email">
-                                <span class="icon-envelope"/>
-                                <a t-att-href="'mailto:'+event.address_id.email">
-                                  <span t-field="event.address_id.email"/>
-                                </a>
-                            </div> -->
-                        </address>
+                        <div class="mt16 mb8" t-field="event.address_id" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["address", "phone", "mobile", "fax", "email"]
+                            }'/>
                     </div>
                 </div>
 
@@ -343,8 +348,8 @@
                         <h4>When</h4>
                     </div>
                     <div class="panel-body">
-                        <i class="icon-time"></i> <span t-field="event.date_begin"> </span><br/>
-                        <i class="icon-time"></i> <span t-field="event.date_end"> </span>
+                        <i class="fa fa-clock-o"></i> <span t-field="event.date_begin"> </span><br/>
+                        <i class="fa fa-clock-o"></i> <span t-field="event.date_end"> </span>
                     </div>
                 </div>
 
@@ -352,15 +357,10 @@
                     <div class="panel-heading">
                         <h4>Organizer</h4>
                     </div>
-                    <div class="panel-body" t-field="event.organizer_id">  <!-- TODO: use widget contact -->
-                      <!--   <p><strong t-field="event.organizer_id.display_name"/></p>
-                        <div t-if="event.phone">
-                            <span class="icon-phone"/> <span t-field="event.phone"/>
-                        </div>
-                        <div t-if="event.email">
-                            <i class="icon-envelope"/> <span t-field="event.email"/>
-                        </div> -->
-                    </div>
+                    <div class="panel-body" t-field="event.organizer_id" t-field-options='{
+                        "widget": "contact",
+                        "fields": ["name", "phone", "mobile", "fax", "email"]
+                        }'/>
                 </div>
 
                 <div class="panel panel-default">

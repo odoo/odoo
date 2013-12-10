@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
+#    Copyright (C) 2004-2013 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -32,6 +32,7 @@ import re
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 from openerp.osv import fields, osv
+from openerp.report import render_report
 from openerp.tools.translate import _
 
 _intervalTypes = {
@@ -461,8 +462,7 @@ class marketing_campaign_activity(osv.osv):
 
     #dead code
     def _process_wi_report(self, cr, uid, activity, workitem, context=None):
-        service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
-        (report_data, format) = service.create(cr, uid, [], {}, {})
+        report_data, format = render_report(cr, uid, [], activity.report_id.report_name, {}, context=context)
         attach_vals = {
             'name': '%s_%s_%s'%(activity.report_id.report_name,
                                 activity.name,workitem.partner_id.name),

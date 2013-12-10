@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP S.A. (<http://www.openerp.com>).
+#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,24 +19,5 @@
 #
 ##############################################################################
 
-{
-    'name': 'Public Customer References + Partner Assign',
-    'category': 'Website',
-    'summary': 'Add Partner Assignment Info to your Customer References',
-    'version': '1.0',
-    'description': """
-OpenERP Customer References + Partner Assign
-============================================
-""",
-    'author': 'OpenERP SA',
-    'depends': [
-        'crm_partner_assign',
-        'website_customer'
-    ],
-    'data': [
-        'views/website_customer.xml',
-    ],
-    'qweb': [],
-    'installable': True,
-    'auto_install': True,
-}
+import models
+import controllers

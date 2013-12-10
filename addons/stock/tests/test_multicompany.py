@@ -56,7 +56,7 @@ class TestStockMulticompany(common.TransactionCase):
                     try:
                         self.stock_location.check_access_rule(cr, uid, [defaults[field]], 'read', context)
                     except Exception, exc:
-                        assert False, "unreadable location %s: %s" % (field, exc)
+                        self.fail("unreadable location %s: %s" % (field, exc))
             self.assertEqual(defaults['type'], type, "wrong move type")
 
 
@@ -71,7 +71,7 @@ class TestStockMulticompany(common.TransactionCase):
                     try:
                         self.stock_location.check_access_rule(cr, uid, [result[field]], 'read', context)
                     except Exception, exc:
-                        assert False, "unreadable location %s: %s" % (field, exc)
+                        self.fail("unreadable location %s: %s" % (field, exc))
 
 
     def test_20_multicompany_default_stock_fill_inventory(self):
@@ -82,7 +82,7 @@ class TestStockMulticompany(common.TransactionCase):
             try:
                 self.stock_location.check_access_rule(cr, uid, [defaults['location_id']], 'read', context)
             except Exception, exc:
-                assert False, "unreadable source location: %s" % exc
+                self.fail("unreadable source location: %s" % exc)
 
 
     def test_30_multicompany_default_warehouse_location(self):
@@ -95,4 +95,4 @@ class TestStockMulticompany(common.TransactionCase):
                 try:
                     self.stock_location.check_access_rule(cr, uid, [defaults[field]], 'read', context)
                 except Exception, exc:
-                    assert False, "unreadable default %s: %s" % (field, exc)
+                    self.fail("unreadable default %s: %s" % (field, exc))

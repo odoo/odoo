@@ -3,12 +3,14 @@
     <data noupdate="0">
 
         <template id="paypal_acquirer_button">
-            <form t-if="acquirer.paypal_email_id" t-att-action="acquirer.paypal_tx_url" method="post" target="_self">
+            <form t-if="acquirer.paypal_email_id" t-att-action="tx_url" method="post" target="_self">
                 <input type="hidden" name="cmd" t-att-value="tx_values['cmd']"/>
                 <input type="hidden" name="business" t-att-value="tx_values['business']"/>
                 <input type="hidden" name="item_name" t-att-value="tx_values['item_name']"/>
                 <input type="hidden" name="item_number" t-att-value="tx_values['item_number']"/>
                 <input type="hidden" name="amount" t-att-value="tx_values['amount']"/>
+                <input t-if="'handling' in tx_values" type="hidden" name="handling"
+                    t-att-value="tx_values.get('handling')"/>
                 <input type="hidden" name="currency_code" t-att-value="tx_values['currency_code']"/>
                 <!-- partner / address data -->
                 <input type="hidden" name="address1" t-att-value="tx_values['address1']"/>
@@ -19,20 +21,21 @@
                 <input type="hidden" name="last_name" t-att-value="tx_values['last_name']"/>
                 <input type="hidden" name="zip" t-att-value="tx_values['zip']"/>
                 <!-- after payment parameters -->
-                <t t-if='tx_values.get("custom")'>
-                    <input type='hidden' name="custom" t-att-value='tx_values["custom"]'/>
-                </t>
+                <input t-if='tx_values.get("custom")' type='hidden' name="custom"
+                    t-att-value='tx_values.get("custom")'/>
                 <!-- URLs -->
                 <input t-if="tx_values.get('return')" type='hidden' name='return'
-                    t-att-value="tx_values['return']"/>
+                    t-att-value="tx_values.get('return')"/>
                 <input t-if="acquirer.paypal_use_ipn" type='hidden' name='notify_url'
-                    t-att-value="tx_values['notify_url']"/>
+                    t-att-value="tx_values.get('notify_url')"/>
                 <input t-if="tx_values.get('cancel_return')" type="hidden" name="cancel_return"
-                    t-att-value="tx_values['cancel_return']"/>
-                <!-- button -->
-                <input type="image" name="submit" id="payment_submit"
-                    width="100px"
-                    src="/payment_acquirer_paypal/static/src/img/paypal_logo.png"/>
+                    t-att-value="tx_values.get('cancel_return')"/>
+                <!-- submit -->
+                <button type="image" name="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_acquirer_paypal/static/src/img/paypal_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/></span>
+                </button>
             </form>
         </template>
 

@@ -1,11 +1,5 @@
 # -*- coding: utf-'8' "-*-"
 
-from openerp.addons.payment_acquirer.models import payment_acquirer
-from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
-from openerp.addons.payment_acquirer_paypal.controllers.main import PaypalController
-from openerp.osv import osv, fields
-from openerp.tools.float_utils import float_compare
-
 import base64
 try:
     import simplejson as json
@@ -16,17 +10,35 @@ import urlparse
 import urllib
 import urllib2
 
+from openerp.addons.payment_acquirer.models.payment_acquirer import ValidationError
+from openerp.addons.payment_acquirer_paypal.controllers.main import PaypalController
+from openerp.osv import osv, fields
+from openerp.tools.float_utils import float_compare
+
 _logger = logging.getLogger(__name__)
 
 
 class AcquirerPaypal(osv.Model):
     _inherit = 'payment.acquirer'
 
+    def _get_paypal_urls(self, cr, uid, env, context=None):
+        """ Paypal URLS """
+        if env == 'prod':
+            return {
+                'paypal_form_url': 'https://www.sandbox.paypal.com/cgi-bin/webscr',
+                'paypal_rest_url': 'https://api.sandbox.paypal.com/v1/oauth2/token',
+            }
+        else:
+            return {
+                'paypal_form_url': 'https://www.sandbox.paypal.com/cgi-bin/webscr',
+                'paypal_rest_url': 'https://api.sandbox.paypal.com/v1/oauth2/token',
+            }
+
     _columns = {
         'paypal_email_id': fields.char('Email ID', required_if_provider='paypal'),
-        'paypal_username': fields.char('Username', required_if_provider='paypal'),
-        'paypal_tx_url': fields.char('Transaction URL', required_if_provider='paypal'),
+        'paypal_seller_id': fields.char('Seller ID', required_if_provider='paypal'),
         'paypal_use_ipn': fields.boolean('Use IPN'),
+        # Server 2 server
         'paypal_api_enabled': fields.boolean('Use Rest API'),
         'paypal_api_username': fields.char('Rest API Username'),
         'paypal_api_password': fields.char('Rest API Password'),
@@ -36,45 +48,65 @@ class AcquirerPaypal(osv.Model):
 
     _defaults = {
         'paypal_use_ipn': True,
+        'fees_active': False,
+        'fees_dom_fixed': 0.35,
+        'fees_dom_var': 3.4,
+        'fees_int_fixed': 0.35,
+        'fees_int_var': 3.9,
         'paypal_api_enabled': False,
-        'paypal_tx_url': 'https://www.sandbox.paypal.com/cgi-bin/webscr',
     }
 
-    def paypal_form_generate_values(self, cr, uid, id, reference, amount, currency, partner_id=False, partner_values=None, tx_custom_values=None, context=None):
-        if partner_values is None:
-            partner_values = {}
+    def paypal_compute_fees(self, cr, uid, id, amount, currency_id, country_id, context=None):
+        """ Compute paypal fees.
+
+            :param float amount: the amount to pay
+            :param integer country_id: an ID of a res.country, or None. This is
+                                       the customer's country, to be compared to
+                                       the acquirer company country.
+            :return float fees: computed fees
+        """
+        acquirer = self.browse(cr, uid, id, context=context)
+        if not acquirer.fees_active:
+            return 0.0
+        country = self.pool['res.country'].browse(cr, uid, country_id, context=context)
+        if country and acquirer.company_id.country_id.id == country.id:
+            fees = amount * (1 + acquirer.fees_dom_var / 100.0) + acquirer.fees_dom_fixed - amount
+        else:
+            fees = amount * (1 + acquirer.fees_int_var / 100.0) + acquirer.fees_int_fixed - amount
+        return fees
+
+    def paypal_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
-        partner = None
-        if partner_id:
-            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        tx_values = {
+
+        paypal_tx_values = dict(tx_values)
+        paypal_tx_values.update({
             'cmd': '_xclick',
             'business': acquirer.paypal_email_id,
-            'item_name': reference,
-            'item_number': reference,
-            'amount': amount,
-            'currency_code': currency and currency.name or 'EUR',
-            'address1': payment_acquirer._partner_format_address(partner and partner.street or partner_values.get('street', ''), partner and partner.street2 or partner_values.get('street2', '')),
-            'city': partner and partner.city or partner_values.get('city', ''),
-            'country': partner and partner.country_id and partner.country_id.name or partner_values.get('country_name', ''),
-            'email': partner and partner.email or partner_values.get('email', ''),
-            'zip': partner and partner.zip or partner_values.get('zip', ''),
-            'first_name': payment_acquirer._partner_split_name(partner and partner.name or partner_values.get('name', ''))[0],
-            'last_name': payment_acquirer._partner_split_name(partner and partner.name or partner_values.get('name', ''))[1],
+            'item_name': tx_values['reference'],
+            'item_number': tx_values['reference'],
+            'amount': tx_values['amount'],
+            'currency_code': tx_values['currency'] and tx_values['currency'].name or '',
+            'address1': partner_values['address'],
+            'city': partner_values['city'],
+            'country': partner_values['country'] and partner_values['country'].name or '',
+            'email': partner_values['email'],
+            'zip': partner_values['zip'],
+            'first_name': partner_values['first_name'],
+            'last_name': partner_values['last_name'],
             'return': '%s' % urlparse.urljoin(base_url, PaypalController._return_url),
             'notify_url': '%s' % urlparse.urljoin(base_url, PaypalController._notify_url),
             'cancel_return': '%s' % urlparse.urljoin(base_url, PaypalController._cancel_url),
-        }
-        if tx_custom_values and tx_custom_values.get('return_url'):
-            tx_values['custom'] = json.dumps({'return_url': '%s' % tx_custom_values.pop('return_url')})
-        if tx_custom_values:
-            tx_values.update(tx_custom_values)
-        return tx_values
+        })
+        if acquirer.fees_active:
+            paypal_tx_values['handling'] = '%.2f' % paypal_tx_values.pop('fees', 0.0)
+        if paypal_tx_values.get('return_url'):
+            paypal_tx_values['custom'] = json.dumps({'return_url': '%s' % paypal_tx_values.pop('return_url')})
+        return partner_values, paypal_tx_values
 
     def paypal_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return acquirer.paypal_tx_url
+        return self._get_paypal_urls(cr, uid, acquirer.env, context=context)['paypal_form_url']
 
     def _paypal_s2s_get_access_token(self, cr, uid, ids, context=None):
         """
@@ -116,28 +148,6 @@ class TxPaypal(osv.Model):
     # FORM RELATED METHODS
     # --------------------------------------------------
 
-    def paypal_form_generate_values(self, cr, uid, id, tx_custom_values=None, context=None):
-        tx = self.browse(cr, uid, id, context=context)
-
-        tx_data = {
-            'item_name': tx.name,
-            'first_name': payment_acquirer._partner_split_name(tx.partner_name)[0],
-            'last_name': payment_acquirer._partner_split_name(tx.partner_name)[0],
-            'email': tx.partner_email,
-            'zip': tx.partner_zip,
-            'address1': tx.partner_address,
-            'city': tx.partner_city,
-            'country': tx.partner_country_id and tx.partner_country_id.name or '',
-        }
-        if tx_custom_values:
-            tx_data.update(tx_custom_values)
-        return self.pool['payment.acquirer'].paypal_form_generate_values(
-            cr, uid, tx.acquirer_id.id,
-            tx.reference, tx.amount, tx.currency_id,
-            tx_custom_values=tx_data,
-            context=context
-        )
-
     def _paypal_form_get_tx_from_data(self, cr, uid, data, context=None):
         reference, txn_id = data.get('item_number'), data.get('txn_id')
         if not reference or not txn_id:
@@ -158,9 +168,8 @@ class TxPaypal(osv.Model):
         return self.browse(cr, uid, tx_ids[0], context=context)
 
     def _paypal_form_get_invalid_parameters(self, cr, uid, tx, data, context=None):
-        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
         invalid_parameters = []
-        if data.get('notify_version')[0] != '2.6':
+        if data.get('notify_version')[0] != '3.4':
             _logger.warning(
                 'Received a notification from Paypal with version %s instead of 2.6. This could lead to issues when managing it.' %
                 data.get('notify_version')
@@ -169,60 +178,48 @@ class TxPaypal(osv.Model):
             _logger.warning(
                 'Received a notification from Paypal using sandbox'
             ),
+
+        # TODO: txn_id: shoudl be false at draft, set afterwards, and verified with txn details
+        if tx.acquirer_reference and data.get('txn_id') != tx.acquirer_reference:
+            invalid_parameters.append(('txn_id', data.get('txn_id'), tx.acquirer_reference))
         # check what is buyed
-        if float_compare(float(data.get('mc_gross', '0.0')), tx.amount, 2) != 0:
-            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % tx.amount))
+        if float_compare(float(data.get('mc_gross', '0.0')), (tx.amount + tx.fees), 2) != 0:
+            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % tx.amount))  # mc_gross is amount + fees
         if data.get('mc_currency') != tx.currency_id.name:
-            invalid_parameters.append(('mc_currency',  data.get('mc_currency'), tx.currency_id.name))
-        # if parameters.get('payment_fee') != tx.payment_fee:
-            # invalid_parameters.append(('payment_fee',  tx.payment_fee))
-        # if parameters.get('quantity') != tx.quantity:
-            # invalid_parameters.append(('mc_currency',  tx.quantity))
-        # if parameters.get('shipping') != tx.shipping:
-            # invalid_parameters.append(('shipping',  tx.shipping))
+            invalid_parameters.append(('mc_currency', data.get('mc_currency'), tx.currency_id.name))
+        if 'handling_amount' in data and float_compare(float(data.get('handling_amount')), tx.fees, 2) != 0:
+            invalid_parameters.append(('handling_amount', data.get('handling_amount'), tx.fees))
         # check buyer
-        # if parameters.get('payer_id') != tx.payer_id:
-            # invalid_parameters.append(('mc_gross', tx.payer_id))
-        # if parameters.get('payer_email') != tx.payer_email:
-            # invalid_parameters.append(('payer_email', tx.payer_email))
+        if tx.partner_reference and data.get('payer_id') != tx.partner_reference:
+            invalid_parameters.append(('payer_id', data.get('payer_id'), tx.partner_reference))
         # check seller
-        # if parameters.get('receiver_email') != tx.receiver_email:
-            # invalid_parameters.append(('receiver_email', tx.receiver_email))
-        # if parameters.get('receiver_id') != tx.receiver_id:
-            # invalid_parameters.append(('receiver_id', tx.receiver_id))
+        if data.get('receiver_email') != tx.acquirer_id.paypal_email_id:
+            invalid_parameters.append(('receiver_email', data.get('receiver_email'), tx.acquirer_id.paypal_email_id))
+        if data.get('receiver_id') != tx.acquirer_id.paypal_seller_id:
+            invalid_parameters.append(('receiver_id', data.get('receiver_id'), tx.acquirer_id.paypal_seller_id))
 
         return invalid_parameters
 
     def _paypal_form_validate(self, cr, uid, tx, data, context=None):
         status = data.get('payment_status')
+        data = {
+            'acquirer_reference': data.get('txn_id'),
+            'paypal_txn_type': data.get('payment_type'),
+            'partner_reference': data.get('payer_id')
+        }
         if status in ['Completed', 'Processed']:
             _logger.info('Validated Paypal payment for tx %s: set as done' % (tx.reference))
-            tx.write({
-                'state': 'done',
-                'date_validate': data.get('payment_date', fields.datetime.now()),
-                'paypal_txn_id': data['txn_id'],
-                'paypal_txn_type': data.get('express_checkout'),
-            })
-            return True
+            data.update(state='done', date_validate=data.get('payment_date', fields.datetime.now()))
+            return tx.write(data)
         elif status in ['Pending', 'Expired']:
             _logger.info('Received notification for Paypal payment %s: set as pending' % (tx.reference))
-            tx.write({
-                'state': 'pending',
-                'state_message': data.get('pending_reason', ''),
-                'paypal_txn_id': data['txn_id'],
-                'paypal_txn_type': data.get('express_checkout'),
-            })
-            return True
+            data.udpate(state='pending', state_message=data.get('pending_reason', ''))
+            return tx.write(data)
         else:
             error = 'Received unrecognized status for Paypal payment %s: %s, set as error' % (tx.reference, status)
             _logger.info(error)
-            tx.write({
-                'state': 'error',
-                'state_message': error,
-                'paypal_txn_id': data['txn_id'],
-                'paypal_txn_type': data.get('express_checkout'),
-            })
-            return False
+            data.update(state='error', state_message=error)
+            return tx.write(data)
 
     # --------------------------------------------------
     # SERVER2SERVER RELATED METHODS

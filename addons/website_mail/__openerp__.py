@@ -29,6 +29,7 @@
     'depends': ['website', 'mail'],
     'data': [
         'views/website_mail.xml',
+        'security/website_mail.xml',
     ],
     'css': [
         'static/src/css/website_mail.css',

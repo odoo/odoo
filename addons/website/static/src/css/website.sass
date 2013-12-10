@@ -304,9 +304,7 @@ ul.nav-stacked > li > a
 
 /* Parallax Theme */
 
-.parallax_quote
-    background: center center no-repeat fixed
-    background-size: contain
+div.carousel[data-snippet-id="slider"]
     .carousel-indicators
         li
             border: 1px solid grey
@@ -316,12 +314,19 @@ ul.nav-stacked > li > a
 .parallax
     position: relative
     background-size: 100%
+    display: table
+    width: 100%
+    min-height: 100px
     &.oe_small
-        height: 200px
+        min-height: 200px
     &.oe_medium
-        height: 300px
+        min-height: 300px
     &.oe_big
-        height: 450px
+        min-height: 450px
+    > div
+        display: table-cell
+        vertical-align: middle
+        padding: 32px 0
 
 /* Background */
  
@@ -336,7 +341,6 @@ ul.nav-stacked > li > a
 .oe_red
     background-color: rgba(255, 0, 0, 0.8)
 .oe_img_bg
-    height: 100%
     background-size: 100%
 
 .texttop
@@ -368,3 +372,9 @@ table.well tr
         font-weight: bold
         a
             color: white
+
+address
+    .fa.fa-mobile-phone
+        margin: 0 3px 0 2px
+    .fa.fa-file-text-o
+        margin-right: 1px

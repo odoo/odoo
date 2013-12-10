@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+    <data noupdate="1">
 
         <record id="payment_acquirer_paypal" model="payment.acquirer">
             <field name="name">paypal</field>
             <field name="view_template_id" ref="paypal_acquirer_button"/>
             <field name="env">test</field>
+            <field name="message"><![CDATA[
+<p>You will be redirected to the Paypal website after cliking on the payment button.</p>]]></field>
             <field name="paypal_tx_url">https://www.sandbox.paypal.com/cgi-bin/webscr</field>
             <field name="paypal_email_id">dummy</field>
-            <field name="paypal_username">dummy</field>
+            <field name="paypal_seller_id">dummy</field>
             <field name="paypal_api_username">dummy</field>
-            <field name="paypal_api_password">dummy-Ud_oozfiDqqN3mUVLMmzPK71IZA3TM4taicUY2uaJYU1</field>
+            <field name="paypal_api_password">dummy</field>
         </record>
 
     </data>

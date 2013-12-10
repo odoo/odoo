@@ -21,6 +21,7 @@ from lxml import etree, html
 from PIL import Image as I
 import openerp.modules
 
+import openerp
 from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.web.http import request
@@ -121,33 +122,49 @@ class Date(orm.AbstractModel):
     _name = 'website.qweb.field.date'
     _inherit = ['website.qweb.field', 'ir.qweb.field.date']
 
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        attrs = super(Date, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=None)
+        return itertools.chain(attrs, [('data-oe-original', record[field_name])])
+
     def from_html(self, cr, uid, model, column, element, context=None):
-        lang = self.user_lang(cr, uid, context=context)
-        in_format = lang.date_format.encode('utf-8')
-
         value = element.text_content().strip()
-        try:
-            dt = datetime.datetime.strptime(in_format, value)
-        except ValueError:
-            dt = parse_fuzzy(in_format, value)
+        if not value: return False
 
-        return dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        datetime.datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT)
+        return value
 
 class DateTime(orm.AbstractModel):
     _name = 'website.qweb.field.datetime'
     _inherit = ['website.qweb.field', 'ir.qweb.field.datetime']
 
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        column = record._model._all_columns[field_name].column
+        value = record[field_name]
+        if isinstance(value, basestring):
+            value = datetime.datetime.strptime(
+                value, DEFAULT_SERVER_DATETIME_FORMAT)
+        value = column.context_timestamp(
+            cr, uid, timestamp=value, context=context)
+
+        attrs = super(DateTime, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=None)
+        return itertools.chain(attrs, [
+            ('data-oe-original', value.strftime(openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT))
+        ])
+
     def from_html(self, cr, uid, model, column, element, context=None):
-        lang = self.user_lang(cr, uid, context=context)
-        in_format = (u"%s %s" % (lang.date_format, lang.time_format)).encode('utf-8')
-
         value = element.text_content().strip()
-        try:
-            dt = datetime.datetime.strptime(in_format, value)
-        except ValueError:
-            dt = parse_fuzzy(in_format, value)
+        if not value: return False
 
-        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        datetime.datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
+        return value
 
 class Text(orm.AbstractModel):
     _name = 'website.qweb.field.text'
@@ -181,6 +198,7 @@ class ManyToOne(orm.AbstractModel):
         matches = self.pool[column._obj].name_search(
             cr, uid, name=element.text_content().strip(), context=context)
         # FIXME: no match? More than 1 match?
+        print element.text_content().strip()
         assert len(matches) == 1
         return matches[0][0]
 
@@ -232,10 +250,10 @@ class Image(orm.AbstractModel):
 
         url_object = urlparse.urlsplit(url)
         query = dict(urlparse.parse_qsl(url_object.query))
-        if url_object.path == '/website/image' and query['model'] == 'ir.attachment':
-            attachment = self.pool['ir.attachment'].browse(
+        if url_object.path == '/website/image':
+            item = self.pool[query['model']].browse(
                 cr, uid, int(query['id']), context=context)
-            return attachment.datas
+            return item[query['field']]
 
         if self.local_url_re.match(url_object.path):
             return self.load_local_url(url)
@@ -302,3 +320,74 @@ class Monetary(orm.AbstractModel):
 
         return float(value.replace(lang.thousands_sep, '')
                           .replace(lang.decimal_point, '.'))
+
+class Duration(orm.AbstractModel):
+    _name = 'website.qweb.field.duration'
+    _inherit = [
+        'ir.qweb.field.duration',
+        'website.qweb.field.float',
+    ]
+
+    def attributes(self, cr, uid, field_name, record, options,
+                   source_element, g_att, t_att, qweb_context,
+                   context=None):
+        attrs = super(Duration, self).attributes(
+            cr, uid, field_name, record, options, source_element, g_att, t_att,
+            qweb_context, context=None)
+        return itertools.chain(attrs, [('data-oe-original', record[field_name])])
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        value = element.text_content().strip()
+
+        # non-localized value
+        return float(value)
+
+
+class RelativeDatetime(orm.AbstractModel):
+    _name = 'website.qweb.field.relative'
+    _inherit = [
+        'ir.qweb.field.relative',
+        'website.qweb.field.datetime',
+    ]
+
+    # get formatting from ir.qweb.field.relative but edition/save from datetime
+
+
+class Contact(orm.AbstractModel):
+    _name = 'website.qweb.field.contact'
+    _inherit = ['website.qweb.field', 'website.qweb.field.many2one']
+
+    def from_html(self, cr, uid, model, column, element, context=None):
+        # FIXME: this behavior is really weird, what if the user wanted to edit the name of the related thingy? Should m2os really be editable without a widget?
+        divs = element.xpath(".//div")
+        for div in divs:
+            if div != divs[0]:
+                div.getparent().remove(div)
+        return super(Contact, self).from_html(cr, uid, model, column, element, context=context)
+
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
+
+        if not getattr(record, field_name):
+            return None
+
+        id = getattr(record, field_name).id
+        field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
+        value = werkzeug.utils.escape( field_browse.name_get()[0][1] )
+
+        IMD = self.pool["ir.model.data"]
+        model, id = IMD.get_object_reference(cr, uid, "website", "contact")
+        view = self.pool["ir.ui.view"].browse(cr, uid, id, context=context)
+
+        html = view.render({
+            'name': value.split("\n")[0],
+            'address': werkzeug.utils.escape("\n".join(value.split("\n")[1:])),
+            'phone': field_browse.phone,
+            'mobile': field_browse.mobile,
+            'fax': field_browse.fax,
+            'email': field_browse.email,
+            'fields': opf,
+            'options': options
+        }, engine='website.qweb', context=context)
+
+        return html

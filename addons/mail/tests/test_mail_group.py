@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.common import TestMail
+from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
@@ -40,7 +41,7 @@ class TestMailGroup(TestMail):
         self.mail_group.read(cr, user_employee_id, [self.group_pigs_id])
 
         # Do: Bert creates a group -> ko, no access rights
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_group.create(cr, user_noone_id, {'name': 'Test'})
         # Do: Raoul creates a restricted group -> ok
         new_group_id = self.mail_group.create(cr, user_employee_id, {'name': 'Test'})
@@ -58,7 +59,7 @@ class TestMailGroup(TestMail):
         # Do: Raoul write on Jobs -> ok
         self.mail_group.write(cr, user_employee_id, [self.group_priv_id], {'name': 'modified'})
         # Do: Bert cannot write on Private -> ko (read but no write)
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_group.write(cr, user_noone_id, [self.group_priv_id], {'name': 're-modified'})
         # Test: Bert cannot unlink the group
         with self.assertRaises(except_orm):

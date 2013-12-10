@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.portal_project.tests.test_access_rights import TestPortalProjectBase
+from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
@@ -71,11 +72,11 @@ class TestPortalIssue(TestPortalProjectBase):
 
         # Do: Bert reads project -> crash, no group
         # Test: no project issue visible
-        self.assertRaises(except_orm, self.project_issue.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
+        self.assertRaises(AccessError, self.project_issue.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
         # Test: no project issue readable
-        self.assertRaises(except_orm, self.project_issue.read, cr, self.user_none_id, issue_ids, ['name'])
+        self.assertRaises(AccessError, self.project_issue.read, cr, self.user_none_id, issue_ids, ['name'])
         # Test: no project issue writable
-        self.assertRaises(except_orm, self.project_issue.write, cr, self.user_none_id, issue_ids, {'description': 'TestDescription'})
+        self.assertRaises(AccessError, self.project_issue.write, cr, self.user_none_id, issue_ids, {'description': 'TestDescription'})
 
         # Do: Chell reads project -> ok (portal ok public)
         # Test: all project issues visible
@@ -85,7 +86,7 @@ class TestPortalIssue(TestPortalProjectBase):
         # Test: all project issues readable
         self.project_issue.read(cr, self.user_portal_id, issue_ids, ['name'])
         # Test: no project issue writable
-        self.assertRaises(except_orm, self.project_issue.write, cr, self.user_portal_id, issue_ids, {'description': 'TestDescription'})
+        self.assertRaises(AccessError, self.project_issue.write, cr, self.user_portal_id, issue_ids, {'description': 'TestDescription'})
 
         # Do: Donovan reads project -> ok (public ok public)
         # Test: all project issues visible
@@ -106,7 +107,7 @@ class TestPortalIssue(TestPortalProjectBase):
 
         # Do: Bert reads project -> crash, no group
         # Test: no project issue searchable
-        self.assertRaises(except_orm, self.project_issue.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
+        self.assertRaises(AccessError, self.project_issue.search, cr, self.user_none_id, [('project_id', '=', pigs_id)])
 
         # Data: issue follower
         self.project_issue.message_subscribe_users(cr, self.user_projectuser_id, [self.issue_1_id, self.issue_3_id], [self.user_portal_id])

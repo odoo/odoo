@@ -51,7 +51,8 @@
         },
     });
 
-    website.snippet.animationRegistry.carousel = website.snippet.Animation.extend({
+    website.snippet.animationRegistry.carousel =
+    website.snippet.animationRegistry.slider = website.snippet.Animation.extend({
         start: function () {
             this.$target.carousel({interval: 10000});
         },
@@ -105,6 +106,7 @@
                 $(window).scroll();
             };
             img.src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
+            $(window).scroll();
         }
     });
 

@@ -135,7 +135,7 @@ class product_uom(osv.osv):
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=(12,12),
             fnct_inv=_factor_inv_write,
-            string='Ratio',
+            string='Bigger Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
         'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
@@ -410,7 +410,7 @@ class product_template(osv.osv):
             help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
-        'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Supplier'),
+        'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
@@ -517,6 +517,7 @@ class product_product(osv.osv):
         return res
 
     def _product_price(self, cr, uid, ids, name, arg, context=None):
+        plobj = self.pool.get('product.pricelist')
         res = {}
         if context is None:
             context = {}
@@ -526,15 +527,16 @@ class product_product(osv.osv):
         if pricelist:
             # Support context pricelists specified as display_name or ID for compatibility
             if isinstance(pricelist, basestring):
-                pricelist_ids = self.pool.get('product.pricelist').name_search(
+                pricelist_ids = plobj.name_search(
                     cr, uid, pricelist, operator='=', context=context, limit=1)
                 pricelist = pricelist_ids[0][0] if pricelist_ids else pricelist
+
+            products = self.browse(cr, uid, ids, context=context)
+            qtys = map(lambda x: (x, quantity, partner), products)
+            pl = plobj.browse(cr, uid, pricelist, context=context)
+            price = plobj._price_get_multi(cr,uid, pl, qtys, context=context)
             for id in ids:
-                try:
-                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
-                except:
-                    price = 0.0
-                res[id] = price
+                res[id] = price.get(id, 0.0)
         for id in ids:
             res.setdefault(id, 0.0)
         return res
@@ -655,8 +657,8 @@ class product_product(osv.osv):
         'virtual_available': fields.function(_product_virtual_available, type='float', string='Quantity Available'),
         'incoming_qty': fields.function(_product_incoming_qty, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, type='float', string='Outgoing'),
-        'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'lst_price' : fields.function(_product_lst_price,  fnct_inv=_save_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
+        'price': fields.function(_product_price, fnct_inv=_save_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'lst_price' : fields.function(_product_lst_price, fnct_inv=_save_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', size=64, select=True),
@@ -787,6 +789,10 @@ class product_product(osv.osv):
     # Could be overrided for variants matrices prices
     #
     def price_get(self, cr, uid, ids, ptype='list_price', context=None):
+        products = self.browse(cr, uid, ids, context=context)
+        return self._price_get(cr, uid, products, ptype=ptype, context=context)
+
+    def _price_get(self, cr, uid, products, ptype='list_price', context=None):
         if context is None:
             context = {}
 
@@ -797,7 +803,7 @@ class product_product(osv.osv):
 
         res = {}
         product_uom_obj = self.pool.get('product.uom')
-        for product in self.browse(cr, uid, ids, context=context):
+        for product in products:
             res[product.id] = product[ptype] or 0.0
             if ptype == 'list_price':
                 res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
@@ -922,7 +928,6 @@ class product_supplierinfo(osv.osv):
     _description = "Information about a product supplier"
     def _calc_qty(self, cr, uid, ids, fields, arg, context=None):
         result = {}
-        product_uom_pool = self.pool.get('product.uom')
         for supplier_info in self.browse(cr, uid, ids, context=context):
             for field in fields:
                 result[supplier_info.id] = {field:False}
@@ -935,10 +940,10 @@ class product_supplierinfo(osv.osv):
         'product_name': fields.char('Supplier Product Name', size=128, help="This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Supplier Product Code', size=64, help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product supplier."),
-        'product_uom': fields.related('product_id', 'uom_po_id', type='many2one', relation='product.uom', string="Supplier Unit of Measure", readonly="1", help="This comes from the product form."),
+        'product_uom': fields.related('product_tmpl_id', 'uom_po_id', type='many2one', relation='product.uom', string="Supplier Unit of Measure", readonly="1", help="This comes from the product form."),
         'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
-        'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
+        'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
         'company_id':fields.many2one('res.company','Company',select=1),
@@ -964,10 +969,11 @@ class product_supplierinfo(osv.osv):
         pricelist_pool = self.pool.get('product.pricelist')
         currency_pool = self.pool.get('res.currency')
         currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+        # Compute price from standard price of product
+        product_price = product_pool.price_get(cr, uid, [product_id], 'standard_price', context=context)[product_id]
+        product = product_pool.browse(cr, uid, product_id, context=context)
         for supplier in partner_pool.browse(cr, uid, supplier_ids, context=context):
-            # Compute price from standard price of product
-            price = product_pool.price_get(cr, uid, [product_id], 'standard_price', context=context)[product_id]
-
+            price = product_price
             # Compute price from Purchase pricelist of supplier
             pricelist_id = supplier.property_product_pricelist_purchase.id
             if pricelist_id:
@@ -975,7 +981,7 @@ class product_supplierinfo(osv.osv):
                 price = currency_pool.compute(cr, uid, pricelist_pool.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
 
             # Compute price from supplier pricelist which are in Supplier Information
-            supplier_info_ids = self.search(cr, uid, [('name','=',supplier.id),('product_id','=',product_id)])
+            supplier_info_ids = self.search(cr, uid, [('name','=',supplier.id),('product_tmpl_id','=',product.product_tmpl_id.id)])
             if supplier_info_ids:
                 cr.execute('SELECT * ' \
                     'FROM pricelist_partnerinfo ' \

@@ -46,8 +46,37 @@
             <field name="show_track_proposal">True</field>
             <field name="show_blog">True</field>
         </record>
+
+        <!-- Show menu after so that the menu is created with tracks -->
+
         <record id="event.event_0" model="event.event">
             <field name="show_menu">True</field>
+        </record>
+
+        <!-- Sponsorships -->
+
+        <record id="event_sponsor_0" model="event.sponsor">
+            <field name="event_id" ref="event.event_0"/>
+            <field name="sponsor_type_id" ref="event_sponsor_type1"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+        </record>
+
+        <record id="event_sponsor_1" model="event.sponsor">
+            <field name="event_id" ref="event.event_0"/>
+            <field name="sponsor_type_id" ref="event_sponsor_type2"/>
+            <field name="partner_id" ref="base.res_partner_12"/>
+        </record>
+
+        <record id="event_sponsor_2" model="event.sponsor">
+            <field name="event_id" ref="event.event_0"/>
+            <field name="sponsor_type_id" ref="event_sponsor_type2"/>
+            <field name="partner_id" ref="base.res_partner_15"/>
+        </record>
+
+        <record id="event_sponsor_3" model="event.sponsor">
+            <field name="event_id" ref="event.event_0"/>
+            <field name="sponsor_type_id" ref="event_sponsor_type3"/>
+            <field name="partner_id" ref="base.res_partner_14"/>
         </record>
 
     </data>

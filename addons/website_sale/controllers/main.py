@@ -8,6 +8,8 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 
+PPG = 20                        # Products Per Page
+PPR = 4                         # Products Per Row
 
 class CheckoutInfo(object):
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
@@ -40,6 +42,65 @@ class CheckoutInfo(object):
         return dict((field_name, post[field_name]) for field_name in self.all_fields() if post[field_name])
 
 
+#
+# Compute grid of products according to their sizes
+#
+class table_compute(object):
+    def __init__(self):
+        self.table = {}
+
+    def _check_place(self, posx, posy, sizex, sizey):
+        for y in range(sizey):
+            for x in range(sizex):
+                if posx+x>=PPR:
+                    return False
+                row = self.table.setdefault(posy+y, {})
+                if row.setdefault(posx+x) is not None:
+                    return False
+        return True
+
+    def process(self, products):
+        # Compute products positions on the grid
+        minpos = 0
+        index = 0
+        maxy = 0
+        for p in products:
+            x = p.website_size_x
+            y = p.website_size_y
+            if index>PPG:
+                x = y = 1
+
+            pos = minpos
+            while not self._check_place(pos%PPR, pos/PPR, x, y):
+                pos += 1
+
+            if index>PPG and (pos/PPR)>maxy:
+                break
+
+            if x==1 and y==1:   # simple heuristic for CPU optimization
+                minpos = pos/PPR
+
+            for y2 in range(y):
+                for x2 in range(x):
+                    self.table[(pos/PPR)+y2][(pos%PPR)+x2] = False
+            self.table[pos/PPR][pos%PPR] = {
+                'product': p, 'x':x, 'y': y,
+                'class': " ".join(map(lambda x: x.html_class, p.website_style_ids))
+            }
+            if index<=PPG:
+                maxy=max(maxy,y+(pos/PPR))
+            index += 1
+
+        # Format table according to HTML needs
+        rows = self.table.items()
+        rows.sort()
+        rows = map(lambda x: x[1], rows)
+        for col in range(len(rows)):
+            cols = rows[col].items()
+            cols.sort()
+            rows[col] = filter(bool, map(lambda x: x[1], cols))
+        return filter(bool, rows)
+
 class Ecommerce(http.Controller):
 
     _order = 'website_sequence desc, website_published desc'
@@ -49,158 +110,8 @@ class Ecommerce(http.Controller):
         attributes_ids = attributes_obj.search(request.cr, request.uid, [], context=request.context)
         return attributes_obj.browse(request.cr, request.uid, attributes_ids, context=request.context)
 
-    def get_categories(self):
-        domain = [('parent_id', '=', False)]
-
-        category_obj = request.registry.get('product.public.category')
-        category_ids = category_obj.search(request.cr, SUPERUSER_ID, domain, context=request.context)
-        categories = category_obj.browse(request.cr, SUPERUSER_ID, category_ids, context=request.context)
-
-        product_obj = request.registry.get('product.product')
-        groups = product_obj.read_group(request.cr, SUPERUSER_ID, [("sale_ok", "=", True), ('website_published', '=', True)], ['public_categ_id'], 'public_categ_id', context=request.context)
-        full_category_ids = [group['public_categ_id'][0] for group in groups if group['public_categ_id']]
-
-        for cat_id in category_obj.browse(request.cr, SUPERUSER_ID, full_category_ids, context=request.context):
-            while cat_id.parent_id:
-                cat_id = cat_id.parent_id
-                full_category_ids.append(cat_id.id)
-        full_category_ids.append(1)
-
-        return (categories, full_category_ids)
-
     def get_pricelist(self):
         return request.registry.get('website').get_pricelist_id(request.cr, request.uid, None, context=request.context)
-
-    def change_pricelist(self):
-        return request.registry.get('website').change_pricelist_id(request.cr, request.uid, None, context=request.context)
-
-    def get_bin_packing_products(self, product_ids, fill_hole, col_number=4):
-        """
-        Packing all products of the search into a table of #col_number columns in function of the product sizes
-        The website_size_x, website_size_y is use for fill table (default 1x1)
-        The website_style_ids datas are concatenate in a html class
-
-        @values:
-
-        product_ids: list of product template
-        fill_hole: list of extra product template use to fill the holes
-        col_number: number of columns
-
-        @return:
-
-        table (list of list of #col_number items)
-        items: {
-            'product': browse of product template,
-            'x': size x,
-            'y': size y,
-            'class': html class
-        }
-        """
-        product_obj = request.registry.get('product.template')
-        style_obj = request.registry.get('website.product.style')
-        request.context['pricelist'] = self.get_pricelist()
-
-        # search for checking of access rules and keep order
-        product_ids = product_obj.search(request.cr, request.uid, [("id", 'in', product_ids)], context=request.context)
-
-        size_ids = {}
-        style_ids = style_obj.search(request.cr, SUPERUSER_ID, [('html_class', 'like', 'size_%')], context=request.context)
-        for style in style_obj.browse(request.cr, SUPERUSER_ID, style_ids, context=request.context):
-            size_ids[style.id] = [int(style.html_class[-3]), int(style.html_class[-1])]
-
-        product_list = []
-        bin_packing = {}
-        bin_packing[0] = {}
-
-        for product in product_obj.browse(request.cr, SUPERUSER_ID, product_ids, context=request.context):
-            index = len(product_list)
-
-            # get size and all html classes
-            x = product.website_size_x or 1
-            y = product.website_size_y or 1
-            html_class = " ".join([str(style_id.html_class) for style_id in product.website_style_ids])
-
-            product_list.append({'product': product, 'x': x, 'y': y, 'class': html_class })
-
-            # bin packing products
-            insert = False
-            line = 0
-            while not insert:
-                # if not full column get next line
-                if len(bin_packing.setdefault(line, {})) >= col_number:
-                    line += 1
-                    continue
-
-                col = 0
-                while col < col_number:
-                    if bin_packing[line].get(col, None) != None:
-                        col += 1
-                        continue
-
-                    insert = True
-
-                    # check if the box can be inserted
-                    copy_line = line
-                    copy_y = y
-                    while copy_y > 0:
-                        copy_col = col
-                        copy_x = x
-                        while copy_x > 0:
-                            if copy_col >= col_number or bin_packing.setdefault(copy_line, {}).get(copy_col, None) != None:
-                                insert = False
-                                break
-                            copy_col += 1
-                            copy_x -= 1
-                        if not insert:
-                            break
-                        copy_line += 1
-                        copy_y -= 1
-
-                    if not insert:
-                        col += 1
-                        continue
-
-                    # insert the box
-                    copy_y = y
-                    while copy_y > 0:
-                        copy_y -= 1
-                        copy_x = x
-                        while copy_x > 0:
-                            copy_x -= 1
-                            bin_packing[line + copy_y][col + copy_x] = False
-                    bin_packing[line + copy_y][col + copy_x] = product_list[index]
-                    break
-
-                if not insert:
-                    line += 1
-                else:
-                    break
-
-        length = len(bin_packing)
-
-        # browse product to fill the holes
-        if fill_hole:
-            fill_hole_products = []
-            # search for checking of access rules and keep order
-            fill_hole = [id for id in fill_hole if id in product_obj.search(request.cr, request.uid, [("id", 'in', fill_hole)], context=request.context)]
-            for product in product_obj.browse(request.cr, request.uid, fill_hole, context=request.context):
-                fill_hole_products.append(product)
-            fill_hole_products.reverse()
-
-        # packaging in list (from dict)
-        bin_packing_list = []
-        line = 0
-        while line < length:
-            bin_packing_list.append([])
-            col = 0
-            while col < col_number:
-                if fill_hole and fill_hole_products and bin_packing[line].get(col) == None:
-                    bin_packing[line][col] = {'product': fill_hole_products.pop(), 'x': 1, 'y': 1, 'class': "" }
-                bin_packing_list[line].append(bin_packing[line].get(col))
-                col += 1
-            line += 1
-
-        return bin_packing_list
 
     def get_products(self, product_ids):
         product_obj = request.registry.get('product.template')
@@ -210,19 +121,19 @@ class Ecommerce(http.Controller):
         return product_obj.browse(request.cr, request.uid, product_ids, context=request.context)
 
     def has_search_filter(self, attribute_id, value_id=None):
-        if request.httprequest.args.get('filter'):
-            filter = simplejson.loads(request.httprequest.args['filter'])
+        if request.httprequest.args.get('filters'):
+            filters = simplejson.loads(request.httprequest.args['filters'])
         else:
-            filter = []
-        for key_val in filter:
+            filters = []
+        for key_val in filters:
             if key_val[0] == attribute_id and (not value_id or value_id in key_val[1:]):
                 return key_val
         return False
 
-    @website.route(['/shop/filter/'], type='http', auth="public", multilang=True)
-    def filter(self, **post):
+    @website.route(['/shop/filters/'], type='http', auth="public", multilang=True)
+    def filters(self, **post):
         index = []
-        filter = []
+        filters = []
         for key, val in post.items():
             cat = key.split("-")
             if len(cat) < 3 or cat[2] in ('max','minmem','maxmem'):
@@ -234,19 +145,19 @@ class Ecommerce(http.Controller):
                 _max = int(post.pop("att-%s-max" % cat[1]))
                 _min = int(val)
                 if (minmem != _min or maxmem != _max) and cat_id not in index:
-                    filter.append([cat_id , [_min, _max] ])
+                    filters.append([cat_id , [_min, _max] ])
                     index.append(cat_id)
             elif cat_id not in index:
-                filter.append([ cat_id, int(cat[2]) ])
+                filters.append([ cat_id, int(cat[2]) ])
                 index.append(cat_id)
             else:
                 cat[2] = int(cat[2])
-                if cat[2] not in filter[index.index(cat_id)][1:]:
-                    filter[index.index(cat_id)].append( cat[2] )
+                if cat[2] not in filters[index.index(cat_id)][1:]:
+                    filters[index.index(cat_id)].append( cat[2] )
             post.pop(key)
 
-        return request.redirect("/shop/?filter=%s%s%s" % (
-                simplejson.dumps(filter),
+        return request.redirect("/shop/?filters=%s%s%s" % (
+                simplejson.dumps(filters),
                 post.get("search") and ("&search=%s" % post.get("search")) or "",
                 post.get("category") and ("&category=%s" % post.get("category")) or ""
             ))
@@ -262,8 +173,14 @@ class Ecommerce(http.Controller):
             else:
                 domain.append(("value_id", "in", key_val[1:]))
         att_ids = obj.search(request.cr, request.uid, domain, context=request.context)
-        att = obj.read(request.cr, request.uid, att_ids, ["product_id"], context=request.context)
-        return [r["product_id"][0] for r in att]
+        att = obj.read(request.cr, request.uid, att_ids, ["product_tmpl_id"], context=request.context)
+        return [r["product_tmpl_id"][0] for r in att]
+
+    @website.route(['/shop/pricelist'], type='http', auth="public", multilang=True)
+    def shop_promo(self, code, **post):
+        assert code, 'No pricelist code provided'
+        request.registry.get('website').change_pricelist_id(request.cr, request.uid, code, context=request.context)
+        return request.redirect("/shop")
 
     @website.route([
         '/shop/',
@@ -271,72 +188,64 @@ class Ecommerce(http.Controller):
         '/shop/category/<int:category>/',
         '/shop/category/<int:category>/page/<int:page>/'
     ], type='http', auth="public", multilang=True)
-    def category(self, category=0, page=0, filter='', search='', **post):
-        # TDE-NOTE: shouldn't we do somethign about product_template without variants ???
-        # TDE-NOTE: is there a reason to call a method category when the route is
-        # basically a shop without category_id speceified ?
-
-        if 'promo' in post:
-            self.change_pricelist(post.get('promo'))
+    def shop(self, category=0, page=0, filters='', search='', **post):
+        cr, uid, context = request.cr, request.uid, request.context
         product_obj = request.registry.get('product.template')
-
         domain = request.registry.get('website').get_website_sale_domain()
-
-        # remove product_product_consultant from ecommerce editable mode, this product never be publish
-        ref = request.registry.get('ir.model.data').get_object_reference(request.cr, SUPERUSER_ID, 'product', 'product_product_consultant')
-        domain.append(("id", "!=", ref[1]))
-
         if search:
-            domain += ['|', '|', '|',
+            domain += ['|',
                 ('name', 'ilike', "%%%s%%" % search),
-                ('description', 'ilike', "%%%s%%" % search),
-                ('website_description', 'ilike', "%%%s%%" % search),
-                ('product_variant_ids.public_categ_id.name', 'ilike', "%%%s%%" % search)]
-
+                ('description', 'ilike', "%%%s%%" % search)]
         if category:
-            domain.append(('product_variant_ids.public_categ_id.id', 'child_of', category))
-
-        if filter:
-            filter = simplejson.loads(filter)
-            if filter:
-                ids = self.attributes_to_ids(filter)
+            domain.append(('product_variant_ids.public_categ_id', 'child_of', category))
+        if filters:
+            filters = simplejson.loads(filters)
+            if filters:
+                ids = self.attributes_to_ids(filters)
                 domain.append(('id', 'in', ids or [0]))
 
-        step = 20
-        product_count = product_obj.search_count(request.cr, request.uid, domain, context=request.context)
-        pager = request.website.pager(url="/shop/", total=product_count, page=page, step=step, scope=7, url_args=post)
+        product_count = product_obj.search_count(cr, uid, domain, context=context)
+        pager = request.website.pager(url="/shop/", total=product_count, page=page, step=PPG, scope=7, url_args=post)
 
         request.context['pricelist'] = self.get_pricelist()
 
-        product_ids = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset'], order=self._order, context=request.context)
-        fill_hole = product_obj.search(request.cr, request.uid, domain, limit=step, offset=pager['offset']+step, order=self._order, context=request.context)
+        pids = product_obj.search(cr, uid, domain, limit=PPG+10, offset=pager['offset'], order=self._order, context=context)
+        products = product_obj.browse(cr, uid, pids, context=context)
 
         styles = []
-        if not request.context['is_public_user']:
+        try:
             style_obj = request.registry.get('website.product.style')
             style_ids = style_obj.search(request.cr, request.uid, [], context=request.context)
             styles = style_obj.browse(request.cr, request.uid, style_ids, context=request.context)
+        except:
+            pass
+
+        category_obj = request.registry.get('product.public.category')
+        category_ids = category_obj.search(cr, uid, [], context=context)
+        categories = category_obj.browse(cr, uid, category_ids, context=context)
+        categs = filter(lambda x: not x.parent_id, categories)
 
         values = {
-            'Ecommerce': self,
-            'product_ids': product_ids,
-            'product_ids_for_holes': fill_hole,
+            'products': products,
+            'bins': table_compute().process(products),
+            'rows': PPR,
+            'range': range,
             'search': {
                 'search': search,
                 'category': category,
-                'filter': filter,
+                'filters': filters,
             },
             'pager': pager,
             'styles': styles,
+            'categories': categs,
+            'Ecommerce': self,   # TODO fp: Should be removed
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
         }
         return request.website.render("website_sale.products", values)
 
     @website.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", multilang=True)
-    def product(self, product, search='', category='', filter='', promo=None, **kwargs):
-
-        if promo:
-            self.change_pricelist(promo)
+    def product(self, product, search='', category='', filters='', **kwargs):
+        website.preload_records(product, on_error="website_sale.404")
 
         category_obj = request.registry.get('product.public.category')
 
@@ -358,7 +267,7 @@ class Ecommerce(http.Controller):
             'search': {
                 'search': search,
                 'category': category and str(category.id),
-                'filter': filter,
+                'filters': filters,
             }
         }
         return request.website.render("website_sale.product", values)
@@ -383,26 +292,33 @@ class Ecommerce(http.Controller):
 
         request.context = dict(request.context, pricelist=self.get_pricelist())
 
-        quantity = 0
+        # set order_line_id and product_id
+        if order_line_id:
+            order_line = order_line_obj.browse(request.cr, SUPERUSER_ID, order_line_id, context=request.context)
+            if order_line.order_id.id == order.id:
+                product_id = order_line.product_id.id
+            else:
+                order_line_id = None
+        else:
+            order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, 
+                [('order_id', '=', order.id),('product_id', '=', product_id)], context=request.context)
+            if order_line_ids:
+                order_line_id = order_line_ids[0]
+
+        if not order_line_id and not product_id:
+            return 0
 
         # values initialisation
+        quantity = 0
         values = {}
-
-        domain = [('order_id', '=', order.id)]
         if order_line_id:
-            domain += [('id', '=', order_line_id)]
-        else:
-            domain += [('product_id', '=', product_id)]
-
-        order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, domain, context=request.context)
-        if order_line_ids:
-            order_line = order_line_obj.read(request.cr, SUPERUSER_ID, order_line_ids, [], context=request.context)[0]
+            order_line_val = order_line_obj.read(request.cr, SUPERUSER_ID, [order_line_id], [], context=request.context)[0]
             if not product_id:
-                product_id = order_line['product_id'][0]
+                product_id = order_line_val['product_id'][0]
             if set_number >= 0:
                 quantity = set_number
             else:
-                quantity = order_line['product_uom_qty'] + number
+                quantity = order_line_val['product_uom_qty'] + number
             if quantity < 0:
                 quantity = 0
         else:
@@ -411,17 +327,17 @@ class Ecommerce(http.Controller):
             quantity = 1
 
         # change and record value
-        vals = order_line_obj._recalculate_product_values(request.cr, request.uid, order_line_ids, product_id, context=request.context)
+        vals = order_line_obj._recalculate_product_values(request.cr, request.uid, [order_line_id], product_id, context=request.context)
         values.update(vals)
 
         values['product_uom_qty'] = quantity
         values['product_id'] = product_id
         values['order_id'] = order.id
 
-        if order_line_ids:
-            order_line_obj.write(request.cr, SUPERUSER_ID, order_line_ids, values, context=request.context)
+        if order_line_id:
+            order_line_obj.write(request.cr, SUPERUSER_ID, [order_line_id], values, context=request.context)
             if not quantity:
-                order_line_obj.unlink(request.cr, SUPERUSER_ID, order_line_ids, context=request.context)
+                order_line_obj.unlink(request.cr, SUPERUSER_ID, [order_line_id], context=request.context)
         else:
             order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, values, context=request.context)
             order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
@@ -433,15 +349,12 @@ class Ecommerce(http.Controller):
         prod_obj = request.registry.get('product.product')
 
         # must have a draft sale order with lines at this point, otherwise reset
-        order = context.get('website_sale_order')
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         if order and order.state != 'draft':
             request.registry['website'].sale_reset_order(cr, uid, context=context)
             return request.redirect('/shop/')
 
-        if 'promo' in post:
-            self.change_pricelist(post.get('promo'))
-        else:
-            self.get_pricelist()
+        self.get_pricelist()
 
         suggested_ids = []
         product_ids = []
@@ -461,14 +374,18 @@ class Ecommerce(http.Controller):
 
         values = {
             'int': int,
-            'get_categories': self.get_categories,
             'suggested_products': prod_obj.browse(cr, uid, suggested_products, context),
         }
         return request.website.render("website_sale.mycart", values)
 
-    @website.route(['/shop/add_cart/'], type='http', auth="public", multilang=True)
-    def add_cart(self, product_id=None, order_line_id=None, remove=None, **kw):
-        self.add_product_to_cart(product_id=product_id and int(product_id), order_line_id=order_line_id and int(order_line_id), number=(remove and -1 or 1))
+    @website.route(['/shop/add_cart/', '/shop/add_cart/<model("product.product"):product>/'], type='http', auth="public", multilang=True, methods=['POST'])
+    def add_cart(self, product=None, product_id=None, remove=None, **kw):
+        self.add_product_to_cart(product_id=int(product_id or product.id))
+        return request.redirect("/shop/mycart/")
+
+    @website.route(['/shop/change_cart/<model("sale.order.line"):order_line>/'], type='http', auth="public", multilang=True)
+    def add_cart_order_line(self, order_line=None, remove=None, **kw):
+        self.add_product_to_cart(order_line_id=int(order_line.id), number=(remove and -1 or 1))
         return request.redirect("/shop/mycart/")
 
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
@@ -489,7 +406,7 @@ class Ecommerce(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         # must have a draft sale order with lines at this point, otherwise reset
-        order = context.get('website_sale_order')
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         if not order or order.state != 'draft' or not order.order_line:
             request.registry['website'].sale_reset_order(cr, uid, context=context)
             return request.redirect('/shop/')
@@ -520,14 +437,20 @@ class Ecommerce(http.Controller):
         checkout = values['checkout']
         error = values['error']
 
-        if not context['is_public_user']:
+        partner = None
+        public_id = request.registry['website'].get_public_user(cr, uid, context)
+        if not request.uid == public_id:
             partner = orm_user.browse(cr, uid, uid, context).partner_id
+        elif order.partner_id and order.partner_id.id != public_id:
+            partner = orm_partner.browse(cr, SUPERUSER_ID, order.partner_id.id, context)
+
+        if partner:
             partner_info = info.from_partner(partner)
             checkout.update(partner_info)
-            shipping_ids = orm_partner.search(cr, uid, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
+            shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
             if shipping_ids:
                 values['shipping'] = "true"
-                shipping_partner = orm_partner.browse(cr, uid, shipping_ids[0], context)
+                shipping_partner = orm_partner.browse(cr, SUPERUSER_ID, shipping_ids[0], context)
                 checkout['shipping_name'] = getattr(shipping_partner, 'name')
                 checkout['shipping_phone'] = getattr(shipping_partner, 'phone')
                 checkout['shipping_street'] = getattr(shipping_partner, 'street')
@@ -545,6 +468,7 @@ class Ecommerce(http.Controller):
     @website.route(['/shop/confirm_order/'], type='http', auth="public", multilang=True)
     def confirm_order(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        order_line_obj = request.registry.get('sale.order')
 
         # must have a draft sale order with lines at this point, otherwise redirect to shop
         order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
@@ -596,7 +520,7 @@ class Ecommerce(http.Controller):
         billing_info = dict(checkout)
         billing_info['parent_id'] = company_id
 
-        if not context['is_public_user']:
+        if not request.uid == request.registry['website'].get_public_user(cr, uid, context):
             partner_id = orm_user.browse(cr, uid, uid, context=context).partner_id.id
             orm_parter.write(cr, uid, [partner_id], billing_info, context=context)
         else:
@@ -633,7 +557,8 @@ class Ecommerce(http.Controller):
             'partner_shipping_id': shipping_id or partner_id
         }
         order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], order.partner_id.id, context=context)['value'])
-        order.write(order_info)
+
+        order_line_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
         return request.redirect("/shop/payment/")
 
@@ -652,7 +577,7 @@ class Ecommerce(http.Controller):
         payment_obj = request.registry.get('payment.acquirer')
 
         # if no sale order at this stage: back to checkout beginning
-        order = context.get('website_sale_order')
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         if not order or not order.state == 'draft' or not order.order_line:
             request.registry['website'].sale_reset_order(cr, uid, context=context)
             return request.redirect("/shop/")
@@ -679,21 +604,23 @@ class Ecommerce(http.Controller):
 
         # fetch all registered payment means
         if tx:
-            payment_ids = [tx.acquirer_id.id]
+            acquirer_ids = [tx.acquirer_id.id]
         else:
-            payment_ids = payment_obj.search(cr, SUPERUSER_ID, [('portal_published', '=', True)], context=context)
-        values['payments'] = payment_obj.browse(cr, uid, payment_ids, context=context)
-        for pay in values['payments']:
-            pay._content = payment_obj.render(
-                cr, uid, pay.id,
+            acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('portal_published', '=', True)], context=context)
+        values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
+        render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
+        for acquirer in values['acquirers']:
+            render_ctx['tx_url'] = '/shop/payment/transaction/%s' % acquirer.id
+            acquirer.button = payment_obj.render(
+                cr, uid, acquirer.id,
                 order.name,
                 order.amount_total,
-                order.pricelist_id.currency_id,
+                order.pricelist_id.currency_id.id,
                 partner_id=shipping_partner_id,
-                tx_custom_values={
+                tx_values={
                     'return_url': '/shop/payment/validate',
                 },
-                context=context)
+                context=render_ctx)
 
         return request.website.render("website_sale.payment", values)
 
@@ -774,11 +701,13 @@ class Ecommerce(http.Controller):
 
         if transaction_id is None:
             tx = context.get('website_sale_transaction')
+            if not tx:
+                return request.redirect('/shop/')
         else:
             tx = request.registry['payment.transaction'].browse(cr, uid, transaction_id, context=context)
 
         if sale_order_id is None:
-            order = context.get('website_sale_order')
+            order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         else:
             order = request.registry['sale.order'].browse(cr, uid, sale_order_id, context=context)
 

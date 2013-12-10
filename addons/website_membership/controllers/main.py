@@ -4,6 +4,7 @@ import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
+from openerp.addons.website_partner.controllers import main as website_partner
 from openerp.tools.translate import _
 
 import urllib
@@ -39,7 +40,7 @@ class WebsiteMembership(http.Controller):
         # group by country, based on all customers (base domain)
         membership_line_ids = membership_line_obj.search(cr, uid, base_line_domain, context=context)
         countries = partner_obj.read_group(
-            cr, uid, [('member_lines', 'in', membership_line_ids)], ["id", "country_id"],
+            cr, uid, [('member_lines', 'in', membership_line_ids), ("website_published", "=", True)], ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
         countries_total = sum(country_dict['country_id_count'] for country_dict in countries)
         countries.insert(0, {
@@ -57,6 +58,10 @@ class WebsiteMembership(http.Controller):
         partner_ids = [m.partner and m.partner.id for m in membership_lines]
         google_map_partner_ids = ",".join(map(str, partner_ids))
 
+        partners_data = {}
+        for partner in partner_obj.read(cr, openerp.SUPERUSER_ID, partner_ids, website_partner.white_list, context=context):
+            partners_data[partner.get("id")] = partner
+
         # format domain for group_by and memberships
         membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], context=context)
         memberships = product_obj.browse(cr, uid, membership_ids, context=context)
@@ -65,6 +70,7 @@ class WebsiteMembership(http.Controller):
         pager = request.website.pager(url="/members/", total=len(membership_line_ids), page=page, step=self._references_per_page, scope=7, url_args=post)
 
         values = {
+            'partners_data': partners_data,
             'membership_lines': membership_lines,
             'memberships': memberships,
             'membership': membership,
@@ -78,12 +84,7 @@ class WebsiteMembership(http.Controller):
 
     @website.route(['/members/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
     def partners_ref(self, partner, **post):
-        if not partner.exists():
+        values = website_partner.get_partner_template_value(partner)
+        if not values:
             return self.members(**post)
-
-        values = {
-            'partner_id': request.registry['res.partner'].browse(
-                request.cr, request.uid, partner.id,
-                context=dict(request.context, show_address=True)),
-        }
         return request.website.render("website_membership.partner", values)

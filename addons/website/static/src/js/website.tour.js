@@ -14,34 +14,80 @@
                 storage: this.tourStorage,
                 keyboard: false,
                 template: this.popover(),
+                onHide: function () {
+                    window.scrollTo(0, 0);
+                }
             });
             this.registerSteps();
         },
         registerSteps: function () {
             var self = this;
             this.tour.addSteps(_.map(this.steps, function (step) {
-               step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
-               if (step.modal) {
-                   step.onShow = function () {
-                        var $doc = $(document);
-                        function onStop () {
-                            if (step.modal.stopOnClose) {
-                                self.stop();
-                            }
-                        }
-                        $doc.on('hide.bs.modal', onStop);
-                        $doc.one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').one('click', function () {
-                                $doc.off('hide.bs.modal', onStop);
-                                self.moveToStep(step.modal.afterSubmit);
+                step.title = openerp.qweb.render('website.tour_popover_title', { title: step.title });
+                if (!step.element) {
+                    step.orphan = true;
+                }
+                if (step.snippet) {
+                    step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                }
+                if (step.trigger) {
+                    if (step.trigger === 'click') {
+                        step.triggers = function (callback) {
+                            $(step.element).one('click', function () {
+                                (callback || self.moveToNextStep).apply(self);
                             });
-                            self.moveToNextStep();
-                        });
+                        };
+                    } else if (step.trigger === 'drag') {
+                        step.triggers = function (callback) {
+                            self.onSnippetDragged(callback || self.moveToNextStep);
+                        };
+                    } else if (step.trigger && step.trigger.id) {
+                        if (step.trigger.emitter && step.trigger.type === 'openerp') {
+                            step.triggers = function (callback) {
+                                step.trigger.emitter.on(step.trigger.id, self, function customHandler () {
+                                    step.trigger.emitter.off(step.trigger.id, customHandler);
+                                    (callback || self.moveToNextStep).apply(self, arguments);
+                                });
+                            };
+                        } else {
+                            step.triggers = function (callback) {
+                                var emitter = _.isString(step.trigger.emitter) ? $(step.trigger.emitter) : (step.trigger.emitter || $(step.element));
+                                emitter.on(step.trigger.id, function customHandler () {
+                                    console.log(arguments);
+                                    (callback || self.moveToNextStep).apply(self, arguments);
+                                });
+                            };
+                        }
+                    } else if (step.trigger.modal) {
+                        step.triggers = function (callback) {
+                            var $doc = $(document);
+                            function onStop () {
+                                if (step.trigger.modal.stopOnClose) {
+                                    self.stop();
+                                }
+                            }
+                            $doc.on('hide.bs.modal', onStop);
+                            $doc.one('shown.bs.modal', function () {
+                                $('.modal button.btn-primary').one('click', function () {
+                                    $doc.off('hide.bs.modal', onStop);
+                                    self.moveToStep(step.trigger.modal.afterSubmit);
+                                });
+                                (callback || self.moveToNextStep).apply(self);
+                            });
+                        };
+                    }
+                }
+                step.onShow = (function () {
+                    var executed = false;
+                    return function () {
+                        if (!executed) {
+                            _.isFunction(step.onStart) && step.onStart();
+                            _.isFunction(step.triggers) && step.triggers();
+                            executed = true;
+                        }
                     };
-               } else {
-                   step.onShow = step.triggers;
-               }
-               return step;
+                }());
+                return step;
             }));
         },
         reset: function () {
@@ -84,17 +130,18 @@
             }
         },
         moveToNextStep: function () {
-            this.moveToStep(this.currentStepIndex() + 1);
+            var nextStepIndex = this.currentStepIndex() + 1;
+            this.moveToStep(nextStepIndex);
         },
         stop: function () {
             this.tour.end();
         },
         redirect: function (url) {
             url = url || new website.UrlParser(window.location.href);
-            if (this.startPath && url.pathname !== this.startPath) {
-                var newUrl = this.startPath + (url.search ? (url.search + "&") : "?") + this.id + "=true";
-                window.location.replace(newUrl);
-            }
+            var path = (this.startPath && url.pathname !== this.startPath) ? this.startPath : url.pathname;
+            var search = url.activateTutorial(this.id);
+            var newUrl = path + search;
+            window.location.replace(newUrl);
         },
         ended: function () {
             return this.tourStorage.getItem(this.id+'_end') === "yes";
@@ -106,8 +153,7 @@
         trigger: function (url) {
             // Override if necessary
             url = url || new website.UrlParser(window.location.href);
-            var urlTrigger = this.id + "=true";
-            return url.search.indexOf(urlTrigger) >= 0;
+            return url.isActive(this.id);
         },
         testUrl: function (pattern) {
             var url = new website.UrlParser(window.location.href);
@@ -116,20 +162,21 @@
         popover: function (options) {
             return openerp.qweb.render('website.tour_popover', options);
         },
-        onSnippetDraggedAdvance: function (snippetId, stepId) {
+        onSnippetDragged: function (callback) {
             var self = this;
             function beginDrag () {
                 $('.popover.tour').remove();
                 function advance () {
-                    if (stepId) {
-                        self.moveToStep(stepId);
-                    } else {
-                        self.moveToNextStep();
+                    if (_.isFunction(callback)) {
+                        callback.apply(self);
                     }
                 }
                 $(document.body).one('mouseup', advance);
             }
-            $('#website-top-navbar [data-snippet-id='+snippetId+'].ui-draggable').one('mousedown', beginDrag);
+            $('#website-top-navbar [data-snippet-id].ui-draggable').one('mousedown', beginDrag);
+        },
+        onSnippetDraggedAdvance: function () {
+            onSnippetDragged(self.moveToNextStep);
         },
     });
 
@@ -146,8 +193,44 @@
             this.origin = a.origin;
             this.search = a.search;
             this.hash = a.hash;
+            function generateTrigger (id) {
+                return "tutorial."+id+"=true";
+            }
+            this.activateTutorial = function (id) {
+                var urlTrigger = generateTrigger(id);
+                var querystring = _.filter(this.search.split('?'), function (str) {
+                    return str;
+                });
+                if (querystring.length > 0) {
+                    var queries = _.filter(querystring[0].split("&"), function (query) {
+                        return query.indexOf("tutorial.") < 0
+                    });
+                    queries.push(urlTrigger);
+                    return "?"+_.uniq(queries).join("&");
+                } else {
+                    return "?"+urlTrigger;
+                }
+            };
+            this.isActive = function (id) {
+                var urlTrigger = generateTrigger(id);
+                return this.search.indexOf(urlTrigger) >= 0;
+            };
         },
     });
+
+    var TestConsole = website.TestConsole = {
+        dragAndDropSnippet: function (snippetId) {
+            var selector = '#oe_snippets div.oe_snippet[data-snippet-id="'+snippetId+'"] .oe_snippet_thumbnail';
+            var $thumbnail = $(selector).first();
+            var thumbnailPosition = $thumbnail.position();
+            $thumbnail.trigger($.Event( "mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
+            $thumbnail.trigger($.Event( "mousemove", { which: 1, pageX: thumbnailPosition.left+100, pageY: thumbnailPosition.top+700 }));
+            var $dropZone = $(".oe_drop_zone").first();
+            var dropPosition = $dropZone.position();
+            $dropZone.trigger($.Event( "mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
+        },
+        tests: [],
+    };
 
     website.EditorBar.include({
         tours: [],
@@ -174,6 +257,30 @@
         },
         registerTour: function (tour) {
             this.tours.push(tour);
+            TestConsole.tests.push({
+                id: tour.id,
+                run: function runTest () {
+                    var actionSteps = _.filter(tour.steps, function (step) {
+                       return step.trigger;
+                    });
+                    var currentIndex = 0;
+                    function executeStep (step) {
+                        var $element = $(step.element);
+                        step.triggers(function () {
+                            currentIndex = currentIndex + 1;
+                            executeStep(actionSteps[currentIndex]);
+                        });
+                        if (step.snippet && step.trigger === 'drag') {
+                            setTimeout(function () {
+                                TestConsole.dragAndDropSnippet(step.snippet);
+                            }, 50);
+                        } else {
+                            $element.click();
+                        }
+                    }
+                    executeStep(actionSteps[currentIndex]);
+                },
+            });
         },
     });
 

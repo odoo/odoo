@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.common import TestMail
+from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools.misc import mute_logger
 
@@ -63,7 +64,7 @@ class test_portal(TestMail):
             trigger_read = chell_pigs.name
 
         # Do: Chell posts a message on Pigs, crash because can not write on group or is not in the followers
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.mail_group.message_post(cr, self.user_chell_id, self.group_pigs_id, body='Message')
 
         # Do: Chell is added into Pigs followers and browse it -> ok for messages, ko for partners (no read permission)
@@ -73,6 +74,9 @@ class test_portal(TestMail):
         for message in chell_pigs.message_ids:
             trigger_read = message.subject
         for partner in chell_pigs.message_follower_ids:
+            if partner.id == self.partner_chell_id:
+                # Chell can read her own partner record
+                continue
             with self.assertRaises(except_orm):
                 trigger_read = partner.name
 

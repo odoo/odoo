@@ -17,7 +17,11 @@ class website_hr_recruitment(http.Controller):
         '/jobs/office/<model("res.partner"):office>'
         ], type='http', auth="public", multilang=True)
     def jobs(self, department=None, office=None):
-        jobs = self._browse_jobs([])
+        JobsObj = request.registry['hr.job']
+        jobpost_ids = JobsObj.search(request.cr, request.uid, [],
+            order="website_published desc,no_of_recruitment desc",
+            context=request.context)
+        jobs = JobsObj.browse(request.cr, request.uid, jobpost_ids, context=dict(request.context, show_address=True, no_tag_br=True))
 
         departments = set()
         offices = set()
@@ -28,18 +32,18 @@ class website_hr_recruitment(http.Controller):
                 offices.add(job.address_id)
 
         if department or office:
-            domain = []
-            if department:
-                domain.append(('department_id','=', department.id))
-            if office:
-                domain.append(('address_id','=', office.id))
-            jobs = self._browse_jobs(domain)
+            _jobs = []
+            for job in jobs:
+                if (department and job.department_id.id == department.id) or \
+                    (office and job.address_id.id == office.id):
+                    _jobs.append(job)
+            jobs = _jobs
 
         return request.website.render("website_hr_recruitment.index", {
             'jobs': jobs,
             'departments': departments,
             'offices': offices,
-            'active': department and department.id or None, 
+            'active': department and department.id or None,
             'office': office and office.id or None
         })
 
@@ -89,11 +93,6 @@ class website_hr_recruitment(http.Controller):
             'job': job_object
         })
 
-    @website.route('/job/publish', type='json', auth="admin", multilang=True)
-    def publish(self, id, object):
-        res = controllers.publish(id, object)
-        return res
-
     @website.route('/job/add_job_offer/', type='http', auth="user", multilang=True, methods=['POST'])
     def add_job_offer(self, **kwargs):
         Job = request.registry.get('hr.job')
@@ -102,11 +101,3 @@ class website_hr_recruitment(http.Controller):
         }, context=request.context)
 
         return request.redirect("/job/detail/%s/?enable_editor=1" % job_id)
-
-    def _browse_jobs(self, domain):
-        Jobs = request.registry['hr.job']
-        jobpost_ids = Jobs.search(request.cr, request.uid, domain,
-            order="website_published desc,no_of_recruitment desc",
-            context=request.context)
-        jobs = Jobs.browse(request.cr, request.uid, jobpost_ids, context=request.context)
-        return jobs
