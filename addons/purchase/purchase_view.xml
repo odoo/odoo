@@ -173,7 +173,7 @@
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
                     <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
                     <button name="wkf_send_rfq" states="approved" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="view_picking" string="Receptions" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
+                    <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
                     <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
                     <button name="purchase_cancel" states="draft,confirmed,sent,bid" string="Cancel"/>
@@ -418,7 +418,7 @@
                         <notebook>
                         <page string="Notes">
                             <field name="name"/>
-                        </page><page string="Invoices and Receptions">
+                        </page><page string="Invoices and Incoming Shipments">
                             <field name="invoice_lines"/>
                             <field name="move_ids"/>
                         </page>
