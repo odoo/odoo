@@ -834,8 +834,8 @@ class Many2one(_Relational):
             # evaluate name_get() in sudo scope, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
-            sudo_scope = value._scope.sudo()
-            return value.scoped(sudo_scope).name_get()[0]
+            with value._scope.sudo():
+                return value.name_get()[0]
         else:
             return False
 

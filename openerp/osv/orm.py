@@ -2170,7 +2170,13 @@ class BaseModel(object):
             :rtype: list(tuple)
             :return: list of pairs ``(id, text_repr)`` for all records
         """
-        return [(record.id, record.display_name) for record in self.exists()]
+        result = []
+        for record in self.scoped():
+            try:
+                result.append((record.id, record.display_name))
+            except MissingError:
+                pass
+        return result
 
     @api.model
     def name_create(self, name):
