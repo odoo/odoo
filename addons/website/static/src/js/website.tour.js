@@ -278,7 +278,6 @@
                             TestConsole.dragAndDropSnippet(step.snippet);
                         } else {
                             var $element = $(step.element);
-                            console.log($element);
                             $element.trigger($.Event("click", { srcElement: $element }));
                         }
                     }
