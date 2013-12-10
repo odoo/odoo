@@ -1108,8 +1108,9 @@ class crm_meeting(osv.Model):
             
             # We remove old attendees who are not in partner_ids now.
             all_partner_ids = [part.id for part in event.partner_ids]
-            all_attendee_ids = [att.partner_id.id for att in event.attendee_ids]
-            partner_ids_to_remove = map(lambda x: x, set(all_attendee_ids + new_att_partner_ids) - set(all_partner_ids))
+            all_part_attendee_ids = [att.partner_id.id for att in event.attendee_ids]
+            all_attendee_ids = [att.id for att in event.attendee_ids]
+            partner_ids_to_remove = map(lambda x: x, set(all_part_attendee_ids + new_att_partner_ids) - set(all_partner_ids))
             
             attendee_ids_to_remove = []
             
