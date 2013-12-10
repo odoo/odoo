@@ -109,7 +109,11 @@
                     placement: 'bottom',
                     title: "Describe the product for your audience",
                     content: "Insert blocks like text-image, or gallery to fully describe the product and make your visitors want to buy this product.",
-                    trigger: 'click',
+                    trigger: {
+                        emitter: editor,
+                        type: 'openerp',
+                        id: 'rte:ready',
+                    },
                 },
                 {
                     stepId: 'drag-big-picture',

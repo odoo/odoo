@@ -71,7 +71,11 @@
                     placement: 'bottom',
                     title: "Layout your event",
                     content: "Insert blocks like 'Banner' to layout the body of your event.",
-                    trigger: 'click',
+                    trigger: {
+                        emitter: editor,
+                        type: 'openerp',
+                        id: 'rte:ready',
+                    },
                 },
                 {
                     stepId: 'drag-banner',

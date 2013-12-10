@@ -60,6 +60,7 @@
                     placement: 'right',
                     title: "Create Blog Post",
                     content: "Click <em>Continue</em> to create the blog post.",
+                    trigger: 'click',
                 },
                 {
                     stepId: 'post-page',
@@ -81,7 +82,11 @@
                     placement: 'bottom',
                     title: "Layout Your Blog Post",
                     content: "Use well designed building blocks to structure the content of your blog. Click 'Insert Blocks' to add new content.",
-                    trigger: 'click',
+                    trigger: {
+                        emitter: editor,
+                        type: 'openerp',
+                        id: 'rte:ready',
+                    },
                 },
                 {
                     stepId: 'drag-image-text',

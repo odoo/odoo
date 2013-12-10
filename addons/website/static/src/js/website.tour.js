@@ -229,7 +229,7 @@
             var $thumbnail = $(selector).first();
             var thumbnailPosition = $thumbnail.position();
             $thumbnail.trigger($.Event("mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
-            $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: thumbnailPosition.left+100, pageY: thumbnailPosition.top+700 }));
+            $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top+500 }));
             var $dropZone = $(".oe_drop_zone").first();
             var dropPosition = $dropZone.position();
             $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
@@ -262,7 +262,7 @@
         registerTour: function (tour) {
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
-            TestConsole.tests.push({
+            var test = {
                 id: tour.id,
                 run: function (force) {
                     var url = new website.UrlParser(window.location.href);
@@ -280,9 +280,14 @@
                         step.triggers(function () {
                             var nextStep = actionSteps.shift();
                             if (nextStep) {
+                                // Ensure the previous step has been fully propagated
                                 setTimeout(function () {
-                                    executeStep(nextStep);
+                                    setTimeout(function () {
+                                        executeStep(nextStep);
+                                    }, 0);
                                 }, 0);
+                            } else {
+                                window.localStorage.removeItem(testId);
                             }
                         });
                         var $element = $(step.element);
@@ -311,7 +316,11 @@
                 reset: function () {
                     window.localStorage.removeItem(testId);
                 },
-            });
+            };
+            TestConsole.tests.push(test);
+            if (window.localStorage.getItem(testId)) {
+                test.run();
+            }
         },
     });
 
