@@ -1259,7 +1259,6 @@
             this._super();
             this.$target.css("background-image", "");
             this.$target.removeClass(this._class);
-            this.$target.find('.content, .carousel-image img').attr('contentEditable', 'true');
         },
         start : function () {
             var self = this;
