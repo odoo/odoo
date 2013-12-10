@@ -698,13 +698,14 @@ class pos_order(osv.osv):
             }, context=context)
             self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
             location_id = order.shop_id.warehouse_id.lot_stock_id.id
-            output_id = order.shop_id.warehouse_id.lot_output_id.id
+            if order.partner_id:
+                destination_id = order.partner_id.property_stock_customer.id
+            else:
+                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
 
             for line in order.lines:
                 if line.product_id and line.product_id.type == 'service':
                     continue
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
 
                 move_obj.create(cr, uid, {
                     'name': line.name,
@@ -716,11 +717,9 @@ class pos_order(osv.osv):
                     'product_qty': abs(line.qty),
                     'tracking_id': False,
                     'state': 'draft',
-                    'location_id': location_id,
-                    'location_dest_id': output_id,
+                    'location_id': location_id if line.qty >= 0 else destination_id,
+                    'location_dest_id': destination_id if line.qty >= 0 else location_id,
                 }, context=context)
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
 
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
