@@ -83,9 +83,11 @@ class hr_applicant(osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
         'stage_id': {
-            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
-            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
+             # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
             'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
+        },
+        'job_id': {
+            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.job_id and obj.job_id.id,
         },
     }
 
@@ -363,7 +365,8 @@ class hr_applicant(osv.Model):
             context = {}
         if vals.get('department_id') and not context.get('default_department_id'):
             context['default_department_id'] = vals.get('department_id')
-
+        if vals.get('job_id'):
+            self.pool['hr.job'].message_post(cr, uid, [vals['job_id']], body=_('New Applicant %s <b>Created</b>') % vals['name'], subtype="hr_recruitment.mt_applicant_new", context=context)
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
         return obj_id
 
@@ -380,6 +383,8 @@ class hr_applicant(osv.Model):
                 vals['last_stage_id'] = applicant.stage_id.id
                 res = super(hr_applicant, self).write(cr, uid, [applicant.id], vals, context=context)
             return res
+        if vals.get('job_id'):
+            self.pool['hr.job'].message_post(cr, uid, [vals['job_id']], body=_('New Applicant %s <b>Created</b>') % vals['name'], subtype="hr_recruitment.mt_applicant_new", context=context)
         return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
 
     def create_employee_from_applicant(self, cr, uid, ids, context=None):
@@ -403,7 +408,7 @@ class hr_applicant(osv.Model):
                                                      'department_id': applicant.department_id.id
                                                      })
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
-                self.message_post(cr, uid, [applicant.id], body=_('Applicant <b>Hired</b>'), subtype="hr_recruitment.mt_applicant_employee", context=context)
+                self.pool['hr.job'].message_post(cr, uid, [applicant.job_id.id], body=_('New Employee %s <b>Hired</b>') % applicant.partner_name, subtype="hr_recruitment.mt_applicant_employee", context=context)
             else:
                 raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
