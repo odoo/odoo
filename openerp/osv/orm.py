@@ -62,7 +62,7 @@ from scope import proxy as scope_proxy
 import fields
 import openerp
 import openerp.tools as tools
-from openerp.exceptions import AccessError, MissingError
+from openerp.exceptions import except_orm, AccessError, MissingError
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
@@ -255,13 +255,6 @@ def fix_import_export_id_paths(fieldname):
     fixed_db_id = re.sub(r'([^/])\.id', r'\1/.id', fieldname)
     fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
     return fixed_external_id.split('/')
-
-class except_orm(Exception):
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-        self.args = (name, value)
-
 
 def pg_varchar(size=0):
     """ Returns the VARCHAR declaration for the provided size:
