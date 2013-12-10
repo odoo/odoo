@@ -288,6 +288,13 @@
                         var $element = $(step.element);
                         if (step.snippet && step.trigger === 'drag') {
                             TestConsole.dragAndDropSnippet(step.snippet);
+                        } else if (step.trigger.id === 'change') {
+                            var currentValue = $element.val();
+                            var options = $element[0].options;
+                            var newValue = _.find(options, function (option) {
+                                return option.value !== currentValue;
+                            }).value;
+                            $element.val(newValue).trigger($.Event("change"));
                         } else {
                             $element.trigger($.Event("click", { srcElement: $element }));
                         }

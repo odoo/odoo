@@ -51,7 +51,6 @@
                     title: "Which Blog?",
                     content: "Blog posts are organized in multiple categories (news, job offers, events, etc). Select <em>News</em> and click <em>Continue</em>.",
                     trigger: {
-                        emitter: '.modal select',
                         id: 'change',
                     },
                 },
@@ -114,11 +113,13 @@
                     placement: 'top',
                     title: "Edit an Area",
                     content: "Select any area of the page to modify it. Click on this subtitle.",
-                    trigger: 'click',
+                    trigger: {
+                        id: 'snippet-activated',
+                    }
                 },
                 {
                     stepId: 'remove-text-block-title',
-                    element: '.oe_snippet_remove:last',
+                    element: '.oe_active .oe_snippet_remove',
                     placement: 'top',
                     title: "Delete the Title",
                     content: "From this toolbar you can move, duplicate or delete the selected zone. Click on the cross to delete the title.",
