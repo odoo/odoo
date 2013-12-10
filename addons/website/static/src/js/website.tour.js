@@ -223,11 +223,11 @@
             var selector = '#oe_snippets div.oe_snippet[data-snippet-id="'+snippetId+'"] .oe_snippet_thumbnail';
             var $thumbnail = $(selector).first();
             var thumbnailPosition = $thumbnail.position();
-            $thumbnail.trigger($.Event( "mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
-            $thumbnail.trigger($.Event( "mousemove", { which: 1, pageX: thumbnailPosition.left+100, pageY: thumbnailPosition.top+700 }));
+            $thumbnail.trigger($.Event("mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
+            $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: thumbnailPosition.left+100, pageY: thumbnailPosition.top+700 }));
             var $dropZone = $(".oe_drop_zone").first();
             var dropPosition = $dropZone.position();
-            $dropZone.trigger($.Event( "mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
+            $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
         },
         tests: [],
     };
@@ -256,6 +256,7 @@
             return this._super();
         },
         registerTour: function (tour) {
+            var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
             TestConsole.tests.push({
                 id: tour.id,
@@ -263,22 +264,35 @@
                     var actionSteps = _.filter(tour.steps, function (step) {
                        return step.trigger;
                     });
-                    var currentIndex = 0;
                     function executeStep (step) {
-                        var $element = $(step.element);
+                        window.localStorage.setItem(testId, step.stepId);
                         step.triggers(function () {
-                            currentIndex = currentIndex + 1;
-                            executeStep(actionSteps[currentIndex]);
+                            var nextStep = actionSteps.shift();
+                            if (nextStep) {
+                                setTimeout(function () {
+                                    executeStep(nextStep);
+                                }, 10);
+                            }
                         });
                         if (step.snippet && step.trigger === 'drag') {
-                            setTimeout(function () {
-                                TestConsole.dragAndDropSnippet(step.snippet);
-                            }, 50);
+                            TestConsole.dragAndDropSnippet(step.snippet);
                         } else {
-                            $element.click();
+                            var $element = $(step.element);
+                            console.log($element);
+                            $element.trigger($.Event("click", { srcElement: $element }));
                         }
                     }
-                    executeStep(actionSteps[currentIndex]);
+                    var lastStepId = window.localStorage.getItem(testId);
+                    var currentStep = actionSteps.shift();
+                    if (lastStepId) {
+                        while (currentStep && lastStepId !== currentStep.stepId) {
+                            currentStep = actionSteps.shift();
+                        }
+                    }
+                    executeStep(currentStep);
+                },
+                reset: function () {
+                    window.localStorage.removeItem(testId);
                 },
             });
         },

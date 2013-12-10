@@ -92,18 +92,18 @@
                 },
                 {
                     stepId: 'activate-text-block-title',
-                    element: '#wrap [data-snippet-id=three-columns]:first .text-center[data-snippet-id=colmd]',
+                    element: '#wrap [data-snippet-id=three-columns] .text-center[data-snippet-id=colmd]',
                     placement: 'top',
                     title: "Edit an Area",
                     content: "Select any area of the page to modify it. Click on this subtitle.",
                     trigger: {
-                        emitter: '#wrap [data-snippet-id=three-columns]:first .text-center[data-snippet-id=colmd]',
+                        emitter: '#wrap [data-snippet-id=three-columns] .text-center[data-snippet-id=colmd]',
                         id: 'snippet-activated',
                     },
                 },
                 {
                     stepId: 'remove-text-block-title',
-                    element: '.ui-draggable.oe_active .oe_snippet_remove',
+                    element: '.oe_active .oe_snippet_remove',
                     placement: 'top',
                     title: "Delete the Title",
                     content: "From this toolbar you can move, duplicate or delete the selected zone. Click on the trash can to delete the title.",
