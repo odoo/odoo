@@ -451,6 +451,13 @@ openerp.web.list_editable = function (instance) {
                 field.on("change:effective_readonly", self, set_invisible);
                 field.on("change:invisible", self, set_invisible);
                 set_invisible();
+                field.on('change:invisible', self, function () {
+                    if (field.get('invisible')) { return; }
+                    var item = _(self.fields_for_resize).find(function (item) {
+                        return item.field === field;
+                    });
+                    if (item) { self.resize_field(item.field, item.cell); }
+                });
             });
 
             this.editor.$el.on('keyup keydown', function (e) {
