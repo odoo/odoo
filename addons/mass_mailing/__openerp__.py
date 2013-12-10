@@ -21,7 +21,11 @@
 
 {
     'name': 'Mass Mailing Campaigns',
-    'description': """TODO""",
+    'description': """
+Easily send mass mailing to your leads, opportunities or customers. Track
+marketing campaigns performance to improve conversion rates. Design
+professional emails and reuse templates in a few clicks.
+    """,
     'version': '1.0',
     'author': 'OpenERP',
     'website': 'http://www.openerp.com',
@@ -34,9 +38,9 @@
     ],
     'data': [
         'mail_data.xml',
-        'mass_mailing_view.xml',
         'wizard/mail_compose_message_view.xml',
         'wizard/mail_mass_mailing_create_segment.xml',
+        'mass_mailing_view.xml',
         'security/ir.model.access.csv',
     ],
     'js': [
