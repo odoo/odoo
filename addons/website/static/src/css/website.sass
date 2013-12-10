@@ -251,27 +251,23 @@ ul.nav-stacked > li > a
     &.oe_big .carousel-inner
         height: 450px
     .carousel-caption
+        left: auto
+        right: auto
+        bottom: 10%
+        text-align: left
+        padding: 20px
+        background: rgba(0, 0, 0, 0.4)
         h1, h2, h3
             margin-top: 10px
             margin-bottom: 10px
     .carousel-image
-        right: 10%
+        right: 50%
         left: 50%
         top: 5%
         bottom: 5%
         position: absolute
-        text-align: center
-        img
-            height: 100%
-            margin: 0 auto
-    .item.text_image
-        .carousel-caption
-            left: auto
-            right: auto
-            bottom: 10%
-            text-align: left
-            padding: 20px
-            background: rgba(0, 0, 0, 0.4)
+        max-height: 90%
+        margin: 0 auto
     .item.text_only
         .carousel-image
             display: none !important
@@ -279,17 +275,13 @@ ul.nav-stacked > li > a
             left: 10%
             right: 10%
             top: 10%
+            bottom: auto
             text-align: center
+            background: transparent
     .item.image_text
         .carousel-caption
-            left: auto
-            text-align: left
             right: 10%
-            bottom: 10%
-            padding: 20px
-            background: rgba(0, 0, 0, 0.4)
         .carousel-image
-            right: 50%
             left: 10%
     .carousel-control
         cursor: pointer

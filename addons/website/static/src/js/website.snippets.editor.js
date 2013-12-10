@@ -1313,7 +1313,7 @@
             this.$target.find('.carousel-control').off('click').on('click', function () {
                 self.$target.carousel( $(this).data('slide')); });
 
-            this.$target.find('.carousel-image img, .content').attr('contentEditable', 'true');
+            this.$target.find('.carousel-image, .content').attr('contentEditable', 'true');
             this._super();
         },
     });
