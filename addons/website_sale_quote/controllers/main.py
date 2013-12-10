@@ -55,15 +55,18 @@ class sale_quote(http.Controller):
         return request.redirect("/quote/%s" % token)
 
     @website.route(['/quote/update_line'], type='json', auth="public")
-    def update(self, line_id=None, qty=None, remove=False,unlink=False,**post):
+    def update(self, line_id=None, remove=False, unlink=False, order_id=None, **post):
         if unlink:
             request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID,[int(line_id)], context=request.context)
+            return
         else:
-            val = self._update_order_line(line_id=int(line_id), number=(remove and -1 or 1), qty=int(qty))
-#            order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
-        return {}
+            val = self._update_order_line(line_id=int(line_id), number=(remove and -1 or 1))
+        order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
+        return [val , order.amount_total]
     
-    def _update_order_line(self,line_id, number,qty):
-        qty += number
-        request.registry.get('sale.order.line').write(request.cr, SUPERUSER_ID, [int(line_id)], {'product_uom_qty':(qty)}, context=request.context)
-        return qty
+    def _update_order_line(self,line_id, number):
+        order_line_obj = request.registry.get('sale.order.line')
+        order_line_val = order_line_obj.read(request.cr, SUPERUSER_ID, [int(line_id)], [], context=request.context)[0]
+        quantity = order_line_val['product_uom_qty'] + number
+        order_line_obj.write(request.cr, SUPERUSER_ID, [int(line_id)], {'product_uom_qty':(quantity)}, context=request.context)
+        return quantity

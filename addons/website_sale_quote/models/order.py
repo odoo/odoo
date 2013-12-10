@@ -85,3 +85,25 @@ class sale_order(osv.osv):
     def onchange_template_id(self, cr, uid,ids, template_id, context=None):
         data = self._get_sale_order_line(cr, uid, template_id, context)
         return {'value':data}
+
+    def recommended_products(self, cr, uid, ids,context=None):
+        order_line = self.browse(cr, uid, ids[0], context=context).order_line
+        product_pool = self.pool.get('product.product')
+        product_ids = []
+        for line in order_line:
+            query = """
+                SELECT      sol.product_id
+                FROM        sale_order_line as my
+                LEFT JOIN   sale_order_line as sol
+                ON          sol.order_id = my.order_id
+                WHERE       my.product_id in (%s)
+                AND         sol.product_id not in (%s)
+                GROUP BY    sol.product_id
+                ORDER BY    COUNT(sol.order_id) DESC
+                LIMIT 10
+            """
+            cr.execute(query, (line.product_id.id, line.product_id.id))
+            for p in cr.fetchall():
+                product_ids.append(p[0])
+        product_ids = product_pool.search(cr, uid, [("id", "in", product_ids)], limit=3)
+        return product_pool.browse(cr, uid, product_ids)

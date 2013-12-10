@@ -3,19 +3,21 @@ $(document).ready(function () {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var href = $link.attr("href");
-        var qty = $link.attr("href").match(/qty=([0-9]+)/);
+        var order_id = $link.attr("href").match(/order_id=([0-9]+)/);
         var line_id = href.match(/update_line\/([0-9]+)/);
         console.log(line_id);
         openerp.jsonRpc("/quote/update_line/", 'call', {
                 'line_id': line_id[1],
-                'qty': qty[1],
+                'order_id':parseInt(order_id[1]),
                 'remove': $link.is('[href*="remove"]'),
                 'unlink': $link.is('[href*="unlink"]'),
                 })
                 .then(function (data) {
-                    location.reload();
-//                    $link.parent('.input-group:first').find('.js_line_qty').val(data[0]);
-//                    $('[data-oe-model="sale.order"][data-oe-field="amount_total"]').replaceWith(data[1]);
+                    if(!data){
+                        location.reload();
+                    }
+                    $link.parents('.input-group:first').find('.js_quantity').val(data[0]);
+                    $('[data-id="total_amount"]>span').html(data[1]);
                 });
         return false;
     });
