@@ -199,12 +199,11 @@ html, body, #wrapwrap {
 }
 
 #wrapwrap {
-  display: table;
   width: 100%;
 }
 
 header, #wrap, footer {
-  display: table-row;
+  margin: 0 auto;
 }
 
 footer {
@@ -222,6 +221,10 @@ footer {
 .col-md-12 {
   float: left;
   width: 100%;
+}
+
+.row {
+  min-height: 32px;
 }
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
@@ -283,12 +286,12 @@ ul.nav-stacked > li > a {
 }
 
 /* ---- PUBLISH ---- */
-.css_unpublish, .css_publish {
+.css_published .btn-danger, .css_published .css_publish {
   display: none;
 }
 
-.css_published .css_unpublish, .css_unpublished .css_publish {
-  display: block;
+.css_unpublished .btn-success, .css_unpublished .css_unpublish {
+  display: none;
 }
 
 [data-publish='off'] {
@@ -345,29 +348,26 @@ ul.nav-stacked > li > a {
 .carousel.oe_big .carousel-inner {
   height: 450px;
 }
-.carousel .carousel-caption h1, .carousel .carousel-caption h2, .carousel .carousel-caption h3 {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.carousel .carousel-image {
-  right: 10%;
-  left: 50%;
-  top: 5%;
-  bottom: 5%;
-  position: absolute;
-  text-align: center;
-}
-.carousel .carousel-image img {
-  height: 100%;
-  margin: 0 auto;
-}
-.carousel .item.text_image .carousel-caption {
+.carousel .carousel-caption {
   left: auto;
   right: auto;
   bottom: 10%;
   text-align: left;
   padding: 20px;
   background: rgba(0, 0, 0, 0.4);
+}
+.carousel .carousel-caption h1, .carousel .carousel-caption h2, .carousel .carousel-caption h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.carousel .carousel-image {
+  right: 50%;
+  left: 50%;
+  top: 5%;
+  bottom: 5%;
+  position: absolute;
+  max-height: 90%;
+  margin: 0 auto;
 }
 .carousel .item.text_only .carousel-image {
   display: none !important;
@@ -376,18 +376,14 @@ ul.nav-stacked > li > a {
   left: 10%;
   right: 10%;
   top: 10%;
+  bottom: auto;
   text-align: center;
+  background: transparent;
 }
 .carousel .item.image_text .carousel-caption {
-  left: auto;
-  text-align: left;
   right: 10%;
-  bottom: 10%;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.4);
 }
 .carousel .item.image_text .carousel-image {
-  right: 50%;
   left: 10%;
 }
 .carousel .carousel-control {

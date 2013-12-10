@@ -277,14 +277,18 @@
         <template id="publish_management">
             <div t-if="editable" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
                 <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
-                    <button t-attf-class="btn btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
-                        <span class="css_publish">Not Published</span>
-                        <span class="css_unpublish">Published</span>
-                    </button>
+                    <button class="btn btn-danger js_publish_btn">Not Published</button>
+                    <button class="btn btn-success js_publish_btn">Published</button>
                     <button type="button" t-attf-class="btn btn-default dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
+                        <li>
+                            <a href="#" class="js_publish_btn">
+                                <span class="css_unpublish">Unpublish</span>
+                                <span class="css_publish">Publish</span>
+                            </a>
+                        </li>
                         <t t-raw="0"/>
                         <li t-if="publish_edit">
                             <a t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (object._name, object.id)"

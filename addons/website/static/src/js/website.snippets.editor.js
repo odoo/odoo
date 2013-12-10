@@ -1114,9 +1114,12 @@
             this.$target.addClass("col-md-offset-" + this.$target.prevAll(".oe_drop_to_remove").length);
             this._super();
         },
+        hide_remove_button: function() {
+            this.$overlay.find('.oe_snippet_remove').toggleClass("hidden", !this.$target.siblings().length);
+        },
         onFocus : function () {
             this._super();
-            this.$overlay.find('.oe_snippet_remove').toggleClass("hidden", !this.$target.siblings().length);
+            this.hide_remove_button();
         },
         on_clone: function () {
             var $clone = this.$target.clone(false);
@@ -1124,13 +1127,16 @@
             _class += ' col-md-1';
             $clone.attr("class", _class);
             this.$target.after($clone);
+            this.hide_remove_button();
             return false;
         },
         on_remove: function () {
             if (!this.$target.siblings().length){
                 return false;
             }
-            return this._super();
+            this._super();
+            this.hide_remove_button();
+            return false;
         },
         on_resize: function (compass, beginClass, current) {
             if (compass !== 'w')
@@ -1174,7 +1180,7 @@
                 self.$target.carousel(+$(this).data('slide-to')); });
 
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('.oe_structure, blockquote').attr('contentEditable', 'true');
+            this.$target.find('.oe_structure, .content>.row').attr('contentEditable', 'true');
 
             this.$target.carousel('pause');
         },
@@ -1259,7 +1265,6 @@
             this._super();
             this.$target.css("background-image", "");
             this.$target.removeClass(this._class);
-            this.$target.find('.content, .carousel-image img').attr('contentEditable', 'true');
         },
         start : function () {
             var self = this;
@@ -1314,7 +1319,7 @@
             this.$target.find('.carousel-control').off('click').on('click', function () {
                 self.$target.carousel( $(this).data('slide')); });
 
-            this.$target.find('.carousel-image img, .content').attr('contentEditable', 'true');
+            this.$target.find('.carousel-image, .content').attr('contentEditable', 'true');
             this._super();
         },
     });
