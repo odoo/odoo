@@ -2,10 +2,15 @@
 <openerp>
 <data noupdate="0">
 
+    <record id="group_locations" model="res.groups">
+        <field name="name">Manage Multiple Locations and Warehouses</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+     </record>
+
     <record id="group_stock_user" model="res.groups">
         <field name="name">User</field>
         <field name="category_id" ref="base.module_category_warehouse_management"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')),(4, ref('stock.group_locations'))]"/>
     </record>
     <record id="group_stock_manager" model="res.groups">
         <field name="name">Manager</field>
@@ -28,12 +33,6 @@
         <field name="name">Manage Multiple Locations and Warehouses</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
-
-    <record id="group_adv_location" model="res.groups">
-        <field name="name">Manage Push and Pull inventory flows</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
 
     <record id="group_tracking_owner" model="res.groups">
         <field name="name">Manage Different Stock Owners</field>
