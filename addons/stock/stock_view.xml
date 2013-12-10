@@ -1034,7 +1034,7 @@
                     <button name="action_process" states="assigned" string="Receive" type="object" class="oe_highlight"/>
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="replace">
-                    <field name="partner_id" on_change="onchange_partner_in(partner_id)" string="Supplier" domain="[('supplier','=',True)]" />
+                    <field name="partner_id" on_change="onchange_partner_in(partner_id)" string="Supplier" domain="[('supplier','=',True)]" context="{'default_supplier':1,'default_customer':0}"/>
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
                     <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}" options='{"reload_on_button": true}'/>
