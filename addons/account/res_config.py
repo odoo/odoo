@@ -22,13 +22,12 @@
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
-from operator import itemgetter
-from os.path import join as opj
 
+import openerp
+from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
-from openerp import tools
 
 class account_config_settings(osv.osv_memory):
     _name = 'account.config.settings'
@@ -81,31 +80,31 @@ class account_config_settings(osv.osv_memory):
         'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier credit note number'),
 
         'module_account_check_writing': fields.boolean('Pay your suppliers by check',
-            help="""This allows you to check writing and printing.
-                This installs the module account_check_writing."""),
+            help='This allows you to check writing and printing.\n'
+                 '-This installs the module account_check_writing.'),
         'module_account_accountant': fields.boolean('Full accounting features: journals, legal statements, chart of accounts, etc.',
             help="""If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of  Accounts, ...)"""),
         'module_account_asset': fields.boolean('Assets management',
-            help="""This allows you to manage the assets owned by a company or a person.
-                It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
-                This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments,
-                but not accounting (Journal Items, Chart of Accounts, ...)"""),
+            help='This allows you to manage the assets owned by a company or a person.\n'
+                 'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n'
+                 '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
+                 'but not accounting (Journal Items, Chart of Accounts, ...)'),
         'module_account_budget': fields.boolean('Budget management',
-            help="""This allows accountants to manage analytic and crossovered budgets.
-                Once the master budgets and the budgets are defined,
-                the project managers can set the planned amount on each analytic account.
-                This installs the module account_budget."""),
+            help='This allows accountants to manage analytic and crossovered budgets. '
+                 'Once the master budgets and the budgets are defined, '
+                 'the project managers can set the planned amount on each analytic account.\n'
+                 '-This installs the module account_budget.'),
         'module_account_payment': fields.boolean('Manage payment orders',
-            help="""This allows you to create and manage your payment orders, with purposes to
-                    * serve as base for an easy plug-in of various automated payment mechanisms, and
-                    * provide a more efficient way to manage invoice payments.
-                This installs the module account_payment."""),
+            help='This allows you to create and manage your payment orders, with purposes to \n'
+                 '* serve as base for an easy plug-in of various automated payment mechanisms, and \n'
+                 '* provide a more efficient way to manage invoice payments.\n'
+                 '-This installs the module account_payment.' ),
         'module_account_voucher': fields.boolean('Manage customer payments',
-            help="""This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.
-                This installs the module account_voucher."""),
+            help='This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.\n'
+                 '-This installs the module account_voucher.'),
         'module_account_followup': fields.boolean('Manage customer payment follow-ups',
-            help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
-                This installs the module account_followup."""),
+            help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
+                 '-This installs the module account_followup.'),
         'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
@@ -276,11 +275,13 @@ class account_config_settings(osv.osv_memory):
 
     def set_default_taxes(self, cr, uid, ids, context=None):
         """ set default sale and purchase taxes for products """
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values = self.pool.get('ir.values')
         config = self.browse(cr, uid, ids[0], context)
-        ir_values.set_default(cr, uid, 'product.product', 'taxes_id',
+        ir_values.set_default(cr, SUPERUSER_ID, 'product.product', 'taxes_id',
             config.default_sale_tax and [config.default_sale_tax.id] or False, company_id=config.company_id.id)
-        ir_values.set_default(cr, uid, 'product.product', 'supplier_taxes_id',
+        ir_values.set_default(cr, SUPERUSER_ID, 'product.product', 'supplier_taxes_id',
             config.default_purchase_tax and [config.default_purchase_tax.id] or False, company_id=config.company_id.id)
 
     def set_chart_of_accounts(self, cr, uid, ids, context=None):

@@ -7,8 +7,8 @@ from werkzeug.exceptions import BadRequest
 
 import openerp
 from openerp import SUPERUSER_ID
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 from openerp.addons.web.controllers.main import db_monodb, set_cookie_and_redirect, login_and_redirect
 from openerp.modules.registry import RegistryManager
 
@@ -19,7 +19,7 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 def fragment_to_query_string(func):
     @functools.wraps(func)
-    def wrapper(self, **kw):
+    def wrapper(self, *a, **kw):
         if not kw:
             return """<html><head><script>
                 var l = window.location;
@@ -31,7 +31,7 @@ def fragment_to_query_string(func):
                 }
                 window.location = r;
             </script></head><body></body></html>"""
-        return func(self, **kw)
+        return func(self, *a, **kw)
     return wrapper
 
 

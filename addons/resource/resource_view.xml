@@ -48,7 +48,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave"/>
+                        <filter string="Leave Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave by Month"/>
                     </group>
                </search>
             </field>
@@ -254,9 +254,9 @@
             <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
         </record>
 
-       <menuitem id="menu_resource_config" name="Resource" parent="base.next_id_4" sequence="5"/>
+       <menuitem id="menu_resource_config" name="Resource" parent="base.menu_custom" sequence="30"/>
        <menuitem action="resource.action_resource_calendar_form" id="menu_resource_calendar" parent="menu_resource_config" sequence="1"/>
-       <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_resource_calendar_leaves" parent="menu_resource_config" sequence="1"/>
-       <menuitem action="resource.action_resource_resource_tree" id="menu_resource_resource" parent="menu_resource_config" sequence="1"/>
+       <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search" parent="menu_resource_config" sequence="2"/>
+       <menuitem action="resource.action_resource_resource_tree" id="menu_resource_resource" parent="menu_resource_config" sequence="3"/>
     </data>
 </openerp>

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:26+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:47+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -24,7 +24,7 @@ msgstr "Faturalacak sipariş yok, oluştur"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr "Grupla..."
+msgstr "Grupla İle..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -108,7 +108,7 @@ msgstr ""
 "Bu sözleşmeye ait faturalandırılan zaman çizelgesi kalemlerinin toplamı."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
 #, python-format
 msgid "Sales Order Lines of %s"
 msgstr "Satış Siparişi Kalemlerinin %s"
@@ -128,7 +128,7 @@ msgstr "Analitik Hesap"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr "Cari"
+msgstr "İş Ortağı"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -190,7 +190,7 @@ msgstr "Beklenen"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts not assigned"
-msgstr "atanmamış sözleşmeler"
+msgstr "Atanmamış sözleşmeler"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -200,7 +200,7 @@ msgstr "Şu formül kullanılarak hesaplandı: Teorik Gelir - Toplam Maliyet."
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr "Faturalandırılmış Zaman"
+msgstr "Faturalanmış Zaman"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_to_invoice:0
@@ -237,7 +237,7 @@ msgid ""
 "computes quantities on all journal of type 'general'."
 msgstr ""
 "Analitik hesap için harcadığınız saat sayısı (zaman çizelgesinden). 'genel' "
-"tipindeki bütün günlüklerdeki miktarlar hesaplanır."
+"tipindeki bütün yevmiyelerdeki miktarlar hesaplanır."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -283,7 +283,7 @@ msgstr "Müşteri Şözleşmeleri"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Parent"
-msgstr "Ana"
+msgstr "Üst"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -340,7 +340,7 @@ msgid ""
 "invoiced if you invoice based on analytic account."
 msgstr ""
 "Analiz hesabına göre faturalandırıyorsanız faturalandırılacak zaman sayısı "
-"(saat/gün)(günlük tipi 'genel'den) ."
+"(saat/gün)(yevmiye tipi 'genel'den) ."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -355,7 +355,7 @@ msgstr "Gecikmiş Miktarlar"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Status"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -376,6 +376,7 @@ msgstr ""
 "hesabıdır."
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
 msgstr "Satış Siparişleri"
@@ -476,10 +477,10 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Yeni bir sözleşme oluşturmak için tıklayın.\n"
 "                </p><p>\n"
-"                    Sözleşmeleri görevleri, zaman çizelgelerini ya da "
-"yapılan iş üzerine kesilen\n"
-"                    faturaları, harcamaları ya da satış siparişlerini takip "
-"etmek için kullanabilirsiniz.\n"
+"                    Görevleri, zaman çizelgelerini ya da yapılan iş üzerine "
+"kesilen faturaları,\n"
+"                    harcamaları ya da satış siparişlerini izlemek için "
+"sözleşmeleri kullanabilirsiniz.\n"
 "                    OpenERP sözleşmelerin yenilenmesi için ilgili satış "
 "temsilcisini otomatik olarak\n"
 "                    uyaracaktır.\n"
@@ -547,7 +548,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr "Faturalandırılmamış Zaman"
+msgstr "Faturalanmamış Zaman"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0

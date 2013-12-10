@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.addons.mail.tests.common import TestMail
 from openerp.osv.orm import except_orm
 from openerp.tools.misc import mute_logger
 
 
-class test_portal(TestMailBase):
+class test_portal(TestMail):
 
     def setUp(self):
         super(test_portal, self).setUp()
@@ -73,6 +73,9 @@ class test_portal(TestMailBase):
         for message in chell_pigs.message_ids:
             trigger_read = message.subject
         for partner in chell_pigs.message_follower_ids:
+            if partner.id == self.partner_chell_id:
+                # Chell can read her own partner record
+                continue
             with self.assertRaises(except_orm):
                 trigger_read = partner.name
 
@@ -210,11 +213,11 @@ class test_portal(TestMailBase):
         msg2_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body2', type='comment', subtype='mail.mt_group_public')
         msg3_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body3', type='comment', subtype='mail.mt_comment')
         msg4_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body4', type='comment')
-        msg5_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body5', type='notification')
+        # msg5_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body5', type='notification')
 
         # Do: Chell search messages: should not see internal notes (comment without subtype)
         msg_ids = self.mail_message.search(cr, self.user_chell_id, [('model', '=', 'mail.group'), ('res_id', '=', group_port_id)])
-        self.assertEqual(set(msg_ids), set([msg1_id, msg2_id, msg3_id, msg5_id]),
+        self.assertEqual(set(msg_ids), set([msg1_id, msg2_id, msg3_id]),
                         'mail_message: portal user has access to messages he should not read')
 
         # Do: Chell read messages she can read

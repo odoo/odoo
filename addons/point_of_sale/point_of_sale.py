@@ -280,7 +280,7 @@ class pos_session(osv.osv):
             # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
             domain = [
                 ('state', 'not in', ('closed','closing_control')),
-                ('user_id', '=', uid)
+                ('user_id', '=', session.user_id.id)
             ]
             count = self.search_count(cr, uid, domain, context=context)
             if count>1:
@@ -478,6 +478,11 @@ class pos_session(osv.osv):
             context = {}
         if not ids:
             return {}
+        for session in self.browse(cr, uid, ids, context=context):
+            if session.user_id.id != uid:
+                raise osv.except_osv(
+                        _('Error!'),
+                        _("You cannot use the session of another users. This session is owned by %s. Please first close this one to use this point of sale." % session.user_id.name))
         context.update({'active_id': ids[0]})
         return {
             'type' : 'ir.actions.client',
@@ -507,7 +512,6 @@ class pos_order(osv.osv):
                 'pos_reference':order['name'],
                 'partner_id': order['partner_id'] or False
             }, context)
-
             for payments in order['statement_ids']:
                 payment = payments[2]
                 self.add_payment(cr, uid, order_id, {
@@ -690,7 +694,7 @@ class pos_order(osv.osv):
 
     def create_picking(self, cr, uid, ids, context=None):
         """Create a picking for each order and validate it."""
-        picking_obj = self.pool.get('stock.picking')
+        picking_obj = self.pool.get('stock.picking.out')
         partner_obj = self.pool.get('res.partner')
         move_obj = self.pool.get('stock.move')
 
@@ -743,7 +747,6 @@ class pos_order(osv.osv):
         @return: True
         """
         stock_picking_obj = self.pool.get('stock.picking')
-        wf_service = netsvc.LocalService("workflow")
         for order in self.browse(cr, uid, ids, context=context):
             stock_picking_obj.signal_button_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':
@@ -809,9 +812,18 @@ class pos_order(osv.osv):
         """Create a copy of order  for refund order"""
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
+        
         for order in self.browse(cr, uid, ids, context=context):
+            current_session_ids = self.pool.get('pos.session').search(cr, uid, [
+                ('state', '!=', 'closed'),
+                ('user_id', '=', uid)], context=context)
+            if not current_session_ids:
+                raise osv.except_osv(_('Error!'), _('To return product(s), you need to open a session that will be used to register the refund.'))
+
             clone_id = self.copy(cr, uid, order.id, {
-                'name': order.name + ' REFUND',
+                'name': order.name + ' REFUND', # not used, name forced by create
+                'session_id': current_session_ids[0],
+                'date_order': time.strftime('%Y-%m-%d %H:%M:%S'),
             }, context=context)
             clone_list.append(clone_id)
 
@@ -1357,30 +1369,10 @@ class product_product(osv.osv):
         'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
-    def _default_pos_categ_id(self, cr, uid, context=None):
-        proxy = self.pool.get('ir.model.data')
-
-        try:
-            category_id = proxy.get_object_reference(cr, uid, 'point_of_sale', 'categ_others')[1]
-        except ValueError:
-            values = {
-                'name' : 'Others',
-            }
-            category_id = self.pool.get('pos.category').create(cr, uid, values, context=context)
-            values = {
-                'name' : 'categ_others',
-                'model' : 'pos.category',
-                'module' : 'point_of_sale',
-                'res_id' : category_id,
-            }
-            proxy.create(cr, uid, values, context=context)
-
-        return category_id
 
     _defaults = {
         'to_weight' : False,
         'available_in_pos': True,
-        'pos_categ_id' : _default_pos_categ_id,
     }
 
     def edit_ean(self, cr, uid, ids, context):

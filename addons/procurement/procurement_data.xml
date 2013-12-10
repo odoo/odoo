@@ -14,6 +14,18 @@
             <field eval="'run_scheduler'" name="function"/>
             <field eval="'(False,True)'" name="args"/>
         </record>
+        <record forcecreate="True" id="ir_cron_scheduler_action_fast" model="ir.cron">
+            <field name="name">Run fast mrp scheduler (without exception)</field>
+            <field eval="False" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">4</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'procurement.order'" name="model"/>
+            <field eval="'run_scheduler'" name="function"/>
+            <field eval="'(False,True,True)'" name="args"/>
+        </record>
         
         <record id="sequence_mrp_op_type" model="ir.sequence.type">
             <field name="name">Stock orderpoint</field>

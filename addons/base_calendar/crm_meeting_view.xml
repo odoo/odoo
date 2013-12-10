@@ -68,10 +68,9 @@
                                     on_change="onchange_dates(date,False,date_deadline)"/>
                             </group>
                             <group>
-                                <field name="user_id" groups="base.group_no_one"/>
+                                <field name="user_id" groups="base.group_no_one" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                                 <field name="categ_ids" widget="many2many_tags"/>
                                 <field name="location"/>
-                                <field name="organizer" groups="base.group_no_one"/>
                             </group>
 
                         </group>

@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:22+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-09-12 05:40+0000\n"
+"X-Generator: Launchpad (build 16761)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "販売の分析会計"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -30,7 +30,7 @@ msgstr "見積の確認"
 #. module: sale
 #: view:board.board:0
 msgid "Sales Dashboard"
-msgstr "受注ダッシュボード"
+msgstr "販売ダッシュボード"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
@@ -105,12 +105,12 @@ msgstr "調達方法"
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr "受注オーダー確認日"
+msgstr "販売オーダ確定日"
 
 #. module: sale
 #: field:account.config.settings,module_sale_analytic_plans:0
 msgid "Use multiple analytic accounts on sales"
-msgstr ""
+msgstr "販売管理にて複数分析アカウントを使用"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -118,10 +118,10 @@ msgid "March"
 msgstr "3月"
 
 #. module: sale
-#: code:addons/sale/sale.py:567
+#: code:addons/sale/sale.py:565
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr ""
+msgstr "始めにこの販売オーダに紐づく全ての請求書を取り消してください。"
 
 #. module: sale
 #: view:sale.order:0
@@ -283,9 +283,9 @@ msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:185
-#: code:addons/sale/sale.py:368
-#: code:addons/sale/sale.py:509
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:363
+#: code:addons/sale/sale.py:504
+#: code:addons/sale/sale.py:598
 #: code:addons/sale/sale.py:763
 #: code:addons/sale/sale.py:780
 #, python-format
@@ -405,7 +405,7 @@ msgid "Tax"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #: code:addons/sale/sale.py:820
 #: code:addons/sale/sale.py:983
 #, python-format
@@ -458,11 +458,11 @@ msgid "Fax :"
 msgstr "FAX："
 
 #. module: sale
-#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:277
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
-msgstr ""
+msgstr "確定した販売オーダを削除するには、はじめに取り消してください。"
 
 #. module: sale
 #: view:sale.order:0
@@ -482,8 +482,8 @@ msgid "Contract Features"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:288
-#: code:addons/sale/sale.py:586
+#: code:addons/sale/sale.py:287
+#: code:addons/sale/sale.py:584
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -493,7 +493,7 @@ msgstr ""
 #: selection:sale.order,state:0
 #, python-format
 msgid "Sales Order"
-msgstr "受注オーダー"
+msgstr "販売オーダ"
 
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
@@ -503,7 +503,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "受注オーダー行"
+msgstr "販売オーダ明細"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
@@ -530,7 +530,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoice the whole sales order"
-msgstr ""
+msgstr "販売オーダ全体を請求"
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -699,7 +699,7 @@ msgstr "受注オーダーのオーダー年"
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr ""
+msgstr "販売オーダ内のアドレス"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -769,7 +769,7 @@ msgstr ""
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "販売の分析会計"
 
 #. module: sale
 #: view:sale.order:0
@@ -816,10 +816,10 @@ msgstr "オーダー日"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order done"
-msgstr ""
+msgstr "販売オーダ完了"
 
 #. module: sale
-#: code:addons/sale/sale.py:369
+#: code:addons/sale/sale.py:364
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -872,7 +872,7 @@ msgid "Sales Make Invoice"
 msgstr "受注による請求書作成"
 
 #. module: sale
-#: code:addons/sale/sale.py:308
+#: code:addons/sale/sale.py:307
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "価格リストの警告。"
@@ -883,7 +883,7 @@ msgid "Discount (%)"
 msgstr "割引（%）"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
+#: code:addons/sale/wizard/sale_line_invoice.py:107
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -891,9 +891,9 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
-"請求書は次の何れかの理由により、この受注オーダー行のために作成されません。\n"
-"1. この受注オーダー行の状態はドラフトまたはキャンセルの何れかである。\n"
-"2. 受注オーダー行は請求されている。"
+"請求書は次の何れかの理由により、この販売オーダ行のために作成されません。\n"
+"1. この販売オーダ明細の状態は「ドラフト」または「取消済」の何れかである。\n"
+"2. 販売オーダ明細は請求されている。"
 
 #. module: sale
 #: view:sale.order.line.make.invoice:0
@@ -949,7 +949,7 @@ msgid "Category of Product"
 msgstr "製品分類"
 
 #. module: sale
-#: code:addons/sale/sale.py:566
+#: code:addons/sale/sale.py:564
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr ""
@@ -972,7 +972,7 @@ msgstr "店名"
 #. module: sale
 #: view:sale.order:0
 msgid "My Sales Orders"
-msgstr ""
+msgstr "マイ販売オーダ"
 
 #. module: sale
 #: report:sale.order:0
@@ -1004,10 +1004,10 @@ msgid "Open Sale Menu"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:598
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr ""
+msgstr "明細のない販売オーダは確定できません。"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1023,7 +1023,7 @@ msgstr "顧客が定義されていません。"
 #. module: sale
 #: field:sale.config.settings,module_sale_stock:0
 msgid "Trigger delivery orders automatically from sales orders"
-msgstr ""
+msgstr "販売オーダより自動で出荷オーダを生成"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1083,7 +1083,7 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
 msgid "Sales Orders"
-msgstr "受注オーダー"
+msgstr "販売オーダ"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -1144,7 +1144,7 @@ msgstr "オーダー"
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: view:sale.report:0
 msgid "Sales Analysis"
-msgstr "受注分析"
+msgstr "販売分析"
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -1161,7 +1161,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "受注オーダーの統計値"
+msgstr "販売オーダ統計"
 
 #. module: sale
 #: field:sale.order,date_order:0
@@ -1177,7 +1177,7 @@ msgstr "日付"
 #: view:sale.report:0
 #: field:sale.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "営業担当者"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1250,7 +1250,7 @@ msgstr "1月"
 #. module: sale
 #: field:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow setting a discount on the sales order lines"
-msgstr ""
+msgstr "販売オーダ行での値引入力を可能にする"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_in_progress
@@ -1283,7 +1283,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr "受注オーダーに関連した分析アカウント"
+msgstr "販売オーダに紐づく分析アカウント"
 
 #. module: sale
 #: view:sale.order:0
@@ -1367,7 +1367,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr ""
+msgstr "販売オーダにマージンを表示"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1405,7 +1405,7 @@ msgid "TVA :"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:449
+#: code:addons/sale/sale.py:444
 #, python-format
 msgid "Customer Invoices"
 msgstr "顧客請求書"
@@ -1428,10 +1428,10 @@ msgstr ""
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Sales"
-msgstr "受注"
+msgstr "販売"
 
 #. module: sale
-#: code:addons/sale/sale.py:309
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1474,7 +1474,8 @@ msgid "Invoice address :"
 msgstr "請求書住所："
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:124
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
 #: view:sale.order:0
 #, python-format
@@ -1552,7 +1553,7 @@ msgid "Shipping address :"
 msgstr "送付先住所："
 
 #. module: sale
-#: code:addons/sale/sale.py:510
+#: code:addons/sale/sale.py:505
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -1561,7 +1562,7 @@ msgstr "同じパートナに対する異なった通貨を持つ受注はグル
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "販売オーダを請求登録"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -1940,8 +1941,9 @@ msgid "Manual In Progress"
 msgstr "手動進行中"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:110
-#: code:addons/sale/wizard/sale_make_invoice.py:43
+#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -2011,7 +2013,7 @@ msgstr "受注オーダーのオーダー月"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr "受注オーダーから"
+msgstr "販売オーダより"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -2054,12 +2056,12 @@ msgstr "支払条件"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order ready to be invoiced"
-msgstr "請求準備のできた受注オーダー"
+msgstr "請求可能な販売オーダ"
 
 #. module: sale
 #: field:sale.config.settings,group_invoice_so_lines:0
 msgid "Generate invoices based on the sales order lines"
-msgstr ""
+msgstr "販売オーダ明細に基づき顧客請求書を生成"
 
 #. module: sale
 #: view:sale.advance.payment.inv:0
@@ -2073,7 +2075,7 @@ msgstr ""
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr "受注オーダー行"
+msgstr "販売オーダ明細"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
@@ -2138,7 +2140,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
-msgstr "受注オーダーのオーダー日"
+msgstr "販売オーダの注文日"
 
 #~ msgid "Sales by Salesman in last 90 days"
 #~ msgstr "過去90日間の販売員による販売"

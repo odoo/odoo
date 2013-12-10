@@ -90,6 +90,15 @@
                             </div>
                         </div>
                     </group>
+                    <group>
+                        <label for="font" />
+                        <div>
+                            <div>
+                                <field name="font" class="oe_inline"  domain="[('mode', 'in', ('normal', 'regular', 'all', 'book'))]" />
+                                <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
@@ -122,6 +131,10 @@
                                 <div name="module_web_linkedin" class="oe_inline">
                                     <field name="module_web_linkedin"/>
                                     <label for="module_web_linkedin"/>
+                                </div>
+                                <div>
+                                    <field name="module_mass_mailing" class="oe_inline"/>
+                                    <label for="module_mass_mailing"/>
                                 </div>
                             </div>
                         </group>

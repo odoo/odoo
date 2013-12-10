@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-11-28 11:04+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
+"PO-Revision-Date: 2013-11-19 10:02+0000\n"
+"Last-Translator: Guipo Hao <hrlpool@sohu.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:48+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-11-20 05:25+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: lunch
 #: field:lunch.product,category_id:0
@@ -117,6 +117,15 @@ msgid ""
 "            </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建午餐单。 \n"
+"            </p>\n"
+"            <p>\n"
+"                午餐单由使用者定义日期和内容。\n"
+"                每个午餐单内容对应一个产品，一个附加信息和一个价格。\n"
+"                决定内容前，记得阅读浅红色区域显示的警告。\n"
+"            </p>\n"
+"            "
 
 #. module: lunch
 #: view:lunch.order.line:0
@@ -137,7 +146,7 @@ msgstr "接收食品"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "cashmove form"
-msgstr ""
+msgstr "现金凭证表单"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
@@ -151,6 +160,11 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                此处可以显示现金的转移。<br/>A 现金转移可以为费用或付款。\n"
+"                当收到一个午餐单时，会自动创建费用。而付款则为经理定义的向公司的缴款。\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
 #: field:lunch.cashmove,amount:0
@@ -179,7 +193,7 @@ msgstr "已取消"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "lunch employee payment"
-msgstr ""
+msgstr "午餐员工付款"
 
 #. module: lunch
 #: view:lunch.alert:0
@@ -200,7 +214,7 @@ msgstr "午餐提醒"
 #: code:addons/lunch/lunch.py:183
 #, python-format
 msgid "Select a product and put your order comments on the note."
-msgstr ""
+msgstr "选择一个产品并且把订单注释写在备注中"
 
 #. module: lunch
 #: selection:lunch.alert,alter_type:0
@@ -220,7 +234,7 @@ msgstr "已确认"
 #. module: lunch
 #: view:lunch.order:0
 msgid "lunch orders"
-msgstr ""
+msgstr "午餐订单"
 
 #. module: lunch
 #: view:lunch.order.line:0
@@ -235,7 +249,7 @@ msgstr "您的帐号"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
 msgid "Your Lunch Account"
-msgstr ""
+msgstr "你的午餐账户"
 
 #. module: lunch
 #: field:lunch.alert,active_from:0
@@ -308,7 +322,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:lunch.action_lunch_control_accounts
 #: model:ir.ui.menu,name:lunch.menu_lunch_control_accounts
 msgid "Control Accounts"
-msgstr ""
+msgstr "控制账户"
 
 #. module: lunch
 #: selection:lunch.alert,alter_type:0
@@ -355,6 +369,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                此处显示按照供应商或日期分组的每个午餐单。\n"
+"              </p>\n"
+"              <p>\n"
+"                - 点击 <img src=\"../../../web/static/src/img/icons/terp-call-"
+"start.png\"/> 来通知午餐单已下 <br/>\n"
+"                - 点击 <img src=\"../../../web/static/src/img/icons/gtk-"
+"apply.png\"/> 来通知午餐单已收 <br/>\n"
+"                - 点击 <img src=\"../../../web/static/src/img/icons/gtk-"
+"cancel.png\"/> red X 来通知午餐单无效\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
 #: field:lunch.alert,tuesday:0
@@ -383,6 +409,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击以创建一个午餐产品。\n"
+"            </p>\n"
+"              <p>\n"
+"                一个产品定义了它的 名称、类别、价格、和供应商。\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
 #: view:lunch.alert:0
@@ -393,7 +426,7 @@ msgstr "消息"
 #. module: lunch
 #: view:lunch.order.order:0
 msgid "Order Meals"
-msgstr ""
+msgstr "订购食品"
 
 #. module: lunch
 #: view:lunch.cancel:0
@@ -413,6 +446,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建午餐分类。 \n"
+"            </p>\n"
+"              <p>\n"
+"                此处可以找到每个午餐的菜品分类。\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
 #: view:lunch.order.order:0
@@ -428,7 +468,7 @@ msgstr "品种分类"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_control_suppliers
 msgid "Control Suppliers"
-msgstr ""
+msgstr "控制供应商"
 
 #. module: lunch
 #: view:lunch.alert:0
@@ -449,7 +489,7 @@ msgid "Note"
 msgstr "说明"
 
 #. module: lunch
-#: code:addons/lunch/lunch.py:250
+#: code:addons/lunch/lunch.py:257
 #, python-format
 msgid "Add"
 msgstr "新增"
@@ -469,7 +509,7 @@ msgstr "取消食品"
 #: model:ir.model,name:lunch.model_lunch_cashmove
 #: view:lunch.cashmove:0
 msgid "lunch cashmove"
-msgstr ""
+msgstr "午餐现金凭证"
 
 #. module: lunch
 #: view:lunch.cancel:0
@@ -588,6 +628,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                此处显示今天按照供应商分组的午餐单。\n"
+"              </p>\n"
+"              <p>\n"
+"                - 点击 <img src=\"../../../web/static/src/img/icons/terp-call-"
+"start.png\"/> 来通知午餐单已下 <br/>\n"
+"                - 点击 <img src=\"../../../web/static/src/img/icons/gtk-"
+"apply.png\"/> 来通知午餐单已收 <br/>\n"
+"                - 点击 <img src=\"../../../web/static/src/img/icons/gtk-"
+"cancel.png\"/> 来通知午餐单无效\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
 #: selection:report.lunch.order.line,month:0
@@ -650,6 +702,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建午餐提醒。 \n"
+"            </p>\n"
+"              <p>\n"
+"                提醒用于与午餐单相关的可能事项。\n"
+"                必须定义午餐提醒的频度，时间间隔以及要显示的信息。\n"
+"            </p>\n"
+"            <p>\n"
+"                例如： <br/>\n"
+"                - 频度：每天<br/>\n"
+"                - 时间间隔：从 00h00 am 到 11h59 pm<br/>\n"
+"                -信息：\"你必须在 10h30 am　前下单。\"\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
 #: view:lunch.cancel:0
@@ -691,6 +757,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                创建一个付款。 \n"
+"            </p>\n"
+"              <p>\n"
+"                此处显示员工的付款。付款为从员工到公司的现金转移。\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
 #: code:addons/lunch/lunch.py:186
@@ -720,6 +793,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                创建一个付款。\n"
+"            </p>\n"
+"              <p>\n"
+"                每次现金转移都可以是费用或者付款。<br/>\n"
+"                开具午餐单收据时自动创建费用。<br/>\n"
+"                付款意味着员工向公司缴款。\n"
+"              </p>\n"
+"            "
 
 #. module: lunch
 #: field:lunch.alert,alter_type:0
@@ -780,7 +862,7 @@ msgstr "新的订单"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "cashmove tree"
-msgstr ""
+msgstr "现金凭证树"
 
 #. module: lunch
 #: view:lunch.cancel:0
@@ -790,7 +872,7 @@ msgstr "取消我们不能从供应商出接收的食物。"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_cashmove
 msgid "Employee Payments"
-msgstr ""
+msgstr "员工付款"
 
 #. module: lunch
 #: view:lunch.cashmove:0

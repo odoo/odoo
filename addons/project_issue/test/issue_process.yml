@@ -10,8 +10,3 @@
         self.send_mail(cr, uid, [new_id], context=ctx)
     except Exception, e:
         pass
--
-  I create Task for Issue.
--
-  !python {model: project.issue}: |
-    self.convert_issue_task(cr, uid, [ref("crm_case_buginaccountsmodule0")])

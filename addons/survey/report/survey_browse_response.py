@@ -27,6 +27,7 @@ from openerp import tools
 from openerp.report import report_sxw
 from openerp.report.interface import report_rml
 from openerp.tools import to_xml
+from openerp.tools.translate import _
 
 class survey_browse_response(report_rml):
     def create(self, cr, uid, ids, datas, context):
@@ -69,7 +70,7 @@ class survey_browse_response(report_rml):
             rml +="""
                     <fill color="gray"/>
                     <setFont name="Helvetica" size="10"/>
-                    <drawRightString x='"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+"""' y="0.6cm">Page : <pageNumber/> </drawRightString>"""
+                    <drawRightString x='"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+"""' y="0.6cm">"""+_('Page : ')+"""<pageNumber/> </drawRightString>"""
         rml +="""</pageGraphics>
                     </pageTemplate>
                 </template>
@@ -163,18 +164,18 @@ class survey_browse_response(report_rml):
                     <initialize>
                       <paraStyle name="all" alignment="justify"/>
                     </initialize>
-                    <paraStyle name="title" fontName="helvetica-bold" fontSize="18.0" leftIndent="0.0" textColor="white"/>
-                    <paraStyle name="answer_right" alignment="RIGHT" fontName="helvetica" fontSize="09.0" leftIndent="2.0"/>
-                    <paraStyle name="Standard1" fontName="helvetica-bold" alignment="RIGHT" fontSize="09.0"/>
+                    <paraStyle name="title" fontName="Helvetica-Bold" fontSize="18.0" leftIndent="0.0" textColor="white"/>
+                    <paraStyle name="answer_right" alignment="RIGHT" fontName="Helvetica" fontSize="09.0" leftIndent="2.0"/>
+                    <paraStyle name="Standard1" fontName="Helvetica-Bold" alignment="RIGHT" fontSize="09.0"/>
                     <paraStyle name="Standard" alignment="LEFT" fontName="Helvetica-Bold" fontSize="11.0"/>
                     <paraStyle name="header1" fontName="Helvetica" fontSize="11.0"/>
-                    <paraStyle name="response" fontName="Helvetica-oblique" fontSize="9.5"/>
-                    <paraStyle name="page" fontName="helvetica" fontSize="11.0" leftIndent="0.0"/>
-                    <paraStyle name="question" fontName="helvetica-boldoblique" fontSize="10.0" leftIndent="3.0"/>
-                    <paraStyle name="answer_bold" fontName="Helvetica-Bold" fontSize="09.0" leftIndent="2.0"/>
-                    <paraStyle name="answer" fontName="helvetica" fontSize="09.0" leftIndent="2.0"/>
-                    <paraStyle name="answer1" fontName="helvetica" fontSize="09.0" leftIndent="2.0"/>
-                    <paraStyle name="Title" fontName="helvetica" fontSize="20.0" leading="15" spaceBefore="6.0" spaceAfter="6.0" alignment="CENTER"/>
+                    <paraStyle name="response" fontName="Helvetica-Oblique" fontSize="9.5"/>
+                    <paraStyle name="page" fontName="Helvetica" fontSize="11.0" leftIndent="0.0"/>
+                    <paraStyle name="question" fontName="Helvetica-BoldOblique" fontSize="10.0" leftIndent="3.0"/>
+                    <paraStyle name="answer_Bold" fontName="Helvetica-Bold" fontSize="09.0" leftIndent="2.0"/>
+                    <paraStyle name="answer" fontName="Helvetica" fontSize="09.0" leftIndent="2.0"/>
+                    <paraStyle name="answer1" fontName="Helvetica" fontSize="09.0" leftIndent="2.0"/>
+                    <paraStyle name="Title" fontName="Helvetica" fontSize="20.0" leading="15" spaceBefore="6.0" spaceAfter="6.0" alignment="CENTER"/>
                     <paraStyle name="P2" fontName="Helvetica" fontSize="14.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="comment" fontName="Helvetica" fontSize="14.0" leading="50" spaceBefore="0.0" spaceAfter="0.0"/>
                     <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="12" spaceBefore="0.0" spaceAfter="1.0"/>
@@ -185,8 +186,8 @@ class survey_browse_response(report_rml):
                     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="10.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="terp_tblheader_General_right_simple" fontName="Helvetica" fontSize="10.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="terp_tblheader_General_right" fontName="Helvetica-Bold" fontSize="10.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
-                    <paraStyle name="descriptive_text" fontName="helvetica-bold" fontSize="18.0" leftIndent="0.0" textColor="white"/>
-                    <paraStyle name="descriptive_text_heading" fontName="helvetica-bold" fontSize="18.0" alignment="RIGHT" leftIndent="0.0" textColor="white"/>
+                    <paraStyle name="descriptive_text" fontName="Helvetica-Bold" fontSize="18.0" leftIndent="0.0" textColor="white"/>
+                    <paraStyle name="descriptive_text_heading" fontName="Helvetica-Bold" fontSize="18.0" alignment="RIGHT" leftIndent="0.0" textColor="white"/>
                   </stylesheet>
                   <images/>
                   <story>"""
@@ -209,29 +210,29 @@ class survey_browse_response(report_rml):
                 resp_create = tools.ustr(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S')))
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
-                            <td><para style="terp_default_9_Bold">Print Date : </para></td>
+                            <td><para style="terp_default_9_Bold">""" + _('Print Date : ') + """</para></td>
                             <td><para style="terp_default_9">""" + to_xml(rml_obj.formatLang(time.strftime("%Y-%m-%d %H:%M:%S"),date_time=True)) + """</para></td>
                             <td><para style="terp_default_9"></para></td>
-                            <td><para style="terp_default_9_Bold">Answered by : </para></td>
+                            <td><para style="terp_default_9_Bold">""" +_('Answered by : ') + """</para></td>
                             <td><para style="terp_default_9">""" + to_xml(response.user_id.login or '') + """</para></td>
                           </tr>
                           <tr>
                             <td><para style="terp_default_9"></para></td>
                             <td><para style="terp_default_9"></para></td>
                             <td><para style="terp_default_9"></para></td>
-                            <td><para style="terp_default_9_Bold">Answer Date : </para></td>
+                            <td><para style="terp_default_9_Bold">""" +_('Answer Date : ') + """</para></td>
                             <td><para style="terp_default_9">""" + to_xml(resp_create) +  """</para></td>
                           </tr>
                         </blockTable><para style="P2"></para>"""
 
-                status = "Not Finished"
-                if response.state == "done": status = "Finished"
+                status = _("Not Finished")
+                if response.state == "done": status = _("Finished")
                 colwidth =  str(tbl_width - 7) + "cm,"
                 colwidth +=  "7cm"
                 rml += """<blockTable colWidths='""" + str(colwidth) + """' style="title_tbl">
                             <tr>
                             <td><para style="title">""" + to_xml(tools.ustr(survey.title)) + """</para><para style="P2"><font></font></para></td>
-                            <td><para style="descriptive_text_heading">Status :- """ + to_xml(tools.ustr(status)) + """</para><para style="P2"><font></font></para></td>
+                            <td><para style="descriptive_text_heading">"""+_('Status :- ')+ to_xml(tools.ustr(status)) + """</para><para style="P2"><font></font></para></td>
                             </tr>
                         </blockTable>"""
 
@@ -242,7 +243,7 @@ class survey_browse_response(report_rml):
 
                 for page in survey.page_ids:
                     rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="page_tbl">
-                                  <tr><td><para style="page">Page :- """ + to_xml(tools.ustr(page.title or '')) + """</para></td></tr>
+                                  <tr><td><para style="page">"""+_('Page :- ') + to_xml(tools.ustr(page.title or '')) + """</para></td></tr>
                               </blockTable>"""
                     if page.note:
                         rml += """<para style="P2"></para>
@@ -302,7 +303,7 @@ class survey_browse_response(report_rml):
 
                             else:
                                 rml +="""<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
-                                             <tr><td> <para style="response">No Answer</para></td> </tr>
+                                             <tr><td> <para style="response">"""+ _('No Answer') + """</para></td> </tr>
                                         </blockTable>"""
 
                         elif que.type in ['multiple_choice_only_one_ans','multiple_choice_multiple_ans']:

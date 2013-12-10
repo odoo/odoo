@@ -34,7 +34,7 @@
                     <div class="oe_msg_attachment_list"></div>
                     <button class="oe_post">
                         <t t-if="!widget.is_log">Send</t>
-                        <t t-if="widget.is_log">Log a note</t>
+                        <t t-if="widget.is_log">Log an internal note</t>
                     </button>
                     <t t-call="mail.compose_message.add_attachment"/>
                 </div>
@@ -51,8 +51,10 @@
                 <div class="field_text oe_compact oe_compact_record">
                     <a class="oe_compose_post" t-if="widget.options.compose_placeholder"><t t-raw="widget.options.compose_placeholder"/></a>
                     <a class="oe_compose_post" t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox">Send a message</a>
-                    <span class="oe_grey oe_sep_word">or</span>
-                    <a class="oe_compose_log">Log a note</a>
+                    <t t-if="widget.options.display_log_button">
+                       <span class="oe_grey oe_sep_word">or</span>
+                       <a class="oe_compose_log">Log an internal note</a>
+                    </t>
                 </div>
             </t>
         </div>
@@ -121,21 +123,23 @@
             To:
             <t t-if="!widget.is_private">
                 <span class="oe_all_follower">
-                    <t t-if="widget.parent_thread.parent_message.record_name" t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'">
+                    <t t-if="widget.parent_thread.parent_message.record_name">
                         Followers of <t t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
                     </t>
                     <t t-if="!widget.parent_thread.parent_message.record_name and widget.options.view_inbox">My Followers</t>
                     <t t-if="!widget.parent_thread.parent_message.record_name and !widget.options.view_inbox">Followers of this document</t>
                 </span>
             </t>
-            <t t-if="!widget.is_private and (widget.partner_ids.length or (widget.author_id and widget.author_id[0]))"> and </t>
             <t t-set="inc" t-value="0"/>
             <t t-foreach="widget.partner_ids" t-as="partner">
-                <span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/>
-                    <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
-                    <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
-                </span>
-                <t t-set="inc" t-value="inc+1"/>
+                <t t-if="widget.is_private or (widget.user_pid != partner[0])">
+                    <t t-if="!widget.is_private and inc==0"> and </t>
+	                <span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/>
+	                    <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
+	                    <t t-if="!widget.options.show_link" t-raw="partner[1]"/>
+	                </span>
+	                <t t-set="inc" t-value="inc+1"/>
+	            </t>
             </t>
             <t t-if="widget.partner_ids.length > 3">
                 <span class="oe_more">, <a><t t-raw="widget.partner_ids.length - 3"/> others...</a></span>
@@ -153,7 +157,7 @@
             </t>
         </div>
         <div t-if="widget.is_log">
-            <span>Attach a note that will not be sent to the followers</span>
+            <span>Add an internal note that will not be sent to the followers</span>
         </div>
     </t>
 
@@ -291,9 +295,9 @@
                         logged a note
                     </t>
                     <t t-if="(widget.type == 'comment' or widget.type == 'email') and (widget.subtype or widget.partner_ids.length > 0)">
-                        to
-                        <t t-if="widget.partner_ids.length == 0">
-                            nobody
+                        <!-- Remove nobody if user have no rights on partner that will display 'portal to nobody 5 minutes ago' that will confuse to end user, now it display 'portal 5 minutes ago' if no rights.-->
+                        <t t-if="widget.partner_ids.length > 0">
+                            to
                         </t>
                     </t>
                     <t t-if="widget.type == 'notification' or ( (widget.type == 'email' or widget.type == 'comment') and (widget.subtype or widget.partner_ids.length > 0))"

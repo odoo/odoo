@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<openerp>
+    <!-- <data noupdate="1"> -->
+    <data>
+
+        <record id="mass_mail_template_1" model="email.template">
+            <field name="name">Partner Newsletter 1</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="partner_to">${object.id}</field>
+            <field name="body_html"><![CDATA[<p>Hello</p>]]></field>
+        </record>
+        <record id="mass_mail_template_2" model="email.template">
+            <field name="name">Partner Newsletter 2</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="partner_to">${object.id}</field>
+            <field name="body_html"><![CDATA[<p>Hello</p>]]></field>
+        </record>
+
+        <record id="mass_mail_campaign_1" model="mail.mass_mailing.campaign">
+            <field name="name">Partners Newsletter</field>
+            <field name="user_id" eval="ref('base.user_root')"/>
+        </record>
+
+        <record id="mass_mail_1" model="mail.mass_mailing">
+            <field name="name">First Newsletter</field>
+            <field name="template_id" eval="ref('mass_mail_template_1')"/>
+            <field name="date" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
+        </record>
+        <record id="mass_mail_2" model="mail.mass_mailing">
+            <field name="name">Second Newsletter</field>
+            <field name="template_id" eval="ref('mass_mail_template_2')"/>
+            <field name="date" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
+        </record>
+
+        <record id="mass_mail_email_1" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111000@OpenERP.com</field>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="replied" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_email_2" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111001@OpenERP.com</field>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="replied" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_email_3" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111002@OpenERP.com</field>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_email_4" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111003@OpenERP.com</field>
+        </record>
+        <record id="mass_mail_email_5" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111004@OpenERP.com</field>
+            <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="mass_mail_email_2_1" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_2')"/>
+            <field name="message_id">1111005@OpenERP.com</field>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_email_2_2" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_2')"/>
+            <field name="message_id">1111006@OpenERP.com</field>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_email_2_3" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_2')"/>
+            <field name="message_id">1111007@OpenERP.com</field>
+        </record>
+
+    </data>
+</openerp>

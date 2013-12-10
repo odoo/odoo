@@ -36,7 +36,7 @@ class res_users(osv.Model):
     _inherits = {'mail.alias': 'alias_id'}
 
     _columns = {
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications."),
         'display_groups_suggestions': fields.boolean("Display Groups Suggestions"),
@@ -80,6 +80,12 @@ class res_users(osv.Model):
         # create a welcome message
         self._create_welcome_message(cr, uid, user, context=context)
         return user_id
+
+    def copy_data(self, *args, **kwargs):
+        data = super(res_users, self).copy_data(*args, **kwargs)
+        if data.get('alias_name'):
+            data['alias_name'] = data['login']
+        return data
 
     def _create_welcome_message(self, cr, uid, user, context=None):
         if not self.has_group(cr, uid, 'base.group_user'):

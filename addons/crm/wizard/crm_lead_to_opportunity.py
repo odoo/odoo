@@ -38,6 +38,9 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', select=True),
     }
 
+    def onchange_action(self, cr, uid, ids, action, context=None):
+        return {'value': {'partner_id': False if action != 'exist' else self._find_matching_partner(cr, uid, context=context)}}
+
     def default_get(self, cr, uid, fields, context=None):
         """
         Default get for name, opportunity_ids.
@@ -59,11 +62,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
             if partner_id:
                 # Search for opportunities that have the same partner and that arent done or cancelled
-                ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id),  ('probability', '<', '100')])
+                ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), '|', ('probability', '=', False), ('probability', '<', '100')])
                 for id in ids:
                     tomerge.add(id)
             if email:
-                ids = lead_obj.search(cr, uid, [('email_from', 'ilike', email[0]),  ('probability', '<', '100')])
+                ids = lead_obj.search(cr, uid, [('email_from', '=ilike', email[0]), '|', ('probability', '=', False), ('probability', '<', '100')])
                 for id in ids:
                     tomerge.add(id)
 

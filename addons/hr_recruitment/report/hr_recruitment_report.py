@@ -56,11 +56,12 @@ class hr_recruitment_report(osv.Model):
         'salary_prop' : fields.float("Salary Proposed", digits_compute=dp.get_precision('Account')),
         'salary_prop_avg' : fields.float("Avg. Proposed Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
         'salary_exp' : fields.float("Salary Expected", digits_compute=dp.get_precision('Account')),
-        'salary_exp_avg' : fields.float("Avg. Expected Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),        
+        'salary_exp_avg' : fields.float("Avg. Expected Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'available': fields.float("Availability"),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
+        'last_stage_id': fields.many2one ('hr.recruitment.stage', 'Last Stage'),
     }
     
     def init(self, cr):
@@ -84,11 +85,12 @@ class hr_recruitment_report(osv.Model):
                      s.department_id,
                      s.priority,
                      s.stage_id,
+                     s.last_stage_id,
                      sum(salary_proposed) as salary_prop,
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
                      (sum(salary_expected)/count(*)) as salary_exp_avg,
-                     extract('epoch' from (s.date_closed-s.create_date))/(3600*24) as delay_close,
+                     extract('epoch' from (s.write_date-s.create_date))/(3600*24) as delay_close,
                      count(*) as nbr
                  from hr_applicant s
                  group by
@@ -99,12 +101,14 @@ class hr_recruitment_report(osv.Model):
                      date_trunc('day',s.date_closed),
                      s.date_open,
                      s.create_date,
+                     s.write_date,
                      s.date_closed,
                      s.date_last_stage_update,
                      s.partner_id,
                      s.company_id,
                      s.user_id,
                      s.stage_id,
+                     s.last_stage_id,
                      s.type_id,
                      s.priority,
                      s.job_id,
