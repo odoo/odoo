@@ -17,7 +17,9 @@ openerp_announcement = function(instance) {
                 if (!dbuuid) {
                     return;
                 }
-                var $css = $('<link />').attr({ 
+                var $link = $bar.find('.url a');
+                $link.attr('href', _.str.sprintf('%s/%s', $link.attr('href'), dbuuid));
+                var $css = $('<link />').attr({
                     rel : 'stylesheet',
                     type: 'text/css',
                     media: 'screen',
@@ -25,17 +27,8 @@ openerp_announcement = function(instance) {
                 });
                 $css.on('load', function() {
                     var close = function() {
-                        var data = window.getComputedStyle($bar.find('.data')[0], ':before').content || "'{}'";
-                        var delim = data[0];
-                        data = data.slice(1, data.length - 1).replace(new RegExp('\\\\'+delim, 'g'), delim);
-                        try {
-                            data = JSON.parse(data);
-                        } catch(_e) {
-                            data = {};
-                        }
-                        var ttl = data.close_ttl || 24*60*60;
+                        var ttl = 7*24*60*60;
                         self.session.set_cookie('ab', 'c', ttl);
-
                         $bar.slideUp('slow');
                     };
                     $bar.find('.close').on('click', close);
