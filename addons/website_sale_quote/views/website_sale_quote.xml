@@ -255,6 +255,7 @@
                     <t t-foreach="quotation.recommended_products()" t-as="product">
                         <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
                             <div class='mt16 text-center'>
+                                <span t-field="product.name"/>
                                 <span t-field="product.image_small" t-field-options='{"widget": "image", "class": "img-rounded"}'/>
 <!--                                <h5>-->
 <!--                                    <a t-href="/shop/product/#{ slug(product) }/"-->
