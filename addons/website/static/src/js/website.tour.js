@@ -282,13 +282,13 @@
                             if (nextStep) {
                                 setTimeout(function () {
                                     executeStep(nextStep);
-                                }, 100);
+                                }, 0);
                             }
                         });
+                        var $element = $(step.element);
                         if (step.snippet && step.trigger === 'drag') {
                             TestConsole.dragAndDropSnippet(step.snippet);
                         } else {
-                            var $element = $(step.element);
                             $element.trigger($.Event("click", { srcElement: $element }));
                         }
                     }
