@@ -73,13 +73,13 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		}
 	},
 
-	get_value: function (id1, id2) {
+	get_value: function (id1, id2, default_value) {
 		var x = Math.min(id1, id2),
 			y = Math.max(id1, id2),
 			cell = _.find(this.cells, function (c) {
 			return ((c.x == x) && (c.y == y));
 		});
-		return (cell === undefined) ? undefined : cell.value;
+		return (cell === undefined) ? default_value : cell.value;
 	},
 
 	is_row: function (id) {
