@@ -477,6 +477,7 @@ openerp.web.list_editable = function (instance) {
             next_record = next_record || 'succ';
             var self = this;
             return this.save_edition().then(function (saveInfo) {
+                if (!saveInfo) { return null; }
                 if (saveInfo.created) {
                     return self.start_edition();
                 }
