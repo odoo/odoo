@@ -239,8 +239,9 @@ class mail_message(osv.Model):
 
     def download_attachment(self, cr, uid, id_message, attachment_id, context=None):
         """ Return the content of linked attachments. """
-        message = self.browse(cr, uid, id_message, context=context)
-        if attachment_id in [attachment.id for attachment in message.attachment_ids]:
+        # this will fail if you cannot read the message
+        message_values = self.read(cr, uid, [id_message], ['attachment_ids'], context=context)[0]
+        if attachment_id in message_values['attachment_ids']:
             attachment = self.pool.get('ir.attachment').browse(cr, SUPERUSER_ID, attachment_id, context=context)
             if attachment.datas and attachment.datas_fname:
                 return {
@@ -774,7 +775,7 @@ class mail_message(osv.Model):
                 if message.get('model') == model and message.get('res_id') in mids]
 
         # Calculate remaining ids: if not void, raise an error
-        other_ids = other_ids.difference(set(document_related_ids), set(ids))
+        other_ids = other_ids.difference(set(document_related_ids))
         if not other_ids:
             return
         raise orm.except_orm(_('Access Denied'),
