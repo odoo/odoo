@@ -50,8 +50,10 @@ openerp.web.list_editable = function (instance) {
             });
             this.on('edit:after', this, function () {
                 self.$el.add(self.$buttons).addClass('oe_editing');
+                self.$('.ui-sortable').sortable('disable');
             });
             this.on('save:after cancel:after', this, function () {
+                self.$('.ui-sortable').sortable('enable');
                 self.$el.add(self.$buttons).removeClass('oe_editing');
             });
         },
