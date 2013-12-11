@@ -5,11 +5,11 @@
         <!--  Add menu: Billing - Deliveries to invoice -->
         <record id="outgoing_picking_list_to_invoice" model="ir.actions.act_window">
             <field name="name">Deliveries to Invoice</field>
-            <field name="res_model">stock.picking.out</field>
+            <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('location_id.usage','=','internal'), ('location_dest_id.usage','!=','internal')]</field>
+            <field name="domain">[('picking_type_id.code','=','outgoing')]</field>
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_to_invoice': 1, 'search_default_done': 1}</field>
             <field name="search_view_id" ref="stock.view_picking_internal_search"/>
         </record>
