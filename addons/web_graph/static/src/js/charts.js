@@ -184,7 +184,7 @@ openerp.web_graph.line_chart = function (pivot, svg, measure_label) {
             return p || 'Undefined';
         }).join('/');
         if (dim_y === 0) {
-            title = measure_label
+            title = measure_label;
         }
         return {values: values, key: title};
     });
@@ -206,13 +206,20 @@ openerp.web_graph.line_chart = function (pivot, svg, measure_label) {
       });
 };
 
-openerp.web_graph.pie_chart = function (pivot, svg) {
-    var data = _.map(pivot.rows.main.children, function (pt) {
-        var value = pivot.get_value(pt.id, pivot.cols.main.id),
-            title = (pt.title !== undefined) ? pt.title : 'Undefined';
-        return {x: title, y: value};
+openerp.web_graph.pie_chart = function (pivot, svg, measure_label) {
+    var dim_x = pivot.rows.groupby.length,
+        dim_y = pivot.cols.groupby.length;
+
+    var data = _.map(pivot.get_rows_leaves(), function (row) {
+        var title = _.map(row.path, function (p) {
+            return p || 'Undefined';
+        }).join('/');
+        if (dim_x === 0) {
+            title = measure_label;
+        }
+        return {x: title, y: pivot.get_total(row)};
     });
-    
+
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
             .color(d3.scale.category10().range())
