@@ -1,11 +1,12 @@
 
-openerp.web_graph.draw_chart = function (mode, pivot, svg, measure_label) {
-    openerp.web_graph[mode](pivot, svg, measure_label);
+openerp.web_graph.draw_chart = function (options) {
+    openerp.web_graph[options.mode](options);
 };
 
 
-openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
-    var dim_x = pivot.rows.groupby.length,
+openerp.web_graph.bar_chart = function (options) {
+    var pivot = options.pivot,
+        dim_x = pivot.rows.groupby.length,
         dim_y = pivot.cols.groupby.length,
         data = [];
 
@@ -13,7 +14,7 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
     if ((dim_x === 0) && (dim_y === 0)) {
         data = [{key: 'Total', values:[{
             title: 'Total',
-            value: pivot.get_value(pivot.rows.main.id, pivot.cols.main.id),
+            value: options.pivot.get_value(pivot.rows.main.id, pivot.cols.main.id),
         }]}];
         nv.addGraph(function () {
           var chart = nv.models.discreteBarChart()
@@ -21,14 +22,14 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
                 .y(function(d) { return d.value;})
                 .tooltips(false)
                 .showValues(true)
-                .staggerLabels(true)
-                .width(650)
-                .height(400);
+                .width(options.width)
+                .height(options.height)
+                .staggerLabels(true);
 
-            d3.select(svg)
+            d3.select(options.svg)
                 .datum(data)
-                .attr('width', 650)
-                .attr('height', 400)
+                .attr('width', options.width)
+                .attr('height', options.height)
                 .call(chart);
 
             nv.utils.windowResize(chart.update);
@@ -46,14 +47,14 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
             var chart = nv.models.multiBarChart()
                     .stacked(true)
                     .tooltips(false)
-                    .showControls(false)
-                    .width(400)
-                    .height(500);
+                    .width(options.width)
+                    .height(options.height)
+                    .showControls(false);
 
-            d3.select(svg)
+            d3.select(options.svg)
                 .datum(data)
-                .attr('width', 400)
-                .attr('height', 500)
+                .attr('width', options.width)
+                .attr('height', options.height)
                 .transition()
                 .duration(500)
                 .call(chart);
@@ -69,21 +70,21 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
                 title = (pt.title !== undefined) ? pt.title : 'Undefined';
             return {title: title, value: value};
         });
-        data = [{key: 'Bar chart', values:data}];
+        data = [{key: options.measure_label, values:data}];
         nv.addGraph(function () {
           var chart = nv.models.discreteBarChart()
                 .x(function(d) { return d.title;})
                 .y(function(d) { return d.value;})
                 .tooltips(false)
                 .showValues(true)
-                .staggerLabels(true)
-                .width(650)
-                .height(400);
+                .width(options.width)
+                .height(options.height)
+                .staggerLabels(true);
 
-            d3.select(svg)
+            d3.select(options.svg)
                 .datum(data)
-                .attr('width', 650)
-                .attr('height', 400)
+                .attr('width', options.width)
+                .attr('height', options.height)
                 .call(chart);
 
             nv.utils.windowResize(chart.update);
@@ -105,14 +106,14 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
           var chart = nv.models.multiBarChart()
                 .stacked(true)
                 .staggerLabels(true)
-                .tooltips(false)
-                .width(650)
-                .height(400);
+                .width(options.width)
+                .height(options.height)
+                .tooltips(false);
 
-            d3.select(svg)
+            d3.select(options.svg)
                 .datum(data)
-                .attr('width', 650)
-                .attr('height', 400)
+                .attr('width', options.width)
+                .attr('height', options.height)
                 .call(chart);
 
             nv.utils.windowResize(chart.update);
@@ -140,14 +141,14 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
           var chart = nv.models.multiBarChart()
                 .stacked(true)
                 .staggerLabels(true)
-                .tooltips(false)
-                .width(650)
-                .height(400);
+                .width(options.width)
+                .height(options.height)
+                .tooltips(false);
 
-            d3.select(svg)
+            d3.select(options.svg)
                 .datum(data)
-                .attr('width', 650)
-                .attr('height', 400)
+                .attr('width', options.width)
+                .attr('height', options.height)
                 .call(chart);
 
             nv.utils.windowResize(chart.update);
@@ -157,8 +158,9 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
 };
 
 
-openerp.web_graph.line_chart = function (pivot, svg, measure_label) {
-    var dim_x = pivot.rows.groupby.length,
+openerp.web_graph.line_chart = function (options) {
+    var pivot = options.pivot,
+        dim_x = pivot.rows.groupby.length,
         dim_y = pivot.cols.groupby.length;
 
     var data = _.map(pivot.get_cols_leaves(), function (col) {
@@ -169,7 +171,7 @@ openerp.web_graph.line_chart = function (pivot, svg, measure_label) {
             return p || 'Undefined';
         }).join('/');
         if (dim_y === 0) {
-            title = measure_label;
+            title = options.measure_label;
         }
         return {values: values, key: title};
     });
@@ -177,13 +179,13 @@ openerp.web_graph.line_chart = function (pivot, svg, measure_label) {
     nv.addGraph(function () {
         var chart = nv.models.lineChart()
             .x(function (d,u) { return u; })
-            .width(600)
-            .height(300)
+            .width(options.width)
+            .height(options.height)
             .margin({top: 30, right: 20, bottom: 20, left: 60});
 
-        d3.select(svg)
-            .attr('width', 600)
-            .attr('height', 300)
+        d3.select(options.svg)
+            .attr('width', options.width)
+            .attr('height', options.height)
             .datum(data)
             .call(chart);
 
@@ -191,8 +193,9 @@ openerp.web_graph.line_chart = function (pivot, svg, measure_label) {
       });
 };
 
-openerp.web_graph.pie_chart = function (pivot, svg, measure_label) {
-    var dim_x = pivot.rows.groupby.length,
+openerp.web_graph.pie_chart = function (options) {
+    var pivot = options.pivot,
+        dim_x = pivot.rows.groupby.length,
         dim_y = pivot.cols.groupby.length;
 
     var data = _.map(pivot.get_rows_leaves(), function (row) {
@@ -200,7 +203,7 @@ openerp.web_graph.pie_chart = function (pivot, svg, measure_label) {
             return p || 'Undefined';
         }).join('/');
         if (dim_x === 0) {
-            title = measure_label;
+            title = options.measure_label;
         }
         return {x: title, y: pivot.get_total(row)};
     });
@@ -208,14 +211,14 @@ openerp.web_graph.pie_chart = function (pivot, svg, measure_label) {
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
             .color(d3.scale.category10().range())
-            .width(650)
-            .height(400);
+            .width(options.width)
+            .height(options.height);
 
-        d3.select(svg)
+        d3.select(options.svg)
             .datum(data)
             .transition().duration(1200)
-            .attr('width', 650)
-            .attr('height', 400)
+            .attr('width', options.width)
+            .attr('height', options.height)
             .call(chart);
 
         nv.utils.windowResize(chart.update);
