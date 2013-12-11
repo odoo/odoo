@@ -71,11 +71,7 @@
                     placement: 'bottom',
                     title: "Layout your event",
                     content: "Insert blocks like 'Banner' to layout the body of your event.",
-                    trigger: {
-                        emitter: editor,
-                        type: 'openerp',
-                        id: 'rte:ready',
-                    },
+                    trigger: 'click',
                 },
                 {
                     stepId: 'drag-banner',
@@ -95,7 +91,7 @@
                 },
                 {
                     stepId: 'drag-text-block',
-                    snipet: 'text-block',
+                    snippet: 'text-block',
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Text Block' block below the banner.",
@@ -135,7 +131,7 @@
                 },
                 {
                     stepId: 'customize-event',
-                    element: '.js_publish_management button:last',
+                    element: '.js_publish_management button#dopprod-8',
                     placement: 'left',
                     title: "Customize your event",
                     content: "Click here to customize your event further.",
