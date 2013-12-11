@@ -4,6 +4,8 @@ openerp.web_kanban_gauge = function (instance) {
  * Kanban widgets: GaugeWidget
  *
  */
+var _t = instance.web._t,
+   _lt = instance.web._lt;
 
 instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
     className: "oe_gauge",
@@ -77,13 +79,18 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
                     $input.focus()
                         .keydown(function (event) {
                             event.stopPropagation();
-                            if (event.keyCode == 13 || event.keyCode == 9) {
-                                if ($input.val() != value) {
-                                    parent.view.dataset.call(self.options.action_change, [parent.id, $input.val()]).then(function () {
-                                        parent.do_reload();
-                                    });
-                                } else {
-                                    $div.remove();
+                            if(isNaN($input.val())){
+                                self.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
+                                $div.remove();
+                            } else {
+                                if (event.keyCode == 13 || event.keyCode == 9) {
+                                    if ($input.val() != value) {
+                                        parent.view.dataset.call(self.options.action_change, [parent.id, $input.val()]).then(function () {
+                                            parent.do_reload();
+                                        });
+                                    } else {
+                                        $div.remove();
+                                    }
                                 }
                             }
                         })
