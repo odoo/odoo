@@ -808,8 +808,9 @@ class users_view(osv.osv):
         if not 'groups_id' in fields:
             fields.append('groups_id')
         res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
-        for values in (res if isinstance(res, list) else [res]):
-            self._get_reified_groups(group_fields, values)
+        if res:
+            for values in (res if isinstance(res, list) else [res]):
+                self._get_reified_groups(group_fields, values)
         return res
 
     def _get_reified_groups(self, fields, values):
