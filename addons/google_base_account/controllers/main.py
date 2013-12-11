@@ -70,7 +70,6 @@ class google_auth(http.Controller):
                 }            
             
             print "@@@@@@@@@@@@@@@@@  Is still used !!!!"
-            import ipdb; ipdb.set_trace()
             gc_obj.synchronize_calendar(request.cr, request.uid, calendar_info, kw.get('LocalContext'))
         
         

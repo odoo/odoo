@@ -11,8 +11,8 @@
             <field name="active" eval="False"/>
             <!-- Avoid auto-including this user in any default group, just like a typical portal member -->
             <field name="groups_id" eval="[(5,)]"/>
-            <!-- no alias for portal users -->
-            <field name="alias_name" eval="False"/>
+            <!-- allow signuped users to have a alias -->
+            <field name="alias_name">_usertemplate</field>
         </record>
 
         <record id="default_template_user_config" model="ir.config_parameter">
