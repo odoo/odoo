@@ -787,7 +787,7 @@
                                 </group>
                                 <group col="1">
                                     <field name="pack_operation_exist" invisible="1"/>
-                                    <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}" class="oe_link oe_right oe_inline"/>
+                                    <button name="action_pack" string="Create Package" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}" class="oe_link oe_right oe_inline" groups="product.group_stock_packaging"/>
                                     <button name="do_split" string="Create Draft Backorder" groups="base.group_no_one" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','!=','assigned')]}" class="oe_link oe_right oe_inline"/>
                                 </group>
                             </group>
@@ -1510,7 +1510,7 @@
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,list,form</field>
+            <field name="view_mode">kanban</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new picking type. 
@@ -1834,6 +1834,11 @@
             <field name="name">Orderpoints</field>
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
+        <record model="ir.actions.act_window" id="product_open_quants">
+            <field name="context">{'search_default_product_id': active_id}</field>
+            <field name="name">Quants</field>
+            <field name="res_model">stock.quant</field>
+        </record>
 <!-->
         <record model="ir.ui.view" id="product_template_form_view_procurement">
             <field name="name">product.template.procurement</field>
@@ -1875,7 +1880,8 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button string="Inventory" name="%(action_product_location_tree)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
                    <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
-                    <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
+                   <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
+                   <button string="Quants" name="%(product_open_quants)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="base.group_no_one"/>
                 </xpath>
                 
                 <xpath expr="//group[@string='Sale Conditions']" position="inside">
@@ -1946,10 +1952,8 @@
                             <button name="unpack" string="Unpack" type="object"/>
                         </div>
                         <div class="oe_title">
-                        <h1>
-                            <label string="Package Reference" class="oe_edit_only"/>
-                            <field name="name" class="oe_inline"/>
-                        </h1>
+                            <label for="name" string="Package Reference" class="oe_edit_only"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
                         </div>
                         <group>
                             <group>
@@ -2030,7 +2034,7 @@
             <field name="name">Packages</field>
             <field name="res_model">stock.quant.package</field>
         </record>
-        <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view"/>
+        <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view" groups="product.group_stock_packaging"/>
         
         
         <!--Routes-->

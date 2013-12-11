@@ -27,7 +27,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import tools
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
@@ -434,7 +434,7 @@ class stock_quant(osv.osv):
             'qty': qty,
             'cost': price_unit,
             'history_ids': [(4, move.id)],
-            'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'in_date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
             'company_id': move.company_id.id,
             'lot_id': lot_id,
             'owner_id': owner_id,
@@ -737,10 +737,10 @@ class stock_picking(osv.osv):
         ),
         'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], string='Priority', required=True),
         'min_date': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_min_date,
-                 store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed"),
+                 store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
                  store={'stock.move': (_get_pickings, ['state', 'date_expected'], 20)}, type='datetime', string='Max. Expected Date', select=2, help="Scheduled time for the last part of the shipment to be processed"),
-        'date': fields.datetime('Commitment Date', help="Date promised for the completion of the transfer order, usually set the time of the order and revised later on.", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
+        'date': fields.datetime('Commitment Date', help="Date promised for the completion of the transfer order, usually set the time of the order and revised later on.", select=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, track_visibility='onchange'),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'quant_reserved_exist': fields.function(_get_quant_reserved_exist, type='boolean', string='Quant already reserved ?', help='technical field used to know if there is already at least one quant reserved on moves of a given picking'),
@@ -767,7 +767,7 @@ class stock_picking(osv.osv):
         'state': 'draft',
         'move_type': 'one',
         'priority': '1',  # normal
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': fields.datetime.now,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
     _sql_constraints = [
@@ -1320,6 +1320,7 @@ class stock_move(osv.osv):
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Procurement Rule', help='The pull rule that created this stock move'),
+        'push_rule_id': fields.many2one('stock.location.path', 'Push Rule', help='The push rule that created this stock move'),
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type'),
         'inventory_id': fields.many2one('stock.inventory', 'Inventory'),
@@ -1361,9 +1362,9 @@ class stock_move(osv.osv):
         'product_qty': 1.0,
         'product_uom_qty': 1.0,
         'scrapped': False,
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': fields.datetime.now,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
-        'date_expected': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_expected': fields.datetime.now,
         'procure_method': 'make_to_stock',
         'propagate': True,
     }
@@ -1393,7 +1394,6 @@ class stock_move(osv.osv):
         return super(stock_move, self).copy_data(cr, uid, id, default, context)
 
     def do_unreserve(self, cr, uid, move_ids, context=None):
-        ids_to_free = []
         quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, move_ids, context=context):
             quant_obj.quants_unreserve(cr, uid, move, context=context)
@@ -1423,20 +1423,23 @@ class stock_move(osv.osv):
             'warehouse_id': move.warehouse_id and move.warehouse_id.id or False,
         }
 
-    def _push_apply(self, cr, uid, moves, context):
+    def _push_apply(self, cr, uid, moves, context=None):
         push_obj = self.pool.get("stock.location.path")
         for move in moves:
             if not move.move_dest_id:
-                routes = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
-                routes = routes or [x.id for x in move.route_ids]
-                if routes:
-                    domain = [('route_id', 'in', routes), ('location_from_id', '=', move.location_dest_id.id)]
-                    if move.warehouse_id:
-                        domain += [('warehouse_id', '=', move.warehouse_id.id)]
-                    rules = push_obj.search(cr, uid, domain, context=context)
-                    if rules:
-                        rule = push_obj.browse(cr, uid, rules[0], context=context)
-                        push_obj._apply(cr, uid, rule, move, context=context)
+                domain = [('location_from_id', '=', move.location_dest_id.id)]
+                if move.warehouse_id: #TODO checker ici pourquoi move.warehouse_id est nul dans le cas ou je l'encode a la main
+                    domain += ['|', ('warehouse_id', '=', move.warehouse_id.id), ('warehouse_id', '=', False)]
+                #priority goes to the route defined on the product and product category
+                route_ids = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
+                rules = push_obj.search(cr, uid, domain + [('route_id', 'in', route_ids)], order='route_sequence, sequence', context=context)
+                if not rules:
+                    #but if there's no rule matching, we try without filtering on routes
+                    rules = push_obj.search(cr, uid, domain, order='route_sequence, sequence', context=context)
+                if rules:
+                    rule = push_obj.browse(cr, uid, rules[0], context=context)
+                    push_obj._apply(cr, uid, rule, move, context=context)
+
         return True
 
     # Create the stock.move.putaway records
@@ -1457,16 +1460,39 @@ class stock_move(osv.osv):
         """ This will create a procurement order """
         return self.pool.get("procurement.order").create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context))
 
-    # Check that we do not modify a stock.move which is done
     def write(self, cr, uid, ids, vals, context=None):
+        procurement_obj = self.pool.get('procurement.order')
         if isinstance(ids, (int, long)):
             ids = [ids]
+        # Check that we do not modify a stock.move which is done
         frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
                 if frozen_fields.intersection(vals):
                     raise osv.except_osv(_('Operation Forbidden!'),
                         _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
+        #propagation of expected date: 
+        propagated_date_field = False
+        if vals.get('date_expected'):
+            #propagate any manual change of the expected date
+            propagated_date_field = 'date_expected'
+        elif (vals.get('state', '') == 'done' and vals.get('date')):
+            #propagate also any delta observed when setting the move as done
+            propagated_date_field = 'date'
+        if propagated_date_field:
+            for move in self.browse(cr, uid, ids, context=context):
+                current_date = datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
+                new_date = datetime.strptime(vals.get(propagated_date_field), DEFAULT_SERVER_DATETIME_FORMAT)
+                delta = new_date - current_date
+                if abs(delta.days) >= move.company_id.propagation_minimum_delta:
+                    if move.procurement_id:
+                        #simply write the same date on the procurement order linked, where the propagation is done
+                        procurement_obj.write(cr, uid, [move.procurement_id.id], {'date_planned': vals.get(propagated_date_field)}, context=context)
+                    elif move.move_dest_id and move.propagate:
+                        #for pushed moves, propagate by recursive call of write()
+                        old_move_date = datetime.strptime(move.move_dest_id.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
+                        new_move_date = (old_move_date + relativedelta.relativedelta(days=delta.days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                        self.write(cr, uid, [move.move_dest_id.id], {'date_expected': new_move_date}, context=context)
         return super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
     def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom, product_uos):
@@ -1612,7 +1638,7 @@ class stock_move(osv.osv):
         @return: Move Date
         """
         if not date_expected:
-            date_expected = time.strftime('%Y-%m-%d %H:%M:%S')
+            date_expected = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {'date': date_expected}}
 
     def action_confirm(self, cr, uid, ids, context=None):
@@ -1985,7 +2011,7 @@ class stock_inventory(osv.osv):
             return False
 
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': fields.datetime.now,
         'state': 'draft',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
         'location_id': _default_stock_location,
@@ -2028,7 +2054,7 @@ class stock_inventory(osv.osv):
             move_obj.action_done(cr, uid, [x.id for x in inv.move_ids if x.location_id.usage == 'internal'], context=context)
             #then, we move from inventory loss. This 2 steps process is needed because some moved quant may need to be put again in stock
             move_obj.action_done(cr, uid, [x.id for x in inv.move_ids if x.location_id.usage != 'internal'], context=context)
-            self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+            self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         return True
 
     def _create_stock_move(self, cr, uid, inventory, todo_line, context=None):
@@ -2848,6 +2874,12 @@ class stock_location_path(osv.osv):
                 result[push_rule.id] = True
         return result.keys()
 
+    def _get_rules(self, cr, uid, ids, context=None):
+        res = []
+        for route in self.browse(cr, uid, ids):
+            res += [x.id for x in route.push_ids]
+        return res
+
     _columns = {
         'name': fields.char('Operation Name', size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -2876,6 +2908,12 @@ class stock_location_path(osv.osv):
                     'stock.location.path': (lambda self, cr, uid, ids, c={}: ids, ['route_id'], 20),},
                 help="If the active field is set to False, it will allow you to hide the rule without removing it." ),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
+        'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence',
+            store={
+                'stock.location.route': (_get_rules, ['sequence'], 10),
+                'stock.location.path': (lambda self, cr, uid, ids, c={}: ids, ['route_id'], 10),
+        }),
+        'sequence': fields.integer('Sequence'),
     }
     _defaults = {
         'auto': 'auto',
@@ -2887,14 +2925,18 @@ class stock_location_path(osv.osv):
     }
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
-        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta.relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d')
-        if rule.auto=='transparent':
+        newdate = (datetime.strptime(move.date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        if rule.auto == 'transparent':
+            old_dest_location = move.location_dest_id.id
             move_obj.write(cr, uid, [move.id], {
                 'date': newdate,
                 'location_dest_id': rule.location_dest_id.id
             })
-            if rule.location_dest_id.id<>move.location_dest_id.id:
-                move_obj._push_apply(self, cr, uid, move.id, context)
+            move.refresh()
+            #avoid looping if a push rule is not well configured
+            if rule.location_dest_id.id != old_dest_location:
+                #call again push_apply to see if a next step is defined
+                move_obj._push_apply(cr, uid, [move], context=context)
             return move.id
         else:
             move_id = move_obj.copy(cr, uid, move.id, {
@@ -2905,8 +2947,8 @@ class stock_location_path(osv.osv):
                 'date_expected': newdate,
                 'picking_id': False,
                 'picking_type_id': rule.picking_type_id and rule.picking_type_id.id or False,
-                'rule_id': rule.id,
-                'propagate': rule.propagate, 
+                'propagate': rule.propagate,
+                'push_rule_id': rule.id,
                 'warehouse_id': rule.warehouse_id and rule.warehouse_id.id or False,
             })
             move_obj.write(cr, uid, [move.id], {
@@ -3285,7 +3327,6 @@ class stock_warehouse_orderpoint(osv.osv):
     def get_draft_procurements(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        result = {}
         if not isinstance(ids, list):
             ids = [ids]
         procurement_obj = self.pool.get('procurement.order')
@@ -3422,7 +3463,7 @@ class stock_picking_type(osv.osv):
                             } for i in range(10, -1, -1)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
         for group in group_obj:
-            group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT)
+            group_begin_date = datetime.strptime(group['__domain'][0][2], DEFAULT_SERVER_DATE_FORMAT)
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
             section_result[10 - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
         return section_result
@@ -3431,8 +3472,8 @@ class stock_picking_type(osv.osv):
         obj = self.pool.get('stock.picking')
         res = dict.fromkeys(ids, False)
         month_begin = date.today().replace(day=1)
-        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        groupby_end = (month_begin + relativedelta.relativedelta(months=3)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        groupby_end = (month_begin + relativedelta.relativedelta(months=3)).strftime(DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             created_domain = [
                 ('picking_type_id', '=', id),
@@ -3450,7 +3491,7 @@ class stock_picking_type(osv.osv):
             'count_picking_waiting': [('state','=','confirmed')],
             'count_picking_ready': [('state','=','assigned')],
             'count_picking': [('state','in',('assigned','waiting','confirmed'))],
-            'count_picking_late': [('min_date','<', time.strftime('%Y-%m-%d %H:%M:%S')), ('state','in',('assigned','waiting','confirmed'))],
+            'count_picking_late': [('min_date','<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state','in',('assigned','waiting','confirmed'))],
             'count_picking_backorders': [('backorder_id','<>', False), ('state','!=','done')],
         }
         result = {}
