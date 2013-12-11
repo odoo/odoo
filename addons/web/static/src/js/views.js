@@ -1355,20 +1355,19 @@ instance.web.View = instance.web.Widget.extend({
                 return self.getParent().on_action_executed.apply(null, arguments);
             }
         };
-        var context = dataset.get_context();
-        if (action_data.model !== dataset.model) {
-            // filter out context keys that are specific to the action model.
-            // Wrong default_ and search_default values will no give the expected views
-            // Wrong group_by values will simply fail and forbid rendering of the destination view
-            context = _.object(_.reject(_.pairs(context.eval()), function(pair) {
-                return pair[0].match('^(?:(?:default_|search_default_).+|group_by|group_by_no_leaf)$') !== null;
-            }));
-        }
+        var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
 
-        context = new instance.web.CompoundContext(context, action_data.context || {});
+        // response handler
         var handler = function (action) {
             if (action && action.constructor == Object) {
-                var ncontext = new instance.web.CompoundContext(context);
+                // filter out context keys that are specific to the current action.
+                // Wrong default_* and search_default_* values will no give the expected result
+                // Wrong group_by values will simply fail and forbid rendering of the destination view
+                var ncontext = new instance.web.CompoundContext(
+                    _.object(_.reject(_.pairs(context.eval()), function(pair) {
+                      return pair[0].match('^(?:(?:default_|search_default_).+|group_by|group_by_no_leaf)$') !== null;
+                    }))
+                );
                 if (record_id) {
                     ncontext.add({
                         active_id: record_id,
