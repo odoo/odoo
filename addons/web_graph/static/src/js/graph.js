@@ -61,8 +61,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     start: function () {
         this.table = $('<table></table>');
         this.$('.graph_main_content').append(this.table);
-        this.width = this.$el.width();
-        this.height = this.$el.parent().parent().height(); // to get view manager body
         instance.web.bus.on('click', this, function (ev) {
             if (this.dropdown) {
                 this.dropdown.remove();
@@ -180,12 +178,17 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     this.draw_table();
                 } else {
                     this.$('.graph_main_content').append($('<div><svg></svg></div>'));
+        //             console.log('this.perentaui', this.getParent().$el);
+        //                     this.width = this.$el.width();
+        // this.height = this.$el.parent().parent().height(); // to get view manager body
+
+        //             debugger;
                     var options = {
                         svg: this.$('.graph_main_content svg')[0],
                         mode: this.mode,
                         pivot: this.pivot_table,
-                        width: this.width,
-                        height: Math.max(this.height - 45, 250),
+                        width: this.$el.width(),
+                        height: Math.max(this.$el.parent().parent().height() - 45, 250),
                         measure_label: this.measure_label()
                     };
                     openerp.web_graph.draw_chart(options);
