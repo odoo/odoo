@@ -1439,7 +1439,6 @@ class stock_move(osv.osv):
                 if rules:
                     rule = push_obj.browse(cr, uid, rules[0], context=context)
                     push_obj._apply(cr, uid, rule, move, context=context)
-
         return True
 
     # Create the stock.move.putaway records
@@ -2925,11 +2924,12 @@ class stock_location_path(osv.osv):
     }
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
-        newdate = (datetime.strptime(move.date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATE_FORMAT)
         if rule.auto == 'transparent':
             old_dest_location = move.location_dest_id.id
             move_obj.write(cr, uid, [move.id], {
                 'date': newdate,
+                'date_expected': newdate,
                 'location_dest_id': rule.location_dest_id.id
             })
             move.refresh()
@@ -2942,7 +2942,7 @@ class stock_location_path(osv.osv):
             move_id = move_obj.copy(cr, uid, move.id, {
                 'location_id': move.location_dest_id.id,
                 'location_dest_id': rule.location_dest_id.id,
-                'date': datetime.now().strftime('%Y-%m-%d'),
+                'date': newdate,
                 'company_id': rule.company_id and rule.company_id.id or False,
                 'date_expected': newdate,
                 'picking_id': False,
