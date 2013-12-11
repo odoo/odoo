@@ -36,13 +36,11 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
         });
     // Only column groupbys ****************************************************
     } else if ((dim_x === 0) && (dim_y >= 1)){
-        _.each(pivot.cols.headers, function (header) {
-            if (header.path.length === 1) {
-                data.push({
-                    key: header.title,
-                    values: [{x:header.root.main.title, y: pivot.get_total(header)}]
-                });
-            }
+        data =  _.map(pivot.get_columns_depth(1), function (header) {
+            return {
+                key: header.title,
+                values: [{x:header.root.main.title, y: pivot.get_total(header)}]
+            };
         });
         nv.addGraph(function() {
             var chart = nv.models.multiBarChart()
@@ -93,20 +91,14 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
         });
     // 1 row groupby and some col groupbys**************************************
     } else if ((dim_x === 1) && (dim_y >= 1))  {
-        data = [];
-        _.each(pivot.cols.headers, function (colhdr) {
-            if (colhdr.path.length === 1) {
-                var values = [];
-                _.each(pivot.rows.headers, function (header) {
-                    if (header.path.length === 1) {
-                        values.push({
-                            x: header.title || 'Undefined',
-                            y: pivot.get_value(header.id, colhdr.id, 0)
-                        });
-                    }
-                });
-                data.push({key: colhdr.title || 'Undefined', values: values});
-            }
+        data = _.map(pivot.get_columns_depth(1), function (colhdr) {
+            var values = _.map(pivot.get_rows_depth(1), function (header) {
+                return {
+                    x: header.title || 'Undefined',
+                    y: pivot.get_value(header.id, colhdr.id, 0)
+                };
+            });
+            return {key: colhdr.title || 'Undefined', values: values};
         });
 
         nv.addGraph(function () {
@@ -128,26 +120,19 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
         });
     // At least two row groupby*************************************************
     } else {
-        data = [];
-        var keys = _.uniq(_.map(_.filter(pivot.rows.headers, function (hdr) {
-            return hdr.path.length === 2;
-        }), function (hdr) {
+        var keys = _.uniq(_.map(pivot.get_rows_depth(2), function (hdr) {
             return hdr.title || 'Undefined';
         }));
         data = _.map(keys, function (key) {
-            var values = [];
-            _.each(pivot.rows.headers, function (hdr) {
-                if (hdr.path.length === 1) {
-                    var subhdr = _.find(hdr.children, function (child) {
-                        return ((child.title === key) || ((child.title === undefined) && (key === 'Undefined')));
-                    });
-                    values.push({
-                        x: hdr.title || 'Undefined', 
-                        y: (subhdr) ? pivot.get_total(subhdr) : 0
-                    });
-                }
+            var values = _.map(pivot.get_rows_depth(1), function (hdr) {
+                var subhdr = _.find(hdr.children, function (child) {
+                    return ((child.title === key) || ((child.title === undefined) && (key === 'Undefined')));
+                });
+                return {
+                    x: hdr.title || 'Undefined',
+                    y: (subhdr) ? pivot.get_total(subhdr) : 0
+                };
             });
-
             return {key:key, values: values};
         });
 
