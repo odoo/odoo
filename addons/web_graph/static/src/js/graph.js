@@ -407,9 +407,15 @@ instance.web_graph.GraphView = instance.web.View.extend({
         });
     },
 
+    get_measure_type: function () {
+        var measure = this.pivot_table.measure;
+        return (measure) ? this.fields[measure].type : 'integer';
+    },
+
     draw_row: function (row) {
         var self = this,
             pivot = this.pivot_table,
+            measure_type = this.get_measure_type(),
             html_row = $('<tr></tr>'),
             row_header = this.make_border_cell(1,1)
                 .append(this.make_header_title(row).attr('data-id', row.id))
@@ -448,7 +454,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             if (value === undefined) {
                 return cell;
             }
-            cell.append(value);
+            cell.append(instance.web.format_value(value, {type: measure_type}));
             if (self.mode === 'heatmap') {
                 total = pivot.get_total();
                 color = Math.floor(50 + 205*(total - value)/total);
