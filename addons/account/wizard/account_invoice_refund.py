@@ -220,7 +220,7 @@ class account_invoice_refund(osv.osv_memory):
             result = mod_obj.get_object_reference(cr, uid, 'account', xml_id)
             id = result and result[1] or False
 
-            result = act_obj.browse(cr, uid, [id], context=context)[0]
+            result = act_obj.read(cr, uid, [id], context=context)[0]
             invoice_domain = eval(result['domain'])
             invoice_domain.append(('id', 'in', created_inv))
             result['domain'] = invoice_domain
