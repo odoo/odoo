@@ -51,13 +51,12 @@
     Check a quotation was created to a certain supplier and confirm so it becomes a confirmed purchase order
 -
     !python {model: purchase.order}: |
-        from openerp import netsvc
+        from openerp import netsvc, workflow
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
         procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
         purchase_id = procurement_order.purchase_line_id.order_id.id
         
-        wf_service = netsvc.LocalService('workflow')
-        wf_service.trg_validate(uid, 'purchase.order', purchase_id, 'purchase_confirm', cr)
+        workflow.trg_validate(uid, 'purchase.order', purchase_id, 'purchase_confirm', cr)
         po_id = self.pool.get('purchase.order').search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
         assert self.browse(cr, uid, purchase_id).state == 'approved', 'Purchase order should be in the approved state'
 - 
