@@ -7,8 +7,8 @@
             <field name="description">Job Posts on your website</field>
         </record>
 
-        <template id="editor_head" inherit_id="website.layout" name="Jobs Editor" groups="base.group_website_designer">
-            <xpath expr="//head" position="inside">
+        <template id="editor_head" inherit_id="website.editor_head" name="Jobs Editor" groups="base.group_website_designer">
+            <xpath expr="//script[last()]" position="after">
                 <script type="text/javascript" src="/website_hr_recruitment/static/src/js/website_hr_recruitment.editor.js"></script>
             </xpath>
         </template>

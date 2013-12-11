@@ -5,8 +5,8 @@
     <!-- Layout add nav and footer -->
 
 
-    <template id="editor_head" inherit_id="website.layout" name="Shop Editor" groups="base.group_website_designer">
-        <xpath expr="//head" position="inside">
+    <template id="editor_head" inherit_id="website.editor_head" name="Shop Editor" groups="base.group_website_designer">
+        <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js"></script>
         </xpath>

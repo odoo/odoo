@@ -2,8 +2,8 @@
 <openerp>
 <data>
 
-    <template id="editor_head" inherit_id="website.layout" name="Event Editor" groups="base.group_website_designer">
-        <xpath expr="//head" position="inside">
+    <template id="editor_head" inherit_id="website.editor_head" name="Event Editor" groups="base.group_website_designer">
+        <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js"></script>
             <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js"></script>
         </xpath>

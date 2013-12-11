@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <template id="editor_head" inherit_id="website.layout" name="Blog Editor" groups="base.group_website_designer">
-        <xpath expr="//head" position="inside">
+    <template id="editor_head" inherit_id="website.editor_head" name="Blog Editor" groups="base.group_website_designer">
+        <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
             <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
         </xpath>
