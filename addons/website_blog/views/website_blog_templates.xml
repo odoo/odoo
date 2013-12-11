@@ -20,7 +20,7 @@
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure"/>
-                <section t-if="editable">
+                <section groups="base.group_website_publisher">
                     <div class="container text-center mt16">
                         <div class="alert alert-warning alert-dismissable">
                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
@@ -100,7 +100,7 @@
             <h1>
                 No blog post yet!
             </h1>
-            <p t-if="editable">
+            <p groups="base.group_website_publisher">
                 To create a new blog post, use the top-right menu <em>Content</em>
                 and select the menuitem <em>New Blog Post</em>.
             </p>

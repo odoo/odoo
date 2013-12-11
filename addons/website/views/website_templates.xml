@@ -54,13 +54,8 @@
 
             <!-- Load stylesheets before scripts to avoid blocking -->
             <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-            <t t-if="editable">
-                <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-                <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
-                <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
-            </t>
-            <t t-call="website.theme"/>
 
+            <t t-call="website.theme"/>
 
             <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
@@ -170,7 +165,7 @@
                                             <t t-esc="lg[1].split('/').pop()"/>
                                         </a>
                                     </li>
-                                    <li t-if="editable">
+                                    <li groups="base.group_website_publisher">
                                         <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]', keep_query='*')"/>
                                         <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
                                             <i class="fa fa-plus-circle"/>
@@ -196,8 +191,13 @@
     </html>
         </template>
 
-        <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_designer">
+        <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher">
             <xpath expr="//head" position="inside">
+                <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
+                <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
+                <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
+
+
                 <link rel="stylesheet" href="/select2/static/lib/select2/select2.css"/>
                 <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
                 <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
@@ -273,7 +273,7 @@
         </template>
 
         <template id="publish_management">
-            <div t-if="editable" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
+            <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
                 <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
                     <button class="btn btn-danger js_publish_btn">Not Published</button>
                     <button class="btn btn-success js_publish_btn">Published</button>
@@ -298,7 +298,7 @@
         </template>
 
         <template id="publish_short">
-            <t t-if="editable" t-ignore="true">
+            <t groups="base.group_website_publisher" t-ignore="true">
                 <div t-attf-class="btn-group pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
                     <button t-attf-class="btn btn-sm btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
                         <span class="css_publish">Not Published</span>

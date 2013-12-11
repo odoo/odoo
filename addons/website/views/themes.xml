@@ -8,7 +8,7 @@
 
     <template id="website.themes" name="Themes">
         <t t-call="website.layout">
-          <div id="wrap" t-if="editable">
+          <div id="wrap" groups="base.group_website_publisher">
             <div class="container">
     
             <div class="alert alert-info mt32" t-if="theme_changed">

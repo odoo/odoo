@@ -119,7 +119,7 @@
 
                                 <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
 
-                                  <div class="css_options" t-ignore="true" t-if="editable">
+                                  <div class="css_options" t-ignore="true" groups="base.group_website_publisher">
                                     <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
                                       <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                                       <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
