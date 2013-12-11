@@ -3424,28 +3424,30 @@ class BaseModel(object):
         fields (as is if the fields is not falsy, or the readable/writable
         fields if fields is falsy).
         """
-        def p(field_name):
-            """Predicate to test if the user has access to the given field name."""
-            # Ignore requested field if it doesn't exist. This is ugly but
-            # it seems to happen at least with 'name_alias' on res.partner.
-            if field_name not in self._all_columns:
-                return True
-            field = self._all_columns[field_name].column
-            if user != SUPERUSER_ID and field.groups:
+        if user == SUPERUSER_ID:
+            return fields or list(self._fields)
+
+        def valid(fname):
+            """ determine whether user has access to field `fname` """
+            field = self._fields.get(fname)
+            if field and field.groups:
                 return self.user_has_groups(cr, user, groups=field.groups, context=context)
             else:
                 return True
+
         if not fields:
-            fields = filter(p, self._all_columns.keys())
+            fields = filter(valid, self._fields)
         else:
-            filtered_fields = filter(lambda a: not p(a), fields)
-            if filtered_fields:
-                _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s', operation, user, self._name, ', '.join(filtered_fields))
+            invalid_fields = filter(lambda name: not valid(name), fields)
+            if invalid_fields:
+                _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
+                    operation, user, self._name, ', '.join(invalid_fields))
                 raise except_orm(
                     _('Access Denied'),
                     _('The requested operation cannot be completed due to security restrictions. '
                     'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                     (self._description, operation))
+
         return fields
 
     @api.multi
