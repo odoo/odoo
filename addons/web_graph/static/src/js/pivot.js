@@ -114,6 +114,20 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		});
 	},
 
+	// return all non expanded rows
+	get_rows_leaves: function () {
+		return _.filter(this.rows.headers, function (hdr) { 
+			return !hdr.is_expanded; 
+		});
+	},
+	
+	// return all non expanded cols
+	get_cols_leaves: function () {
+		return _.filter(this.cols.headers, function (hdr) { 
+			return !hdr.is_expanded; 
+		});
+	},
+	
 	fold: function (header) {
 		var list = [];
 		function tree_traversal(tree) {

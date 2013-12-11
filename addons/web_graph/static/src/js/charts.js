@@ -173,20 +173,20 @@ openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
 
 
 openerp.web_graph.line_chart = function (pivot, svg, measure_label) {
-    var data = [],
-        dim_x = pivot.rows.groupby.length,
+    var dim_x = pivot.rows.groupby.length,
         dim_y = pivot.cols.groupby.length;
 
-    if (dim_y === 0) {
-        pivot.cols.main.title = measure_label;
-    }
-    _.each(pivot.cols.headers, function (col) {
-        if (!col.is_expanded) {
-            var values = _.map(pivot.get_rows_depth(dim_x), function (row) {
-                return {x: row.title, y: pivot.get_value(row.id,col.id, 0)};
-            });
-            data.push({values: values, key: col.title || 'Undefined'});
+    var data = _.map(pivot.get_cols_leaves(), function (col) {
+        var values = _.map(pivot.get_rows_depth(dim_x), function (row) {
+            return {x: row.title, y: pivot.get_value(row.id,col.id, 0)};
+        });
+        var title = _.map(col.path, function (p) {
+            return p || 'Undefined';
+        }).join('/');
+        if (dim_y === 0) {
+            title = measure_label
         }
+        return {values: values, key: title};
     });
 
     nv.addGraph(function () {
