@@ -85,7 +85,8 @@ def inverse_related(field, records):
         other = record
         for name in field.related[:-1]:
             other = other[name]
-        other[field.related[-1]] = record[field.name]
+        if other:
+            other[field.related[-1]] = record[field.name]
 
 def search_related(field, operator, value):
     """ Determine the domain to search on `field`. """
