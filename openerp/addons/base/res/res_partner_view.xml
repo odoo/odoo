@@ -329,7 +329,7 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <field name="name"
-                       filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email,'ilike',self)]"/>
+                       filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
                    <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
                    <separator/>
                    <filter string="Persons" name="type_person" domain="[('is_company','=',0)]"/>

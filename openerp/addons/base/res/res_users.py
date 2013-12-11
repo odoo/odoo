@@ -169,7 +169,8 @@ class res_users(osv.osv):
     }
 
     def on_change_login(self, cr, uid, ids, login, context=None):
-        return {'value': {'email': login}}
+        v = {'email': login} if tools.single_email_re.match(login) else {}
+        return {'value': v}
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
@@ -762,7 +763,6 @@ class users_view(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         self._set_reified_groups(values)
-
         return super(users_view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
@@ -811,7 +811,7 @@ class users_view(osv.osv):
                 if len(group_split) != 2:
                     raise osv.except_osv(_('Invalid context value'), _('Invalid context default_groups_ref value (model.name_id) : "%s"') % group_xml_id)
                 try:
-                    temp, group_id = ir_model_data.get_object_reference(cr, uid,  group_split[0], group_split[1])
+                    temp, group_id = ir_model_data.get_object_reference(cr, uid, group_split[0], group_split[1])
                 except ValueError:
                     group_id = False
                 groups += [group_id]
@@ -819,14 +819,19 @@ class users_view(osv.osv):
         return values
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        if not fields:
-            fields = self.fields_get(cr, uid, context=context).keys()
-        group_fields, fields = partition(is_reified_group, fields)
-        if not 'groups_id' in fields:
+        fields_get = fields if fields is not None else self.fields_get(cr, uid, context=context).keys()
+        group_fields, _ = partition(is_reified_group, fields_get)
+
+        inject_groups_id = group_fields and fields and 'groups_id' not in fields
+        if inject_groups_id:
             fields.append('groups_id')
         res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
-        for values in (res if isinstance(res, list) else [res]):
-            self._get_reified_groups(group_fields, values)
+
+        if group_fields:
+            for values in (res if isinstance(res, list) else [res]):
+                self._get_reified_groups(group_fields, values)
+                if inject_groups_id:
+                    values.pop('groups_id', None)
         return res
 
     def _get_reified_groups(self, fields, values):

@@ -182,7 +182,7 @@ class ir_translation(osv.osv):
         if context is None:
             context = {}
         record = self.browse(cr, uid, id, context=context)
-        if value and record.type == 'model':
+        if  record.type == 'model':
             model_name, field = record.name.split(',')
             model = self.pool.get(model_name)
             #We need to take the context without the language information, because we want to write on the

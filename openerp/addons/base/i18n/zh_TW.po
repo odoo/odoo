@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-02 05:56+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2013-12-03 05:39+0000\n"
+"X-Generator: Launchpad (build 16856)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -50,7 +50,7 @@ msgstr "日期時間"
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
-msgstr "「多對多(many2many)」欄位 %s 之第二個引數須為 SQL 表格！您用了並非有效 SQL 表格名稱之 %s。"
+msgstr "「多對多(many2many)」欄位 %s 之第二個引數須為 SQL 表格！您輸入的 %s 並非有效 SQL 表格名稱。"
 
 #. module: base
 #: field:ir.ui.view,arch:0
@@ -61,7 +61,7 @@ msgstr "檢視架構"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sale Orders, Delivery & Invoicing Control"
-msgstr "報價, 銷售訂單, 交貨及發票管理"
+msgstr "報價單, 銷貨單, 發貨及發票管理"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -88,7 +88,7 @@ msgstr "幫助你管理專案，追蹤任務，生成計劃"
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "Touchscreen Interface for Shops"
-msgstr "商店觸控螢幕界面"
+msgstr "店面用觸控螢幕界面"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -122,15 +122,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"在產品表格中加入製造商及屬性之模組\n"
+"此模組在產品表單中加入製造商及屬性\n"
 "====================================================================\n"
 "\n"
-"您可以對一件產品做以下定義:\n"
+"您可以對產品定義以下內容：\n"
 "-----------------------------------------------\n"
 "    * 製造商\n"
 "    * 製造商的產品名稱\n"
 "    * 製造商的產品代碼\n"
-"    * 產品性質\n"
+"    * 產品屬性\n"
 "    "
 
 #. module: base
@@ -145,11 +145,14 @@ msgid ""
 "The module adds google user in res user.\n"
 "========================================\n"
 msgstr ""
+"\n"
+"此模組將 Google 使用者加到 res user 中。\n"
+"========================================\n"
 
 #. module: base
 #: help:res.partner,employee:0
 msgid "Check this box if this contact is an Employee."
-msgstr "如果聯絡人是員工則請勾選"
+msgstr "如果聯絡人是員工則請勾選此項"
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -232,7 +235,7 @@ msgstr "ir.ui.view.custom"
 #: code:addons/base/ir/ir_model.py:374
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr ""
+msgstr "不允許重新命名稀疏欄位「%s」"
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -286,6 +289,12 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"智利會計科目及稅務在地化。\n"
+"==============================================\n"
+"Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale
@@ -324,7 +333,7 @@ msgstr "最大尺寸"
 msgid ""
 "Database ID of record to open in form view, when ``view_mode`` is set to "
 "'form' only"
-msgstr ""
+msgstr "當「檢視模式」僅設為「表單」時，將開啟的紀錄的資料庫 ID"
 
 #. module: base
 #: help:ir.values,key2:0
@@ -389,7 +398,7 @@ msgstr ""
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
 "change it before setting a new default"
-msgstr ""
+msgstr "已有一共享的過濾器被設為 %(model)s 的預設過濾器。要設定新的預設過濾器前，請先修改或刪除原有預設過濾器。"
 
 #. module: base
 #: code:addons/orm.py:2649
@@ -465,7 +474,7 @@ msgstr "所指定為無效的日期/時間格式指示。請參照當您編寫�
 msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
-msgstr ""
+msgstr "您要修改的紀錄已被刪除（文件類型： %s）。"
 
 #. module: base
 #: help:ir.actions.act_window,views:0
@@ -691,7 +700,7 @@ msgstr "自訂欄位名稱開頭必須是 'x_' !"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx
 msgid "Mexico - Accounting"
-msgstr ""
+msgstr "墨西哥 - 會計"
 
 #. module: base
 #: help:ir.actions.server,action_id:0
@@ -847,7 +856,7 @@ msgstr "自動化動作"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro
 msgid "Romania - Accounting"
-msgstr ""
+msgstr "羅馬尼亞 - 會計"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config_settings
@@ -970,7 +979,7 @@ msgstr "報表類型，如 pdf, html, raw, sxw, odt, html2html, mako2html, ..."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document_webdav
 msgid "Shared Repositories (WebDAV)"
-msgstr ""
+msgstr "共享的儲存庫（WebDAV）"
 
 #. module: base
 #: view:res.users:0
@@ -997,7 +1006,7 @@ msgstr "辛巴威"
 #: help:ir.model.constraint,type:0
 msgid ""
 "Type of the constraint: `f` for a foreign key, `u` for other constraints."
-msgstr ""
+msgstr "限制條件類型：「f」為 foreign key ，「u」代表其他限制條件。"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -1092,7 +1101,7 @@ msgstr "請求參考類型"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_base_account
 msgid "Google Users"
-msgstr ""
+msgstr "Google 使用者"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
@@ -1260,6 +1269,8 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
+"您的系統中尚未定義語言代碼為「 %s 」的語言！ \n"
+"請於管理者介面中定義。"
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -1269,7 +1280,7 @@ msgstr "關島（美屬）"
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr ""
+msgstr "國家名稱必須為獨一無二的！"
 
 #. module: base
 #: field:ir.module.module,installed_version:0
@@ -1406,7 +1417,7 @@ msgid ""
 "suitable\n"
 "                                for uploading to OpenERP's translation "
 "platform,"
-msgstr ""
+msgstr "TGZ 格式：這是含有 PO 格式檔案的壓縮檔，適用於直接上傳至 OpenERP 的翻譯平台。"
 
 #. module: base
 #: view:res.lang:0
@@ -1430,7 +1441,7 @@ msgstr "測試"
 #. module: base
 #: field:ir.actions.report.xml,attachment:0
 msgid "Save as Attachment Prefix"
-msgstr ""
+msgstr "另存附件檔案的前綴字元"
 
 #. module: base
 #: field:ir.ui.view_sc,res_id:0
@@ -1467,7 +1478,7 @@ msgstr "海地"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
 msgid "French Payroll"
-msgstr ""
+msgstr "法國薪資"
 
 #. module: base
 #: view:ir.ui.view:0
@@ -1506,12 +1517,12 @@ msgstr "操作取消"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document
 msgid "Document Management System"
-msgstr ""
+msgstr "文件管理系統"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_claim
 msgid "Claims Management"
-msgstr ""
+msgstr "申訴管理"
 
 #. module: base
 #: model:ir.module.module,description:base.module_document_webdav
@@ -13105,7 +13116,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
 msgid "Belgium - Payroll with Accounting"
-msgstr ""
+msgstr "比利時 - 薪資（含會計）"
 
 #. module: base
 #: selection:base.language.export,format:0

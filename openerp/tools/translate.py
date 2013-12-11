@@ -684,7 +684,7 @@ def trans_generate(lang, modules, cr):
             except AttributeError, exc:
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
-            objmodel = registry[obj.model]
+            objmodel = registry.get(obj.model)
             if not objmodel or not field_name in objmodel._columns:
                 continue
             field_def = objmodel._columns[field_name]
