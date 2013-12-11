@@ -301,7 +301,7 @@ class stock_quant(osv.osv):
             self.write(cr, SUPERUSER_ID, toreserve, {'reservation_id': move.id, 'link_move_operation_id': link and link.id or False}, context=context)
         #check if move'state needs to be set as 'assigned'
         move.refresh()
-        if sum([q.qty for q in move.reserved_quant_ids]) == move.product_qty and move.state == 'confirmed':
+        if sum([q.qty for q in move.reserved_quant_ids]) == move.product_qty and move.state in ('confirmed', 'waiting'):
             self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
 
     def quants_move(self, cr, uid, quants, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
@@ -2924,7 +2924,7 @@ class stock_location_path(osv.osv):
     }
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
-        newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        newdate = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=rule.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         if rule.auto == 'transparent':
             old_dest_location = move.location_dest_id.id
             move_obj.write(cr, uid, [move.id], {
