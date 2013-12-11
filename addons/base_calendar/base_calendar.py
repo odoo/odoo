@@ -115,7 +115,7 @@ class calendar_attendee(osv.osv):
         return result
 
     _columns = {
-        'state': fields.selection([('needs-action', 'Needs Action'),('tentative', 'Uncertain'),('declined', 'Declined'),('accepted', 'Accepted')], 'Status', readonly=True, help="Status of the attendee's participation"),
+        'state': fields.selection([('needsAction', 'Needs Action'),('tentative', 'Uncertain'),('declined', 'Declined'),('accepted', 'Accepted')], 'Status', readonly=True, help="Status of the attendee's participation"),
         'cn': fields.function(_compute_data, string='Common name', type="char", size=124, multi='cn', store=True),
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."),
         'partner_id': fields.many2one('res.partner', 'Contact',readonly="True"),
@@ -127,7 +127,7 @@ class calendar_attendee(osv.osv):
         'event_id': fields.many2one('crm.meeting','Meeting linked'),        
     }
     _defaults = {
-        'state': 'needs-action',        
+        'state': 'needsAction',        
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -220,7 +220,7 @@ class calendar_attendee(osv.osv):
         template_pool = self.pool.get('email.template')
         local_context = context.copy()
         color = {
-                 'needs-action' : 'grey',
+                 'needsAction' : 'grey',
                  'accepted' :'green',
                  'tentative' :'#FFFF00',
                  'declined':'red'                 
@@ -297,8 +297,7 @@ class calendar_attendee(osv.osv):
         meeting_obj =  self.pool.get('crm.meeting')
         res = self.write(cr, uid, ids, {'state': 'accepted'}, context)
         for attendee in self.browse(cr, uid, ids, context=context):
-            if attendee.ref:
-                meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has accepted invitation") % (attendee.cn)),subtype="base_calendar.subtype_invitation", context=context)
+            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has accepted invitation") % (attendee.cn)),subtype="base_calendar.subtype_invitation", context=context)
                 
         return res
     
@@ -572,7 +571,7 @@ class calendar_alarm_manager(osv.osv):
             template_pool = self.pool.get('email.template')
             local_context = context and context.copy() or {}
             color = {
-                     'needs-action' : 'grey',
+                     'needsAction' : 'grey',
                      'accepted' :'green',
                      'tentative' :'#FFFF00',
                      'declined':'red'                 
@@ -849,7 +848,7 @@ class crm_meeting(osv.Model):
                 if field == 'is_attendee':
                     res[meeting_id][field] = True if attendee else False
                 elif field == 'attendee_status':
-                    res[meeting_id][field] = attendee.state if attendee else 'needs-action'
+                    res[meeting_id][field] = attendee.state if attendee else 'needsAction'
                 elif field == 'display_time':
                     res[meeting_id][field] = self._get_display_time(cr, uid, meeting_id, context=context)
         return res
@@ -1082,7 +1081,6 @@ class crm_meeting(osv.Model):
                 access_token = self.new_invitation_token(cr, uid, event, partner.id)
                 att_id = self.pool.get('calendar.attendee').create(cr, uid, {
                     'partner_id': partner.id,
-                    'user_id': partner.user_ids and partner.user_ids[0].id or False,
                     'event_id': event.id,
                     'access_token': access_token,
                     'email': partner.email,

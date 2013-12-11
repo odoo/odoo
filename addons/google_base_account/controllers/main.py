@@ -4,7 +4,6 @@ import openerp
 import openerp.addons.web.http as http
 from openerp.addons.web.http import request
 import openerp.addons.web.controllers.main as webmain
-import json
 from openerp.addons.web.http import SessionExpiredException
 from werkzeug.exceptions import BadRequest
 import werkzeug.utils
@@ -13,29 +12,41 @@ class google_auth(http.Controller):
     
     @http.route('/googleauth/oauth2callback', type='http', auth="none")
     def oauth2callback(self, **kw):
+        """ This route/function is called by Google when user Accept/Refuse the consent of Google """
         
         state = simplejson.loads(kw['state'])
-
         dbname = state.get('d')
+        service = state.get('s')
         url_return = state.get('from')
         
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
-            #TODO CHECK IF REQUEST OK
-            registry.get('google.calendar').set_all_tokens(cr,request.session.uid,kw['code'])
-            #registry.get('google.calendar').set_primary_id(cr,request.session.uid)
+            if kw.get('code'):
+                registry.get('google.%s' % service).set_all_tokens(cr,request.session.uid,kw['code'])
+                return werkzeug.utils.redirect(url_return)
             
-        return werkzeug.utils.redirect(url_return)        
-
+            #TODO - Display error at customer if url contains ?Error=
+            elif kw.get('error'):
+                return werkzeug.utils.redirect("%s%s%s" % (url_return ,"?Error=" , kw.get('error')))
+            else:
+                return werkzeug.utils.redirect("%s%s%s" % (url_return ,"?Error=Unknown_error"))
+            
+                
     @http.route('/web_calendar_sync/sync_calendar/sync_data', type='json', auth='user')
     def sync_data(self, arch, fields, model,**kw):
-       
+        """ 
+            This route/function is called when we want to synchronize openERP calendar with Google Calendar
+            
+            Function return a dictionary with the status :  NeedConfigFromAdmin, NeedAuth, NeedRefresh, NoNewEventFromGoogle, SUCCESS if not crm meeting
+            The dictionary may contains an url, to allow OpenERP Client to redirect user on this URL for authorization for example 
                     
+        """
+                            
         if model == 'crm.meeting':
             gs_obj = request.registry.get('google.service')
             gc_obj = request.registry.get('google.calendar')
             
-            #We check that admin has already configure api for google synchronization !
+            # Checking that admin have already configured Google API for google synchronization !
             client_id = gs_obj.get_client_id(request.cr, request.uid,'calendar',context=kw.get('LocalContext'))
 
             if not client_id or client_id == '':
@@ -44,7 +55,7 @@ class google_auth(http.Controller):
                         "url" : '' 
                         }
                         
-            #We check that user has already accepted openerp to access his calendar !
+            # Checking that user have already  accepted OpenERP to access his calendar !
             if gc_obj.need_authorize(request.cr, request.uid,context=kw.get('LocalContext')):
                 url =  gc_obj.authorize_google_uri(request.cr, request.uid, from_url=kw.get('fromurl'),context=kw.get('LocalContext'))
                 return {
@@ -52,27 +63,9 @@ class google_auth(http.Controller):
                         "url" : url 
                         }
             
-            #We launch the synchronization
-            result = gc_obj.synchronize_events(request.cr, request.uid, [], kw.get('LocalContext'))
-            return result
-        else:            
-            calendar_info = {
-               'field_data':{},
-               'date_start':arch['attrs'].get('date_start'),
-               'date_stop':arch['attrs'].get('date_stop'),
-               'calendar_string':arch['attrs'].get('string'),
-               'model':model
-            }
-            for field, data in fields.items():
-                calendar_info['field_data'][field] = {
-                     'type': data.get('type'),
-                     'string': data.get('string')
-                }            
-            
-            print "@@@@@@@@@@@@@@@@@  Is still used !!!!"
-            gc_obj.synchronize_calendar(request.cr, request.uid, calendar_info, kw.get('LocalContext'))
-        
-        
+            # If App authorized, and user access accepted, We launch the synchronization
+            return gc_obj.synchronize_events(request.cr, request.uid, [], kw.get('LocalContext'))
+                      
         return { "status" : "SUCCESS" }
 
 

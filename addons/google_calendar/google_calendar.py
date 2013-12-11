@@ -38,19 +38,6 @@ from openerp.osv import fields, osv
 from openerp.osv import osv
 
 
-google_state_mapping = {
-    'needs-action':'needsAction',
-    'declined': 'declined',
-    'tentative':'tentative',
-    'accepted':'accepted',
-    'delegated':'declined',
-}
-oe_state_mapping = {
-    'needsAction':'needs-action',
-    'declined': 'declined',
-    'tentative':'tentative',
-    'accepted':'accepted',
-}
 
 class google_calendar(osv.osv):
     _name = 'google.calendar'
@@ -71,14 +58,12 @@ class google_calendar(osv.osv):
             end_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context).isoformat('T')
             type = 'dateTime'
         attendee_list = []
-        
-        print "att for event %s : %s" % (event.id,event.attendee_ids)
 
         for attendee in event.attendee_ids:
             attendee_list.append({
                 'email':attendee.email or 'NoEmail@mail.com',
                 'displayName':attendee.partner_id.name,
-                'responseStatus':google_state_mapping.get(attendee.state, 'needsAction'),
+                'responseStatus':attendee.state or 'needsAction',
             })
         data = {
             "summary": event.name or '',
@@ -112,10 +97,8 @@ class google_calendar(osv.osv):
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = simplejson.dumps(data)
         
-        response = gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
-        #TODO Check response result
-        
-        return response
+        return gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
+    
         
     def delete_an_event(self, cr, uid,event_id, context=None):
         gs_pool = self.pool.get('google.service')
@@ -128,7 +111,6 @@ class google_calendar(osv.osv):
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary',event_id)
         
         response = gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
-        print "@@@RESPONSE",response
         return response
         
     def get_event_dict(self,cr,uid,token=False,nextPageToken=False,context=None):
@@ -243,7 +225,7 @@ class google_calendar(osv.osv):
                 if type == "write":
                     for oe_attendee in event['attendee_ids']:
                         if oe_attendee.email == google_attendee['email']:
-                            calendar_attendee_obj.write(cr, uid,[oe_attendee.id] ,{'state' : oe_state_mapping[google_attendee['responseStatus']]},context=context)
+                            calendar_attendee_obj.write(cr, uid,[oe_attendee.id] ,{'state' : google_attendee['responseStatus']},context=context)
                             google_attendee['found'] = True
                             continue
                             
@@ -255,7 +237,7 @@ class google_calendar(osv.osv):
                 attendee = res_partner_obj.read(cr, uid, attendee_id[0], ['email'], context=context)
                 partner_record.append((4, attendee.get('id')))
                 attendee['partner_id'] = attendee.pop('id')                
-                attendee['state'] = oe_state_mapping[google_attendee['responseStatus']]
+                attendee['state'] = google_attendee['responseStatus']
                 attendee_record.append((0, 0, attendee))                
         UTC = pytz.timezone('UTC')
         if single_event_dict.get('start') and single_event_dict.get('end'): # If not cancelled   

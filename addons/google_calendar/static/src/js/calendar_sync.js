@@ -42,8 +42,8 @@ openerp.google_calendar = function(instance) {
                 else if (o.status == "NeedRefresh"){
                     self.$calendar.fullCalendar('refetchEvents');
                 }
-                $('div.oe_cal_sync_button').prop('disabled',false);
-            });
+
+            }).always(function(o) { $('div.oe_cal_sync_button').prop('disabled',false); });
         }
     });
 

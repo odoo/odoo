@@ -65,8 +65,9 @@ class google_service(osv.osv_memory):
     
     #If no scope is passed, we use service by default to get a default scope
        
+       
     def _get_authorize_uri(self, cr, uid, from_url, service, scope = False, context=None): 
-        
+        """ This method return the url needed to allow this instance of OpenErp to access to the scope of gmail specified as parameters """
         state_obj = {}
         state_obj['d'] = cr.dbname
         state_obj['s'] = service
@@ -88,7 +89,7 @@ class google_service(osv.osv_memory):
         uri = self.get_uri_oauth(a='auth') + "?%s" % urllib.urlencode(params)
         return uri
             
-    def _get_google_token_json(self, cr, uid, authorize_code, service, context=None): #exchange_AUTHORIZATION vs Token (service = calendar)
+    def _get_google_token_json(self, cr, uid, authorize_code, service, context=None): 
         res = False
         base_url = self.get_base_url(cr, uid, context)
         client_id = self.get_client_id(cr, uid, service, context)
@@ -107,13 +108,13 @@ class google_service(osv.osv_memory):
         try:
             data = urllib.urlencode(params)
             req = urllib2.Request(self.get_uri_oauth(a='token'), data, headers)
+            
             content = urllib2.urlopen(req).read()
             res = simplejson.loads(content)            
             
         except urllib2.HTTPError,e:
             print e
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"), context=context)
-            
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during your token generation. Maybe your Authorization Code is invalid"), context=context)            
         return res
                 
     def _refresh_google_token_json(self, cr, uid, refresh_token, service, context=None): #exchange_AUTHORIZATION vs Token (service = calendar)
@@ -163,11 +164,13 @@ class google_service(osv.osv_memory):
             else:
                 raise ('Method not supported [%s] not in [GET, POST, PUT or PATCH]!' % (type))
             req.get_method = lambda: type.upper()            
-            req.add_header('Pragma', 'no-cache')
+
             request = urllib2.urlopen(req)
             
-            if request.getcode() == 204:
+            if request.getcode() == 204: #No content returned, (ex: POST calendar/event/clear)
                 res = True
+            elif request.getcode() == 404: #Page not found
+                res = False
             else:
                 content=request.read()
                 res = simplejson.loads(content)
@@ -177,7 +180,7 @@ class google_service(osv.osv_memory):
                 print "=========="
         except urllib2.HTTPError,e:
             print "ERROR CATCHED : ",e.read()
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"), context=context)
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong with your request to google"), context=context)
           
         return res
         
@@ -190,7 +193,7 @@ class google_service(osv.osv_memory):
     def get_client_secret(self, cr, uid, service, context=None):
         return self.pool.get('ir.config_parameter').get_param(cr, uid, 'google_%s_client_secret' % (service,),context=context).strip()
     
-    def get_uri_oauth(self,a=''): #a = optionnal action
+    def get_uri_oauth(self,a=''): #a = optional action
         return "https://accounts.google.com/o/oauth2/%s" % (a,)
     
     def get_uri_api(self):
