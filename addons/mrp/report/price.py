@@ -70,6 +70,8 @@ class report_custom(report_rml):
             main_strd_price = str(std_price) + '\r\n'
             sum_strd = prod_qtty*std_price
             for seller_id in prod.seller_ids:
+                if seller_id.name.id == prod.seller_id.id:
+                    continue
                 sellers +=  '- <i>'+ to_xml(seller_id.name.name) +'</i>\r\n'
                 pricelist = seller_id.name.property_product_pricelist_purchase
                 price = pricelist_pool.price_get(cr,uid,[pricelist.id],

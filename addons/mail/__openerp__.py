@@ -81,16 +81,19 @@ Main Features
     'css': [
         'static/src/css/mail.css',
         'static/src/css/mail_group.css',
+        'static/src/css/announcement.css',
     ],
     'js': [
         'static/src/js/mail.js',
         'static/src/js/mail_followers.js',
         'static/src/js/many2many_tags_email.js',
+        'static/src/js/announcement.js',
         'static/src/js/suggestions.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',
         'static/src/xml/mail_followers.xml',
+        'static/src/xml/announcement.xml',
         'static/src/xml/suggestions.xml',
     ],
 }
