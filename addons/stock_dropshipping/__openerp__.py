@@ -46,6 +46,6 @@ This adds the route to make dropshipping sales orders in which the product sold 
         'test/lifo_price.yml'
         ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
