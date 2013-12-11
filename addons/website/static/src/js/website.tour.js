@@ -265,10 +265,6 @@
             var test = {
                 id: tour.id,
                 run: function (force) {
-                    var url = new website.UrlParser(window.location.href);
-                    if (tour.startPath && url.pathname !== tour.startPath) {
-                        throw new Error(tour.startPath);
-                    }
                     if (force === true) {
                         this.reset();
                     }
@@ -296,6 +292,7 @@
                         } else if (step.trigger.id === 'change') {
                             var currentValue = $element.val();
                             var options = $element[0].options;
+                            // FIXME: It may be necessary to set a particular value
                             var newValue = _.find(options, function (option) {
                                 return option.value !== currentValue;
                             }).value;
@@ -304,14 +301,22 @@
                             $element.trigger($.Event("click", { srcElement: $element }));
                         }
                     }
-                    var lastStepId = window.localStorage.getItem(testId);
-                    var currentStep = actionSteps.shift();
-                    if (lastStepId) {
-                        while (currentStep && lastStepId !== currentStep.stepId) {
-                            currentStep = actionSteps.shift();
+                    var url = new website.UrlParser(window.location.href);
+                    if (tour.startPath && url.pathname !== tour.startPath) {
+                        window.localStorage.setItem(testId, actionSteps[0].stepId);
+                        window.location.href = tour.startPath;
+                    } else {
+                        var lastStepId = window.localStorage.getItem(testId);
+                        var currentStep = actionSteps.shift();
+                        if (lastStepId) {
+                            while (currentStep && lastStepId !== currentStep.stepId) {
+                                currentStep = actionSteps.shift();
+                            }
                         }
+                        setTimeout(function () {
+                            executeStep(currentStep);
+                        }, 0);
                     }
-                    executeStep(currentStep);
                 },
                 reset: function () {
                     window.localStorage.removeItem(testId);

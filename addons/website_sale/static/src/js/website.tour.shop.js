@@ -109,11 +109,7 @@
                     placement: 'bottom',
                     title: "Describe the product for your audience",
                     content: "Insert blocks like text-image, or gallery to fully describe the product and make your visitors want to buy this product.",
-                    trigger: {
-                        emitter: editor,
-                        type: 'openerp',
-                        id: 'rte:ready',
-                    },
+                    trigger: 'click',
                 },
                 {
                     stepId: 'drag-big-picture',
@@ -134,11 +130,17 @@
                 },
                 {
                     stepId: 'publish-product',
-                    element: 'button.js_publish_btn',
+                    element: '.js_publish_management button.js_publish_btn.btn-danger',
                     placement: 'top',
                     title: "Publish your product",
                     content: "Click to publish your product so your customers can see it.",
                     trigger: 'click',
+                },
+                {
+                    stepId: 'congratulations',
+                    title: "Congratulations",
+                    content: "Congratulations! You just created and published your first product.",
+                    template: self.popover({ end: "Ok" }),
                 },
             ];
             return this._super();
