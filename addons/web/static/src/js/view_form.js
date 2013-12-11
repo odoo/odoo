@@ -2104,8 +2104,9 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
             this.$el.find('.oe_field_translate').click(this.on_translate);
         }
         this.$label = this.view ? this.view.$el.find('label[for=' + this.id_for_label + ']') : $();
-        if (instance.session.debug) {
+        if (this.field.help || instance.session.debug)
             this.do_attach_tooltip(this, this.$label[0] || this.$el);
+        if (instance.session.debug) {
             this.$label.off('dblclick').on('dblclick', function() {
                 console.log("Field '%s' of type '%s' in View: %o", self.name, (self.node.attrs.widget || self.field.type), self.view);
                 window.w = self;
