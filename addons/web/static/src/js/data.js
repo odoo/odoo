@@ -920,6 +920,15 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
      * @param {Object} id record to remove from the BDS's cache
      */
     evict_record: function (id) {
+        // Don't evict records which haven't yet been saved: there is no more
+        // recent data on the server (and there potentially isn't any data),
+        // and this breaks the assumptions of other methods (that the data
+        // for new and altered records is both in the cache and in the to_write
+        // or to_create collection)
+        if (_(this.to_create.concat(this.to_write)).find(function (record) {
+                return record.id === id; })) {
+            return;
+        }
         for(var i=0, len=this.cache.length; i<len; ++i) {
             var record = this.cache[i];
             // if record we call the button upon is in the cache
