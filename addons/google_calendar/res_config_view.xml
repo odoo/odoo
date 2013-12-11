@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="calendar_config_settings" model="ir.ui.view">
+            <field name="name">Calendar settings</field>
+            <field name="model">calendar.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure your Gmail" version="7.0" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <separator string="Google synchronization Settings"/>
+                    <div>
+                        <group>
+                            <div>
+                                <label for="google_cal_sync"/>
+                                <field name="google_cal_sync" class="oe_inline"/>                            
+                                <div> 
+                                    <div attrs="{'invisible':[('google_cal_sync','=',False)]}">
+                                        <br/><h2>To setup the signin process with Google, first you have to perform the following steps</h2>
+                                        <ul> 
+                                            <li> Connect on your google account and go to <a href='https://cloud.google.com/console' target='_blank'>https://cloud.google.com/console</a> </li>
+                                            <li> 
+                                                Click on <b>"Create Project"</b> and enter a project name and change your id if you want. Don't forget to accept the Terms of Services
+                                                <br/><img src='/google_calendar/static/src/img/setup_01.png' class='calendar_img_tuto'/> 
+                                                <br/><img src='/google_calendar/static/src/img/setup_02.png' class='calendar_img_tuto'/>   
+                                            </li>
+                                            <li> In the menu on left side, select the sub menu APIs (from menu APIs and auth) and activate <b>"Calendar API"</b> by clicking on button "OFF".
+                                                <br/> You will need to accept again the "Google APIs Terms of services" and "Calendar API Terms of service"
+                                                <br/> When it's done, check that the button of "Calendar API" is well in green and with text "ON"
+                                                <br/> <img src='/google_calendar/static/src/img/setup_03.png' class='calendar_img_tuto'/>
+                                                <br/> <img src='/google_calendar/static/src/img/setup_04.png' class='calendar_img_tuto'/>
+                                                <br/> <img src='/google_calendar/static/src/img/setup_05.png' class='calendar_img_tuto'/>
+                                            </li> 
+                                            <li> 
+                                                In the menu on left side, select the sub menu <b>'Registered apps'</b> (from menu APIs and auth) and click on button "Register APP".
+                                                <br/> Fill in the Name of application and check that the platform is well on "Web Application" before to click on "Register"
+                                                <br/> <img src='/google_calendar/static/src/img/setup_06.png' class='calendar_img_tuto'/>
+                                                <br/> <img src='/google_calendar/static/src/img/setup_07.png' class='calendar_img_tuto'/>
+                                            </li> 
+                                            <li> 
+                                                Now, you can click on <b>"OAuth 2.0 Client ID"</b>  and see your <i>Client ID</i> and your <i>Client Secret</i>.
+                                                <br/>That's these both informations that you need to insert in the 2 fields below !
+                                                <br/> <img src='/google_calendar/static/src/img/setup_08.png' class='calendar_img_tuto'/>
+                                            </li>
+                                            <li> 
+                                                Remark : You can, if you want, personalize the consent screen that yours users will seen by clicking also in the left menu on "Consent Screen".                                                    
+                                            </li>
+                                        </ul>                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </group> 
+                        <group>
+                            <div>
+                                <label for="cal_client_id" string="Google Client ID" />
+                                <field name="cal_client_id" class="oe_inline"/>  
+                            </div>
+                        </group> 
+                        <group>
+                            <div>
+                                <label for="cal_client_secret" string="Google Client Secret"/>
+                                <field name="cal_client_secret" class="oe_inline"/>
+                            </div>
+                        </group>                            
+                    </div>                              
+                </form>
+            </field>
+        </record>
+
+        <record id="action_config_settings" model="ir.actions.act_window">
+            <field name="name">Synchronization</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">calendar.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+        
+        <menuitem id="menu_calendar_config_settings" parent="base_calendar.menu_calendar_configuration" action="action_config_settings" groups="base.group_no_one"/>
+
+    </data>
+</openerp>
