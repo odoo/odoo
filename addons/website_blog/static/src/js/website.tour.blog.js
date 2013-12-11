@@ -82,11 +82,7 @@
                     placement: 'bottom',
                     title: "Layout Your Blog Post",
                     content: "Use well designed building blocks to structure the content of your blog. Click 'Insert Blocks' to add new content.",
-                    trigger: {
-                        emitter: editor,
-                        type: 'openerp',
-                        id: 'rte:ready',
-                    },
+                    trigger: 'click',
                 },
                 {
                     stepId: 'drag-image-text',
