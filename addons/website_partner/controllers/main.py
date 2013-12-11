@@ -6,10 +6,8 @@ from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 import werkzeug
 
-white_list = ["grade_id", "name", "parent_id", 'website_short_description', "website_published",
-        "website_description", "tel", "fax", "image", "image_small", "image_medium"]
 
-def get_partner_template_value(partner, add_white_list=None):
+def get_partner_template_value(partner):
     ctx = dict(request.context, show_address=True)
     partner_obj = request.registry['res.partner']
     partner_id = partner.id
@@ -18,7 +16,7 @@ def get_partner_template_value(partner, add_white_list=None):
         partner = None
 
     partner_data = partner_obj.read(
-            request.cr, openerp.SUPERUSER_ID, [partner_id], white_list + (add_white_list or []), context=ctx)[0]
+            request.cr, openerp.SUPERUSER_ID, [partner_id], request.website.get_partner_white_list_fields(), context=ctx)[0]
 
     if not partner_data["website_published"]:
         return None

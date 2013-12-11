@@ -59,7 +59,7 @@ class WebsiteMembership(http.Controller):
         google_map_partner_ids = ",".join(map(str, partner_ids))
 
         partners_data = {}
-        for partner in partner_obj.read(cr, openerp.SUPERUSER_ID, partner_ids, website_partner.white_list, context=context):
+        for partner in partner_obj.read(cr, openerp.SUPERUSER_ID, partner_ids, request.website.get_partner_white_list_fields(), context=context):
             partners_data[partner.get("id")] = partner
 
         # format domain for group_by and memberships

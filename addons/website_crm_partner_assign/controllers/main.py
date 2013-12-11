@@ -44,14 +44,14 @@ class WebsiteCrmPartnerAssign(http.Controller):
         pager = request.website.pager(url="/partners/", total=len(partner_ids), page=page, step=self._references_per_page, scope=7, url_args=post)
 
         # search for partners to display
-        partner_ids = partner_obj.search(
-            request.cr, openerp.SUPERUSER_ID, partner_domain,
-            context=request.context,
-            limit=self._references_per_page, offset=pager['offset'],
-            order="grade_id ASC,partner_weight DESC")
-        google_map_partner_ids = ",".join([str(p) for p in partner_ids])
-        partners_data = partner_obj.read(
-            request.cr, openerp.SUPERUSER_ID, partner_ids, website_partner.white_list, context=request.context)
+        partners_data = partner_obj.search_read(request.cr, openerp.SUPERUSER_ID,
+            domain=partner_domain,
+            fields=request.website.get_partner_white_list_fields(),
+            offset=pager['offset'],
+            limit=self._references_per_page,
+            order="grade_id DESC,partner_weight DESC",
+            context=request.context)
+        google_map_partner_ids = ",".join([str(p['id']) for p in partners_data])
 
         # group by country
         countries = partner_obj.read_group(
@@ -74,7 +74,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             context=request.context, count=True)
         grades.insert(0, {
             'grade_id_count': grades_partners,
-            'grade_id': ("all", _("All Grades"))
+            'grade_id': ("all", _("All Levels"))
         })
 
         values = {
