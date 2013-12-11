@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:05+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-06-28 05:58+0000\n"
+"X-Generator: Launchpad (build 16681)\n"
 
 #. module: base
 #: field:ir.filters,domain:0
@@ -141,15 +141,15 @@ msgid "Target Window"
 msgstr "대상 창"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:104
-#: code:addons/base/ir/ir_sequence.py:130
+#: code:addons/base/ir/ir_sequence.py:134
+#: code:addons/base/ir/ir_sequence.py:160
 #: code:addons/base/res/res_users.py:473
 #, python-format
 msgid "Warning!"
 msgstr "경고!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:406
+#: code:addons/base/ir/ir_model.py:405
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -173,7 +173,7 @@ msgid "Swaziland"
 msgstr "스와질란드"
 
 #. module: base
-#: code:addons/orm.py:4486
+#: code:addons/orm.py:4485
 #, python-format
 msgid "created."
 msgstr "생성됨."
@@ -483,7 +483,7 @@ msgid "Miscellaneous Suppliers"
 msgstr "기타 공급업체"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:345
+#: code:addons/base/ir/ir_model.py:344
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "사용자 지정 필드명은 'x_'로 시작해야 합니다 !"
@@ -621,7 +621,7 @@ msgstr "알바니아어 / Shqip"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr "영업기회"
+msgstr "기회"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -851,7 +851,7 @@ msgid "Transitions"
 msgstr "전환"
 
 #. module: base
-#: code:addons/orm.py:4918
+#: code:addons/orm.py:4920
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr "레코드 #%d (%s) 가 발견되지 않아 복사할 수 없습니다!"
@@ -958,7 +958,7 @@ msgid "Marshall Islands"
 msgstr "마샬 군도"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:430
+#: code:addons/base/ir/ir_model.py:429
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "필드의 모델 변경은 금지되었습니다!"
@@ -983,6 +983,9 @@ msgid ""
 "reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
+"작업이 다음과 같은 이유로 완료될 수 없습니다:\n"
+"- 삭제 : 다른 레코드가 참고하고 있는 레코드를 삭제하려고 합니다.\n"
+"- 생성/수정 : 필수 필드가 올바르게 설정되지 않습니다."
 
 #. module: base
 #: view:ir.rule:0
@@ -1147,7 +1150,7 @@ msgid "On Create"
 msgstr "생성 시"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:914
+#: code:addons/base/ir/ir_model.py:913
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1378,7 +1381,7 @@ msgstr "말라위"
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:36
-#: code:addons/base/res/res_partner.py:314
+#: code:addons/base/res/res_partner.py:339
 #: code:addons/base/res/res_users.py:92
 #: code:addons/base/res/res_users.py:335
 #: code:addons/base/res/res_users.py:337
@@ -1890,15 +1893,18 @@ msgid "Messages"
 msgstr "메시지"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:373
-#: code:addons/base/ir/ir_model.py:375
-#: code:addons/base/ir/ir_model.py:405
-#: code:addons/base/ir/ir_model.py:419
-#: code:addons/base/ir/ir_model.py:421
-#: code:addons/base/ir/ir_model.py:423
-#: code:addons/base/ir/ir_model.py:430
-#: code:addons/base/ir/ir_model.py:433
+#: code:addons/base/ir/ir_model.py:372
+#: code:addons/base/ir/ir_model.py:374
+#: code:addons/base/ir/ir_model.py:404
+#: code:addons/base/ir/ir_model.py:418
+#: code:addons/base/ir/ir_model.py:420
+#: code:addons/base/ir/ir_model.py:422
+#: code:addons/base/ir/ir_model.py:429
+#: code:addons/base/ir/ir_model.py:432
+#: code:addons/base/module/wizard/base_module_import.py:58
+#: code:addons/base/module/wizard/base_module_import.py:66
 #: code:addons/base/module/wizard/base_update_translations.py:39
+#: code:addons/base/res/res_currency.py:52
 #, python-format
 msgid "Error!"
 msgstr "오류!"
@@ -2168,7 +2174,7 @@ msgstr "메인 업체"
 #. module: base
 #: field:ir.ui.menu,web_icon_hover:0
 msgid "Web Icon File (hover)"
-msgstr ""
+msgstr "웹 아이콘 파일 (제자리비행)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -3001,7 +3007,7 @@ msgid "%c - Appropriate date and time representation."
 msgstr "%c - 적절한 날짜 및 시간 표시"
 
 #. module: base
-#: code:addons/base/res/res_config.py:388
+#: code:addons/base/res/res_config.py:420
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -3307,6 +3313,7 @@ msgstr "Affero GPL-3"
 
 #. module: base
 #: field:ir.sequence,number_next:0
+#: field:ir.sequence,number_next_actual:0
 msgid "Next Number"
 msgstr "다음 번호"
 
@@ -3387,7 +3394,7 @@ msgid "Apply For Delete"
 msgstr "삭제에 적용"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:421
+#: code:addons/base/ir/ir_model.py:420
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr "해당 열이 이미 존재하기 때문에, 열 이름을 %s로 변경할 수 없음!"
@@ -3606,7 +3613,7 @@ msgid "Montserrat"
 msgstr "몬세라트산"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:278
+#: code:addons/base/ir/ir_model.py:277
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -4584,7 +4591,7 @@ msgstr "정수"
 msgid ""
 "The path to the main report file (depending on Report Type) or NULL if the "
 "content is in another data field"
-msgstr "주 보고서 파일의 경로 (보고서 유형에 따름) 또는 컨텐트가 다른 데이터 필드에 위치할 경우 NULL"
+msgstr "주 보고서 파일의 경로 (보고서 유형에 따름) 또는 내용이 다른 데이터 필드에 위치할 경우 NULL"
 
 #. module: base
 #: help:res.users,company_id:0
@@ -4895,7 +4902,7 @@ msgid "Dutch / Nederlands"
 msgstr "독일어 / 네덜란드"
 
 #. module: base
-#: code:addons/base/res/res_config.py:350
+#: code:addons/base/res/res_config.py:380
 #, python-format
 msgid ""
 "\n"
@@ -5090,7 +5097,7 @@ msgid "Nigeria"
 msgstr "나이지리아"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:339
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "선택 필드용, 선택 옵션이 정해져야 함!"
@@ -5453,7 +5460,7 @@ msgid "Reunion (French)"
 msgstr "리유니온 (프랑스령)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:423
+#: code:addons/base/ir/ir_model.py:422
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -5693,7 +5700,7 @@ msgid "res.widget"
 msgstr "res.widget"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:348
+#: code:addons/base/ir/ir_model.py:347
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "%s 모델이 존재하지 않습니다!"
@@ -5848,7 +5855,7 @@ msgid ""
 msgstr "화면 유형: 계층적 트리 화면에서 '트리'로, 다른 화면에서는 '양식'으로 설정"
 
 #. module: base
-#: code:addons/base/res/res_config.py:387
+#: code:addons/base/res/res_config.py:419
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr "'계속'을 클릭하여 다음 부가 기능을 구성하세요..."
@@ -6285,7 +6292,6 @@ msgstr "첨부 파일"
 #: model:ir.ui.menu,name:base.menu_sale_config_sales
 #: model:ir.ui.menu,name:base.menu_sales
 #: model:ir.ui.menu,name:base.next_id_64
-#: view:res.users:0
 msgid "Sales"
 msgstr "판매"
 
@@ -6485,7 +6491,7 @@ msgid "Saint Kitts & Nevis Anguilla"
 msgstr "세인트 키츠 네비스 앙귈라"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:193
+#: code:addons/base/res/res_currency.py:194
 #, python-format
 msgid ""
 "No rate found \n"
@@ -7224,7 +7230,7 @@ msgstr ""
 "음수는 제한이 없음을 의미함"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:433
+#: code:addons/base/ir/ir_model.py:432
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -7888,7 +7894,7 @@ msgid ""
 msgstr "해당 스케줄러가 실행되었을 때 객체를 부를 방식의 명칭"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:292
+#: code:addons/base/ir/ir_model.py:291
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -8285,12 +8291,12 @@ msgstr "투르크메니스탄"
 #: code:addons/base/ir/ir_actions.py:702
 #: code:addons/base/ir/ir_actions.py:705
 #: code:addons/base/ir/ir_model.py:165
-#: code:addons/base/ir/ir_model.py:277
-#: code:addons/base/ir/ir_model.py:291
-#: code:addons/base/ir/ir_model.py:321
-#: code:addons/base/ir/ir_model.py:340
-#: code:addons/base/ir/ir_model.py:345
-#: code:addons/base/ir/ir_model.py:348
+#: code:addons/base/ir/ir_model.py:276
+#: code:addons/base/ir/ir_model.py:290
+#: code:addons/base/ir/ir_model.py:320
+#: code:addons/base/ir/ir_model.py:339
+#: code:addons/base/ir/ir_model.py:344
+#: code:addons/base/ir/ir_model.py:347
 #: code:addons/base/ir/ir_translation.py:341
 #: code:addons/base/module/module.py:320
 #: code:addons/base/module/module.py:362
@@ -8300,7 +8306,7 @@ msgstr "투르크메니스탄"
 #: code:addons/base/module/module.py:525
 #: code:addons/base/module/module.py:539
 #: code:addons/base/module/module.py:644
-#: code:addons/base/res/res_currency.py:193
+#: code:addons/base/res/res_currency.py:194
 #: code:addons/base/res/res_users.py:98
 #: code:addons/custom.py:555
 #: code:addons/orm.py:787
@@ -8559,7 +8565,7 @@ msgid ""
 msgstr "액션을 트리거할 클라이언트 사이트의 액션이나 버튼 종류"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:354
+#: code:addons/base/ir/ir_ui_menu.py:379
 #, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr "오류 ! 재귀적 메뉴를 생성할 수 없습니다."
@@ -8624,7 +8630,7 @@ msgstr "태국"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr "잠재 고객 & 매출 기회"
+msgstr "리드 & 기회"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8907,8 +8913,10 @@ msgid "Azerbaijan"
 msgstr "아제르바이잔"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:480
-#: code:addons/base/res/res_partner.py:439
+#: code:addons/base/ir/ir_mail_server.py:481
+#: code:addons/base/ir/ir_sequence.py:259
+#: code:addons/base/res/res_partner.py:360
+#: code:addons/base/res/res_partner.py:566
 #, python-format
 msgid "Warning"
 msgstr "경고"
@@ -9077,7 +9085,7 @@ msgid "Portrait"
 msgstr "세로 방향"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:419
+#: code:addons/base/ir/ir_model.py:418
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr "열의 이름은 한 번에 한 개씩만 변경할 수 있습니다!"
@@ -9315,7 +9323,7 @@ msgid "Workflow Instances"
 msgstr "업무 흐름 사례"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:531
+#: code:addons/base/res/res_partner.py:684
 #, python-format
 msgid "Partners: "
 msgstr "협력업체: "

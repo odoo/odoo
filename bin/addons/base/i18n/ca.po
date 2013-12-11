@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:03+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-06-28 05:56+0000\n"
+"X-Generator: Launchpad (build 16681)\n"
 
 #. module: base
 #: field:ir.filters,domain:0
@@ -145,15 +145,15 @@ msgid "Target Window"
 msgstr "Destí finestra"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:104
-#: code:addons/base/ir/ir_sequence.py:130
+#: code:addons/base/ir/ir_sequence.py:134
+#: code:addons/base/ir/ir_sequence.py:160
 #: code:addons/base/res/res_users.py:473
 #, python-format
 msgid "Warning!"
 msgstr "Avís!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:406
+#: code:addons/base/ir/ir_model.py:405
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -180,7 +180,7 @@ msgid "Swaziland"
 msgstr "Swazilàndia"
 
 #. module: base
-#: code:addons/orm.py:4486
+#: code:addons/orm.py:4485
 #, python-format
 msgid "created."
 msgstr "creat."
@@ -499,7 +499,7 @@ msgid "Miscellaneous Suppliers"
 msgstr "Proveïdors varis"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:345
+#: code:addons/base/ir/ir_model.py:344
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Els camps personalitzats han de tenir un nom que comenci amb 'x_'!"
@@ -881,7 +881,7 @@ msgid "Transitions"
 msgstr "Transicions"
 
 #. module: base
-#: code:addons/orm.py:4918
+#: code:addons/orm.py:4920
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr "No s'ha trobat el registre #%d de %s, no es pot copiar!"
@@ -991,7 +991,7 @@ msgid "Marshall Islands"
 msgstr "Illes Marshall"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:430
+#: code:addons/base/ir/ir_model.py:429
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Està prohibit canviar el model d'un camp!"
@@ -1194,7 +1194,7 @@ msgid "On Create"
 msgstr "En creació"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:914
+#: code:addons/base/ir/ir_model.py:913
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1435,7 +1435,7 @@ msgstr "Malawi"
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:36
-#: code:addons/base/res/res_partner.py:314
+#: code:addons/base/res/res_partner.py:339
 #: code:addons/base/res/res_users.py:92
 #: code:addons/base/res/res_users.py:335
 #: code:addons/base/res/res_users.py:337
@@ -1969,15 +1969,18 @@ msgid "Messages"
 msgstr "Missatges"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:373
-#: code:addons/base/ir/ir_model.py:375
-#: code:addons/base/ir/ir_model.py:405
-#: code:addons/base/ir/ir_model.py:419
-#: code:addons/base/ir/ir_model.py:421
-#: code:addons/base/ir/ir_model.py:423
-#: code:addons/base/ir/ir_model.py:430
-#: code:addons/base/ir/ir_model.py:433
+#: code:addons/base/ir/ir_model.py:372
+#: code:addons/base/ir/ir_model.py:374
+#: code:addons/base/ir/ir_model.py:404
+#: code:addons/base/ir/ir_model.py:418
+#: code:addons/base/ir/ir_model.py:420
+#: code:addons/base/ir/ir_model.py:422
+#: code:addons/base/ir/ir_model.py:429
+#: code:addons/base/ir/ir_model.py:432
+#: code:addons/base/module/wizard/base_module_import.py:58
+#: code:addons/base/module/wizard/base_module_import.py:66
 #: code:addons/base/module/wizard/base_update_translations.py:39
+#: code:addons/base/res/res_currency.py:52
 #, python-format
 msgid "Error!"
 msgstr "Error!"
@@ -3109,7 +3112,7 @@ msgid "%c - Appropriate date and time representation."
 msgstr "%c - Representació apropiada de data i hora."
 
 #. module: base
-#: code:addons/base/res/res_config.py:388
+#: code:addons/base/res/res_config.py:420
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -3421,6 +3424,7 @@ msgstr "Affero GPL-3"
 
 #. module: base
 #: field:ir.sequence,number_next:0
+#: field:ir.sequence,number_next_actual:0
 msgid "Next Number"
 msgstr "Número següent"
 
@@ -3503,7 +3507,7 @@ msgid "Apply For Delete"
 msgstr "Aplica per eliminar"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:421
+#: code:addons/base/ir/ir_model.py:420
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr ""
@@ -3736,7 +3740,7 @@ msgid "Montserrat"
 msgstr "Montserrat"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:278
+#: code:addons/base/ir/ir_model.py:277
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -5058,7 +5062,7 @@ msgid "Dutch / Nederlands"
 msgstr "Holandès / Nederlands"
 
 #. module: base
-#: code:addons/base/res/res_config.py:350
+#: code:addons/base/res/res_config.py:380
 #, python-format
 msgid ""
 "\n"
@@ -5256,7 +5260,7 @@ msgid "Nigeria"
 msgstr "Nigèria"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:339
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "Per camps selection heu d'indicar les opcions de selecció!"
@@ -5634,7 +5638,7 @@ msgid "Reunion (French)"
 msgstr "Reunió (Francesa)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:423
+#: code:addons/base/ir/ir_model.py:422
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -5880,7 +5884,7 @@ msgid "res.widget"
 msgstr "res.widget"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:348
+#: code:addons/base/ir/ir_model.py:347
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "No existeix el mòdul %s!"
@@ -6038,7 +6042,7 @@ msgstr ""
 "per a les altres vistes."
 
 #. module: base
-#: code:addons/base/res/res_config.py:387
+#: code:addons/base/res/res_config.py:419
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr "Feu clic a 'Continua' per a establir el següent mòdul ..."
@@ -6494,7 +6498,6 @@ msgstr "Adjunts"
 #: model:ir.ui.menu,name:base.menu_sale_config_sales
 #: model:ir.ui.menu,name:base.menu_sales
 #: model:ir.ui.menu,name:base.next_id_64
-#: view:res.users:0
 msgid "Sales"
 msgstr "Vendes"
 
@@ -6699,7 +6702,7 @@ msgid "Saint Kitts & Nevis Anguilla"
 msgstr "Saint Kitts i Nevis Anguilla"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:193
+#: code:addons/base/res/res_currency.py:194
 #, python-format
 msgid ""
 "No rate found \n"
@@ -7455,7 +7458,7 @@ msgstr ""
 "un nombre negatiu indica que és indefinit (sense límit)."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:433
+#: code:addons/base/ir/ir_model.py:432
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -8135,7 +8138,7 @@ msgstr ""
 "Nom del mètode de l'objecte a trucar quan aquesta planificació s'executi."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:292
+#: code:addons/base/ir/ir_model.py:291
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -8539,12 +8542,12 @@ msgstr "Turkmenistan"
 #: code:addons/base/ir/ir_actions.py:702
 #: code:addons/base/ir/ir_actions.py:705
 #: code:addons/base/ir/ir_model.py:165
-#: code:addons/base/ir/ir_model.py:277
-#: code:addons/base/ir/ir_model.py:291
-#: code:addons/base/ir/ir_model.py:321
-#: code:addons/base/ir/ir_model.py:340
-#: code:addons/base/ir/ir_model.py:345
-#: code:addons/base/ir/ir_model.py:348
+#: code:addons/base/ir/ir_model.py:276
+#: code:addons/base/ir/ir_model.py:290
+#: code:addons/base/ir/ir_model.py:320
+#: code:addons/base/ir/ir_model.py:339
+#: code:addons/base/ir/ir_model.py:344
+#: code:addons/base/ir/ir_model.py:347
 #: code:addons/base/ir/ir_translation.py:341
 #: code:addons/base/module/module.py:320
 #: code:addons/base/module/module.py:362
@@ -8554,7 +8557,7 @@ msgstr "Turkmenistan"
 #: code:addons/base/module/module.py:525
 #: code:addons/base/module/module.py:539
 #: code:addons/base/module/module.py:644
-#: code:addons/base/res/res_currency.py:193
+#: code:addons/base/res/res_currency.py:194
 #: code:addons/base/res/res_users.py:98
 #: code:addons/custom.py:555
 #: code:addons/orm.py:787
@@ -8816,7 +8819,7 @@ msgid ""
 msgstr "Tipus d'acció o botó del costat del client que activarà l'acció."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:354
+#: code:addons/base/ir/ir_ui_menu.py:379
 #, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr "Error! No podeu crear menús recursius."
@@ -9176,8 +9179,10 @@ msgid "Azerbaijan"
 msgstr "Azerbaidjan"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:480
-#: code:addons/base/res/res_partner.py:439
+#: code:addons/base/ir/ir_mail_server.py:481
+#: code:addons/base/ir/ir_sequence.py:259
+#: code:addons/base/res/res_partner.py:360
+#: code:addons/base/res/res_partner.py:566
 #, python-format
 msgid "Warning"
 msgstr "Avís"
@@ -9352,7 +9357,7 @@ msgid "Portrait"
 msgstr "Vertical"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:419
+#: code:addons/base/ir/ir_model.py:418
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr "Només podeu canviar el nom una columna a la vegada!"
@@ -9594,7 +9599,7 @@ msgid "Workflow Instances"
 msgstr "Instàncies flux"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:531
+#: code:addons/base/res/res_partner.py:684
 #, python-format
 msgid "Partners: "
 msgstr "Empreses: "

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-08 05:04+0000\n"
-"X-Generator: Launchpad (build 16523)\n"
+"X-Launchpad-Export-Date: 2013-06-28 05:57+0000\n"
+"X-Generator: Launchpad (build 16681)\n"
 
 #. module: base
 #: field:ir.filters,domain:0
@@ -47,8 +47,8 @@ msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
 msgstr ""
-"A második bizonyítás a many2many mezőhöz %s egy SQL táblának kell lennie!Ezt "
-"lett használva %s, ami nem érvényes SQL tábla név."
+"A második bizonyításnak a many2many mezőhöz %s egy SQL táblának kell lennie! "
+"Ezt használta %s, ami nem érvényes SQL tábla név."
 
 #. module: base
 #: view:ir.values:0
@@ -131,7 +131,7 @@ msgid ""
 msgstr ""
 "A feltételes tartomány ahhoz, hogy korlátozni lehessen az összefüggések "
 "mezőinek lehetséges értékei, mint megadott Python kifejezést ami a háromágú "
-"listát rja le. Például: [('szín','=','piros')]"
+"listát írja le. Például: [('szín','=','piros')]"
 
 #. module: base
 #: field:res.partner,ref:0
@@ -144,15 +144,15 @@ msgid "Target Window"
 msgstr "Cél Ablak"
 
 #. module: base
-#: code:addons/base/ir/ir_sequence.py:104
-#: code:addons/base/ir/ir_sequence.py:130
+#: code:addons/base/ir/ir_sequence.py:134
+#: code:addons/base/ir/ir_sequence.py:160
 #: code:addons/base/res/res_users.py:473
 #, python-format
 msgid "Warning!"
 msgstr "Figyelem!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:406
+#: code:addons/base/ir/ir_model.py:405
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -178,7 +178,7 @@ msgid "Swaziland"
 msgstr "Szváziföld"
 
 #. module: base
-#: code:addons/orm.py:4486
+#: code:addons/orm.py:4485
 #, python-format
 msgid "created."
 msgstr "létrehozva."
@@ -285,7 +285,7 @@ msgstr "Varázsló Neve"
 #: code:addons/orm.py:2649
 #, python-format
 msgid "Invalid group_by"
-msgstr "Invalid group_by"
+msgstr "Hibás csoportosítás"
 
 #. module: base
 #: field:res.partner,credit_limit:0
@@ -313,7 +313,7 @@ msgstr "Forrás Objektum"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Config Wizard Steps"
-msgstr "Konfigurációs Varázsló Lépések"
+msgstr "Konfigurációs Varázsló Lépései"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_sc
@@ -379,8 +379,8 @@ msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by OpenERP (updates, module installation, ...)"
 msgstr ""
-"Az admin felhasználót nem lehet törölni, mivel a szoftver több funkciója ezt "
-"használja (frissítések, modul telepítés, stb.)"
+"Az adminisztrátor felhasználót nem lehet törölni, mivel a szoftver több "
+"funkciója ezt használja (frissítések, modul telepítés, stb.)"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -456,7 +456,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "Két betűs ISO országkód.\n"
-"Ez a mező gyorskereséshez használható."
+"Ez a mező gyors kereséshez használható."
 
 #. module: base
 #: model:res.country,name:base.pw
@@ -479,7 +479,8 @@ msgstr "Lefordítatlan"
 msgid ""
 "Context dictionary as Python expression, empty by default (Default: {})"
 msgstr ""
-"Context dictionary as Python expression, empty by default (Default: {})"
+"Összefüggés szótár mint Python kifejezés, Alapállapotban üres "
+"(Alapértelmezett: {})"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_wizard
@@ -494,7 +495,7 @@ msgid "Miscellaneous Suppliers"
 msgstr "Egyéb beszállítók"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:345
+#: code:addons/base/ir/ir_model.py:344
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Egyéni mező nevének 'x_'-el kell kezdődnie!"
@@ -525,13 +526,13 @@ msgstr "Model leírás"
 msgid ""
 "Optional model name of the objects on which this action should be visible"
 msgstr ""
-"Opcionális modelnév azon objektumoknak, amelyeken ez a művelet látható kell "
-"hogy legyen"
+"Választható modellnév azon objektumoknak, amelyeken ez a művelet látható "
+"kell hogy legyen"
 
 #. module: base
 #: field:workflow.transition,trigger_expr_id:0
 msgid "Trigger Expression"
-msgstr "Trigger Expression"
+msgstr "Kifejezés kapcsolása"
 
 #. module: base
 #: model:res.country,name:base.jo
@@ -634,7 +635,7 @@ msgstr "Albán / Shqip"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr "Lehetőségek"
+msgstr "Esélyek"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -799,7 +800,7 @@ msgstr "TGZ Archívum"
 #. module: base
 #: view:res.lang:0
 msgid "%B - Full month name."
-msgstr "%B - Hónap hosszú neve."
+msgstr "%B - Hónap teljes neve."
 
 #. module: base
 #: field:ir.actions.todo,type:0
@@ -823,8 +824,8 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
-"Language with code \"%s\" is not defined in your system !\n"
-"Define it through the Administration menu."
+"Nyelv kód ezzel a kóddal \"%s\" nincs meghatározva a rendszerben!\n"
+"Határozza meg az Adminisztrációs menüben."
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -871,10 +872,10 @@ msgid "Transitions"
 msgstr "Átmenetek"
 
 #. module: base
-#: code:addons/orm.py:4918
+#: code:addons/orm.py:4920
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
-msgstr "Record #%d of %s not found, cannot copy!"
+msgstr "A  #%d rekord ebből %s nem található, nem másolható!"
 
 #. module: base
 #: field:ir.module.module,contributors:0
@@ -979,7 +980,7 @@ msgid "Marshall Islands"
 msgstr "Marshall-szigetek"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:430
+#: code:addons/base/ir/ir_model.py:429
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Nem lehet megváltoztatni egy mezőhöz tartozó model-t!"
@@ -1004,10 +1005,9 @@ msgid ""
 "reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
-"The operation cannot be completed, probably due to the following:\n"
-"- deletion: you may be trying to delete a record while other records still "
-"reference it\n"
-"- creation/update: a mandatory field is not correctly set"
+"A művelet nem végezhető el, valószínűleg a következők miatt:\n"
+"- törlés: rekordot szeretne törölni, de arra még van hivatkozás\n"
+"- létrehozás/frissítés: egy szükséges mező nincs rendesen beállítva/kitöltve"
 
 #. module: base
 #: view:ir.rule:0
@@ -1020,7 +1020,7 @@ msgstr ""
 #: code:addons/base/res/res_users.py:131
 #, python-format
 msgid "Operation Canceled"
-msgstr "Művelet Visszavonva"
+msgstr "Művelet visszavonva"
 
 #. module: base
 #: help:base.language.export,lang:0
@@ -1179,7 +1179,7 @@ msgid "On Create"
 msgstr "Létrehozáskor"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:914
+#: code:addons/base/ir/ir_model.py:913
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1420,7 +1420,7 @@ msgstr "Malawi"
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:36
-#: code:addons/base/res/res_partner.py:314
+#: code:addons/base/res/res_partner.py:339
 #: code:addons/base/res/res_users.py:92
 #: code:addons/base/res/res_users.py:335
 #: code:addons/base/res/res_users.py:337
@@ -1952,15 +1952,18 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:373
-#: code:addons/base/ir/ir_model.py:375
-#: code:addons/base/ir/ir_model.py:405
-#: code:addons/base/ir/ir_model.py:419
-#: code:addons/base/ir/ir_model.py:421
-#: code:addons/base/ir/ir_model.py:423
-#: code:addons/base/ir/ir_model.py:430
-#: code:addons/base/ir/ir_model.py:433
+#: code:addons/base/ir/ir_model.py:372
+#: code:addons/base/ir/ir_model.py:374
+#: code:addons/base/ir/ir_model.py:404
+#: code:addons/base/ir/ir_model.py:418
+#: code:addons/base/ir/ir_model.py:420
+#: code:addons/base/ir/ir_model.py:422
+#: code:addons/base/ir/ir_model.py:429
+#: code:addons/base/ir/ir_model.py:432
+#: code:addons/base/module/wizard/base_module_import.py:58
+#: code:addons/base/module/wizard/base_module_import.py:66
 #: code:addons/base/module/wizard/base_update_translations.py:39
+#: code:addons/base/res/res_currency.py:52
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
@@ -1997,8 +2000,7 @@ msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
 msgstr ""
-"One of the records you are trying to modify has already been deleted "
-"(Document type: %s)."
+"Az egyik módosítani kívánt rekord már törölve lett (Dokumentum típus: %s)."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -3092,7 +3094,7 @@ msgid "%c - Appropriate date and time representation."
 msgstr "%c - Pontos dátum és idő."
 
 #. module: base
-#: code:addons/base/res/res_config.py:388
+#: code:addons/base/res/res_config.py:420
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -3404,6 +3406,7 @@ msgstr "Affero GPL-3"
 
 #. module: base
 #: field:ir.sequence,number_next:0
+#: field:ir.sequence,number_next_actual:0
 msgid "Next Number"
 msgstr "Köv. szám"
 
@@ -3485,7 +3488,7 @@ msgid "Apply For Delete"
 msgstr "Alkalmazás törléshez"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:421
+#: code:addons/base/ir/ir_model.py:420
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr ""
@@ -3715,7 +3718,7 @@ msgid "Montserrat"
 msgstr "Montserrat"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:278
+#: code:addons/base/ir/ir_model.py:277
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -5034,7 +5037,7 @@ msgid "Dutch / Nederlands"
 msgstr "Holland / Nederlands"
 
 #. module: base
-#: code:addons/base/res/res_config.py:350
+#: code:addons/base/res/res_config.py:380
 #, python-format
 msgid ""
 "\n"
@@ -5233,7 +5236,7 @@ msgid "Nigeria"
 msgstr "Nigéria"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:339
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "A kiválasztás mezőkhöz a Kiválasztás opciót meg kell adni!"
@@ -5611,7 +5614,7 @@ msgid "Reunion (French)"
 msgstr "Réunion (Francia)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:423
+#: code:addons/base/ir/ir_model.py:422
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -5856,7 +5859,7 @@ msgid "res.widget"
 msgstr "res.widget"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:348
+#: code:addons/base/ir/ir_model.py:347
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "A %s model nem létezik!"
@@ -6013,7 +6016,7 @@ msgstr ""
 "más nézetekhez"
 
 #. module: base
-#: code:addons/base/res/res_config.py:387
+#: code:addons/base/res/res_config.py:419
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr ""
@@ -6469,7 +6472,6 @@ msgstr "Mellékletek"
 #: model:ir.ui.menu,name:base.menu_sale_config_sales
 #: model:ir.ui.menu,name:base.menu_sales
 #: model:ir.ui.menu,name:base.next_id_64
-#: view:res.users:0
 msgid "Sales"
 msgstr "Értékesítés"
 
@@ -6672,7 +6674,7 @@ msgid "Saint Kitts & Nevis Anguilla"
 msgstr "Saint Kitts & Nevis Anguilla"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:193
+#: code:addons/base/res/res_currency.py:194
 #, python-format
 msgid ""
 "No rate found \n"
@@ -7436,7 +7438,7 @@ msgstr ""
 "negatív szám esetén nincs korlát."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:433
+#: code:addons/base/ir/ir_model.py:432
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -8117,7 +8119,7 @@ msgstr ""
 "ütemezőt elindítják."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:292
+#: code:addons/base/ir/ir_model.py:291
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -8523,12 +8525,12 @@ msgstr "Türkmenisztán"
 #: code:addons/base/ir/ir_actions.py:702
 #: code:addons/base/ir/ir_actions.py:705
 #: code:addons/base/ir/ir_model.py:165
-#: code:addons/base/ir/ir_model.py:277
-#: code:addons/base/ir/ir_model.py:291
-#: code:addons/base/ir/ir_model.py:321
-#: code:addons/base/ir/ir_model.py:340
-#: code:addons/base/ir/ir_model.py:345
-#: code:addons/base/ir/ir_model.py:348
+#: code:addons/base/ir/ir_model.py:276
+#: code:addons/base/ir/ir_model.py:290
+#: code:addons/base/ir/ir_model.py:320
+#: code:addons/base/ir/ir_model.py:339
+#: code:addons/base/ir/ir_model.py:344
+#: code:addons/base/ir/ir_model.py:347
 #: code:addons/base/ir/ir_translation.py:341
 #: code:addons/base/module/module.py:320
 #: code:addons/base/module/module.py:362
@@ -8538,7 +8540,7 @@ msgstr "Türkmenisztán"
 #: code:addons/base/module/module.py:525
 #: code:addons/base/module/module.py:539
 #: code:addons/base/module/module.py:644
-#: code:addons/base/res/res_currency.py:193
+#: code:addons/base/res/res_currency.py:194
 #: code:addons/base/res/res_users.py:98
 #: code:addons/custom.py:555
 #: code:addons/orm.py:787
@@ -8804,7 +8806,7 @@ msgstr ""
 "műveletet."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:354
+#: code:addons/base/ir/ir_ui_menu.py:379
 #, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr "Hiba ! Nem hozhat létre rekurzív menüket."
@@ -8871,7 +8873,7 @@ msgstr "Thaiföld"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr "Lehetőségek"
+msgstr "Érdeklődések & Lehetőségek"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9164,8 +9166,10 @@ msgid "Azerbaijan"
 msgstr "Azerbajdzsán"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:480
-#: code:addons/base/res/res_partner.py:439
+#: code:addons/base/ir/ir_mail_server.py:481
+#: code:addons/base/ir/ir_sequence.py:259
+#: code:addons/base/res/res_partner.py:360
+#: code:addons/base/res/res_partner.py:566
 #, python-format
 msgid "Warning"
 msgstr "Figyelem"
@@ -9342,7 +9346,7 @@ msgid "Portrait"
 msgstr "Álló"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:419
+#: code:addons/base/ir/ir_model.py:418
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr "Egyszerre csak egy oszlopot lehet átnevezni!"
@@ -9583,7 +9587,7 @@ msgid "Workflow Instances"
 msgstr "Munkafolyamat példányok"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:531
+#: code:addons/base/res/res_partner.py:684
 #, python-format
 msgid "Partners: "
 msgstr "Partnerek: "
