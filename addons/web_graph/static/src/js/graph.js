@@ -185,7 +185,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                         mode: this.mode,
                         pivot: this.pivot_table,
                         width: this.width,
-                        height: this.height - 30,
+                        height: Math.max(this.height - 45, 250),
                         measure_label: this.measure_label()
                     };
                     openerp.web_graph.draw_chart(options);
