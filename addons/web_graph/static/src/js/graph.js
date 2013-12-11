@@ -82,9 +82,9 @@ instance.web_graph.GraphView = instance.web.View.extend({
         _.each(fields_view_get.arch.children, function (field) {
             if ('name' in field.attrs) {
                 if ('operator' in field.attrs) {
-                    self.measure_list.push(field.attrs.name);
+                    measure = field.attrs.name;
                 } else {
-                    if (self.measure_list.length) {
+                    if (measure) {
                         self.default_col_groupby.push(field.attrs.name);
                     } else {
                         self.default_row_groupby.push(field.attrs.name);
@@ -92,10 +92,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 }
             }
         });
-        if (this.measure_list.length > 0) {
-            measure = this.measure_list[0];
-            this.pivot_table.set_measure(measure);
-        }
+        this.pivot_table.set_measure(measure);
 
         // get the most important fields (of the model) by looking at the
         // groupby filters defined in the search view
@@ -117,6 +114,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
         // get the fields descriptions from the model
         var deferred2 = this.model.call('fields_get', []).then(function (fs) {
             self.fields = fs;
+            var temp = _.map(fs, function (field, name) {
+                return {name:name, type: field.type};
+            });
+            temp = _.filter(temp, function (field) {
+                return (((field.type === 'integer') || (field.type === 'float')) && (field.name !== 'id'));
+            });
+            self.measure_list = _.map(temp, function (field) {
+                return field.name;
+            });
+
             var measure_selection = self.$('.graph_measure_selection');
             _.each(self.measure_list, function (measure) {
                 var choice = $('<a></a>').attr('data-choice', measure)
