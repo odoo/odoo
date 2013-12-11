@@ -1,10 +1,10 @@
 
-openerp.web_graph.draw_chart = function (mode, pivot, svg) {
-    openerp.web_graph[mode](pivot, svg);
+openerp.web_graph.draw_chart = function (mode, pivot, svg, measure_label) {
+    openerp.web_graph[mode](pivot, svg, measure_label);
 };
 
 
-openerp.web_graph.bar_chart = function (pivot, svg) {
+openerp.web_graph.bar_chart = function (pivot, svg, measure_label) {
     var dim_x = pivot.rows.groupby.length,
         dim_y = pivot.cols.groupby.length,
         data = [];
@@ -156,7 +156,6 @@ openerp.web_graph.bar_chart = function (pivot, svg) {
                 .stacked(true)
                 .staggerLabels(true)
                 .tooltips(false)
-                .transitionDuration(0)
                 .width(650)
                 .height(400);
 
@@ -165,7 +164,6 @@ openerp.web_graph.bar_chart = function (pivot, svg) {
                 .attr('width', 650)
                 .attr('height', 400)
                 .call(chart);
-                debugger;
 
             nv.utils.windowResize(chart.update);
             return chart;
@@ -174,12 +172,22 @@ openerp.web_graph.bar_chart = function (pivot, svg) {
 };
 
 
-openerp.web_graph.line_chart = function (pivot, svg) {
-    var data = _.map(pivot.rows.main.children, function (pt) {
-    var value = pivot.get_value(pt.id, pivot.cols.main.id),
-        title = (pt.title !== undefined) ? pt.title : 'Undefined';
-            return {x: title, y: value};
-        });
+openerp.web_graph.line_chart = function (pivot, svg, measure_label) {
+    var data = [],
+        dim_x = pivot.rows.groupby.length,
+        dim_y = pivot.cols.groupby.length;
+
+    if (dim_y === 0) {
+        pivot.cols.main.title = measure_label;
+    }
+    _.each(pivot.cols.headers, function (col) {
+        if (!col.is_expanded) {
+            var values = _.map(pivot.get_rows_depth(dim_x), function (row) {
+                return {x: row.title, y: pivot.get_value(row.id,col.id, 0)};
+            });
+            data.push({values: values, key: col.title || 'Undefined'});
+        }
+    });
 
     nv.addGraph(function () {
         var chart = nv.models.lineChart()
@@ -191,7 +199,7 @@ openerp.web_graph.line_chart = function (pivot, svg) {
         d3.select(svg)
             .attr('width', 600)
             .attr('height', 300)
-            .datum([{key: 'Bar chart', values: data}])
+            .datum(data)
             .call(chart);
 
         return chart;

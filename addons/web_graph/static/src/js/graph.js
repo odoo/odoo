@@ -172,7 +172,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 } else {
                     this.$('.graph_main_content').append($('<div><svg></svg></div>'));
                     var svg = this.$('.graph_main_content svg')[0];
-                    openerp.web_graph.draw_chart(this.mode, this.pivot_table, svg);
+                    openerp.web_graph.draw_chart(this.mode, this.pivot_table, svg, this.measure_label());
                 }
             }
         }

@@ -100,6 +100,20 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		});
 	},
 
+	// return all columns with a path length of 'depth'
+	get_columns_depth: function (depth) {
+		return _.filter(this.cols.headers, function (hdr) {
+			return hdr.path.length === depth;
+		});
+	},
+
+	// return all rows with a path length of 'depth'
+	get_rows_depth: function (depth) {
+		return _.filter(this.rows.headers, function (hdr) {
+			return hdr.path.length === depth;
+		});
+	},
+
 	fold: function (header) {
 		var list = [];
 		function tree_traversal(tree) {
