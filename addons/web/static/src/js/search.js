@@ -71,7 +71,10 @@ my.SearchQuery = B.Collection.extend({
     },
     add: function (values, options) {
         options = options || {};
-        if (!(values instanceof Array)) {
+
+        if (!values) {
+            values = [];
+        } else if (!(values instanceof Array)) {
             values = [values];
         }
 
@@ -87,6 +90,10 @@ my.SearchQuery = B.Collection.extend({
             }
             B.Collection.prototype.add.call(this, model, options);
         }, this);
+        // warning: in backbone 1.0+ add is supposed to return the added models,
+        // but here toggle may delegate to add and return its value directly.
+        // return value of neither seems actually used but should be tested
+        // before change, probably
         return this;
     },
     toggle: function (value, options) {
