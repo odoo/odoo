@@ -2,11 +2,11 @@
     <t t-extend="website.editorbar">
         <t t-jquery="#website-top-view" t-operation="after">
             <div class="navbar-inner" id="website-top-edit">
-                <form class="navbar-form pull-left">
+                <form class="navbar-form pull-left text-muted">
                     <button type="button" data-action="save"
                             class="btn btn-primary">Save</button>
-                    <button type="button" data-action="cancel"
-                            class="btn">Discard</button>
+                    or
+                    <a href="#" data-action="cancel">Discard</a>
                 </form>
                 <ul class="nav navbar-nav pull-right">
                 </ul>
@@ -25,7 +25,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary save">Save</button>
                         <button type="button" class="btn hidden wait" disabled="disabled"/>
-                        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Discard</button>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
                     </div>
                 </div>
             </div>
@@ -138,7 +139,7 @@
                         <div class="existing-attachments"/>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Discard</button>
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
                     </div>
                 </div>
             </div>
@@ -187,7 +188,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger">Discard</button>
-                        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Cancel</a>
                     </div>
                 </div>
             </div>
