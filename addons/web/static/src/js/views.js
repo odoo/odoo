@@ -1365,14 +1365,14 @@ instance.web.View = instance.web.Widget.extend({
                 // Wrong group_by values will simply fail and forbid rendering of the destination view
                 var ncontext = new instance.web.CompoundContext(
                     _.object(_.reject(_.pairs(context.eval()), function(pair) {
-                      return pair[0].match('^(?:(?:default_|search_default_).+|group_by|group_by_no_leaf)$') !== null;
+                      return pair[0].match('^(?:(?:default_|search_default_).+|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
                     }))
                 );
+                ncontext.add({active_model: dataset.model});
                 if (record_id) {
                     ncontext.add({
                         active_id: record_id,
                         active_ids: [record_id],
-                        active_model: dataset.model
                     });
                 }
                 ncontext.add(action.context || {});
