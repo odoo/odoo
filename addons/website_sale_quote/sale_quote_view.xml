@@ -6,6 +6,18 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_quotation_send']" position="replace">
+                    <button name="action_quotation_send" string="Send by Email" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': ['|',('is_template', '=', True),('state','!=','draft')]}"/>
+                </xpath>
+                <xpath expr="//button[@string='Print'][@states='draft']" position="replace">
+                    <button name="print_quotation" string="Print" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': ['|',('is_template', '=', True),('state','!=','draft')]}"/>
+                </xpath>
+                <xpath expr="//button[@string='Confirm Sale'][@states='draft']" position="replace">
+                    <button name="action_button_confirm" string="Confirm Sale" type="object" groups="base.group_user" attrs="{'invisible': ['|',('is_template', '=', True),('state','!=','draft')]}"/>
+                </xpath>
+                <xpath expr="//button[@string='Cancel Quotation']" position="replace">
+                    <button name="cancel" string="Cancel Quotation" groups="base.group_user" attrs="{'invisible': ['|',('is_template', '=', True),('state','not in',('draft','sent'))]}"/>
+                </xpath>
                 <xpath expr="//header" position="after">
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': ['|',('quote_url', '=', False),('template_id','=',False)]}">
                         <field name="quote_url" widget="url"/>
@@ -13,14 +25,13 @@
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="is_template"/>
-                    <field name="template_id" domain ="[('is_template','=',True)]" attrs="{'invisible': [('is_template', '=', True  )]}" on_change="onchange_template_id(template_id)"/>
+                    <field name="template_id" domain ="[('is_template','=',True)]" attrs="{'invisible': [('is_template', '=', True)]}" on_change="onchange_template_id(template_id)"/>
                 </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page string="Introduction">
                         <field name="website_description"/>
                     </page>
                 </xpath>
-
             </field>
         </record>
     </data>
