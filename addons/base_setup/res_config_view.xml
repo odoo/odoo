@@ -94,7 +94,7 @@
                         <label for="font" />
                         <div>
                             <div>
-                                <field name="font" class="oe_inline"/>
+                                <field name="font" class="oe_inline"  domain="[('mode', 'in', ('normal', 'regular', 'all', 'book'))]" />
                                 <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
                             </div>
                         </div>
