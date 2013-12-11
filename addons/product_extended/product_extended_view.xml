@@ -1,22 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-<!--        <record model="ir.ui.view" id="product_product_ext_form_view">
-            <field name="name">product_extended.product.form.view</field>
-            <field name="type">form</field>
-            <field name="model">product.product</field>
-            <field name="priority">2</field>
-            <field name="inherit_id" ref="stock.view_product_standard_price_form" />
-            <field name="arch" type="xml">
-                <field name="virtual_available" position="after">
-                    <field name="qty_dispo" />
-                </field>
-            </field>
-    </record> -->
         <record model="ir.ui.view" id="product_product_ext_form_view2">
             <field name="name">product_extended.product.form.view</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="priority">3</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
