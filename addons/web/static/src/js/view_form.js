@@ -3588,6 +3588,67 @@ instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
      },
 });
 
+/**
+ * Abstract-ish ListView.List subclass adding an "Add an item" row to replace
+ * the big ugly button in the header.
+ *
+ * Requires the implementation of a ``is_readonly`` method (usually a proxy to
+ * the corresponding field's readonly or effective_readonly property) to
+ * decide whether the special row should or should not be inserted.
+ *
+ * Optionally an ``_add_row_class`` attribute can be set for the class(es) to
+ * set on the insertion row.
+ */
+instance.web.form.AddAnItemList = instance.web.ListView.List.extend({
+    pad_table_to: function (count) {
+        if (!this.view.is_action_enabled('create') || this.is_readonly()) {
+            this._super(count);
+            return;
+        }
+
+        this._super(count > 0 ? count - 1 : 0);
+
+        var self = this;
+        var columns = _(this.columns).filter(function (column) {
+            return column.invisible !== '1';
+        }).length;
+        if (this.options.selectable) { columns++; }
+        if (this.options.deletable) { columns++; }
+
+        var $cell = $('<td>', {
+            colspan: columns,
+            'class': this._add_row_class || ''
+        }).append(
+            $('<a>', {href: '#'}).text(_t("Add an item"))
+                .mousedown(function () {
+                    // FIXME: needs to be an official API somehow
+                    if (self.view.editor.is_editing()) {
+                        self.view.__ignore_blur = true;
+                    }
+                })
+                .click(function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // FIXME: there should also be an API for that one
+                    if (self.view.editor.form.__blur_timeout) {
+                        clearTimeout(self.view.editor.form.__blur_timeout);
+                        self.view.editor.form.__blur_timeout = false;
+                    }
+                    self.view.ensure_saved().done(function () {
+                        self.view.do_add_record();
+                    });
+                }));
+
+        var $padding = this.$current.find('tr:not([data-id]):first');
+        var $newrow = $('<tr>').append($cell);
+        if ($padding.length) {
+            $padding.before($newrow);
+        } else {
+            this.$current.append($newrow)
+        }
+    }
+});
+
 /*
 # Values: (0, 0,  { fields })    create
 #         (1, ID, { fields })    update
@@ -4166,62 +4227,11 @@ instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
         }
     }
 });
-instance.web.form.One2ManyList = instance.web.ListView.List.extend({
-    pad_table_to: function (count) {
-        if (!this.view.is_action_enabled('create')) {
-            this._super(count);
-        } else {
-            this._super(count > 0 ? count - 1 : 0);
-        }
-
-        // magical invocation of wtf does that do
-        if (this.view.o2m.get('effective_readonly')) {
-            return;
-        }
-
-        var self = this;
-        var columns = _(this.columns).filter(function (column) {
-            return column.invisible !== '1';
-        }).length;
-        if (this.options.selectable) { columns++; }
-        if (this.options.deletable) { columns++; }
-
-        if (!this.view.is_action_enabled('create')) {
-            return;
-        }
-
-        var $cell = $('<td>', {
-            colspan: columns,
-            'class': 'oe_form_field_one2many_list_row_add'
-        }).append(
-            $('<a>', {href: '#'}).text(_t("Add an item"))
-                .mousedown(function () {
-                    // FIXME: needs to be an official API somehow
-                    if (self.view.editor.is_editing()) {
-                        self.view.__ignore_blur = true;
-                    }
-                })
-                .click(function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    // FIXME: there should also be an API for that one
-                    if (self.view.editor.form.__blur_timeout) {
-                        clearTimeout(self.view.editor.form.__blur_timeout);
-                        self.view.editor.form.__blur_timeout = false;
-                    }
-                    self.view.ensure_saved().done(function () {
-                        self.view.do_add_record();
-                    });
-                }));
-
-        var $padding = this.$current.find('tr:not([data-id]):first');
-        var $newrow = $('<tr>').append($cell);
-        if ($padding.length) {
-            $padding.before($newrow);
-        } else {
-            this.$current.append($newrow);
-        }
-    }
+instance.web.form.One2ManyList = instance.web.form.AddAnItemList.extend({
+    _add_row_class: 'oe_form_field_one2many_list_row_add',
+    is_readonly: function () {
+        return this.view.o2m.get('effective_readonly');
+    },
 });
 
 instance.web.form.One2ManyFormView = instance.web.FormView.extend({
@@ -4433,7 +4443,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend(instan
         this.$el.addClass('oe_form_field oe_form_field_many2many');
 
         this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
-                    'addable': this.get("effective_readonly") ? null : _t("Add"),
+                    'addable': null,
                     'deletable': this.get("effective_readonly") ? false : true,
                     'selectable': this.multi_selection,
                     'sortable': false,
@@ -4500,6 +4510,11 @@ instance.web.form.Many2ManyDataSet = instance.web.DataSetStatic.extend({
  * @extends instance.web.ListView
  */
 instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends instance.web.form.Many2ManyListView# */{
+    init: function (parent, dataset, view_id, options) {
+        this._super(parent, dataset, view_id, _.extend(options || {}, {
+            ListType: instance.web.form.Many2ManyList,
+        }));
+    },
     do_add_record: function () {
         var pop = new instance.web.form.SelectCreatePopup(this);
         pop.select_element(
@@ -4548,6 +4563,12 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         }
      },
     is_action_enabled: function () { return true; },
+});
+instance.web.form.Many2ManyList = instance.web.form.AddAnItemList.extend({
+    _add_row_class: 'oe_form_field_many2many_list_row_add',
+    is_readonly: function () {
+        return this.view.m2m_field.get('effective_readonly');
+    }
 });
 
 instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, {
