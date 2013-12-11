@@ -183,7 +183,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	make_header: function (groups, parent) {
-		var name = groups[0].attributes.value[1],
+		var name = get_attribute_value(groups[0]),
             new_header = {
 				id: _.uniqueId(),
 				path: parent.path.concat(name),
@@ -387,14 +387,15 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		}
 
 		function make_tree_headers (data_pt, parent, max_depth) {
-			var node = {
-				id: _.uniqueId(),
-				path: parent.path.concat(data_pt.attributes.value[1]),
-				title: data_pt.attributes.value[1],
-				domain: data_pt.model._domain,
-				parent: parent,
-				children: [],
-			};
+			var value = get_attribute_value(data_pt),
+				node = {
+					id: _.uniqueId(),
+					path: parent.path.concat(value),
+					title: value,
+					domain: data_pt.model._domain,
+					parent: parent,
+					children: [],
+				};
 			if (self.measure) {
 				node.total = data_pt.attributes.aggregates[self.measure];
 			} else {
@@ -412,8 +413,13 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		function make_cells (data, index, current_path) {
 			_.each(data, function (group) {
 				var attr = group.attributes,
+					group_val = (attr.value instanceof Array) ? attr.value[1] : attr.value,
 					path = current_path,
 					value;
+
+				if (group_val === false) {
+					group_val = undefined;
+				}
 
 				if (self.measure) {
 					value = attr.aggregates[self.measure];
@@ -422,8 +428,14 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				}
 
 				if (attr.grouped_on !== undefined) {
-					path = path.concat(attr.value[1]);
+					if (attr.value === false) {
+						path = path.concat('undefined');
+					} else {
+						path = path.concat(group_val);
+					}
 				}
+
+				console.log('attr', attr);
 				var rowpath = path.slice(0, index),
 					colpath = path.slice(index);
 
@@ -433,6 +445,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				var col = _.find(col_headers, function (header) {
 					return _.isEqual(header.path, colpath);
 				});
+				debugger;
 				cells.push({x: Math.min(row.id, col.id),
 							y: Math.max(row.id, col.id),
 							value: value});
@@ -489,12 +502,18 @@ function query_groups_data (model, fields, domain, row_groupbys, col_groupby) {
 }
 
 function format_group (group, path) {
-    group.path = path.concat(group.attributes.value[1]);
+    group.path = path.concat(get_attribute_value(group));
     var result = [group];
     _.each(group.subgroups_data, function (subgroup) {
         result = result.concat(format_group (subgroup, group.path));
     });
     return result;
+}
+
+function get_attribute_value (group) {
+	var value = group.attributes.value;
+	if (value === false) return 'undefined';
+	return (value instanceof Array) ? value[1] : value;
 }
 
 })();
