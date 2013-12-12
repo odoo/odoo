@@ -124,11 +124,10 @@ html,body, #wrapwrap
     height: 100%
 
 #wrapwrap
-    display: table
     width: 100%
 
 header, #wrap, footer
-    display: table-row
+    margin: 0 auto
 
 footer
     height: 100%
@@ -144,6 +143,9 @@ footer
 .col-md-12
     float: left
     width: 100%
+
+.row
+    min-height: 32px
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
@@ -202,10 +204,12 @@ ul.nav-stacked > li > a
     text-transform: uppercase
 
 /* ---- PUBLISH ---- */
-.css_unpublish, .css_publish
-    display: none
-.css_published .css_unpublish, .css_unpublished .css_publish
-    display: block
+.css_published
+    .btn-danger, .css_publish
+        display: none
+.css_unpublished
+    .btn-success, .css_unpublish
+        display: none
 
 [data-publish='off']
     +opacity(0.5)
@@ -250,27 +254,23 @@ ul.nav-stacked > li > a
     &.oe_big .carousel-inner
         height: 450px
     .carousel-caption
+        left: auto
+        right: auto
+        bottom: 10%
+        text-align: left
+        padding: 20px
+        background: rgba(0, 0, 0, 0.4)
         h1, h2, h3
             margin-top: 10px
             margin-bottom: 10px
     .carousel-image
-        right: 10%
+        right: 50%
         left: 50%
         top: 5%
         bottom: 5%
         position: absolute
-        text-align: center
-        img
-            height: 100%
-            margin: 0 auto
-    .item.text_image
-        .carousel-caption
-            left: auto
-            right: auto
-            bottom: 10%
-            text-align: left
-            padding: 20px
-            background: rgba(0, 0, 0, 0.4)
+        max-height: 90%
+        margin: 0 auto
     .item.text_only
         .carousel-image
             display: none !important
@@ -278,17 +278,13 @@ ul.nav-stacked > li > a
             left: 10%
             right: 10%
             top: 10%
+            bottom: auto
             text-align: center
+            background: transparent
     .item.image_text
         .carousel-caption
-            left: auto
-            text-align: left
             right: 10%
-            bottom: 10%
-            padding: 20px
-            background: rgba(0, 0, 0, 0.4)
         .carousel-image
-            right: 50%
             left: 10%
     .carousel-control
         cursor: pointer
@@ -378,3 +374,6 @@ address
         margin: 0 3px 0 2px
     .fa.fa-file-text-o
         margin-right: 1px
+
+span[data-oe-type="monetary"]
+    white-space: nowrap

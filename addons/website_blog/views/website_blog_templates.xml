@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <template id="secure_layout" inherit_id="website.secure_layout">
-        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
-            <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js" t-ignore="true"></script>
-            <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js" t-ignore="true"></script>
+    <template id="editor_head" inherit_id="website.editor_head" name="Blog Editor" groups="base.group_website_designer">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
+            <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
         </xpath>
     </template>
 
@@ -20,7 +20,7 @@
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure"/>
-                <section t-if="editable">
+                <section groups="base.group_website_publisher">
                     <div class="container text-center mt16">
                         <div class="alert alert-warning alert-dismissable">
                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
@@ -100,7 +100,7 @@
             <h1>
                 No blog post yet!
             </h1>
-            <p t-if="editable">
+            <p groups="base.group_website_publisher">
                 To create a new blog post, use the top-right menu <em>Content</em>
                 and select the menuitem <em>New Blog Post</em>.
             </p>
@@ -167,7 +167,7 @@
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>
-                <li t-ignore="True">
+                <li>
                     <form class="duplicate hidden" action="/blogpost/duplicate">
                         <input name="blog_post_id" t-att-value="blog_post.id"/>
                     </form>
@@ -218,7 +218,7 @@
             inherit_option_id="website_blog.blog_post_complete" inherit_id="website_blog.blog_post_complete"
             groups="website_mail.group_comment">
         <xpath expr="//ul[@id='comments-list']" position="after">
-            <section class="mb32">
+            <section class="mb32 css_editable_mode_hidden">
                 <form id="comment" t-attf-action="/blogpost/#{blog_post.id}/comment"
                         method="POST">
                     <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
@@ -329,7 +329,7 @@
             <section class="mt32">
             <h4>About us</h4>
             <p>
-                Write here a small text for <b>new visitors</b> finding your website
+                Write a small text here for when <b>new visitors</b> find your website
                 through your <b>blog entries</b>, referenced in Google.
             </p>
             <div>

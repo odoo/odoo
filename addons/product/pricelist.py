@@ -172,9 +172,7 @@ class product_pricelist(osv.osv):
         products = map(lambda x: x[0], products_by_qty_by_partner)
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')
-        product_category_obj = self.pool.get('product.category')
         product_uom_obj = self.pool.get('product.uom')
-        supplierinfo_obj = self.pool.get('product.supplierinfo')
         price_type_obj = self.pool.get('product.price.type')
 
         version = False
@@ -278,8 +276,6 @@ class product_pricelist(osv.osv):
                 break
 
             if price:
-                # FP Note: what's this?
-                # results['item_id'] = res.id
                 if 'uom' in context and not uom_price_already_computed:
                     product = products_dict[product.id]
                     uom = product.uos_id or product.uom_id
@@ -292,7 +288,6 @@ class product_pricelist(osv.osv):
         product = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
         res_multi = self.price_get_multi(cr, uid, pricelist_ids=ids, products_by_qty_by_partner=[(product, qty, partner)], context=context)
         res = res_multi[prod_id]
-        res.update({'item_id': {ids[-1]: res_multi.get('item_id', ids[-1])}})
         return res
 
 

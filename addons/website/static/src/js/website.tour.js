@@ -27,6 +27,9 @@
                 if (!step.element) {
                     step.orphan = true;
                 }
+                if (step.snippet) {
+                    step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                }
                 if (step.trigger) {
                     if (step.trigger === 'click') {
                         step.triggers = function (callback) {
@@ -48,8 +51,8 @@
                             };
                         } else {
                             step.triggers = function (callback) {
-                                var emitter = step.trigger.emitter || $(step.element);
-                                emitter.one(step.trigger.id, function customHandler () {
+                                var emitter = _.isString(step.trigger.emitter) ? $(step.trigger.emitter) : (step.trigger.emitter || $(step.element));
+                                emitter.on(step.trigger.id, function () {
                                     (callback || self.moveToNextStep).apply(self, arguments);
                                 });
                             };
@@ -144,7 +147,7 @@
         },
         resume: function () {
             // Override if necessary
-            return !this.ended();
+            return this.tourStorage.getItem(this.id+'_current_step') && !this.ended();
         },
         trigger: function (url) {
             // Override if necessary
@@ -164,7 +167,7 @@
                 $('.popover.tour').remove();
                 function advance () {
                     if (_.isFunction(callback)) {
-                        callback.call(self);
+                        callback.apply(self);
                     }
                 }
                 $(document.body).one('mouseup', advance);
@@ -214,12 +217,52 @@
         },
     });
 
-    var TestConsole = website.TestConsole = {
-        tests: []
-    };
+    var TestConsole = openerp.Class.extend({
+        tests: [],
+        editor: null,
+        init: function (editor) {
+            if (!editor) {
+                throw new Error("Editor cannot be null or undefined");
+            }
+            this.editor = editor;
+        },
+        test: function (id) {
+            return _.find(this.tests, function (tour) {
+               return tour.id === id;
+            });
+        },
+        snippetSelector: function (snippetId) {
+            return '#oe_snippets div.oe_snippet[data-snippet-id="'+snippetId+'"] .oe_snippet_thumbnail';
+        },
+        snippetThumbnail: function (snippetId) {
+            return $(this.snippetSelector(snippetId)).first();
+        },
+        dragAndDropSnippet: function (snippetId) {
+            function actualDragAndDrop ($thumbnail) {
+                var thumbnailPosition = $thumbnail.position();
+                $thumbnail.trigger($.Event("mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
+                $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top+500 }));
+                var $dropZone = $(".oe_drop_zone").first();
+                var dropPosition = $dropZone.position();
+                $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
+            }
+            if (this.snippetThumbnail(snippetId).length === 0) {
+                this.editor.on('rte:ready', this, function () {
+                    actualDragAndDrop(this.snippetThumbnail(snippetId));
+                });
+            } else {
+                actualDragAndDrop(this.snippetThumbnail(snippetId));
+            }
+        },
+    });
 
     website.EditorBar.include({
         tours: [],
+        init: function () {
+            var result = this._super();
+            website.TestConsole = new TestConsole(this);
+            return result;
+        },
         start: function () {
             $('.tour-backdrop').click(function (e) {
                 e.stopImmediatePropagation();
@@ -242,25 +285,72 @@
             return this._super();
         },
         registerTour: function (tour) {
+            var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
-            TestConsole.tests.push({
+            var test = {
                 id: tour.id,
-                run: function runTest () {
-                    var actionSteps = _.filter(tour.steps, function (step) {
-                       return step.triggers;
-                    });
-                    var currentIndex = 0;
-                    function executeStep (step) {
-                       var $element = $(step.element);
-                       step.triggers(function () {
-                           currentIndex = currentIndex + 1;
-                           executeStep(actionSteps[currentIndex]);
-                       });
-                       $element.click();
+                run: function (force) {
+                    if (force === true) {
+                        this.reset();
                     }
-                    executeStep(actionSteps[currentIndex]);
+                    var actionSteps = _.filter(tour.steps, function (step) {
+                       return step.trigger;
+                    });
+                    function executeStep (step) {
+                        window.localStorage.setItem(testId, step.stepId);
+                        step.triggers(function () {
+                            var nextStep = actionSteps.shift();
+                            if (nextStep) {
+                                // Ensure the previous step has been fully propagated
+                                setTimeout(function () {
+                                    setTimeout(function () {
+                                        executeStep(nextStep);
+                                    }, 0);
+                                }, 0);
+                            } else {
+                                window.localStorage.removeItem(testId);
+                            }
+                        });
+                        var $element = $(step.element);
+                        if (step.snippet && step.trigger === 'drag') {
+                            website.TestConsole.dragAndDropSnippet(step.snippet);
+                        } else if (step.trigger.id === 'change') {
+                            var currentValue = $element.val();
+                            var options = $element[0].options;
+                            // FIXME: It may be necessary to set a particular value
+                            var newValue = _.find(options, function (option) {
+                                return option.value !== currentValue;
+                            }).value;
+                            $element.val(newValue).trigger($.Event("change"));
+                        } else {
+                            $element.trigger($.Event("click", { srcElement: $element }));
+                        }
+                    }
+                    var url = new website.UrlParser(window.location.href);
+                    if (tour.startPath && url.pathname !== tour.startPath) {
+                        window.localStorage.setItem(testId, actionSteps[0].stepId);
+                        window.location.href = tour.startPath;
+                    } else {
+                        var lastStepId = window.localStorage.getItem(testId);
+                        var currentStep = actionSteps.shift();
+                        if (lastStepId) {
+                            while (currentStep && lastStepId !== currentStep.stepId) {
+                                currentStep = actionSteps.shift();
+                            }
+                        }
+                        setTimeout(function () {
+                            executeStep(currentStep);
+                        }, 0);
+                    }
                 },
-            });
+                reset: function () {
+                    window.localStorage.removeItem(testId);
+                },
+            };
+            website.TestConsole.tests.push(test);
+            if (window.localStorage.getItem(testId)) {
+                test.run();
+            }
         },
     });
 

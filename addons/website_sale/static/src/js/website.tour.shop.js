@@ -113,7 +113,7 @@
                 },
                 {
                     stepId: 'drag-big-picture',
-                    element: '#website-top-navbar [data-snippet-id=big-picture].ui-draggable',
+                    snippet: 'big-picture',
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Big Picture' block and drop it in your page.",
@@ -130,11 +130,18 @@
                 },
                 {
                     stepId: 'publish-product',
-                    element: 'button.js_publish_btn',
+                    element: '.js_publish_management button.js_publish_btn.btn-danger',
                     placement: 'top',
                     title: "Publish your product",
                     content: "Click to publish your product so your customers can see it.",
                     trigger: 'click',
+                },
+                {
+                    stepId: 'congratulations',
+                    title: "Congratulations",
+                    content: "Congratulations! You just created and published your first product.",
+                    template: self.popover({ end: "Close Tutorial" }),
+                    backdrop: true,
                 },
             ];
             return this._super();

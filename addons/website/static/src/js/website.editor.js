@@ -366,7 +366,7 @@
         events: {
             'click button[data-action=edit]': 'edit',
             'click button[data-action=save]': 'save',
-            'click button[data-action=cancel]': 'cancel',
+            'click a[data-action=cancel]': 'cancel',
             'click a[data-action=new_page]': 'new_page',
         },
         container: 'body',

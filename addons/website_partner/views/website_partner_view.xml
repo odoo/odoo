@@ -54,7 +54,7 @@
             <div class="col-md-8 mt32">
                 <t t-if="partner">
                     <div t-field="partner.website_description"/>
-                    <t t-if="editable">
+                    <t groups="base.group_website_publisher">
                         <h2 class="css_non_editable_mode_hidden">Short Description for List View</h2>
                         <div class="css_non_editable_mode_hidden" t-field="partner.website_short_description"/>
                     </t>

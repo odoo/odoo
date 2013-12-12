@@ -4,10 +4,11 @@
 
     <!-- Layout add nav and footer -->
 
-    <template id="secure_layout" inherit_id="website.secure_layout">
-        <xpath expr="//t[@id='editable_scripts_hook']" position="inside">
-              <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js" t-ignore="true"></script>
-              <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js" t-ignore="true"></script>
+
+    <template id="editor_head" inherit_id="website.editor_head" name="Shop Editor" groups="base.group_website_designer">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website.tour.shop.js"></script>
         </xpath>
     </template>
 
@@ -41,7 +42,12 @@
     <template id="search" name="Search hidden fields">
         <input type="hidden" name="category" t-att-value="search.get('category') or ''"/>
         <input type="hidden" name="filters" t-att-value="search.get('filters') or ''"/>
-        <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
+        <div class="input-group">
+          <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search.get('search') or ''"/>
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit"><i class="fa fa-search"/></button>
+          </span>
+        </div>
     </template>
 
     <template id="products_cart" name="Shopping cart">
@@ -88,18 +94,14 @@
             <div id="wrap">
               <div class="oe_structure"/>
               <div class="container oe_website_sale">
-                <div class="row">
-                    <div class="col-sm-8 products_pager">
-                        <t t-call="website.pager">
-                            <t t-set="classname">pull-right</t>
-                            <t t-set="style">padding-left: 5px;</t>
-                        </t>
-                        <form action="/shop/" method="get" class="pull-right pagination form-inline" style="padding-right: 5px;">
-                            <t t-call="website_sale.search" />
-                        </form>
-                    </div>
+                <div class="products_pager">
+                  <div>
+                    <form action="/shop/" method="get" class="pagination form-inline col-md-3">
+                        <t t-call="website_sale.search" />
+                    </form>
+                    <t t-call="website.pager"/>
+                  </div>
                 </div>
-
                 <div class='style_default row'>
                   <div class="hidden" id="products_grid_before"></div>
                   <div class="col-md-12" id="products_grid">
@@ -118,7 +120,7 @@
 
                                 <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
 
-                                  <div class="css_options" t-ignore="true" t-if="editable">
+                                  <div class="css_options" t-ignore="true" groups="base.group_website_publisher">
                                     <div t-attf-class="dropdown js_options" t-att-data-id="product.id">
                                       <a class="btn btn-default" t-att-id="'dopprod-%s' % product.id" role="button" data-toggle="dropdown">Options <span class="caret"></span></a>
                                       <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % product.id">
@@ -178,14 +180,18 @@
                       </tbody>
                     </table>
                     <t t-if="not bins">
-                      <h3 class="text-center text-muted">No product found for this search</h3>
+                      <div class="text-center text-muted">
+                        <h3>No product found</h3>
+                        <t groups="base.group_website_publisher">
+                          <p>Click on "Content" to define a new product or "Help" for more informations.</p>
+                          <p>In the backend's product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.</p>
+                        </t>
+                      </div>
                     </t>
                   </div>
                 </div>
                 <div class="products_pager">
-                    <t t-call="website.pager">
-                        <t t-set="classname">pull-right</t>
-                    </t>
+                    <t t-call="website.pager"/>
                 </div>
               </div>
               <div class="oe_structure mb32"/>
@@ -253,13 +259,19 @@
 
               <section class="container mt8">
                 <div class="row">
-                  <div class="col-sm-5">
+                  <div class="col-sm-4">
                       <ol class="breadcrumb">
                           <li><a href="/shop">Products</a></li>
                           <li t-if="search.get('category')"><a t-href="/shop/" t-keep-query="category,search,filters"><span t-field="category.name"/></a></li>
                           <li class="active"><span t-field="product.name"/></li>
                       </ol>
-                  </div><div class="col-sm-3">
+                  </div>
+                  <div class="col-sm-3">
+                    <form action="/shop/" method="get" class="pull-right">
+                        <t t-call="website_sale.search" />
+                    </form>
+                  </div>
+                  <div class="col-sm-4">
                       <t t-call="website.publish_management">
                         <t t-set="object" t-value="product"/>
                         <t t-set="publish_edit" t-value="True"/>
@@ -271,15 +283,11 @@
                             </ul>
                         </li>
                       </t>
-                  </div><div class="col-sm-3 col-sm-offset-1">
-                        <form action="/shop/" method="get" class="pull-right">
-                            <t t-call="website_sale.search" />
-                        </form>
                   </div>
                 </div>
               </section>
 
-              <section class="container oe_website_sale mb16" id="product_detail">
+              <section class="container oe_website_sale" id="product_detail">
                 <div class="row">
                   <div class="col-sm-7 col-md-7 col-lg-7">
                       <span t-field="product.image" style="max-height: 500px" t-field-options='{"widget": "image", "class": "img img-responsive"}'/>
@@ -471,7 +479,7 @@
                                     </th>
                                 </tr>
                                 <tr class="text-muted">
-                                    <td><abbr title="Taxes may be updated after providing shipping address">Incl. Taxes:</abbr></td>
+                                    <td><abbr title="Taxes may be updated after providing shipping address">Taxes:</abbr></td>
                                     <td class="text-right">
                                         <span t-field="website_sale_order.amount_tax" t-field-options='{
                                             "widget": "monetary",
@@ -870,7 +878,7 @@
                                 }'/></h3></th>
                             </tr>
                             <tr class="text-muted">
-                                <td>Incl. Taxes:</td>
+                                <td>Taxes:</td>
                                 <td class="text-right"><span t-field="website_sale_order.amount_tax" t-field-options='{
                                     "widget": "monetary",
                                     "display_currency": "website.pricelist_id.currency_id"

@@ -154,6 +154,9 @@ ul.oe_menu_editor
 .modal .image-preview
     margin-bottom: 0.5em
 
+.modal-footer
+    text-align: left
+
 .modal.nosave .modal-footer
     button.save
         display: none
@@ -182,7 +185,8 @@ ul.oe_menu_editor
     position: absolute
     top: 0
     left: 0
-    z-index: 42
+    // This z-index is due to .navbar of bootstrap
+    z-index: 1000
 
 /* ---- SNIPPET EDITOR ---- */
 

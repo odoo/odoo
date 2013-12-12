@@ -81,6 +81,7 @@
                                     <span t-esc="partner_data['grade_id'][1]"/> Partners
                                     <t t-if="current_country"> in <t t-esc="current_country.name"/></t>
                                 </h3>
+                                <t t-set="internal_gid" t-value="partner_data['grade_id'][1]"/>
                             </t>
                             <div class="media thumbnail">
                                 <a class="pull-left" t-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">

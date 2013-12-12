@@ -246,6 +246,9 @@
                 this.snippet_focus($snippet);
             }
             $("#oe_snippets").trigger('snippet-activated', $snippet);
+            if ($snippet) {
+                $snippet.trigger('snippet-activated', $snippet);
+            }
         },
         create_overlay: function ($snippet) {
             if (typeof $snippet.data("snippet-editor") === 'undefined') {
@@ -670,7 +673,7 @@
     });
 
 
-    website.snippet.styleRegistry['size'] = website.snippet.StyleEditor.extend({
+    website.snippet.styleRegistry.size = website.snippet.StyleEditor.extend({
         select: function(event, np) {
             this._super(event, np);
             this.parent.parent.cover_target(this.$overlay, this.$target);
@@ -1111,9 +1114,13 @@
             this.$target.addClass("col-md-offset-" + this.$target.prevAll(".oe_drop_to_remove").length);
             this._super();
         },
+        hide_remove_button: function() {
+            this.$overlay.find('.oe_snippet_remove').toggleClass("hidden",
+                !this.$target.siblings().length && this.$target.parents("[data-snippet-id]:first").find("[data-snippet-id='colmd']").length > 1);
+        },
         onFocus : function () {
             this._super();
-            this.$overlay.find('.oe_snippet_remove').toggleClass("hidden", !this.$target.siblings().length);
+            this.hide_remove_button();
         },
         on_clone: function () {
             var $clone = this.$target.clone(false);
@@ -1121,13 +1128,21 @@
             _class += ' col-md-1';
             $clone.attr("class", _class);
             this.$target.after($clone);
+            this.hide_remove_button();
             return false;
         },
         on_remove: function () {
-            if (!this.$target.siblings().length){
-                return false;
+            if (!this.$target.siblings().length) {
+                var $parent = this.$target.parents("[data-snippet-id]:first");
+                if($parent.find("[data-snippet-id='colmd']").length > 1) {
+                    return false;
+                } else {
+                    $parent.data("snippet-editor").on_remove();
+                }
             }
-            return this._super();
+            this._super();
+            this.hide_remove_button();
+            return false;
         },
         on_resize: function (compass, beginClass, current) {
             if (compass !== 'w')
@@ -1171,7 +1186,7 @@
                 self.$target.carousel(+$(this).data('slide-to')); });
 
             this.$target.attr('contentEditable', 'false');
-            this.$target.find('.oe_structure, blockquote').attr('contentEditable', 'true');
+            this.$target.find('.oe_structure, .content>.row').attr('contentEditable', 'true');
 
             this.$target.carousel('pause');
         },
@@ -1256,7 +1271,6 @@
             this._super();
             this.$target.css("background-image", "");
             this.$target.removeClass(this._class);
-            this.$target.find('.content, .carousel-image img').attr('contentEditable', 'true');
         },
         start : function () {
             var self = this;
@@ -1311,7 +1325,7 @@
             this.$target.find('.carousel-control').off('click').on('click', function () {
                 self.$target.carousel( $(this).data('slide')); });
 
-            this.$target.find('.carousel-image img, .content').attr('contentEditable', 'true');
+            this.$target.find('.carousel-image, .content').attr('contentEditable', 'true');
             this._super();
         },
     });
