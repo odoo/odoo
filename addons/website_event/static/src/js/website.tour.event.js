@@ -145,6 +145,13 @@
                     content: "Click here to edit your event in the backend.",
                     trigger: 'click',
                 },
+                {
+                    stepId: 'end-tutorial',
+                    title: "Thanks!",
+                    content: "This tutorial is finished. Congratulations on creating your first event.",
+                    template: self.popover({ end: "Close Tutorial" }),
+                    backdrop: true,
+                },
             ];
             return this._super();
         },

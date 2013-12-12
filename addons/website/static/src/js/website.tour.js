@@ -264,7 +264,6 @@
             return result;
         },
         start: function () {
-
             $('.tour-backdrop').click(function (e) {
                 e.stopImmediatePropagation();
                 e.preventDefault();
