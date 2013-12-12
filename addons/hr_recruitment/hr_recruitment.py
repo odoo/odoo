@@ -86,9 +86,6 @@ class hr_applicant(osv.Model):
              # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
             'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
         },
-        'job_id': {
-            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.job_id and obj.job_id.id,
-        },
     }
 
     def _get_default_department_id(self, cr, uid, context=None):
@@ -366,7 +363,8 @@ class hr_applicant(osv.Model):
         if vals.get('department_id') and not context.get('default_department_id'):
             context['default_department_id'] = vals.get('department_id')
         if vals.get('job_id'):
-            self.pool['hr.job'].message_post(cr, uid, [vals['job_id']], body=_('New Applicant %s Created') % vals['name'], subtype="hr_recruitment.mt_applicant_new", context=context)
+            name = vals['partner_name'] if vals['partner_name'] != False else vals['name']
+            self.pool['hr.job'].message_post(cr, uid, [vals['job_id']], body=_('New Applicant %s Created') % name, subtype="hr_recruitment.mt_applicant_new", context=context)
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
         return obj_id
 
@@ -385,7 +383,8 @@ class hr_applicant(osv.Model):
             return res
         if vals.get('job_id'):
             for applicant in self.browse(cr, uid, ids, context=None):
-                self.pool['hr.job'].message_post(cr, uid, [vals['job_id']], body=_('New Applicant %s Created') % applicant.name, subtype="hr_recruitment.mt_applicant_new", context=context)
+                name = applicant.partner_name if applicant.partner_name != False else applicant.name
+                self.pool['hr.job'].message_post(cr, uid, [vals['job_id']], body=_('New Applicant %s Created') % name, subtype="hr_recruitment.mt_applicant_new", context=context)
         return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
 
     def create_employee_from_applicant(self, cr, uid, ids, context=None):
