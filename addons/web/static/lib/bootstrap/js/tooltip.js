@@ -250,7 +250,7 @@
   Tooltip.prototype.setContent = function () {
     var $tip  = this.tip()
     var title = this.getTitle()
-
+    title = title.search("oe_tooltip_string") != -1 ? title : title.replace(/\n/g, "<br />");
     $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
     $tip.removeClass('fade in top bottom left right')
   }
