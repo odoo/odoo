@@ -1,5 +1,5 @@
 <templates>
-    <div t-name="GraphView">
+    <div t-name="GraphView" class="graph_view">
     	<div class="graph_header">
             <div class="btn-group">
                 <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -26,22 +26,11 @@
             </div>
             <div class="btn-group">
                 <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Fold/Expand <span class="caret"></span>
-                </label>
-                <ul class="dropdown-menu graph_expand_selection" role="menu">
-                    <li><a data-choice="fold_columns" href="#">Fold Columns</a></li>
-                    <li><a data-choice="fold_rows" href="#">Fold Rows</a></li>
-                    <li><a data-choice="fold_all" href="#">Fold All</a></li>
-                    <li role="presentation" class="divider"></li>
-                    <li><a data-choice="expand_all" href="#">Expand All</a></li>
-                </ul>
-            </div>
-            <div class="btn-group">
-                <label type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Options <span class="caret"></span>
                 </label>
                 <ul class="dropdown-menu graph_options_selection" role="menu">
                     <li><a data-choice="swap_axis" href="#">Swap Axis</a></li>
+                    <li><a data-choice="expand_all" href="#">Expand All</a></li>
                     <li><a data-choice="update_values" href="#">Update all values</a></li>
                     <li><a data-choice="export_data" href="#">Export data</a></li>
                 </ul>

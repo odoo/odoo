@@ -24,7 +24,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     events: {
         'click .graph_mode_selection li' : 'mode_selection',
         'click .graph_measure_selection li' : 'measure_selection',
-        'click .graph_expand_selection li' : 'expand_selection',
         'click .graph_options_selection li' : 'option_selection',
         'click .web_graph_click' : 'cell_click_callback',
         'click a.field-selection' : 'field_selection',
@@ -269,35 +268,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.display_data();
     },
 
-    expand_selection: function (event) {
-        event.preventDefault();
-        switch (event.target.attributes['data-choice'].nodeValue) {
-            case 'fold_columns':
-                this.pivot_table.fold_cols();
-                this.register_groupby();
-                break;
-            case 'fold_rows':
-                this.pivot_table.fold_rows();
-                this.register_groupby();
-                break;
-            case 'fold_all':
-                this.pivot_table.fold_cols();
-                this.pivot_table.fold_rows();
-                this.register_groupby();
-                break;
-            case 'expand_all':
-                this.pivot_table.invalidate_data();
-                this.display_data();
-                break;
-        }
-    },
-
     option_selection: function (event) {
         event.preventDefault();
         switch (event.target.attributes['data-choice'].nodeValue) {
             case 'swap_axis':
                 this.pivot_table.swap_axis();
                 this.register_groupby();
+                break;
+            case 'expand_all':
+                this.pivot_table.invalidate_data();
+                this.display_data();
                 break;
             case 'update_values':
                 this.pivot_table.stale_data = true;
@@ -368,7 +348,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return $('<span> </span>')
             .addClass('web_graph_click')
             .attr('href', '#')
-            .addClass((header.is_expanded) ? 'icon-minus-sign' : 'icon-plus-sign')
+            .addClass((header.is_expanded) ? 'fa fa-minus-square' : 'fa fa-plus-square')
             .append((header.title !== undefined) ? header.title : 'Undefined');
     },
 
