@@ -570,8 +570,9 @@ class google_calendar(osv.osv):
                                         if event_to_synchronize[base_event][0][1].get('OE_event_id'):                                
                                             parent_oe_id =  event_to_synchronize[base_event][0][1].get('OE_event_id')
                                             crm_meeting.unlink(cr,uid,"%s-%s" % (parent_oe_id,new_google_event_id),unlink_level=1,context=context)
-                                        else:
-                                            raise "Need to delete !"
+                                        #else:
+                                            
+                                            #raise "Need to delete !"
                                     
                     elif actToDo == 'DELETE':
                         if actSrc == 'GG':
