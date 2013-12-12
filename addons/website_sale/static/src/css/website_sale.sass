@@ -33,6 +33,21 @@
         width: 100%
         height: 100%
 
+.products_pager
+    text-align: center
+    > div
+        margin: 0 auto
+        display: inline-block
+        > *
+            vertical-align: middle
+            float: none
+            padding: 0
+        > ul
+            padding-left: 10px
+    > ul
+        margin-left: auto
+        margin-right: auto
+
 /* ---- Default Styles Description ---- */
 
 .oe_product
@@ -136,12 +151,8 @@
             height: 300px
             display: inline-block
     .products_pager
-        text-align: center
-        margin: 10px 0
         .pagination
-            float: none !important
-            margin: 0 !important
-            padding: 0 !important
+            margin: 5px auto !important
 
 @media (max-width: 400px)
     #products_grid
@@ -355,4 +366,3 @@ ul.wizard li.text-primary .chevron:before
 ul.wizard li:first-child
     padding-left: 15px
     border-radius: 4px 0 0 4px
-
