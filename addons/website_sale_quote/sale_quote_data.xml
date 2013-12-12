@@ -15,7 +15,7 @@
                 
                     <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>
 
-                    <% set signup_url = object.get_signup_url(object.access_token) %>
+                    <% set signup_url = object.quote_url %>
                     <p>
                         You can access this document and pay online via our Customer Portal:
                     </p>

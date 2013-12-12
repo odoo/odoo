@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
         <record id="product_template_quote_1" model="product.template">
             <field name="name">Functional Training</field>
             <field name="categ_id" ref="product.product_category_5"/>
@@ -31,6 +31,38 @@
         <record id="product_product_quote_2" model="product.product">
             <field name="product_tmpl_id" ref="product_template_quote_2"/>
             <field name="default_code">QF12</field>
+        </record>
+
+        <record id="product_template_quote_3" model="product.template">
+            <field name="name">Advanced CRM Functional</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="public_categ_id" ref="product.Computer_all_in_one"/>
+            <field name="standard_price">50000.0</field>
+            <field name="list_price">750000.0</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">Learn directly from our team and network of OpenERP experts. Choose from the available training sessions for a better functional understanding of OpenERP</field>
+        </record>
+        <record id="product_product_quote_3" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_quote_3"/>
+            <field name="default_code">QF13</field>
+        </record>
+
+        <record id="product_template_quote_4" model="product.template">
+            <field name="name">Advanced Account Functional </field>
+            <field name="categ_id" ref="product.product_category_6"/>
+            <field name="public_categ_id" ref="product.Computer_all_in_one"/>
+            <field name="standard_price">50000.0</field>
+            <field name="list_price">750000.0</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">Learn directly from our team and network of OpenERP experts. Choose from the available training sessions for a better functional understanding of OpenERP</field>
+        </record>
+        <record id="product_product_quote_4" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_quote_4"/>
+            <field name="default_code">QF14</field>
         </record>
         <record id="website_sale_order_1" model="sale.order">
             <field name="partner_id" ref="base.res_partner_2"/>

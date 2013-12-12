@@ -21,10 +21,12 @@ class sale_quote(http.Controller):
     def view(self, token=None, **post):
         values = {}
         order_pool = request.registry.get('sale.order')
+        
         quotation = order_pool.browse(request.cr, SUPERUSER_ID, self.get_quote(token))[0]
         render_template = 'website_sale_quote.so_quotation'
         values.update({
             'quotation' : quotation,
+            'total_mail' : len(order_pool.search(request.cr, request.uid,[('access_token','=',token),('message_ids.type', '=', 'email')], context=request.context)),
         })
         return request.website.render(render_template, values)
 
@@ -46,7 +48,7 @@ class sale_quote(http.Controller):
         if post.get('new_message'):
             request.session.body = post.get('new_message')
         if 'body' in request.session and request.session.body:
-            request.registry.get('sale.order').message_post(request.cr, SUPERUSER_ID, self.get_quote(token),
+            request.registry.get('sale.order').message_post(request.cr, request.uid, self.get_quote(token),
                     body=request.session.body,
                     type='email',
                     subtype='mt_comment',
