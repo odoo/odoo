@@ -253,6 +253,7 @@
         <t t-call="website.layout">
             <t t-set="head">
                 <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+                <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
             </t>
             <t t-set="additional_title" t-value="product.name"/>
             <div id="wrap">
@@ -290,7 +291,7 @@
               <section class="container oe_website_sale" id="product_detail">
                 <div class="row">
                   <div class="col-sm-7 col-md-7 col-lg-7">
-                      <span t-field="product.image" style="max-height: 500px" t-field-options='{"widget": "image", "class": "img img-responsive"}'/>
+                      <span t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
                   </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
                       <h1 t-field="product.name">Product Name</h1>
 
