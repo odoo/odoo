@@ -399,9 +399,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     this.dataset.index = this.dataset.ids.length - 1;
                     break;
             }
-            this.reload();
+            var def = this.reload();
             this.trigger('pager_action_executed');
+            return def;
         }
+        return $.when();
     },
     init_pager: function() {
         var self = this;
@@ -416,8 +418,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.$el.find('.oe_form_pager').replaceWith(this.$pager);
         }
         this.$pager.on('click','a[data-pager-action]',function() {
-            var action = $(this).data('pager-action');
-            self.execute_pager_action(action);
+            var $el = $(this);
+            if ($el.attr("disabled"))
+                return;
+            var action = $el.data('pager-action');
+            var def = $.when(self.execute_pager_action(action));
+            $el.attr("disabled");
+            def.always(function() {
+                $el.removeAttr("disabled");
+            });
         });
         this.do_update_pager();
     },
@@ -722,12 +731,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.save().done(function(result) {
             self.trigger("save", result);
-            self.to_view_mode();
-        }).then(function(result) {
-            var parent = self.ViewManager.ActionManager.getParent();
-            if(parent){
-                parent.menu.do_reload_needaction();
-            }
+            self.reload().then(function() {
+                self.to_view_mode();
+                var parent = self.ViewManager.ActionManager.getParent();
+                if(parent){
+                    parent.menu.do_reload_needaction();
+                }
+            });
         });
     },
     on_button_cancel: function(event) {
@@ -891,17 +901,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @param {Object} r result of the write function.
      */
     record_saved: function(r) {
-        var self = this;
+        this.trigger('record_saved', r);
         if (!r) {
             // should not happen in the server, but may happen for internal purpose
-            this.trigger('record_saved', r);
             return $.Deferred().reject();
-        } else {
-            return $.when(this.reload()).then(function () {
-                self.trigger('record_saved', r);
-                return r;
-            });
         }
+        return r;
     },
     /**
      * Updates the form' dataset to contain the new record:
@@ -3071,7 +3076,7 @@ instance.web.form.CompletionFieldMixin = {
                 values.push({
                     label: _t("Search More..."),
                     action: function() {
-                        dataset.name_search(search_val, self.build_domain(), 'ilike', false).done(function(data) {
+                        dataset.name_search(search_val, self.build_domain(), 'ilike', 160).done(function(data) {
                             self._search_create_popup("search", data);
                         });
                     },
@@ -3581,6 +3586,67 @@ instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
         this.set('value', value_);
         this.set_button();
      },
+});
+
+/**
+ * Abstract-ish ListView.List subclass adding an "Add an item" row to replace
+ * the big ugly button in the header.
+ *
+ * Requires the implementation of a ``is_readonly`` method (usually a proxy to
+ * the corresponding field's readonly or effective_readonly property) to
+ * decide whether the special row should or should not be inserted.
+ *
+ * Optionally an ``_add_row_class`` attribute can be set for the class(es) to
+ * set on the insertion row.
+ */
+instance.web.form.AddAnItemList = instance.web.ListView.List.extend({
+    pad_table_to: function (count) {
+        if (!this.view.is_action_enabled('create') || this.is_readonly()) {
+            this._super(count);
+            return;
+        }
+
+        this._super(count > 0 ? count - 1 : 0);
+
+        var self = this;
+        var columns = _(this.columns).filter(function (column) {
+            return column.invisible !== '1';
+        }).length;
+        if (this.options.selectable) { columns++; }
+        if (this.options.deletable) { columns++; }
+
+        var $cell = $('<td>', {
+            colspan: columns,
+            'class': this._add_row_class || ''
+        }).append(
+            $('<a>', {href: '#'}).text(_t("Add an item"))
+                .mousedown(function () {
+                    // FIXME: needs to be an official API somehow
+                    if (self.view.editor.is_editing()) {
+                        self.view.__ignore_blur = true;
+                    }
+                })
+                .click(function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // FIXME: there should also be an API for that one
+                    if (self.view.editor.form.__blur_timeout) {
+                        clearTimeout(self.view.editor.form.__blur_timeout);
+                        self.view.editor.form.__blur_timeout = false;
+                    }
+                    self.view.ensure_saved().done(function () {
+                        self.view.do_add_record();
+                    });
+                }));
+
+        var $padding = this.$current.find('tr:not([data-id]):first');
+        var $newrow = $('<tr>').append($cell);
+        if ($padding.length) {
+            $padding.before($newrow);
+        } else {
+            this.$current.append($newrow)
+        }
+    }
 });
 
 /*
@@ -4161,62 +4227,11 @@ instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
         }
     }
 });
-instance.web.form.One2ManyList = instance.web.ListView.List.extend({
-    pad_table_to: function (count) {
-        if (!this.view.is_action_enabled('create')) {
-            this._super(count);
-        } else {
-            this._super(count > 0 ? count - 1 : 0);
-        }
-
-        // magical invocation of wtf does that do
-        if (this.view.o2m.get('effective_readonly')) {
-            return;
-        }
-
-        var self = this;
-        var columns = _(this.columns).filter(function (column) {
-            return column.invisible !== '1';
-        }).length;
-        if (this.options.selectable) { columns++; }
-        if (this.options.deletable) { columns++; }
-
-        if (!this.view.is_action_enabled('create')) {
-            return;
-        }
-
-        var $cell = $('<td>', {
-            colspan: columns,
-            'class': 'oe_form_field_one2many_list_row_add'
-        }).append(
-            $('<a>', {href: '#'}).text(_t("Add an item"))
-                .mousedown(function () {
-                    // FIXME: needs to be an official API somehow
-                    if (self.view.editor.is_editing()) {
-                        self.view.__ignore_blur = true;
-                    }
-                })
-                .click(function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    // FIXME: there should also be an API for that one
-                    if (self.view.editor.form.__blur_timeout) {
-                        clearTimeout(self.view.editor.form.__blur_timeout);
-                        self.view.editor.form.__blur_timeout = false;
-                    }
-                    self.view.ensure_saved().done(function () {
-                        self.view.do_add_record();
-                    });
-                }));
-
-        var $padding = this.$current.find('tr:not([data-id]):first');
-        var $newrow = $('<tr>').append($cell);
-        if ($padding.length) {
-            $padding.before($newrow);
-        } else {
-            this.$current.append($newrow);
-        }
-    }
+instance.web.form.One2ManyList = instance.web.form.AddAnItemList.extend({
+    _add_row_class: 'oe_form_field_one2many_list_row_add',
+    is_readonly: function () {
+        return this.view.o2m.get('effective_readonly');
+    },
 });
 
 instance.web.form.One2ManyFormView = instance.web.FormView.extend({
@@ -4428,7 +4443,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend(instan
         this.$el.addClass('oe_form_field oe_form_field_many2many');
 
         this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
-                    'addable': this.get("effective_readonly") ? null : _t("Add"),
+                    'addable': null,
                     'deletable': this.get("effective_readonly") ? false : true,
                     'selectable': this.multi_selection,
                     'sortable': false,
@@ -4495,6 +4510,11 @@ instance.web.form.Many2ManyDataSet = instance.web.DataSetStatic.extend({
  * @extends instance.web.ListView
  */
 instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends instance.web.form.Many2ManyListView# */{
+    init: function (parent, dataset, view_id, options) {
+        this._super(parent, dataset, view_id, _.extend(options || {}, {
+            ListType: instance.web.form.Many2ManyList,
+        }));
+    },
     do_add_record: function () {
         var pop = new instance.web.form.SelectCreatePopup(this);
         pop.select_element(
@@ -4543,6 +4563,12 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         }
      },
     is_action_enabled: function () { return true; },
+});
+instance.web.form.Many2ManyList = instance.web.form.AddAnItemList.extend({
+    _add_row_class: 'oe_form_field_many2many_list_row_add',
+    is_readonly: function () {
+        return this.view.m2m_field.get('effective_readonly');
+    }
 });
 
 instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, {
@@ -5547,18 +5573,18 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var self = this;
         var selection_unfolded = [];
         var selection_folded = [];
+        var fold_field = this.options.fold_field;
 
         var calculation = _.bind(function() {
             if (this.field.type == "many2one") {
-                return self.get_distant_fields().then(function(fields) {
+                return self.get_distant_fields().then(function (fields) {
                     return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
-                        .read_slice(fields.fold ? ['fold'] : ['id'], {}).then(function (records) {
-
-                            var ids = _.map(records, function (val) {return val.id;});
+                        .read_slice(_.union(_.keys(self.distant_fields), ['id']), {}).then(function (records) {
+                            var ids = _.pluck(records, 'id');
                             return self.dataset.name_get(ids).then(function (records_name) {
                                 _.each(records, function (record) {
                                     var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
-                                    if (record.fold && record.id != self.get('value')) {
+                                    if (fold_field && record[fold_field] && record.id != self.get('value')) {
                                         selection_folded.push([record.id, name]);
                                     } else {
                                         selection_unfolded.push([record.id, name]);
@@ -5566,7 +5592,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                                 });
                             });
                         });
-                });
+                    });
             } else {
                 // For field type selection filter values according to
                 // statusbar_visible attribute of the field. For example:
@@ -5588,12 +5614,18 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             }
         });
     },
+    /*
+     * :deprecated: this feature will probably be removed with OpenERP v8
+     */
     get_distant_fields: function() {
         var self = this;
+        if (! this.options.fold_field) {
+            this.distant_fields = {}
+        }
         if (this.distant_fields) {
             return $.when(this.distant_fields);
         }
-        return new instance.web.Model(self.field.relation).call("fields_get", [["fold"]]).then(function(fields) {
+        return new instance.web.Model(self.field.relation).call("fields_get", [[this.options.fold_field]]).then(function(fields) {
             self.distant_fields = fields;
             return fields;
         });
