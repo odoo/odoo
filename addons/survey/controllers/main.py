@@ -243,26 +243,4 @@ class WebsiteSurvey(http.Controller):
         return request.website.render('survey.survey_print',
                                       {'survey': survey, 'page_nr': 0})
 
-    # Pagination
-
-    def find_next_page(self, survey, user_input):
-        ''' Find the browse record of the first unfilled page '''
-        if not user_input.user_input_line_ids:
-            return survey.page_ids[0], 0, len(survey.page_ids) == 1
-        else:
-            filled_pages = set()
-            for user_input_line in user_input.user_input_line_ids:
-                filled_pages.add(user_input_line.page_id)
-            last = False
-            page_nr = 0
-            nextpage = None
-            for page in survey.page_ids:
-                if page in filled_pages:
-                    page_nr = page_nr + 1
-                else:
-                    nextpage = page
-                if page_nr == len(survey.page_ids) - 1:
-                    last = True
-            return nextpage, page_nr, last
-
 # vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:
