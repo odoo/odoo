@@ -15,7 +15,7 @@
         <record id="goal_user_visibility" model="ir.rule">
             <field name="name">User can only see his/her goals or goal from the same plan in board visibility</field>
             <field name="model_id" ref="model_gamification_goal"/>
-            <field name="global" eval="True"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="False"/>
@@ -27,5 +27,17 @@
                         ('plan_id.user_ids','in',user.id),
                         ('plan_id.visibility_mode','=','board')]</field>
         </record>
+
+        <record id="goal_gamification_manager_visibility" model="ir.rule">
+            <field name="name">Gamification Manager can see any goal</field>
+            <field name="model_id" ref="model_gamification_goal"/>
+            <field name="groups" eval="[(4, ref('group_goal_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
     </data>
 </openerp>
