@@ -833,11 +833,12 @@
             <field name="name">stock.picking.internal.search</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <search string="Internal Picking List">
-                    <field name="name" string="Internal Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                    <filter icon="terp-check" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Internal Moves"/>
-                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
-                    <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
+                <search string="Picking Lists">
+                    <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
+                    <filter icon="terp-check" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
+                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Moves"/>
+                    <filter icon="terp-check" name="waiting" string="Waiting" domain="[('state','in', ('waiting', 'confirmed'))]" help="Waiting Moves"/>
+                    <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <separator/>
                     <filter name="late" string="Late" domain="[('min_date','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Pickings that are late on scheduled time"/>
@@ -918,7 +919,7 @@
                     'search_default_picking_type_id': [active_id],
                     'default_picking_type_id': active_id,
                     'contact_display': 'partner_address',
-                    'search_default_confirmed': 1,
+                    'search_default_waiting': 1,
             }
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -936,9 +937,7 @@
                     'default_picking_type_id': active_id,
                     'contact_display': 'partner_address',
                     'search_default_late': 1,
-                    'search_default_assigned': 1,
                     'search_default_confirmed': 1,
-                    'search_default_available': 1
             }
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -956,9 +955,7 @@
                     'default_picking_type_id': active_id,
                     'contact_display': 'partner_address',
                     'search_default_backorder': 1,
-                    'search_default_assigned': 1,
                     'search_default_confirmed': 1,
-                    'search_default_available': 1
             }
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -980,7 +977,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create an internal move request. 
+                Click to create a stock operation. 
               </p><p>
                 Most operations are prepared automatically by OpenERP according
                 to your preconfigured logistics rules, but you can also record
@@ -1486,11 +1483,7 @@
                                             </a>
                                         </div>
                                         <div>
-                                            <t t-if="record.count_picking_draft.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree_draft)d" type="action">
-                                                <field name="count_picking_draft"/> Draft
-                                            </a>
-                                            </t>
+                                            <a name="%(action_picking_tree)d" type="action">All Operations</a>
                                         </div>
                                     </div>
                                     <div class="oe_center oe_stock_justgage">

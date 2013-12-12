@@ -3493,11 +3493,11 @@ class stock_picking_type(osv.osv):
         obj = self.pool.get('stock.picking')
         domains = {
             'count_picking_draft': [('state', '=', 'draft')],
-            'count_picking_waiting': [('state','=','confirmed')],
+            'count_picking_waiting': [('state','in', ('confirmed', 'waiting'))],
             'count_picking_ready': [('state','=','assigned')],
             'count_picking': [('state','in',('assigned','waiting','confirmed'))],
             'count_picking_late': [('min_date','<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state','in',('assigned','waiting','confirmed'))],
-            'count_picking_backorders': [('backorder_id','<>', False), ('state','!=','done')],
+            'count_picking_backorders': [('backorder_id','!=', False), ('state','in',('confirmed', 'assigned', 'waiting'))],
         }
         result = {}
         for field in domains:
@@ -3510,7 +3510,7 @@ class stock_picking_type(osv.osv):
         for tid in ids:
             if result[tid]['count_picking']:
                 result[tid]['rate_picking_late'] = result[tid]['count_picking_late'] *100 / result[tid]['count_picking']
-                result[tid]['rate_picking_backorders'] = result[tid]['count_picking_backorders'] *100 / (result[tid]['count_picking'] + result[tid]['count_picking_draft'])
+                result[tid]['rate_picking_backorders'] = result[tid]['count_picking_backorders'] *100 / result[tid]['count_picking']
             else:
                 result[tid]['rate_picking_late'] = 0
                 result[tid]['rate_picking_backorders'] = 0
