@@ -236,11 +236,13 @@ class hr_employee(osv.osv):
         employee_id = super(hr_employee, self).create(cr, uid, data, context=create_ctx)
         employee = self.browse(cr, uid, employee_id, context=context)
         if employee.user_id:
+            res_users = self.pool['res.users']
             # send a copy to every user of the company
-            company_id = employee.user_id.partner_id.company_id.id
-            partner_ids = self.pool.get('res.partner').search(cr, uid, [
-                ('company_id', '=', company_id),
-                ('user_ids', '!=', False)], context=context)
+            # TODO: post to the `Whole Company` mail.group when we'll be able to link to the employee record  
+            _model, group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')
+            user_ids = res_users.search(cr, uid, [('company_id', '=', employee.user_id.company_id.id),
+                                                  ('groups_id', 'in', group_id)])
+            partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, uid, user_ids, context=context)))
         else:
             partner_ids = []
         self.message_post(cr, uid, [employee_id],
@@ -346,26 +348,9 @@ class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
 
-    def create(self, cr, uid, data, context=None):
-        user_id = super(res_users, self).create(cr, uid, data, context=context)
-
-        # add shortcut unless 'noshortcut' is True in context
-        if not(context and context.get('noshortcut', False)):
-            data_obj = self.pool.get('ir.model.data')
-            try:
-                data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
-                view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-                self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                            'user_id': user_id}, context=context)
-            except:
-                # Tolerate a missing shortcut. See product/product.py for similar code.
-                _logger.debug('Skipped meetings shortcut for user "%s".', data.get('name','<new'))
-
-        return user_id
-
     _columns = {
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
-        }
+    }
 
 
 

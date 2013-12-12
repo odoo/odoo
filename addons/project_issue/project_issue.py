@@ -320,56 +320,6 @@ class project_issue(osv.Model):
         """
         return self.set_priority(cr, uid, ids, '3')
 
-    def convert_issue_task(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-
-        case_obj = self.pool.get('project.issue')
-        data_obj = self.pool.get('ir.model.data')
-        task_obj = self.pool.get('project.task')
-
-        result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
-        res = data_obj.read(cr, uid, result, ['res_id'])
-        id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
-        id3 = data_obj._get_id(cr, uid, 'project', 'view_task_tree2')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
-        for bug in case_obj.browse(cr, uid, ids, context=context):
-            new_task_id = task_obj.create(cr, uid, {
-                'name': bug.name,
-                'partner_id': bug.partner_id.id,
-                'description':bug.description,
-                'date_deadline': bug.date,
-                'project_id': bug.project_id.id,
-                # priority must be in ['0','1','2','3','4'], while bug.priority is in ['1','2','3','4','5']
-                'priority': str(int(bug.priority) - 1),
-                'user_id': bug.user_id.id,
-                'planned_hours': 0.0,
-            })
-            vals = {
-                'task_id': new_task_id,
-                'stage_id': self.stage_find(cr, uid, [bug], bug.project_id.id, [('sequence', '=', 1)], context=context),
-            }
-            message = _("Project issue <b>converted</b> to task.")
-            self.message_post(cr, uid, [bug.id], body=message, context=context)
-            case_obj.write(cr, uid, [bug.id], vals, context=context)
-
-        return  {
-            'name': _('Tasks'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'project.task',
-            'res_id': int(new_task_id),
-            'view_id': False,
-            'views': [(id2,'form'),(id3,'tree'),(False,'calendar'),(False,'graph')],
-            'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id'],
-            'nodestroy': True
-        }
-
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)
         if not default:
@@ -406,6 +356,16 @@ class project_issue(osv.Model):
             return {'value': {}}
         task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
         return {'value': {'user_id': task.user_id.id, }}
+
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        """ This function returns value of partner email address based on partner
+            :param part: Partner's id
+        """
+        result = {}
+        if partner_id:
+            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context)
+            result['email_from'] = partner.email
+        return {'value': result}
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         context['empty_list_help_model'] = 'project.project'
@@ -455,18 +415,20 @@ class project_issue(osv.Model):
             return stage_ids[0]
         return False
 
-    def case_escalate(self, cr, uid, ids, context=None):
-        cases = self.browse(cr, uid, ids)
-        for case in cases:
+    def case_escalate(self, cr, uid, ids, context=None):        # FIXME rename this method to issue_escalate
+        for issue in self.browse(cr, uid, ids, context=context):
             data = {}
-            if case.project_id.project_escalation_id:
-                data['project_id'] = case.project_id.project_escalation_id.id
-                if case.project_id.project_escalation_id.user_id:
-                    data['user_id'] = case.project_id.project_escalation_id.user_id.id
-                if case.task_id:
-                    self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
-            else:
+            esc_proj = issue.project_id.project_escalation_id
+            if not esc_proj:
                 raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+
+            data['project_id'] = esc_proj.id
+            if esc_proj.user_id:
+                data['user_id'] = esc_proj.user_id.id
+            issue.write(data)
+
+            if issue.task_id:
+                issue.task_id.write({'project_id': esc_proj.id, 'user_id': False})
         return True
 
     # -------------------------------------------------------
@@ -507,39 +469,9 @@ class project_issue(osv.Model):
             'partner_id': msg.get('author_id', False),
             'user_id': False,
         }
-        if msg.get('priority'):
-            defaults['priority'] = msg.get('priority')
-
         defaults.update(custom_values)
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
         return res_id
-
-    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
-        """ Overrides mail_thread message_update that is called by the mailgateway
-            through message_process.
-            This method updates the document according to the email.
-        """
-        if isinstance(ids, (str, int, long)):
-            ids = [ids]
-        if update_vals is None: update_vals = {}
-
-        # Update doc values according to the message
-        if msg.get('priority'):
-            update_vals['priority'] = msg.get('priority')
-        # Parse 'body' to find values to update
-        maps = {
-            'cost': 'planned_cost',
-            'revenue': 'planned_revenue',
-            'probability': 'probability',
-        }
-        for line in msg.get('body', '').split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res and maps.get(res.group(1).lower(), False):
-                key = maps.get(res.group(1).lower())
-                update_vals[key] = res.group(2).lower()
-
-        return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
@@ -560,6 +492,8 @@ class project(osv.Model):
         return [('project.task', "Tasks"), ("project.issue", "Issues")]
 
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
+        """ :deprecated: this method will be removed with OpenERP v8. Use issue_ids
+                         fields instead. """
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
         for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
@@ -571,7 +505,10 @@ class project(osv.Model):
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
-        'issue_count': fields.function(_issue_count, type='integer', string="Unclosed Issues"),
+        'issue_count': fields.function(_issue_count, type='integer', string="Unclosed Issues",
+                                       deprecated="This field will be removed in OpenERP v8. Use issue_ids one2many field instead."),
+        'issue_ids': fields.one2many('project.issue', 'project_id',
+                                     domain=[('stage_id.fold', '=', False)])
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):

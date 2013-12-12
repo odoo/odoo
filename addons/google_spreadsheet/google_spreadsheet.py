@@ -18,6 +18,7 @@
 #
 ##############################################################################
 
+import cgi
 import simplejson
 import logging
 from lxml import etree
@@ -60,31 +61,31 @@ class config(osv.osv):
         user = self.pool['res.users'].read(cr, uid, uid, ['login', 'password'], context=context)
         username = user['login']
         password = user['password']
-        if self.pool['ir.module.module'].search_count(cr, SUPERUSER_ID, ['&', ('name', '=', 'auth_crypt'), ('state', '=', 'installed')]) == 1:
+        if not password:
             config_formula = '=oe_settings("%s";"%s")' % (url, dbname)
         else:
             config_formula = '=oe_settings("%s";"%s";"%s";"%s")' % (url, dbname, username, password)
         request = '''<feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:batch="http://schemas.google.com/gdata/batch"
       xmlns:gs="http://schemas.google.com/spreadsheets/2006">
-  <id>https://spreadsheets.google.com/feeds/cells/%s/od6/private/full</id>
+  <id>https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full</id>
   <entry>
     <batch:id>A1</batch:id>
     <batch:operation type="update"/>
-    <id>https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/R1C1</id>
+    <id>https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R1C1</id>
     <link rel="edit" type="application/atom+xml"
-      href="https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/R1C1"/>
-    <gs:cell row="1" col="1" inputValue="%s"/>
+      href="https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R1C1"/>
+    <gs:cell row="1" col="1" inputValue="{formula}"/>
   </entry>
   <entry>
     <batch:id>A2</batch:id>
     <batch:operation type="update"/>
-    <id>https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/R60C15</id>
+    <id>https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R60C15</id>
     <link rel="edit" type="application/atom+xml"
-      href="https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/R60C15"/>
-    <gs:cell row="60" col="15" inputValue="%s"/>
+      href="https://spreadsheets.google.com/feeds/cells/{key}/od6/private/full/R60C15"/>
+    <gs:cell row="60" col="15" inputValue="{config}"/>
   </entry>
-</feed>''' % (spreadsheet_key, spreadsheet_key, spreadsheet_key, formula.replace('"', '&quot;'), spreadsheet_key, spreadsheet_key, config_formula.replace('"', '&quot;'))
+</feed>''' .format(key=spreadsheet_key, formula=cgi.escape(formula, quote=True), config=cgi.escape(config_formula, quote=True))
 
         try:
             req = urllib2.Request(

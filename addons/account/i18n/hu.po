@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-27 22:48+0000\n"
-"Last-Translator: Balint (eSolve) <Unknown>\n"
+"PO-Revision-Date: 2013-12-10 17:32+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-12 05:27+0000\n"
-"X-Generator: Launchpad (build 16761)\n"
+"X-Launchpad-Export-Date: 2013-12-11 05:32+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -26,6 +26,8 @@ msgstr "Kifizetési rendszer"
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
 msgstr ""
+"Egy könyvelés költségvetési évfordulóját csak egyszer lehet megadni az arra "
+"hivatkozó számlákra vonatkozólag."
 
 #. module: account
 #: help:account.tax.code,sequence:0
@@ -33,6 +35,8 @@ msgid ""
 "Determine the display order in the report 'Accounting \\ Reporting \\ "
 "Generic Reporting \\ Taxes \\ Taxes Report'"
 msgstr ""
+"Meghatározza a kijelzés sorrendjét a kimutatáson 'Könyvelés \\ "
+"Kimutatáskészítés \\ Általános kimutatás \\ Adók \\ Adó kimutatás'"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -60,7 +64,7 @@ msgstr "Rendezetlen összeg"
 #: code:addons/account/account_bank_statement.py:369
 #, python-format
 msgid "Journal item \"%s\" is not valid."
-msgstr ""
+msgstr "A \"%s\" könyvelési napló tétel nem érvényes."
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
@@ -78,7 +82,7 @@ msgstr "Importálás számlából vagy pénzügyi rendezésből"
 #: code:addons/account/account_move_line.py:1210
 #, python-format
 msgid "Bad Account!"
-msgstr ""
+msgstr "Eltévesztett könyvelési számla!"
 
 #. module: account
 #: view:account.move:0
@@ -92,6 +96,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
 msgstr ""
+"Hiba!\n"
+"Nem hozhat létre visszatérő számla sablonokat."
 
 #. module: account
 #. openerp-web
@@ -102,7 +108,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
 #, python-format
 msgid "Reconcile"
-msgstr "Párosítás"
+msgstr "Egyeztetés"
 
 #. module: account
 #: field:account.bank.statement,name:0
@@ -114,7 +120,7 @@ msgstr "Párosítás"
 #: xsl:account.transfer:0
 #: field:cash.box.in,ref:0
 msgid "Reference"
-msgstr "Hivatkozás"
+msgstr "Információforrás"
 
 #. module: account
 #: help:account.payment.term,active:0
@@ -122,7 +128,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
 msgstr ""
-"Ha az aktív mező nincs bejelölve, nem használható a fizetési feltétel."
+"Ha az aktív mező hamisra van állatva, akkor a fizetési feltételt "
+"eltüntetheti anélkül, hogy törölné azt."
 
 #. module: account
 #: code:addons/account/account.py:641
@@ -151,7 +158,7 @@ msgstr "Figyelem!"
 #: code:addons/account/account.py:3197
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr "Vegyes napló"
+msgstr "Vegyes könyvelési napló"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -161,12 +168,14 @@ msgid ""
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
 msgstr ""
+"Be kell állítania az 'Év végi belépő könyvelési naplót' a 'Nyitási tétel "
+"létrehozása' menüvel létrehozott üzleti év tételekhez."
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
 #: field:account.fiscal.position.account.template,account_src_id:0
 msgid "Account Source"
-msgstr "Eredeti főkönyvi számla"
+msgstr "Forrás főkönyvi számla"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period
@@ -179,6 +188,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson üzleti szakasz hozzáadásához.\n"
+"              </p><p>\n"
+"                Egy könyvelési szakasz leggyakrabban egy negyedév vagy egy "
+"hónap. \n"
+"                Általában összhangban van az adóbevallás periódusával.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -188,12 +205,12 @@ msgstr "Az elmúlt 15 napban készített számlák"
 #. module: account
 #: field:accounting.report,label_filter:0
 msgid "Column Label"
-msgstr ""
+msgstr "Oszlop elnevezés"
 
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "Könyvelési kódnak használt számlyegyek száma"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -213,6 +230,9 @@ msgid ""
 "lines for invoices. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"Elemző számla mely alapértelmezésben a számlák adó tételének számlája. "
+"Hagyja üresen, ha alap értelmezésben nem szeretne elemző számát használni a "
+"számlák adó tételeire."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -252,11 +272,14 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
 msgstr ""
+"Számla típus információs célt szolgál, országra jellemző törvényekre sajátos "
+"kimutatások létrehozásához, és az induló tételek létrehozásához valamint az "
+"üzleti év lezáró szabályainak beállításához."
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "Következő jóváírási értesítés szám"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -265,6 +288,9 @@ msgid ""
 "sales, purchase, expense, contra, etc.\n"
 "                This installs the module account_voucher."
 msgstr ""
+"Ez magába foglalja az összes alap követelményt a banki, készpénzes, "
+"vásárlói, beszerzési, kiadási, visszaküldött, stb nyugta bevitelhez.\n"
+"                Ez a account_voucher (könyvelés_nyugta) modult telepíti.."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
@@ -296,6 +322,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson ügyfél visszatérítés létrehozásához. \n"
+"              </p><p>\n"
+"                A visszatérítés egy dokumentum a számla teljes összegének "
+"vagy részének a \n"
+"                jóváírásról.\n"
+"              </p><p>\n"
+"                Kézi ügyfél részére történő jóváírás helyett, megteheti\n"
+"                azt közvetlenül az ide vonatkozó ügyfél számlából.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: help:account.installer,charts:0
@@ -304,12 +341,12 @@ msgid ""
 "accounting needs of your company based on your country."
 msgstr ""
 "Lokalizált számlatükröt állít be, hogy amilyen szorosan csak lehet, "
-"illeszkedjen a vállalat szükségletéhez."
+"illeszkedjen a vállalat szükségletéhez az országra vonatkozóan."
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Párosítás visszavonása"
+msgstr "Könyvelési számla párosítás visszavonása"
 
 #. module: account
 #: field:account.config.settings,module_account_budget:0
@@ -319,7 +356,7 @@ msgstr "Költségvetés kezelés"
 #. module: account
 #: view:product.template:0
 msgid "Purchase Properties"
-msgstr "Beszerzés könyvelési beállítások"
+msgstr "Beszerzési tulajdonságok"
 
 #. module: account
 #: help:account.financial.report,style_overwrite:0
@@ -328,17 +365,20 @@ msgid ""
 "leave the automatic formatting, it will be computed based on the financial "
 "reports hierarchy (auto-computed field 'level')."
 msgstr ""
+"Beállíthatja ennek a rekordnak a megjelenítési formáját. Ha automatikus "
+"formázást hagyja, akkor az a pénzügyi jelentés rangsora alapján lesz "
+"kiszámítva (automatikusan számított mező a 'szint')."
 
 #. module: account
 #: field:account.config.settings,group_multi_currency:0
 msgid "Allow multi currencies"
-msgstr ""
+msgstr "Többféle valuta engedélyezése"
 
 #. module: account
 #: code:addons/account/account_invoice.py:77
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr ""
+msgstr "Meg kell határoznia egy elemző gyüjtőnapló típust '%s'!"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -353,12 +393,12 @@ msgstr "Június"
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr ""
+msgstr "A párosításhoz könyvelési számlákat kell kiválasztania."
 
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
 msgid "Allows you to use the analytic accounting."
-msgstr ""
+msgstr "Főkönyvi számla használatának engedélyezése."
 
 #. module: account
 #: view:account.invoice:0
@@ -393,12 +433,12 @@ msgstr "Bejövő jóváíró számla"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr "Nyitó/záró"
+msgstr "Nyitó/záró állapot"
 
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr "Tételek rögzítésének pénzneme"
+msgstr "Számlakivonat tételek rögzítésének pénzneme"
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -409,7 +449,7 @@ msgstr "Alapértelmezett tartozik főkönyvi számla"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Total Credit"
-msgstr "Követel összesen"
+msgstr "Összes követelés"
 
 #. module: account
 #: help:account.config.settings,module_account_asset:0
@@ -421,11 +461,19 @@ msgid ""
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
+"Ez lehetővé teszi a személy vagy vállalat által birtokolt vagyoneszközök "
+"nyilvántartását.\n"
+"                A vagyoneszközök értékcsökkenését követi nyomon, és "
+"könyvelési számlák közt mozgatja ezeket az értékcsökkenő\n"
+"                tételeket.\n"
+"                Ez a account_asset (számla_eszköz) modult telepíti. Ha nem "
+"jelöli be ezt a kockát, akkor tud számlázni & kifizetni,\n"
+"                de nem tud könyvelni (Napló tételeket, Számlatükröket, ...)"
 
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "Kezdeményezőtől a kedvezményezetthez intézett információ"
 
 #. module: account
 #. openerp-web
@@ -446,6 +494,7 @@ msgstr "Számlatükör sablon"
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
 msgstr ""
+"Módosít: visszatérítést, párosítást készít és új számla tervezetet hoz létre"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -459,6 +508,16 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Ha kiválasztotta a 'Tétel soronkénti kerekítést' : mindegyik adóra, először "
+"számítást és kerekítést végez minden egyes Beszerzési megrendelés "
+"BM/Vásárlói megrendelés VM/számla tétel sorra és ezek a kerekített tételek "
+"lesznek összegezve, így kialakítva a teljes adó értéket. Ha kiválasztotta a "
+"'Teljes körű kerekítést': mindegyik adóra, először adó számítást végez "
+"minden egyes Beszerzési megrendelés BM/Vásárlói megrendelés VM/számla tétel "
+"sorra, melyek összegzésre kerülnek  és végül ez a teljes adó összege lesz "
+"kerekítve. Ha adóval együtt történik az eladás, akkor a 'Tétel soronkénti "
+"kerekítést' válassza, mivel bizonyára azt szeretné, hogy az adóval növelt "
+"tételsor összegei egyezzenek a teljes összeg adóval növel értékével."
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -473,12 +532,12 @@ msgstr "Az összeg egy választható más pénznemben kifejezve."
 #. module: account
 #: view:account.journal:0
 msgid "Available Coins"
-msgstr ""
+msgstr "Rendelkezésre álló pénzérmék"
 
 #. module: account
 #: field:accounting.report,enable_filter:0
 msgid "Enable Comparison"
-msgstr ""
+msgstr "Összehasonlítás bekapcsolása"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -527,6 +586,7 @@ msgstr "Gyűjtő célszámla"
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
 msgstr ""
+"Ennek a tételsornak a sorszámát adja, amikor a számla kijelzésre kerül."
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -600,13 +660,13 @@ msgstr "Nincs párosítandó tétel"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "Tizedes pontosság a napló bevitt tételeinél"
 
 #. module: account
 #: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "3 Monthly"
-msgstr "Negyedéves"
+msgstr "3 havonta"
 
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
@@ -626,6 +686,8 @@ msgid ""
 "Specified journal does not have any account move entries in draft state for "
 "this period."
 msgstr ""
+"A kiválasztott napló nem rendelkezik tervezet állapotú számla mozgásokkal  "
+"erre az időszakra."
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -648,7 +710,7 @@ msgstr "A fő sorszámnak el kell térnie az aktuálistól!"
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly."
-msgstr ""
+msgstr "A jelenlegi pénznem nincs megfelelően konfigurálva."
 
 #. module: account
 #: field:account.journal,profit_account_id:0
@@ -672,13 +734,13 @@ msgstr "Számlatípusonkénti értékesítési kimutatás"
 #: code:addons/account/account.py:3201
 #, python-format
 msgid "SAJ"
-msgstr "SAJ"
+msgstr "Számlatípusonkénti értékesítés SZTÉ"
 
 #. module: account
 #: code:addons/account/account.py:1591
 #, python-format
 msgid "Cannot create move with currency different from .."
-msgstr ""
+msgstr "Nem lehet mozgást végrehajtani, ha eltér a pénznem ettől .."
 
 #. module: account
 #: model:email.template,report_name:account.email_template_edi_invoice
@@ -712,7 +774,7 @@ msgstr "Könyvelési időszak"
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
-msgstr ""
+msgstr "Egy időszakra csak egy mozgatást végezhet  a központosított naplón."
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
@@ -721,6 +783,9 @@ msgid ""
 "lines for refunds. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"Állítsa be a gyűjtő/elemző számlát amit alapértelmezetten használ a számlák "
+"adó tételsoraira a visszatérítéshez. Hagyja üresen, ha alapértelmezetten nem "
+"szeretne gyűjtő/elemző számlát használni a számla adó tételsoraira."
 
 #. module: account
 #: view:account.account:0
@@ -733,17 +798,17 @@ msgstr ""
 #: code:addons/account/report/account_partner_ledger.py:272
 #, python-format
 msgid "Receivable Accounts"
-msgstr "Vevő számlák"
+msgstr "Követelés számlák"
 
 #. module: account
 #: view:account.config.settings:0
 msgid "Configure your company bank accounts"
-msgstr "A cég bankszámláinak beállítása"
+msgstr "A cége bankszámláinak beállítása"
 
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Refund"
-msgstr ""
+msgstr "Visszatérítés létrehozása"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -773,7 +838,7 @@ msgstr "Biztos benne, hogy létre akarja hozni a tételeket?"
 #: code:addons/account/account_invoice.py:1361
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr ""
+msgstr "Számla részben fizetve: %s%s of %s%s (%s%s még maradt)."
 
 #. module: account
 #: view:account.invoice:0
@@ -787,6 +852,8 @@ msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
 msgstr ""
+"Nem lehet %s számlázni, mert párosítva van, először szüntesse meg a "
+"párosítást. Ezt a számlát csak visszatérítheti."
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -814,7 +881,7 @@ msgstr "Soronkénti gyűjtőkód tételek"
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
 msgid "Refund Method"
-msgstr "Jóváírás módja"
+msgstr "Visszatérítés módja"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
@@ -879,7 +946,7 @@ msgstr "Párosítás visszavonása"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "Gyűjtőnapló"
+msgstr "Gyűjtőnapló számla"
 
 #. module: account
 #: view:account.invoice:0
@@ -1475,7 +1542,7 @@ msgstr "Listázási beállítások"
 #. module: account
 #: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to Close"
-msgstr ""
+msgstr "Bezárni kívánt üzleti év"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
@@ -1553,7 +1620,7 @@ msgstr "Adók keresése"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger
 msgid "Account Analytic Cost Ledger"
-msgstr "Gyűjtőkód karton"
+msgstr "Főkönyvi költség gyűjtőkód karton számla"
 
 #. module: account
 #: view:account.model:0
@@ -1624,6 +1691,8 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
+"Az aktív mező üresen hagyásával, eltüntetheti az ÁFA helyét, annak törlése "
+"nélkül."
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -2194,7 +2263,7 @@ msgstr "Korosított folyószámla kivonat"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close Fiscal Year"
-msgstr ""
+msgstr "Üzleti év lezárása"
 
 #. module: account
 #. openerp-web
@@ -2207,6 +2276,7 @@ msgstr ""
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
 msgstr ""
+"Az adó adóügyi pozíciója csak egyszer határozható meg ugyanarra az adóra."
 
 #. module: account
 #: view:account.tax:0
@@ -2320,7 +2390,7 @@ msgstr "Részleges tételsorok"
 #: view:account.fiscalyear:0
 #: field:account.treasury.report,fiscalyear_id:0
 msgid "Fiscalyear"
-msgstr "Üzleti év"
+msgstr "Üzletiév"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -2963,6 +3033,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új adóügyi év létrehozásához.\n"
+"              </p><p>\n"
+"                Határozza meg a vállalkozása üzleti évét a kívánságainak "
+"megfelelően.\n"
+"                Egy üzleti év egy idő periódus, aminek a végén a vállalkozás "
+"könyvelése\n"
+"                elszámolásra kerül (általában 12 hónap). Az üzleti év arra a "
+"dátumra\n"
+"                hivatkozik általában ahol az véget ér. Például,\n"
+"                ha a vállalkozás pénzügyi üzleti éve 2011 november 30-ára "
+"esik, akkor\n"
+"                minden ami 2010 december 1 és 2011 november 30 közé esik\n"
+"                azt hívjuk 2011 évi üzleti/pénzügyi/adóügyi évnek.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: view:account.common.report:0
@@ -3912,6 +3998,8 @@ msgid ""
 "There is no fiscal year defined for this date.\n"
 "Please create one from the configuration of the accounting menu."
 msgstr ""
+"Erre a dátumra nem lett üzleti adóügyi év meghatározva.\n"
+"Kérem hozzon létre egyet a könyvelési menü beállítása menüpont alatt."
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -4282,6 +4370,8 @@ msgid ""
 "The fiscalyear, periods or chart of account chosen have to belong to the "
 "same company."
 msgstr ""
+"Az üzelti adóügyi év, periódus vagy számlatükör kiválasztása ugyanarra a "
+"vállalkozásra kell, hogy vonatkozzon."
 
 #. module: account
 #: help:account.tax.code.template,notprintable:0
@@ -7344,6 +7434,8 @@ msgid ""
 "Error!\n"
 "The start date of a fiscal year must precede its end date."
 msgstr ""
+"Hiba!\n"
+"Az üzleti adóügyi év elejének előbb kell lennie mint a végének."
 
 #. module: account
 #: view:account.tax.template:0
@@ -8276,7 +8368,8 @@ msgstr ""
 msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
-msgstr "Válassza ki az üzleti évet, amelynek a nyitó tételeit törölni akarja"
+msgstr ""
+"Válassza ki az üzleti évet, amelynek a záró tételei közül törölni szeretne"
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -8397,7 +8490,7 @@ msgstr "Gyűjtőkód karton"
 #. module: account
 #: view:account.config.settings:0
 msgid "No Fiscal Year Defined for This Company"
-msgstr ""
+msgstr "Ehhez a vállalkozáshoz nem lett üzleti adóügyi év meghatározva"
 
 #. module: account
 #: view:account.invoice:0
@@ -8548,6 +8641,9 @@ msgid ""
 "This wizard will remove the end of year journal entries of selected fiscal "
 "year. Note that you can run this wizard many times for the same fiscal year."
 msgstr ""
+"Ez a varázsló a kiválasztott üzleti adóügyi évet lezáró könyvelési napló "
+"tételeit fogja eltávolítani. Megjegyezzük, hogy ezt a varázslót többször is "
+"elindíthatja ugyanarra az üzleti évre."
 
 #. module: account
 #: report:account.invoice:0
@@ -8732,7 +8828,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
 msgid "Fiscalyear Close state"
-msgstr "Üzleti év zárása"
+msgstr "Üzleti év zárt állapotban"
 
 #. module: account
 #: field:account.invoice.refund,journal_id:0
@@ -9161,7 +9257,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,has_fiscal_year:0
 msgid "Company has a fiscal year"
-msgstr ""
+msgstr "Vállalkozásnak van üzleti, adóügyi éve"
 
 #. module: account
 #: help:account.tax,child_depend:0
@@ -9599,6 +9695,9 @@ msgid ""
 "The period is invalid. Either some periods are overlapping or the period's "
 "dates are not matching the scope of the fiscal year."
 msgstr ""
+"Hiba!\n"
+"Az időszak nem érvényes. Vagy az egyes időszakok átfedik egymást vagy az "
+"időszakok nem egyeznek az üzleti év határidőivel."
 
 #. module: account
 #: report:account.overdue:0
@@ -9897,7 +9996,7 @@ msgstr "Gyűjtőkódokból"
 #. module: account
 #: view:account.installer:0
 msgid "Configure your Fiscal Year"
-msgstr ""
+msgstr "Állítsa be az üzleti, adóügyi évét"
 
 #. module: account
 #: field:account.period,name:0
@@ -10834,6 +10933,8 @@ msgstr "Könyvelési tételsorok jóváhagyása"
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
 msgstr ""
+"Az ÁFA pozíció meghatározza a partnerre vonatkozó adókat és főkönyvi "
+"számlákat."
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
@@ -10906,7 +11007,7 @@ msgstr ""
 #: view:ir.sequence:0
 #: model:ir.ui.menu,name:account.menu_action_account_fiscalyear
 msgid "Fiscal Years"
-msgstr "Üzleti év"
+msgstr "Üzleti évek"
 
 #. module: account
 #: help:account.analytic.journal,active:0

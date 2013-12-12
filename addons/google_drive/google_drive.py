@@ -31,7 +31,7 @@ import re
 _logger = logging.getLogger(__name__)
 
 
-class config(osv.osv):
+class config(osv.Model):
     _name = 'google.drive.config'
     _description = "Google Drive templates config"
 
@@ -60,10 +60,9 @@ class config(osv.osv):
     def get_access_token(self, cr, uid, scope=None, context=None):
         ir_config = self.pool['ir.config_parameter']
         google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
-        group_config = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
-        user = self.pool['res.users'].read(cr, uid, uid, "groups_id")
+        user_is_admin = self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
         if not google_drive_refresh_token:
-            if group_config in user['groups_id']:
+            if user_is_admin:
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
             else:
                 raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
@@ -81,7 +80,7 @@ class config(osv.osv):
             req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
             content = urllib2.urlopen(req).read()
         except urllib2.HTTPError:
-            if group_config in user['groups_id']:
+            if user_is_admin:
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
             else:
                 raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
@@ -116,8 +115,26 @@ class config(osv.osv):
             attach_pool = self.pool.get("ir.attachment")
             attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url': content['alternateLink']}
             res['id'] = attach_pool.create(cr, uid, attach_vals)
+            # Commit in order to attach the document to the current object instance, even if the permissions has not been written.
+            cr.commit()
             res['url'] = content['alternateLink']
-        return res
+            key = self._get_key_from_url(res['url'])
+            request_url = "https://www.googleapis.com/drive/v2/files/%s/permissions?emailMessage=This+is+a+drive+file+created+by+OpenERP&sendNotificationEmails=false&access_token=%s" % (key, access_token)
+            data = {'role': 'reader', 'type': 'anyone', 'value': '', 'withLink': True}
+            try:
+                req = urllib2.Request(request_url, json.dumps(data), headers)
+                urllib2.urlopen(req)
+            except urllib2.HTTPError:
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission 'reader' for 'anyone with the link' has not been written on the document"), context=context)
+            user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+            if user.email:
+                data = {'role': 'writer', 'type': 'user', 'value': user.email}
+                try:
+                    req = urllib2.Request(request_url, json.dumps(data), headers)
+                    urllib2.urlopen(req)
+                except urllib2.HTTPError:
+                    raise self.pool.get('res.config.settings').get_config_warning(cr, _("The permission 'writer' for your email '%s' has not been written on the document. Is this email a valid Google Account ?" % user.email), context=context)
+        return res 
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
         '''
@@ -151,12 +168,18 @@ class config(osv.osv):
                 configs.append({'id': config.id, 'name': config.name})
         return configs
 
+    def _get_key_from_url(self, url):
+        mo = re.search("(key=|/d/)([A-Za-z0-9-_]+)", url)
+        if mo:
+            return mo.group(2)
+        return None
+
     def _resource_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for data in self.browse(cr, uid, ids, context):
-            mo = re.search("(key=|/d/)([A-Za-z0-9-_]+)", data.google_drive_template_url)
+            mo = self._get_key_from_url(data.google_drive_template_url)
             if mo:
-                result[data.id] = mo.group(2)
+                result[data.id] = mo
             else:
                 raise osv.except_osv(_('Incorrect URL!'), _("Please enter a valid Google Document URL."))
         return result
@@ -205,12 +228,10 @@ class config(osv.osv):
     ]
 
     def get_google_scope(self):
-        return 'https://www.googleapis.com/auth/drive'
-
-config()
+        return 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file'
 
 
-class base_config_settings(osv.osv):
+class base_config_settings(osv.TransientModel):
     _inherit = "base.config.settings"
 
     _columns = {
@@ -219,9 +240,14 @@ class base_config_settings(osv.osv):
     }
     _defaults = {
         'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', scope=s.pool['google.drive.config'].get_google_scope(), context=c),
+        'google_drive_authorization_code': lambda s, cr, uid, c: s.pool['ir.config_parameter'].get_param(cr, uid, 'google_drive_authorization_code', context=c),
     }
 
     def set_google_authorization_code(self, cr, uid, ids, context=None):
+        ir_config_param = self.pool['ir.config_parameter']
         config = self.browse(cr, uid, ids[0], context)
-        refresh_token = self.pool['google.service'].generate_refresh_token(cr, uid, 'drive', config.google_drive_authorization_code, context=context)
-        self.pool['ir.config_parameter'].set_param(cr, uid, 'google_drive_refresh_token', refresh_token)
+        auth_code = config.google_drive_authorization_code
+        if auth_code and auth_code != ir_config_param.get_param(cr, uid, 'google_drive_authorization_code', context=context):
+            refresh_token = self.pool['google.service'].generate_refresh_token(cr, uid, 'drive', config.google_drive_authorization_code, context=context)
+            ir_config_param.set_param(cr, uid, 'google_drive_authorization_code', auth_code)
+            ir_config_param.set_param(cr, uid, 'google_drive_refresh_token', refresh_token)

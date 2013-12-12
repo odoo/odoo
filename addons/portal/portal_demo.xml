@@ -10,7 +10,7 @@
             <field name="customer" eval="True"/>
             <field name="notification_email_send">none</field>
         </record>
-        <record id="demo_user0" model="res.users">
+        <record id="demo_user0" model="res.users" context="{'no_reset_password': True}">
             <field name="partner_id" ref="partner_demo_portal"/>
             <field name="login">portal</field>
             <field name="password">portal</field>
@@ -18,6 +18,7 @@
 Mr Demo Portal</field>
             <!-- Avoid auto-including this user in any default group -->
             <field name="groups_id" eval="[(5,)]"/>
+            <field name="share" eval="True" />
         </record>
 
         <!-- Add the demo user to the portal (and therefore to the portal member group) -->

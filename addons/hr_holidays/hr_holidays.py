@@ -26,6 +26,7 @@ import math
 import time
 from operator import attrgetter
 
+from openerp.exceptions import Warning
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -144,10 +145,14 @@ class hr_holidays(osv.osv):
 
     def _check_date(self, cr, uid, ids):
         for holiday in self.browse(cr, uid, ids):
-            holiday_ids = self.search(cr, uid, [('date_from', '<=', holiday.date_to), ('date_to', '>=', holiday.date_from), ('employee_id', '=', holiday.employee_id.id), ('id', '<>', holiday.id)])
+            holiday_ids = self.search(cr, uid, [('date_from', '<=', holiday.date_to), ('date_to', '>=', holiday.date_from),
+                                                ('employee_id', '=', holiday.employee_id.id), ('id', '<>', holiday.id),
+                                                ('state', 'not in', ['cancel', 'refuse'])])
             if holiday_ids:
                 return False
         return True
+
+    _check_holidays = lambda self, cr, uid, ids, context=None: self.check_holidays(cr, uid, ids, context=context)
 
     _columns = {
         'name': fields.char('Description', size=64),
@@ -188,6 +193,7 @@ class hr_holidays(osv.osv):
     }
     _constraints = [
         (_check_date, 'You can not have 2 leaves that overlaps on same day!', ['date_from','date_to']),
+        (_check_holidays, 'The number of remaining leaves is not sufficient for this leave type', ['state','number_of_days_temp'])
     ] 
     
     _sql_constraints = [
@@ -314,7 +320,6 @@ class hr_holidays(osv.osv):
             context = {}
         context = dict(context, mail_create_nolog=True)
         hol_id = super(hr_holidays, self).create(cr, uid, values, context=context)
-        self.check_holidays(cr, uid, [hol_id], context=context)
         return hol_id
 
     def holidays_reset(self, cr, uid, ids, context=None):
@@ -333,7 +338,6 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_first_validate(self, cr, uid, ids, context=None):
-        self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
@@ -341,7 +345,6 @@ class hr_holidays(osv.osv):
         return self.write(cr, uid, ids, {'state':'validate1', 'manager_id': manager})
 
     def holidays_validate(self, cr, uid, ids, context=None):
-        self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
@@ -393,7 +396,6 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_confirm(self, cr, uid, ids, context=None):
-        self.check_holidays(cr, uid, ids, context=context)
         for record in self.browse(cr, uid, ids, context=context):
             if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [record.id], user_ids=[record.employee_id.parent_id.user_id.id], context=context)
@@ -429,12 +431,10 @@ class hr_holidays(osv.osv):
             if record.holiday_type != 'employee' or record.type != 'remove' or not record.employee_id or record.holiday_status_id.limit:
                 continue
             leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
-            if leave_days['remaining_leaves'] < record.number_of_days_temp:
-                raise osv.except_osv(_('Warning!'),
-                                     _('There are not enough remaining days available in %s for employee %s.') % (record.holiday_status_id.name, record.employee_id.name))
-            if leave_days['virtual_remaining_leaves'] < record.number_of_days_temp:
-                raise osv.except_osv(_('Warning!'),
-                                     _('Other pending requests already book too much days in %s for employee %s.') % (record.holiday_status_id.name, record.employee_id.name))
+            if leave_days['remaining_leaves'] < 0 or leave_days['virtual_remaining_leaves'] < 0:
+                # Raising a warning gives a more user-friendly feedback than the default constraint error
+                raise Warning(_('The number of remaining leaves is not sufficient for this leave type.\n'
+                                'Please verify also the leaves waiting for validation.'))
         return True
 
     # -----------------------------

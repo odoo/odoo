@@ -1,7 +1,7 @@
 -
    Create a user as 'Accountant'
 -
-  !record {model: res.users, id: res_users_account_user}:
+  !record {model: res.users, id: res_users_account_user, view: False}:
     company_id: base.main_company
     name: Accountant  
     login: acc
@@ -17,7 +17,7 @@
 -
    Create a user as 'Financial Manager'
 -
-  !record {model: res.users, id: res_users_account_manager}:
+  !record {model: res.users, id: res_users_account_manager, view: False}:
     company_id: base.main_company
     name: Financial Manager
     login: fm

@@ -51,7 +51,12 @@ openerp.base_import = function (instance) {
                         type: 'ir.actions.client',
                         tag: 'import',
                         params: {
-                            model: self.dataset.model
+                            model: self.dataset.model,
+                            // self.dataset.get_context() could be a compound?
+                            // not sure. action's context should be evaluated
+                            // so safer bet. Odd that timezone & al in it
+                            // though
+                            context: self.getParent().action.context,
                         }
                     }, {
                         on_reverse_breadcrumb: function () {
@@ -127,6 +132,7 @@ openerp.base_import = function (instance) {
             var self = this;
             this._super.apply(this, arguments);
             this.res_model = action.params.model;
+            this.parent_context = action.params.context || {};
             // import object id
             this.id = null;
             this.Import = new instance.web.Model('base_import.import');
@@ -353,11 +359,12 @@ openerp.base_import = function (instance) {
         },
 
         //- import itself
-        call_import: function (options) {
+        call_import: function (kwargs) {
             var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
                 return $(el).select2('val') || false;
             }).get();
-            return this.Import.call('do', [this.id, fields, this.import_options()], options)
+            kwargs.context = this.parent_context;
+            return this.Import.call('do', [this.id, fields, this.import_options()], kwargs)
                 .then(undefined, function (error, event) {
                     // In case of unexpected exception, convert
                     // "JSON-RPC error" to an import failure, and
@@ -366,7 +373,7 @@ openerp.base_import = function (instance) {
                     return $.when([{
                         type: 'error',
                         record: false,
-                        message: error.data.fault_code,
+                        message: error.data.arguments[1],
                     }]);
                 }) ;
         },

@@ -8,8 +8,8 @@
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                 <field name="pricelist_id" position="before">
-                    <field name="location_id" context="{'location': self}"/>
-                    <field name="warehouse_id" context="{'warehouse': self}"/>
+                    <field name="location_id" widget="selection" context="{'location': self}"/>
+                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
                 </field>
             </field>
         </record>
@@ -224,11 +224,17 @@
                     <field name="delivery_count"/>
                 </field>
                 <xpath expr="//div[@name='tags']" position="inside">
-                    <a name="%(action_receive_move)d" type="action" t-if="record.reception_count.raw_value>0">
+                    <a name="%(action_receive_move)d" type="action" t-if="record.reception_count.raw_value&gt;1">
                         <t t-esc="record.reception_count.value"/> Receptions
                     </a>
-                    <a name="%(action_deliver_move)d" type="action" t-if="record.delivery_count.raw_value>0">
+                    <a name="%(action_receive_move)d" type="action" t-if="record.reception_count.raw_value==1">
+                        <t t-esc="record.reception_count.value"/> Reception
+                    </a>
+                    <a name="%(action_deliver_move)d" type="action" t-if="record.delivery_count.raw_value&gt;1">
                         <t t-esc="record.delivery_count.value"/> Deliveries
+                    </a>
+                    <a name="%(action_deliver_move)d" type="action" t-if="record.delivery_count.raw_value==1">
+                        <t t-esc="record.delivery_count.value"/> Delivery
                     </a>
                 </xpath>
                 <ul position="inside">

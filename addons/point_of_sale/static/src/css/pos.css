@@ -97,6 +97,9 @@
 .point-of-sale .pos-right-align {
     text-align: right;
 }
+.point-of-sale .pos-center-align {
+    text-align: center;
+}
 .point-of-sale .pos-right-align input {
     text-align: right;
     border: 1px solid #cecbcb;
@@ -123,6 +126,7 @@
     background: #393939;
     background: -moz-linear-gradient(#7b7979, #393939);
     background: -webkit-gradient(linear, left top, left bottom, from(#7b7979), to(#393939));
+    z-index: 2; /* Customize according bootstrap3 navbar */
 }
 
 /*  a) The left part of the top-bar */
@@ -303,12 +307,12 @@
     text-align: center;
     vertical-align: top;
     width: 205px;
-    max-height: 232px;
+    max-height: 350px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 .point-of-sale #paypad button {
-    height: 50px;
+    height: 39px;
     display: block;
     width: 100%;
     margin: 0px -6px 4px -2px;
@@ -656,6 +660,7 @@
 .point-of-sale .screen header h2 {
     margin-top: 0px;
     padding-top: 7px;
+    font-size: 1.5em /* Customize font according bootstrap3 */
 }
 .point-of-sale .screen p{
     font-size: 18px;
@@ -815,6 +820,9 @@
 }
 
 @media print {
+    .point-of-sale{
+        background: white !important;
+    }
     .point-of-sale #topheader, .point-of-sale #leftpane {
         display: none !important;
     }
@@ -834,9 +842,6 @@
     .pos-actionbar {
         display: none !important;
     }
-    .pos-sale-ticket {
-        margin: 0;
-    }
     .debug-widget{
         display: none !important;
     }
@@ -846,9 +851,12 @@
         background: transparent !important;
     }
     .point-of-sale .pos-sale-ticket{
+        margin: 0;
         margin-left: auto !important;
         margin-right: auto !important;
-        border: solid 1px black !important;
+        border: none !important;
+        font-size: 13px !important;
+        width: 266px !important;
     }
 }
 

@@ -834,7 +834,9 @@ openerp.mail = function (session) {
                 // go to the parented message
                 var message = this.parent_thread.parent_message;
                 var parent_message = message.parent_id ? message.parent_thread.parent_message : message;
-                var messages = [parent_message].concat(parent_message.get_childs());
+                if(parent_message){
+                    var messages = [parent_message].concat(parent_message.get_childs());
+                }
             } else if (this.options.emails_from_on_composer) {
                 // get all wall messages if is not a mail.Wall
                 _.each(this.options.root_thread.messages, function (msg) {messages.push(msg); messages.concat(msg.get_childs());});
@@ -1218,7 +1220,7 @@ openerp.mail = function (session) {
         init: function (parent, datasets, options) {
             var self = this;
             this._super(parent, options);
-            this.MailWidget = parent.__proto__ == mail.Widget.prototype ? parent : false;
+            this.MailWidget = parent instanceof mail.Widget ? parent : false;
             this.domain = options.domain || [];
             this.context = _.extend(options.context || {});
 
@@ -1800,15 +1802,17 @@ openerp.mail = function (session) {
                 'read_action': 'unread',
                 'show_record_name': false,
                 'show_compact_message': 1,
+                'display_log_button' : true,
             }, this.node.params);
-
             if (this.node.attrs.placeholder) {
                 this.node.params.compose_placeholder = this.node.attrs.placeholder;
             }
             if (this.node.attrs.readonly) {
                 this.node.params.readonly = this.node.attrs.readonly;
             }
-
+            if ('display_log_button' in this.options) {
+                this.node.params.display_log_button = this.options.display_log_button;
+            }
             this.domain = this.node.params && this.node.params.domain || [];
 
             if (!this.ParentViewManager.is_action_enabled('edit')) {

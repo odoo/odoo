@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-import openerp
-import openerp.addons.im.im as im
 import json
 import random
 import jinja2
+
+import openerp
+import openerp.addons.im.im as im
 from openerp.osv import osv, fields
 from openerp import tools
-import openerp.addons.web.http as http
-from openerp.addons.web.http import request
+from openerp import http
+from openerp.http import request
 
 env = jinja2.Environment(
     loader=jinja2.PackageLoader('openerp.addons.im_livechat', "."),
@@ -210,5 +211,5 @@ class im_session(osv.osv):
     _inherit = 'im.session'
 
     _columns = {
-        'channel_id': fields.many2one("im.user", "Channel"),
+        'channel_id': fields.many2one("im_livechat.channel", "Channel"),
     }

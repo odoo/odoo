@@ -698,8 +698,9 @@ class mail_message(osv.Model):
             """
             model_record_ids = {}
             for id in msg_ids:
-                if msg_val[id]['model'] and msg_val[id]['res_id']:
-                    model_record_ids.setdefault(msg_val[id]['model'], dict()).setdefault(msg_val[id]['res_id'], set()).add(msg_val[id]['res_id'])
+                vals = msg_val.get(id, {})
+                if vals.get('model') and vals.get('res_id'):
+                    model_record_ids.setdefault(vals['model'], set()).add(vals['res_id'])
             return model_record_ids
 
         if uid == SUPERUSER_ID:
@@ -711,7 +712,7 @@ class mail_message(osv.Model):
         partner_id = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
 
         # Read mail_message.ids to have their values
-        message_values = dict.fromkeys(ids)
+        message_values = dict.fromkeys(ids, {})
         cr.execute('SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
         for id, rmod, rid, author_id, parent_id in cr.fetchall():
             message_values[id] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id}
@@ -745,10 +746,10 @@ class mail_message(osv.Model):
             ], context=context)
             notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, SUPERUSER_ID, not_ids, context=context)]
         elif operation == 'create':
-            for doc_model, doc_dict in model_record_ids.items():
+            for doc_model, doc_ids in model_record_ids.items():
                 fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
                     ('res_model', '=', doc_model),
-                    ('res_id', 'in', list(doc_dict.keys())),
+                    ('res_id', 'in', list(doc_ids)),
                     ('partner_id', '=', partner_id),
                     ], context=context)
                 fol_mids = [follower.res_id for follower in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context)]
@@ -759,9 +760,9 @@ class mail_message(osv.Model):
         other_ids = other_ids.difference(set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         document_related_ids = []
-        for model, doc_dict in model_record_ids.items():
+        for model, doc_ids in model_record_ids.items():
             model_obj = self.pool[model]
-            mids = model_obj.exists(cr, uid, doc_dict.keys())
+            mids = model_obj.exists(cr, uid, list(doc_ids))
             if hasattr(model_obj, 'check_mail_message_access'):
                 model_obj.check_mail_message_access(cr, uid, mids, operation, context=context)
             else:
@@ -816,12 +817,11 @@ class mail_message(osv.Model):
         return email_reply_to
 
     def _get_message_id(self, cr, uid, values, context=None):
-        message_id = None
-        if not values.get('message_id') and values.get('reply_to'):
+        if values.get('reply_to'):
             message_id = tools.generate_tracking_message_id('reply_to')
-        elif not values.get('message_id') and values.get('res_id') and values.get('model'):
+        elif values.get('res_id') and values.get('model'):
             message_id = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
-        elif not values.get('message_id'):
+        else:
             message_id = tools.generate_tracking_message_id('private')
         return message_id
 
@@ -832,7 +832,7 @@ class mail_message(osv.Model):
 
         if 'email_from' not in values:  # needed to compute reply_to
             values['email_from'] = self._get_default_from(cr, uid, context=context)
-        if not values.get('message_id'):
+        if 'message_id' not in values:
             values['message_id'] = self._get_message_id(cr, uid, values, context=context)
         if 'reply_to' not in values:
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
