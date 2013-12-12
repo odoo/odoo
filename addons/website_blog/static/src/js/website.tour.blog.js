@@ -136,7 +136,7 @@
                 },
                 {
                     stepId: 'publish-post',
-                    element: 'button.js_publish_btn',
+                    element: 'button.btn-danger.js_publish_btn',
                     placement: 'top',
                     title: "Publish Your Post",
                     content: "Your blog post is not yet published. You can update this draft version and publish it once you are ready.",

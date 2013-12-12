@@ -123,7 +123,7 @@
                 },
                 {
                     stepId: 'publish-event',
-                    element: 'button.js_publish_btn',
+                    element: 'button.btn-danger.js_publish_btn',
                     placement: 'top',
                     title: "Publish your event",
                     content: "Click to publish your event.",
