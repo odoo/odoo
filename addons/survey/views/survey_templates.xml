@@ -115,9 +115,9 @@
                 </div>
             </t>
             <div class="text-center mt16 mb16">
-                <button t-if="survey.users_can_go_back and page_nr > 0" type="submit" class="btn btn-default">Previous page</button>
-                <button t-if="not last" type="submit" class="btn btn-primary">Next page</button>
-                <button type="submit" t-if="last" class="btn btn-primary">Submit survey</button>
+                <button t-if="survey.users_can_go_back and page_nr > 0" type="submit" class="btn btn-default" name="button_submit" value="previous">Previous page</button>
+                <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
+                <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
             </div>
         </form>
 

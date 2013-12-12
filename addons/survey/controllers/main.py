@@ -23,15 +23,55 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 from openerp import SUPERUSER_ID
-
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF
+from datetime import datetime
 import werkzeug
 import json
 import logging
+
 
 _logger = logging.getLogger(__name__)
 
 
 class WebsiteSurvey(http.Controller):
+
+    ## HELPER METHODS ##
+
+    def _check_bad_cases(self, cr, uid, request, survey_obj, survey, user_input_obj, context=None):
+        # In case of bad survey, redirect to surveys list
+        if survey_obj.exists(cr, SUPERUSER_ID, survey.id, context=context) == []:
+            return werkzeug.utils.redirect("/survey/")
+
+        # In case of auth required, block public user
+        if survey.auth_required and uid == request.registry['website'].get_public_user(cr, uid, context):
+            return request.website.render("website.401")
+
+        # In case of non open surveys
+        if survey.state != 'open':
+            return request.website.render("survey.notopen")
+
+        # If enough surveys completed
+        if survey.user_input_limit > 0:
+            completed = user_input_obj.search(cr, uid, [('state', '=', 'done')], count=True)
+            if completed >= survey.user_input_limit:
+                return request.website.render("survey.notopen")
+
+        # Everything seems to be ok
+        return None
+
+    def _check_deadline(self, cr, uid, user_input, context=None):
+        '''Prevent opening of the survey if the deadline has turned out
+
+        ! This will NOT disallow access to users who have already partially filled the survey !'''
+        if user_input.deadline:
+            dt_deadline = datetime.strptime(user_input.deadline, DTF)
+            dt_now = datetime.now()
+            if dt_now > dt_deadline:  # survey is not open anymore
+                return request.website.render("survey.notopen")
+
+        return None
+
+    ## ROUTES HANDLERS ##
 
     # Survey list
     @website.route(['/survey/',
@@ -56,23 +96,10 @@ class WebsiteSurvey(http.Controller):
         survey_obj = request.registry['survey.survey']
         user_input_obj = request.registry['survey.user_input']
 
-        # In case of bad survey, redirect to surveys list
-        if survey_obj.exists(cr, uid, survey.id, context=context) == []:
-            return werkzeug.utils.redirect("/survey/")
-
-        # In case of auth required, block public user
-        if survey.auth_required and uid == request.registry['website'].get_public_user(request.cr, SUPERUSER_ID, request.context):
-            return request.website.render("website.401")
-
-        # In case of non open surveys
-        if survey.state != 'open':
-            return request.website.render("survey.notopen")
-
-        # If enough surveys completed
-        if survey.user_input_limit > 0:
-            completed = user_input_obj.search(cr, uid, [('state', '=', 'done')], count=True)
-            if completed >= survey.user_input_limit:
-                return request.website.render("survey.notopen")
+        # Controls if the survey can be displayed
+        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, context=context)
+        if errpage:
+            return errpage
 
         # Manual surveying
         if not token:
@@ -89,73 +116,50 @@ class WebsiteSurvey(http.Controller):
             else:
                 user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
 
-        # Prevent opening of the survey if the deadline has turned out
-        # ! This will NOT disallow access to users who have already partially filled the survey !
-        # if user_input.deadline > fields.date.now() and user_input.state == 'new':
-        #     return request.website.render("survey.notopen")
-            # TODO check if this is ok
+        # Do not open expired survey
+        errpage = self._check_deadline(cr, uid, user_input, context=context)
+        if errpage:
+            return errpage
 
         # Select the right page
-
         if user_input.state == 'new':  # Intro page
             data = {'survey': survey, 'page': None, 'token': user_input.token}
             return request.website.render('survey.survey_init', data)
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
 
-
     # Survey displaying
-    @website.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>'],
+    @website.route(['/survey/fill/<model("survey.survey"):survey>/<string:token>',
+                    '/survey/fill/<model("survey.survey"):survey>/<string:token>/<string:prev>'],
                    type='http', auth='public', multilang=True)
-    def fill_survey(self, survey, token, **post):
+    def fill_survey(self, survey, token, prev=None, **post):
         '''Display and validates a survey'''
         cr, uid, context = request.cr, request.uid, request.context
         survey_obj = request.registry['survey.survey']
         user_input_obj = request.registry['survey.user_input']
 
-        # In case of bad survey, redirect to surveys list
-        if survey_obj.exists(cr, uid, survey.id, context=context) == []:
-            return werkzeug.utils.redirect("/survey/")
+        # Controls if the survey can be displayed
+        errpage = self._check_bad_cases(cr, uid, request, survey_obj, survey, user_input_obj, context=context)
+        if errpage:
+            return errpage
 
-        # In case of auth required, block public user
-        if survey.auth_required and uid == request.registry['website'].get_public_user(request.cr, SUPERUSER_ID, request.context):
-            return request.website.render("website.401")
-
-        # In case of non open surveys
-        if survey.state != 'open':
-            return request.website.render("survey.notopen")
-
-        # If enough surveys completed
-        if survey.user_input_limit > 0:
-            completed = user_input_obj.search(cr, uid, [('state', '=', 'done')], count=True)
-            if completed >= survey.user_input_limit:
-                return request.website.render("survey.notopen")
-
-        # Manual surveying
-        if not token:
-            if survey.visible_to_user:
-                user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id})
-                user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
-            else:  # An user cannot open hidden surveys without token
-                return request.website.render("website.403")
+        # Load the user_input
+        try:
+            user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
+        except IndexError:  # Invalid token
+            return request.website.render("website.403")
         else:
-            try:
-                user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
-            except IndexError:  # Invalid token
-                return request.website.render("website.403")
-            else:
-                user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+            user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
 
-        # Prevent opening of the survey if the deadline has turned out
-        # ! This will NOT disallow access to users who have already partially filled the survey !
-        # if user_input.deadline > fields.date.now() and user_input.state == 'new':
-        #     return request.website.render("survey.notopen")
-            # TODO check if this is ok
+        # Do not display expired survey (even if some pages have already been
+        # displayed -- There's a time for everything!)
+        errpage = self._check_deadline(cr, uid, user_input, context=context)
+        if errpage:
+            return errpage
 
         # Select the right page
-
         if user_input.state == 'new':  # First page
-            page, page_nr, last = self.find_next_page(survey, user_input)
+            page, page_nr, last = survey_obj.next_page(cr, uid, user_input, 0, go_back=False, context=context)
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
@@ -163,39 +167,33 @@ class WebsiteSurvey(http.Controller):
         elif user_input.state == 'done':  # Display success message
             return request.website.render('survey.finished', {'survey': survey})
         elif user_input.state == 'skip':
-            page, page_nr, last = self.find_next_page(survey, user_input)
+            flag = (True if prev and prev == 'prev' else False)
+            page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=flag, context=context)
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
+            return request.website.render('survey.survey', data)
         else:
             return request.website.render("website.403")
 
-    # @website.route(['/survey/prefill/<model("survey.survey"):survey>'], type='json', auth='public', multilang=True):
+    # AJAX prefilling of a survey
+    # @website.route(['/survey/prefill/<model("survey.survey"):survey>'],
+    #                type='json', auth='public', multilang=True):
+    # def prefill(self, survey, **post):
 
+    # AJAX validation of some questions
     # @website.route(['/survey/validate/<model("survey.survey"):survey>'],
     #                type='http', auth='public', multilang=True)
     # def validate(self, survey, **post):
-    #     _logger.debug('Incoming data: %s', post)
-    #     page_id = int(post['page_id'])
-    #     cr, uid, context = request.cr, request.uid, request.context
-    #     questions_obj = request.registry['survey.question']
-    #     questions_ids = questions_obj.search(cr, uid, [('page_id', '=', page_id)], context=context)
-    #     questions = questions_obj.browse(cr, uid, questions_ids, context=context)
-    #     errors = {}
-    #     for question in questions:
-    #         answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
-    #         errors.update(self.validate_question(question, post, answer_tag))
-    #     ret = {}
-    #     if (len(errors) != 0):
-    #         ret['errors'] = errors
-    #     return json.dumps(ret)
 
+    # AJAX submission of a page
     @website.route(['/survey/submit/<model("survey.survey"):survey>'],
                    type='http', auth='public', multilang=True)
     def submit(self, survey, **post):
         _logger.debug('Incoming data: %s', post)
         page_id = int(post['page_id'])
         cr, uid, context = request.cr, request.uid, request.context
+        survey_obj = request.registry['survey.survey']
         questions_obj = request.registry['survey.question']
         questions_ids = questions_obj.search(cr, uid, [('page_id', '=', page_id)], context=context)
         questions = questions_obj.browse(cr, uid, questions_ids, context=context)
@@ -213,6 +211,7 @@ class WebsiteSurvey(http.Controller):
         else:
             # Store answers into database
             user_input_obj = request.registry['survey.user_input']
+
             user_input_line_obj = request.registry['survey.user_input_line']
             try:
                 user_input_id = user_input_obj.search(cr, uid, [('token', '=', post['token'])], context=context)[0]
@@ -222,12 +221,18 @@ class WebsiteSurvey(http.Controller):
                 answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
                 user_input_line_obj.save_lines(cr, uid, user_input_id, question, post, answer_tag, context=context)
 
-                # page, _, _ = self.find_next_page(survey, user_input_obj.browse(cr, uid, [user_input_id], context=context))
-                # if page:
-                #     user_input_obj.write(cr, uid, user_input_id, {'state': 'skip'})
-                # else:
-                user_input_obj.write(cr, uid, user_input_id, {'state': 'done'})
+            user_input = user_input_obj.browse(cr, uid, user_input_id, context=context)
+            go_back = post['button_submit'] == 'previous'
+            next_page, _, last = survey_obj.next_page(cr, uid, user_input, page_id, go_back=go_back, context=context)
+            vals = {'last_displayed_page_id': page_id}
+            if next_page is None and not go_back:
+                vals.update({'state': 'done'})
+            else:
+                vals.update({'state': 'skip'})
+            user_input_obj.write(cr, uid, user_input_id, vals, context=context)
             ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
+            if go_back:
+                ret['redirect'] += '/prev'
         return json.dumps(ret)
 
     # Printing routes
@@ -256,7 +261,7 @@ class WebsiteSurvey(http.Controller):
                     page_nr = page_nr + 1
                 else:
                     nextpage = page
-                if page_nr == len(survey.page_ids):
+                if page_nr == len(survey.page_ids) - 1:
                     last = True
             return nextpage, page_nr, last
 

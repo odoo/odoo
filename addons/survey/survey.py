@@ -150,6 +150,45 @@ class survey_survey(osv.osv):
         return super(survey_survey, self).copy(cr, uid, ids, vals,
             context=context)
 
+    def next_page(self, cr, uid, user_input, page_id, go_back=False, context=None):
+        '''The next page to display to the user, knowing that page_id is the id
+        of the last displayed page.
+
+        If page_id == 0, it will always return the first page of the survey.
+
+        If all the pages have been displayed and go_back == False, it will
+        return None
+
+        If go_back == True, it will return the *previous* page instead of the
+        next page.
+
+        .. note::
+            It is assumed here that a careful user will not try to set go_back
+            to True if she knows that the page to display is the first one!
+            (doing this will probably cause a giant worm to eat her house)'''
+        survey = user_input.survey_id
+        pages = list(enumerate(survey.page_ids))
+
+        # First page
+        if page_id == 0:
+            return (pages[0][1], 0, len(pages) == 1)
+
+        current_page_index = pages.index((filter(lambda p: p[1].id == page_id, pages))[0])
+
+        # All the pages have been displayed
+        if current_page_index == len(pages) - 1 and not go_back:
+            return (None, -1, False)
+        # Let's get back, baby!
+        elif go_back and survey.users_can_go_back:
+            return (pages[current_page_index - 1][1], current_page_index - 1, False)
+        else:
+            # This will show the last page
+            if current_page_index == len(pages) - 2:
+                return (pages[current_page_index + 1][1], current_page_index + 1, True)
+            # This will show a regular page
+            else:
+                return (pages[current_page_index + 1][1], current_page_index + 1, False)
+
     def action_print_survey_questions(self, cr, uid, ids, context=None):
         ''' Generates a printable view of an empty survey '''
         pass
@@ -287,6 +326,9 @@ class survey_page(osv.osv):
             help="An introductory text to your page", translate=True,
             oldname="note"),
     }
+    _defaults = {
+        'sequence': 10
+    }
 
     # Public methods #
 
@@ -408,6 +450,7 @@ class survey_question(osv.osv):
     }
     _defaults = {
         'page_id': lambda s, cr, uid, c: c.get('page_id'),
+        'sequence': 10,
         'type': 'free_text',
         'matrix_subtype': 'simple',
         'column_nb': '12',
@@ -661,7 +704,7 @@ class survey_question(osv.osv):
         if question.constr_mandatory:
             lines_number = len(question.labels_ids_2)
             answer_candidates = dict_keys_startswith(post, answer_tag)
-            comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), None)
+            #comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), None)
             # Number of lines that have been answered
             if question.matrix_subtype == 'simple':
                 answer_number = len(answer_candidates)
@@ -701,6 +744,9 @@ class survey_label(osv.osv):
         'value': fields.char("Suggested value", translate=True,
             required=True)
     }
+    defaults = {
+        'sequence': 10
+    }
 
 
 class survey_user_input(osv.osv):
@@ -714,8 +760,9 @@ class survey_user_input(osv.osv):
                                      readonly=1, ondelete='restrict'),
         'date_create': fields.datetime('Creation Date', required=True,
                                        readonly=1),
-        'deadline': fields.date("Deadline",
-                                help="Date by which the person can take part to the survey",
+        'deadline': fields.datetime("Deadline",
+                                help="Date by which the person can open the survey and submit answers.\
+                                Warning: ",
                                 oldname="date_deadline"),
         'type': fields.selection([('manually', 'Manually'), ('link', 'Link')],
                                  'Answer Type', required=1, readonly=1,
@@ -732,6 +779,9 @@ class survey_user_input(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=1),
         'email': fields.char("E-mail", readonly=1),
 
+        # Displaying data
+        'last_displayed_page_id': fields.many2one('survey.page',
+                                              'Last displayed page'),
         # The answers !
         'user_input_line_ids': fields.one2many('survey.user_input_line',
                                                'user_input_id', 'Answers'),
@@ -872,7 +922,7 @@ class survey_user_input_line(osv.osv):
         'survey_id': fields.related('user_input_id', 'survey_id',
                                     type="many2one", relation="survey.survey",
                                     string='Survey'),
-        'date_create': fields.datetime('Create Date', required=1),  # drop
+        'date_create': fields.datetime('Create Date', required=1),
         'skipped': fields.boolean('Skipped'),
         'answer_type': fields.selection([('text', 'Text'),
                                          ('number', 'Number'),
@@ -888,7 +938,7 @@ class survey_user_input_line(osv.osv):
     }
     _defaults = {
         'skipped': False,
-        'date_create': fields.datetime.now
+        'date_create': fields.datetime.now()
     }
 
     def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
@@ -912,7 +962,7 @@ class survey_user_input_line(osv.osv):
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
         }
-        if answer_tag in post:
+        if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'free_text', 'value_free_text': post[answer_tag]})
         else:
             vals.update({'skipped': True})
@@ -933,7 +983,7 @@ class survey_user_input_line(osv.osv):
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
         }
-        if answer_tag in post:
+        if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
         else:
             vals.update({'skipped': True})
@@ -954,10 +1004,10 @@ class survey_user_input_line(osv.osv):
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
         }
-        if answer_tag in post:
+        if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'number', 'value_number': float(post[answer_tag])})
         else:
-            vals.update({'skipped': True})
+            vals.update({'skipped': True, 'answer_type': None})
         old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
                                         ('survey_id', '=', question.survey_id.id),
                                         ('question_id', '=', question.id)],
@@ -989,26 +1039,26 @@ class survey_user_input_line(osv.osv):
             self.create(cr, uid, vals, context=context)
         return True
 
-    def save_line_simple_choice(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
-        vals = {
-            'user_input_id': user_input_id,
-            'question_id': question.id,
-            'page_id': question.page_id.id,
-            'survey_id': question.survey_id.id,
-        }
-        if answer_tag in post:
-            vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
-        else:
-            vals.update({'skipped': True})
-        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
-                                        ('survey_id', '=', question.survey_id.id),
-                                        ('question_id', '=', question.id)],
-                              context=context)
-        if old_uil:
-            self.write(cr, uid, old_uil[0], vals, context=context)
-        else:
-            self.create(cr, uid, vals, context=context)
-        return True
+    # def save_line_simple_choice(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+    #     vals = {
+    #         'user_input_id': user_input_id,
+    #         'question_id': question.id,
+    #         'page_id': question.page_id.id,
+    #         'survey_id': question.survey_id.id,
+    #     }
+    #     if answer_tag in post:
+    #         vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
+    #     else:
+    #         vals.update({'skipped': True})
+    #     old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+    #                                     ('survey_id', '=', question.survey_id.id),
+    #                                     ('question_id', '=', question.id)],
+    #                           context=context)
+    #     if old_uil:
+    #         self.write(cr, uid, old_uil[0], vals, context=context)
+    #     else:
+    #         self.create(cr, uid, vals, context=context)
+    #     return True
 
 
 def dict_keys_startswith(dictionary, string):
