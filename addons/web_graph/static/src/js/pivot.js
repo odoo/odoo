@@ -445,7 +445,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				var col = _.find(col_headers, function (header) {
 					return _.isEqual(header.path, colpath);
 				});
-				debugger;
 				cells.push({x: Math.min(row.id, col.id),
 							y: Math.max(row.id, col.id),
 							value: value});
