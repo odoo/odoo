@@ -1,11 +1,12 @@
 -
   !python {model: ir.model.data}: |
-    main_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock_warehouse_shop0'), context=context)
+    chicago_warehouse = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock_warehouse_shop0'), context=context)
 
     #create xml ids for demo data that are widely used in tests or in other codes, for more convenience
     xml_references = [
-        {'name':'chi_picking_type_in','module':'stock', 'model':'stock.picking.type','res_id':main_warehouse.in_type_id.id},
-        {'name':'chi_picking_type_out','module':'stock', 'model':'stock.picking.type','res_id':main_warehouse.out_type_id.id},
+        {'name':'chi_picking_type_in','module':'stock', 'model':'stock.picking.type','res_id': chicago_warehouse.in_type_id.id},
+        {'name':'chi_picking_type_out','module':'stock', 'model':'stock.picking.type','res_id': chicago_warehouse.out_type_id.id},
+        {'name':'stock_location_shop0','module':'stock', 'model':'stock.location','res_id': chicago_warehouse.lot_stock_id.id},
     ]
     for xml_record in xml_references:
         xml_ids = self.search(cr, uid, [('module', '=', xml_record['module']), ('model', '=', xml_record['model']), ('name', '=', xml_record['name'])], context=context)
@@ -19,14 +20,6 @@
     usage: internal
     location_id: stock_location_14
 -
- !record {model: stock.location, id: location_opening}:
-    name: opening
-    usage: inventory
--
- !record {model: stock.location, id: location_convenience_shop}:
-    name: Convenient Store
-    usage: supplier
--
  !record {model: product.product, id: product_icecream}:
     default_code: 001
     name: Ice Cream
@@ -36,7 +29,7 @@
     standard_price: 70.0
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
-    property_stock_inventory: location_opening
+    property_stock_inventory: location_inventory
     description: Ice cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 -
  !record {model: stock.production.lot, id: lot_icecream_0}:
@@ -135,7 +128,7 @@
     product_uom: product.product_uom_kgm
     product_uom_qty: 50.0
     picking_type_id: stock.picking_type_in
-    location_id: location_convenience_shop
+    location_id: stock_location_suppliers
     location_dest_id: stock_location_14
 -
  !record {model: stock.picking, id: incomming_shipment1}:
@@ -198,7 +191,7 @@
         product_uom_qty: 25.0
         picking_type_id: chi_picking_type_in
         location_id: stock.stock_location_suppliers
-        location_dest_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_shop0
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse1}:
     picking_type_id: chi_picking_type_in
@@ -210,7 +203,7 @@
         product_uom_qty: 180.0
         picking_type_id: chi_picking_type_in
         location_id: stock.stock_location_suppliers
-        location_dest_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_shop0
         state: done
     pack_operation_ids:
       - product_id: product.product_product_48
@@ -227,7 +220,7 @@
         product_uom_qty: 45.0
         picking_type_id: chi_picking_type_in
         location_id: stock.stock_location_suppliers
-        location_dest_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_shop0
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse3}:
     picking_type_id: chi_picking_type_in
@@ -240,7 +233,7 @@
         product_uom_qty: 75.0
         picking_type_id: chi_picking_type_in
         location_id: stock.stock_location_suppliers
-        location_dest_id: stock.stock_location_stock
+        location_dest_id: stock.stock_location_shop0
 -
    Create STOCK_PICKING_OUT for Chicago Warehouse
 -
@@ -253,7 +246,7 @@
         product_uom: product.product_uom_unit
         product_uom_qty: 15.0
         picking_type_id: chi_picking_type_out
-        location_id: stock.stock_location_stock
+        location_id: stock.stock_location_shop0
         location_dest_id: stock.stock_location_customers
 -
  !record {model: stock.picking, id: outgoing_chicago_warehouse1}:
@@ -265,7 +258,7 @@
         product_uom: product.product_uom_unit
         product_uom_qty: 180.0
         picking_type_id: chi_picking_type_out
-        location_id: stock.stock_location_stock
+        location_id: stock.stock_location_shop0
         location_dest_id: stock.stock_location_customers
     pack_operation_ids:
       - product_id: product.product_product_6
@@ -281,7 +274,7 @@
         product_uom: product.product_uom_unit
         product_uom_qty: 45.0
         picking_type_id: chi_picking_type_out
-        location_id: stock.stock_location_stock
+        location_id: stock.stock_location_shop0
         location_dest_id: stock.stock_location_customers
 -
  !record {model: stock.picking, id: outgoing_chicago_warehouse3}:
@@ -293,7 +286,7 @@
         product_uom: product.product_uom_unit
         product_uom_qty: 75.0
         picking_type_id: chi_picking_type_out
-        location_id: stock.stock_location_stock
+        location_id: stock.stock_location_shop0
         location_dest_id: stock.stock_location_customers
 -
  !python {model: stock.picking}: |

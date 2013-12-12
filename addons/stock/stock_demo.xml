@@ -188,53 +188,6 @@
             <field name="name">Your Company, Chicago shop</field>
         </record>
 
-        <!--        Child Company 2-->
-        <record id="res_partner_company_2" model="res.partner">
-            <field name="name">Your Company, Birmingham shop</field>
-            <field eval="1" name="customer"/>
-            <field eval="1" name="supplier"/>
-            <field eval="1" name="active"/>
-            <field name="is_company">1</field>
-            <field name="street">82-85 Academy Avenue</field>
-            <field name="city">Birmingham</field>
-            <field name="zip">B46 3AG</field>
-            <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
-            <field name="phone">+44 121 690 4596</field>
-            <field name="email">birmingham@yourcompany.com</field>
-            <field name="website">www.yourcompany.com</field>
-        </record>
-
-        <record id="res_partner_address_40" model="res.partner">
-            <field name="name">Donald Thompson</field>
-            <field name="parent_id" ref="res_partner_company_2"/>
-            <field name="use_parent_address" eval="1"/>
-        </record>
-
-        <record id="res_company_2" model="res.company">
-            <field name="currency_id" ref="base.GBP"/>
-            <field name="partner_id" ref="res_partner_company_2"/>
-            <field name="parent_id" ref="base.main_company"/>
-            <field name="name">Your Company, Birmingham shop</field>
-        </record>
-
-        <!--TOCHECK-->
-        <record id="stock_location_shop0" model="stock.location">
-            <field model="res.partner" name="partner_id" search="[('name','=','Fabien')]"/>
-            <field name="location_id" ref="stock.stock_location_locations"/>
-            <field name="company_id" ref="res_company_1"/>
-            <field name="usage">internal</field>
-            <field eval="1" name="active"/>
-            <field name="name">Your Company, Chicago shop</field>
-        </record>
-
-        <record id="stock_location_intermediatelocation0" model="stock.location">
-            <field name="partner_id" ref="base.main_partner"/>
-            <field name="location_id" ref="stock.stock_location_locations_partner"/>
-            <field name="usage">transit</field>
-            <field name="name">Internal Shippings</field>
-            <field name="company_id" eval="False"/>
-        </record>
-
         <record id="stock_warehouse_shop0" model="stock.warehouse">
             <field name="name">Chicago Warehouse</field>
             <field name="lot_stock_id" ref="stock_location_shop0"/>
