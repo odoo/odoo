@@ -2458,10 +2458,10 @@ class stock_warehouse(osv.osv):
         try:
             mto_route_id = data_obj.get_object_reference(cr, uid, 'stock', 'route_warehouse0_mto')[1]
         except:
-            mto_route_id = route_obj.search(cr, uid, [('name', 'like', _('MTO'))], context=context)
+            mto_route_id = route_obj.search(cr, uid, [('name', 'like', _('Make To Order'))], context=context)
             mto_route_id = mto_route_id and mto_route_id[0] or False
         if not mto_route_id:
-            raise osv.except_osv(_('Error!'), _('Can\'t find any generic MTO route.'))
+            raise osv.except_osv(_('Error!'), _('Can\'t find any generic Make To Order route.'))
 
         from_loc, dest_loc, pick_type_id = values[0]
         return {
