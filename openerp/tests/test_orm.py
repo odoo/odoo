@@ -77,6 +77,16 @@ class TestORM(common.TransactionCase):
         with self.assertRaises(Exception):
             self.partner.unlink(cr, uid2, [p1,p2])
 
+    def test_multi_read(self):
+        record_id = self.partner.create(self.cr, UID, {'name': 'MyPartner1'})
+        records = self.partner.read(self.cr, UID, [record_id])
+        self.assertIsInstance(records, list)
+
+    def test_one_read(self):
+        record_id = self.partner.create(self.cr, UID, {'name': 'MyPartner1'})
+        record = self.partner.read(self.cr, UID, record_id)
+        self.assertIsInstance(record, dict)
+
     @mute_logger('openerp.osv.orm')
     def test_search_read(self):
         # simple search_read

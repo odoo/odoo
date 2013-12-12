@@ -380,8 +380,19 @@ def multi(method):
         if _has_cursor(args, kwargs):
             cr, uid, ids, context, args, kwargs = split_args(args, kwargs)
             with Scope(cr, uid, context):
-                value = method(self.browse(ids), *args, **kwargs)
-                return new_to_old(self, value)
+                # There is this feature for the backward-compatiblity with the
+                # previous version of OpenERP, and we give the capability to use
+                # one identifier for the read method
+                if method.func_name == 'read' and isinstance(ids, (long, int)):
+                    _logger.warning(
+                        "Call to %s with an integer instead of a list of integers is deprecated.",
+                        method.func_name
+                    )
+                    values = method(self.browse([ids], *args, **kwargs))
+                    return new_to_old(self, values)[0]
+                else:
+                    value = method(self.browse(ids), *args, **kwargs)
+                    return new_to_old(self, value)
         else:
             return method(self, *args, **kwargs)
 
