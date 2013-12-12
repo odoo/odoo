@@ -35,6 +35,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/jquery.scrollTo/jquery.scrollTo-min.js",
         "static/lib/jquery.textext/jquery.textext.js",
         "static/lib/jquery.timeago/jquery.timeago.js",
+        "static/lib/bootstrap/js/bootstrap.js",
         "static/lib/qweb/qweb2.js",
         "static/lib/underscore/underscore.js",
         "static/lib/underscore.string/lib/underscore.string.js",
