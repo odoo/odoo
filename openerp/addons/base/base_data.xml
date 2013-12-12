@@ -39,7 +39,7 @@
             <field name="city"></field>
             <field name="zip"></field>
             <field name="phone"></field>
-            <field name="email">info@yourcompany.example.com</field>
+            <field name="email">info@yourcompany.com</field>
             <field name="website">www.yourcompany.com</field>
         </record>
 
@@ -68,10 +68,7 @@
             <field name="name">Administrator</field>
             <field name="company_id" ref="main_company"/>
             <field name="customer" eval="False"/>
-            <field name="email">admin@yourcompany.example.com</field>
-            <field name="city">Barchon</field>
-            <field name="zip">4671</field>
-            <field name="street">Rue de Heuseux 61</field>
+            <field name="email">admin@example.com</field>
         </record>
 
         <record model="res.users" id="base.user_root">
@@ -103,7 +100,6 @@ Administrator</field>
             <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual OpenERP groups.</field>
         </record>
-
         <!--
             A group dedicated to the public user only, making groups
             restrictions more convenient.
@@ -112,6 +108,26 @@ Administrator</field>
             <field name="name">Public</field>
             <field name="comment">Public users have specific access rights (such as record rules and restricted menus).
                 They usually do not belong to the usual OpenERP groups.</field>
+        </record>
+
+        <!-- Basic fonts family included in PDF standart, will always be in the font list -->
+        <record model="res.font" id="base.font_helvetica">
+            <field name="name">Helvetica</field>
+            <field name="family">Helvetica</field>
+            <field name="path">/dev/null</field>
+            <field name="mode">all</field>
+        </record>
+        <record model="res.font" id="base.font_times">
+            <field name="name">Times</field>
+            <field name="family">Times</field>
+            <field name="path">/dev/null</field>
+            <field name="mode">all</field>
+        </record>
+        <record model="res.font" id="base.font_courier">
+            <field name="name">Courier</field>
+            <field name="family">Courier</field>
+            <field name="path">/dev/null</field>
+            <field name="mode">all</field>
         </record>
 
     </data>

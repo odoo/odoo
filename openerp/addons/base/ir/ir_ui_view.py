@@ -214,7 +214,6 @@ class view(osv.osv):
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
             conditions.extend([
-                ['model_ids.model', '=', 'ir.ui.view'],
                 '|',
                 ['model_ids.module', 'in', tuple(self.pool._init_modules)],
                 ['id', 'in', check_view_ids],
@@ -380,7 +379,7 @@ class view(osv.osv):
         if context is None: context = {}
 
         # if view_id is not a root view, climb back to the top.
-        v = self.browse(cr, uid, view_id, context=context)
+        base = v = self.browse(cr, uid, view_id, context=context)
         while v.inherit_id:
             v = v.inherit_id
         root_id = v.id
@@ -401,7 +400,8 @@ class view(osv.osv):
             })
 
         # and apply inheritance
-        arch = self.apply_view_inheritance(cr, uid, arch_tree, root_id, v.model, context=context)
+        arch = self.apply_view_inheritance(
+            cr, uid, arch_tree, root_id, base.model, context=context)
 
         return dict(view, arch=etree.tostring(arch, encoding='utf-8'))
 

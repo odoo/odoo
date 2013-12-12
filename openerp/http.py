@@ -187,9 +187,16 @@ class WebRequest(object):
         @service_model.check
         def checked_call(dbname, *a, **kw):
             return self.func(*a, **kw)
-        if self.db:
-            return checked_call(self.db, *args, **kwargs)
-        return self.func(*args, **kwargs)
+
+        # FIXME: code and rollback management could be cleaned
+        try:
+            if self.db:
+                return checked_call(self.db, *args, **kwargs)
+            return self.func(*args, **kwargs)
+        except Exception:
+            if self._cr:
+                self._cr.rollback()
+            raise
 
     @property
     def debug(self):
@@ -401,13 +408,9 @@ class HttpRequest(WebRequest):
         self.params = params
 
     def dispatch(self):
-        try:
-            r = self._call_function(**self.params)
-        except (werkzeug.exceptions.HTTPException), e:
-            r = e
-        else:
-            if not r:
-                r = werkzeug.wrappers.Response(status=204)  # no content
+        r = self._call_function(**self.params)
+        if not r:
+            r = werkzeug.wrappers.Response(status=204)  # no content
         return r
 
     def make_response(self, data, headers=None, cookies=None):
