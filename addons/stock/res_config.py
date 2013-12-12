@@ -36,6 +36,7 @@ class stock_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'module_mrp_jit': fields.boolean("Generate procurement in real time",
             help="""This allows Just In Time computation of procurement orders.
                 All procurement orders will be processed immediately, which could in some
@@ -91,6 +92,10 @@ This installs the module product_expiry."""),
                  '-This installs the module stock_dropshipping.'),
     }
 
+    def _default_company(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id.id
+
     def get_default_dp(self, cr, uid, fields, context=None):
         dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
         return {'decimal_precision': dp.digits}
@@ -99,5 +104,9 @@ This installs the module product_expiry."""),
         config = self.browse(cr, uid, ids[0], context)
         dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'decimal_stock_weight')
         dp.write({'digits': config.decimal_precision})
+
+    _defaults = {
+        'company_id': _default_company,
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
