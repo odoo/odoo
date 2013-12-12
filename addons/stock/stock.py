@@ -3466,6 +3466,11 @@ class stock_picking_type(osv.osv):
             group_begin_date = datetime.strptime(group['__domain'][0][2], DEFAULT_SERVER_DATE_FORMAT)
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
             section_result[10 - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+            inner_groupby = (group.get('__context', {})).get('group_by',[])
+            if inner_groupby:
+                groupby_picking = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
+                for groupby in groupby_picking:
+                    section_result[10 - (month_delta.months + 1)]['value'] = groupby.get(value_field, 0)
         return section_result
 
     def _get_picking_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -3481,7 +3486,7 @@ class stock_picking_type(osv.osv):
                 ('date', '>=', groupby_begin),
                 ('date', '<', groupby_end),
             ]
-            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date'], 'picking_type_id_count', 'date', context=context)
+            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date','picking_type_id'], 'picking_type_id_count', ['date','picking_type_id'], context=context)
         return res
 
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
