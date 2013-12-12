@@ -78,6 +78,10 @@
                                 <field name="group_stock_adv_location" class="oe_inline"/>
                                 <label for="group_stock_adv_location"/>
                             </div>
+                            <div attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
+                                <label for="propagation_minimum_delta"/>
+                                <field name="propagation_minimum_delta" class="oe_inline"/>
+                            </div>
                             <div>
                                 <field name="module_stock_dropshipping" class="oe_inline"/>
                                 <label for="module_stock_dropshipping"/>

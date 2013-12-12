@@ -44,7 +44,7 @@ class sale_order(osv.osv):
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
         if not warehouse_ids:
-            raise osv.except_osv(_('Error!'), _('There is no warehouse defined for selected company.'))
+            return False
         return warehouse_ids[0]
 
     def _get_shipped(self, cr, uid, ids, name, args, context=None):
@@ -371,7 +371,7 @@ class sale_order_line(osv.osv):
         if not isMto:
             uom2 = False
             if uom:
-                uom2 = product_uom_obj.browse(cr, uid, uom)
+                uom2 = product_uom_obj.browse(cr, uid, uom, context=context)
                 if product_obj.uom_id.category_id.id != uom2.category_id.id:
                     uom = False
             if not uom2:

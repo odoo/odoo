@@ -88,7 +88,7 @@ class procurement_order(osv.osv):
             'project_id': project and project.id or False,
             'company_id': procurement.company_id.id,
         },context=context)
-        self.write(cr, uid, [procurement.id], {'task_id': task_id, 'message':_('Task created.')}, context=context)
+        self.write(cr, uid, [procurement.id], {'task_id': task_id}, context=context)
         self.project_task_create_note(cr, uid, [procurement.id], context=context)
         return task_id
 

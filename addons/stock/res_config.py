@@ -21,6 +21,16 @@
 
 from openerp.osv import fields, osv
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'propagation_minimum_delta': fields.integer('Minimum Delta for Propagation of a Date Change on moves linked together'),
+    }
+
+    _defaults = {
+        'propagation_minimum_delta': 1,
+    }
+
 class stock_config_settings(osv.osv_memory):
     _name = 'stock.config.settings'
     _inherit = 'res.config.settings'
@@ -71,10 +81,11 @@ This installs the module product_expiry."""),
             implied_group='stock.group_locations',
             help="""This allows to configure and use multiple stock locations and warehouses,
                 instead of having a single default one."""),
-        'group_stock_adv_location': fields.boolean("Active Push and Pull inventory flows", 
-            implied_group='stock.group_adv_location', 
+        'group_stock_adv_location': fields.boolean("Active Push and Pull inventory flows",
+            implied_group='stock.group_adv_location',
             help="""This option supplements the warehouse application by effectively implementing Push and Pull inventory flows. """),
         'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
+        'propagation_minimum_delta': fields.related('company_id', 'propagation_minimum_delta', type='integer', string="Minimum days to trigger a propagation of date change in pushed/pull flows."),
         'module_stock_dropshipping': fields.boolean("Manage dropshipping",
             help='\nCreates the dropship route and add more complex tests'
                  '-This installs the module stock_dropshipping.'),

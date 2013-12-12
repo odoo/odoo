@@ -606,7 +606,7 @@ class purchase_order(osv.osv):
         return res
 
     def invoice_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'approved'}, context=context)
+        self.write(cr, uid, ids, {'state': 'approved'}, context=context)
         return True
 
     def has_stockable_product(self, cr, uid, ids, *args):
@@ -617,26 +617,26 @@ class purchase_order(osv.osv):
         return False
 
     def wkf_action_cancel(self, cr, uid, ids, context=None):
-        self.write(cr,uid,ids,{'state':'cancel'})
+        self.write(cr, uid, ids, {'state': 'cancel'})
         self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         for purchase in self.browse(cr, uid, ids, context=context):
             for pick in purchase.picking_ids:
-                if pick.state not in ('draft','cancel'):
+                if pick.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
-                        _('Unable to cancel this purchase order.'),
+                        _('Unable to cancel the purchase order %s.') % (purchase.name),
                         _('First cancel all receptions related to this purchase order.'))
             self.pool.get('stock.picking') \
                 .signal_button_cancel(cr, uid, map(attrgetter('id'), purchase.picking_ids))
             for inv in purchase.invoice_ids:
-                if inv and inv.state not in ('cancel','draft'):
+                if inv and inv.state not in ('cancel', 'draft'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
                         _('You must first cancel all receptions related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_invoice_cancel(cr, uid, map(attrgetter('id'), purchase.invoice_ids))
-        self.write(cr,uid,ids,{'state':'cancel'})
+        self.write(cr, uid, ids, {'state': 'cancel'})
         self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
         self.signal_purchase_cancel(cr, uid, ids)
         return True
@@ -645,7 +645,7 @@ class purchase_order(osv.osv):
         """ Convert date values expressed in user's timezone to
         server-side UTC timestamp, assuming a default arbitrary
         time of 12:00 AM - because a time is needed.
-    
+
         :param str userdate: date string in in user time zone
         :return: UTC datetime string for server-side use
         """
@@ -672,7 +672,6 @@ class purchase_order(osv.osv):
         if order.currency_id.id != order.company_id.currency_id.id:
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
-        
         return {
             'name': order_line.name or '',
             'product_id': order_line.product_id.id,
@@ -691,8 +690,9 @@ class purchase_order(osv.osv):
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
             'price_unit': price_unit,
-            'picking_type_id': order.picking_type_id.id, 
-            'group_id': group_id, 
+            'picking_type_id': order.picking_type_id.id,
+            'group_id': group_id,
+            'procurement_id': order_line.procurement_ids and order_line.procurement_ids[0].id or False,
             'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
         }
 
@@ -906,6 +906,14 @@ class purchase_order_line(osv.osv):
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
+    def _get_uom_id(self, cr, uid, context=None):
+        try:
+            proxy = self.pool.get('ir.model.data')
+            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
+            return result[1]
+        except Exception, ex:
+            return False
+
     _columns = {
         'name': fields.text('Description', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
@@ -933,6 +941,7 @@ class purchase_order_line(osv.osv):
         'group_id': fields.related('procurement_ids', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group'),
     }
     _defaults = {
+        'product_uom' : _get_uom_id,
         'product_qty': lambda *a: 1.0,
         'state': lambda *args: 'draft',
         'invoiced': lambda *a: 0,
@@ -953,8 +962,11 @@ class purchase_order_line(osv.osv):
         """
         onchange handler of product_uom.
         """
+        if context is None:
+            context = {}
         if not uom_id:
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
+        context = dict(context, purchase_uom_check=True)
         return self.onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
             name=name, price_unit=price_unit, state=state, context=context)
@@ -1034,7 +1046,7 @@ class purchase_order_line(osv.osv):
             uom_id = product_uom_po_id
 
         if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
-            if self._check_product_uom_group(cr, uid, context=context):
+            if context.get('purchase_uom_check') and self._check_product_uom_group(cr, uid, context=context):
                 res['warning'] = {'title': _('Warning!'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
             uom_id = product_uom_po_id
 
@@ -1358,8 +1370,8 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        if po_ids:
-            purchase_order_obj.message_post(cr, user_id, po_ids, body=_("Invoice paid"), context=context)
+        for po_id in po_ids:
+            purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice paid"), context=context)
         return res
 
 class account_invoice_line(osv.Model):
