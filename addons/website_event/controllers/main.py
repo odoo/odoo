@@ -194,8 +194,9 @@ class website_event(http.Controller):
         user_obj = request.registry['res.users']
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
+        order_obj = request.registry.get('sale.order')
 
-        order = request.context['website_sale_order']
+        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
         if not order:
             order = request.registry['website']._get_order(request.cr, request.uid, context=request.context)
 
@@ -235,9 +236,8 @@ class website_event(http.Controller):
                 partner_id=partner_id, context=request.context)['value']
             _values.update(values)
 
-            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID,
-                                                  _values, context=request.context)
-            order.write({'order_line': [(4, order_line_id)]}, context=request.context)
+            order_line_id = order_line_obj.create(request.cr, SUPERUSER_ID, _values, context=request.context)
+            order_obj.write(request.cr, SUPERUSER_ID, [order.id], {'order_line': [(4, order_line_id)]}, context=request.context)
 
         if not _values:
             return request.redirect("/event/%s/" % event_id)
