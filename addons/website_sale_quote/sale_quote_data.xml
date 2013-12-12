@@ -1,8 +1,8 @@
 <openerp>
     <data>
         <!--Email template -->
-        <record id="email_template_sale_quote" model="email.template">
-            <field name="name">Sales Quotation - Send by Email (Quote)</field>
+        <record id="sale.email_template_edi_sale" model="email.template">
+            <field name="name">Sales Order - Send by Email</field>
             <field name="email_from">${object.user_id.email or ''}</field>
             <field name="subject">${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_invoice_id.id}</field>

@@ -35,7 +35,6 @@ class sale_order_line(osv.osv):
         if product:
             desc = self.pool.get('product.product').browse(cr, uid, product, context).website_description
             res.get('value').update({'website_description': desc})
-        print res
         return res
 
 class sale_order(osv.osv):
@@ -48,20 +47,38 @@ class sale_order(osv.osv):
         'is_template': fields.boolean('Is Template'),
     }
 
-    def new_quotation_token(self, cr, uid, record_id,context=None):
+    def new_quotation_token(self, cr, uid, ids,context=None):
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-        quotation_token = hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, record_id)).hexdigest()
-        return self.write(cr, uid, [record_id],{'access_token': quotation_token,'quote_url': self.get_signup_url(cr, uid, quotation_token, context)} )
+        quotation_token = hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, ids[0])).hexdigest()
+        return self.write(cr, uid, ids,{'access_token': quotation_token,'quote_url': self._get_signup_url(cr, uid, False,quotation_token, context)} )
 
     def create(self, cr, uid, vals, context=None):
         template_id = vals.get('template_id', False)
         new_id = super(sale_order, self).create(cr, uid, vals, context=context)
-        self.new_quotation_token(cr, uid, new_id,context)
+        self.create_portal_user(cr, uid, new_id, context=context)
+        self.write(cr, uid, [new_id],{'quote_url': self._get_signup_url(cr, uid, new_id, False, context)} )
         return new_id
 
-    def get_signup_url(self, cr, uid, token, context=None):
+    def action_quotation_send(self, cr, uid, ids, context=None):
+        res = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
+        self.new_quotation_token(cr, uid, ids,context)
+        return res
+
+    def create_portal_user(self, cr, uid, order_id, context=None):
+        portal_ids = self.pool.get('res.groups').search(cr, uid, [('is_portal', '=', True)])
+        user_wizard_pool = self.pool.get('portal.wizard.user')
+        order = self.browse(cr, uid, order_id, context=context)
+        wizard_id = self.pool.get('portal.wizard').create(cr, uid,{'portal_id': portal_ids and portal_ids[0] or False})
+        user_id = user_wizard_pool.create(cr, uid,{
+            'wizard_id':wizard_id, 
+            'partner_id':order.partner_id.id,
+            'email':order.partner_id.email,
+            'in_portal':True} )
+        return user_wizard_pool.action_apply(cr, uid, [user_id], context=context)
+
+    def _get_signup_url(self, cr, uid, order_id=False, token=False, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-        url = "%s/quote/%s" % (base_url ,token)
+        url = "%s/quote/%s" % (base_url ,token and token or order_id)
         return url
 
     def _get_sale_order_line(self, cr, uid,template_id, context=None):

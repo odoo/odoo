@@ -17,44 +17,50 @@ class sale_quote(http.Controller):
         order_id = order_pool.search(request.cr, SUPERUSER_ID, [('access_token', '=', token)], context=request.context)
         return order_id
 
-    @website.route(['/quote/<token>'], type='http', auth="public")
-    def view(self, token=None, **post):
+    def _get_token(self, order_id):
+        order_pool = request.registry.get('sale.order')
+        access_token = order_pool.browse(request.cr, SUPERUSER_ID, order_id, context=request.context).access_token
+        return access_token or order_id
+
+    @website.route(['/quote/<token>','/quote/<int:order_id>'], type='http', auth="public")
+    def view(self, token=None, order_id=None, **post):
         values = {}
         order_pool = request.registry.get('sale.order')
-        
-        quotation = order_pool.browse(request.cr, SUPERUSER_ID, self.get_quote(token))[0]
+        if token:
+            order_id = self.get_quote(token)[0]
+        quotation = order_pool.browse(request.cr, SUPERUSER_ID, order_id)
         render_template = 'website_sale_quote.so_quotation'
         values.update({
             'quotation' : quotation,
-            'total_mail' : len(order_pool.search(request.cr, request.uid,[('access_token','=',token),('message_ids.type', '=', 'email')], context=request.context)),
+            'total_mail' : len(order_pool.search(request.cr, request.uid,[('id','=',order_id),('message_ids.type', '=', 'email')], context=request.context)),
         })
         return request.website.render(render_template, values)
 
-    @website.route(['/quote/<token>/accept'], type='http', auth="public")
-    def accept(self, token=None , **post):
+    @website.route(['/quote/<int:order_id>/accept'], type='http', auth="public")
+    def accept(self, order_id=None, **post):
         values = {}
-        quotation = request.registry.get('sale.order').write(request.cr, SUPERUSER_ID, self.get_quote(token), {'state': 'manual'})
-        return request.redirect("/quote/%s" % token)
+        quotation = request.registry.get('sale.order').write(request.cr, SUPERUSER_ID, [order_id], {'state': 'manual'})
+        return request.redirect("/quote/%s" % self._get_token(order_id))
 
-    @website.route(['/quote/<token>/decline'], type='http', auth="public")
-    def decline(self, token=None , **post):
+    @website.route(['/quote/<int:order_id>/decline'], type='http', auth="public")
+    def decline(self, order_id=None, **post):
         values = {}
-        quotation = request.registry.get('sale.order').write(request.cr, SUPERUSER_ID, self.get_quote(token), {'state': 'cancel'})
-        return request.redirect("/quote/%s" % token)
+        quotation = request.registry.get('sale.order').write(request.cr, SUPERUSER_ID, [order_id], {'state': 'cancel'})
+        return request.redirect("/quote/%s" % self._get_token(order_id))
 
-    @website.route(['/quote/<token>/post'], type='http', auth="public")
-    def post(self, token=None, **post):
+    @website.route(['/quote/<int:order_id>/post'], type='http', auth="public")
+    def post(self, order_id=None, **post):
         values = {}
         if post.get('new_message'):
             request.session.body = post.get('new_message')
         if 'body' in request.session and request.session.body:
-            request.registry.get('sale.order').message_post(request.cr, request.uid, self.get_quote(token),
+            request.registry.get('sale.order').message_post(request.cr, request.uid, order_id,
                     body=request.session.body,
                     type='email',
                     subtype='mt_comment',
                 )
             request.session.body = False
-        return request.redirect("/quote/%s" % token)
+        return request.redirect("/quote/%s" % self._get_token(order_id))
 
     @website.route(['/quote/update_line'], type='json', auth="public")
     def update(self, line_id=None, remove=False, unlink=False, order_id=None, **post):
@@ -65,7 +71,7 @@ class sale_quote(http.Controller):
             val = self._update_order_line(line_id=int(line_id), number=(remove and -1 or 1))
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         return [val , order.amount_total]
-    
+
     def _update_order_line(self,line_id, number):
         order_line_obj = request.registry.get('sale.order.line')
         order_line_val = order_line_obj.read(request.cr, SUPERUSER_ID, [int(line_id)], [], context=request.context)[0]
