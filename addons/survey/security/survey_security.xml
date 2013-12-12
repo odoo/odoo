@@ -14,7 +14,7 @@
         </record>
 
         <!-- Record rules -->
-        <record id="survey_public_access" model="ir.rule">
+<!--         <record id="survey_public_access" model="ir.rule">
             <field name="name">Public access to surveys</field>
             <field name="model_id" ref="survey.model_survey_survey"/>
             <field name="domain_force">[('state', '=', 'open'), ('auth_required', '=', False)]</field>
@@ -35,7 +35,7 @@
             <field eval="1" name="perm_read"/>
             <field eval="0" name="perm_create"/>
         </record>
-
+ -->
         <record id="survey_rule_manager" model="ir.rule">
             <field name="name">Survey Manager access rights</field>
             <field name="model_id" ref="survey.model_survey_survey"/>
