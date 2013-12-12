@@ -2,285 +2,285 @@
 <openerp>
 <data>
 
-    <template id="event_home">
-        <t t-call="website.layout">
-          <div id="wrap">
-            <div class="oe_structure"/>
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-5">
-                        <h1 t-field="event.name" class="mt16"></h1>
+<template id="event_home">
+    <t t-call="website.layout">
+      <div id="wrap">
+        <div class="oe_structure"/>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-5">
+                    <h1 t-field="event.name" class="mt16"></h1>
+                </div>
+                <div class="col-sm-2">
+                    <div class="mt16">
+                        <t t-call="website.publish_management">
+                            <t t-set="object" t-value="event"/>
+                            <t t-set="publish_edit" t-value="True"/>
+                            <t t-set="publish_controller">/event/publish</t>
+                        </t>
                     </div>
-                    <div class="col-sm-2">
-                        <div class="mt16">
-                            <t t-call="website.publish_management">
-                                <t t-set="object" t-value="event"/>
-                                <t t-set="publish_edit" t-value="True"/>
-                                <t t-set="publish_controller">/event/publish</t>
+                </div>
+                <div class="col-sm-5">
+                    <ul class="nav nav-pills pull-right mt16">
+                        <li class="active"><a href="#">Event</a></li>
+                        <li><a href="#">Agenda</a></li>
+                        <li><a href="#">Location</a></li>
+                        <li><a href="#">Registration</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="oe_structure"/>
+      </div>
+    </t>
+</template>
+
+<template name="Sponsors" id="event_sponsor" inherit_option_id="website_event.layout" inherit_id="website_event.layout">
+    <xpath expr="//t[@t-call='website.layout']" position="inside">
+        <t t-set="head">
+            <link rel='stylesheet' href='/website_event_track/static/src/css/website_event_track.css'/>
+            <t t-raw="head or ''"/>
+        </t>
+    </xpath>
+    <xpath expr="//div[@id='wrap']" position="inside">
+        <div class="container mt32 mb16" t-if="event.sponsor_ids">
+            <section data-snippet-id="title">
+                <h2 class="text-center mb32">Our Sponsors</h2>
+            </section>
+            <div class="row">
+                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
+                    <a t-href="#{sponsor.partner_id and ('partners/%s/' % sponsor.partner_id.id) or '#'}" style="position: relative; display: inline-block;">
+                        <span t-field="sponsor.partner_id.image"
+                            t-field-options='{"widget": "image", "class": "shadow"}'/>
+                        <div class="ribbon-wrapper">
+                            <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="tracks">
+    <t t-call="website_event.event_details">
+        <div class="col-md-3 css_noprint">
+
+            <ul class="nav nav-pills nav-stacked">
+                <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ slug(event) }/track/">All</a></li>
+                <t t-foreach="tags" t-as="tag">
+                    <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
+                        <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
+                            <t t-esc="tag.name"/>
+                        </a>
+                    </li>
+                </t>
+            </ul>
+        </div>
+        <div class="col-md-9">
+
+            <ul class="media-list">
+                <li t-foreach="tracks" t-as="track" class="media">
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a t-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
+                            <span t-field="track.date"/>
+                            <!-- <small t-if="not track.website_published" class="label label-danger">not published</small> -->
+                        </h4>
+                        <div><span t-esc="html2text(track.description)[0:400]"/>...</div>
+                        <div>
+                            <t t-foreach="track.tag_ids" t-as="tag_id">
+                                <span class="label label-default" t-field="tag_id.name"/>
                             </t>
                         </div>
                     </div>
-                    <div class="col-sm-5">
-                        <ul class="nav nav-pills pull-right mt16">
-                            <li class="active"><a href="#">Event</a></li>
-                            <li><a href="#">Agenda</a></li>
-                            <li><a href="#">Location</a></li>
-                            <li><a href="#">Registration</a></li>
-                        </ul>
-                    </div>
+                </li>
+            </ul>
+        </div>
+    </t>
+</template>
+
+
+<template id="track_view">
+    <t t-call="website_event.event_details">
+        <div class="col-md-8">
+            <h2 t-field="track.name"/>
+            <div t-field="track.description"/>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Informations</h4>
                 </div>
-            </div>
-            <div class="oe_structure"/>
-          </div>
-        </t>
-    </template>
-
-    <template name="Sponsors" id="event_sponsor" inherit_option_id="website_event.layout" inherit_id="website_event.layout">
-        <xpath expr="//t[@t-call='website.layout']" position="inside">
-            <t t-set="head">
-                <link rel='stylesheet' href='/website_event_track/static/src/css/website_event_track.css'/>
-                <t t-raw="head or ''"/>
-            </t>
-        </xpath>
-        <xpath expr="//div[@id='wrap']" position="inside">
-            <div class="container mt32 mb16" t-if="event.sponsor_ids">
-                <section data-snippet-id="title">
-                    <h2 class="text-center mb32">Our Sponsors</h2>
-                </section>
-                <div class="row">
-                    <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
-                        <a t-href="#{sponsor.partner_id and ('partners/%s/' % sponsor.partner_id.id) or '#'}" style="position: relative; display: inline-block;">
-                            <span t-field="sponsor.partner_id.image"
-                                t-field-options='{"widget": "image", "class": "shadow"}'/>
-                            <div class="ribbon-wrapper">
-                                <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </xpath>
-    </template>
-
-    <template id="tracks">
-        <t t-call="website_event.event_details">
-            <div class="col-md-3 css_noprint">
-
-                <ul class="nav nav-pills nav-stacked">
-                    <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ slug(event) }/track/">All</a></li>
-                    <t t-foreach="tags" t-as="tag">
-                        <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
-                            <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
-                                <t t-esc="tag.name"/>
-                            </a>
-                        </li>
+                <div class="panel-body">
+                    <t t-foreach="track.tag_ids" t-as="tag_id">
+                        <span class="label label-default" t-field="tag_id.name"/>
                     </t>
-                </ul>
-            </div>
-            <div class="col-md-9">
-
-                <ul class="media-list">
-                    <li t-foreach="tracks" t-as="track" class="media">
-                        <div class="media-body">
-                            <h4 class="media-heading">
-                                <a t-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
-                                <span t-field="track.date"/>
-                                <!-- <small t-if="not track.website_published" class="label label-danger">not published</small> -->
-                            </h4>
-                            <div><span t-esc="html2text(track.description)[0:400]"/>...</div>
-                            <div>
-                                <t t-foreach="track.tag_ids" t-as="tag_id">
-                                    <span class="label label-default" t-field="tag_id.name"/>
-                                </t>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </t>
-    </template>
-
-
-    <template id="track_view">
-        <t t-call="website_event.event_details">
-            <div class="col-md-8">
-                <h2 t-field="track.name"/>
-                <div t-field="track.description"/>
-            </div>
-            <div class="col-md-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4>Informations</h4>
-                    </div>
-                    <div class="panel-body">
-                        <t t-foreach="track.tag_ids" t-as="tag_id">
-                            <span class="label label-default" t-field="tag_id.name"/>
-                        </t>
-                    </div>
-                    <div class="panel-body">
-                        <b>Responsible</b><br/>
-                        <span t-field="track.user_id"/><br/>
-                        <b>Speakers</b><br/>
-                        <span t-field="track.speaker_ids"/><br/>
-                        <b>Date</b><br/>
-                        <span t-field="track.date"/><br/>
-                        <b>Duration</b><br/>
-                        <span t-field="track.duration"/><br/>
-                        <b>Location</b><br/>
-                        <span t-field="track.location_id"/><br/>
-                        <b>Stage</b><br/>
-                        <span t-field="track.stage_id"/><br/>
-                    </div>
+                </div>
+                <div class="panel-body">
+                    <b>Responsible</b><br/>
+                    <span t-field="track.user_id"/><br/>
+                    <b>Speakers</b><br/>
+                    <span t-field="track.speaker_ids"/><br/>
+                    <b>Date</b><br/>
+                    <span t-field="track.date"/><br/>
+                    <b>Duration</b><br/>
+                    <span t-field="track.duration"/><br/>
+                    <b>Location</b><br/>
+                    <span t-field="track.location_id"/><br/>
+                    <b>Stage</b><br/>
+                    <span t-field="track.stage_id"/><br/>
                 </div>
             </div>
-        </t>
-    </template>
+        </div>
+    </t>
+</template>
 
 
-    <template id="event_track_proposal">
-        <t t-call="website_event.layout">
-            <div class="oe_structure"/>
-            <div class="container">
-                <section data-snippet-id="title">
-                    <h1 class="text-center mb0">Call for Proposals</h1>
-                    <h2 class="text-center text-muted mb32" t-esc="event.name"></h2>
-                </section>
-                <section id="forms" t-if="not event.show_track_proposal">
-                    <h1>Proposals are closed!</h1>
-                    <p>
-                        This event does not accept proposals.
-                    </p>
-                </section>
-                <section class="row">
-                    <div class="col-md-7">
-                        <div class="oe_structure">
-                            <section data-snippet-id="text">
-                                <h3 class="page-header mt16">
-                                    Introduction
-                                </h3>
-                                <p>
-                                    We will accept a broad range of
-                                    presentations, from reports on academic and
-                                    commercial projects to tutorials and case
-                                    studies. As long as the presentation is
-                                    interesting and potentially useful to the
-                                    audience, it will be considered for
-                                    inclusion in the programme.
-                                </p>
-                            </section>
-                            <section data-snippet-id="text">
-                                <h3 class="page-header">Application</h3>
-                                <p>
-                                    Fill this form to propose your talk.
+<template id="event_track_proposal">
+    <t t-call="website_event.layout">
+        <div class="oe_structure"/>
+        <div class="container">
+            <section data-snippet-id="title">
+                <h1 class="text-center mb0">Call for Proposals</h1>
+                <h2 class="text-center text-muted mb32" t-esc="event.name"></h2>
+            </section>
+            <section id="forms" t-if="not event.show_track_proposal">
+                <h1>Proposals are closed!</h1>
+                <p>
+                    This event does not accept proposals.
+                </p>
+            </section>
+            <section class="row">
+                <div class="col-md-7">
+                    <div class="oe_structure">
+                        <section data-snippet-id="text">
+                            <h3 class="page-header mt16">
+                                Introduction
+                            </h3>
+                            <p>
+                                We will accept a broad range of
+                                presentations, from reports on academic and
+                                commercial projects to tutorials and case
+                                studies. As long as the presentation is
+                                interesting and potentially useful to the
+                                audience, it will be considered for
+                                inclusion in the programme.
+                            </p>
+                        </section>
+                        <section data-snippet-id="text">
+                            <h3 class="page-header">Application</h3>
+                            <p>
+                                Fill this form to propose your talk.
 
-                                </p>
-                            </section>
-                        </div>
-                        <section id="forms" t-if="event.show_track_proposal">
-                            <form class="form-horizontal mt32" action="/event/#{event.id}/track_proposal/success" method="post" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <label class="col-md-3 col-sm-4 control-label" for="partner_name">Speaker Name</label>
-                                    <div class="col-md-7 col-sm-8">
-                                        <input type="text" class="form-control" name="partner_name" required="True" />
-                                    </div>
+                            </p>
+                        </section>
+                    </div>
+                    <section id="forms" t-if="event.show_track_proposal">
+                        <form class="form-horizontal mt32" action="/event/#{event.id}/track_proposal/success" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="partner_name">Speaker Name</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <input type="text" class="form-control" name="partner_name" required="True" />
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-sm-4 control-label" for="email_from">Your Email</label>
-                                    <div class="col-md-7 col-sm-8">
-                                        <input type="email" class="form-control" name="email_from" required="True" />
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="email_from">Your Email</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <input type="email" class="form-control" name="email_from" required="True" />
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-sm-4 control-label" for="phone">Your Phone</label>
-                                    <div class="col-md-7 col-sm-8">
-                                        <input type="text" class="form-control" name="phone" required="True" />
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="phone">Your Phone</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <input type="text" class="form-control" name="phone" required="True" />
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-sm-4 control-label" for="phone">Tags</label>
-                                    <div class="col-md-7 col-sm-8">
-                                        <div class="row">
-                                            <div class="col-sm-4" t-foreach="event.allowed_track_tag_ids" t-as="tag">
-                                                <input type="checkbox" t-att-value="tag.id" name="tags"/>
-                                                <t t-esc="tag.name"/>
-                                            </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="phone">Tags</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <div class="row">
+                                        <div class="col-sm-4" t-foreach="event.allowed_track_tag_ids" t-as="tag">
+                                            <input type="checkbox" t-att-value="tag.id" name="tags"/>
+                                            <t t-esc="tag.name"/>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-sm-4 control-label" for="phone">Speaker Biography</label>
-                                    <div class="col-md-7 col-sm-8">
-                                        <textarea  class="form-control" name="biography" style="min-height: 120px"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-3 col-sm-4 control-label" for="description">Talk Introduction</label>
-                                    <div class="col-md-7 col-sm-8">
-                                        <textarea  class="form-control" name="description" style="min-height: 120px"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                                        <button type="submit" class="btn btn-primary">Submit Proposal</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </section>
-                        <div class="oe_structure"/>
-                    </div><div class="col-md-4 col-md-offset-1">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4>Talks Types</h4>
                             </div>
-                            <div class="panel-body">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <strong>Regular Talks</strong>. These are standard talks with slides,
-                                        alocated in slots of 30 minutes.
-                                    </li><li>
-                                        <strong>Lightning Talks</strong>. These are 10 minutes talks on many
-                                        different topics. Most topics are accepted in lightning talks.
-                                    </li>
-                                </ul>
+                            <div class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="phone">Speaker Biography</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <textarea  class="form-control" name="biography" style="min-height: 120px"/>
+                                </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="description">Talk Introduction</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <textarea  class="form-control" name="description" style="min-height: 120px"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                                    <button type="submit" class="btn btn-primary">Submit Proposal</button>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+                    <div class="oe_structure"/>
+                </div><div class="col-md-4 col-md-offset-1">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Talks Types</h4>
                         </div>
-
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4>Submission Agreement</h4>
-                            </div>
-                            <div class="panel-body">
-                                <p>
-                                We require speakers to accept an agreement in which they commit to:
-                                </p>
-                                <ul class="list-unstyled">
-                                    <li>
-                                        Timely release of presentation material (slides),
-                                        for publishing on our website.
-                                    </li><li>
-                                        Allow video and audio recording of their
-                                        presentation, for publishing on our website.
-                                    </li>
-                                </ul>
-                            </div>
+                        <div class="panel-body">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <strong>Regular Talks</strong>. These are standard talks with slides,
+                                    alocated in slots of 30 minutes.
+                                </li><li>
+                                    <strong>Lightning Talks</strong>. These are 10 minutes talks on many
+                                    different topics. Most topics are accepted in lightning talks.
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </section>
-
-            </div>
-            <div class="oe_structure"/>
-        </t>
-    </template>
 
 
-    <template id="event_track_proposal_success">
-        <t t-call="website_event.event_details">
-            <div class="col-md-8">
-                Thanks
-            </div>
-            <div class="col-md-4"></div>
-        </t>
-    </template>
- </data>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Submission Agreement</h4>
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                            We require speakers to accept an agreement in which they commit to:
+                            </p>
+                            <ul class="list-unstyled">
+                                <li>
+                                    Timely release of presentation material (slides),
+                                    for publishing on our website.
+                                </li><li>
+                                    Allow video and audio recording of their
+                                    presentation, for publishing on our website.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        <div class="oe_structure"/>
+    </t>
+</template>
+
+
+<template id="event_track_proposal_success">
+    <t t-call="website_event.event_details">
+        <div class="col-md-8">
+            Thanks
+        </div>
+        <div class="col-md-4"></div>
+    </t>
+</template>
+</data>
 </openerp>
