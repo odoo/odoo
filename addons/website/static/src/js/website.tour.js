@@ -217,28 +217,54 @@
         },
     });
 
-    var TestConsole = website.TestConsole = {
+    var TestConsole = openerp.Class.extend({
         tests: [],
+        editor: null,
+        init: function (editor) {
+            if (!editor) {
+                throw new Error("Editor cannot be null or undefined");
+            }
+            this.editor = editor;
+        },
         test: function (id) {
             return _.find(this.tests, function (tour) {
                return tour.id === id;
             });
         },
-        dragAndDropSnippet: function (snippetId) {
-            var selector = '#oe_snippets div.oe_snippet[data-snippet-id="'+snippetId+'"] .oe_snippet_thumbnail';
-            var $thumbnail = $(selector).first();
-            var thumbnailPosition = $thumbnail.position();
-            $thumbnail.trigger($.Event("mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
-            $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top+500 }));
-            var $dropZone = $(".oe_drop_zone").first();
-            var dropPosition = $dropZone.position();
-            $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
+        snippetSelector: function (snippetId) {
+            return '#oe_snippets div.oe_snippet[data-snippet-id="'+snippetId+'"] .oe_snippet_thumbnail';
         },
-    };
+        snippetThumbnail: function (snippetId) {
+            return $(this.snippetSelector(snippetId)).first();
+        },
+        dragAndDropSnippet: function (snippetId) {
+            function actualDragAndDrop ($thumbnail) {
+                var thumbnailPosition = $thumbnail.position();
+                $thumbnail.trigger($.Event("mousedown", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top }));
+                $thumbnail.trigger($.Event("mousemove", { which: 1, pageX: thumbnailPosition.left, pageY: thumbnailPosition.top+500 }));
+                var $dropZone = $(".oe_drop_zone").first();
+                var dropPosition = $dropZone.position();
+                $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
+            }
+            if (this.snippetThumbnail(snippetId).length === 0) {
+                this.editor.on('rte:ready', this, function () {
+                    actualDragAndDrop(this.snippetThumbnail(snippetId));
+                });
+            } else {
+                actualDragAndDrop(this.snippetThumbnail(snippetId));
+            }
+        },
+    });
 
     website.EditorBar.include({
         tours: [],
+        init: function () {
+            var result = this._super();
+            website.TestConsole = new TestConsole(this);
+            return result;
+        },
         start: function () {
+
             $('.tour-backdrop').click(function (e) {
                 e.stopImmediatePropagation();
                 e.preventDefault();
@@ -288,7 +314,7 @@
                         });
                         var $element = $(step.element);
                         if (step.snippet && step.trigger === 'drag') {
-                            TestConsole.dragAndDropSnippet(step.snippet);
+                            website.TestConsole.dragAndDropSnippet(step.snippet);
                         } else if (step.trigger.id === 'change') {
                             var currentValue = $element.val();
                             var options = $element[0].options;
@@ -322,7 +348,7 @@
                     window.localStorage.removeItem(testId);
                 },
             };
-            TestConsole.tests.push(test);
+            website.TestConsole.tests.push(test);
             if (window.localStorage.getItem(testId)) {
                 test.run();
             }
