@@ -147,7 +147,7 @@
         },
         resume: function () {
             // Override if necessary
-            return !this.ended();
+            return this.tourStorage.getItem(this.id+'_current_step') && !this.ended();
         },
         trigger: function (url) {
             // Override if necessary

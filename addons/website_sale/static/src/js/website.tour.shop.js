@@ -140,7 +140,8 @@
                     stepId: 'congratulations',
                     title: "Congratulations",
                     content: "Congratulations! You just created and published your first product.",
-                    template: self.popover({ end: "Ok" }),
+                    template: self.popover({ end: "Close Tutorial" }),
+                    backdrop: true,
                 },
             ];
             return this._super();
