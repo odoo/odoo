@@ -5407,6 +5407,11 @@ class BaseModel(object):
         """ Return the 'id' of record `self` or ``False``. """
         return bool(self._ids) and self._ids[0]
 
+    # backward-compatibility with former browse records
+    _cr = property(lambda self: self._scope.cr)
+    _uid = property(lambda self: self._scope.uid)
+    _context = property(lambda self: self._scope.context)
+
     #
     # Conversion methods
     #
