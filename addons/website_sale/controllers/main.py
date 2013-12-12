@@ -98,12 +98,12 @@ class table_compute(object):
         for col in range(len(rows)):
             cols = rows[col].items()
             cols.sort()
-            rows[col] = filter(bool, map(lambda x: x[1], cols))
+            rows[col] = map(lambda x: x[1], cols)
         return filter(bool, rows)
 
 class Ecommerce(http.Controller):
 
-    _order = 'website_sequence desc, website_published desc'
+    _order = 'website_published desc, website_sequence desc'
 
     def get_attribute_ids(self):
         attributes_obj = request.registry.get('product.attribute')
