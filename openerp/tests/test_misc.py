@@ -40,7 +40,6 @@ class test_countingstream(unittest2.TestCase):
         self.assertIsNone(next(s, None))
         self.assertEqual(s.index, 0)
 
-lname, _ = locale.getdefaultlocale()
 class TestPosixToBabel(unittest2.TestCase):
     def setUp(self):
         super(TestPosixToBabel, self).setUp()
@@ -49,10 +48,11 @@ class TestPosixToBabel(unittest2.TestCase):
     def assert_eq(self, fmt, d=None):
         if d is None: d = self.d
 
-        ldml_format = misc.posix_to_ldml(fmt, locale=babel.Locale.parse(lname))
+        locale = babel.Locale.default('LC_TIME')
+        ldml_format = misc.posix_to_ldml(fmt, locale=locale)
         self.assertEqual(
             d.strftime(fmt),
-            babel.dates.format_datetime(d, format=ldml_format),
+            babel.dates.format_datetime(d, format=ldml_format, locale=locale),
             "%r resulted in a different result than %r for %s" % (
                 ldml_format, fmt, d))
 
