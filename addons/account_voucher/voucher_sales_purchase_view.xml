@@ -285,7 +285,7 @@
                                     <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
                                 </group>
                                 <group>
-                                    <field name="account_id" domain="[('type','=','other')]" attrs="{'invisible': [('partner_id','!=', False)]}"/>
+                                    <field name="account_id" domain="[('type', 'in', ['liquidity', 'payable'])]" attrs="{'invisible': [('partner_id', '!=', False)]}"/>
                                 </group>
                             </group>
                         </page>
