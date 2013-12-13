@@ -44,7 +44,7 @@ tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "if
 tags_to_remove = ['html', 'body', 'font']
 
 # allow new semantic HTML5 tags
-allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure'.split())
+allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split())
 safe_attrs = clean.defs.safe_attrs | frozenset(['style'])
 
 
