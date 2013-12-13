@@ -141,14 +141,15 @@ class stock_return_picking(osv.osv_memory):
          @return: A dictionary which of fields with values.
         """
         new_picking_id, pick_type_id = self._create_returns(cr, uid, ids, context=context)
+        # Override the context to disable all the potential filters that could have been set previously
         ctx = {
-               'default_picking_type_id': pick_type_id,
-               # Probably a more beautiful way to do that ??? QDP ? (feedback please)
-               'search_default_draft': 0,
-               'search_default_assigned': 0,
-               'search_default_confirmed': 0,
-               'search_default_ready': 0,
-               'search_default_late': 0,
+               'search_default_picking_type_id': pick_type_id,
+               'search_default_draft': False,
+               'search_default_assigned': False,
+               'search_default_confirmed': False,
+               'search_default_ready': False,
+               'search_default_late': False,
+               'search_default_available': False,
         }
         return {
             'domain': "[('id', 'in', [" + str(new_picking_id) + "])]",
@@ -157,7 +158,7 @@ class stock_return_picking(osv.osv_memory):
             'view_mode': 'tree,form',
             'res_model': 'stock.picking',
             'type': 'ir.actions.act_window',
-            'context': ctx,  # TODO: fix a bug here: the context is not the given one, but the one from the initial action (still searching on old picking type when the new picking type can be different!)
+            'context': ctx,
         }
 
 
