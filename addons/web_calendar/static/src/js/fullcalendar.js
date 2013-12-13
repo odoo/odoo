@@ -385,7 +385,7 @@ openerp.web_calendar = function(instance) {
             if (this.color_map[key]) {
                 return this.color_map[key];
             }
-            var index = ((_.keys(this.color_map).length + 4) % 24) + 1;
+            var index = (((_.keys(this.color_map).length + 1) * 5) % 24) + 1;
             this.color_map[key] = index;
             return index;
         },
@@ -504,6 +504,8 @@ openerp.web_calendar = function(instance) {
                 }
                 the_title = the_title.replace(/&/g,'&amp;').replace(/</g,'&lt;'); //.replace(/>/g,'&gt;');
                 
+                the_title_avatar = '';
+                
                 if (typeof this.attendee_people !== "undefined") {
                     var MAX_ATTENDEES = 3;
                     var attendee_showed = 0;
@@ -514,7 +516,7 @@ openerp.web_calendar = function(instance) {
                             attendees.push(the_attendee_people);
                             attendee_showed += 1;
                             if (attendee_showed<= MAX_ATTENDEES) {
-                                the_title += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head" width="20px" height="20px" src="/web/binary/image?model=res.partner&field=image_small&id=' + the_attendee_people + '"></img>';                                
+                                the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head" width="20px" height="20px" src="/web/binary/image?model=res.partner&field=image_small&id=' + the_attendee_people + '"></img>';                                
                             }
                             else {
                                 attendee_other += self.all_attendees[the_attendee_people] +", ";
@@ -522,8 +524,9 @@ openerp.web_calendar = function(instance) {
                         }
                     );
                     if (attendee_other.length>2) {
-                        the_title += '<span class="attendee_head" title="' + attendee_other.slice(0, -2) + '">+</span>';                    
+                        the_title_avatar += '<span class="attendee_head" title="' + attendee_other.slice(0, -2) + '">+</span>';                    
                     }
+                    the_title = the_title_avatar + the_title;
                 }                
             }
             
