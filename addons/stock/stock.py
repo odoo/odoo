@@ -1428,7 +1428,7 @@ class stock_move(osv.osv):
         for move in moves:
             if not move.move_dest_id:
                 domain = [('location_from_id', '=', move.location_dest_id.id)]
-                if move.warehouse_id: #TODO checker ici pourquoi move.warehouse_id est nul dans le cas ou je l'encode a la main
+                if move.warehouse_id:
                     domain += ['|', ('warehouse_id', '=', move.warehouse_id.id), ('warehouse_id', '=', False)]
                 #priority goes to the route defined on the product and product category
                 route_ids = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
@@ -1460,7 +1460,8 @@ class stock_move(osv.osv):
         return self.pool.get("procurement.order").create(cr, uid, self._prepare_procurement_from_move(cr, uid, move, context=context))
 
     def write(self, cr, uid, ids, vals, context=None):
-        procurement_obj = self.pool.get('procurement.order')
+        if context is None:
+            context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         # Check that we do not modify a stock.move which is done
@@ -1470,7 +1471,13 @@ class stock_move(osv.osv):
                 if frozen_fields.intersection(vals):
                     raise osv.except_osv(_('Operation Forbidden!'),
                         _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
-        #propagation of expected date: 
+        propagated_changes_dict = {}
+        #propagation of quantity change
+        if vals.get('product_uom_qty'):
+            propagated_changes_dict['product_uom_qty'] = vals['product_uom_qty']
+        if vals.get('product_uom_id'):
+            propagated_changes_dict['product_uom_id'] = vals['product_uom_id']
+        #propagation of expected date:
         propagated_date_field = False
         if vals.get('date_expected'):
             #propagate any manual change of the expected date
@@ -1478,20 +1485,25 @@ class stock_move(osv.osv):
         elif (vals.get('state', '') == 'done' and vals.get('date')):
             #propagate also any delta observed when setting the move as done
             propagated_date_field = 'date'
-        if propagated_date_field:
+
+        if not context.get('do_not_propagate', False) and (propagated_date_field or propagated_changes_dict):
+            #any propagation is (maybe) needed
             for move in self.browse(cr, uid, ids, context=context):
-                current_date = datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
-                new_date = datetime.strptime(vals.get(propagated_date_field), DEFAULT_SERVER_DATETIME_FORMAT)
-                delta = new_date - current_date
-                if abs(delta.days) >= move.company_id.propagation_minimum_delta:
-                    if move.procurement_id:
-                        #simply write the same date on the procurement order linked, where the propagation is done
-                        procurement_obj.write(cr, uid, [move.procurement_id.id], {'date_planned': vals.get(propagated_date_field)}, context=context)
-                    elif move.move_dest_id and move.propagate:
-                        #for pushed moves, propagate by recursive call of write()
-                        old_move_date = datetime.strptime(move.move_dest_id.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
-                        new_move_date = (old_move_date + relativedelta.relativedelta(days=delta.days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                        self.write(cr, uid, [move.move_dest_id.id], {'date_expected': new_move_date}, context=context)
+                if move.move_dest_id and move.propagate:
+                    if 'date_expected' in propagated_changes_dict:
+                        propagated_changes_dict.pop('date_expected')
+                    if propagated_date_field:
+                        current_date = datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
+                        new_date = datetime.strptime(vals.get(propagated_date_field), DEFAULT_SERVER_DATETIME_FORMAT)
+                        delta = new_date - current_date
+                        if abs(delta.days) >= move.company_id.propagation_minimum_delta:
+                            old_move_date = datetime.strptime(move.move_dest_id.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
+                            new_move_date = (old_move_date + relativedelta.relativedelta(days=delta.days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                            propagated_changes_dict['date_expected'] = new_move_date
+                    #For pushed moves as well as for pulled moves, propagate by recursive call of write().
+                    #Note that, for pulled moves we intentionally don't propagate on the procurement.
+                    if propagated_changes_dict:
+                        self.write(cr, uid, [move.move_dest_id.id], propagated_changes_dict, context=context)
         return super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
     def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom, product_uos):
@@ -1930,16 +1942,19 @@ class stock_move(osv.osv):
             'product_uom_qty': uom_qty,
             'product_uos_qty': uos_qty,
             'state': move.state,
+            'procure_method': 'make_to_stock',
             'move_dest_id': False,
             'reserved_quant_ids': []
         }
         new_move = self.copy(cr, uid, move.id, defaults)
 
+        ctx = context.copy()
+        ctx['do_not_propagate'] = True
         self.write(cr, uid, [move.id], {
             'product_uom_qty': move.product_uom_qty - uom_qty,
             'product_uos_qty': move.product_uos_qty - uos_qty,
             #'reserved_quant_ids': [(6,0,[])]  SHOULD NOT CHANGE as it has been reserved already
-        }, context=context)
+        }, context=ctx)
 
         if move.move_dest_id and move.propagate:
             new_move_prop = self.split(cr, uid, move.move_dest_id, qty, context=context)
@@ -2506,7 +2521,7 @@ class stock_warehouse(osv.osv):
             pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
-        #create MTS route and pull rules for delivery a specific route MTO to be set on the product
+        #create MTS route and pull rules for delivery and a specific route MTO to be set on the product
         route_name, values = routes_dict[warehouse.delivery_steps]
         route_vals = self._get_reception_delivery_route(cr, uid, warehouse, route_name, context=context)
         #create the route and its pull rules
@@ -2747,7 +2762,7 @@ class stock_warehouse(osv.osv):
             'crossdock': (_('Cross-Dock'), [(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
             'ship_only': (_('Ship Only'), [(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id.id)]),
             'pick_ship': (_('Pick + Ship'), [(warehouse.lot_stock_id, warehouse.wh_output_stock_loc_id, warehouse.pick_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
-            'pick_pack_ship': (_('Pick + Pack + Ship'), [(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.int_type_id.id), (warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
+            'pick_pack_ship': (_('Pick + Pack + Ship'), [(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id.id), (warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
         }
 
     def _handle_renaming(self, cr, uid, warehouse, name, context=None):
@@ -2775,7 +2790,6 @@ class stock_warehouse(osv.osv):
             ids = [ids]
         seq_obj = self.pool.get('ir.sequence')
         route_obj = self.pool.get('stock.location.route')
-        warehouse_obj = self.pool.get('stock.warehouse')
 
         context_with_inactive = context.copy()
         context_with_inactive['active_test'] = False
@@ -2804,7 +2818,7 @@ class stock_warehouse(osv.osv):
                     old_ids = set([wh.id for wh in warehouse.resupply_wh_ids])
                     to_add_wh_ids = new_ids - old_ids
                     if to_add_wh_ids:
-                        supplier_warehouses = warehouse_obj.browse(cr, uid, list(to_add_wh_ids), context=context)
+                        supplier_warehouses = self.browse(cr, uid, list(to_add_wh_ids), context=context)
                         self._create_resupply_routes(cr, uid, warehouse, supplier_warehouses, warehouse.default_resupply_wh_id, context=context)
                     to_remove_wh_ids = old_ids - new_ids
                     if to_remove_wh_ids:

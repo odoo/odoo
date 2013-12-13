@@ -102,22 +102,6 @@ class procurement_order(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', help="Warehouse to consider for the route selection"),
     }
 
-    def write(self, cr, uid, ids, vals, context=None):
-        move_obj = self.pool.get('stock.move')
-        if vals.get('date_planned'):
-            #propagation of a change in date_planned
-            for procurement in self.browse(cr, uid, ids, context=context):
-                if procurement.move_dest_id and procurement.move_dest_id.propagate:
-                    current_date = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-                    new_date = datetime.strptime(vals.get('date_planned'), '%Y-%m-%d %H:%M:%S')
-                    delta = new_date - current_date
-                    if abs(delta.days) >= procurement.company_id.propagation_minimum_delta:
-                        #propagate the same delta in dates on the move that created the procurement
-                        old_move_date = datetime.strptime(procurement.move_dest_id.date_expected, '%Y-%m-%d %H:%M:%S')
-                        new_move_date = (old_move_date + relativedelta(days=delta.days or 0)).strftime('%Y-%m-%d %H:%M:%S')
-                        move_obj.write(cr, uid, [procurement.move_dest_id.id], {'date_expected': new_move_date}, context=context)
-        return super(procurement_order, self).write(cr, uid, ids, vals, context=context)
-
     def propagate_cancel(self, cr, uid, procurement, context=None):
         if procurement.rule_id.action == 'move' and procurement.move_ids:
             self.pool.get('stock.move').action_cancel(cr, uid, [m.id for m in procurement.move_ids], context=context)
