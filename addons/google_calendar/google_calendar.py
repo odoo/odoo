@@ -40,14 +40,10 @@ from openerp.osv import osv
 
 
 class google_calendar(osv.osv):
-    _name = 'google.calendar'
-    
     STR_SERVICE = 'calendar'
+    _name = 'google.%s' % STR_SERVICE
     
-#################################        
-##     DISCUSS WITH GMAIL      ##
-#################################
-    
+
     def generate_data(self, cr, uid, event, context=None):
         if event.allday:
             start_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.date, tools.DEFAULT_SERVER_DATETIME_FORMAT) , context=context).isoformat('T').split('T')[0]
@@ -98,8 +94,7 @@ class google_calendar(osv.osv):
         data_json = simplejson.dumps(data)
         
         return gs_pool._do_request(cr, uid, url, data_json, headers, type='POST', context=context)
-    
-        
+            
     def delete_an_event(self, cr, uid,event_id, context=None):
         gs_pool = self.pool.get('google.service')
         
@@ -107,11 +102,9 @@ class google_calendar(osv.osv):
                  'access_token' : self.get_token(cr,uid,context)
                 }
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary',event_id)
-        
-        response = gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
-        return response
+
+        return gs_pool._do_request(cr, uid, url, params, headers, type='DELETE', context=context)
         
     def get_event_dict(self,cr,uid,token=False,nextPageToken=False,context=None):
         if not token:
@@ -122,30 +115,21 @@ class google_calendar(osv.osv):
         params = {
                  'fields': 'items,nextPageToken',
                  'access_token' : token,
-#                 'orderBy' : 'id', #Allow to create the main recurrence event, before instance of it ! 
+#                 'orderBy' : 'id', #Allow to create the main recurrence event, before instance of it ! DOESNT WORK ACTUALLY ON API GMAIL
                 }
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             
         url = "/calendar/v3/calendars/%s/events" % 'primary' #?fields=%s&access_token=%s" % ('primary',urllib.quote('items,nextPageToken'), token)
         if nextPageToken:
             params['pageToken'] = nextPageToken
-        
-        
+                
         content = gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)    
         
         google_events_dict = {}
-        
-        print content['items']
-        
                 
         for google_event in content['items']:
             google_events_dict[google_event['id']] = google_event
-            #if google_event.get('updated',False):
-#                 if withInstance:
-#                     for instance in self.get_instance_event(cr,uid,event_id,context):
-#                         google_events_dict[instance['id']] = instance
-#                 else:     
-                
+
         if content.get('nextPageToken', False):
             google_events_dict.update(self.get_event_dict(cr,uid,token,content['nextPageToken'],context=context))
         return google_events_dict    
@@ -153,20 +137,15 @@ class google_calendar(osv.osv):
     def update_to_google(self, cr, uid, oe_event, google_event, context):
         crm_meeting = self.pool['crm.meeting']
         gs_pool = self.pool.get('google.service')
-
         
         url = "/calendar/v3/calendars/%s/events/%s?fields=%s&access_token=%s" % ('primary', google_event['id'],'id,updated', self.get_token(cr,uid,context))
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data = self.generate_data(cr,uid ,oe_event, context)
         data['sequence'] = google_event.get('sequence', 0)
         data_json = simplejson.dumps(data)
-        
-        
+       
         content = gs_pool._do_request(cr, uid, url, data_json, headers, type='PATCH', context=context)
-        
-        #except urllib2.HTTPError,e:
-        #    error_message = json.loads(e.read())
-            
+           
         update_date = datetime.strptime(content['updated'],"%Y-%m-%dT%H:%M:%S.%fz")
         crm_meeting.write(cr, uid, [oe_event.id], {'oe_update_date':update_date})
              
@@ -199,11 +178,7 @@ class google_calendar(osv.osv):
         data['sequence'] = self.get_sequence(cr, uid, instance_id, context)
         
         data_json = simplejson.dumps(data)
-        response = gs_pool._do_request(cr, uid, url, data_json, headers, type='PUT', context=context)
-
-        #TODO, il http fail, no event, do DELETE ! ?
-                
-        return response
+        return gs_pool._do_request(cr, uid, url, data_json, headers, type='PUT', context=context)
     
     def update_from_google(self, cr, uid, event, single_event_dict, type, context):
         if context is None:
@@ -268,9 +243,6 @@ class google_calendar(osv.osv):
             'attendee_ids': attendee_record,
             'partner_ids': list(set(partner_record)),
 
-#             'date': date,
-#             'date_deadline': date_deadline,
-#             'allday': allday,
             'name': single_event_dict.get('summary','Event'),
             'description': single_event_dict.get('description',False),
             'location':single_event_dict.get('location',False),
@@ -286,11 +258,11 @@ class google_calendar(osv.osv):
         if type == "write":
             return crm_meeting.write(cr, uid, event['id'], result, context=context)
         elif type == "copy":
-            #result['write_type'] = "copy"
             result['recurrence'] = True
             return crm_meeting.write(cr, uid, [event['id']], result, context=context)
         elif type == "create":
             return crm_meeting.create(cr, uid, result, context=context)        
+
 #################################        
 ##   MANAGE SYNCHRO TO GMAIL   ##
 #################################        
@@ -324,7 +296,7 @@ class google_calendar(osv.osv):
         new_events_ids = crm_meeting.search(cr, uid,[('partner_ids', 'in', myPartnerID),('google_internal_event_id', '=', False),'|',('recurrent_id', '=', 0),('recurrent_id', '=', False)], context=context_norecurrent)
 
         for event in crm_meeting.browse(cr, uid, list(set(new_events_ids)), context):
-            #TODO rpelace it by a batch
+            #TODO replace it by a batch
             response = self.create_an_event(cr,uid,event,context=context)
             update_date = datetime.strptime(response['updated'],"%Y-%m-%dT%H:%M:%S.%fz")
             crm_meeting.write(cr, uid, event.id, {'google_internal_event_id': response['id'], 'oe_update_date':update_date})
@@ -374,9 +346,7 @@ class google_calendar(osv.osv):
                        
         }
     
-    def update_events(self, cr, uid, context):
-
-        
+    def update_events(self, cr, uid, context):        
         crm_meeting = self.pool['crm.meeting']
         user_obj = self.pool['res.users']
         myPartnerID = user_obj.browse(cr,uid,uid,context=context).partner_id.id
@@ -390,7 +360,6 @@ class google_calendar(osv.osv):
         
         # Select all events from OpenERP which have been already synchronized in gmail
         events_ids = crm_meeting.search(cr, uid,[('partner_ids', 'in', myPartnerID),('google_internal_event_id', '!=', False),('oe_update_date','!=', False)],order='google_internal_event_id',context=context_novirtual)        
-        
         
         event_to_synchronize = {}
         for event in crm_meeting.browse(cr, uid, events_ids, context):
@@ -432,18 +401,18 @@ class google_calendar(osv.osv):
             
         
         
-        print " $ Event IN Google "
-        print " $-----------------"
-        for ev in all_event_from_google:
-            print ' $ %s (%s) [%s]' % (all_event_from_google[ev].get('id'), all_event_from_google[ev].get('sequence'),all_event_from_google[ev].get('status'))
-        print " $-----------------"
-        print ""
-        print " $ Event IN OPENERP "
-        print " $------------------"
-        for event in crm_meeting.browse(cr, uid, events_ids, context):
-            print ' $ %s (%s) [%s]' % (event.google_internal_event_id, event.id,event.active)
-        print " $------------------"        
-        
+#         print " $ Event IN Google "
+#         print " $-----------------"
+#         for ev in all_event_from_google:
+#             print ' $ %s (%s) [%s]' % (all_event_from_google[ev].get('id'), all_event_from_google[ev].get('sequence'),all_event_from_google[ev].get('status'))
+#         print " $-----------------"
+#         print ""
+#         print " $ Event IN OPENERP "
+#         print " $------------------"
+#         for event in crm_meeting.browse(cr, uid, events_ids, context):
+#             print ' $ %s (%s) [%s]' % (event.google_internal_event_id, event.id,event.active)
+#         print " $------------------"        
+#         
         
         for base_event in event_to_synchronize:
             for current_event in event_to_synchronize[base_event]:
@@ -492,8 +461,9 @@ class google_calendar(osv.osv):
                         event['td_comment'] = "Both are already deleted"  
                 # New in openERP...  Create on create_events of synchronize function
                 elif event['OE_found'] and not event['GG_found']:
-                    print "### Should never be here !!"
-                    raise("error L 487")
+                    #Has been deleted form gmail
+                    event['td_action'] = 'DELETE'
+                    event['td_comment'] = 'Removed from GOOGLE ?'        
                 elif event['GG_found'] and not event['OE_found']:
                     event['td_source'] = 'GG'
                     if not event['GG_status'] and not event['GG_isInstance']:
@@ -513,24 +483,28 @@ class google_calendar(osv.osv):
                               event['td_action'] = "CREATE"
                               event['td_comment'] = 'New EVENT CREATE from GMAIL'
                                 
-        print " $ Event Merged "
-        print " $-----------------"        
+#         print " $ Event Merged "
+#         print " $-----------------"        
         for base_event in event_to_synchronize:
             print "Base Event : %s " % base_event
             event_to_synchronize[base_event] = sorted(event_to_synchronize[base_event].iteritems(),key=operator.itemgetter(0))
             for current_event in event_to_synchronize[base_event]:
+                cr.commit()
                 event = current_event[1]
-                print "  Real Event  %s (%s)" %  (current_event[0],event['OE_event_id'])
-                print "    Recurrence  OE:%5s vs GG: %5s" % (event['OE_isRecurrence'],event['GG_isRecurrence'])
-                print "    Instance    OE:%5s vs GG: %5s" % (event['OE_isInstance'],event['GG_isInstance'])
-                print "    Update      OE: %10s " % (event['OE_update'])  
-                print "    Update      GG: %10s " % (event['GG_update'])
-                print "    Status      OE:%5s vs GG: %5s" % (event['OE_status'],event['GG_status'])
-                print "    Action     %s" % (event['td_action'])
-                print "    Source     %s" % (event['td_source'])
-                print "    comment    %s" % (event['td_comment'])
+                #############
+                ### DEBUG ###
+                #############                
+#                 print "  Real Event  %s (%s)" %  (current_event[0],event['OE_event_id'])
+#                 print "    Found       OE:%5s vs GG: %5s" % (event['OE_found'],event['GG_found'])
+#                 print "    Recurrence  OE:%5s vs GG: %5s" % (event['OE_isRecurrence'],event['GG_isRecurrence'])
+#                 print "    Instance    OE:%5s vs GG: %5s" % (event['OE_isInstance'],event['GG_isInstance'])
+#                 print "    Update      OE: %10s " % (event['OE_update'])  
+#                 print "    Update      GG: %10s " % (event['GG_update'])
+#                 print "    Status      OE:%5s vs GG: %5s" % (event['OE_status'],event['GG_status'])
+#                 print "    Action     %s" % (event['td_action'])
+#                 print "    Source     %s" % (event['td_source'])
+#                 print "    comment    %s" % (event['td_comment'])
          
-                
                 actToDo = event['td_action']
                 actSrc = event['td_source']
                 if not actToDo:
@@ -570,9 +544,6 @@ class google_calendar(osv.osv):
                                         if event_to_synchronize[base_event][0][1].get('OE_event_id'):                                
                                             parent_oe_id =  event_to_synchronize[base_event][0][1].get('OE_event_id')
                                             crm_meeting.unlink(cr,uid,"%s-%s" % (parent_oe_id,new_google_event_id),unlink_level=1,context=context)
-                                        #else:
-                                            
-                                            #raise "Need to delete !"
                                     
                     elif actToDo == 'DELETE':
                         if actSrc == 'GG':
@@ -580,145 +551,6 @@ class google_calendar(osv.osv):
                         elif  actSrc == 'OE':
                             crm_meeting.unlink(cr,uid,event['OE_event_id'],unlink_level=0,context=context)
         return True
-#             
-#             'oe_event_id' : False,
-#                 'oe_isRecurrence':False,
-#                 'oe_isInstance':False,
-#                 'oe_update':False,
-#                 'oe_status':False,
-#                 
-#                 #GOOGLE                
-#                 'GG_isRecurrence':False,
-#                 'GG_isInstance':False,
-#                 'GG_update':False,
-#                 'GG_status':False,
-#                 
-                
-        
-        #For each Event in MY CALENDAR (ALL has been already create in GMAIL in the past)
-        
-        # WARNING, NEED TO KEEP IDS SORTED !!!
-        # AS THAT, WE THREAT ALWAYS THE PARENT BEFORE THE RECURRENT
-        
-        for event_id in events_ids:
-            event = crm_meeting.browse(cr, uid, event_id, context)
-            cr.commit()
-            
-            # IF I HAVE BEEN DELETED FROM GOOGLE
-            if event.google_internal_event_id not in all_event_from_google:
-                print " __  !! OERP %s (%s) NOT IN google" % (event.google_internal_event_id,event.id) 
-                
-                #If m the parent, we delete all all recurrence
-                if recurrency:
-                    print "Master Event"
-                    #If single i can delete 
-                elif not event.recurrent_id or event.recurrent_id == 0: 
-                    print " __  !! Single Event (%s) has been delete in google" % (event.google_internal_event_id)
-                    ids_deleted = crm_meeting.delete(cr,uid,event.id,context=context)
-                    #ids should be alway single
-                    assert len(ids_deleted)==1,"Warning, recurrent event (%s) deleted as a single event" % event.google_internal_event_id
-                    print "IDS DELETED : ",ids_deleted
-                    for id_deleted in [x for x in ids_deleted if x in events_ids]:
-                        events_ids.remove(id_deleted)
-                #elif recurrency not event.recurrent_id or event.recurrent_id == 0:
-                                            
-                else: # I 'm a recurrence, removed from gmail
-                    print "Unlink me simply ? Where i m passed ?"
-                    raise "Unlink me simply ? Where i m passed ?"
-                    
-                    
-            else:
-                print " __  OERP %s (%s) IN google" % (event.google_internal_event_id,event.id)
-                
-                if event.active == False:
-                    if all_event_from_google[event.google_internal_event_id].get('status')!='cancelled':
-                        print " __  !! Event (%s) has been removed from OPENERP" % (event.google_internal_event_id)
-                        #if len(crm_meeting.get_linked_ids(cr,uid,event.id,show_unactive=False,context=context)) == 1: #IF I'M ALONE
-                        if crm_meeting.count_left_instance(cr,uid,event.id,context=context)==0:    
-                            print "COUNT LEFT INTANCE==="                            
-                            print crm_meeting.count_left_instance(cr,uid,event.id,context=context)
-                            temp = crm_meeting.get_linked_ids(cr,uid,event.id,show_unactive=False,context=context)
-                            print "IDS LINKEND : IM ALONE = ",temp 
-                            print "@1___DELETE FROM GOOGLE THE EVENT AND DELETE FROM OPENERP : ",event.id
-                            print "delete event from google : ",event.google_internal_event_id.split('_')[0]
-                            print "delete event from openerp : ",event.id
-                            
-                            content = self.delete_an_event(cr,uid,event.google_internal_event_id.split('_')[0],context=context_novirtual)
-                            ids_deleted = crm_meeting.delete(cr,uid,event.id,context=context_novirtual)
-                            print "IDS DELETED : ",ids_deleted
-                            for id_deleted in ids_deleted:
-                                if id_deleted in events_ids:
-                                    events_ids.remove(id_deleted)
-                        else :
-                            print "@2___DELETE FROM GOOGLE THE EVENT AND HIDE FROM OPENERP : %s [%s]"  % (event.id,event.google_internal_event_id)
-                            content = self.delete_an_event(cr,uid,event.google_internal_event_id,context=context_novirtual)
-                            crm_meeting.unlink(cr,uid,event.id,unlink_level=0,context=context)
-                        
-                elif all_event_from_google[event.google_internal_event_id].get('status')=='cancelled':
-                    print "@3___HAS BEEN REMOVED IN GOOGLE, HIDE IT IN OPENERP : ",event.id
-                    crm_meeting.unlink(cr,uid,event.id,unlink_level=1,context=context) #Try to delete really in db if not recurrent
-                else:
-                    print "@4___NEED UPDATE : %s " % (event.id)
-                    self.check_and_sync(cr, uid, event, all_event_from_google[event.google_internal_event_id], context)
-                
-                if event.google_internal_event_id in all_new_event_from_google:
-                    del all_new_event_from_google[event.google_internal_event_id]
-                     
-        #FOR EACH EVENT CREATE IN GOOGLE, WE ADD THEM IN OERP
-        print " $ New Event IN Google "
-        print " $-----------------"
-        for ev in all_new_event_from_google:
-            print ' $ %s (%s) [%s]' % (all_new_event_from_google[ev].get('id'), all_new_event_from_google[ev].get('sequence'),all_new_event_from_google[ev].get('status'))
-        print " $-----------------"
-        print ""
-        
-        for new_google_event in all_new_event_from_google.values():
-             if new_google_event.get('status','') == 'cancelled':
-                continue
-#             print "#### IN FOR #########"
-             elif new_google_event.get('recurringEventId',False):
-                 
-                 reccurent_event = crm_meeting.search(cr, uid, [('google_internal_event_id', '=', new_google_event['recurringEventId'])])
-                 
-                 new_google_event_id = new_google_event['id'].split('_')[1]
-                 if 'T' in new_google_event_id:
-                     new_google_event_id = new_google_event_id.replace('T','')[:-1]
-                 else:
-                     new_google_event_id = new_google_event_id + "000000"
-                 print "#############rec_event : ",reccurent_event
-                 print "Google id : %s [%s]" % (new_google_event_id,new_google_event['id'])
-                 for event_id in reccurent_event:
-                     print "EVENT_ID = %s (%s)" % (event_id,event_id.split('-')[1])
-                     
-                     if isinstance(event_id, str) and len(event_id.split('-'))>1 and event_id.split('-')[1] == new_google_event_id:
-                         reccurnt_event_id = int(event_id.split('-')[0].strip())
-                         parent_event = crm_meeting.read(cr,uid, reccurnt_event_id, [], context)
-                         parent_event['id'] = event_id
-                         #recurrent update from google
-                         
-                         if new_google_event.get('status','') == 'cancelled':
-                             print 'unlink -> cancelled in google'
-                             crm_meeting.unlink(cr,uid,event_id,context)
-                         else:    
-                             print "DO COPY?"
-                             self.update_from_google(cr, uid, parent_event, new_google_event, "copy", context)
-                     else:
-                             print "ELSE"
-             elif new_google_event.get('recurrence',False) != False: #If was origin event from recurrent:
-                 print "NEED TO CHECK IF AN INSTANCE ACTIVE..."
-                 if True: #if a instance exist
-                     self.update_from_google(cr, uid, False, new_google_event, "create", context)
- #               
-                 else:
-                     self.delete_an_event(cr, uid, new_google_event, context)
-                     print ''#ELSE WE DELETE THE ORIGIN EVENT
-             else :
-                 print "@and not recurring event"
-                 #new event from google
-                 self.update_from_google(cr, uid, False, new_google_event, "create", context)
- #                 del google_events_dict[new_google_event['id']]
-        return True
-            
 
     def bind_recurring_events_to_google(self, cr, uid,  context):
         crm_meeting = self.pool['crm.meeting']
@@ -743,9 +575,8 @@ class google_calendar(osv.osv):
             
             if new_google_internal_event_id:
                 crm_meeting.write(cr, uid, [event.id], {'google_internal_event_id': new_google_internal_event_id})
-                #Create new event calendar with exlude recuureent_id on RecurringEventID
                 
-                #TODO WARNING, NEED TO CHECK THAT EVENT and ALl insatance NOT DELETE IN GMAIL BEFORE !
+                #TODO WARNING, NEED TO CHECK THAT EVENT and ALL instance NOT DELETE IN GMAIL BEFORE !
                 self.update_recurrent_event_exclu(cr,uid,new_google_internal_event_id,source_record.google_internal_event_id,event,context=context)
             
                 
@@ -769,149 +600,6 @@ class google_calendar(osv.osv):
                 
         content = gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)
         return content.get('sequence',0)
-        
-    def update_events_ORI(self, cr, uid, context):
-        crm_meeting = self.pool['crm.meeting']
-        user_obj = self.pool['res.users']
-        myPartnerID = user_obj.browse(cr,uid,uid,context=context).partner_id.id
-                
-        context_novirtual = context.copy()
-        context_novirtual['virtual_id'] = False
-        
-        all_event_from_google = self.get_event_dict(cr,uid,context=context)
-        all_new_event_from_google = all_event_from_google.copy()
-        
-        events_ids = crm_meeting.search(cr, uid,[('partner_ids', 'in', myPartnerID),('google_internal_event_id', '!=', False),('oe_update_date','!=', False),'|',('active','=',False),('active','=',True)],order='google_internal_event_id',context=context_novirtual) #MORE ACTIVE = False
-
-        print " $ Event IN Google "
-        print " $-----------------"
-        for ev in all_event_from_google:
-            print ' $ %s (%s) [%s]' % (all_event_from_google[ev].get('id'), all_event_from_google[ev].get('sequence'),all_event_from_google[ev].get('status'))
-        print " $-----------------"
-        print ""
-        print " $ Event IN OPENERP "
-        print " $------------------"
-        for event in crm_meeting.browse(cr, uid, events_ids, context):
-            print ' $ %s (%s) [%s]' % (event.google_internal_event_id, event.id,event.active)
-        print " $------------------"        
-        
-        #For each Event in MY CALENDAR (ALL has been already create in GMAIL in the past)
-        
-        # WARNING, NEED TO KEEP IDS SORTED !!!
-        # AS THAT, WE THREAT ALWAYS THE PARENT BEFORE THE RECURRENT
-        
-        for event_id in events_ids:
-            event = crm_meeting.browse(cr, uid, event_id, context)
-            cr.commit()
-            
-            # IF I HAVE BEEN DELETED FROM GOOGLE
-            if event.google_internal_event_id not in all_event_from_google:
-                print " __  !! OERP %s (%s) NOT IN google" % (event.google_internal_event_id,event.id) 
-                
-                #If m the parent, we delete all all recurrence
-                if not event.recurrent_id or event.recurrent_id == 0: 
-                    print " __  !! Master Event (%s) has been deleted has been delete in google" % (event.google_internal_event_id)
-                    ids_deleted = crm_meeting.delete(cr,uid,event.id,context=context)
-                    print "IDS DELETED : ",ids_deleted
-                    for id_deleted in [x for x in ids_deleted if x in events_ids]:
-                        #if id_deleted in events_ids:
-                        events_ids.remove(id_deleted)
-                else: # I 'm and recurrence, removed from gmail
-                    print "Unlink me simply ? Where i m passed ?"
-                    raise "Unlink me simply ? Where i m passed ?"
-                    
-                    
-            else:
-                print " __  OERP %s (%s) IN google" % (event.google_internal_event_id,event.id)
-                
-                if event.active == False:
-                    if all_event_from_google[event.google_internal_event_id].get('status')!='cancelled':
-                        print " __  !! Event (%s) has been removed from OPENERP" % (event.google_internal_event_id)
-                        #if len(crm_meeting.get_linked_ids(cr,uid,event.id,show_unactive=False,context=context)) == 1: #IF I'M ALONE
-                        if crm_meeting.count_left_instance(cr,uid,event.id,context=context)==0:    
-                            print "COUNT LEFT INTANCE==="                            
-                            print crm_meeting.count_left_instance(cr,uid,event.id,context=context)
-                            temp = crm_meeting.get_linked_ids(cr,uid,event.id,show_unactive=False,context=context)
-                            print "IDS LINKEND : IM ALONE = ",temp 
-                            print "@1___DELETE FROM GOOGLE THE EVENT AND DELETE FROM OPENERP : ",event.id
-                            print "delete event from google : ",event.google_internal_event_id.split('_')[0]
-                            print "delete event from openerp : ",event.id
-                            
-                            content = self.delete_an_event(cr,uid,event.google_internal_event_id.split('_')[0],context=context_novirtual)
-                            ids_deleted = crm_meeting.delete(cr,uid,event.id,context=context_novirtual)
-                            print "IDS DELETED : ",ids_deleted
-                            for id_deleted in ids_deleted:
-                                if id_deleted in events_ids:
-                                    events_ids.remove(id_deleted)
-                        else :
-                            print "@2___DELETE FROM GOOGLE THE EVENT AND HIDE FROM OPENERP : %s [%s]"  % (event.id,event.google_internal_event_id)
-                            content = self.delete_an_event(cr,uid,event.google_internal_event_id,context=context_novirtual)
-                            crm_meeting.unlink(cr,uid,event.id,unlink_level=0,context=context)
-                        
-                elif all_event_from_google[event.google_internal_event_id].get('status')=='cancelled':
-                    print "@3___HAS BEEN REMOVED IN GOOGLE, HIDE IT IN OPENERP : ",event.id
-                    crm_meeting.unlink(cr,uid,event.id,unlink_level=1,context=context) #Try to delete really in db if not recurrent
-                else:
-                    print "@4___NEED UPDATE : %s " % (event.id)
-                    self.check_and_sync(cr, uid, event, all_event_from_google[event.google_internal_event_id], context)
-                
-                if event.google_internal_event_id in all_new_event_from_google:
-                    del all_new_event_from_google[event.google_internal_event_id]
-                     
-        #FOR EACH EVENT CREATE IN GOOGLE, WE ADD THEM IN OERP
-        print " $ New Event IN Google "
-        print " $-----------------"
-        for ev in all_new_event_from_google:
-            print ' $ %s (%s) [%s]' % (all_new_event_from_google[ev].get('id'), all_new_event_from_google[ev].get('sequence'),all_new_event_from_google[ev].get('status'))
-        print " $-----------------"
-        print ""
-        
-        for new_google_event in all_new_event_from_google.values():
-             if new_google_event.get('status','') == 'cancelled':
-                continue
-#             print "#### IN FOR #########"
-             elif new_google_event.get('recurringEventId',False):
-                 
-                 reccurent_event = crm_meeting.search(cr, uid, [('google_internal_event_id', '=', new_google_event['recurringEventId'])])
-                 
-                 new_google_event_id = new_google_event['id'].split('_')[1]
-                 if 'T' in new_google_event_id:
-                     new_google_event_id = new_google_event_id.replace('T','')[:-1]
-                 else:
-                     new_google_event_id = new_google_event_id + "000000"
-                 print "#############rec_event : ",reccurent_event
-                 print "Google id : %s [%s]" % (new_google_event_id,new_google_event['id'])
-                 for event_id in reccurent_event:
-                     print "EVENT_ID = %s (%s)" % (event_id,event_id.split('-')[1])
-                     
-                     if isinstance(event_id, str) and len(event_id.split('-'))>1 and event_id.split('-')[1] == new_google_event_id:
-                         reccurnt_event_id = int(event_id.split('-')[0].strip())
-                         parent_event = crm_meeting.read(cr,uid, reccurnt_event_id, [], context)
-                         parent_event['id'] = event_id
-                         #recurrent update from google
-                         
-                         if new_google_event.get('status','') == 'cancelled':
-                             print 'unlink -> cancelled in google'
-                             crm_meeting.unlink(cr,uid,event_id,context)
-                         else:    
-                             print "DO COPY?"
-                             self.update_from_google(cr, uid, parent_event, new_google_event, "copy", context)
-                     else:
-                             print "ELSE"
-             elif new_google_event.get('recurrence',False) != False: #If was origin event from recurrent:
-                 print "NEED TO CHECK IF AN INSTANCE ACTIVE..."
-                 if True: #if a instance exist
-                     self.update_from_google(cr, uid, False, new_google_event, "create", context)
- #               
-                 else:
-                     self.delete_an_event(cr, uid, new_google_event, context)
-                     print ''#ELSE WE DELETE THE ORIGIN EVENT
-             else :
-                 print "@and not recurring event"
-                 #new event from google
-                 self.update_from_google(cr, uid, False, new_google_event, "create", context)
- #                 del google_events_dict[new_google_event['id']]
-        return True
     
 #################################        
 ##  MANAGE CONNEXION TO GMAIL  ##
@@ -965,6 +653,8 @@ class google_calendar(osv.osv):
         vals['google_%s_token' % self.STR_SERVICE] = all_token.get('access_token')           
         self.pool.get('res.users').write(cr,uid,uid,vals,context=context)
          
+         
+         
 class res_users(osv.osv): 
     _inherit = 'res.users'
     
@@ -973,13 +663,6 @@ class res_users(osv.osv):
         'google_calendar_token': fields.char('User token'), 
         'google_calendar_token_validity': fields.datetime('Token Validity'),       
      }
-        
-#     def get_cal_token_info(self, cr, uid, partner_id=False, context=None):
-#         if partner_id:
-#             user = self.pool.get('res.partner').browse(cr,uid,partner_id,context=context).user_id
-#         else:
-#             user = self.pool.get('res.users').browse(cr,uid,uid,context=context)
-#         return dict(authcode=user.google_cal_authcode, token=user.google_cal_token, validity=user.google_cal_token_validity,)
 
 
 class crm_meeting(osv.osv):
@@ -1013,6 +696,7 @@ class crm_meeting(osv.osv):
 # If attendees are updated, we need to specify that next synchro need an action    
 class calendar_attendee(osv.osv):
     _inherit = 'calendar.attendee'
+    
     
     def write(self, cr, uid, ids, vals, context=None):
         for id in ids:
