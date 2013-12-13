@@ -39,10 +39,6 @@ class sale_order(osv.osv):
         },
     }
 
-    # Hook for website_sale to inherit (website_sale_delivery)
-    def _get_website_data(self, cr, uid, order, context):
-        return {}
-
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
