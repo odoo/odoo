@@ -304,6 +304,7 @@ class sale_order(osv.osv):
                     or line.product_uom.id,
             'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
             'procure_method': line.type,
+            'property_ids': [(6, 0, [l.id for l in line.property_ids])],
             'move_id': move_id,
             'company_id': order.company_id.id,
             'note': line.name,
