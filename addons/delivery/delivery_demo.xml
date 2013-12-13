@@ -91,5 +91,11 @@
             <field eval="0" name="list_price"/>
             <field eval="0" name="standard_price"/>
         </record>
+
+        <record forcecreate="True" id="property_delivery_carrier" model="ir.property">
+            <field name="name">property_delivery_carrier</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier')]"/>
+            <field name="value" eval="'delivery.carrier,'+str(ref('normal_delivery_carrier'))"/>
+        </record>
     </data>
 </openerp>
