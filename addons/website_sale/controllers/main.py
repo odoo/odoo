@@ -98,12 +98,12 @@ class table_compute(object):
         for col in range(len(rows)):
             cols = rows[col].items()
             cols.sort()
-            rows[col] = filter(bool, map(lambda x: x[1], cols))
+            rows[col] = map(lambda x: x[1], cols)
         return filter(bool, rows)
 
 class Ecommerce(http.Controller):
 
-    _order = 'website_sequence desc, website_published desc'
+    _order = 'website_published desc, website_sequence desc'
 
     def get_attribute_ids(self):
         attributes_obj = request.registry.get('product.attribute')
@@ -441,7 +441,7 @@ class Ecommerce(http.Controller):
         public_id = request.registry['website'].get_public_user(cr, uid, context)
         if not request.uid == public_id:
             partner = orm_user.browse(cr, uid, uid, context).partner_id
-        elif order.partner_id and order.partner_id.id != public_id:
+        elif order.partner_id and (not order.partner_id.user_ids or public_id not in [u.id for u in order.partner_id.user_ids]):
             partner = orm_partner.browse(cr, SUPERUSER_ID, order.partner_id.id, context)
 
         if partner:
