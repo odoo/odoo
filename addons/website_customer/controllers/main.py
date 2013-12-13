@@ -62,7 +62,7 @@ class WebsiteCustomer(http.Controller):
             cr, openerp.SUPERUSER_ID, domain,
             limit=self._references_per_page, offset=pager['offset'], context=context)
         partners_data = partner_obj.read(
-            request.cr, openerp.SUPERUSER_ID, partner_ids, website_partner.white_list, context=request.context)
+            request.cr, openerp.SUPERUSER_ID, partner_ids, request.website.get_partner_white_list_fields(), context=request.context)
         values = {
             'countries': countries,
             'current_country_id': country_id or 0,
@@ -84,11 +84,11 @@ class WebsiteCustomer(http.Controller):
         if values['partner_data']['assigned_partner_id']:
             values['assigned_partner_data'] = partner_obj.read(
                 request.cr, openerp.SUPERUSER_ID, [values['partner_data']['assigned_partner_id'][0]],
-                website_partner.white_list, context=request.context)[0]
+                request.website.get_partner_white_list_fields(), context=request.context)[0]
         if values['partner_data']['implemented_partner_ids']:
             implemented_partners_data = partner_obj.read(
                 request.cr, openerp.SUPERUSER_ID, values['partner_data']['implemented_partner_ids'],
-                website_partner.white_list, context=request.context)
+                request.website.get_partner_white_list_fields(), context=request.context)
             values['implemented_partners_data'] = []
             for data in implemented_partners_data:
                 if data.get('website_published'):

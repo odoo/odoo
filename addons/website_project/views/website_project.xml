@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+<data>
 
-        <!-- Layout add nav and footer -->
-        <template id="footer_custom" inherit_id="website.layout" name="Footer Project's Links">
-            <xpath expr="//footer//ul[@name='products']" position="inside">
-                <li t-foreach="website_project_ids" t-as="project"><a t-href="/project/#{ project.id }/" t-field="project.name"/></li>
-            </xpath>
-        </template>
+<!-- Layout add nav and footer -->
+<template id="footer_custom" inherit_id="website.layout" name="Footer Project's Links">
+    <xpath expr="//footer//ul[@name='products']" position="inside">
+        <li t-foreach="website_project_ids" t-as="project"><a t-href="/project/#{ project.id }/" t-field="project.name"/></li>
+    </xpath>
+</template>
 
-        <!-- Task --> 
-        <template id="task" name="Task">
-            <t t-call="website.layout">
-                <t t-set="additional_title">Task</t>
-                <div id="wrap">
-                    <div class="oe_structure"/>
-                    <div class="container">
-                        <h4 t-field="task.name"/>
-                    </div>
-                    <div class="oe_structure"/>
-              </div>
-            </t>
-        </template>
-
-        <!-- Project --> 
-        <template id="task_kanban_card" name="TaskKanban">
-            <div class="thumbnail">
-                <a t-href="/project/task/#{object_id.id}/"><span t-field="object_id.name"/></a>
-                <div>
-                    Assigned to <span t-field="object_id.user_id"/>
-                </div>
-                <div>
-                    <span t-foreach="object_id.categ_ids" t-as="categ_id" class="label">
-                        <t t-esc="categ_id.name"/>
-                    </span>
-                </div>
-                <small>
-                    <i class="fa fa-clock-o"></i> <span t-field="object_id.date_start"/><br/>
-                    <t t-if="object_id.date_end">Ending Date: <span t-field="object_id.date_end"/></t>
-                </small>
+<!-- Task --> 
+<template id="task" name="Task">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Task</t>
+        <div id="wrap">
+            <div class="oe_structure"/>
+            <div class="container">
+                <h4 t-field="task.name"/>
             </div>
-        </template>
-        <template id="index" name="Project">
-            <t t-call="website.layout">
-                <t t-set="additional_title">Project</t>
-                <div id="wrap">
-                    <div class="oe_structure"/>
-                    <div class="container">
-                        <h4 t-field="project.name"/>
-                        <t t-call="website.kanban">
-                            <t t-set="model">project.task</t>
-                            <t t-set="domain" t-value="[('project_id', '=', project.id)]"/>
-                            <t t-set="column">stage_id</t>
-                            <t t-set="template">website_project.task_kanban_card</t>
-                            <t t-set="step">10</t>
-                            <t t-set="scope">3</t>
-                        </t>
-                    </div>
-                    <div class="oe_structure"/>
-              </div>
-            </t>
-        </template>
+            <div class="oe_structure"/>
+      </div>
+    </t>
+</template>
 
-    </data>
+<!-- Project --> 
+<template id="task_kanban_card" name="TaskKanban">
+    <div class="thumbnail">
+        <a t-href="/project/task/#{object_id.id}/"><span t-field="object_id.name"/></a>
+        <div>
+            Assigned to <span t-field="object_id.user_id"/>
+        </div>
+        <div>
+            <span t-foreach="object_id.categ_ids" t-as="categ_id" class="label">
+                <t t-esc="categ_id.name"/>
+            </span>
+        </div>
+        <small>
+            <i class="fa fa-clock-o"></i> <span t-field="object_id.date_start"/><br/>
+            <t t-if="object_id.date_end">Ending Date: <span t-field="object_id.date_end"/></t>
+        </small>
+    </div>
+</template>
+<template id="index" name="Project">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Project</t>
+        <div id="wrap">
+            <div class="oe_structure"/>
+            <div class="container">
+                <h4 t-field="project.name"/>
+                <t t-call="website.kanban">
+                    <t t-set="model">project.task</t>
+                    <t t-set="domain" t-value="[('project_id', '=', project.id)]"/>
+                    <t t-set="column">stage_id</t>
+                    <t t-set="template">website_project.task_kanban_card</t>
+                    <t t-set="step">10</t>
+                    <t t-set="scope">3</t>
+                </t>
+            </div>
+            <div class="oe_structure"/>
+      </div>
+    </t>
+</template>
+
+</data>
 </openerp>

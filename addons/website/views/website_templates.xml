@@ -3,122 +3,82 @@
 -->
 <openerp>
     <data>
-        <!-- Layout and generic templates -->
 
-        <template id="website.theme" name="Theme">
-            <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
-            <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
-        </template>
+<!-- Layout and generic templates -->
 
-        <template id="website.submenu" name="Submenu">
-            <li t-if="not submenu.child_id">
-                <a t-att-href="url_for(submenu.url)" t-ignore="true">
-                    <span t-field="submenu.name"/>
-                </a>
-            </li>
-            <li t-if="submenu.child_id" class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <t t-foreach="submenu.child_id" t-as="submenu">
-                        <t t-call="website.submenu"/>
-                    </t>
-                </ul>
-            </li>
-        </template>
+<template id="website.theme" name="Theme">
+    <link id="bootstrap_css" rel='stylesheet' href='/website/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
+    <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
+</template>
 
-        <template id="secure_layout" name="Main: Don't Edit This Layout">&lt;!DOCTYPE html&gt;
-                <html t-att-lang="lang and lang.replace('_', '-')"
-                      t-att-data-website-id="website.id if editable else None"
-                      t-att-data-editable="'1' if editable else None"
-                      t-att-data-translatable="'1' if translatable else None"
-                      t-att-data-view-xmlid="xmlid if editable else None"
-                      t-att-data-main-object="repr(main_object) if editable else None">
-                    <head>
-                        <t t-if="main_object and 'website_meta_title' in main_object">
-                            <t t-set="title" t-value="main_object.website_meta_title"/>
-                        </t>
-                        <t t-if="not title and main_object and 'name' in main_object">
-                            <t t-set="additional_title" t-value="main_object.name"/>
-                        </t>
-                        <t t-if="not title">
-                            <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
-                        </t>
-                        <title><t t-esc="title"/></title>
-                        <meta name="openerp.company" t-att-value="res_company.name"/>
-                        <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
-                            and main_object.website_meta_description or website_meta_description"/>
-                        <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
-                            and main_object.website_meta_keywords or website_meta_keywords"/>
+<template id="website.submenu" name="Submenu">
+    <li t-if="not submenu.child_id">
+        <a t-att-href="url_for(submenu.url)" t-ignore="true">
+            <span t-field="submenu.name"/>
+        </a>
+    </li>
+    <li t-if="submenu.child_id" class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <t t-foreach="submenu.child_id" t-as="submenu">
+                <t t-call="website.submenu"/>
+            </t>
+        </ul>
+    </li>
+</template>
 
-                        <!-- Load stylesheets before scripts to avoid blocking -->
-                        <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-                        <t t-if="editable">
-                            <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-                            <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
-                            <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
-                        </t>
-                        <t t-call="website.theme"/>
+<template id="layout" name="Main layout">&lt;!DOCTYPE html&gt;
+    <html t-att-lang="lang and lang.replace('_', '-')"
+          t-att-data-website-id="website.id if editable else None"
+          t-att-data-editable="'1' if editable else None"
+          t-att-data-translatable="'1' if translatable else None"
+          t-att-data-view-xmlid="xmlid if editable else None"
+          t-att-data-main-object="repr(main_object) if editable else None">
+        <head>
+            <t t-if="main_object and 'website_meta_title' in main_object">
+                <t t-set="title" t-value="main_object.website_meta_title"/>
+            </t>
+            <t t-if="not title and main_object and 'name' in main_object">
+                <t t-set="additional_title" t-value="main_object.name"/>
+            </t>
+            <t t-if="not title">
+                <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
+            </t>
+            <title><t t-esc="title"/></title>
+            <meta name="openerp.company" t-att-value="res_company.name"/>
+            <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
+                and main_object.website_meta_description or website_meta_description"/>
+            <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
+                and main_object.website_meta_keywords or website_meta_keywords"/>
 
+            <!-- Load stylesheets before scripts to avoid blocking -->
+            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
 
-                        <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
-                        <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
-                        <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
-                        <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
-                        <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
-                        <script type="text/javascript">
-                            // Bootstrap and jQuery UI conflicts
-                            $.fn.bstooltip = $.fn.tooltip;
-                            $.fn.bsbutton = $.fn.button;
-                        </script>
+            <t t-call="website.theme"/>
 
-                        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-                        <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+            <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
+            <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+            <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
+            <script type="text/javascript">
+                // Bootstrap and jQuery UI conflicts
+                $.fn.bstooltip = $.fn.tooltip;
+                $.fn.bsbutton = $.fn.button;
+            </script>
 
-                        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-                        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
+            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
 
-                        <t t-if="editable" id="editable_scripts_hook">
-                            <link rel="stylesheet" href="/select2/static/lib/select2/select2.css"/>
-                            <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
-                            <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
+            <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
 
-                            <script type="text/javascript" src="/select2/static/lib/select2/select2.js"></script>
-                            <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
-                            <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
-                            <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-                            <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
-                            <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
-                            <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
-                            <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
-
-                            <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
-                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
-                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
-                            <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
-                        </t>
-
-                        <t t-raw="head or ''"/>
-                    </head>
-                    <body>
-                        <div id="wrapwrap">
-                            <t t-raw="0"/>
-                        </div>
-                    </body>
-                </html>
-        </template>
-
-        <template id="layout" name="Main layout">
-            <t t-call="website.secure_layout">
+            <t t-raw="head or ''"/>
+        </head>
+        <body>
+            <div id="wrapwrap">
                 <header>
                     <div class="navbar navbar-default navbar-static-top">
                         <div class="container">
@@ -129,7 +89,7 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a class="navbar-brand" href="/">Your<b>Company</b></a>
+                                <a class="navbar-brand" href="/" t-field="res_company.name"/>
                             </div>
                             <div class="collapse navbar-collapse navbar-top-collapse">
                                 <ul class="nav navbar-nav navbar-right" id="top_menu">
@@ -189,7 +149,7 @@
                                         <small> - <a href="/page/website.aboutus">About us</a></small>
                                     </h4>
                                     <p>
-                                        We are a team of passionated people whose goal is to improve everyone's
+                                        We are a team of passionate people whose goal is to improve everyone's
                                         life through disruptive products. We build great products to solve your
                                         business problems.
                                     </p>
@@ -206,7 +166,7 @@
                                             <t t-esc="lg[1].split('/').pop()"/>
                                         </a>
                                     </li>
-                                    <li t-if="editable">
+                                    <li groups="base.group_website_publisher">
                                         <t t-set="url_return" t-value="url_for(request.httprequest.path, '[lang]', keep_query='*')"/>
                                         <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
                                             <i class="fa fa-plus-circle"/>
@@ -227,483 +187,523 @@
                         </div>
                     </div>
                 </footer>
-            </t>
-        </template>
+            </div>
+        </body>
+    </html>
+</template>
 
-        <template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
-            <xpath expr="//ul[@id='top_menu']" position="inside">
-                <li t-if="user_id.id == website.public_user.id">
-                    <a t-attf-href="/web#redirect=#{ quote_plus(url_for('', keep_query='*')) }">
-                        <span class="badge">Sign in</span>
+<template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher">
+    <xpath expr="//head" position="inside">
+        <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
+        <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
+        <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
+
+
+        <link rel="stylesheet" href="/select2/static/lib/select2/select2.css"/>
+        <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+        <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
+
+        <script type="text/javascript" src="/select2/static/lib/select2/select2.js"></script>
+        <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
+        <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
+        <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
+        <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+        <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
+        <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
+        <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
+        <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
+        <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
+
+        <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
+        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
+        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
+        <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+    </xpath>
+</template>
+
+
+
+<template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
+    <xpath expr="//ul[@id='top_menu']" position="inside">
+        <li t-if="user_id.id == website.public_user.id">
+            <a t-attf-href="/web#redirect=#{ quote_plus(url_for('', keep_query='*')) }">
+                <span class="badge">Sign in</span>
+            </a>
+        </li>
+    </xpath>
+</template>
+
+<template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
+    <xpath expr="//div[@id='footer_container']" position="before">
+        <div class="oe_structure">
+            <section data-snippet-id='three-columns' class="mt16 mb16">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h4 class="mt16">Subtitle</h4>
+                            <p>
+                                <a href="/">Homepage</a>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h4 class="mt16">Subtitle 2</h4>
+                            <p>
+                                ...
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <h4 class="mt16">Subtitle 3</h4>
+                            <p>
+                                ...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+    <xpath expr="//div[@id='footer_container']" position="attributes">
+        <attribute name="style">display: none</attribute>
+    </xpath>
+</template>
+
+<template id="publish_management">
+    <div groups="base.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
+        <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+            <button class="btn btn-danger js_publish_btn">Not Published</button>
+            <button class="btn btn-success js_publish_btn">Published</button>
+            <button type="button" t-attf-class="btn btn-default dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
+                <li>
+                    <a href="#" class="js_publish_btn">
+                        <span class="css_unpublish">Unpublish</span>
+                        <span class="css_publish">Publish</span>
                     </a>
                 </li>
-            </xpath>
-        </template>
-
-        <template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
-            <xpath expr="//div[@id='footer_container']" position="before">
-                <div class="oe_structure">
-                    <section data-snippet-id='three-columns' class="mt16 mb16">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <h4 class="mt16">Subtitle</h4>
-                                    <p>
-                                        <a href="/">Homepage</a>
-                                    </p>
-                                </div>
-                                <div class="col-md-4">
-                                    <h4 class="mt16">Subtitle 2</h4>
-                                    <p>
-                                        ...
-                                    </p>
-                                </div>
-                                <div class="col-md-4">
-                                    <h4 class="mt16">Subtitle 3</h4>
-                                    <p>
-                                        ...
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </xpath>
-            <xpath expr="//div[@id='footer_container']" position="attributes">
-                <attribute name="style">display: none</attribute>
-            </xpath>
-        </template>
-
-        <template id="publish_management">
-            <div t-if="editable" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or ''">
-                <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
-                    <button class="btn btn-danger js_publish_btn">Not Published</button>
-                    <button class="btn btn-success js_publish_btn">Published</button>
-                    <button type="button" t-attf-class="btn btn-default dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
-                        <li>
-                            <a href="#" class="js_publish_btn">
-                                <span class="css_unpublish">Unpublish</span>
-                                <span class="css_publish">Publish</span>
-                            </a>
-                        </li>
-                        <t t-raw="0"/>
-                        <li t-if="publish_edit">
-                            <a t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (object._name, object.id)"
-                            title='Edit in backend'>Edit</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </template>
-
-        <template id="publish_short">
-            <t t-if="editable" t-ignore="true">
-                <div t-attf-class="btn-group pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
-                    <button t-attf-class="btn btn-sm btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
-                        <span class="css_publish">Not Published</span>
-                        <span class="css_unpublish">Published</span>
-                    </button>
-                </div>
-            </t>
-        </template>
-
-        <template id="pager" name="Pager">
-            <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or ''">
-                <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
-                    <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
-                </li>
-                <t t-foreach="pager['pages']" t-as="page">
-                    <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
-                </t>
-                <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' ">
-                    <a t-att-href=" pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
+                <t t-raw="0"/>
+                <li t-if="publish_edit">
+                    <a t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (object._name, object.id)"
+                    title='Edit in backend'>Edit</a>
                 </li>
             </ul>
-        </template>
+        </div>
+    </div>
+</template>
 
-        <template id="kanban">
-            <t t-set="step"><t t-esc="step or 0"/></t>
-            <t t-set="scope"><t t-esc="scope or 0"/></t>
-            <t t-set="orderby"><t t-esc="orderby or 'name'"/></t>
-            <t t-raw="website.kanban(model, domain, column, template, step=step, scope=scope, orderby=orderby)"/>
-        </template>
+<template id="publish_short">
+    <t groups="base.group_website_publisher" t-ignore="true">
+        <div t-attf-class="btn-group pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+            <button t-attf-class="btn btn-sm btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
+                <span class="css_publish">Not Published</span>
+                <span class="css_unpublish">Published</span>
+            </button>
+        </div>
+    </t>
+</template>
 
-        <template id="kanban_contain">
-            <table class="table js_kanban">
-                <thead>
-                    <tr>
-                        <t t-set="width" t-value="str(round(100.0 / len(objects), 2)) + '%'"/>
-                        <t t-foreach="objects">
-                            <th t-att-width="width">
-                                <div t-field="column_id.name" class="text-center"></div>
-                            </th>
+<template id="pager" name="Pager">
+    <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or ''">
+        <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else '' ">
+            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else '' ">Prev</a>
+        </li>
+        <t t-foreach="pager['pages']" t-as="page">
+            <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else '' "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
+        </t>
+        <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else '' ">
+            <a t-att-href=" pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else '' ">Next</a>
+        </li>
+    </ul>
+</template>
+
+<template id="kanban">
+    <t t-set="step"><t t-esc="step or 0"/></t>
+    <t t-set="scope"><t t-esc="scope or 0"/></t>
+    <t t-set="orderby"><t t-esc="orderby or 'name'"/></t>
+    <t t-raw="website.kanban(model, domain, column, template, step=step, scope=scope, orderby=orderby)"/>
+</template>
+
+<template id="kanban_contain">
+    <table class="table js_kanban">
+        <thead>
+            <tr>
+                <t t-set="width" t-value="str(round(100.0 / len(objects), 2)) + '%'"/>
+                <t t-foreach="objects">
+                    <th t-att-width="width">
+                        <div t-field="column_id.name" class="text-center"></div>
+                    </th>
+                </t>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <t t-foreach="objects">
+                    <td class="js_kanban_col" t-att-data-template="template" t-att-data-domain="domain" t-att-data-page_count="page_count" t-att-data-model="model" t-att-data-step="step" t-att-data-orderby="orderby">
+                        <t t-foreach="object_ids" t-as="object_id">
+                            <t t-call="#{ template }"></t>
                         </t>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <t t-foreach="objects">
-                            <td class="js_kanban_col" t-att-data-template="template" t-att-data-domain="domain" t-att-data-page_count="page_count" t-att-data-model="model" t-att-data-step="step" t-att-data-orderby="orderby">
-                                <t t-foreach="object_ids" t-as="object_id">
-                                    <t t-call="#{ template }"></t>
-                                </t>
-                                <!-- pager -->
-                                <div t-if="1 != page_end" class="pagination pagination-centered">
-                                    <ul>
-                                        <li t-attf-class="prev #{'active' if page == 1 else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &gt; 1 and page-1 or 1)) ">Prev</a></li>
-                                        <t t-foreach="range(page_start, page_end+1)" t-as="p">
-                                            <li t-att-class=" 'active' if page == p else '' "> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, p)" t-esc="p"></a></li>
-                                        </t>
-                                        <li t-attf-class="next #{'active' if page == page_end else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &lt; page_end and page+1 or page_end) )">Next</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </t>
-                    </tr>
-                </tbody>
-            </table>
-        </template>
-
-        <!-- Error and special pages -->
-
-        <template id="default_page">
-            <t t-call="website.layout">
-              <div id="wrap" class="oe_structure oe_empty"></div>
-            </t>
-        </template>
-
-        <template id="page_404">
-            <t t-call="website.404">
-                <div class="container">
-                    <div class="well mt32">
-                        <p>This page does not exists, but you can create it as you are administrator of this site.</p>
-                        <a class="btn btn-primary" t-attf-href="/pagenew/#{ path }">Create Page</a>
-                        <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
-                    </div>
-                    <div class="text-center text-muted">Edit the content bellow this line to adapt the default "page not found" page.</div>
-                </div>
-                <hr/>
-            </t>
-        </template>
-
-       <template id="http_error">
-            <t t-call="website.layout">
-                <div id="wrap">
-                    <div class="oe_structure">
-                        <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
-                    </div>
-
-                    <t t-if="editable or request.debug">
-                        <t t-call="website.http_error_debug"/>
-                    </t>
-                </div>
-            </t>
-        </template>
-
-        <template id="http_error_debug">
-            <div class="container panel-group mb32 mt32" id="debug_infos">
-                <div class="panel panel-default" t-if="exception">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">
-                                Error
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="error_main" class="panel-collapse collapse in">
-                        <div class="panel-body">
-                            <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
-                            <p><strong>Error message:</strong> <pre t-esc="exception.message"/></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default" t-if="qweb_template">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
-                                QWeb
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="error_qweb" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <p>
-                                The error occured while rendering the template <code t-esc="qweb_template"/>
-                                <t t-if="qweb_eval">and evaluating the following expression: <code t-esc="qweb_eval"/></t>
-                            </p>
-                            <t t-if="qweb_node">
-                                <pre id="exception_node" t-esc="qweb_node.toxml()"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default" t-if="traceback">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">
-                                Traceback
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="error_traceback" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <pre id="exception_traceback" t-esc="traceback"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <template id="404">
-            <t t-call="website.layout">
-                <div id="wrap">
-                    <t t-raw="0"/>
-                    <div class="oe_structure oe_empty">
-                        <div class="container">
-                            <h1 class="mt32">404: Page not found!</h1>
-                            <p>
-                                The page you were looking for could not be found; it is possible you have
-                                typed the address incorrectly, but it has most probably been removed due
-                                to the recent website reorganisation.
-                            </p>
-                            <p>Maybe you were looking for one of these popular pages ?</p>
+                        <!-- pager -->
+                        <div t-if="1 != page_end" class="pagination pagination-centered">
                             <ul>
-                                <li><a href="/">Homepage</a></li>
-                                <li><a href="/page/website.contactus/">Contact Us</a></li>
+                                <li t-attf-class="prev #{'active' if page == 1 else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &gt; 1 and page-1 or 1)) ">Prev</a></li>
+                                <t t-foreach="range(page_start, page_end+1)" t-as="p">
+                                    <li t-att-class=" 'active' if page == p else '' "> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, p)" t-esc="p"></a></li>
+                                </t>
+                                <li t-attf-class="next #{'active' if page == page_end else '' }"> <a t-att-href=" '%s,%s-%s' % (kanban_url, column_id.id, (page &lt; page_end and page+1 or page_end) )">Next</a></li>
                             </ul>
                         </div>
-                    </div>
+                    </td>
+                </t>
+            </tr>
+        </tbody>
+    </table>
+</template>
 
-                    <t t-if="request.debug">
-                        <t t-call="website.http_error_debug"/>
+<!-- Error and special pages -->
+
+<template id="default_page">
+    <t t-call="website.layout">
+      <div id="wrap" class="oe_structure oe_empty"></div>
+    </t>
+</template>
+
+<template id="page_404">
+    <t t-call="website.404">
+        <div class="container">
+            <div class="well mt32">
+                <p>This page does not exists, but you can create it as you are administrator of this site.</p>
+                <a class="btn btn-primary" t-attf-href="/pagenew/#{ path }">Create Page</a>
+                <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
+            </div>
+            <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
+        </div>
+        <hr/>
+    </t>
+</template>
+
+<template id="http_error">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure">
+                <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
+            </div>
+
+            <t t-if="editable or request.debug">
+                <t t-call="website.http_error_debug"/>
+            </t>
+        </div>
+    </t>
+</template>
+
+<template id="http_error_debug">
+    <div class="container panel-group mb32 mt32" id="debug_infos">
+        <div class="panel panel-default" t-if="exception">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">
+                        Error
+                    </a>
+                </h4>
+            </div>
+            <div id="error_main" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
+                    <p><strong>Error message:</strong> <pre t-esc="exception.message"/></p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" t-if="qweb_template">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">
+                        QWeb
+                    </a>
+                </h4>
+            </div>
+            <div id="error_qweb" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>
+                        The error occured while rendering the template <code t-esc="qweb_template"/>
+                        <t t-if="qweb_eval">and evaluating the following expression: <code t-esc="qweb_eval"/></t>
+                    </p>
+                    <t t-if="qweb_node">
+                        <pre id="exception_node" t-esc="qweb_node.toxml()"/>
                     </t>
                 </div>
-            </t>
-        </template>
+            </div>
+        </div>
+        <div class="panel panel-default" t-if="traceback">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">
+                        Traceback
+                    </a>
+                </h4>
+            </div>
+            <div id="error_traceback" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <pre id="exception_traceback" t-esc="traceback"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
 
-        <template id="500">
-            <t t-call="website.http_error"/>
-        </template>
-
-        <template id="403">
-            <t t-call="website.layout">
-              <div id="wrap">
+<template id="404">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <t t-raw="0"/>
+            <div class="oe_structure oe_empty">
                 <div class="container">
-                    <h1 class="mt32">403: Forbidden</h1>
+                    <h1 class="mt32">404: Page not found!</h1>
                     <p>
-                        The page you were looking for could not be
-                        authorized.
+                        The page you were looking for could not be found; it is possible you have
+                        typed the address incorrectly, but it has most probably been removed due
+                        to the recent website reorganisation.
                     </p>
-                    <p>
-                        Maybe you were looking for one of these
-                        popular pages ?
-                    </p>
+                    <p>Maybe you were looking for one of these popular pages ?</p>
                     <ul>
                         <li><a href="/">Homepage</a></li>
                         <li><a href="/page/website.contactus/">Contact Us</a></li>
                     </ul>
                 </div>
-                <t t-if="editable or request.debug">
-                    <t t-call="website.http_error_debug"/>
-                </t>
-              </div>
-            </t>
-        </template>
+            </div>
 
-        <template id="robots">
+            <t t-if="request.debug">
+                <t t-call="website.http_error_debug"/>
+            </t>
+        </div>
+    </t>
+</template>
+
+<template id="500">
+    <t t-call="website.http_error"/>
+</template>
+
+<template id="403">
+    <t t-call="website.layout">
+      <div id="wrap">
+        <div class="container">
+            <h1 class="mt32">403: Forbidden</h1>
+            <p>
+                The page you were looking for could not be
+                authorized.
+            </p>
+            <p>
+                Maybe you were looking for one of these
+                popular pages ?
+            </p>
+            <ul>
+                <li><a href="/">Homepage</a></li>
+                <li><a href="/page/website.contactus/">Contact Us</a></li>
+            </ul>
+        </div>
+        <t t-if="editable or request.debug">
+            <t t-call="website.http_error_debug"/>
+        </t>
+      </div>
+    </t>
+</template>
+
+<template id="robots">
 # robotstxt.org/
 User-agent: *
 Sitemap: <t t-esc="url_root"/>sitemap.xml
-        </template>
+</template>
 
-        <template id="sitemap" name="Site Map">
-            <t t-call="website.layout">
-                <ul>
-                    <li t-foreach="pages" t-as="page">
-                        <a t-att-href="page['url']"><t t-esc="page['name']"/></a>
-                    </li>
-                </ul>
-            </t>
-        </template>
+<template id="sitemap" name="Site Map">
+    <t t-call="website.layout">
+        <ul>
+            <li t-foreach="pages" t-as="page">
+                <a t-att-href="page['url']"><t t-esc="page['name']"/></a>
+            </li>
+        </ul>
+    </t>
+</template>
 
-        <template id="sitemap_xml">
-            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-                <t t-foreach="pages" t-as="page">
-                    <url>
-                        <loc><t t-esc="page['url']"/></loc>
-                    </url>
-                </t>
-            </urlset>
-        </template>
+<template id="sitemap_xml">
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <t t-foreach="pages" t-as="page">
+            <url>
+                <loc><t t-esc="page['url']"/></loc>
+            </url>
+        </t>
+    </urlset>
+</template>
 
-        <!-- Actual pages -->
+<!-- Actual pages -->
 
-        <template id="homepage" name="Homepage" page="True">
-            <t t-call="website.layout">
-              <div id="wrap" class="oe_structure oe_empty"></div>
-            </t>
-        </template>
+<template id="homepage" name="Homepage" page="True">
+    <t t-call="website.layout">
+      <div id="wrap" class="oe_structure oe_empty"></div>
+    </t>
+</template>
 
-        <template id="company_description" name="Company Description">
-            <address>
-                <div t-field="res_company.partner_id">Name</div>
-                <br />
-                <div>&amp;#x2706; <span t-field="res_company.phone"></span></div>
-                <div class="fa fa-envelope" t-field="res_company.email"></div>
-            </address>
-             <a t-att-href="res_company.google_map_link()" target="_BLANK">
-                <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
-            </a>
-        </template>
+<template id="company_description" name="Company Description">
+    <address>
+        <div t-field="res_company.partner_id">Name</div>
+        <br />
+        <div>&amp;#x2706; <span t-field="res_company.phone"></span></div>
+        <div class="fa fa-envelope" t-field="res_company.email"></div>
+    </address>
+     <a t-att-href="res_company.google_map_link()" target="_BLANK">
+        <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
+    </a>
+</template>
 
-        <template id="contactus" name="Contact us" page="True">
-            <t t-call="website.layout">
-              <div id="wrap">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <h1>Contact us</h1>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="oe_structure">
-                                <div>
-                                    <p>Contact us about anything related to our company or services.</p>
-                                    <p>We'll do our best to get back to you as soon as possible.</p>
-                                </div>
-                            </div>
-                            <div class="text-center mt64" name="mail_button">
-                                <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary">Send us an email</a>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb32">
-                            <t t-call="website.company_description"/>
+<template id="contactus" name="Contact us" page="True">
+    <t t-call="website.layout">
+      <div id="wrap">
+        <div class="oe_structure"/>
+        <div class="container">
+            <h1>Contact us</h1>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="oe_structure">
+                        <div>
+                            <p>Contact us about anything related to our company or services.</p>
+                            <p>We'll do our best to get back to you as soon as possible.</p>
                         </div>
                     </div>
-                </div>
-                <div class="oe_structure"/>
-              </div>
-            </t>
-        </template>
-
-        <template id="aboutus" name="About us" page="True">
-            <t t-call="website.layout">
-                <div id="wrap">
-                    <div class="oe_structure">
-
-                        <section data-snippet-id="title">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h1 class="text-center">About us</h1>
-                                        <h3 class="text-muted text-center">Great products for great people</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section data-snippet-id="text-image">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-6 mt32">
-                                        <p>
-                                              We are a team of passionated people whose goal is to improve everyone's
-                                              life through disruptive products. We build great products to solve your
-                                              business problems.
-                                        </p>
-                                        <p>
-                                              Our products are designed for small to medium companies willing to optimize
-                                              their performance.
-                                        </p>
-                                    </div>
-                                    <div class="col-md-4 col-md-offset-2 mt16 mb16">
-                                        <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Our Team"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <div class="parallax oe_structure mt16 oe_medium mb64" data-scroll-background-ratio="0.6" data-snippet-id="parallax" style="background-image: url(http://localhost:8069/website/static/src/img/parallax/parallax_bg.jpg); background-attachment: scroll; background-position: 0px 0px; ">
-                            <section class="mb32 mt16" data-snippet-id="references">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-12 mt16 mb8">
-                                            <h1 class="text-center">What do customers say about us...</h1>
-                                        </div>
-                                        <div class="col-md-4 col-md-offset-1 mt16 mb0">
-                                            <blockquote data-snippet-id="quote">
-                                                <p><span style="background-color:#FFFFFF;">Write here a quote from one of your customer. Quotes are are great way to give confidence in your products or services.</span></p>
-                                                <small><span style="background-color:#FFFFFF;">Author of this quote</span></small>
-                                            </blockquote>
-                                        </div>
-                                        <div class="col-md-4 col-md-offset-2 mt16 mb32">
-                                            <blockquote data-snippet-id="quote">
-                                                <p><span style="background-color:#FFFFFF;">OpenERP provides essential platform for our project management. Things are better organized and more visible with it.</span></p>
-                                                <small><span style="background-color:#FFFFFF;">John Doe, CEO</span></small>
-                                            </blockquote>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-
+                    <div class="text-center mt64" name="mail_button">
+                        <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary">Send us an email</a>
                     </div>
-                    <div class="oe_structure"></div>
                 </div>
-            </t>
-        </template>
+                <div class="col-md-4 mb32">
+                    <t t-call="website.company_description"/>
+                </div>
+            </div>
+        </div>
+        <div class="oe_structure"/>
+      </div>
+    </t>
+</template>
 
-        <template id="creation_failed">
-            <t t-call="website.layout">
-                <div id="wrap">
-                    <div class="oe_structure">
+<template id="aboutus" name="About us" page="True">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure">
+
+                <section data-snippet-id="title">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1 class="text-center">About us</h1>
+                                <h3 class="text-muted text-center">Great products for great people</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-snippet-id="text-image">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 mt32">
+                                <p>
+                                      We are a team of passionate people whose goal is to improve everyone's
+                                      life through disruptive products. We build great products to solve your
+                                      business problems.
+                                </p>
+                                <p>
+                                      Our products are designed for small to medium companies willing to optimize
+                                      their performance.
+                                </p>
+                            </div>
+                            <div class="col-md-4 col-md-offset-2 mt16 mb16">
+                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Our Team"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="parallax oe_structure mt16 oe_medium mb64" data-scroll-background-ratio="0.6" data-snippet-id="parallax" style="background-image: url(http://localhost:8069/website/static/src/img/parallax/parallax_bg.jpg); background-attachment: scroll; background-position: 0px 0px; ">
+                    <section class="mb32 mt16" data-snippet-id="references">
                         <div class="container">
-                            <h1 class="text-center">
-                                The page "<em><t t-esc="page"/></em>"
-                                already exists
-                            </h1>
-                            <h3 class="text-center text-muted">We could not create it.</h3>
-                            <ul>
-                                <li>
-                                    You can <a t-href="#{path}">visit the existing page</a>
-                                </li>
-                                <li>Or you can <a href="#" class="create-new-page">
-                                    create an other page.</a></li>
-                            </ul>
+                            <div class="row">
+                                <div class="col-md-12 mt16 mb8">
+                                    <h1 class="text-center">What do customers say about us...</h1>
+                                </div>
+                                <div class="col-md-4 col-md-offset-1 mt16 mb0">
+                                    <blockquote data-snippet-id="quote">
+                                        <p><span style="background-color:#FFFFFF;">Write here a quote from one of your customer. Quotes are are great way to give confidence in your products or services.</span></p>
+                                        <small><span style="background-color:#FFFFFF;">Author of this quote</span></small>
+                                    </blockquote>
+                                </div>
+                                <div class="col-md-4 col-md-offset-2 mt16 mb32">
+                                    <blockquote data-snippet-id="quote">
+                                        <p><span style="background-color:#FFFFFF;">OpenERP provides essential platform for our project management. Things are better organized and more visible with it.</span></p>
+                                        <small><span style="background-color:#FFFFFF;">John Doe, CEO</span></small>
+                                    </blockquote>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
-                <script type="application/javascript">
-                    $(document.body).on('click', 'a.create-new-page', function (e) {
-                        e.preventDefault();
-                        openerp.website.prompt({
-                            window_title: "New Page",
-                            input: "Page Title",
-                        }).then(function (val) {
-                            if (val) {
-                                document.location = '/pagenew/' + encodeURI(val);
-                            }
-                        });
-                    });
-                </script>
-            </t>
-        </template>
 
-        <template id="contact">
-            <address t-ignore="true">
-                <div t-att-class='"" if "name" in fields else "css_non_editable_mode_hidden"'><span t-esc="name"/></div>
-                <div class='css_editable_mode_hidden'>
-                    <div t-if="address and 'address' in fields">
-                        <i class='fa fa-map-marker'/>
-                        <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
-                    </div>
-                    <div t-if="phone and 'phone' in fields"><i class='fa fa-phone'/> <span t-esc="phone"/></div>
-                    <div t-if="mobile and 'mobile' in fields"><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
-                    <div t-if="fax and 'fax' in fields"><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
-                    <div t-if="email and 'email' in fields"><i class='fa fa-envelope'/> <span t-esc="email"/></div>
+            </div>
+            <div class="oe_structure"></div>
+        </div>
+    </t>
+</template>
+
+<template id="creation_failed">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure">
+                <div class="container">
+                    <h1 class="text-center">
+                        The page "<em><t t-esc="page"/></em>"
+                        already exists
+                    </h1>
+                    <h3 class="text-center text-muted">We could not create it.</h3>
+                    <ul>
+                        <li>
+                            You can <a t-href="#{path}">visit the existing page</a>
+                        </li>
+                        <li>Or you can <a href="#" class="create-new-page">
+                            create an other page.</a></li>
+                    </ul>
                 </div>
-            </address>
-        </template>
+            </div>
+        </div>
+        <script type="application/javascript">
+            $(document.body).on('click', 'a.create-new-page', function (e) {
+                e.preventDefault();
+                openerp.website.prompt({
+                    window_title: "New Page",
+                    input: "Page Title",
+                }).then(function (val) {
+                    if (val) {
+                        document.location = '/pagenew/' + encodeURI(val);
+                    }
+                });
+            });
+        </script>
+    </t>
+</template>
+
+<template id="contact">
+    <address t-ignore="true">
+        <div t-att-class='"" if "name" in fields else "css_non_editable_mode_hidden"'><span t-esc="name"/></div>
+        <div class='css_editable_mode_hidden'>
+            <div t-if="address and 'address' in fields">
+                <i class='fa fa-map-marker'/>
+                <span t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt; &amp;nbsp; &amp;nbsp; ')"/>
+            </div>
+            <div t-if="phone and 'phone' in fields"><i class='fa fa-phone'/> <span t-esc="phone"/></div>
+            <div t-if="mobile and 'mobile' in fields"><i class='fa fa-mobile-phone'/> <span t-esc="mobile"/></div>
+            <div t-if="fax and 'fax' in fields"><i class='fa fa-file-text-o'/> <span t-esc="fax"/></div>
+            <div t-if="email and 'email' in fields"><i class='fa fa-envelope'/> <span t-esc="email"/></div>
+        </div>
+    </address>
+</template>
+
      </data>
 </openerp>

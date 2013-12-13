@@ -673,7 +673,7 @@
     });
 
 
-    website.snippet.styleRegistry['size'] = website.snippet.StyleEditor.extend({
+    website.snippet.styleRegistry.size = website.snippet.StyleEditor.extend({
         select: function(event, np) {
             this._super(event, np);
             this.parent.parent.cover_target(this.$overlay, this.$target);
@@ -1115,7 +1115,8 @@
             this._super();
         },
         hide_remove_button: function() {
-            this.$overlay.find('.oe_snippet_remove').toggleClass("hidden", !this.$target.siblings().length);
+            this.$overlay.find('.oe_snippet_remove').toggleClass("hidden",
+                !this.$target.siblings().length && this.$target.parents("[data-snippet-id]:first").find("[data-snippet-id='colmd']").length > 1);
         },
         onFocus : function () {
             this._super();
@@ -1131,8 +1132,13 @@
             return false;
         },
         on_remove: function () {
-            if (!this.$target.siblings().length){
-                return false;
+            if (!this.$target.siblings().length) {
+                var $parent = this.$target.parents("[data-snippet-id]:first");
+                if($parent.find("[data-snippet-id='colmd']").length > 1) {
+                    return false;
+                } else {
+                    $parent.data("snippet-editor").on_remove();
+                }
             }
             this._super();
             this.hide_remove_button();

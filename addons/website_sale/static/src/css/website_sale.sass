@@ -33,6 +33,21 @@
         width: 100%
         height: 100%
 
+.products_pager
+    text-align: center
+    > div
+        margin: 0 auto
+        display: inline-block
+        > *
+            vertical-align: middle
+            float: none
+            padding: 0
+        > ul
+            padding-left: 10px
+    > ul
+        margin-left: auto
+        margin-right: auto
+
 /* ---- Default Styles Description ---- */
 
 .oe_product
@@ -42,24 +57,23 @@
         right: 15px
         top: 15px
         bottom: 50px
-
-.oe_product_description
-    bottom: 0
-    position: absolute
-    left: 15px
-    right: 15px
-    border-top: 1px solid #dddddd
-    max-height: 120px
-    overflow: hidden
-    padding-bottom: 24px
-.product_price
-    position: absolute
-    right: 15px
-    left: 15px
-    bottom: 0
-    z-index: 6
-    background: rgba(255,255,255,0.6)
-    padding: 5px 0
+    .oe_product_description
+        bottom: 0
+        position: absolute
+        left: 15px
+        right: 15px
+        border-top: 1px solid #dddddd
+        max-height: 120px
+        overflow: hidden
+        padding-bottom: 24px
+    .product_price
+        position: absolute
+        right: 15px
+        left: 15px
+        bottom: 0
+        z-index: 6
+        background: rgba(255,255,255,0.6)
+        padding: 5px 0
 
 .oe_mycart
     .input-group-addon
@@ -136,12 +150,8 @@
             height: 300px
             display: inline-block
     .products_pager
-        text-align: center
-        margin: 10px 0
         .pagination
-            float: none !important
-            margin: 0 !important
-            padding: 0 !important
+            margin: 5px auto !important
 
 @media (max-width: 400px)
     #products_grid
@@ -356,3 +366,8 @@ ul.wizard li:first-child
     padding-left: 15px
     border-radius: 4px 0 0 4px
 
+/* product detail */
+
+.product_detail_img
+    min-width: 128px
+    max-height: 500px

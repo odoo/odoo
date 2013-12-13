@@ -20,11 +20,16 @@
         }),
     });
 
+    function reload_enable_editor() {
+        var search = location.search.replace(/\?|$/, '?enable_editor=1&');
+        location.href = location.href.replace(/(\?|#|$).*/, search + location.hash);
+    }
 
-    $(document).on('click', '.js_publish_management .js_go_to_top,.js_publish_management .js_go_to_bottom', function (event) {
+    $(document).on('click', '.js_options .js_go_to_top,.js_options .js_go_to_bottom', function (event) {
         var $a = $(event.currentTarget);
-        var $data = $a.parents(".js_publish_management:first");
-        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'top': $a.hasClass('js_go_to_top')});
+        var $data = $a.parents(".js_options:first");
+        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'top': $a.hasClass('js_go_to_top')})
+            .then(reload_enable_editor);
     });
 
     $(document).on('click', '.js_options ul[name="style"] a', function (event) {
@@ -69,10 +74,7 @@
         var x = $td.index()+1;
         var y = $td.parent().index()+1;
         openerp.jsonRpc('/shop/change_size/', 'call', {'id': $data.data('id'), 'x': x, 'y': y})
-            .then(function () {
-                var search = location.search.replace(/\?|$/, '?enable_editor=1&');
-                location.href = location.href.replace(/(\?|#).*/, search + location.hash);
-            });
+            .then(reload_enable_editor);
     });
 
 })();

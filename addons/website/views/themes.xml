@@ -8,14 +8,14 @@
 
     <template id="website.themes" name="Themes">
         <t t-call="website.layout">
-          <div id="wrap" t-if="editable">
+          <div id="wrap" groups="base.group_website_publisher">
             <div class="container">
     
             <div class="alert alert-info mt32" t-if="theme_changed">
                 <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
                 <p>
                     <h4>Theme Changed!</h4>
-                    Have a look at <a href="/">your homepage</a> or try another theme bellow.
+                    Have a look at <a href="/">your homepage</a> or try another theme below.
                 </p>
             </div>
             <h1 class="text-center">Try a New Theme</h1>

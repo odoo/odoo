@@ -91,7 +91,7 @@
                 },
                 {
                     stepId: 'drag-text-block',
-                    snipet: 'text-block',
+                    snippet: 'text-block',
                     placement: 'bottom',
                     title: "Drag & Drop a block",
                     content: "Drag the 'Text Block' block below the banner.",
@@ -123,7 +123,7 @@
                 },
                 {
                     stepId: 'publish-event',
-                    element: 'button.js_publish_btn',
+                    element: 'button.btn-danger.js_publish_btn',
                     placement: 'top',
                     title: "Publish your event",
                     content: "Click to publish your event.",
@@ -131,7 +131,7 @@
                 },
                 {
                     stepId: 'customize-event',
-                    element: '.js_publish_management button:last',
+                    element: '.js_publish_management button#dopprod-8',
                     placement: 'left',
                     title: "Customize your event",
                     content: "Click here to customize your event further.",
@@ -144,6 +144,13 @@
                     title: "Customize your event",
                     content: "Click here to edit your event in the backend.",
                     trigger: 'click',
+                },
+                {
+                    stepId: 'end-tutorial',
+                    title: "Thanks!",
+                    content: "This tutorial is finished. Congratulations on creating your first event.",
+                    template: self.popover({ end: "Close Tutorial" }),
+                    backdrop: true,
                 },
             ];
             return this._super();

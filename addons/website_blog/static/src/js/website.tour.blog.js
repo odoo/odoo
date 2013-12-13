@@ -51,11 +51,7 @@
                     title: "Which Blog?",
                     content: "Blog posts are organized in multiple categories (news, job offers, events, etc). Select <em>News</em> and click <em>Continue</em>.",
                     trigger: {
-                        emitter: '.modal select',
                         id: 'change',
-                        predicate: function ($el, value) {
-                            return $el.find('[value='+value+']').text().toLowerCase() === 'news';
-                        },
                     },
                 },
                 {
@@ -64,6 +60,7 @@
                     placement: 'right',
                     title: "Create Blog Post",
                     content: "Click <em>Continue</em> to create the blog post.",
+                    trigger: 'click',
                 },
                 {
                     stepId: 'post-page',
@@ -117,11 +114,13 @@
                     placement: 'top',
                     title: "Edit an Area",
                     content: "Select any area of the page to modify it. Click on this subtitle.",
-                    trigger: 'click',
+                    trigger: {
+                        id: 'snippet-activated',
+                    }
                 },
                 {
                     stepId: 'remove-text-block-title',
-                    element: '.oe_snippet_remove:last',
+                    element: '.oe_active .oe_snippet_remove',
                     placement: 'top',
                     title: "Delete the Title",
                     content: "From this toolbar you can move, duplicate or delete the selected zone. Click on the cross to delete the title.",
@@ -137,7 +136,7 @@
                 },
                 {
                     stepId: 'publish-post',
-                    element: 'button.js_publish_btn',
+                    element: 'button.btn-danger.js_publish_btn',
                     placement: 'top',
                     title: "Publish Your Post",
                     content: "Your blog post is not yet published. You can update this draft version and publish it once you are ready.",
