@@ -15,7 +15,6 @@ Graph Views for Web Client.
     'version': '3.0',
     'depends': ['web'],
     'js': [
-        'static/lib/dropdown.js',
         'static/lib/flotr2/lib/bean.js',
         'static/lib/flotr2/js/Flotr.js',
         'static/lib/flotr2/js/DefaultOptions.js',

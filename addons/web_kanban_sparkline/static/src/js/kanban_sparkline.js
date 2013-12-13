@@ -13,6 +13,7 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
         setTimeout(function () {
             var value = _.pluck(self.field.value, 'value');
             var tooltips = _.pluck(self.field.value, 'tooltip');
+            var suffix = self.options.tooltip_suffix || "";
             var sparkline_options = _.extend({
                     type: 'bar',
                     barWidth: 5,
@@ -20,14 +21,14 @@ instance.web_kanban.SparklineBarWidget = instance.web_kanban.AbstractField.exten
                     barWidth: 4,
                     barSpacing: 1,
                     barColor: '#96d854',
+                    tooltipFormat: '{{offset:offset}} {{value}} ' + suffix,
                     chartRangeMin: 0,
-                    tooltipFormat: '{{offset:offset}} {{value}}',
                     tooltipValueLookups: {
                         'offset': tooltips
                     }
                 }, self.options);
             self.$el.sparkline(value, sparkline_options);
-            self.$el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
+            self.$el.tipsy({'delayIn': self.options.delayIn || 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
         }, 0);
     },
 });
