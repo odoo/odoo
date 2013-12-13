@@ -4,6 +4,7 @@
   I add delivery cost in Sale order.
 -
   !python {model: sale.order}: |
+    self.write(cr, uid, ref("sale.sale_order_6"), {'carrier_id': ref('normal_delivery_carrier')})
     self.delivery_set(cr, uid, [ref("sale.sale_order_6")], context=context)
 -
   I check sale order after added delivery cost.
@@ -35,6 +36,7 @@
     import openerp.report
     from openerp import tools
     sale = self.pool.get('sale.order')
+    sale.write(cr, uid, ref("sale.sale_order_6"), {'carrier_id': ref('normal_delivery_carrier')})
     sale_order = sale.browse(cr, uid, ref("sale.sale_order_6"))
     ship_ids = [x.id for x in sale_order.picking_ids]
     data, format = openerp.report.render_report(cr, uid, ship_ids, 'sale.shipping', {}, {})
@@ -44,6 +46,7 @@
   I add free delivery cost in Sale order.
 -
   !python {model: sale.order}: |
+    self.write(cr, uid, ref("sale.sale_order_2"), {'carrier_id': ref('free_delivery_carrier')})
     self.delivery_set(cr, uid, [ref("sale.sale_order_2")], context=context)
 -
   I check sale order after added delivery cost.
