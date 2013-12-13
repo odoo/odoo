@@ -710,7 +710,7 @@ class crm_meeting(osv.osv):
     _columns = {        
         'oe_update_date': fields.datetime('OpenERP Update Date'),
     }
-    _sql_constraints = [('google_id_uniq','unique(google_internal_event_id)', 'Google ID must be unique!')]
+    
 # If attendees are updated, we need to specify that next synchro need an action    
 class calendar_attendee(osv.osv):
     _inherit = 'calendar.attendee'
@@ -719,6 +719,8 @@ class calendar_attendee(osv.osv):
         'google_internal_event_id': fields.char('Google Calendar Event Id', size=124),
         'oe_synchro_date': fields.datetime('OpenERP Synchro Date'),
     }
+    
+    _sql_constraints = [('google_id_uniq','unique(google_internal_event_id)', 'Google ID must be unique!')]
     
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
