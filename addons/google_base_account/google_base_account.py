@@ -145,15 +145,15 @@ class google_service(osv.osv_memory):
     def _do_request(self,cr,uid,uri,params={},headers={},type='POST', context=None):
         res = False
         
-        print "#########################################"
-        print "###  URI : %s ###" % (uri)
-        print "###  HEADERS : %s ###" % (headers)
-        print "###  METHOD : %s ###" % (type)
-        if type=='GET':
-            print "###  PARAMS : %s ###" % urllib.urlencode(params)
-        else:
-            print "###  PARAMS : %s ###" % (params)        
-        print "#########################################"
+#         print "#########################################"
+#         print "###  URI : %s ###" % (uri)
+#         print "###  HEADERS : %s ###" % (headers)
+#         print "###  METHOD : %s ###" % (type)
+#         if type=='GET':
+#             print "###  PARAMS : %s ###" % urllib.urlencode(params)
+#         else:
+#             print "###  PARAMS : %s ###" % (params)        
+#         print "#########################################"
         
         try:
             if type.upper() == 'GET' or type.upper() == 'DELETE':
@@ -174,10 +174,7 @@ class google_service(osv.osv_memory):
             else:
                 content=request.read()
                 res = simplejson.loads(content)
-                print "RESPONSE"
-                print "=========="
-                print res
-                print "=========="
+                print "="
         except urllib2.HTTPError,e:
             print "ERROR CATCHED : ",e.read()
             raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong with your request to google"), context=context)
