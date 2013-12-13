@@ -22,6 +22,12 @@ class sale_quote(http.Controller):
         access_token = order_pool.browse(request.cr, SUPERUSER_ID, order_id, context=request.context).access_token
         return access_token or order_id
 
+    def _get_partner_user(self, order_id):
+        order_pool = request.registry.get('sale.order')
+        user_pool = request.registry.get('res.users')
+        partner = order_pool.browse(request.cr, SUPERUSER_ID, order_id, context=request.context).partner_id.id
+        return user_pool.search(request.cr, SUPERUSER_ID, [('partner_id', '=', partner)])[0]
+
     @website.route(['/quote/<token>','/quote/<int:order_id>'], type='http', auth="public")
     def view(self, token=None, order_id=None, **post):
         values = {}
@@ -54,7 +60,7 @@ class sale_quote(http.Controller):
         if post.get('new_message'):
             request.session.body = post.get('new_message')
         if 'body' in request.session and request.session.body:
-            request.registry.get('sale.order').message_post(request.cr, request.uid, order_id,
+            request.registry.get('sale.order').message_post(request.cr, self._get_partner_user(order_id), order_id,
                     body=request.session.body,
                     type='email',
                     subtype='mt_comment',
