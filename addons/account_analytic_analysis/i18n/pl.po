@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-15 13:00+0000\n"
+"Last-Translator: Mirosław Bojanowicz <miroslaw.bojanowicz@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:46+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-21 05:56+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -26,7 +26,7 @@ msgstr "Brak zamówień do fakturowania, utwórz"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:547
 #, python-format
 msgid "Timesheets to Invoice of %s"
-msgstr ""
+msgstr "Listy ewidencji czasu pracy do fakturowania za %s"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -36,7 +36,7 @@ msgstr "Grupuj wg..."
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Template"
-msgstr ""
+msgstr "Szablon"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -56,7 +56,7 @@ msgstr "Rzeczywista stopa marży (%)"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End date passed or prepaid unit consumed"
-msgstr ""
+msgstr "Data końcowa upływu lub przedpłaty jednostek konsumowanych"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -101,6 +101,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknij aby utworzyć ofertę, która będzie mogła zostać "
+"zamieniona na\n"
+"                zlecenie sprzedaży.\n"
+"              </p><p>\n"
+"                Używaj zleceń sprzedaży żeby śledzić wszystko co powinno "
+"zostać zafakturowane\n"
+"                w ustalonej cenie na umowie.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -110,7 +120,7 @@ msgstr "Suma zafakturowanych klientom kwot dla tego konta"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Anulowano"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
@@ -120,18 +130,18 @@ msgstr "Suma pozycji kart czasu pracy zafakturowanych dla tej umowy."
 #. module: account_analytic_analysis
 #: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
 msgid "Contract expiration reminder ${user.company_id.name}"
-msgstr ""
+msgstr "Przypomnienie o kończącym się terminie umowy ${user.company_id.name}"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
 #, python-format
 msgid "Sales Order Lines of %s"
-msgstr ""
+msgstr "Zlecenie sprzedaży %s"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End date is in the next month"
-msgstr ""
+msgstr "Data końcowa jest w przyszłym miesiącu"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -148,7 +158,7 @@ msgstr "Konto analityczne"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr ""
+msgstr "Kontrahent"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -193,7 +203,7 @@ msgstr "Data Końcowa"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Account Manager"
-msgstr ""
+msgstr "Zarządzający kontem"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -208,7 +218,7 @@ msgstr "Oczekiwany"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Closed contracts"
-msgstr ""
+msgstr "Zamknięte kontrakty"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -238,7 +248,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Cennik"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -293,7 +303,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts assigned to a customer."
-msgstr ""
+msgstr "Umowy przypisane do klienta"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
@@ -303,7 +313,7 @@ msgstr "Suma godzin na miesiąc"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending contracts"
-msgstr ""
+msgstr "Umowy w toku"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -323,7 +333,7 @@ msgstr "Nadrzędny"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Consumed"
-msgstr ""
+msgstr "Jednostki skonsumowane"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -345,7 +355,7 @@ msgstr "Data początkowa"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expiring soon"
-msgstr ""
+msgstr "Wygasające wkrótce"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -430,7 +440,7 @@ msgstr "Karty godzin"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Closed"
-msgstr ""
+msgstr "Zamknięte"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -498,7 +508,7 @@ msgstr "Użytkownik"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Cancelled contracts"
-msgstr ""
+msgstr "Anulowane umowy"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -557,7 +567,7 @@ msgstr "Dochód w czasie (rzeczywisty)"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expired or consumed"
-msgstr ""
+msgstr "Zakończone lub skonsumowane"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
@@ -599,7 +609,7 @@ msgstr "Umowy nie przypisane"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Customer Contracts"
-msgstr ""
+msgstr "Umowy z klientami"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -609,7 +619,7 @@ msgstr "Ogólna wartość faktury"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "In Progress"
-msgstr ""
+msgstr "W toku"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -619,7 +629,7 @@ msgstr "Obliczone formułą: Maksymalna cena faktury - Kwota zafakturowana"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress (open, draft)"
-msgstr ""
+msgstr "Umowy w trakcie (otwarte, uzgadniane)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -629,7 +639,7 @@ msgstr "Data ostatniej faktury"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Remaining"
-msgstr ""
+msgstr "Pozostałe jednostki"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -728,6 +738,12 @@ msgid ""
 "                            defined on the product related (e.g timesheet \n"
 "                            products are defined on each employee)."
 msgstr ""
+"Podczas refakturowania kosztów OpenERP używa\n"
+"                            cennika kontraktu, który używa ceny "
+"zdefiniowanej\n"
+"                            dla produktu powiązanego (np. produkty kart "
+"czasu\n"
+"                            pracy są zdefiniowane dla każdego pracownika)."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
@@ -743,7 +759,7 @@ msgstr "Obowiązkowe stosowanie szablonów"
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Contract Template"
-msgstr ""
+msgstr "Szablon umowy"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0

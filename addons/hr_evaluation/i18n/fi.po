@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-23 08:32+0000\n"
+"Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:00+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-24 05:47+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -37,7 +37,7 @@ msgstr "Ryhmittele"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Cancel Appraisal"
-msgstr ""
+msgstr "Peruuta arviointi"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -58,7 +58,7 @@ msgstr "Lykkää aloitusta"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal that are in waiting appreciation state"
-msgstr ""
+msgstr "Arvoinnit, jotka odottavat arvostelua"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:0
@@ -96,17 +96,19 @@ msgid ""
 "This number of months will be used to schedule the first evaluation date of "
 "the employee when selecting an evaluation plan. "
 msgstr ""
+"Työntekijän ensimmäinen arvointipäivä ajoitetaan tämän kuukausimäärän "
+"perusteella arvointisuunnitelmaa valittaessa. "
 
 #. module: hr_evaluation
 #: view:hr.employee:0
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisals"
-msgstr ""
+msgstr "Arvioinnit"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(eval_name)s:Appraisal Name"
-msgstr ""
+msgstr "(eval_name)s:Arvioinnin nimi"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_ids:0
@@ -122,7 +124,7 @@ msgstr "Viestin teksti"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,wait:0
 msgid "Wait Previous Phases"
-msgstr ""
+msgstr "Odota edeltäviä vaiheita"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
@@ -167,7 +169,7 @@ msgstr "Lopetuspäivämäärä"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_first:0
 msgid "First Appraisal in (months)"
-msgstr ""
+msgstr "Ensimmäinen arviointi (kuukauteen)"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -199,10 +201,16 @@ msgstr ""
 "\n"
 "Hyvä %(employee_name)s,\n"
 "\n"
-"teen arvostelua työntekijästä %(eval_name)s.\n"
+"Teen yrityksemme henkilöstön arviontia työntekijästä %(eval_name)s.\n"
 "\n"
-"Ole hyvä ja lähetä vastauksesi.\n"
+"Kyselymme tapahtuu etukäteen suunnitellun arviontiaikataulun mukaisesti.\n"
 "\n"
+"Ole hyvä ja täytä oheinen arviointikysely huolellisesti, rehellisesti ja "
+"täydellisesti.\n"
+"\n"
+"Tarvittaessa voit pyytää minulta lisätietoja tästä kyselystä. Otan "
+"mielelläni vastaan myös \n"
+"kehitysehdotuksia ja palautetta tavastamme toimia.\n"
 "\n"
 "Kiitos,\n"
 "--\n"
@@ -213,7 +221,7 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal that are in Plan In Progress state"
-msgstr ""
+msgstr "Arviointi on Suunnittelu kesken -tilassa"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_summary:0
@@ -243,7 +251,7 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In progress Evaluations"
-msgstr "Keskeneräiset arvostelut"
+msgstr "Keskeneräiset arvioinnit"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_survey_request
@@ -330,7 +338,7 @@ msgstr "Lähetä kaikki vastaukset esimiehelle"
 #: selection:hr.evaluation.report,state:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Plan In Progress"
-msgstr ""
+msgstr "Keskeneräinen suunnitelma"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -346,7 +354,7 @@ msgstr "Lähetä muistutusviesti"
 #: view:hr.evaluation.report:0
 #: field:hr_evaluation.evaluation,rating:0
 msgid "Appreciation"
-msgstr ""
+msgstr "Arvostelu"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -418,12 +426,12 @@ msgstr "Toimintasuunnitelma"
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
 msgid "Periodic Appraisal"
-msgstr "Jaksoarviointi"
+msgstr "Säännöllinen arviointi"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_next:0
 msgid "Periodicity of Appraisal (months)"
-msgstr "Arvioinnin jaksollisuus (kuukausia)"
+msgstr "Arviointivälien pituus (kuukausia)"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -434,7 +442,7 @@ msgstr "Ylittää selkeästi vaatimukset"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "In progress"
-msgstr ""
+msgstr "Kesken"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -504,7 +512,7 @@ msgid ""
 "If the evaluation does not meet the expectations, you can proposean action "
 "plan"
 msgstr ""
-"Jos arvostelu ei täytä odotuksia, voit ehdottaa toimintasuunnitelmaa."
+"Jos arviointi ei täytä odotuksia, voit ehdottaa toimintasuunnitelmaa."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -535,7 +543,7 @@ msgstr "Arviointisuunnitelma"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Print Survey"
-msgstr ""
+msgstr "Tulosta kyselylomake"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -642,7 +650,7 @@ msgstr "Lopullinen vahvistus"
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Waiting Appreciation"
-msgstr ""
+msgstr "Odottaa arvostelua"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -654,12 +662,12 @@ msgstr "Arvioinnin analyysi"
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date:0
 msgid "Appraisal Deadline"
-msgstr "Arvioinnin määräpäivä"
+msgstr "Arvioinnin takaraja"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
 msgid "Overall Rating"
-msgstr ""
+msgstr "Yleisarvosana"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -670,22 +678,22 @@ msgstr "Haastattelija"
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_report
 msgid "Evaluations Statistics"
-msgstr "Arvostelutilasto"
+msgstr "Arvointitilasto"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Deadline Date"
-msgstr ""
+msgstr "Palautuspäivä"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
 msgid "This is the appreciation on which the evaluation is summarized."
-msgstr ""
+msgstr "Tässä on arvostelu, joka on yhteenveto arvoinneista."
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Top-Down Appraisal Requests"
-msgstr ""
+msgstr "Ylhäältä alas -arviointipyynnöt"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -755,7 +763,7 @@ msgid ""
 "(first appraisal + periodicity)."
 msgstr ""
 "Seuraavan arvioinnin päivämäärä on laskettu arviointisuunnitelman "
-"päivämäärien mukaan (ensimmäinen arviointi + jaksollisuus)."
+"päivämäärien mukaan (ensimmäinen arviointi + arviointiväli)."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
@@ -768,8 +776,8 @@ msgid ""
 "The number of month that depicts the delay between each evaluation of this "
 "plan (after the first one)."
 msgstr ""
-"Kuukausien määrä, joka kuvaa viivettä tämän suunnitelman arvostelujen "
-"välillä (ensimmäisen jälkeen)."
+"Tämän suunnitelman arviointien välinen viive kuukaisina alkaen ensimmäisestä "
+"arvoinnista."
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
@@ -823,7 +831,7 @@ msgstr "Vaihe"
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Bottom-Up Appraisal Requests"
-msgstr ""
+msgstr "Alhaalta ylös -arviointipyynnöt"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -834,23 +842,23 @@ msgstr "Helmikuu"
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Interview Appraisal"
-msgstr "Haastatteluarviointi"
+msgstr "Arviointihaastattelu"
 
 #. module: hr_evaluation
 #: field:survey.request,is_evaluation:0
 msgid "Is Appraisal?"
-msgstr ""
+msgstr "On arviointi?"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "You cannot start evaluation without Appraisal."
-msgstr ""
+msgstr "Arvostelua ei voi aloittaa ilman arviointia."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal Summary..."
-msgstr ""
+msgstr "Arviointiyhteenveto..."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
@@ -864,6 +872,8 @@ msgid ""
 "You cannot change state, because some appraisal(s) are in waiting answer or "
 "draft state."
 msgstr ""
+"Et voi vaihtaa tilaa, sillä osa arvioinneista odottaa vastausta tai on "
+"Ehdotus-tilassa."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -873,7 +883,7 @@ msgstr "Huhtikuu"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Appraisal Plan Phases"
-msgstr ""
+msgstr "Arvioinnin suunnitteluvaiheet"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
@@ -901,12 +911,12 @@ msgstr ""
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Search Appraisal"
-msgstr "Etsi arviointeja"
+msgstr "Hae arviointeja"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Järjestysluku"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -940,7 +950,7 @@ msgstr "Arvioinnin yhteenveto"
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
-msgstr "Seuraavan arvioinnin päivämäärä"
+msgstr "Seuraava arviointipäivä"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0

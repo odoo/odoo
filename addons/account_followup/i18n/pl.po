@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-11-17 11:10+0000\n"
+"Last-Translator: Mirosław Bojanowicz <miroslaw.bojanowicz@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:48+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-11-21 05:58+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -23,12 +23,12 @@ msgstr ""
 #: model:email.template,subject:account_followup.email_template_account_followup_level1
 #: model:email.template,subject:account_followup.email_template_account_followup_level2
 msgid "${user.company_id.name} Payment Reminder"
-msgstr ""
+msgstr "${user.company_id.name} Przypomnienie o płatności"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
 msgid "The maximum follow-up level"
-msgstr ""
+msgstr "Maksymalny poziom monitu o płatność"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -39,7 +39,7 @@ msgstr "Grupuj wg..."
 #. module: account_followup
 #: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
-msgstr "Windykacja"
+msgstr "Monitowanie płatności"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -55,7 +55,7 @@ msgstr "Data następnej akcji"
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,manual_action:0
 msgid "Manual Action"
-msgstr ""
+msgstr "Manualne działanie"
 
 #. module: account_followup
 #: field:account_followup.sending.results,needprinting:0
@@ -95,23 +95,23 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "days overdue, do the following actions:"
-msgstr ""
+msgstr "dni po terminie, wykonaj następującą akcję:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "Kroki monitowania płatności"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:261
 #, python-format
 msgid "Due Date"
-msgstr ""
+msgstr "Termin płatności"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
 msgid "Send Follow-Ups"
-msgstr ""
+msgstr "Wyślij monit o płatność"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:312
@@ -119,7 +119,7 @@ msgstr ""
 #: code:addons/account_followup/report/account_followup_print.py:86
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Błąd!"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -134,11 +134,14 @@ msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
 msgstr ""
+"To jest następne działanie jakie zostanie podjęte. Zostanie automatycznie "
+"podjęte jeśli kontrahent otrzyma monit o płatność, który wymaga manualnych "
+"działań. "
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "No Responsible"
-msgstr ""
+msgstr "Bez odpowiedzi"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -205,12 +208,12 @@ msgstr ""
 #: code:addons/account_followup/account_followup.py:260
 #, python-format
 msgid "Reference"
-msgstr ""
+msgstr "Odnośnik"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
-msgstr ""
+msgstr "Bilans > 0"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -225,19 +228,19 @@ msgstr "Następna akcja"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": Partner Name"
-msgstr ""
+msgstr ": Kontrahent"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_responsible_id:0
 msgid "Assign a Responsible"
-msgstr ""
+msgstr "Przypisz odpowiedzialną/ego"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 #: field:account_followup.followup,followup_line:0
 #: view:res.partner:0
 msgid "Follow-up"
-msgstr "Windykacja"
+msgstr "Monitowanie płatności"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -250,7 +253,7 @@ msgstr "VAT:"
 #: field:account_followup.stat.by.partner,partner_id:0
 #: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
-msgstr "Partner"
+msgstr "Kontrahent"
 
 #. module: account_followup
 #: field:account_followup.print,email_body:0
@@ -280,43 +283,43 @@ msgstr "Data :"
 #. module: account_followup
 #: field:account_followup.print,partner_ids:0
 msgid "Partners"
-msgstr "Partnerzy"
+msgstr "Kontrahenci"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "Tylko jeden monit na firmę jest dozwolony"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "Przypomnienie faktur"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
+msgstr "Podczas przetwarzania, wydrukuje list"
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
 msgid "Worst Due Date"
-msgstr ""
+msgstr "Najgorszy termin płatności"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr ""
+msgstr "Bez postępowania sądowego"
 
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Send emails and generate letters"
-msgstr ""
+msgstr "Wyślij email i generuj listy"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
 msgid "Manual Follow-Ups"
-msgstr ""
+msgstr "Manualne monitowanie płatności"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -372,44 +375,46 @@ msgstr "Winien"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr ""
+msgstr "Statystyka monitowania płatności"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Send Overdue Email"
-msgstr ""
+msgstr "Wyślij list zaległych płatności"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr ""
+msgstr "Kryteria monitowania płatności"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr ""
+"Daje polecenie porządkowania kolejności podczas wyświetlania listy pozycji "
+"monitów o płatność."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
 #, python-format
 msgid " will be sent"
-msgstr ""
+msgstr " zostanie wysłany"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": User's Company Name"
-msgstr ""
+msgstr ": Nazwa firmy użytkownika"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,send_letter:0
 msgid "Send a Letter"
-msgstr ""
+msgstr "Wyślij list"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
-msgstr ""
+msgstr "Monity o płatność"
 
 #. module: account_followup
 #: code:addons/account_followup/report/account_followup_print.py:86
@@ -428,12 +433,12 @@ msgstr ""
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:0
 msgid "Follow-up Level"
-msgstr "Poziom wezwania"
+msgstr "Poziom monitu o płatność"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 msgid "Latest followup"
-msgstr "Ostatnia windykacja"
+msgstr "Ostatni monit o płatność"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
@@ -443,7 +448,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
 msgid "Do Manual Follow-Ups"
-msgstr ""
+msgstr "Wykonaj manualnie monit o płatność"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -453,33 +458,33 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.print,email_conf:0
 msgid "Send Email Confirmation"
-msgstr ""
+msgstr "Wyślij potwierdzenie email"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up Entries with period in current year"
-msgstr ""
+msgstr "Wpisy monitu o płatność z bieżącego roku"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr ""
+msgstr "Najnowsze monity o platność"
 
 #. module: account_followup
 #: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr ""
+msgstr "Wyślij email w języku kontrahenta"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:169
 #, python-format
 msgid " email(s) sent"
-msgstr ""
+msgstr " email wysłany"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr ""
+msgstr "Wydrukuj monity płatności i wyślij maila do klienta"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -495,28 +500,28 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:155
 #, python-format
 msgid "Anybody"
-msgstr ""
+msgstr "Ktokolwiek"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "Podczas przetwarzania, wyśle email"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr ""
+msgstr "Przypomnienia dla kontrahenta/ów"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Print Overdue Payments"
-msgstr ""
+msgstr "Wydruk przeterminowanych płatności"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr "Windykacje"
+msgstr "Monitowanie płatności"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:218
@@ -527,7 +532,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "Konto monitowania płatności"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
@@ -562,17 +567,17 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0
 msgid "Search Partner"
-msgstr ""
+msgstr "Szukaj kontrahenta"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send Letters and Emails"
-msgstr ""
+msgstr "Wyślij list i email"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Follow-up"
-msgstr ""
+msgstr "Przeszukaj monity o płatność"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -595,27 +600,27 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr ""
+msgstr "Zablokowane"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr ""
+msgstr "Dni poziomów monitowania płatności muszą być inne"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Click to mark the action as done."
-msgstr ""
+msgstr "Kliknij aby zazaczyć działanie jako wykonane"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
-msgstr ""
+msgstr "Analiza monitów o płatność"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -697,7 +702,7 @@ msgstr "Dokument : Zestawienie konta klienta"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Poziomy monitowania płatności"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -724,29 +729,29 @@ msgstr ""
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
 msgid "Amount Due"
-msgstr ""
+msgstr "Należność"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "Ostatnia windykacja"
+msgstr "Najnowszy monit o płatność"
 
 #. module: account_followup
 #: view:account_followup.sending.results:0
 msgid "Download Letters"
-msgstr ""
+msgstr "Pobierz listy"
 
 #. module: account_followup
 #: field:account_followup.print,company_id:0
 #: field:res.partner,unreconciled_aml_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "nieznany"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:313
 #, python-format
 msgid "Printed overdue payments report"
-msgstr ""
+msgstr "Raport wydrukowanych należności przeterminowanych"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:290
@@ -780,23 +785,23 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Pozycje zapisów dziennika"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:280
 #, python-format
 msgid "Amount due"
-msgstr ""
+msgstr "Należność"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Razem:"
 
 #. module: account_followup
 #: field:account_followup.followup.line,email_template_id:0
 msgid "Email Template"
-msgstr ""
+msgstr "Szablon emaila"
 
 #. module: account_followup
 #: field:account_followup.print,summary:0
@@ -807,7 +812,7 @@ msgstr "Podsumowanie"
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,send_email:0
 msgid "Send an Email"
-msgstr ""
+msgstr "Wyślij email"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -817,7 +822,7 @@ msgstr "Ma"
 #. module: account_followup
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
-msgstr ""
+msgstr "Kwota przeterminowana"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:263
@@ -836,7 +841,7 @@ msgstr ""
 #: view:account_followup.stat:0
 #: field:res.partner,latest_followup_date:0
 msgid "Latest Follow-up Date"
-msgstr ""
+msgstr "Data najnowszego monitu"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_default
@@ -881,12 +886,12 @@ msgstr "Saldo"
 #. module: account_followup
 #: help:res.partner,payment_note:0
 msgid "Payment Note"
-msgstr ""
+msgstr "Notatka platności"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "My Follow-ups"
-msgstr ""
+msgstr "Moje monity"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -919,7 +924,7 @@ msgstr "Ostatnia zmiana"
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Okres"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:228
@@ -930,7 +935,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Follow-up Report"
-msgstr ""
+msgstr "Raport monitów płatności"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -947,17 +952,17 @@ msgstr "Anuluj"
 #. module: account_followup
 #: view:account_followup.sending.results:0
 msgid "Close"
-msgstr ""
+msgstr "Zamknij"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr ""
+msgstr "Spór sądowy"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr ""
+msgstr "Maksymalny poziom monitu"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
@@ -975,12 +980,12 @@ msgstr ""
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
 #: view:res.partner:0
 msgid "Payment Follow-up"
-msgstr ""
+msgstr "Monitowanie płatności"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": Current Date"
-msgstr ""
+msgstr ": Bieżąca data"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -993,7 +998,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
 msgid "Follow-Up Action"
-msgstr ""
+msgstr "Działanie monitowania płatności"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1011,7 +1016,7 @@ msgstr "Opis"
 #. module: account_followup
 #: view:account_followup.sending.results:0
 msgid "Summary of actions"
-msgstr ""
+msgstr "Podsumowanie działań"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -1021,17 +1026,17 @@ msgstr "Odnośnik"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "After"
-msgstr ""
+msgstr "Po"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "This Fiscal year"
-msgstr ""
+msgstr "Ten rok finansowy"
 
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
 msgid "Latest Follow-up Level without litigation"
-msgstr ""
+msgstr "Najnowszy monit o płatność bez sporu sądowego"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1051,7 +1056,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up lines"
-msgstr ""
+msgstr "Pozycje monitowania płatności"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -1096,7 +1101,7 @@ msgstr ""
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 msgid "Follow-ups Sent"
-msgstr ""
+msgstr "Monit wysłany"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -1106,7 +1111,7 @@ msgstr "Nazwa"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id:0
 msgid "Latest Follow-up Level"
-msgstr ""
+msgstr "Najnowszy poziom monitu"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move:0
@@ -1117,7 +1122,7 @@ msgstr "Pierwsza zmiana"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Follow-up Statistics by Partner"
-msgstr ""
+msgstr "Statystyki monitów płatności kontrahenta"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:172
@@ -1129,12 +1134,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
 #: model:ir.ui.menu,name:account_followup.menu_sale_followup
 msgid "My Follow-Ups"
-msgstr ""
+msgstr "Moje monity płatności"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Customer Followup"
-msgstr ""
+msgstr "Monity płatności klienta"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -1155,7 +1160,7 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:166
 #, python-format
 msgid "Follow-up letter of "
-msgstr ""
+msgstr "Monit płatności "
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1165,7 +1170,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Send follow-ups"
-msgstr ""
+msgstr "Wyślij monit płatności"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -1188,7 +1193,7 @@ msgstr "Numeracja"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Follow-ups To Do"
-msgstr ""
+msgstr "Monity płatności do wykonania"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -1216,17 +1221,17 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.print,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Wydruk testowy"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": User Name"
-msgstr ""
+msgstr ": Nazwa użytkownika"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Accounting"
-msgstr ""
+msgstr "Księgowość"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1244,4 +1249,4 @@ msgstr ""
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
-msgstr ""
+msgstr "Obietnica płatności klienta"

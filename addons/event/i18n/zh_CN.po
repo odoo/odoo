@@ -9,13 +9,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-08-12 05:48+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
+"Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-08-13 06:06+0000\n"
-"X-Generator: Launchpad (build 16723)\n"
+"X-Launchpad-Export-Date: 2013-11-21 06:09+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: event
 #: view:event.event:0
@@ -583,6 +583,8 @@ msgid ""
 "status is set to 'Done'.If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"一个事件创建成功后，初始状态为草稿，如果某一天该事件被确认了，其状态会相应变为确认。如果该事件结束了，状态就会显示为已结束。当该事件被取消了，状态就显示为"
+"已取消。"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -638,7 +640,7 @@ msgstr "如果你设定了邮件模板，每个参与者将收到邮件公告确
 #. module: event
 #: view:board.board:0
 msgid "Events Filling By Status"
-msgstr ""
+msgstr "按照状态过滤"
 
 #. module: event
 #: selection:report.event.registration,event_state:0
@@ -740,6 +742,13 @@ msgid ""
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
 msgstr ""
+"\n"
+"        &nbsp:&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:<p>你好，${object.name},</p>\n"
+"&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:<p>你注册的活动${object.event_id.name} "
+"已经被确认了，举办时间定在${object.event_id.date_begin} ~ ${object.event_id.date_end}之间.\n"
+"&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:详细信息,请联系我们的活动组织部门.</p>\n"
+"&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:<p>谢谢参与!</p>\n"
+"&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:<p>此致敬礼</p>"
 
 #. module: event
 #: field:event.event,message_is_follower:0
@@ -808,7 +817,7 @@ msgstr "确认登记记录"
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr ""
+msgstr "鉴于你已经注册该事件为“参加”。如果你想取消这次活动。请首先将其状态改为草稿。"
 
 #. module: event
 #: view:res.partner:0
@@ -841,7 +850,7 @@ msgstr "活动类型"
 msgid ""
 "This field contains the template of the mail that will be automatically sent "
 "each time a registration for this event is confirmed."
-msgstr ""
+msgstr "活动一旦被确认，这个字段包含的模板会自动发送的邮件。"
 
 #. module: event
 #: view:event.event:0
@@ -1038,7 +1047,7 @@ msgstr "4月"
 msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
-msgstr ""
+msgstr "当你选择了这个活动，它将选择这个默认确认事件邮件价值"
 
 #. module: event
 #: view:report.event.registration:0
@@ -1104,6 +1113,13 @@ msgid ""
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
 msgstr ""
+"\n"
+"        &nbsp:&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:<p>你好，${object.name},</p>\n"
+"&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:<p>你注册的活动${object.event_id.name} "
+"已经被正式记录了，一旦活动确认\n"
+"你将自动接收电子邮件提供您更多的实用信息(如进度、议程…)。\n"
+"&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:<p>谢谢参与!</p>\n"
+"&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:&nbsp:<p>此致敬礼</p>"
 
 #. module: event
 #: help:event.event,reply_to:0
@@ -1113,6 +1129,7 @@ msgid ""
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
+"在这里添写组织者的邮件地址,当活动或注册确认时，它会自动出现在在邮件的‘回复给’一栏里。如果你电子邮件地址使用的不是默认网关的话，则需要添写邮件网关。"
 
 #. module: event
 #: view:event.event:0

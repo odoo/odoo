@@ -70,7 +70,11 @@ class document_file(osv.osv):
 
     def check(self, cr, uid, ids, mode, context=None, values=None):
         """Overwrite check to verify access on directory to validate specifications of doc/access_permissions.rst"""
+        if not isinstance(ids, list):
+            ids = [ids]
+
         super(document_file, self).check(cr, uid, ids, mode, context=context, values=values)
+        
         if ids:
             self.pool.get('ir.model.access').check(cr, uid, 'document.directory', mode)
 

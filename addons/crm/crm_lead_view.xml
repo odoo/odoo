@@ -324,7 +324,7 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Leads">
-                    <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                    <field name="name" string="Lead / Customer" filter_domain="['|','|','|',('partner_name','ilike',self),('email_from','ilike',self),('contact_name','ilike',self),('name','ilike',self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]"/>
                     <field name="section_id" context="{'invisible_section': False}"/>
                     <field name="user_id"/>
@@ -412,7 +412,7 @@
                                     on_change="onchange_partner_id(partner_id, email_from)"
                                     string="Customer"
                                     context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
-                                <field name="email_from" string="Email"/>
+                                <field name="email_from" string="Email" widget="email"/>
                                 <field name="phone"/>
                             </group>
 

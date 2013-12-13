@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-12-03 14:19+0000\n"
+"Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:51+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-12-04 05:56+0000\n"
+"X-Generator: Launchpad (build 16861)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -44,7 +44,7 @@ msgstr ""
 #: selection:calendar.todo,rrule_type:0
 #: selection:crm.meeting,rrule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "viikko(a)"
 
 #. module: base_calendar
 #: field:calendar.event,we:0
@@ -63,12 +63,12 @@ msgstr "Tuntematon"
 #: help:calendar.todo,recurrency:0
 #: help:crm.meeting,recurrency:0
 msgid "Recurrent Meeting"
-msgstr "Toistuva kokous"
+msgstr "Toistuva tapaaminen"
 
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr ""
+msgstr "Palautetapaaminen"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -134,13 +134,13 @@ msgstr "Maaliskuu"
 #. module: base_calendar
 #: help:calendar.attendee,cutype:0
 msgid "Specify the type of Invitation"
-msgstr "Määrittele kutsun tyyppi"
+msgstr "Määrittele kutsutyyppi"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 #: field:crm.meeting,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Lukemattomat viestit"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
@@ -174,7 +174,7 @@ msgstr "Vapaa"
 #. module: base_calendar
 #: help:crm.meeting,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: base_calendar
 #: help:calendar.attendee,rsvp:0
@@ -226,12 +226,12 @@ msgstr "Viimeinen"
 #. module: base_calendar
 #: help:crm.meeting,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Viesti- ja kommunikointihistoria"
 
 #. module: base_calendar
 #: field:crm.meeting,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Viestit"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
@@ -258,7 +258,7 @@ msgstr "Puheenjohtaja"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "My Meetings"
-msgstr ""
+msgstr "Omat tapaamiset"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -297,17 +297,17 @@ msgstr "Osallistujan osallistumisen tila"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Mail To"
-msgstr ""
+msgstr "Sähköposti osoitteeseen"
 
 #. module: base_calendar
 #: field:crm.meeting,name:0
 msgid "Meeting Subject"
-msgstr ""
+msgstr "Tapaamisen aihe"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "End of Recurrence"
-msgstr ""
+msgstr "Toiston loppu"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -322,13 +322,13 @@ msgstr "Toiston asetukset"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day where repeat the meeting"
-msgstr "Valitse päivä jolloin kokous toistuu"
+msgstr "Valitse päivä jolloin tapaaminen toistuu"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 #: model:ir.actions.act_window,name:base_calendar.action_crm_meeting
 msgid "Meetings"
-msgstr ""
+msgstr "Tapaamiset"
 
 #. module: base_calendar
 #: field:calendar.event,recurrent_id_date:0
@@ -354,6 +354,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on "
+"valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:399
@@ -455,7 +457,7 @@ msgstr "Su"
 #. module: base_calendar
 #: field:calendar.attendee,cutype:0
 msgid "Invite Type"
-msgstr "Kutsun tyyppi"
+msgstr "Kutsutyypit"
 
 #. module: base_calendar
 #: view:res.alarm:0
@@ -477,7 +479,7 @@ msgstr "Kuukauden päivä"
 #. module: base_calendar
 #: field:crm.meeting,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Seuraajat"
 
 #. module: base_calendar
 #: field:calendar.event,location:0
@@ -524,26 +526,26 @@ msgstr "Tapahtuman hälytystiedot"
 #: code:addons/base_calendar/base_calendar.py:1017
 #, python-format
 msgid "Count cannot be negative or 0."
-msgstr ""
+msgstr "Määrä ei voi olla negatiivinen tai nolla."
 
 #. module: base_calendar
 #: field:crm.meeting,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Luontipäivä"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 #: model:ir.model,name:base_calendar.model_crm_meeting
 #: model:res.request.link,name:base_calendar.request_link_meeting
 msgid "Meeting"
-msgstr ""
+msgstr "Tapaaminen"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 #: selection:crm.meeting,rrule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Kuukautta"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -565,7 +567,7 @@ msgstr "Caldav URL"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Ohjattu kutsutoiminta"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -589,7 +591,7 @@ msgstr "To"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Meeting Details"
-msgstr ""
+msgstr "Tapaamisen yksityiskohdat"
 
 #. module: base_calendar
 #: field:calendar.attendee,child_ids:0
@@ -600,21 +602,21 @@ msgstr "Delegoitu"
 #: code:addons/base_calendar/crm_meeting.py:102
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr ""
+msgstr "Seuraavilla yhteystiedoilla ei ole sähköpostia määritelty :"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 #: selection:crm.meeting,rrule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Vuosi/vuodet"
 
 #. module: base_calendar
 #: view:crm.meeting.type:0
 #: model:ir.actions.act_window,name:base_calendar.action_crm_meeting_type
 #: model:ir.ui.menu,name:base_calendar.menu_crm_meeting_type
 msgid "Meeting Types"
-msgstr ""
+msgstr "Tapaamistyypit"
 
 #. module: base_calendar
 #: field:calendar.event,create_date:0
@@ -632,17 +634,17 @@ msgstr "Julkinen työntekijöille"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "hours"
-msgstr ""
+msgstr "tunti;tuntia"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Cancel Event"
-msgstr ""
+msgstr "Peruuta tapahtuma"
 
 #. module: base_calendar
 #: field:calendar.attendee,partner_id:0
 msgid "Contact"
-msgstr "Yhteyshenkilö"
+msgstr "Yhteystieto"
 
 #. module: base_calendar
 #: field:calendar.attendee,language:0
@@ -659,7 +661,7 @@ msgstr "Toista kunnes"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Options"
-msgstr ""
+msgstr "Vaihtoehdot"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
@@ -698,7 +700,7 @@ msgstr "Tiistai"
 #. module: base_calendar
 #: field:crm.meeting,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Tunnisteet"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -732,7 +734,7 @@ msgstr "Anna tapahtuman toistua säännöllisin väliajoin"
 #. module: base_calendar
 #: model:ir.ui.menu,name:base_calendar.mail_menu_calendar
 msgid "Calendar"
-msgstr ""
+msgstr "Kalenteri"
 
 #. module: base_calendar
 #: field:calendar.attendee,cn:0
@@ -749,6 +751,7 @@ msgstr "Hylätty"
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
+"Päivämäärällä ryhmittely ei ole tuettu, käytä sen sijaan kalenterinäkymää."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -825,7 +828,7 @@ msgstr "Liite"
 #. module: base_calendar
 #: field:crm.meeting,date_closed:0
 msgid "Closed"
-msgstr ""
+msgstr "Suljettu"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -850,7 +853,7 @@ msgstr "Toistojen määrä"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet2
 msgid "Internal Meeting"
-msgstr ""
+msgstr "Sisäinen tapaaminen"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -867,7 +870,7 @@ msgstr "Tapahtumat"
 #: field:calendar.todo,state:0
 #: field:crm.meeting,state:0
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #. module: base_calendar
 #: help:calendar.attendee,email:0
@@ -877,7 +880,7 @@ msgstr "Kutsutun henkilön sähköposti"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet1
 msgid "Customer Meeting"
-msgstr ""
+msgstr "Asiakastapaaminen"
 
 #. module: base_calendar
 #: help:calendar.attendee,dir:0
@@ -905,7 +908,7 @@ msgstr "Maanantai"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet4
 msgid "Open Discussion"
-msgstr ""
+msgstr "Avoin keskustelu"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
@@ -929,18 +932,18 @@ msgstr "Tapahtuman päivä"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Invitations"
-msgstr ""
+msgstr "Kutsut"
 
 #. module: base_calendar
 #: view:calendar.event:0
 #: view:crm.meeting:0
 msgid "The"
-msgstr ""
+msgstr "."
 
 #. module: base_calendar
 #: field:crm.meeting,write_date:0
 msgid "Write Date"
-msgstr ""
+msgstr "Kirjoita päiväys"
 
 #. module: base_calendar
 #: field:calendar.attendee,delegated_from:0
@@ -950,7 +953,7 @@ msgstr "Delegoinut"
 #. module: base_calendar
 #: field:crm.meeting,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "on seuraaja"
 
 #. module: base_calendar
 #: field:calendar.attendee,user_id:0
@@ -1009,7 +1012,7 @@ msgstr "Epävarma"
 #: constraint:calendar.todo:0
 #: constraint:crm.meeting:0
 msgid "Error ! End date cannot be set before start date."
-msgstr ""
+msgstr "Virhe! Loppuaika ei voi olla ennen alkuaikaa."
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_occurs:0
@@ -1068,7 +1071,7 @@ msgstr "Et voi kopioida kalenterin mukaista osallistujaa"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr "Valitse kuukauden päivä koska kokous toistetaan"
+msgstr "Valitse kuukauden päivä koska tapaaminen toistetaan"
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
@@ -1103,7 +1106,7 @@ msgstr "Määrittelee toimenpiteen joka käynnistään kun hälytys laukaistaan"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Starting at"
-msgstr ""
+msgstr "Alkaa"
 
 #. module: base_calendar
 #: selection:calendar.event,end_type:0
@@ -1132,12 +1135,12 @@ msgstr ""
 #: field:calendar.todo,end_type:0
 #: field:crm.meeting,end_type:0
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "Toiston päättö"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Until"
-msgstr ""
+msgstr "Kunnes"
 
 #. module: base_calendar
 #: view:res.alarm:0
@@ -1147,12 +1150,12 @@ msgstr "Muistutuksen yksityiskohdat"
 #. module: base_calendar
 #: model:crm.meeting.type,name:base_calendar.categ_meet3
 msgid "Off-site Meeting"
-msgstr ""
+msgstr "Tapaaminen poissa toimistolta"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Day of Month"
-msgstr ""
+msgstr "Kuukauden päivä"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -1169,7 +1172,7 @@ msgstr "Toista joka (päivä/viikko/kuukausi/vuosi)"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "All Day?"
-msgstr ""
+msgstr "Koko päivän?"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,help:base_calendar.action_crm_meeting
@@ -1185,6 +1188,15 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klikkaa ajoittaaksesi uuden tapaamisen.\n"
+"          </p><p>\n"
+"            Kalenteri on jaettu työntekijöiden kesken ja se on täysin "
+"integroitu\n"
+"            muihin sovelluksiin, sekä työntekijöiden lomiin ja "
+"myyntijärjestelmään.\n"
+"          </p>\n"
+"        "
 
 #. module: base_calendar
 #: help:calendar.alarm,description:0
@@ -1204,7 +1216,7 @@ msgstr "Vastuukäyttäjä"
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Select Weekdays"
-msgstr ""
+msgstr "Valitse viikonpäivät"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:1521
@@ -1283,7 +1295,7 @@ msgstr "Kuukausi"
 #: selection:calendar.todo,rrule_type:0
 #: selection:crm.meeting,rrule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Päivä(t)"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1327,22 +1339,22 @@ msgstr "Pysäytä"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_values
 msgid "ir.values"
-msgstr ""
+msgstr "ir.values"
 
 #. module: base_calendar
 #: view:crm.meeting:0
 msgid "Search Meetings"
-msgstr ""
+msgstr "Hae tapaamiset"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
-msgstr ""
+msgstr "Tapaamistyyppi"
 
 #. module: base_calendar
 #: selection:calendar.attendee,state:0
@@ -1368,11 +1380,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikkaa asettaaksesi hälytystyypin.\n"
+"              </p><p>\n"
+"                Voit määritellä kalenterille muokatun hälytystyypin, joka \n"
+"                voidaan asettaa kalenteritapahtumiin tai tapaamisiin.\n"
+"              </p>\n"
+"            "
 
 #. module: base_calendar
 #: selection:crm.meeting,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Vahvistamaton"
 
 #. module: base_calendar
 #: help:calendar.attendee,sent_by:0
@@ -1424,7 +1443,7 @@ msgstr ""
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Viesti"
 
 #. module: base_calendar
 #: field:calendar.event,base_calendar_alarm_id:0
@@ -1449,7 +1468,7 @@ msgstr "Huhtikuu"
 #: code:addons/base_calendar/crm_meeting.py:106
 #, python-format
 msgid "Email addresses not found"
-msgstr ""
+msgstr "Sähköpostiosoitetta ei löydy"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1467,7 +1486,7 @@ msgstr "Arkipäivä"
 #: code:addons/base_calendar/base_calendar.py:1015
 #, python-format
 msgid "Interval cannot be negative."
-msgstr ""
+msgstr "Väli ei voi olla negatiivinen"
 
 #. module: base_calendar
 #: field:calendar.event,byday:0
@@ -1480,7 +1499,7 @@ msgstr "Päivittäin"
 #: code:addons/base_calendar/base_calendar.py:441
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "Ensin sinun pitää määritellä kutsulle päivä."
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
@@ -1563,7 +1582,7 @@ msgstr "Lauantai"
 #: field:calendar.todo,interval:0
 #: field:crm.meeting,interval:0
 msgid "Repeat Every"
-msgstr ""
+msgstr "Toista joka"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
@@ -1604,6 +1623,11 @@ msgid ""
 "                    * Points to a procedure resource, which is invoked when  "
 "                    the alarm is triggered for procedure."
 msgstr ""
+"* Osoittaa äänilähteeseen, joka esitetään, kun hälytys käynnistää äänen,\n"
+"                    * Tiedosto joka on tarkoitettu lähetettäväksi "
+"sähköpostiviestin liitteenä.\n"
+"                    * Osoittaa menettelyn, joka suoritetaan, kun hälytys "
+"käynnistää menettelyn."
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0

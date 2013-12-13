@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-12-07 08:06+0000\n"
+"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:03+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-12-08 05:46+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -58,7 +58,7 @@ msgstr "(V tem trenutku pusti prazno)"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Group By..."
-msgstr ""
+msgstr "Združeno po..."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
@@ -72,7 +72,7 @@ msgstr ""
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Enota mere"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
@@ -100,7 +100,7 @@ msgstr "Časovnica"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Please define employee for this user!"
-msgstr ""
+msgstr "Prosimo, določite zaposlenega za tega uporabnika!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -147,12 +147,12 @@ msgstr "Opravljeno delo v zadnjem obdobju"
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employees name"
-msgstr ""
+msgstr "Ime zaposlenega"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Projekt / Analitični konto"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
@@ -163,12 +163,12 @@ msgstr ""
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "Please define employee for your user."
-msgstr ""
+msgstr "Prosimo, določite zaposlenega za vašega uporabnika."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "Stroški & Prihodki"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -185,7 +185,7 @@ msgstr "Analitični konto"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Costs and Revenues"
-msgstr ""
+msgstr "Stroški in prihodki"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:150
@@ -195,12 +195,12 @@ msgstr ""
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Opozorilo!"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:44
@@ -224,7 +224,7 @@ msgstr "Vsota"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Analitični konto"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -241,6 +241,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kliknite za beleženje aktivnosti.\n"
+"              </p><p>\n"
+"                Vaše delovne ure lahko beležite in spremljate po projektu "
+"vsak\n"
+"                dan. Čas, porabljen na projektu bo postal strošek v "
+"analitičnem\n"
+"                knjigovodstvu/pogodbi in je lahko zaračunan (fakturiran)\n"
+"                kupcu, če se to zahteva.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -291,6 +302,9 @@ msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
 msgstr ""
+"Na projektu ni določen analitični konto.\n"
+"Prosimo, nastavite enega, sicer ne moremo avtomatično izpolniti liste "
+"prisotnosti."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -326,7 +340,7 @@ msgstr "december"
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
 msgid "employees"
-msgstr ""
+msgstr "zaposleni"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,month:0
@@ -345,7 +359,7 @@ msgstr "Opis dela"
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "or"
-msgstr ""
+msgstr "ali"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0
@@ -366,7 +380,7 @@ msgstr "Prijavi/odjavi se iz projekta"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "Določite vašo analitično strukturo"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:146
@@ -397,7 +411,7 @@ msgstr ""
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr ""
+msgstr "Analitična vrstica"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -415,6 +429,8 @@ msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
 msgstr ""
+"Za '%s' ni določen analitični dnevnik.\n"
+"Morate prirediti analitični dnevnik na formi zaposlenega."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -429,12 +445,12 @@ msgstr "junij"
 #: field:hr.sign.in.project,state:0
 #: field:hr.sign.out.project,state:0
 msgid "Current Status"
-msgstr ""
+msgstr "Trenutni status"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -479,7 +495,7 @@ msgstr "čet"
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Sign In/Out by Project"
-msgstr ""
+msgstr "Prijava / Odjava po projektu"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
@@ -490,12 +506,12 @@ msgstr ""
 #: field:hr.sign.in.project,emp_id:0
 #: field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "Šifra zaposlenega"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Period"
-msgstr ""
+msgstr "Obdobje"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -521,13 +537,13 @@ msgstr "Časovnice zaposlencev"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
-msgstr ""
+msgstr "Informacije"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Zaposleni"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -582,7 +598,7 @@ msgstr "(lokalno na strežniku)"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "Prijava po projektu"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -596,7 +612,7 @@ msgstr "februar"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr ""
+msgstr "Odjava po projektu"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:150
@@ -609,7 +625,7 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
+msgstr "Zaposleni"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -634,7 +650,7 @@ msgstr "april"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Napaka uporabnika!"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -650,12 +666,12 @@ msgstr "Leto"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Duration"
-msgstr ""
+msgstr "Trajanje"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
-msgstr ""
+msgstr "Računovodstvo"
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet:0

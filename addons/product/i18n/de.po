@@ -1,21 +1,23 @@
 # German translation for openobject-addons
 # Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Rudolf Schnapka <rs@techno-flex.de>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-08-26 09:47+0000\n"
-"Last-Translator: Armin GREGOR <armin.gregor@gmail.com>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2013-12-02 19:34+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-08-27 05:03+0000\n"
-"X-Generator: Launchpad (build 16738)\n"
+"X-Launchpad-Export-Date: 2013-12-03 06:16+0000\n"
+"X-Generator: Launchpad (build 16856)\n"
+"Language: de\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -46,7 +48,7 @@ msgstr "Webcam"
 #. module: product
 #: field:product.product,incoming_qty:0
 msgid "Incoming"
-msgstr "Eingang"
+msgstr "Eingehend"
 
 #. module: product
 #: view:product.product:0
@@ -97,7 +99,7 @@ msgstr "Regel Bezeichnung"
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog price."
 msgstr ""
-"Basis Preis für die Berechnung des Verkaufspreis. Manchmal wird dieser Preis "
+"Basispreis für die Berechnung des Verkaufspreis. Manchmal wird dieser Preis "
 "auch Listenpreis genannt."
 
 #. module: product
@@ -135,7 +137,7 @@ msgid ""
 "both belong to different Category!."
 msgstr ""
 "Konvertierung von Produkt Mengeninheit %s zu Standard Mengeneinheit %s ist "
-"nicht möglich, das diese zu verschiedenen Kategorien gehören."
+"nicht möglich, da diese zu verschiedenen Kategorien gehören."
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -208,9 +210,8 @@ msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
 msgstr ""
-"Fehler ! Die Dezimalstellen Konfiguration der Finanzbuchhaltung "
-"Einstellungen darf nicht größer sein als der Rundungsfaktor für die "
-"Hauptwährung des Unternehmens."
+"Fehler! Die Nachkommastellen des Finanz-Kontos dürfen nicht größer sein als "
+"der Rundungsfaktor für die Hauptwährung des Unternehmens."
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -238,9 +239,9 @@ msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
 msgstr ""
-"Fehler ! Sie können keinen Rundungsfaktor für die Hauptwährung des "
-"Unternehmens einstellen, der kleiner ist als die Dezimalstellen "
-"Konfiguration der Finanzbuchhaltung Einstellungen."
+"Fehler! Sie können den Rundungsfaktor für die Hauptwährung des Unternehmens "
+"nicht kleiner ist als die eingestellten Nachkommastellen der Finanzkonten "
+"wählen."
 
 #. module: product
 #: help:product.product,outgoing_qty:0
@@ -302,7 +303,7 @@ msgstr "Kategorie"
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Laptop E5023"
-msgstr ""
+msgstr "Laptop E5023"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -682,7 +683,7 @@ msgstr "oder"
 #. module: product
 #: constraint:product.packaging:0
 msgid "Error: Invalid ean code"
-msgstr "Fehler: Falscher EAN code"
+msgstr "Fehler: Ungültiger EAN code"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
@@ -835,12 +836,12 @@ msgstr "Externe Festplatte"
 #. module: product
 #: view:product.product:0
 msgid "describe the product characteristics..."
-msgstr ""
+msgstr "beschreiben Sie die Produkteigenschaften..."
 
 #. module: product
 #: view:res.partner:0
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "Preislisten werden verwaltet"
 
 #. module: product
 #: field:product.category,child_id:0
@@ -850,7 +851,7 @@ msgstr "Unterkategorien"
 #. module: product
 #: field:product.pricelist.version,date_end:0
 msgid "End Date"
-msgstr "Endedatum"
+msgstr "Enddatum"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -965,7 +966,7 @@ msgstr "Faktor zur Berechnung Standard UoM -> UoS"
 #: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
-msgstr "Kategorien Produkte"
+msgstr "Produktkategorien"
 
 #. module: product
 #: view:product.template:0
@@ -1000,7 +1001,7 @@ msgstr "Ist bereits Follower"
 #. module: product
 #: field:product.product,price_extra:0
 msgid "Variant Price Extra"
-msgstr "Variante Extra Preis"
+msgstr "Varianten-Aufpreis"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -1138,7 +1139,7 @@ msgstr "Abbrechen"
 #. module: product
 #: model:product.template,description:product.product_product_37_product_template
 msgid "All in one hi-speed printer with fax and scanner."
-msgstr ""
+msgstr "Hochgeschwindigkeitsdrucker mit Fax und Scanner"
 
 #. module: product
 #: help:product.supplierinfo,min_qty:0
@@ -1147,8 +1148,8 @@ msgid ""
 "Product Unit of Measure if not empty, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
-"Die minimale Bestellmenge beim Lieferanten, ausgedrückt in der Lieferanten "
-"Mengeneinheit ist noch nicht definiert."
+"Die Mindestbestellmenge beim Lieferanten, in dessen Mengeneinheit angegeben "
+"ist noch nicht definiert."
 
 #. module: product
 #: view:product.product:0
@@ -1169,12 +1170,12 @@ msgstr "Weitere Info"
 #. module: product
 #: field:product.pricelist.version,items_id:0
 msgid "Price List Items"
-msgstr "Preisliste Einzelpositionen"
+msgstr "Preislistenpositionen"
 
 #. module: product
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
-msgstr "Preis/ME"
+msgstr "Stückpreis"
 
 #. module: product
 #: field:product.category,parent_right:0
@@ -1195,7 +1196,7 @@ msgstr "Aufschlag"
 #: code:addons/product/pricelist.py:380
 #, python-format
 msgid "Supplier Prices on the product form"
-msgstr ""
+msgstr "Lieferpreise im Produkt-Formular"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1474,6 +1475,8 @@ msgid ""
 "The prices below will only be taken into account when your pricelist is set "
 "as based on supplier prices."
 msgstr ""
+"Die unten angegebenen Preise werden nur  dann berücksichtigt, wenn Ihre "
+"Preisliste auf Lieferanten-Preisen basiert."
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1526,7 +1529,7 @@ msgstr "Bruttogewicht in KG"
 #. module: product
 #: model:product.template,name:product.product_product_37_product_template
 msgid "Printer, All-in-one"
-msgstr ""
+msgstr "Drucke, All-In-One"
 
 #. module: product
 #: view:product.template:0
@@ -1587,7 +1590,7 @@ msgstr "Startdatum"
 #. module: product
 #: model:product.template,name:product.product_product_38_product_template
 msgid "Ink Cartridge"
-msgstr ""
+msgstr "Tintenpatrone"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
@@ -1882,7 +1885,7 @@ msgstr "Kategorien"
 #. module: product
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Computer Case"
-msgstr ""
+msgstr "Computergehäuse"
 
 #. module: product
 #: model:product.template,name:product.product_product_9_product_template
@@ -2058,7 +2061,7 @@ msgstr "Interne Referenz"
 #. module: product
 #: view:product.product:0
 msgid "e.g. 5901234123457"
-msgstr ""
+msgstr "z. B. 5901234123457"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -2069,7 +2072,7 @@ msgstr "Preislistentyp"
 #. module: product
 #: model:product.category,name:product.product_category_6
 msgid "External Devices"
-msgstr ""
+msgstr "Externe Geräte"
 
 #. module: product
 #: field:product.product,color:0
@@ -2715,7 +2718,7 @@ msgstr "Produkte Kategorien"
 #. module: product
 #: model:product.template,description:product.product_product_19_product_template
 msgid "On demand hard-disk having capacity based on requirement."
-msgstr ""
+msgstr "Festplatte auf Abruf, Bedarfsgerechte Kapazität"
 
 #. module: product
 #: selection:product.template,state:0

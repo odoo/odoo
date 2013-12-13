@@ -306,7 +306,6 @@ class sale_order(osv.osv):
             'move_id': move_id,
             'company_id': order.company_id.id,
             'note': line.name,
-            'property_ids': [(6, 0, [x.id for x in line.property_ids])],
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
@@ -601,7 +600,7 @@ class sale_order_line(osv.osv):
         #check if product is available, and if not: raise an error
         uom2 = False
         if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
+            uom2 = product_uom_obj.browse(cr, uid, uom, context=context)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
                 uom = False
         if not uom2:

@@ -14,9 +14,6 @@
         <menuitem id="menu_purchase_config_purchase" name="Configuration"
             groups="group_purchase_manager"
             parent="base.menu_purchase_root" sequence="100"/>
-        <menuitem
-            action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
-            parent="menu_purchase_config_purchase" sequence="10" groups="product.group_purchase_pricelist" />
 
         <record id="purchase_pricelist_version_action" model="ir.actions.act_window">
             <field name="name">Pricelist Versions</field>
@@ -39,6 +36,9 @@
         <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
             parent="menu_purchase_config_purchase" sequence="50" groups="product.group_purchase_pricelist"/>
+        <menuitem
+            action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
+            parent="menu_purchase_config_pricelist" sequence="1" groups="product.group_purchase_pricelist" />
 
         <menuitem
             action="purchase_pricelist_version_action" id="menu_purchase_pricelist_version_action"
@@ -196,7 +196,7 @@
                         </group>
                         <group>
                             <field name="date_order"/>
-                            <field name="origin" attr="{'invisible': [('origin','=',False)]}"/>
+                            <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
                             <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>

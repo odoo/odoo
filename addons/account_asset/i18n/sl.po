@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-03-09 10:28+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
+"PO-Revision-Date: 2013-12-07 07:39+0000\n"
+"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:47+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-12-08 05:46+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in draft and open states"
-msgstr "Osnovna sredstva v stanju \"Osnutek\" ali  \"Odprto\""
+msgstr "Osnovna sredstva v stanju \"V pripravi\" ali  \"Odprto\""
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
@@ -92,7 +92,7 @@ msgstr "Spremeni"
 #: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
-msgstr "Se izvaja"
+msgstr "V uporabi"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -122,7 +122,7 @@ msgstr "Degresivni faktor"
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_list_normal
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_list_normal
 msgid "Asset Categories"
-msgstr "Kategorije osnovnega sredstva"
+msgstr "Kategorije osnovnih sredstev"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -130,7 +130,7 @@ msgstr "Kategorije osnovnega sredstva"
 #: field:account.move.line,entry_ids:0
 #: model:ir.actions.act_window,name:account_asset.act_entries_open
 msgid "Entries"
-msgstr "Vnosi"
+msgstr "Vknjižbe"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -214,7 +214,7 @@ msgstr "Število mesecev v obdobju"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in draft state"
-msgstr "Osnovna sredstva v osnutku"
+msgstr "Osnovna sredstva s statusom \"V pripravi\""
 
 #. module: account_asset
 #: field:account.asset.asset,method_end:0
@@ -252,7 +252,7 @@ msgstr "Obdobje obračuna"
 #: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Draft"
-msgstr "Osnutek"
+msgstr "V pripravi"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -328,7 +328,7 @@ msgstr "Kategorija Osnovnega sredstva"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Assets in closed state"
-msgstr "Osnovno sredstvo v statusu \"zaprto\""
+msgstr "Osnovno sredstvo v statusu \"Izven uporabe\""
 
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
@@ -419,12 +419,12 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in running state"
-msgstr "Osnovna sredstva v upurabi"
+msgstr "Osnovna sredstva v uporabi"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Closed"
-msgstr "Zaprto"
+msgstr "Izven uporabe"
 
 #. module: account_asset
 #: help:account.asset.asset,state:0
@@ -435,8 +435,11 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
-"Ko kreirate osnovno sredstvo ima status \"Osnutek\".\n"
-"Ko ga potrdite ima status \"V uporabi\"."
+"Ko kreirate osnovno sredstvo ima status \"V pripravi\".\n"
+"Ko ga potrdite ima status \"V uporabi\".\n"
+"Osnovno sredstvo lahko ročno določite \"Izven uporabe\", ko je amortizacija "
+"zaključena. Ko je knjižena prva amortizacija, dobi osnovno sredstvo "
+"avtomatično status \"V uporabi\"."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
@@ -546,7 +549,7 @@ msgstr "Račun"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Set to Close"
-msgstr "Zapri"
+msgstr "Nastvi na \"Izven uporabe\""
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
@@ -621,7 +624,7 @@ msgstr "Naziv osnovnega sredstva"
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
 msgid "Skip Draft State"
-msgstr "Preskoči osnutek"
+msgstr "Preskoči status \"V pripravi\""
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -775,4 +778,4 @@ msgstr "Potrdi osnovno sredstvo"
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
-msgstr "Hierarhija osnovnega sredstva"
+msgstr "Hierarhija osnovnih sredstev"

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-11-10 09:05+0000\n"
+"PO-Revision-Date: 2013-11-24 10:34+0000\n"
 "Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-11 05:38+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2013-11-25 06:00+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -601,7 +601,7 @@ msgstr "税マッピング"
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close_state
 msgid "Close a Fiscal Year"
-msgstr "会計年度を閉じる"
+msgstr "会計年度締"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
@@ -926,7 +926,7 @@ msgstr "勘定分析仕訳帳"
 #. module: account
 #: view:account.invoice:0
 msgid "Send by Email"
-msgstr ""
+msgstr "Eメールで送信"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -1508,7 +1508,7 @@ msgstr "レポートオプション"
 #. module: account
 #: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to Close"
-msgstr ""
+msgstr "締対象会計年度"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
@@ -1536,7 +1536,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "請求書ステータス"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
@@ -1575,7 +1575,7 @@ msgstr ""
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With balance is not equal to 0"
-msgstr "残高が0ではありません。"
+msgstr "残高があるもの(<>0)"
 
 #. module: account
 #: code:addons/account/account.py:1483
@@ -1704,7 +1704,7 @@ msgstr ""
 #: selection:account.fiscalyear,state:0
 #: selection:account.period,state:0
 msgid "Closed"
-msgstr "閉じた"
+msgstr "クローズ"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
@@ -1913,6 +1913,8 @@ msgid ""
 "Select a configuration package to setup automatically your\n"
 "                        taxes and chart of accounts."
 msgstr ""
+"税および勘定科目表を自動設定するための設定パッケージを\n"
+"                        選択してください。"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -3915,7 +3917,7 @@ msgstr "売上 / 仕入仕訳帳印刷"
 #. module: account
 #: view:account.installer:0
 msgid "Continue"
-msgstr ""
+msgstr "次へ"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -4408,7 +4410,7 @@ msgstr "平均レート"
 #: field:account.common.account.report,display_account:0
 #: field:account.report.general.ledger,display_account:0
 msgid "Display Accounts"
-msgstr "アカウントの表示"
+msgstr "表示対象勘定"
 
 #. module: account
 #: view:account.state.open:0
@@ -5126,7 +5128,7 @@ msgstr "確認"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "or"
-msgstr ""
+msgstr "または"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -5761,7 +5763,7 @@ msgstr ""
 #: field:account.partner.ledger,initial_balance:0
 #: field:account.report.general.ledger,initial_balance:0
 msgid "Include Initial Balances"
-msgstr "期首残高を含む"
+msgstr "期初残高を含む"
 
 #. module: account
 #: view:account.invoice.tax:0
@@ -5986,7 +5988,7 @@ msgstr "チャートを開く"
 #: field:account.print.journal,amount_currency:0
 #: field:account.report.general.ledger,amount_currency:0
 msgid "With Currency"
-msgstr "通貨で"
+msgstr "通貨表示"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7958,7 +7960,7 @@ msgstr "通貨調整"
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
 msgid "Fiscal Year to close"
-msgstr "閉じる会計年度"
+msgstr "締対象会計年度"
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -8193,7 +8195,7 @@ msgstr "現金箱行"
 #. module: account
 #: field:account.installer,charts:0
 msgid "Accounting Package"
-msgstr ""
+msgstr "会計パッケージ"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -8666,7 +8668,7 @@ msgstr "銀行消し込みの移動"
 #. module: account
 #: view:account.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "適用"
 
 #. module: account
 #: field:account.financial.report,account_type_ids:0
@@ -8877,7 +8879,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close
 msgid "Fiscalyear Close"
-msgstr "会計年度を閉じる"
+msgstr "会計年度締"
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -9297,7 +9299,7 @@ msgstr "請求書作成"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
 msgid "Configure Accounting Data"
-msgstr ""
+msgstr "会計データ設定"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax_rate:0
@@ -9881,13 +9883,13 @@ msgstr ""
 #: view:account.entries.report:0
 #: view:account.move.line:0
 msgid "Unreconciled"
-msgstr "未消し込み"
+msgstr "未消込"
 
 #. module: account
 #: code:addons/account/account_invoice.py:922
 #, python-format
 msgid "Bad total !"
-msgstr "合計が誤っています。"
+msgstr "合計が不正です。"
 
 #. module: account
 #: field:account.journal,sequence_id:0
@@ -10420,7 +10422,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
-msgstr "未消し込みエントリー"
+msgstr "未消込エントリ"
 
 #. module: account
 #: help:account.partner.reconcile.process,today_reconciled:0
@@ -10630,7 +10632,7 @@ msgstr ""
 #: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With movements"
-msgstr "変動"
+msgstr "変動があったもの"
 
 #. module: account
 #: view:account.tax.code.template:0

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-11-06 13:24+0000\n"
+"PO-Revision-Date: 2013-11-20 22:09+0000\n"
 "Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-07 05:50+0000\n"
-"X-Generator: Launchpad (build 16820)\n"
+"X-Launchpad-Export-Date: 2013-11-21 06:19+0000\n"
+"X-Generator: Launchpad (build 16831)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -60,7 +60,7 @@ msgstr "Komentarji"
 #: code:addons/mail/static/src/xml/mail.xml:313
 #, python-format
 msgid "more messages"
-msgstr ""
+msgstr "več sporočil"
 
 #. module: mail
 #: view:mail.alias:0
@@ -80,6 +80,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.my.openerp.com>"
 msgstr ""
+"Ime vzdevka v e-mailu, npr. 'jobs', če želite iskati e-maile za "
+"<jobs@example.my.openerp.com>"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
@@ -93,6 +95,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
+"Napačen izraz, mora biti skladen z definicijo python slovarja, npr. "
+"\"{'field':'value'}\""
 
 #. module: mail
 #: view:mail.group:0
@@ -109,7 +113,7 @@ msgstr "Javno"
 #: code:addons/mail/static/src/xml/mail.xml:277
 #, python-format
 msgid "to"
-msgstr ""
+msgstr "za"
 
 #. module: mail
 #: view:mail.mail:0
@@ -128,6 +132,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found for incoming emails."
 msgstr ""
+"Elektronski naslov pošiljatelja. To polje je označeno, če ni najden ustrezen "
+"partner za vhodno pošto."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -139,7 +145,7 @@ msgstr "Čarovnik za sestavljanje e-pošte"
 #: code:addons/mail/static/src/xml/mail.xml:268
 #, python-format
 msgid "updated document"
-msgstr ""
+msgstr "ažuriran dokument"
 
 #. module: mail
 #. openerp-web
@@ -184,6 +190,8 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
+"Člani te skupine bodo avtomatično dodani kot sledilci. Lahko bodo upravljali "
+"svojo prijavo tudi ročno, če bo treba."
 
 #. module: mail
 #. openerp-web
@@ -212,6 +220,9 @@ msgid ""
 " %s won't be notified of any email or discussion on this document. Do you "
 "really want to remove him from the followers ?"
 msgstr ""
+"Opozorilo! \n"
+" %s ne bo obveščen o nobenem e-mailu ali diskusiji na tem dokumentu. Ali ga "
+"res želite odstraniti iz seznama sledilcev?"
 
 #. module: mail
 #: field:mail.compose.message,res_id:0
@@ -219,7 +230,7 @@ msgstr ""
 #: field:mail.message,res_id:0
 #: field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
-msgstr ""
+msgstr "ID povezanega dokumenta"
 
 #. module: mail
 #: code:addons/mail/mail_message.py:737
@@ -234,6 +245,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Slika srednje velikosti za to skupino. Avtomatično bo prilagojena na "
+"128x128px, z upoštevanjem razmerja. Uporabite to polje v pogledih forme ali "
+"nekaterih pogledih kanban."
 
 #. module: mail
 #. openerp-web
@@ -271,7 +285,7 @@ msgstr "Prejeto"
 #: code:addons/mail/static/src/xml/mail.xml:71
 #, python-format
 msgid "Attach a File"
-msgstr ""
+msgstr "Pripni datoteko"
 
 #. module: mail
 #: view:mail.mail:0
@@ -283,14 +297,14 @@ msgstr "Nit"
 #: code:addons/mail/static/src/xml/mail.xml:29
 #, python-format
 msgid "Open the full mail composer"
-msgstr ""
+msgstr "Odpri celotni oblikovalca elektronske pošte"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:29
 #, python-format
 msgid "&ograve"
-msgstr ""
+msgstr "&ograve"
 
 #. module: mail
 #: field:base.config.settings,alias_domain:0
@@ -300,7 +314,7 @@ msgstr ""
 #. module: mail
 #: field:mail.group,group_ids:0
 msgid "Auto Subscription"
-msgstr ""
+msgstr "avto-prijava"
 
 #. module: mail
 #: field:mail.mail,references:0
@@ -319,6 +333,8 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
 msgstr ""
+"Avtor sporočila. Če ni nastavljen, lahko email_from vsebuje elektronski "
+"naslov, ki ni povezan z nobenim partnerjem."
 
 #. module: mail
 #. openerp-web
@@ -342,6 +358,9 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
+"Tip sporočila: elektronska pošta za elektronsko sporočilo, zaznamek za "
+"sistemsko sporočilo, komentar za ostala sporočila kot npr. uporabnikov "
+"odgovor"
 
 #. module: mail
 #: help:mail.message.subtype,relation_field:0
@@ -365,14 +384,14 @@ msgstr "Odgovori"
 #: code:addons/mail/wizard/invite.py:37
 #, python-format
 msgid "<div>You have been invited to follow %s.</div>"
-msgstr ""
+msgstr "<div>Bili ste povabljeni, da sledite %s.</div>"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:53
 #, python-format
 msgid "Send a message"
-msgstr ""
+msgstr "Pošlji sporočilo"
 
 #. module: mail
 #: help:mail.group,message_unread:0
@@ -400,21 +419,21 @@ msgstr "Vrsta sporočila"
 #. module: mail
 #: field:mail.mail,auto_delete:0
 msgid "Auto Delete"
-msgstr ""
+msgstr "avtomatsko brisanje"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:294
 #, python-format
 msgid "notified"
-msgstr ""
+msgstr "obveščen"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:274
 #, python-format
 msgid "logged a note"
-msgstr ""
+msgstr "zabeležil pripombo"
 
 #. module: mail
 #. openerp-web
@@ -422,14 +441,14 @@ msgstr ""
 #: view:mail.group:0
 #, python-format
 msgid "Unfollow"
-msgstr ""
+msgstr "prekini sledenje"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:312
 #, python-format
 msgid "show one more message"
-msgstr ""
+msgstr "pokaži še eno sporočilo"
 
 #. module: mail
 #: code:addons/mail/mail_mail.py:75
@@ -443,7 +462,7 @@ msgstr "Napačno dejanje!"
 #: code:addons/mail/static/src/xml/mail.xml:25
 #, python-format
 msgid "User img"
-msgstr ""
+msgstr "slika uporabnika"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -478,23 +497,23 @@ msgstr ""
 #. module: mail
 #: view:base.config.settings:0
 msgid "mycompany.my.openerp.com"
-msgstr ""
+msgstr "mycompany.my.openerp.com"
 
 #. module: mail
 #: field:mail.message.subtype,relation_field:0
 msgid "Relation field"
-msgstr ""
+msgstr "Polje povezave"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
 #: selection:mail.message,type:0
 msgid "System notification"
-msgstr ""
+msgstr "Sistemsko sporočilo"
 
 #. module: mail
 #: view:mail.message:0
 msgid "To Read"
-msgstr ""
+msgstr "Prebrati"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -535,13 +554,13 @@ msgstr "Od"
 #: field:mail.message,subtype_id:0
 #: view:mail.message.subtype:0
 msgid "Subtype"
-msgstr ""
+msgstr "Podvrsta"
 
 #. module: mail
 #: view:mail.mail:0
 #: view:mail.message.subtype:0
 msgid "Email message"
-msgstr ""
+msgstr "Elektronsko sporočilo"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_config_settings
@@ -558,7 +577,7 @@ msgstr "sledilci"
 #. module: mail
 #: view:mail.group:0
 msgid "Send a message to the group"
-msgstr ""
+msgstr "Pošlji sporočilo skupini"
 
 #. module: mail
 #. openerp-web
@@ -573,7 +592,7 @@ msgstr "Pošlji"
 #: code:addons/mail/static/src/js/mail_followers.js:153
 #, python-format
 msgid "No followers"
-msgstr ""
+msgstr "Ni sledilcev"
 
 #. module: mail
 #: view:mail.mail:0
@@ -583,7 +602,7 @@ msgstr "Neuspešno"
 #. module: mail
 #: view:mail.mail:0
 msgid "Cancel Email"
-msgstr ""
+msgstr "Prekliči e-mail"
 
 #. module: mail
 #. openerp-web
