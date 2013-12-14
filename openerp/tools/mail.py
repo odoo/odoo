@@ -62,6 +62,7 @@ def html_sanitize(src, silent=True):
     kwargs = {
         'page_structure': True,
         'style': False,             # do not remove style attributes
+        'frames': False,            # de not remove frames (embbed video in CMS blogs)
         'forms': True,              # remove form tags
         'remove_unknown_tags': False,
         'allow_tags': allowed_tags,
