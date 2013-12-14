@@ -27,7 +27,7 @@
 
 <template id="categories_recursive" name="Category list">
   <li t-att-class="str(category.id) == search.get('category') and 'active' or ''">
-      <a t-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
+      <a t-href="/shop/category/#{ slug(category) }/" t-field="category.name"></a>
       <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
           <t t-foreach="category.child_id" t-as="category">
               <t t-call="website_sale.categories_recursive"/>
@@ -54,7 +54,7 @@
     <div class="ribbon btn btn-danger">Promo</div>
   </div>
   <div class="oe_product_image">
-      <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filters">
+      <a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filters">
           <span t-field="product.image" t-field-options='{"widget": "image"}'/>
       </a>
   </div>
