@@ -223,7 +223,7 @@
     </t>
 </template>
 
-<template id="job_departments" inherit_option_id="website_hr_recruitment.index" name="Filter on Departments">
+<template id="job_departments" inherit_option_id="website_hr_recruitment.index" name="Filter by Departments">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if active else 'active' "><a href="/jobs">All Departments</a></li>
@@ -239,7 +239,7 @@
     </xpath>
 </template>
 
-<template id="job_offices" inherit_option_id="website_hr_recruitment.index" name="Filter on Offices">
+<template id="job_offices" inherit_option_id="website_hr_recruitment.index" name="Filter by Offices">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if office else 'active' "><a href="/jobs">All Offices</a></li>

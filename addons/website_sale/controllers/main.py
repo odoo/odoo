@@ -378,9 +378,14 @@ class Ecommerce(http.Controller):
         }
         return request.website.render("website_sale.mycart", values)
 
-    @website.route(['/shop/add_cart/', '/shop/add_cart/<model("product.product"):product>/'], type='http', auth="public", multilang=True, methods=['POST'])
-    def add_cart(self, product=None, product_id=None, remove=None, **kw):
-        self.add_product_to_cart(product_id=int(product_id or product.id))
+    @website.route(['/shop/add_cart/'], type='http', auth="public", multilang=True, methods=['POST'])
+    def add_cart(self, product_id, remove=None, **kw):
+        self.add_product_to_cart(product_id=int(product_id))
+        return request.redirect("/shop/mycart/")
+
+    @website.route(['/shop/add_cart/<model("product.product"):product>/'], type='http', auth="public", multilang=True)
+    def add_cart_product(self, product=None, product_id=None, remove=None, **kw):
+        self.add_product_to_cart(product_id=product.id)
         return request.redirect("/shop/mycart/")
 
     @website.route(['/shop/change_cart/<model("sale.order.line"):order_line>/'], type='http', auth="public", multilang=True)

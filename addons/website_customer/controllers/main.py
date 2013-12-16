@@ -76,7 +76,7 @@ class WebsiteCustomer(http.Controller):
 
     @website.route(['/customers/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
     def customer(self, partner, **post):
-        values = website_partner.get_partner_template_value(partner, ["commercial_partner_id", "assigned_partner_id", "implemented_partner_ids"])
+        values = website_partner.get_partner_template_value(partner)
         if not values:
             return self.customers(**post)
 
