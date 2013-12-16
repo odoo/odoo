@@ -9,9 +9,10 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.rows = { groupby: [], main: null, headers: null };
 		this.cols = { groupby: [], main: null, headers: null };
 		this.cells = [];
-		this.model = model;
 		this.domain = domain;
 		this.measure = null;
+
+		this.data_loader = new openerp.web_graph.DataLoader(model);
 
 		this.id_seed = 0;
 		this.no_data = true;
@@ -157,7 +158,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         }
 
         var otherDim = (header.root === this.cols) ? this.rows : this.cols;
-        return query_groups_data(this.model, this.visible_fields(), header.domain, otherDim.groupby, field_id)
+        return this.data_loader.get_groups(this.visible_fields(), header.domain, otherDim.groupby, {first_groupby:field_id, add_path:true})
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
                     var new_header_id = self.make_header(group, header);
@@ -183,7 +184,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	make_header: function (groups, parent) {
-		var name = get_attribute_value(groups[0]),
+		var name = groups[0].attributes.value,
             new_header = {
 				id: _.uniqueId(),
 				path: parent.path.concat(name),
@@ -195,7 +196,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				root: parent.root,
 			};
 		parent.children.splice(0,0, new_header);
-		insertAfter(parent.root.headers, parent, new_header);
+		parent.root.headers.splice(parent.root.headers.indexOf(parent) + 1, 0, new_header);
 		return new_header.id;
 	},
 
@@ -270,7 +271,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 				_.each(corresponding_header.children, function (c) {
 					c.is_expanded = false;
 				});
-			} 
+			}
 			if (corresponding_header && (!header.is_expanded)) {
 				corresponding_header.is_expanded = false;
 			}
@@ -318,7 +319,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			groupbys = [rows, []];
 		}
 		def_array = _.map(groupbys, function (groupby) {
-			return query_groups(self.model, self.visible_fields(), self.domain, groupby);
+			return self.data_loader.get_groups(self.visible_fields(), self.domain, groupby);
 		});
 
 		return $.when.apply(null, def_array).then(function () {
@@ -387,7 +388,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		}
 
 		function make_tree_headers (data_pt, parent, max_depth) {
-			var value = get_attribute_value(data_pt),
+			var value = data_pt.attributes.value, //get_attribute_value(data_pt),
 				node = {
 					id: _.uniqueId(),
 					path: parent.path.concat(value),
@@ -435,7 +436,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 					}
 				}
 
-				console.log('attr', attr);
 				var rowpath = path.slice(0, index),
 					colpath = path.slice(index);
 
@@ -458,61 +458,74 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 });
 
-function insertAfter(array, after, elem) {
-    array.splice(array.indexOf(after) + 1, 0, elem);
-}
+openerp.web_graph.DataLoader = openerp.web.Class.extend({
+	init: function (model) {
+		this.model = model;
+	},
 
-/**
- * Query the server and return a deferred which will return the data
- * with all the groupbys applied (this is done for now, but the goal
- * is to modify read_group in order to allow eager and lazy groupbys
- */
-function query_groups (model, fields, domain, groupbys) {
-    return model.query(fields)
-        .filter(domain)
-        .group_by(groupbys)
-        .then(function (results) {
-            var non_empty_results = _.filter(results, function (group) {
-                return group.attributes.length > 0;
-            });
-            if (groupbys.length <= 1) {
-                return non_empty_results;
-            } else {
-                var get_subgroups = $.when.apply(null, _.map(non_empty_results, function (result) {
-                    var new_domain = result.model._domain;
-                    var new_groupings = groupbys.slice(1);
-                    return query_groups(model, fields,new_domain, new_groupings).then(function (subgroups) {
-                        result.subgroups_data = subgroups;
-                    });
-                }));
-                return get_subgroups.then(function () {
-                    return non_empty_results;
-                });
-            }
-        });
-}
+	get_groups: function (fields, domain, groupbys, options) {
+		var self = this,
+			options = (options) ? options : {},
+			groupings = (options.first_groupby) ? [options.first_groupby].concat(groupbys) : groupbys;
 
-function query_groups_data (model, fields, domain, row_groupbys, col_groupby) {
-    return query_groups(model, fields, domain, [col_groupby].concat(row_groupbys)).then(function (groups) {
-        return _.map(groups, function (group) {
-            return format_group(group, []);
-        });
-    });
-}
+		return this._query_db(fields, domain, groupings).then(function (groups) {
+			return _.map(groups, function (group) {
+				return (options.add_path) ?self._add_path(group, []) : group;
+			});
+		});
 
-function format_group (group, path) {
-    group.path = path.concat(get_attribute_value(group));
-    var result = [group];
-    _.each(group.subgroups_data, function (subgroup) {
-        result = result.concat(format_group (subgroup, group.path));
-    });
-    return result;
-}
+	},
 
-function get_attribute_value (group) {
-	var value = group.attributes.value;
-	if (value === false) return 'undefined';
-	return (value instanceof Array) ? value[1] : value;
-}
+	_query_db: function (fields, domain, groupbys) {
+		var self = this;
+		return this.model.query(fields)
+			.filter(domain)
+			.group_by(groupbys)
+			.then(function (results) {
+				var non_empty_results = _.filter(results, function (group) {
+					return group.attributes.length > 0;
+				});
+				_.each(non_empty_results, self._sanitize_value);
+				if (groupbys.length <= 1) {
+					return non_empty_results;
+				} else {
+					var get_subgroups = $.when.apply(null, _.map(non_empty_results, function (result) {
+						var new_domain = result.model._domain;
+						var new_groupings = groupbys.slice(1);
+						return self._query_db(fields,new_domain, new_groupings).then(function (subgroups) {
+							result.subgroups_data = subgroups;
+						});
+					}));
+					return get_subgroups.then(function () {
+						return non_empty_results;
+					});
+				}
+			});
+	},
+
+	_sanitize_value: function (group) {
+		var value = group.attributes.value;
+		if (value === false) {
+			group.attributes.value = 'undefined';
+		} else if (value instanceof Array) {
+			group.attributes.value = value[1];
+		} else {
+			group.attributes.value = value;
+		}
+	},
+
+	_add_path: function (group, current_path) {
+		var self = this;
+
+		group.path = current_path.concat(group.attributes.value);
+		var result = [group];
+		_.each(group.subgroups_data, function (subgroup) {
+			result = result.concat(self._add_path(subgroup, group.path));
+		});
+		return result;
+	},
+
+});
+
 
 })();
