@@ -388,7 +388,7 @@ def multi(method):
                         "Call to %s with an integer instead of a list of integers is deprecated.",
                         method.func_name
                     )
-                    values = method(self.browse([ids], *args, **kwargs))
+                    values = method(self.browse([ids]), *args, **kwargs)
                     return new_to_old(self, values)[0]
                 else:
                     value = method(self.browse(ids), *args, **kwargs)
