@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 
 # from templates import TemplateHelper
@@ -55,7 +56,7 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
         end_date = default_end_date
 
     if start_date and end_date:
-        return (start_date.isoformat(), end_date.isoformat())
+        return (start_date.strftime(DF), end_date.strftime(DF))
     else:
         return (start_date, end_date)
 
@@ -79,22 +80,22 @@ class gamification_goal_plan(osv.Model):
         """Return the next report date based on the last report date and report
         period.
 
-        :return: a string in isoformat representing the date"""
+        :return: a string in DEFAULT_SERVER_DATE_FORMAT representing the date"""
         res = {}
         for plan in self.browse(cr, uid, ids, context):
             last = datetime.strptime(plan.last_report_date, '%Y-%m-%d').date()
             if plan.report_message_frequency == 'daily':
                 next = last + timedelta(days=1)
-                res[plan.id] = next.isoformat()
+                res[plan.id] = next.strftime(DF)
             elif plan.report_message_frequency == 'weekly':
                 next = last + timedelta(days=7)
-                res[plan.id] = next.isoformat()
+                res[plan.id] = next.strftime(DF)
             elif plan.report_message_frequency == 'monthly':
                 month_range = calendar.monthrange(last.year, last.month)
                 next = last.replace(day=month_range[1]) + timedelta(days=1)
-                res[plan.id] = next.isoformat()
+                res[plan.id] = next.strftime(DF)
             elif plan.report_message_frequency == 'yearly':
-                res[plan.id] = last.replace(year=last.year + 1).isoformat()
+                res[plan.id] = last.replace(year=last.year + 1).strftime(DF)
             # frequency == 'once', reported when closed only
             else:
                 res[plan.id] = False
@@ -288,7 +289,7 @@ class gamification_goal_plan(osv.Model):
                 '&',
                     ('state', 'in', ('reached', 'failed')),
                     '|',
-                        ('end_date', '>=', yesterday.isoformat()),
+                        ('end_date', '>=', yesterday.strftime(DF)),
                         ('end_date', '=', False)
         ], context=context)
         # update every running goal already generated linked to selected plans
@@ -634,7 +635,7 @@ class gamification_goal_plan(osv.Model):
         for plan in self.browse(cr, uid, plan_ids, context=context):
             (start_date, end_date) = start_end_date_for_period(plan.period, plan.start_date, plan.end_date)
             yesterday = date.today() - timedelta(days=1)
-            if end_date == yesterday.isoformat() or force:
+            if end_date == yesterday.strftime(DF) or force:
                 # open chatter message
                 message_body = _("The challenge %s is finished." % plan.name)
 
