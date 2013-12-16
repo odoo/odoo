@@ -1031,6 +1031,31 @@
         </t>
     </span>
 </t>
+
+
+<t t-name="StageMode.kanban_state">
+    <div class="btn-group">
+    <t t-foreach="res" t-as="rec">
+            <a  class="dropdown-toggle" data-toggle="dropdown" href="#" t-if="widget.get('value') === rec.name"  t-att-title="rec.description" >
+                <t t-raw="rec.body" /> 
+            </a>
+    </t>
+    <ul class="dropdown-menu">
+        <t t-foreach="res" t-as="rec">
+            <t t-if="widget.get('value') !== rec.name">
+                <li><a  t-att-data-value="rec.name" href="#"><t t-raw="rec.body" /></a></li>
+            </t>
+        </t>
+    </ul>
+    </div>
+</t>
+<t t-name="StageMode.priority">
+    <t t-foreach="res" t-as="rec">
+            <a t-if="widget.get('value') === rec.name" t-att-data="rec.name"  t-att-title="rec.description" >
+                <t t-raw="rec.body" />
+            </a>
+    </t>
+</t>
 <t t-name="FieldEmail">
     <span class="oe_form_field oe_form_field_email" t-att-style="widget.node.attrs.style">
         <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri" target="_blank"/>

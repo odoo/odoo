@@ -2330,7 +2330,44 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         });
     }
 });
-
+instance.web.form.StageMode = instance.web.form.FieldChar.extend({
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
+        this.options = py.eval(node.attrs.options) 
+        this.stage_dataset  = new instance.web.DataSetStatic(this, this.options.stage_model, this.build_context());
+        this.stage_field = this.options.stage_field;
+    },
+    
+    get_stage_value: function(){
+        var def = $.Deferred();
+        var stage_id = this.field_manager.fields[this.stage_field].get_value()
+        this.stage_dataset.call('search_read', [[[this.stage_field,'=', stage_id],['type','=',this.name]]]).then(function (res){
+                    def.resolve(res);
+                })
+        return def
+    },
+    
+    render_value: function() {
+        var self = this;
+        self.get_stage_value().then(function (res){
+            var content = QWeb.render("StageMode."+self.name, {
+                'widget': self, 
+                'res': res,
+                });
+            self.$el.html(content);
+            self.$el.find("li").click(self.execute_action.bind(self));
+        })
+    },
+    execute_action: function(e){
+        e.preventDefault();
+        var self = this;
+        $this = $(e.target)
+        var value = $this.data('value') || $this.parent().data('value');
+        return this.view.dataset.call_button(self.options.action, [this.view.datarecord.id, value, this.view.dataset.get_context()]).done(function(r) {
+            self.view.reload();
+        });
+    }
+});
 instance.web.form.FieldID = instance.web.form.FieldChar.extend({
     process_modifiers: function () {
         this._super();
@@ -5853,6 +5890,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
+    'stage_mode':'instance.web.form.StageMode'
 });
 
 /**
