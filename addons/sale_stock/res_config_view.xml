@@ -30,14 +30,14 @@
                          </div>
                      </xpath>
                      <xpath expr="//label[@string='Default Options']" position="replace">
-                         <label for="id" string="Default Options" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False),('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False),('task_work','=',False), ('module_account_analytic_analysis','=',False)]}"/>
+                         <label for="id" string="Default Options"/>
                      </xpath>
                      <xpath expr="//div[@name='time_unit']" position="before">
-                         <div attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}">
+                         <div attrs="{'invisible':[('group_invoice_so_lines','=',False)],'required': [('group_invoice_so_lines','=',True)]}">
                              <label for="default_order_policy"/>
                              <field name="default_order_policy" class="oe_inline"/>
                          </div>
-                         <div attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}">
+                         <div>
                              <field name="module_delivery" class="oe_inline"/>
                              <label for="module_delivery"/>
                          </div>
