@@ -49,7 +49,7 @@ class website_hr_recruitment(http.Controller):
 
     @website.route(['/job/detail/<model("hr.job"):job>'], type='http', auth="public", multilang=True)
     def detail(self, job, **kwargs):
-        return request.website.render("website_hr_recruitment.detail", {'job': job})
+        return request.website.render("website_hr_recruitment.detail", { 'job': job, 'main_object': job })
 
     @website.route(['/job/success'], methods=['POST'], type='http', auth="admin", multilang=True)
     def success(self, **post):
