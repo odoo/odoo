@@ -253,7 +253,7 @@
                                 <field name="suffix" placeholder="e.g. days"/>
                                 <field name="monetary"/>
                             </group>
-                            <group string="Clickable Goals">
+                            <group string="Clickable Goals" attrs="{'invisible': [('computation_mode', '=', 'manually')]}">
                                 <field name="action_id"  class="oe_inline"/>
                                 <field name="res_id_field"  attrs="{'invisible': [('action_id', '=', False)]}" class="oe_inline"/>
                             </group>
