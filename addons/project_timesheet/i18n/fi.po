@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-12-14 10:41+0000\n"
+"Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:30+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2013-12-15 05:46+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -44,11 +44,13 @@ msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
 "uncheck the active box."
 msgstr ""
+"Et voi poistaa projektille annettua kumppania, mutta voit poistaa merkinnän "
+"aktiivinen -laatikosta."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
 msgid "Project Task Work"
-msgstr "Projektin tehtävät työt"
+msgstr "Projektille tehtävät työt"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:294
@@ -56,11 +58,12 @@ msgstr "Projektin tehtävät työt"
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
 msgstr ""
+"Et voi valita abalyyttistä tiliä, joka on tilassa suljettu tai peruutettu."
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group By..."
-msgstr "Ryhmittele"
+msgstr "Ryhmittely..."
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -72,7 +75,7 @@ msgstr "Lokakuu"
 #: view:project.project:0
 #, python-format
 msgid "Timesheets"
-msgstr ""
+msgstr "Tuntikortit"
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -94,7 +97,7 @@ msgstr ""
 #. module: project_timesheet
 #: view:account.analytic.line:0
 msgid "Analytic Account/Project"
-msgstr ""
+msgstr "Analyyttinen tili/projekti"
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
@@ -133,7 +136,7 @@ msgstr "Tehtävän laskutus"
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_taskwork0
 msgid "Task Work"
-msgstr "Tehtävän tyot"
+msgstr "Tehtävän työt"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -147,11 +150,13 @@ msgid ""
 "Please define journal on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"Määrittele ao. työntekijälle päiväkirja.\n"
+"Täytä työntekijälomakkeen välilehti: tuntikortti."
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
 msgid "Sign in / Sign out by project"
-msgstr "Kirjaudu Sisään/Ulos projektista"
+msgstr "Kirjaudu sisään/ulos projektista"
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -166,7 +171,7 @@ msgstr "Uusittavat sopimukset"
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Hours"
-msgstr ""
+msgstr "Tunnit"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -198,7 +203,7 @@ msgstr "Heinäkuu"
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_timesheettask0
 msgid "Complete Your Timesheet."
-msgstr "Tee tuntilistasi valmiiksi."
+msgstr "Tee tuntiikorttisi valmiiksi."
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
@@ -225,17 +230,17 @@ msgstr ""
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_timesheettask0
 msgid "Timesheet task"
-msgstr "Tuntilistan tehtävä"
+msgstr "Tuntikortin tehtävä"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
 msgid "Task encoding"
-msgstr "Tehtävän syöttö"
+msgstr "Tehtävän kirjaus"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_filltimesheet0
 msgid "Task summary is comes into the timesheet line"
-msgstr "Tehtävän yhteenvedosta tulee tuntilistan rivi"
+msgstr "Tehtävän yhteenvedosta tulee tuntikortin rivi"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -270,7 +275,7 @@ msgstr "Huhtikuu"
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
 msgid "report.timesheet.task.user"
-msgstr ""
+msgstr "report.timesheet.task.user"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskencoding0
@@ -282,6 +287,7 @@ msgstr "Syötä tehtävään käyttämäsi tuntimäärä"
 #, python-format
 msgid "Please define employee for user \"%s\". You must create one."
 msgstr ""
+"Määrittele käyttäjälle \"%s\" työntekijätiedot. Oltava vähintään yksi."
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
@@ -297,7 +303,7 @@ msgstr "Virheellinen analyyttinen tili !"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Timesheet/Task hours Report Per Month"
-msgstr "Tuntilista/tehtävä tuntiraportti kuukausittain"
+msgstr "Tuntikortti ja tehtävän tunnit -raportti kuukausittain"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:84
@@ -316,7 +322,7 @@ msgstr "Laskutus"
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_triggerinvoice0
 msgid "Trigger invoices from sales order lines"
-msgstr ""
+msgstr "Liipaise laskut myyntitilausten riveiltä."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:100
@@ -334,6 +340,8 @@ msgid ""
 "<p>Timesheets on this project may be invoiced to %s, according to the terms "
 "defined in the contract.</p>"
 msgstr ""
+"<p>Tämän projection tuntikortit voi laskuttaa sopimuksen ehtojen mukaisesti "
+"asiakkaalta \"%s\".</p>"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_taskwork0
@@ -344,7 +352,7 @@ msgstr "Tehtävälle tehty työ"
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks"
-msgstr ""
+msgstr "Laskuta tehtävät"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
@@ -372,7 +380,7 @@ msgstr "Kun tehtävä on valmis, tee sille lasku."
 #: code:addons/project_timesheet/project_timesheet.py:266
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Virheellinen toiminto!"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -387,11 +395,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
 "'%s'.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Kirjaa tuntikorttisi projectile "
+"\"%s\".</p>"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
 msgid "Timesheet Hours"
-msgstr "Tuntilistan tunnit"
+msgstr "Tuntikortin tunnit"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -402,4 +412,4 @@ msgstr "Vuosi"
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
-msgstr "Täytä tuntilista"
+msgstr "Täytä tuntikortti"

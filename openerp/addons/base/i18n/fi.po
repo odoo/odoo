@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:35+0000\n"
-"PO-Revision-Date: 2013-12-03 06:41+0000\n"
+"PO-Revision-Date: 2013-12-14 10:13+0000\n"
 "Last-Translator: Harri Luuppala <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-04 05:56+0000\n"
-"X-Generator: Launchpad (build 16861)\n"
+"X-Launchpad-Export-Date: 2013-12-15 05:45+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -215,13 +215,12 @@ msgid ""
 "reports."
 msgstr ""
 "\n"
-"Luo laskut perustuen kuluihin, aikaan ja tuntikirjauksiin.\n"
+"Luo laskut perustuen kuluihin ja tuntikortteihin.\n"
 "========================================================\n"
 "\n"
-"Moduuli laskujen luomiseen henkilökulujen pohjalta (tuntilomakkeen "
-"merkinnät, kulut,...)\n"
+"Moduuli laskujen luomiseen kulujen pohjalta (henkilöstöhallinto, kulut,...)\n"
 "\n"
-"Voit määritellä hinnastoja kustannuspaikoille ja luoda näillä "
+"Voit määritellä hinnastoja analyyttisessä kirjanpidossa ja luoda näillä "
 "ennusteraportteja tuloista."
 
 #. module: base
@@ -676,7 +675,7 @@ msgstr "Espanjalainen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_invoice
 msgid "Invoice on Timesheets"
-msgstr "Laskuta tuntilistojen mukaan"
+msgstr "Laskuta tuntikorttien mukaan"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -4352,7 +4351,7 @@ msgstr "Liechtenstein"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
 msgid "Timesheet on Issues"
-msgstr "Tuntilomake asioille"
+msgstr "Tuntikortti asioille"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_ltd
@@ -6712,7 +6711,7 @@ msgid ""
 "request, timesheets, ...), if he is linked to an employee in the system."
 msgstr ""
 "käyttäjä voi hallita hänen omia henkilöstöhallintotietojaan "
-"(poissaolopyyntöjä, tuntilmoakkeitaan,...), mikäli hänet on kytketty "
+"(poissaolopyyntöjä, tuntikorttejaan,...), mikäli hänet on kytketty "
 "järjestelmään työntekijänä."
 
 #. module: base
@@ -7018,7 +7017,7 @@ msgstr "OHADA - Kirjanpito"
 #. module: base
 #: help:res.bank,bic:0
 msgid "Sometimes called BIC or Swift."
-msgstr "Kutsutaan myös BIC tai SWIFT koodiksi."
+msgstr "Kutsutaan myös BIC tai SWIFT -koodiksi."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
@@ -7028,7 +7027,7 @@ msgstr "Intia - Kirjanpito"
 #. module: base
 #: field:res.lang,time_format:0
 msgid "Time Format"
-msgstr "Aika formaatti"
+msgstr "Ajan esitysmuoto"
 
 #. module: base
 #: field:res.company,rml_header3:0
@@ -7335,7 +7334,7 @@ msgstr "Siirtymät"
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets"
-msgstr "Tuntilistat"
+msgstr "Tuntikortit"
 
 #. module: base
 #: help:ir.values,company_id:0
@@ -7414,6 +7413,20 @@ msgid ""
 "up a management by affair.\n"
 "    "
 msgstr ""
+"\n"
+"Tämä moduuli asentaa tuntikorttijärjestelmän.\n"
+"==========================================\n"
+"\n"
+"Jokainen työntekjiä voi kirjata ajankäyttönsä ja seurata tätä "
+"projekteittain.\n"
+"Projekti on analyyttinen till ja projekti synnyttää kustannuksia "
+"analyyttiselle tilille.\n"
+"\n"
+"Sisältää seurantaan paljon erilaisia aika- ja työntekijäraportteja.\n"
+"\n"
+"Moduuli on täysin integroitu ksutannuslaskentamoduulin kanssa. Sallii \n"
+"hallinnan määrittämisen asiaryhmittäin.\n"
+"    "
 
 #. module: base
 #: field:res.bank,state:0
@@ -7820,7 +7833,7 @@ msgstr "MDX"
 #. module: base
 #: view:ir.cron:0
 msgid "Scheduled Action"
-msgstr "Jaksottimen toiminto"
+msgstr "Ajoitettu toimenpide"
 
 #. module: base
 #: model:res.country,name:base.bi
@@ -8658,9 +8671,9 @@ msgid ""
 "Keep empty to not save the printed reports. You can use a python expression "
 "with the object and time variables."
 msgstr ""
-"Tämä on liitteen nimi johon tulostus tallennetaan. Jätä tyhjäksi jos "
-"tulostettuja raportteija ei haluta tallentaa. Voit käyttää python-lauseketta "
-"jossa on objekti- tai aikamuuttuja."
+"Tämä on liitteen tiedostonimi, johon tuloste tallennetaan. Jätä tyhjäksi jos "
+"tulostettuja raportteja ei haluta tallentaa. Voit käyttää python-lauseketta, "
+"jossa on objekti- tai aikamuuttujia."
 
 #. module: base
 #: sql_constraint:ir.model.data:0
@@ -8740,7 +8753,7 @@ msgstr "Filippiinit"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet_sheet
 msgid "Timesheets, Attendances, Activities"
-msgstr "Tuntilomakkeet, Poissaolot, Tehtävät"
+msgstr "Tuntikortit, läsnäolot, toiminnot"
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -9547,7 +9560,7 @@ msgstr "8. %I:%M:%S %p = 06:25:20 PM"
 #. module: base
 #: view:ir.filters:0
 msgid "Filters shared with all users"
-msgstr "Suodattimet jaettu kaikkien käyttäjien kanssa"
+msgstr "Suodattimet jotka on jaettu kaikkien käyttäjien kanssa"
 
 #. module: base
 #: view:ir.translation:0
@@ -9862,7 +9875,7 @@ msgstr "Mallia %s ei ole olemassa!"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_jit
 msgid "Just In Time Scheduling"
-msgstr "Just in time ajoitus (JIT)"
+msgstr "JOT-ajoitus (JIT)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -10088,6 +10101,15 @@ msgid ""
 "handle an issue.\n"
 "                "
 msgstr ""
+"\n"
+"Tämä moduuli lisää tuen tuntikortteille projektin asioiden ja  virheiden "
+"hallintaan.\n"
+"============================================================================="
+"====\n"
+"\n"
+"Työkohtaisia lokeja voi ylläpitää käytetyn työajan näyttämiseen "
+"käyttäjittäin.\n"
+"                "
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -12082,7 +12104,7 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "Legends for Date and Time Formats"
-msgstr "Selitykset päivämäärän ja kellonajan muotoilusta"
+msgstr "Merkinnät päivämäärän ja kellonajan muotoiluun"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -12284,8 +12306,7 @@ msgstr "Käyttäjän viite"
 #: code:addons/base/ir/ir_fields.py:226
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
-msgstr ""
-"\"%s\" ei näyttäisi olevan sallittu päivä/aika kentälle \"%%(field)s\""
+msgstr "\"%s\" ei ole sallittu päivä/aika kentälle \"%%(field)s\""
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_bic
@@ -13116,7 +13137,7 @@ msgstr "Suodata dokumenttejani"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_gtd
 msgid "Personal Tasks, Contexts, Timeboxes"
-msgstr "Henkilökohtaiset tehtävät, Asiakokonaisuudet, Aikalaatikot"
+msgstr "Henkilökohtaiset tehtävät, asiakokonaisuudet, aikarajat"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cr
@@ -13899,8 +13920,8 @@ msgstr ""
 "---------------\n"
 "* Työntekijät ja hierarkiat: Voit määritellä työntekijät käyttäjinä ja "
 "näyttää hierarkiat\n"
-"* Henkilöstöosastot\n"
-"* Henkilöstötyöt\n"
+"* Henkilöstöhallinnon osastot\n"
+"* Henkilöstöhallinnon tehtävät\n"
 "    "
 
 #. module: base
