@@ -197,7 +197,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         }
                     }
                     self.cashregisters = bankstatements;
-                    console.log('cashregisters',self.cashregisters);
                 });
         
             return loaded;

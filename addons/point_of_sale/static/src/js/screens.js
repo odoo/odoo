@@ -570,6 +570,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         get_product_weight_string: function(){
             return (this.weight || 0).toFixed(3) + ' Kg';
         },
+        get_product_image_url: function(){
+            var product = this.get_product();
+            if(product){
+                return window.location.origin + '/web/binary/image?model=product.product&field=image_medium&id='+product.id;
+            }else{
+                return "";
+            }
+        },
         close: function(){
             var self = this;
             this._super();
@@ -930,7 +938,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             
             if(    this.pos.config.iface_cashdrawer 
                 && this.pos.get('selectedOrder').get('paymentLines').find( function(pl){ 
-                           return pl.cashregister.get('journal').type === 'cash'; 
+                           return pl.cashregister.journal.type === 'cash'; 
                    })){
                     this.pos.proxy.open_cashbox();
             }

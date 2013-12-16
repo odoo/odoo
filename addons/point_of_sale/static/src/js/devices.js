@@ -108,7 +108,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.connection.session_id = _.uniqueId('posproxy');
             this.test_connection();
             window.proxy = this;
-            
         },
         close: function(){
             this.connection.destroy();

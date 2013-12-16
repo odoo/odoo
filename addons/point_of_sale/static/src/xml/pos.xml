@@ -235,7 +235,7 @@
                         <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
                     </span> 
                     <t t-if="widget.get_product()">
-                        <img t-att-src="widget.get_product().get_image_url()" />
+                        <img t-att-src="widget.get_product_image_url()" />
                     </t>
                 </div>
             </div>
