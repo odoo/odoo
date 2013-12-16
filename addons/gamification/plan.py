@@ -83,7 +83,7 @@ class gamification_goal_plan(osv.Model):
         :return: a string in DEFAULT_SERVER_DATE_FORMAT representing the date"""
         res = {}
         for plan in self.browse(cr, uid, ids, context):
-            last = datetime.strptime(plan.last_report_date, '%Y-%m-%d').date()
+            last = datetime.strptime(plan.last_report_date, DF).date()
             if plan.report_message_frequency == 'daily':
                 next = last + timedelta(days=1)
                 res[plan.id] = next.strftime(DF)
