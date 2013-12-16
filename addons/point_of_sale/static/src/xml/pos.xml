@@ -569,8 +569,8 @@
     </t>
 
     <t t-name="PaypadButtonWidget">
-        <button class="paypad-button" t-att-cash-register-id="widget.cashRegister.get('id')">
-            <t t-esc="widget.cashRegister.get('journal').name"/>
+        <button class="paypad-button" t-att-cash-register-id="widget.cashregister.id">
+            <t t-esc="widget.cashregister.journal.name"/>
         </button>
     </t>
 
@@ -590,10 +590,10 @@
             <div class="pos-center-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
                 Date.CultureInfo.formatPatterns.longTime)"/> <t t-esc="order.get('name')"/></div>
             <br />
-            <t t-esc="widget.company.name"/><br />
-            Phone: <t t-esc="widget.company.phone || ''"/><br />
-            User: <t t-esc="widget.user.name"/><br />
-            Shop: <t t-esc="widget.shop_obj.name"/><br />
+            <t t-esc="widget.pos.company.name"/><br />
+            Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
+            User: <t t-esc="widget.pos.user.name"/><br />
+            Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
             <table>
                 <colgroup>

@@ -589,6 +589,7 @@ td {
 .pos .category-button .category-img img {
     max-height: 100px;
     max-width:  120px;
+    vertical-align: middle;
 }
 
 .pos .category-button .category-name {
@@ -640,6 +641,7 @@ td {
 .pos .product .product-img img {
     max-height: 100px;
     max-width:  120px;
+    vertical-align: middle;
 }
 
 .pos .product .price-tag {
@@ -862,15 +864,25 @@ td {
 }
 
 @media print {
-<<<<<<< TREE
-    .pos{
-        background: white !important;
-    }
-    .pos .pos-topheader, .pos .pos-leftpane {
+    .oe_leftbar,
+    .pos .pos-topheader, 
+    .pos .pos-leftpane, 
+    .pos .keyboard_frame {
         display: none !important;
     }
-    .pos .pos-content {
-        top: 0px !important;
+    .pos,
+    .pos .pos-content,
+    .pos .rightpane,
+    .pos .screen, 
+    .pos .window, 
+    .pos .window .subwindow, 
+    .pos .subwindow .subwindow-container{
+        display: block;
+        position: static;
+        height: auto;
+    }
+    .pos{
+        background: white !important;
     }
     .pos .rightpane {
         left: 0px !important;

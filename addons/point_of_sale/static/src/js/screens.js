@@ -182,10 +182,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // - if there's a user with a matching ean, put it as the active 'cashier', go to cashier mode, and return true
         // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
         barcode_cashier_action: function(code){
-            var users = this.pos.get('user_list');
+            var users = this.pos.users;
             for(var i = 0, len = users.length; i < len; i++){
                 if(users[i].ean13 === code.code){
-                    this.pos.set('cashier',users[i]);
+                    this.pos.cashier = users[i];
                     this.pos_widget.username.refresh();
                     this.pos.proxy.cashier_mode_activated();
                     this.pos_widget.screen_selector.set_user_mode('cashier');
@@ -201,7 +201,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // - if there's a user with a matching ean, put it as the active 'client' and return true
         // - else : return false. 
         barcode_client_action: function(code){
-            var partners = this.pos.get('partner_list');
+            var partners = this.pos.partners;
             for(var i = 0, len = partners.length; i < len; i++){
                 if(partners[i].ean13 === code.code){
                     this.pos.get('selectedOrder').set_client(partners[i]);
@@ -278,7 +278,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos_widget.set_left_action_bar_visible(this.show_leftpane && !this.cashier_mode);
             this.pos_widget.set_cashier_controls_visible(this.cashier_mode);
 
-            if(this.cashier_mode && this.pos.iface_self_checkout){
+            if(this.cashier_mode && this.pos.config.iface_self_checkout){
                 this.pos_widget.client_button.show();
             }else{
                 this.pos_widget.client_button.hide();
@@ -557,11 +557,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         get_product_name: function(){
             var product = this.get_product();
-            return (product ? product.get('name') : undefined) || 'Unnamed Product';
+            return (product ? product.name : undefined) || 'Unnamed Product';
         },
         get_product_price: function(){
             var product = this.get_product();
-            return (product ? product.get('price') : 0) || 0;
+            return (product ? product.price : 0) || 0;
         },
         set_weight: function(weight){
             this.weight = weight;
@@ -628,14 +628,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                             
                             //we get the first cashregister marked as self-checkout
                             var selfCheckoutRegisters = [];
-                            for(var i = 0; i < self.pos.get('cashRegisters').models.length; i++){
-                                var cashregister = self.pos.get('cashRegisters').models[i];
+                            for(var i = 0; i < self.pos.cashregisters.length; i++){
+                                var cashregister = self.pos.cashregisters[i];
                                 if(cashregister.self_checkout_payment_method){
                                     selfCheckoutRegisters.push(cashregister);
                                 }
                             }
 
-                            var cashregister = selfCheckoutRegisters[0] || self.pos.get('cashRegisters').models[0];
+                            var cashregister = selfCheckoutRegisters[0] || self.pos.cashregisters[0];
                             currentOrder.addPaymentline(cashregister);
                             self.pos.push_order(currentOrder)
                             currentOrder.destroy();
@@ -750,7 +750,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.product_list_widget = new module.ProductListWidget(this,{
                 click_product_action: function(product){
-                    if(product.to_weight && self.pos.iface_electronic_scale){
+                    if(product.to_weight && self.pos.config.iface_electronic_scale){
                         self.pos_widget.screen_selector.set_current_screen( self.cashier_mode ? self.scale_screen : self.client_scale_screen, {product: product});
                     }else{
                         self.pos.get('selectedOrder').addProduct(product);
@@ -790,7 +790,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.pos_widget.order_widget.set_editable(false);
 
-            if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
+            if(this.pos.config.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
                 this.pos_widget.onscreen_keyboard.hide();
             }
         },
@@ -802,15 +802,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show_numpad:     true,
         show_leftpane:   true,
 
-        init: function(parent, options) {
-            this._super(parent,options);
-            this.user = this.pos.get('user');
-            this.company = this.pos.get('company');
-            this.shop_obj = this.pos.get('shop');
-        },
-        renderElement: function() {
-            this._super();
-        },
         show: function(){
             this._super();
             var self = this;
@@ -830,7 +821,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.refresh();
             this.print();
 
-            // THIS IS THE HACK OF THE CENTURY
             //
             // The problem is that in chrome the print() is asynchronous and doesn't
             // execute until all rpc are finished. So it conflicts with the rpc used
@@ -938,7 +928,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             
             document.body.addEventListener('keyup', this.hotkey_handler);
             
-            if(    this.pos.iface_cashdrawer 
+            if(    this.pos.config.iface_cashdrawer 
                 && this.pos.get('selectedOrder').get('paymentLines').find( function(pl){ 
                            return pl.cashregister.get('journal').type === 'cash'; 
                    })){
@@ -963,7 +953,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     },
                 });
            
-            if( this.pos.iface_invoicing ){
+            if( this.pos.config.iface_invoicing ){
                 this.add_action_button({
                         label: 'Invoice',
                         name: 'invoice',
@@ -974,7 +964,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     });
             }
 
-            if( this.pos.iface_cashdrawer ){
+            if( this.pos.config.iface_cashdrawer ){
                 this.add_action_button({
                         label: _t('Cash'),
                         name: 'cashbox',
@@ -1172,7 +1162,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             }else{
                 this.pos.push_order(currentOrder) 
-                if(this.pos.iface_print_via_proxy){
+                if(this.pos.config.iface_print_via_proxy){
                     this.pos.proxy.print_receipt(currentOrder.export_for_printing());
                     this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
                 }else{

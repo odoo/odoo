@@ -91,7 +91,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
-    // The paypad allows to select the payment method (cashRegisters) 
+    // The paypad allows to select the payment method (cashregisters) 
     // used to pay the order.
     module.PaypadWidget = module.PosBaseWidget.extend({
         template: 'PaypadWidget',
@@ -99,11 +99,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this._super();
 
-            this.pos.get('cashRegisters').each(function(cashRegister) {
+            _.each(this.pos.cashregisters,function(cashregister) {
                 var button = new module.PaypadButtonWidget(self,{
                     pos: self.pos,
                     pos_widget : self.pos_widget,
-                    cashRegister: cashRegister,
+                    cashregister: cashregister,
                 });
                 button.appendTo(self.$el);
             });
@@ -114,7 +114,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template: 'PaypadButtonWidget',
         init: function(parent, options){
             this._super(parent, options);
-            this.cashRegister = options.cashRegister;
+            this.cashregister = options.cashregister;
         },
         renderElement: function() {
             var self = this;
@@ -125,7 +125,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     console.warn('TODO should not get there...?');
                     return;
                 }
-                self.pos.get('selectedOrder').addPaymentline(self.cashRegister);
+                self.pos.get('selectedOrder').addPaymentline(self.cashregister);
                 self.pos_widget.screen_selector.set_current_screen('payment');
             });
         },
@@ -523,7 +523,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.el.querySelector('.search-clear').addEventListener('click',this.clear_search_handler);
 
-            if(this.pos.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
+            if(this.pos.config.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
                 this.pos_widget.onscreen_keyboard.connect(this.$('.searchbox input'));
             }
         },
@@ -648,9 +648,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         get_name: function(){
             var user;
             if(this.mode === 'cashier'){
-                user = this.pos.get('cashier') || this.pos.get('user');
+                user = this.pos.cashier || this.pos.user;
             }else{
-                user = this.pos.get('selectedOrder').get_client()  || this.pos.get('user');
+                user = this.pos.get('selectedOrder').get_client()  || this.pos.user;
             }
             if(user){
                 return user.name;
@@ -818,6 +818,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template: 'PosWidget',
         init: function() { 
             this._super(arguments[0],{});
+            console.log('UH');
 
             instance.web.blockUI(); 
 
@@ -881,7 +882,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 self.build_widgets();
 
-                if(self.pos.iface_big_scrollbars){
+                if(self.pos.config.iface_big_scrollbars){
                     self.$el.addClass('big-scrollbars');
                 }
 
@@ -891,9 +892,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 instance.webclient.set_content_full_screen(true);
 
-                if (!self.pos.get('pos_session')) {
+                if (!self.pos.session) {
                     self.screen_selector.show_popup('error', 'Sorry, we could not create a user session');
-                }else if(!self.pos.get('pos_config')){
+                }else if(!self.pos.config){
                     self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
                 }
             
@@ -1035,7 +1036,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
-                default_mode: this.pos.iface_self_checkout ?  'client' : 'cashier',
+                default_mode: this.pos.config.iface_self_checkout ?  'client' : 'cashier',
             });
 
             if(this.pos.debug){
