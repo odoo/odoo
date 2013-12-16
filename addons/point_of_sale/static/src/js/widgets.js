@@ -409,7 +409,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             };
             
             this.clear_search_handler = function(event){
-                console.log("CLEAR SEARCH");
                 self.clear_search();
             };
 
@@ -524,7 +523,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.el.querySelector('.search-clear').addEventListener('click',this.clear_search_handler);
 
             if(this.pos.config.iface_vkeyboard && this.pos_widget.onscreen_keyboard){
-                this.pos_widget.onscreen_keyboard.connect(this.$('.searchbox input'));
+                this.pos_widget.onscreen_keyboard.connect($(this.el.querySelector('.searchbox input')));
             }
         },
         
