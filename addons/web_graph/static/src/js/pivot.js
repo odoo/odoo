@@ -214,15 +214,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.fold(this.cols.main);
 	},
 
-	expand_headers: function (root, new_headers) {
-		root.headers = new_headers;
-		root.main = new_headers[0];
-		_.each(root.headers, function (header) {
-			header.root = root;
-			header.is_expanded = (header.children.length > 0);
-		});
-	},
-
 	get_total: function (header) {
 		if (header) {
 			var main = (header.root === this.rows) ? this.cols.main : this.rows.main;
@@ -241,9 +232,45 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.stale_data = true;
 	},
 
-	update_data: function () {
-		var self = this;
-		return this.query_all_values().then(function (result) {
+	// To obtain all the values required to draw the full table, we have to do 
+	// at least      2 + min(row.groupby.length, col.groupby.length)
+	// calls to readgroup.  For example, if row.groupby = [r1, r2, r3] and 
+	// col.groupby = [c1, c2, c3, c4], then a minimal set of calls is done 
+	// with the following groupby:
+	// [], [c1, c2, c3, c4], r1, c1, c2, c3, c4], [r1, r2, c1, c2, c3, c4],
+	// [r1, r2, r3, c1, c2, c3, c4]
+	// To simplify the code, we will always do 2 + row.groupby.length calls,
+	// unless col.groupby.length = 0, in which case we do 2 calls ([] and 
+	// row_groupbys), but this can be optimized later.
+	load_data: function () {
+		var self = this,
+			cols = this.cols.groupby,
+			rows = this.rows.groupby,
+			def_array,
+			groupbys;
+
+		if (cols.length > 0) {
+			groupbys = _.map(_.range(rows.length + 1), function (i) {
+				return rows.slice(0, i).concat(cols);
+			});
+			groupbys.push([]);
+		} else {
+			groupbys = [rows, []];
+		}
+		def_array = _.map(groupbys, function (groupby) {
+			return self.data_loader.get_groups(self.visible_fields(), self.domain, groupby);
+		});
+
+		return $.when.apply(null, def_array).then(function () {
+			var args = Array.prototype.slice.call(arguments),
+				col_data = _.first(args),
+				total = _.last(args)[0],
+				row_data = _.last(_.initial(args)),
+				cell_data = args;
+
+			return (total === undefined) ? undefined
+                    : self.format_data(total, col_data, row_data, cell_data);
+		}).then(function (result) {
 			self.stale_data = false;
 			if (result) {
 				self.no_data = false;
@@ -258,6 +285,15 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			} else {
 				self.no_data = true;
 			}
+		});
+	},
+
+	expand_headers: function (root, new_headers) {
+		root.headers = new_headers;
+		root.main = new_headers[0];
+		_.each(root.headers, function (header) {
+			header.root = root;
+			header.is_expanded = (header.children.length > 0);
 		});
 	},
 
@@ -287,52 +323,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		});
 		root.headers = updated_headers;
 		root.main = root.headers[0];
-	},
-
-	// this method is a little tricky.  In order to obtain all the values 
-	// required to draw the full table, we have to do at least 
-	//             2 + min(row.groupby.length, col.groupby.length)
-	// calls to readgroup.  For example, if row.groupby = [r1, r2, r3] and 
-	// col.groupby = [c1, c2, c3, c4], then a minimal set of calls is done 
-	// with the following groupby:
-	// []
-	// [c1, c2, c3, c4]
-	// [r1, c1, c2, c3, c4]
-	// [r1, r2, c1, c2, c3, c4]
-	// [r1, r2, r3, c1, c2, c3, c4]
-	// To simplify the code, we will always do 2 + row.groupby.length calls,
-	// unless col.groupby.length = 0, in which case we do 2 calls ([] and 
-	// row_groupbys), but this can be optimized later.
-	query_all_values: function () {
-		var self = this,
-			cols = this.cols.groupby,
-			rows = this.rows.groupby,
-			def_array,
-			groupbys;
-
-		if (cols.length > 0) {
-			groupbys = _.map(_.range(rows.length + 1), function (i) {
-				return rows.slice(0, i).concat(cols);
-			});
-			groupbys.push([]);
-		} else {
-			groupbys = [rows, []];
-		}
-		def_array = _.map(groupbys, function (groupby) {
-			return self.data_loader.get_groups(self.visible_fields(), self.domain, groupby);
-		});
-
-		return $.when.apply(null, def_array).then(function () {
-			var args = Array.prototype.slice.call(arguments),
-				col_data = _.first(args),
-				total = _.last(args)[0],
-				row_data = _.last(_.initial(args)),
-				cell_data = args;
-
-			return (total === undefined) ? undefined
-                    : self.format_data(total, col_data, row_data, cell_data);
-		});
-
 	},
 
 	format_data: function (total, col_data, row_data, cell_data) {
@@ -388,7 +378,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		}
 
 		function make_tree_headers (data_pt, parent, max_depth) {
-			var value = data_pt.attributes.value, //get_attribute_value(data_pt),
+			var value = data_pt.attributes.value,
 				node = {
 					id: _.uniqueId(),
 					path: parent.path.concat(value),

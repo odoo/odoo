@@ -163,7 +163,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     display_data: function () {
         var pivot = this.pivot_table;
         if (pivot.stale_data) {
-            pivot.update_data().done(this.proxy('display_data'));
+            pivot.load_data().done(this.proxy('display_data'));
         } else {
             this.$('.graph_main_content svg').remove();
             this.table.empty();
