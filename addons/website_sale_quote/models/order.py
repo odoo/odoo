@@ -87,22 +87,27 @@ class sale_order(osv.osv):
         'website_description': fields.html('Description'),
     }
 
-    def _get_token(self, cr, uid, ids, context=None):
+    def _get_token(self, cr, uid, oder_id, context=None):
         """
             Generate token for sale order on action_quotation_send , send it to customer.
         """
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-        return hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, ids[0])).hexdigest()
+        return hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, oder_id)).hexdigest()
+
+    def _get_signup_url(self, cr, uid, order_id=False, token=False, context=None):
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
+        url = "%s/quote/%s/%s" % (base_url, order_id, token)
+        return url
 
     def create(self, cr, uid, vals, context=None):
         new_id = super(sale_order, self).create(cr, uid, vals, context=context)
-        self.write(cr, uid, [new_id], {'quote_url': self._get_signup_url(cr, uid, new_id, False, context)})
+        token = self._get_token(cr, uid, new_id, context)
+        url = self._get_signup_url(cr, uid, new_id, token, context)
+        self.write(cr, uid, [new_id], {'access_token': token,'quote_url': url})
         return new_id
 
     def action_quotation_send(self, cr, uid, ids, context=None):
-        token = self._get_token(cr, uid, ids, context)
         self._create_portal_user(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'access_token': token, 'quote_url': self._get_signup_url(cr, uid, False, token, context)})
         res = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
         return res
 
@@ -121,11 +126,6 @@ class sale_order(osv.osv):
                 'email': order.partner_id.email,
                 'in_portal': True}))
         return user_wizard_pool.action_apply(cr, uid, user, context=context)
-
-    def _get_signup_url(self, cr, uid, order_id=False, token=False, context=None):
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-        url = "%s/quote/%s" % (base_url, token and token or order_id)
-        return url
 
     def _get_sale_order_line(self, cr, uid, template_id, context=None):
         """create order line from selected quote template line."""

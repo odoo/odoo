@@ -165,7 +165,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="btn" t-if="quotation.state != 'cancel'" id="cancelQuotation">
+                            <a type="submit" t-if="quotation.state != 'cancel'" t-href="/quote/#{ quotation.id }/decline">
                                 <span class="fa-stack">
                                     <i class="fa fa-circle fa-stack-2x" style="color:#d9534f;"></i>
                                     <i class="fa fa-times fa-stack-1x fa-inverse"></i>

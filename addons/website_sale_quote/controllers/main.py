@@ -41,29 +41,28 @@ class sale_quote(http.Controller):
         order_pool = request.registry.get('sale.order')
         user_pool = request.registry.get('res.users')
         partner = order_pool.browse(request.cr, SUPERUSER_ID, order_id, context=request.context).partner_id.id
-        return user_pool.search(request.cr, SUPERUSER_ID, [('partner_id', '=', partner)])[0]
+        if partner:
+            user = user_pool.search(request.cr, SUPERUSER_ID, [('partner_id', '=', partner)])[0]
+        return user
 
-    @website.route(['/quote/<token>', '/quote/<int:order_id>'], type='http', auth="public")
-    def view(self, token=None, order_id=None, **post):
+    @website.route(["/quote/<model('sale.order'):order>/<token>"], type='http', auth="public")
+    def view(self, order=None, token=None,**post):
+        assert token == order.access_token, 'No token found'
         values = {}
-        order_pool = request.registry.get('sale.order')
-        if token:
-            order_id = self._get_quote(token)[0]
-        quotation = order_pool.browse(request.cr, SUPERUSER_ID, order_id)
         values.update({
-            'quotation': quotation,
+            'quotation': order,
         })
         return request.website.render('website_sale_quote.so_quotation', values)
 
     @website.route(['/quote/<int:order_id>/accept'], type='http', auth="public")
     def accept(self, order_id=None, **post):
         request.registry.get('sale.order').write(request.cr, SUPERUSER_ID, [order_id], {'state': 'manual'})
-        return request.redirect("/quote/%s" % self._get_token(order_id))
+        return request.redirect("/quote/%s/%s" % (order_id, self._get_token(order_id)))
 
     @website.route(['/quote/<int:order_id>/decline'], type='http', auth="public")
     def decline(self, order_id=None, **post):
         request.registry.get('sale.order').write(request.cr, SUPERUSER_ID, [order_id], {'state': 'cancel'})
-        return request.redirect("/quote/%s" % self._get_token(order_id))
+        return request.redirect("/quote/%s/%s" % (order_id, self._get_token(order_id)))
 
     @website.route(['/quote/<int:order_id>/post'], type='http', auth="public")
     def post(self, order_id=None, **post):
@@ -76,7 +75,7 @@ class sale_quote(http.Controller):
                     subtype='mt_comment',
                 )
             request.session.body = False
-        return request.redirect("/quote/%s" % self._get_token(order_id))
+        return request.redirect("/quote/%s/%s" % (order_id, self._get_token(order_id)))
 
     @website.route(['/quote/update_line'], type='json', auth="public")
     def update(self, line_id=None, remove=False, unlink=False, order_id=None, **post):
