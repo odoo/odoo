@@ -106,7 +106,7 @@ class hr_grant_badge_wizard(osv.TransientModel):
             if uid == wiz.user_id.id:
                 raise osv.except_osv(_('Warning!'), _('You can not send a badge to yourself'))
 
-            if badge_obj._can_grant_badge(cr, uid,
+            if badge_obj.check_granting(cr, uid,
                                          user_from_id=uid,
                                          badge_id=wiz.badge_id.id,
                                          context=context):
