@@ -131,7 +131,10 @@ class gamification_goal(osv.Model):
         res = dict.fromkeys(ids, 0.0)
         for goal in self.browse(cr, uid, ids, context=context):
             if goal.type_condition == 'higher':
-                res[goal.id] = min(100, round(100.0 * goal.current / goal.target_goal, 2))
+                if goal.current >= goal.target_goal:
+                    res[goal.id] = 100.0
+                else:
+                    res[goal.id] = round(100.0 * goal.current / goal.target_goal, 2)
             elif goal.current < goal.target_goal:
                 # a goal 'lower than' has only two values possible: 0 or 100%
                 res[goal.id] = 100.0
