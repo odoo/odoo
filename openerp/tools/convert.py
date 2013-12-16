@@ -773,6 +773,9 @@ form: module.record_id""" % (xml_id,)
         if rec_context:
             rec_context = unsafe_eval(rec_context)
         self._test_xml_id(rec_id)
+        # in update mode, the record won't be updated if the data node explicitely
+        # opt-out using @noupdate="1". A second check will be performed in
+        # ir.model.data#_update() using the record's ir.model.data `noupdate` field.
         if self.isnoupdate(data_node) and self.mode != 'init':
             # check if the xml record has an id string
             if rec_id:

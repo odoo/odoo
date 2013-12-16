@@ -934,12 +934,15 @@ class ir_model_data(osv.osv):
             return False
         action_id = False
         if xml_id:
-            cr.execute('''SELECT imd.id, imd.res_id, md.id, imd.model
+            cr.execute('''SELECT imd.id, imd.res_id, md.id, imd.model, imd.noupdate
                           FROM ir_model_data imd LEFT JOIN %s md ON (imd.res_id = md.id)
                           WHERE imd.module=%%s AND imd.name=%%s''' % model_obj._table,
                           (module, xml_id))
             results = cr.fetchall()
-            for imd_id2,res_id2,real_id2,real_model in results:
+            for imd_id2,res_id2,real_id2,real_model,noupdate_imd in results:
+                # In update mode, do not update a record if it's ir.model.data is flagged as noupdate
+                if mode == 'update' and noupdate_imd:
+                    return res_id2
                 if not real_id2:
                     self._get_id.clear_cache(self)
                     self.get_object_reference.clear_cache(self)
