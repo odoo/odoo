@@ -344,19 +344,6 @@ class gamification_goal(osv.Model):
         """
         goal = self.browse(cr, uid, goal_id, context=context)
 
-        if goal.computation_mode == 'manually':
-            #open a wizard window to update the value manually
-            action = {
-                'name': _("Update %s") % goal.type_id.name,
-                'id': goal_id,
-                'type': 'ir.actions.act_window',
-                'views': [[False, 'form']],
-                'target': 'new',
-            }
-            action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current}
-            action['res_model'] = 'gamification.goal.wizard'
-            return action
-
         if goal.type_id.action_id:
             #open a the action linked on the goal
             action = goal.type_id.action_id.read()[0]
@@ -372,6 +359,19 @@ class gamification_goal(osv.Model):
                         views = [(view_id, mode)]
                         break
                 action['views'] = views
+            return action
+
+        if goal.computation_mode == 'manually':
+            #open a wizard window to update the value manually
+            action = {
+                'name': _("Update %s") % goal.type_id.name,
+                'id': goal_id,
+                'type': 'ir.actions.act_window',
+                'views': [[False, 'form']],
+                'target': 'new',
+            }
+            action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current}
+            action['res_model'] = 'gamification.goal.wizard'
             return action
 
         return False
