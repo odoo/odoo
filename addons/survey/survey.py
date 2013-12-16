@@ -1025,7 +1025,7 @@ class survey_user_input_line(osv.osv):
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
         }
-        if answer_tag in post:
+        if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
         else:
             vals.update({'skipped': True})
@@ -1039,26 +1039,26 @@ class survey_user_input_line(osv.osv):
             self.create(cr, uid, vals, context=context)
         return True
 
-    # def save_line_simple_choice(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
-    #     vals = {
-    #         'user_input_id': user_input_id,
-    #         'question_id': question.id,
-    #         'page_id': question.page_id.id,
-    #         'survey_id': question.survey_id.id,
-    #     }
-    #     if answer_tag in post:
-    #         vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
-    #     else:
-    #         vals.update({'skipped': True})
-    #     old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
-    #                                     ('survey_id', '=', question.survey_id.id),
-    #                                     ('question_id', '=', question.id)],
-    #                           context=context)
-    #     if old_uil:
-    #         self.write(cr, uid, old_uil[0], vals, context=context)
-    #     else:
-    #         self.create(cr, uid, vals, context=context)
-    #     return True
+    def save_line_simple_choice(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+        }
+        if answer_tag in post and post[answer_tag].strip() != '':
+            vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
+        else:
+            vals.update({'skipped': True})
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.write(cr, uid, old_uil[0], vals, context=context)
+        else:
+            self.create(cr, uid, vals, context=context)
+        return True
 
 
 def dict_keys_startswith(dictionary, string):
