@@ -202,7 +202,7 @@ class WebsiteSurvey(http.Controller):
                 elif answer.answer_type == 'text':
                     answer_value = answer.value_text
                 elif answer.answer_type == 'number':
-                    answer_value = answer.value_number
+                    answer_value = answer.value_number.__str__()
                 elif answer.answer_type == 'date':
                     answer_value = answer.value_date
                 # TODO mettre les QCM ici

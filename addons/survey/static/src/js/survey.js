@@ -64,7 +64,6 @@ $(document).ready(function () {
     function prefill(){
         var prefill_def = $.ajax(prefill_controller, {dataType: "json"})
             .done(function(json_data){
-                console.log(json_data)
                 _.each(json_data, function(value, key){
                     the_form.find(".form-control[name=" + key + "]").val(value);
                 });
@@ -72,6 +71,7 @@ $(document).ready(function () {
             .fail(function(){
                 console.warn("[survey] Unable to load prefill data");
             });
+        return prefill_def;
     };
 
     // function validate(form){
@@ -116,5 +116,6 @@ $(document).ready(function () {
 
     console.debug("[survey] Custom JS for survey loaded!");
 
+    // Launch prefilling
     prefill();
 });
