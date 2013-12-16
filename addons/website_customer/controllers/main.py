@@ -94,4 +94,5 @@ class WebsiteCustomer(http.Controller):
                 if data.get('website_published'):
                     values['implemented_partners_data'].append(data)
 
+        values['main_object'] = values['partner']
         return request.website.render("website_customer.details", values)
