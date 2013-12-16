@@ -26,7 +26,7 @@
     <record id="membership_2" model="product.product">
         <field name="membership">True</field>
         <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
-        <field eval="time.strftime('%Y-12-13')" name="membership_date_to"/>
+        <field eval="time.strftime('%Y-12-31')" name="membership_date_to"/>
         <field name="name">Basic Membership</field>
         <field name="categ_id" ref="product.product_category_1"/>
         <field name="list_price">40</field>
