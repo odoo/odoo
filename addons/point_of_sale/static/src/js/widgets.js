@@ -705,10 +705,53 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             'payment_status',
         ],
         minimized: false,
+        init: function(parent,options){
+            this._super(parent,options);
+            var self = this;
+            
+            this.minimized = false;
+
+            // for dragging the debug widget around
+            this.dragging  = false;
+            this.drag_x = 0;
+            this.drag_y = 0;
+
+            this.mouseleave_handler = function(event){
+                self.dragging = false;
+            };
+            this.mouseup_handler = function(event){
+                self.dragging = false;
+            };
+            this.mousedown_handler = function(event){
+                self.dragging = true;
+                self.drag_x = event.screenX;
+                self.drag_y = event.screenY;
+            };
+            this.mousemove_handler = function(event){
+                if(self.dragging){
+                    var top = this.offsetTop;
+                    var left = this.offsetLeft;
+                    var dx   = event.screenX - self.drag_x;
+                    var dy   = event.screenY - self.drag_y;
+
+                    self.drag_x = event.screenX;
+                    self.drag_y = event.screenY;
+
+                    this.style.right = 'auto';
+                    this.style.bottom = 'auto';
+                    this.style.left = left + dx + 'px';
+                    this.style.top  = top  + dy + 'px';
+                }
+            };
+        },
         start: function(){
             var self = this;
 
-            this.$el.draggable();
+            this.el.addEventListener('mouseleave', this.mouseleave_handler);
+            this.el.addEventListener('mouseup',    this.mouseup_handler);
+            this.el.addEventListener('mousedown',  this.mousedown_handler);
+            this.el.addEventListener('mousemove',  this.mousemove_handler);
+
             this.$('.toggle').click(function(){
                 var content = self.$('.content');
                 var bg      = self.$el;
