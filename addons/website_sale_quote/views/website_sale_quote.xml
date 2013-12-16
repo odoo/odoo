@@ -197,7 +197,7 @@
                         <t t-foreach="quotation.message_ids" t-as="message">
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col-xs-2 col-md-1">
+                                    <div class="col-xs-2 col-md-1" t-if="message.author_id.image_small">
                                         <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
                                     <div class="col-xs-10 col-md-11">
                                         <div>
@@ -273,6 +273,39 @@
                     </div>
                 </div>
             </section>
+        </template>
+
+        <template id="so_template" name="SO Template">
+            <t t-call="website_sale_quote.static_layout">
+                <div class="col-xs-12 col-md-8 tab-content">
+                    <section id="template_introduction" class="tab-pane active oe_section jumbotron" t-field="template.website_description">
+                    </section>
+                    <t t-foreach="template.quote_line" t-as="line">
+                        <section class="tab-pane oe_section jumbotron" t-att-id="line.id">
+                            <div t-field="line.website_description" class="oe_structure"/>
+                        </section>
+                    </t>
+                    <section id="templateterms" class="tab-pane oe_section">
+                        <div class="container panel panel-default tab-pane oe_section">
+                            <div class="row panel-body">
+                                <div class="text-center">
+                                    <h2><strong>Terms &amp; Conditions</strong></h2>
+                                    <p class="lead" t-field="template.note"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-xs-6 col-md-4 sidebar oe_section" id="sidebar">
+                    <ul class="nav nav-pills nav-stacked" data-spy="affix">
+                        <li class="active"><a href="#template_introduction" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
+                        <t t-foreach="template.quote_line" t-as="line">
+                            <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><i class="icon-chevron-right"></i><t t-raw="line.product_id.name_template"/> </a></li>
+                        </t>
+                        <li><a href="#templateterms" data-toggle="tab"><i class="icon-chevron-right"></i> Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+            </t>
         </template>
     </data>
 </openerp>

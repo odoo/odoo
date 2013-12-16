@@ -23,6 +23,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sale Quotation Template" version="7.0">
+                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('template_url', '=', False)]}">
+                        <field name="template_url" widget="url"/>
+                    </div>
                     <sheet>
                         <h1>
                             <label string="Quotation Template"/>

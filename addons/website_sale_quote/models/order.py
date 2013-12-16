@@ -32,8 +32,18 @@ class sale_quote_template(osv.osv):
         'website_description': fields.html('Description'),
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
+        'template_url': fields.char('URL', readonly=True),
     }
 
+    def _get_signup_url(self, cr, uid, quote_id, context=None):
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
+        url = "%s/template/%s" % (base_url, quote_id)
+        return url
+
+    def create(self, cr, uid, ids, context=None):
+        new_id = super(sale_quote_template, self).create(cr, uid, ids, context)
+        self.write(cr, uid, new_id, {'template_url':self._get_signup_url(cr, uid, new_id, context=context)})
+        return new_id
 
 class sale_quote_line(osv.osv):
     _name = "sale.quote.line"
@@ -87,27 +97,27 @@ class sale_order(osv.osv):
         'website_description': fields.html('Description'),
     }
 
-    def _get_token(self, cr, uid, oder_id, context=None):
+    def _get_token(self, cr, uid, ids, context=None):
         """
             Generate token for sale order on action_quotation_send , send it to customer.
         """
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-        return hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, oder_id)).hexdigest()
+        for id in ids:
+            token = hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, id)).hexdigest()
+        return token
 
-    def _get_signup_url(self, cr, uid, order_id=False, token=False, context=None):
+    def _get_signup_url(self, cr, uid, ids, token=False, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-        url = "%s/quote/%s/%s" % (base_url, order_id, token)
+        for id in ids:
+            url = "%s/quote/%s/%s" % (base_url, id, token)
         return url
 
-    def create(self, cr, uid, vals, context=None):
-        new_id = super(sale_order, self).create(cr, uid, vals, context=context)
-        token = self._get_token(cr, uid, new_id, context)
-        url = self._get_signup_url(cr, uid, new_id, token, context)
-        self.write(cr, uid, [new_id], {'access_token': token,'quote_url': url})
-        return new_id
 
     def action_quotation_send(self, cr, uid, ids, context=None):
         self._create_portal_user(cr, uid, ids, context=context)
+        token = self._get_token(cr, uid, ids, context)
+        url = self._get_signup_url(cr, uid, ids, token, context)
+        self.write(cr, uid, ids, {'access_token': token,'quote_url': url})
         res = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
         return res
 

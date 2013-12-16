@@ -13,7 +13,9 @@ OpenERP Sale Quote Roller
     'data': [
         'views/website_sale_quote.xml',
         'sale_quote_view.xml',
-        'sale_quote_data.xml'
+        'sale_quote_data.xml',
+        'security/ir.model.access.csv',
+        'security/website_sale_quote.xml',
     ],
     'demo': [
         'sale_quote_demo.xml'

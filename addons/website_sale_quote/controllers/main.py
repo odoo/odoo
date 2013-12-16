@@ -91,3 +91,11 @@ class sale_quote(http.Controller):
         quantity = order_line_val['product_uom_qty'] + number
         order_line_obj.write(request.cr, SUPERUSER_ID, [int(line_id)], {'product_uom_qty': (quantity)}, context=request.context)
         return quantity
+        
+    @website.route(["/template/<model('sale.quote.template'):quote>"], type='http', auth="public")
+    def template_view(self, quote=None, **post):
+        values = {}
+        values.update({
+            'template': quote,
+        })
+        return request.website.render('website_sale_quote.so_template', values)
