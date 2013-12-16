@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 OpenERP SA (<http://openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,22 +18,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'HR Gamification',
-    'version': '1.0',
-    'author': 'OpenERP SA',
-    'category': 'hidden',
-    'depends': ['gamification', 'hr'],
-    'description': """Use the HR ressources for the gamification process.
 
-The HR officer can now manage challenges and badges.
-This allow the user to send badges to employees instead of simple users.
-Badge received are displayed on the user profile.
-""",
-    'data': [
-        'security/ir.model.access.csv',
-        'security/gamification_security.xml',
-        'gamification_view.xml',
-    ],
-    'js': ['static/src/js/gamification.js'],
-}

@@ -18,22 +18,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'HR Gamification',
-    'version': '1.0',
-    'author': 'OpenERP SA',
-    'category': 'hidden',
-    'depends': ['gamification', 'hr'],
-    'description': """Use the HR ressources for the gamification process.
 
-The HR officer can now manage challenges and badges.
-This allow the user to send badges to employees instead of simple users.
-Badge received are displayed on the user profile.
-""",
+
+{
+    'name': 'Portal Gamification',
+    'version': '1',
+    'category': 'Tools',
+    'complexity': 'easy',
+    'description': """
+This module adds security rules for gamification to allow portal users to participate to challenges
+===================================================================================================
+    """,
+    'author': 'OpenERP SA',
+    'depends': ['gamification','portal'],
     'data': [
         'security/ir.model.access.csv',
-        'security/gamification_security.xml',
-        'gamification_view.xml',
+        'security/portal_security.xml',
     ],
-    'js': ['static/src/js/gamification.js'],
+    'installable': True,
+    'auto_install': True,
+    'category': 'Hidden',
 }
+
