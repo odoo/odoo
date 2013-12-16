@@ -85,7 +85,7 @@ class res_users_gamification_group(osv.Model):
                     vals = {'type_name': planline_board['goal_type'].name,
                             'type_description': planline_board['goal_type'].description,
                             'type_condition': planline_board['goal_type'].condition,
-                            'type_computation_mode': planline_board['goal_type'].computation_mode,
+                            'computation_mode': planline_board['goal_type'].computation_mode,
                             'type_monetary': planline_board['goal_type'].monetary,
                             'type_suffix': planline_board['goal_type'].suffix,
                             'type_action': True if planline_board['goal_type'].action_id else False,
