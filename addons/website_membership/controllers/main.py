@@ -87,4 +87,5 @@ class WebsiteMembership(http.Controller):
         values = website_partner.get_partner_template_value(partner)
         if not values:
             return self.members(**post)
+        values['main_object'] = values['partner']
         return request.website.render("website_membership.partner", values)

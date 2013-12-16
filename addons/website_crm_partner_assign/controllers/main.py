@@ -96,6 +96,5 @@ class WebsiteCrmPartnerAssign(http.Controller):
         values = website_partner.get_partner_template_value(partner)
         if not values:
             return self.partners(**post)
-        else:
-            values['main_object'] = values['partner']
+        values['main_object'] = values['partner']
         return request.website.render("website_crm_partner_assign.partner", values)
