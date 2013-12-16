@@ -31,7 +31,11 @@ class website_event(http.Controller):
     @website.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", multilang=True)
     def event_track_view(self, event, track, **post):
         # TODO: not implemented
-        values = { 'track': track, 'event': track.event_id}
+        values = {
+            'track': track,
+            'event': track.event_id,
+            'main_object': track.event_id,
+        }
         return request.website.render("website_event_track.track_view", values)
 
     @website.route([
@@ -55,6 +59,7 @@ class website_event(http.Controller):
 
         values = {
             'event': event,
+            'main_object': event,
             'tracks': tracks,
             'tags': event.tracks_tag_ids,
             'searches': searches,
@@ -64,15 +69,24 @@ class website_event(http.Controller):
 
     @website.route(['/event/detail/<model("event.event"):event>'], type='http', auth="public", multilang=True)
     def event_detail(self, event, **post):
-        values = { 'event': event }
+        values = {
+            'event': event,
+            'main_object': event,
+        }
         return request.website.render("website_event_track.event_home", values)
 
     @website.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", multilang=True)
     def event_track_proposal(self, event, **post):
-        values = { 'event': event }
+        values = {
+            'event': event,
+            'main_object': event,
+        }
         return request.website.render("website_event_track.event_track_proposal", values)
 
     @website.route(['/event/<model("event.event"):event>/track_proposal/success/'], type='http', auth="public", multilang=True)
     def event_track_proposal_success(self, event, **post):
-        values = { 'event': event }
+        values = {
+            'event': event,
+            'main_object': event,
+        }
         return request.website.render("website_event_track.event_track_proposal_success", values)

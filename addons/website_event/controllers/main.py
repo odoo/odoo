@@ -188,6 +188,7 @@ class website_event(http.Controller):
             'event': event,
             'main_object': event,
             'range': range,
+            'main_object': event,
         }
         return request.website.render("website_event.event_description_full", values)
 
