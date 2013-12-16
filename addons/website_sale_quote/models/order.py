@@ -23,87 +23,130 @@ from openerp.osv import osv, fields
 import hashlib
 import time
 
+
+class sale_quote_template(osv.osv):
+    _name = "sale.quote.template"
+    _description = "Sale Quotation Template"
+    _columns = {
+        'name': fields.char('Quotation Template', size=256, required=True),
+        'website_description': fields.html('Description'),
+        'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
+        'note': fields.text('Terms and conditions'),
+    }
+
+
+class sale_quote_line(osv.osv):
+    _name = "sale.quote.line"
+    _description = "Quotation Template Lines"
+    _columns = {
+        'quote_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', required=True, ondelete='cascade', select=True),
+        'name': fields.text('Description', required=True),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
+        'website_description': fields.html('Line Description'),
+        'price_unit': fields.float('Unit Price', required=True),
+        'product_uom_qty': fields.float('Quantity', required=True),
+    }
+
+    _defaults = {
+        'product_uom_qty': 1,
+    }
+
+    def on_change_product_id(self, cr, uid, ids, product, context=None):
+        vals = {}
+        product_obj = self.pool.get('product.product')
+        product_obj = product_obj.browse(cr, uid, product, context=context)
+        vals.update({
+            'price_unit': product_obj.list_price,
+            'website_description': product_obj.website_description,
+            'name': product_obj.name,
+        })
+        return {'value': vals}
+
+
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
     _description = "Sales Order Line"
     _columns = {
-        'website_description':fields.html('Line Description'),
+        'website_description': fields.html('Line Description'),
     }
 
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,uom=False, qty_uos=0, uos=False, name='', partner_id=False,lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
-        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,uom, qty_uos, uos, name, partner_id,lang, update_tax, date_order, packaging, fiscal_position, flag, context)
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='', partner_id=False, lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom, qty_uos, uos, name, partner_id, lang, update_tax, date_order, packaging, fiscal_position, flag, context)
         if product:
             desc = self.pool.get('product.product').browse(cr, uid, product, context).website_description
             res.get('value').update({'website_description': desc})
         return res
 
+
 class sale_order(osv.osv):
     _inherit = 'sale.order'
     _columns = {
         'quote_url': fields.char('URL', readonly=True),
-        'access_token':fields.char('Quotation Token', size=256),
-        'template_id': fields.many2one('sale.order','Quote Template'),
+        'access_token': fields.char('Quotation Token', size=256),
+        'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
         'website_description': fields.html('Description'),
-        'is_template': fields.boolean('Is Template'),
     }
 
-    def new_quotation_token(self, cr, uid, ids,context=None):
+    def _get_token(self, cr, uid, ids, context=None):
+        """
+            Generate token for sale order on action_quotation_send , send it to customer.
+        """
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-        quotation_token = hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, ids[0])).hexdigest()
-        return self.write(cr, uid, ids,{'access_token': quotation_token,'quote_url': self._get_signup_url(cr, uid, False,quotation_token, context)} )
+        return hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, ids[0])).hexdigest()
 
     def create(self, cr, uid, vals, context=None):
-        template_id = vals.get('template_id', False)
         new_id = super(sale_order, self).create(cr, uid, vals, context=context)
-        self.create_portal_user(cr, uid, new_id, context=context)
-        self.write(cr, uid, [new_id],{'quote_url': self._get_signup_url(cr, uid, new_id, False, context)} )
+        self.write(cr, uid, [new_id], {'quote_url': self._get_signup_url(cr, uid, new_id, False, context)})
         return new_id
 
     def action_quotation_send(self, cr, uid, ids, context=None):
+        token = self._get_token(cr, uid, ids, context)
+        self._create_portal_user(cr, uid, ids, context=context)
+        self.write(cr, uid, ids, {'access_token': token, 'quote_url': self._get_signup_url(cr, uid, False, token, context)})
         res = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
-        self.new_quotation_token(cr, uid, ids,context)
         return res
 
-    def create_portal_user(self, cr, uid, order_id, context=None):
+    def _create_portal_user(self, cr, uid, ids, context=None):
+        """
+            create portal user of customer in quotation , when action_quotation_send perform.
+        """
+        user = []
         portal_ids = self.pool.get('res.groups').search(cr, uid, [('is_portal', '=', True)])
         user_wizard_pool = self.pool.get('portal.wizard.user')
-        order = self.browse(cr, uid, order_id, context=context)
-        wizard_id = self.pool.get('portal.wizard').create(cr, uid,{'portal_id': portal_ids and portal_ids[0] or False})
-        user_id = user_wizard_pool.create(cr, uid,{
-            'wizard_id':wizard_id, 
-            'partner_id':order.partner_id.id,
-            'email':order.partner_id.email,
-            'in_portal':True} )
-        return user_wizard_pool.action_apply(cr, uid, [user_id], context=context)
+        for order in self.browse(cr, uid, ids, context=context):
+            wizard_id = self.pool.get('portal.wizard').create(cr, uid, {'portal_id': portal_ids and portal_ids[0] or False})
+            user.append(user_wizard_pool.create(cr, uid, {
+                'wizard_id': wizard_id,
+                'partner_id': order.partner_id.id,
+                'email': order.partner_id.email,
+                'in_portal': True}))
+        return user_wizard_pool.action_apply(cr, uid, user, context=context)
 
     def _get_signup_url(self, cr, uid, order_id=False, token=False, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-        url = "%s/quote/%s" % (base_url ,token and token or order_id)
+        url = "%s/quote/%s" % (base_url, token and token or order_id)
         return url
 
-    def _get_sale_order_line(self, cr, uid,template_id, context=None):
-        line_pool = self.pool.get('sale.order.line')
+    def _get_sale_order_line(self, cr, uid, template_id, context=None):
+        """create order line from selected quote template line."""
         lines = []
-        order_template = self.browse(cr, uid, template_id, context)
-        for line in order_template.order_line:
-            lines.append((0,0,{
+        quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context)
+        for line in quote_template.quote_line:
+            lines.append((0, 0, {
             'name': line.name,
-            'sequence': line.sequence,
             'price_unit': line.price_unit,
             'product_uom_qty': line.product_uom_qty,
-            'discount': line.discount,
             'product_id': line.product_id.id,
-            'tax_id': [(6, 0, [x.id for x in line.tax_id])],
-            'website_description':line.website_description,
-            'state':'draft',
+            'website_description': line.website_description,
+            'state': 'draft',
             }))
-        return {'order_line':lines,'website_description': order_template.website_description}
+        return {'order_line': lines, 'website_description': quote_template.website_description, 'note': quote_template.note}
 
-    def onchange_template_id(self, cr, uid,ids, template_id, context=None):
+    def onchange_template_id(self, cr, uid, ids, template_id, context=None):
         data = self._get_sale_order_line(cr, uid, template_id, context)
-        return {'value':data}
+        return {'value': data}
 
-    def recommended_products(self, cr, uid, ids,context=None):
+    def recommended_products(self, cr, uid, ids, context=None):
         order_line = self.browse(cr, uid, ids[0], context=context).order_line
         product_pool = self.pool.get('product.product')
         product_ids = []

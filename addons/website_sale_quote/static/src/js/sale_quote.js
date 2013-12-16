@@ -8,9 +8,9 @@ $(document).ready(function () {
         console.log(line_id);
         openerp.jsonRpc("/quote/update_line/", 'call', {
                 'line_id': line_id[1],
-                'order_id':parseInt(order_id[1]),
+                'order_id': parseInt(order_id[1]),
                 'remove': $link.is('[href*="remove"]'),
-                'unlink': $link.is('[href*="unlink"]'),
+                'unlink': $link.is('[href*="unlink"]')
                 })
                 .then(function (data) {
                     if(!data){

@@ -29,7 +29,6 @@
                         <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
                             and main_object.website_meta_keywords or website_meta_keywords"/>
 
-                        <!-- Load stylesheets before scripts to avoid blocking -->
                         <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
                         <t t-if="editable">
                             <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
@@ -166,7 +165,7 @@
                             </a>
                         </li>
                         <li>
-                            <a type="submit" t-if="quotation.state != 'cancel'" t-href="/quote/#{ quotation.id }/decline">
+                            <a href="#" class="btn" t-if="quotation.state != 'cancel'" id="cancelQuotation">
                                 <span class="fa-stack">
                                     <i class="fa fa-circle fa-stack-2x" style="color:#d9534f;"></i>
                                     <i class="fa fa-times fa-stack-1x fa-inverse"></i>
@@ -180,7 +179,7 @@
                                     <i class="fa fa-circle fa-stack-2x" style="color:#428bca;"></i>
                                     <i class="fa fa-comment fa-stack-1x fa-inverse"></i>
                                 </span>Discuss
-                                <sup class="label label-info"><t t-esc="total_mail"/></sup>
+                                <sup class="label label-info"><t t-esc="len(quotation.message_ids)"/></sup>
                             </a>
                         </li>
                     </ul>
@@ -188,7 +187,7 @@
             </div>
         </template>
         <template id="chatter">
-            <div id="chat" class="panel panel-default widget">
+            <div id="chat" class="panel panel-default panel-chatter">
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-comment"></span>
                     <h3 class="panel-title">Recent Comments</h3>
@@ -196,23 +195,21 @@
                 <div class="panel-body">
                     <ul class="list-group">
                         <t t-foreach="quotation.message_ids" t-as="message">
-                            <t t-if="message.type == 'email'">
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-xs-2 col-md-1">
-                                            <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
-                                        <div class="col-xs-10 col-md-11">
-                                            <div>
-                                                <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html"/>
-                                                    <t t-raw="message.body"/>
-                                                <div class="mic-info">
-                                                    By: <a href="#"><t t-esc="message.author_id.name"/></a> on <t t-esc="message.date"/>
-                                                </div>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">
+                                        <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
+                                    <div class="col-xs-10 col-md-11">
+                                        <div>
+                                            <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html"/>
+                                                <t t-raw="message.body"/>
+                                            <div class="mic-info">
+                                                By: <a href="#"><t t-esc="message.author_id.name"/></a> on <t t-esc="message.date"/>
                                             </div>
                                         </div>
                                     </div>
-                                </li>
-                            </t>
+                                </div>
+                            </li>
                         </t>
                     </ul>
                 </div>
@@ -234,6 +231,7 @@
                         </section>
                     </t>
                     <t t-call="website_sale_quote.pricing"/>
+                    <t t-call="website_sale_quote.terms_and_conditions"/>
                     <t t-call="website_sale_quote.product_recommendation"/>
                     <t t-call="website_sale_quote.chatter"/>
                 </div>
@@ -244,6 +242,7 @@
                             <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><i class="icon-chevron-right"></i><t t-raw="line.product_id.name_template"/> </a></li>
                         </t>
                         <li><a href="#quote" data-toggle="tab"><i class="icon-chevron-right"></i> Quotation</a></li>
+                        <li><a href="#terms" data-toggle="tab"><i class="icon-chevron-right"></i> Terms &amp; Conditions</a></li>
                     </ul>
                 </div>
             </t>
@@ -262,6 +261,18 @@
                     </t>
                 </div>
             </div>
+        </template>
+        <template id="terms_and_conditions" name="Terms &amp; Conditions">
+            <section id="terms" class="tab-pane oe_section">
+                <div class="container panel panel-default tab-pane oe_section">
+                    <div class="row panel-body">
+                        <div class="text-center">
+                            <h2><strong>Terms &amp; Conditions</strong></h2>
+                            <p class="lead" t-field="quotation.note"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </template>
     </data>
 </openerp>

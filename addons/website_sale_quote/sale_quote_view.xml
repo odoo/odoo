@@ -6,33 +6,89 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_quotation_send']" position="replace">
-                    <button name="action_quotation_send" string="Send by Email" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': ['|',('is_template', '=', True),('state','!=','draft')]}"/>
-                </xpath>
-                <xpath expr="//button[@string='Print'][@states='draft']" position="replace">
-                    <button name="print_quotation" string="Print" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': ['|',('is_template', '=', True),('state','!=','draft')]}"/>
-                </xpath>
-                <xpath expr="//button[@string='Confirm Sale'][@states='draft']" position="replace">
-                    <button name="action_button_confirm" string="Confirm Sale" type="object" groups="base.group_user" attrs="{'invisible': ['|',('is_template', '=', True),('state','!=','draft')]}"/>
-                </xpath>
-                <xpath expr="//button[@string='Cancel Quotation']" position="replace">
-                    <button name="cancel" string="Cancel Quotation" groups="base.group_user" attrs="{'invisible': ['|',('is_template', '=', True),('state','not in',('draft','sent'))]}"/>
-                </xpath>
                 <xpath expr="//header" position="after">
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': ['|',('quote_url', '=', False),('template_id','=',False)]}">
                         <field name="quote_url" widget="url"/>
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
-                    <field name="is_template"/>
-                    <field name="template_id" domain ="[('is_template','=',True)]" attrs="{'invisible': [('is_template', '=', True)]}" on_change="onchange_template_id(template_id)"/>
-                </xpath>
-                <xpath expr="//notebook" position="inside">
-                    <page string="Introduction">
-                        <field name="website_description"/>
-                    </page>
+                    <field name="template_id" on_change="onchange_template_id(template_id)"/>
                 </xpath>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="view_sale_quote_template_form">
+            <field name="name">sale.quote.template.form</field>
+            <field name="model">sale.quote.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sale Quotation Template" version="7.0">
+                    <sheet>
+                        <h1>
+                            <label string="Quotation Template"/>
+                            <field name="name"/>
+                        </h1>
+                        <notebook>
+                            <page string="Quote Lines">
+                                <field name="quote_line">
+                                    <form string="Sales Quote Template Lines" version="7.0">
+                                        <group>
+                                            <group>
+                                                <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                                <label for="product_uom_qty"/>
+                                                <div>
+                                                    <field
+                                                        name="product_uom_qty" class="oe_inline"/>
+                                                </div>
+                                                <field name="price_unit"/>
+                                            </group>
+                                        </group>
+                                        <notebook colspan="4">
+                                            <page string="Description">
+                                                <field name="name" />
+                                            </page>
+                                            <page string="Website Description">
+                                                <field name="website_description" />
+                                            </page>
+                                        </notebook>
+                                    </form>
+                                    <tree string="Sales Quote Template Lines" editable="bottom">
+                                        <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                        <field name="name"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="price_unit"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Website Description">
+                                <field name="website_description"/>
+                            </page>
+                            <page string="Terms &amp; Conditions">
+                                <field name="note" placeholder="Terms and conditions..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_sale_quote_template_tree">
+            <field name="name">sale.quote.template.tree</field>
+            <field name="model">sale.quote.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Quote Template">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_sale_quotation_template" model="ir.actions.act_window">
+            <field name="name">Quote Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.quote.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_sale_quotation_template" id="menu_sale_quote_template" parent="base.menu_base_config" sequence="6" groups="base.group_sale_salesman,base.group_sale_manager"/>
     </data>
 </openerp>

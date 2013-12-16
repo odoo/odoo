@@ -12,6 +12,7 @@
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="description_sale">Learn directly from our team and network of OpenERP experts. Choose from the available training sessions for a better functional understanding of OpenERP</field>
         </record>
+
         <record id="product_product_quote_1" model="product.product">
             <field name="product_tmpl_id" ref="product_template_quote_1"/>
             <field name="default_code">QF11</field>
@@ -28,6 +29,7 @@
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="description_sale">Learn directly from our team and network of OpenERP experts. Choose from the available training sessions for a better technical understanding of OpenERP</field>
         </record>
+
         <record id="product_product_quote_2" model="product.product">
             <field name="product_tmpl_id" ref="product_template_quote_2"/>
             <field name="default_code">QF12</field>
@@ -44,6 +46,7 @@
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="description_sale">Learn directly from our team and network of OpenERP experts. Choose from the available training sessions for a better functional understanding of OpenERP</field>
         </record>
+
         <record id="product_product_quote_3" model="product.product">
             <field name="product_tmpl_id" ref="product_template_quote_3"/>
             <field name="default_code">QF13</field>
@@ -60,17 +63,15 @@
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="description_sale">Learn directly from our team and network of OpenERP experts. Choose from the available training sessions for a better functional understanding of OpenERP</field>
         </record>
+
         <record id="product_product_quote_4" model="product.product">
             <field name="product_tmpl_id" ref="product_template_quote_4"/>
             <field name="default_code">QF14</field>
         </record>
-        <record id="website_sale_order_1" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_2"/>
-            <field name="partner_invoice_id" ref="base.res_partner_2"/>
-            <field name="partner_shipping_id" ref="base.res_partner_2"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="is_template" eval="True"/>
+
+        <record id="website_quote_template_1" model="sale.quote.template">
+            <field name="name">Partnership Contract with Training</field>
+            <field name="note">The 5-day training is modular, which means that you can choose to participate in the full training or to just 1 or 2 modules. Nevertheless, the first day of the training is compulsory for everyone. The Monday is compulsory because the introduction of OpenERP is important before going through the other modules.</field>
             <field name="website_description" type="html">
                 <section id="whatsuit" class="tab-pane active oe_section jumbotron">
                     <div class="container panel panel-default tab-pane active oe_section">
@@ -106,7 +107,7 @@
                                 <field name="arch" type="xml">
                                     <form string="Untitled">
                                         <group col="6" colspan="4">
-                                            
+
                                         </group>
                                     </form>
                                 </field>
@@ -145,13 +146,13 @@
                         </div>
                         <div class="col-md-8 col-md-offset-2 mb32 text-center">
                             <p>
-                            As a partner, you get a big discount on OpenERP Enterprise. 
-                            This allows you to offer reduced prices to your customers and/or 
+                            As a partner, you get a big discount on OpenERP Enterprise.
+                            This allows you to offer reduced prices to your customers and/or
                             to benefit from a commission on every subscription you sell to your customers.
                             </p>
                         </div>
                     </div>
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-xs-12 col-md-12 text-center">
                             <h2><strong>Benefit From A Dedicated Account Manager</strong></h2>
                             <h3><small>Our role is to help you succeed</small></h3>
@@ -163,28 +164,28 @@
                             <p>A dedicated account manager is assigned to every partner to help develop the OpenERP business. The account manager helps you get leads, close deals, gives you feedback and best practices, delivers sales training and is a direct point of contact for any request you may have.</p>
                         </div>
                     </div>
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-xs-12 col-md-12 text-center">
                             <h2><strong>Get access to our consultants and technical experts</strong></h2>
                             <h3><small>Get access to experts for an extra fee</small></h3>
                             <p>For an extra fee, partners can get access to OpenERP's core developers and functional experts. This can help you succeed in delivering more complex or bigger projects by getting the support of highly experienced consultants on demand.</p>
                         </div>
                     </div>
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-xs-12 col-md-12 text-center">
                             <h2><strong>Get recognition as an official certified partner</strong></h2>
                             <h3><small>We give you visibility in our official partner list</small></h3>
                             <p>OpenERP promotes its partners through various ways: publication on our website, official communication, publication of your success stories, etc. As soon as you become an OpenERP partner and have followed the official trainings, you will be visible on the partner directory listing.</p>
                         </div>
                     </div>
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-xs-12 col-md-12 text-center">
                             <h2><strong>Access to the Lead Generation Program</strong></h2>
                             <h3><small>We give you visibility in our official partner list</small></h3>
                             <p>Every year, we redirect more than 100,000 customer requests to our official partners. These are prospects that filled a form on the OpenERP website and wanted to use OpenERP. The right partner to fulfill the customer request is selected based on the customer localization (nearest partner) and the grade of the partner..</p>
                         </div>
                     </div>
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-xs-12 col-md-12 text-center">
                         <h2><strong>Benefit from the OpenERP branding</strong></h2>
                         <h3><small>Get rights to use the OpenERP trademark</small></h3>
@@ -230,7 +231,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row"> 
+                <div class="row">
                     <div class="col-xs-12 col-md-12 text-center">
                         <h2><strong>Get access to online training materials</strong></h2>
                         <h3><small>Train yourself on every new release using online videosGet rights to use the OpenERP trademark</small></h3>
@@ -246,7 +247,7 @@
                         <p>As you go through your first implementation of an OpenERP system it is normal to need some support. We are here to answer your questions regarding the functionality of the software, or how to configure the solution. Each partner is entitled to a certain number of support hours thanks to his or her partner program.</p>
                     </div>
                 </div>
-                <div class="row"> 
+                <div class="row">
                     <div class="col-xs-12 col-md-12 text-center">
                         <h2><strong>Get technical support services</strong></h2>
                         <h3><small>We help your developers with bugs or support questions</small></h3>
@@ -259,7 +260,7 @@
                         <p>The OpenERP Support Team is 100% dedicated to helping our customers. You can contact the Support Team for any functional or technical questions and issues with regard to OpenERP development. They can help you develop custom modules.</p>
                     </div>
                 </div>
-                <div class="row"> 
+                <div class="row">
                     <div class="col-xs-12 col-md-12 text-center">
                         <h2><strong>Test all your developments automatically</strong></h2>
                         <h3><small>Your dedicated test integration platform</small></h3>
@@ -321,13 +322,11 @@
         </field>
         </record>
 
-        <record id="website_sale_order_line_1" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_1"/>
+        <record id="website_sale_order_line_1" model="sale.quote.line">
+            <field name="quote_id" ref="website_quote_template_1"/>
             <field name="name">Fuctional Training</field>
             <field name="product_id" ref="product_product_quote_1"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uos_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">12950.00</field>
             <field name="website_description" type="html">
                 <section data-snippet-id="text-image" class="tab-pane oe_section jumbotron">
@@ -366,13 +365,11 @@
             </field>
         </record>
 
-        <record id="website_sale_order_line_2" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_1"/>
+        <record id="website_sale_order_line_2" model="sale.quote.line">
+            <field name="quote_id" ref="website_quote_template_1"/>
             <field name="name">Technical Training</field>
             <field name="product_id" ref="product_product_quote_2"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uos_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">00.00</field>
             <field name="website_description" type="html">
                 <section id="whatsuit" class="tab-pane active oe_section jumbotron">
@@ -406,15 +403,5 @@
                 </section>
             </field>
         </record>
-
-        <record id="sale_order_2" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_7"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_13"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_13"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="order_policy">manual</field>
-        </record>
-
     </data>
 </openerp>

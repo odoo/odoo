@@ -9,7 +9,7 @@ OpenERP Sale Quote Roller
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website_sale','website','product','portal_sale', 'mail'],
+    'depends': ['website_sale','portal_sale', 'mail'],
     'data': [
         'views/website_sale_quote.xml',
         'sale_quote_view.xml',
