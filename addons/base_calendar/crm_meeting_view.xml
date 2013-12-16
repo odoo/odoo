@@ -144,6 +144,11 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Misc" groups="base.group_no_one">
+                            <label string="Owner"/>
+                            <field name="user_id" />
+                            
+                        </page>
 
                     </notebook>
                 </sheet>
@@ -209,9 +214,9 @@
         <field name="model">crm.meeting</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">                          
-            <calendar string="Meetings" date_start="date" date_stop="date_deadline" date_delay="duration" 
-                         display="[name]" color="color_partner_id" attendee="partner_ids" 
-                         use_contacts="True" quick_add="True" all_day="allday" event_open_popup="%(base_calendar.view_crm_meeting_form_popup)s">
+            <calendar string="Meetings" date_start="date" date_stop="date_deadline" date_delay="duration" all_day="allday" 
+                         display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
+                         use_contacts="True" quick_add="True" event_open_popup="%(base_calendar.view_crm_meeting_form_popup)s">
             
                 <field name="name"/>
                 <field name="user_id"/>

@@ -29,7 +29,6 @@ openerp.hr_holidays = function(instance) {
             
             // Can hold data pre-set from where you clicked on agenda
             this.data_template = data_template || {};
-
         },
        
        

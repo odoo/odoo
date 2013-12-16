@@ -41,12 +41,19 @@
                                             <br/> <img src='/google_calendar/static/src/img/setup_07.png' class='calendar_img_tuto'/>
                                         </li> 
                                         <li> 
-                                            Now, you can click on <b>"OAuth 2.0 Client ID"</b>  and see your <u><i>Client ID</i></u> and your <u><i>Client Secret</i></u>.
-                                            <br/>That's these both informations that you need to insert in the 2 fields below !
+                                            Now, you can click on <b>"OAuth 2.0 Client ID"</b> and see your <u><i>Client ID</i></u> and your <u><i>Client Secret</i></u>.
+                                            <br/> You should now configure the allowed pages on which you will be redirected. To do it, you need to complete de field <b>"Redirect RI"</b>
+                                            and set as value your own domain followed by <i>"/googleauth/oauth2callback"</i>. (Eg: http://127.0.0.1:8069/googleauth/oauth2callback)
+                                            <br/>
+                                            <br/><img src='/google_calendar/static/src/img/setup_09.png' class='calendar_img_tuto'/>
+                                        </li>
+                                        <li>One the uri allowed, you need to regenerate your private token by clicking on "Generate".
+                                            <br/>Once done, you will have the both informations that you need to insert in the 2 fields below !
                                             <br/> <img src='/google_calendar/static/src/img/setup_08.png' class='calendar_img_tuto'/>
                                         </li>
                                         <li> 
-                                            Remark : You can, if you want, personalize the consent screen that your users will see by clicking also in the left menu on <b>"Consent Screen"</b>.                                                    
+                                            Remark : You can, if you want, personalize the consent screen that your users will see by clicking on "update" below <b>"Consent Screen"</b>.
+                                            <br/> <img src='/google_calendar/static/src/img/setup_10.png' class='calendar_img_tuto'/>
                                         </li>
                                     </ul>                                    
                                 </div>
@@ -70,15 +77,15 @@
             </field>
         </record>
 
-        <record id="action_config_settings" model="ir.actions.act_window">
+        <record id="action_config_settings_google_calendar" model="ir.actions.act_window">
             <field name="name">Synchronization</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">calendar.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
-        
-        <menuitem id="menu_calendar_config_settings" parent="base_calendar.menu_calendar_configuration" action="action_config_settings" groups="base.group_no_one"/>
+
+        <menuitem id="menu_calendar_config_settings" parent="base_calendar.menu_calendar_configuration" action="action_config_settings_google_calendar" groups="base.group_no_one"/>
 
     </data>
 </openerp>

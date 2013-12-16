@@ -91,6 +91,18 @@
                         </div>
                     </group>
                     <group>
+                        <label for="id" string="Google Calendar"/>
+                        <div name="google_calendar">
+                            <div name="module_google_calendar">
+                                <field name="module_google_calendar" class="oe_inline"/>
+                                <label for="module_google_calendar"/>
+                                    <p attrs="{'invisible': [('module_google_calendar','=',False)]}"> 
+                                        Once installed, you can configure your API credentials in "Settings -> Technical -> Calendar -> Synchronization"
+                                    </p>
+                                </div>
+                        </div>
+                    </group>
+                    <group>
                         <label for="font" />
                         <div>
                             <div>
@@ -188,6 +200,8 @@
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
+        
+        
 
     </data>
 </openerp>
