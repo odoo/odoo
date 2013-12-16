@@ -196,7 +196,7 @@ class gamification_goal(osv.Model):
     }
     _order = 'create_date desc, end_date desc, type_id, id'
 
-    def _check_remind_delay(self, goal, context=None):
+    def _check_remind_delay(self, cr, uid, goal, context=None):
         """Verify if a goal has not been updated for some time and send a
         reminder message of needed.
 
@@ -231,7 +231,7 @@ class gamification_goal(osv.Model):
                 continue
 
             if goal.type_id.computation_mode == 'manually':
-                towrite.update(self._check_remind_delay(goal, context))
+                towrite.update(self._check_remind_delay(cr, uid, goal, context))
 
             elif goal.type_id.computation_mode == 'python':
                 # execute the chosen method
