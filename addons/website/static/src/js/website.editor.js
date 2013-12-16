@@ -32,6 +32,27 @@
         });
     });
 
+    /**
+     * An editing host is an HTML element with @contenteditable=true, or the
+     * child of a document in designMode=on (but that one's not supported)
+     *
+     * https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#editing-host
+     */
+    function is_editing_host(element) {
+        return element.getAttribute('contentEditable') === 'true';
+    }
+    /**
+     * Checks that both the element's content *and the element itself* are
+     * editable: an editing host is considered non-editable because its content
+     * is editable but its attributes should not be considered editable
+     */
+    function is_editable_node(element) {
+        return !(element.data('oe-model') === 'ir.ui.view'
+              || element.data('cke-realelement')
+              || is_editing_host(element)
+              || element.isReadOnly());
+    }
+
     function link_dialog(editor) {
         return new website.editor.RTELinkDialog(editor).appendTo(document.body);
     }
@@ -54,18 +75,13 @@
             init: function (editor) {
                 editor.on('doubleclick', function (evt) {
                     var element = evt.data.element;
-                    if (element.is('img')
-                            && !element.data('cke-realelement')
-                            && !element.isReadOnly()
-                            && (element.data('oe-model') !== 'ir.ui.view')) {
+                    if (element.is('img') && is_editable_node(element)) {
                         image_dialog(editor, element);
                         return;
                     }
 
                     element = get_selected_link(editor) || evt.data.element;
-                    if (element.isReadOnly()
-                        || !element.is('a')
-                        || element.data('oe-model')) {
+                    if (!(element.is('a') && is_editable_node(element))) {
                         return;
                     }
 
@@ -360,7 +376,8 @@
         });
         $body.css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
     };
-        /* ----- TOP EDITOR BAR FOR ADMIN ---- */
+
+    /* ----- TOP EDITOR BAR FOR ADMIN ---- */
     website.EditorBar = openerp.Widget.extend({
         template: 'website.editorbar',
         events: {
@@ -597,9 +614,7 @@
                 if (previous && previous === this) { return; }
 
                 var selected = new CKEDITOR.dom.element(this);
-                if (selected.data('oe-model') === 'ir.ui.view'
-                 || selected.data('cke-realelement')
-                 || selected.isReadOnly()) {
+                if (!is_editable_node(selected)) {
                     return;
                 }
 
