@@ -25,6 +25,7 @@ import openerp
 from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.addons.web.http import request
+from openerp.addons.base.ir import ir_qweb
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -198,7 +199,6 @@ class ManyToOne(orm.AbstractModel):
         matches = self.pool[column._obj].name_search(
             cr, uid, name=element.text_content().strip(), context=context)
         # FIXME: no match? More than 1 match?
-        print element.text_content().strip()
         assert len(matches) == 1
         return matches[0][0]
 
@@ -239,10 +239,10 @@ class Image(orm.AbstractModel):
         if options is None: options = {}
         classes = ['img', 'img-responsive'] + options.get('class', '').split()
 
-        return '<img class="%s" src="/website/image?model=%s&field=%s&id=%s"/>' % (
+        return ir_qweb.HTMLSafe('<img class="%s" src="/website/image?model=%s&field=%s&id=%s"/>' % (
             ' '.join(itertools.imap(werkzeug.utils.escape, classes)),
             record._model._name,
-            field_name, record.id)
+            field_name, record.id))
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
     def from_html(self, cr, uid, model, column, element, context=None):
@@ -390,4 +390,4 @@ class Contact(orm.AbstractModel):
             'options': options
         }, engine='website.qweb', context=context)
 
-        return html
+        return ir_qweb.HTMLSafe(html)
