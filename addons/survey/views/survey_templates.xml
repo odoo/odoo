@@ -22,7 +22,7 @@
         </t>
     </template>
 
-    <!-- Thank you message when the survey is completed -->
+    <!-- "Thank you" message when the survey is completed -->
     <template id="finished" name="Survey Finished">
         <t t-call="website.layout">
             <div class="wrap">
@@ -93,7 +93,7 @@
             <div t-field='page.description'/>
         </div>
 
-        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (survey.id, token)" t-att-data-prefill="'/survey/prefill/%s' % (survey.id)" t-att-data-validate="'/survey/validate/%s' % (survey.id)" t-att-data-submit="'/survey/submit/%s' % (survey.id)">
+        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (survey.id, token)" t-att-data-prefill="'/survey/prefill/%s/%s/%s' % (survey.id, token, page.id)" t-att-data-validate="'/survey/validate/%s' % (survey.id)" t-att-data-submit="'/survey/submit/%s' % (survey.id)">
             <input type="hidden" name="page_id" t-att-value="page.id" />
             <input type="hidden" name="token" t-att-value="token" />
             <t t-foreach='page.question_ids' t-as='question'>

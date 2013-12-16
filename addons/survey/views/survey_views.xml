@@ -516,12 +516,26 @@
             <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_page': True}</field>
         </record>
 
+
+        <record model="ir.ui.view" id="survey_label_tree">
+            <field name="name">survey_label_tree</field>
+            <field name="model">survey.label</field>
+            <field name="arch" type="xml">
+                <tree string="Survey Label">
+                    <field name="sequence" widget="handle"/>
+                    <field name="question_id"/>
+                    <field name="question_id_2"/>
+                    <field name="value"/>
+                </tree>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_survey_label_form">
             <field name="name">Survey Labels</field>
             <field name="res_model">survey.label</field>
-            <field name="view_type">tree</field>
-            <field name="view_mode">tree</field>
-            <field name="context">{'default_group_by_question': True}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="survey_label_tree"></field>
         </record>
 
         <record model="ir.ui.view" id="survey_question_wizard_test">
@@ -561,7 +575,8 @@
                             <field name="value_number" colspan='2' attrs="{'invisible': [('answer_type','!=','number')]}"/>
                             <field name="value_date" colspan='2' attrs="{'invisible': [('answer_type','!=','date')]}"/>
                             <field name="value_free_text" colspan='2' attrs="{'invisible': [('answer_type','!=','free_text')]}"/>
-                            <field name="value_suggested" colspan='2' attrs="{'invisible': [('answer_type','!=','suggested')]}"/>
+                            <field name="value_suggested_row" colspan='2' attrs="{'invisible': [('value_suggested_row','is','None')]}"/>
+                            <field name="value_suggested" colspan='2' attrs="{'invisible': [('answer_type','!=','suggestion')]}"/>
                         </group>
                     </sheet>
                 </form>

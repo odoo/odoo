@@ -177,9 +177,45 @@ class WebsiteSurvey(http.Controller):
             return request.website.render("website.403")
 
     # AJAX prefilling of a survey
-    # @website.route(['/survey/prefill/<model("survey.survey"):survey>'],
-    #                type='json', auth='public', multilang=True):
-    # def prefill(self, survey, **post):
+    @website.route(['/survey/prefill/<model("survey.survey"):survey>/<string:token>',
+                    '/survey/prefill/<model("survey.survey"):survey>/<string:token>/<model("survey.page"):page>'],
+                   type='http', auth='public', multilang=True)
+    def prefill(self, survey, token, page=None, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        user_input_line_obj = request.registry['survey.user_input_line']
+        ret = {}
+
+        # Fetch previous answers
+        if page:
+            ids = user_input_line_obj.search(cr, uid, [('user_input_id.token', '=', token), ('page_id', '=', page.id)], context=context)
+        else:
+            ids = user_input_line_obj.search(cr, uid, [('user_input_id.token', '=', token)], context=context)
+        previous_answers = user_input_line_obj.browse(cr, uid, ids, context=context)
+
+        # Return non empty answers in a JSON compatible format
+        for answer in previous_answers:
+            if not answer.skipped:
+                answer_tag = '%s_%s_%s' % (answer.survey_id.id, answer.page_id.id, answer.question_id.id)
+                answer_value = None
+                if answer.answer_type == 'free_text':
+                    answer_value = answer.value_free_text
+                elif answer.answer_type == 'text':
+                    answer_value = answer.value_text
+                elif answer.answer_type == 'number':
+                    answer_value = answer.value_number
+                elif answer.answer_type == 'date':
+                    answer_value = answer.value_date
+                # TODO mettre les QCM ici
+                if answer_value:
+                    ret.update({answer_tag: answer_value})
+                else:
+                    _logger.warning("[survey] Fetching None answer for question %s" % answer_tag)
+
+        return json.dumps(ret)
+
+    # load all the user input lines corresponding to token & page (or survey)
+    # format them into a json dict
+    # return them to JS
 
     # AJAX validation of some questions
     # @website.route(['/survey/validate/<model("survey.survey"):survey>'],

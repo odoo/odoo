@@ -745,7 +745,7 @@ class survey_label(osv.osv):
             required=True)
     }
     defaults = {
-        'sequence': 10
+        'sequence': 100
     }
 
 
@@ -934,7 +934,8 @@ class survey_user_input_line(osv.osv):
         'value_number': fields.float("Numerical answer"),
         'value_date': fields.datetime("Date answer"),
         'value_free_text': fields.text("Free Text answer"),
-        'value_suggested': fields.many2one('survey.label'),
+        'value_suggested': fields.many2one('survey.label', "Suggested answer"),
+        'value_suggested_row': fields.many2one('survey.label', "Row answer"),
     }
     _defaults = {
         'skipped': False,
@@ -965,7 +966,7 @@ class survey_user_input_line(osv.osv):
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'free_text', 'value_free_text': post[answer_tag]})
         else:
-            vals.update({'skipped': True})
+            vals.update({'answer_type': None, 'skipped': True})
         old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
                                         ('survey_id', '=', question.survey_id.id),
                                         ('question_id', '=', question.id)],
@@ -986,7 +987,7 @@ class survey_user_input_line(osv.osv):
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
         else:
-            vals.update({'skipped': True})
+            vals.update({'answer_type': None, 'skipped': True})
         old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
                                         ('survey_id', '=', question.survey_id.id),
                                         ('question_id', '=', question.id)],
@@ -1007,7 +1008,7 @@ class survey_user_input_line(osv.osv):
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'number', 'value_number': float(post[answer_tag])})
         else:
-            vals.update({'skipped': True, 'answer_type': None})
+            vals.update({'answer_type': None, 'skipped': True})
         old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
                                         ('survey_id', '=', question.survey_id.id),
                                         ('question_id', '=', question.id)],
@@ -1028,7 +1029,7 @@ class survey_user_input_line(osv.osv):
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
         else:
-            vals.update({'skipped': True})
+            vals.update({'answer_type': None, 'skipped': True})
         old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
                                         ('survey_id', '=', question.survey_id.id),
                                         ('question_id', '=', question.id)],
@@ -1047,9 +1048,9 @@ class survey_user_input_line(osv.osv):
             'survey_id': question.survey_id.id,
         }
         if answer_tag in post and post[answer_tag].strip() != '':
-            vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
+            vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
         else:
-            vals.update({'skipped': True})
+            vals.update({'answer_type': None, 'skipped': True})
         old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
                                         ('survey_id', '=', question.survey_id.id),
                                         ('question_id', '=', question.id)],

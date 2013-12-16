@@ -60,9 +60,19 @@ $(document).ready(function () {
     var validate_controller = the_form.attr("data-validate");
     var submit_controller = the_form.attr("data-submit");
 
-    // function prefill(form){
-    //     return false;
-    // }
+    // Pre-filling of the form with previous answers
+    function prefill(){
+        var prefill_def = $.ajax(prefill_controller, {dataType: "json"})
+            .done(function(json_data){
+                console.log(json_data)
+                _.each(json_data, function(value, key){
+                    the_form.find(".form-control[name=" + key + "]").val(value);
+                });
+            })
+            .fail(function(){
+                console.warn("[survey] Unable to load prefill data");
+            });
+    };
 
     // function validate(form){
     //     return false;
@@ -105,4 +115,6 @@ $(document).ready(function () {
     });
 
     console.debug("[survey] Custom JS for survey loaded!");
+
+    prefill();
 });
