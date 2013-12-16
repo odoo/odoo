@@ -27,7 +27,7 @@
 
 <template id="categories_recursive" name="Category list">
   <li t-att-class="str(category.id) == search.get('category') and 'active' or ''">
-      <a t-href="/shop/category/#{ category.id }/" t-field="category.name"></a>
+      <a t-href="/shop/category/#{ slug(category) }/" t-field="category.name"></a>
       <ul t-if="category.child_id" class="nav nav-pills nav-stacked nav-hierarchy">
           <t t-foreach="category.child_id" t-as="category">
               <t t-call="website_sale.categories_recursive"/>
@@ -50,34 +50,32 @@
 </template>
 
 <template id="products_cart" name="Shopping cart">
-<div class="ribbon-wrapper">
-  <div class="ribbon">Promo</div>
-</div>
-<div class="oe_product_description">
-    <a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filters">
-        <b t-field="product.name"/>
-    </a>
-</div>
-<div class="product_price" t-if="product.product_variant_ids">
-    <b>
-        <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
-          <del class="text-danger"
-            t-field="product.product_variant_ids[0].lst_price" t-field-options='{
-                 "widget": "monetary",
-                 "display_currency": "website.pricelist_id.currency_id"
-            }'/>&amp;nbsp;
-        </t>
-        <span t-field="product.product_variant_ids[0].price"  t-field-options='{
-             "widget": "monetary",
-             "display_currency": "website.pricelist_id.currency_id"
-         }'/>
-    </b>
-</div>
-<div class="oe_product_image text-center">
-    <a t-href="/shop/product/#{ product.id }/" t-keep-query="category,search,filters">
-        <span t-field="product.image" t-field-options='{"widget": "image"}'/>
-    </a>
-</div>
+  <div class="ribbon-wrapper">
+    <div class="ribbon btn btn-danger">Promo</div>
+  </div>
+  <div class="oe_product_image">
+      <a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filters">
+          <span t-field="product.image" t-field-options='{"widget": "image"}'/>
+      </a>
+  </div>
+  <section>
+      <h5><strong><a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filters" t-field="product.name"/></strong></h5>
+      <div class="product_price" t-if="product.product_variant_ids">
+          <b>
+              <t t-if="product.product_variant_ids[0].lst_price != product.product_variant_ids[0].price">
+                <del class="text-danger"
+                  t-field="product.product_variant_ids[0].lst_price" t-field-options='{
+                       "widget": "monetary",
+                       "display_currency": "website.pricelist_id.currency_id"
+                  }'/>&amp;nbsp;
+              </t>
+              <span t-field="product.product_variant_ids[0].price"  t-field-options='{
+                   "widget": "monetary",
+                   "display_currency": "website.pricelist_id.currency_id"
+               }'/>
+          </b>
+      </div>
+  </section>
 </template>
 
 <template id="products" name="Products">
@@ -101,7 +99,7 @@
               <t t-call="website.pager"/>
             </div>
           </div>
-          <div class='style_default row'>
+          <div class='row'>
             <div class="hidden" id="products_grid_before"></div>
             <div class="col-md-12" id="products_grid">
               <table width="100%">
@@ -115,7 +113,7 @@
                       <t t-set="product" t-value="td_product['product']"/>
                       <td t-att-colspan="td_product['x'] != 1 and td_product['x']"
                           t-att-rowspan="td_product['y'] != 1 and td_product['y']"
-                          t-attf-class="oe_product oe-height-#{td_product['y']*2} #{ td_product['class'] }">
+                          t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }">
 
                           <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
 
@@ -190,6 +188,7 @@
                   <h3>No product found</h3>
                   <t groups="base.group_website_publisher">
                     <p>Click on "Content" to define a new product or "Help" for more informations.</p>
+                    <img src="/website/static/src/img/content_here.png"/>
                     <p>In the backend's product form contains information to simplify the sale process: price, notes in the quotation, accounting data, procurement methods, etc.</p>
                   </t>
                 </div>
@@ -208,10 +207,9 @@
 <!-- Product Description-->
 
 <template id="product_description" inherit_option_id="website_sale.products_cart" name="Product Description">
-  <xpath expr="//div[@class='oe_product_description']" position="inside">
-      <p class="text-muted oe_subdescription">
-          <span t-field="product.description_sale"/>
-      </p>
+  <xpath expr="//div[@class='product_price']" position="before">
+      <div class="text-info oe_subdescription oe_shadow" t-field="product.description_sale"/>
+      <div class="text-info oe_subdescription" t-field="product.description_sale"/>
   </xpath>
 </template>
 
@@ -219,7 +217,7 @@
 
 <template id="add_to_basket" inherit_option_id="website_sale.products_cart" name="Add to Cart">
   <xpath expr="//div[@class='product_price']" position="inside">
-      <a t-href="/shop/add_cart/#{ product.product_variant_ids[0].id }/" class="js_add_cart_json">
+      <a t-href="/shop/add_cart/#{ product.product_variant_ids[0].id }/"><!-- class="js_add_cart_json" -->
           <span class="fa fa-shopping-cart"/>
       </a>
   </xpath>
@@ -229,13 +227,11 @@
 
 <template id="list_view" inherit_option_id="website_sale.products" name="List View">
   <xpath expr="//div[@id='products_grid']//table" position="replace">
-    <div class="row">
-      <t t-foreach="products" t-as="product">
-        <div class="col-md-12 oe_list_products oe-height-1">
-          <t t-call="website_sale.products_cart"/>
-        </div>
-      </t>
-    </div>
+    <t t-foreach="products" t-as="product">
+      <div class="oe_product oe_list oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
+        <t t-call="website_sale.products_cart"/>
+      </div>
+    </t>
   </xpath>
 </template>
 
@@ -307,7 +303,6 @@
                                          }'/>
                             </span>
                         </label>
-                        <br/>
                     </t>
 
                     <div class="product_price mt16" t-if="product.product_variant_ids">
@@ -406,7 +401,7 @@
                   </div>
                   <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.order_line">
                       <colgroup>
-                          <col width="80"/>
+                          <col width="100"/>
                           <col/>
                           <col width="100"/>
                           <col width="120"/>
@@ -421,7 +416,7 @@
                       <tbody>
                           <tr t-foreach="website_sale_order.order_line" t-as="line">
                               <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
-                              <td t-if="line.product_id.product_tmpl_id">
+                              <td align="center" t-if="line.product_id.product_tmpl_id">
                                   <span t-field="line.product_id.image_small"
                                         t-field-options='{"widget": "image", "class": "img-rounded"}'/>
                               </td>
@@ -526,7 +521,7 @@
       </ul>
   </xpath>
   <xpath expr="//div[@id='products_grid_before']" position="attributes">
-      <attribute name="class">col-md-3</attribute>
+      <attribute name="class">col-md-3 hidden-xs</attribute>
   </xpath>
   <xpath expr="//div[@id='products_grid']" position="attributes">
       <attribute name="class">col-md-9</attribute>
@@ -572,7 +567,7 @@
       </form>
   </xpath>
   <xpath expr="//div[@id='products_grid_before']" position="attributes">
-      <attribute name="class">col-md-3</attribute>
+      <attribute name="class">col-md-3 hidden-xs</attribute>
   </xpath>
   <xpath expr="//div[@id='products_grid']" position="attributes">
       <attribute name="class">col-md-9</attribute>
