@@ -166,6 +166,7 @@ class website_event(http.Controller):
         website.preload_records(event, on_error="website_event.404")
         values = {
             'event': event,
+            'main_object': event
         }
         return request.website.render(page, values)
 
@@ -185,6 +186,7 @@ class website_event(http.Controller):
         website.preload_records(event, on_error="website_event.404")
         values = {
             'event': event,
+            'main_object': event,
             'range': range,
         }
         return request.website.render("website_event.event_description_full", values)
