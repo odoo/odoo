@@ -4,6 +4,8 @@ import os
 import xml.dom.minidom
 import datetime
 
+from werkzeug.utils import escape as e
+
 from openerp.tests import common
 from openerp.addons.base.ir import ir_qweb
 
@@ -36,8 +38,8 @@ class TestExport(common.TransactionCase):
                 break
             except KeyError: pass
 
-        return lambda value, options=None, context=None: model.value_to_html(
-            self.cr, self.uid, value, column, options=options, context=context)
+        return lambda value, options=None, context=None: e(model.value_to_html(
+            self.cr, self.uid, value, column, options=options, context=context))
 
 class TestBasicExport(TestExport):
     _model = 'test_converter.test_model'
@@ -223,8 +225,8 @@ class TestMany2OneExport(TestBasicExport):
             column = self.get_column('many2one')
             model = self.registry('ir.qweb.field.many2one')
 
-            return model.record_to_html(
-                self.cr, self.uid, 'many2one', record, column)
+            return e(model.record_to_html(
+                self.cr, self.uid, 'many2one', record, column))
 
         value = converter(self.Model.browse(self.cr, self.uid, id0))
         self.assertEqual(value, "Foo")
@@ -241,8 +243,8 @@ class TestBinaryExport(TestBasicExport):
             content = f.read()
 
         encoded_content = content.encode('base64')
-        value = converter.value_to_html(
-            self.cr, self.uid, encoded_content, column)
+        value = e(converter.value_to_html(
+            self.cr, self.uid, encoded_content, column))
         self.assertEqual(
             value, '<img src="data:image/jpeg;base64,%s">' % (
                 encoded_content
@@ -252,15 +254,15 @@ class TestBinaryExport(TestBasicExport):
             content = f.read()
 
         with self.assertRaises(ValueError):
-            converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), column)
+            e(converter.value_to_html(
+                self.cr, self.uid, 'binary', content.encode('base64'), column))
 
         with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
-            converter.value_to_html(
-                self.cr, self.uid, 'binary', content.encode('base64'), column)
+            e(converter.value_to_html(
+                self.cr, self.uid, 'binary', content.encode('base64'), column))
 
 class TestSelectionExport(TestBasicExport):
     def test_selection(self):

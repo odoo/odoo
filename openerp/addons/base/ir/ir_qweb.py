@@ -530,7 +530,7 @@ class FieldConverter(osv.AbstractModel):
         """ Converts a single value to its HTML version/output
         """
         if not value: return ''
-        return werkzeug.utils.escape(value)
+        return value
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
         """ Converts the specified field of the browse_record ``record`` to
@@ -554,6 +554,10 @@ class FieldConverter(osv.AbstractModel):
                 cr, uid, field_name, record,
                 record._model._all_columns[field_name].column,
                 options, context=context)
+            if options.get('html-escape', True):
+                content = werkzeug.utils.escape(content)
+            elif hasattr(content, '__html__'):
+                content = content.__html__()
         except Exception:
             _logger.warning("Could not get field %s for model %s",
                             field_name, record._model._name, exc_info=True)
@@ -620,7 +624,7 @@ class FloatConverter(osv.AbstractModel):
         # strip trailing 0.
         if not precision:
             formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
-        return werkzeug.utils.escape(formatted)
+        return formatted
 
 class DateConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.date'
@@ -677,7 +681,8 @@ class TextConverter(osv.AbstractModel):
         Escapes the value and converts newlines to br. This is bullshit.
         """
         if not value: return ''
-        return werkzeug.utils.escape(value).replace('\n', '<br>\n')
+
+        return nl2br(value, options=options)
 
 class SelectionConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.selection'
@@ -699,14 +704,14 @@ class ManyToOneConverter(osv.AbstractModel):
         [read] = record.read([field_name])
         _, value = read[field_name]
 
-        return werkzeug.utils.escape(value).replace('\n', '<br>\n')
+        return nl2br(value, options=options)
 
 class HTMLConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.html'
     _inherit = 'ir.qweb.field'
 
     def value_to_html(self, cr, uid, value, column, options=None, context=None):
-        return value or ''
+        return HTMLSafe(value or '')
 
 class ImageConverter(osv.AbstractModel):
     """ ``image`` widget rendering, inserts a data:uri-using image tag in the
@@ -729,7 +734,7 @@ class ImageConverter(osv.AbstractModel):
         except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
-        return '<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value)
+        return HTMLSafe('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value))
 
 class MonetaryConverter(osv.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
@@ -783,12 +788,12 @@ class MonetaryConverter(osv.AbstractModel):
         else:
             post = u' {symbol}'
 
-        return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(
+        return HTMLSafe(u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(
             formatted_amount,
             pre=pre, post=post,
         ).format(
             symbol=display.symbol,
-        )
+        ))
 
     def display_currency(self, cr, uid, options):
         return self.qweb_object().eval_object(
@@ -858,6 +863,43 @@ class RelativeDatetimeConverter(osv.AbstractModel):
         return babel.dates.format_timedelta(
             value - reference, add_direction=True, locale=locale)
 
+class HTMLSafe(object):
+    """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for
+    objects with a ``__html__`` methods but AFAIK does not provide any such
+    object.
+
+    Wrapping a string in HTML will prevent its escaping
+    """
+    __slots__ = ['string']
+    def __init__(self, string):
+        self.string = string
+    def __html__(self):
+        return self.string
+    def __str__(self):
+        s = self.string
+        if isinstance(s, unicode):
+            return s.encode('utf-8')
+        return s
+    def __unicode__(self):
+        s = self.string
+        if isinstance(s, str):
+            return s.decode('utf-8')
+        return s
+
+def nl2br(string, options=None):
+    """ Converts newlines to HTML linebreaks in ``string``. Automatically
+    escapes content unless options['html-escape'] is set to False, and returns
+    the result wrapped in an HTMLSafe object.
+
+    :param str string:
+    :param dict options:
+    :rtype: HTMLSafe
+    """
+    if options is None: options = {}
+
+    if options.get('html-escape', True):
+        string = werkzeug.utils.escape(string)
+    return HTMLSafe(string.replace('\n', '<br>\n'))
 
 def get_field_type(column, options):
     """ Gets a t-field's effective type from the field's column and its options

@@ -22,6 +22,13 @@ column, but this can be overridden by providing a ``widget`` as field option.
 Field options are specified through ``t-field-options``, which must be a JSON
 object (map). Custom widgets may define their own (possibly mandatory) options.
 
+Global options
+--------------
+
+A global option ``html-escape`` is provided. It defaults to ``True``, and for
+many (not all) fields it determines whether the field's output will be
+html-escaped before being output.
+
 Date and datetime converters
 ----------------------------
 
@@ -88,3 +95,4 @@ The duration must be a positive number, and no rounding is applied.
 
 .. _ldml date format patterns:
     http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns
+
