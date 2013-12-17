@@ -802,10 +802,11 @@ openerp.web_calendar = function(instance) {
             return false;
         },
         open_event: function(id,title) {
+            var self = this;
             if (! this.open_popup_action) { 
                 var index = this.dataset.get_id_index(id);
                 this.dataset.index = index;
-                this.do_switch_view('form');
+                this.do_switch_view('form', null, { mode: "edit" });
             }            
             else {
 
@@ -823,7 +824,7 @@ openerp.web_calendar = function(instance) {
                var form_controller = pop.view_form;
                form_controller.on("load_record", self, function(){
                     button_delete = _.str.sprintf("<button class='oe_button oe_bold delme'><span> %s </span></button>",_t("Delete"));
-                    button_edit = _.str.sprintf("<button class='oe_button oe_bold editme oe_highlight'><span> %s </span></button>",_t("Edit event &gt;&gt;"));
+                    button_edit = _.str.sprintf("<button class='oe_button oe_bold editme oe_highlight'><span> %s </span></button>",_t("Edit Event"));
                     
                     
                     pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_delete)
@@ -837,6 +838,7 @@ openerp.web_calendar = function(instance) {
                     );
                     $('.editme').click(
                         function() { 
+                        /*
                              var action = {
                                 type: 'ir.actions.act_window',
                                 res_model: 'crm.meeting',
@@ -845,9 +847,16 @@ openerp.web_calendar = function(instance) {
                                 views: [[false, 'form']],
                                 res_id: id,
                                 context: {},
+                                mode:"edit",
                             };
-                            $('.oe_form_button_cancel').trigger('click'); 
                             self.do_action(action);
+                         */
+                            $('.oe_form_button_cancel').trigger('click'); 
+
+                            var index = self.dataset.get_id_index(id);
+                            self.dataset.index = index;
+                            self.do_switch_view('form', null, { mode: "edit" });
+
                         }
                     );
                     
