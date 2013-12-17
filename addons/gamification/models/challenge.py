@@ -198,7 +198,6 @@ class gamification_challenge(osv.Model):
 
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to add the user of groups"""
-        context = context or {}
         if not ids:
             return True
 
@@ -230,8 +229,6 @@ class gamification_challenge(osv.Model):
         - Create the missing goals (eg: modified the challenge to add lines)
         - Update every running challenge
         """
-        if not context: context = {}
-
         # start planned challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'draft'),
@@ -254,7 +251,6 @@ class gamification_challenge(osv.Model):
 
         :param list(int) ids: the ids of the challenges to update, if False will
         update only challenges in progress."""
-        if not context: context = {}
         goal_obj = self.pool.get('gamification.goal')
 
         # we use yesterday to update the goals that just ended
@@ -297,7 +293,6 @@ class gamification_challenge(osv.Model):
 
     def quick_update(self, cr, uid, challenge_id, context=None):
         """Update all the goals of a challenge, no generation of new goals"""
-        if not context: context = {}
         goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', '=', challenge_id)], context=context)
         self.pool.get('gamification.goal').update(cr, uid, goal_ids, context=context)
         return True
@@ -521,8 +516,8 @@ class gamification_challenge(osv.Model):
           periods.
         :param subset_goal_ids: a list(int) of goal ids to restrict the report
         """
-
-        context = context or {}
+        if context is None:
+            context = {}
         # template_env = TemplateHelper()
         temp_obj = self.pool.get('email.template')
         ctx = context.copy()
@@ -573,7 +568,6 @@ class gamification_challenge(osv.Model):
 
     def accept_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
         """The user accept the suggested challenge"""
-        context = context or {}
         user_id = user_id or uid
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has joined the challenge" % user.name
@@ -583,7 +577,6 @@ class gamification_challenge(osv.Model):
 
     def discard_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
         """The user discard the suggested challenge"""
-        context = context or {}
         user_id = user_id or uid
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has refused the challenge" % user.name
@@ -591,7 +584,6 @@ class gamification_challenge(osv.Model):
         return self.write(cr, uid, challenge_ids, {'invited_user_ids': (3, user_id)}, context=context)
 
     def reply_challenge_wizard(self, cr, uid, challenge_id, context=None):
-        context = context or {}
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         result = mod_obj.get_object_reference(cr, uid, 'gamification', 'challenge_wizard')

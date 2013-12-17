@@ -76,7 +76,7 @@ class res_users_gamification_group(osv.Model):
                 # board report should be grouped by line for all users
                 goals_info = challenge_obj.get_board_goal_info(cr, uid, challenge, subset_goal_ids=False, context=context)
 
-                if len(goals_info) == 0:
+                if not goals_info:
                     # challenge with no valid lines
                     continue
 
