@@ -1141,7 +1141,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
         var eventOut = trigger == 'hover' ? 'mouseleave' : 'blur'
 
         this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
-        //this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
+        this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
       }
     }
 
