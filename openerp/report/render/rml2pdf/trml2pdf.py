@@ -56,8 +56,11 @@ def select_fontname(fontname, default_fontname):
         try:
             pdfmetrics.getFont(fontname)
         except Exception:
-            _logger.warning('Could not locate font %s, substituting default: %s',
-                fontname, default_fontname)
+            addition = ""
+            if " " in fontname:
+                addition = ". Your font contains spaces which is not valid in RML."
+            _logger.warning('Could not locate font %s, substituting default: %s%s',
+                fontname, default_fontname, addition)
             fontname = default_fontname
     return fontname
 
@@ -242,7 +245,7 @@ class _rml_styles(object,):
             if sname in self.styles_obj:
                 style = self.styles_obj[sname]
             else:
-                _logger.warning('Warning: style not found, %s - setting default!\n' % (node.get('style'),) )
+                _logger.debug('Warning: style not found, %s - setting default!', node.get('style'))
         if not style:
             style = self.default_style['Normal']
         para_update = self._para_style_update(node)
@@ -307,7 +310,7 @@ class _rml_doc(object):
             addMapping(face, 0, 1, fontname)    #italic
             addMapping(face, 1, 0, fontname)    #bold
             addMapping(face, 1, 1, fontname)    #italic and bold
-        elif (mode== 'normal') or (mode == 'regular'):
+        elif (mode== 'normal') or (mode == 'regular') or (mode == 'book'):
             addMapping(face, 0, 0, fontname)    #normal
         elif mode == 'italic':
             addMapping(face, 0, 1, fontname)    #italic
@@ -630,6 +633,18 @@ class _rml_Illustration(platypus.flowables.Flowable):
     def draw(self):
         drw = _rml_draw(self.localcontext ,self.node,self.styles, images=self.self2.images, path=self.self2.path, title=self.self2.title)
         drw.render(self.canv, None)
+
+# Workaround for issue #15: https://bitbucket.org/rptlab/reportlab/issue/15/infinite-pages-produced-when-splitting 
+original_pto_split = platypus.flowables.PTOContainer.split
+def split(self, availWidth, availHeight):
+    res = original_pto_split(self, availWidth, availHeight)
+    if len(res) > 2 and len(self._content) > 0:
+        header = self._content[0]._ptoinfo.header
+        trailer = self._content[0]._ptoinfo.trailer
+        if isinstance(res[-2], platypus.flowables.UseUpSpace) and len(header + trailer) == len(res[:-2]):
+            return []
+    return res
+platypus.flowables.PTOContainer.split = split
 
 class _rml_flowable(object):
     def __init__(self, doc, localcontext, images=None, path='.', title=None, canvas=None):
@@ -1012,11 +1027,16 @@ class _rml_template(object):
             # Reset Page Number with new story tag
             fis.append(PageReset())
             story_cnt += 1
-        if self.localcontext and self.localcontext.get('internal_header',False):
-            self.doc_tmpl.afterFlowable(fis)
-            self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
-        else:
-            self.doc_tmpl.build(fis)
+        try:
+            if self.localcontext and self.localcontext.get('internal_header',False):
+                self.doc_tmpl.afterFlowable(fis)
+                self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
+            else:
+                self.doc_tmpl.build(fis)
+        except platypus.doctemplate.LayoutError, e:
+            e.name = 'Print Error'
+            e.value = 'The document you are trying to print contains a table row that does not fit on one page. Please try to split it in smaller rows or contact your administrator.'
+            raise
 
 def parseNode(rml, localcontext=None, fout=None, images=None, path='.', title=None):
     node = etree.XML(rml)

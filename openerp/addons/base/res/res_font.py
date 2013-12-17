@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2013 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,6 +20,7 @@
 ##############################################################################
 
 from reportlab.pdfbase import ttfonts
+from openerp.modules.registry import RegistryManager
 from openerp.osv import fields, osv
 from openerp.report.render.rml2pdf import customfonts
 
@@ -40,57 +41,75 @@ _logger = logging.getLogger(__name__)
 class res_font(osv.Model):
     _name = "res.font"
     _description = 'Fonts available'
-    _order = 'name'
+    _order = 'family,name,id'
+    _rec_name = 'family'
 
     _columns = {
-        'name': fields.char("Name", required=True),
+        'family': fields.char("Font family", required=True),
+        'name': fields.char("Font Name", required=True),
+        'path': fields.char("Path", required=True),
+        'mode': fields.char("Mode", required=True),
     }
 
     _sql_constraints = [
-        ('name_font_uniq', 'unique(name)', 'You can not register two fonts with the same name'),
+        ('name_font_uniq', 'unique(family, name)', 'You can not register two fonts with the same name'),
     ]
 
-    def discover_fonts(self, cr, uid, ids, context=None):
-        """Scan fonts on the file system, add them to the list of known fonts
-        and create font object for the new ones"""
-        customfonts.CustomTTFonts = customfonts.BaseCustomTTFonts
+    def font_scan(self, cr, uid, lazy=False, context=None):
+        """Action of loading fonts
+        In lazy mode will scan the filesystem only if there is no founts in the database and sync if no font in CustomTTFonts
+        In not lazy mode will force scan filesystem and sync
+        """
+        if lazy:
+            # lazy loading, scan only if no fonts in db
+            found_fonts_ids = self.search(cr, uid, [('path', '!=', '/dev/null')], context=context)
+            if not found_fonts_ids:
+                # no scan yet or no font found on the system, scan the filesystem
+                self._scan_disk(cr, uid, context=context)
+            elif len(customfonts.CustomTTFonts) == 0:
+                # CustomTTFonts list is empty
+                self._sync(cr, uid, context=context)
+        else:
+            self._scan_disk(cr, uid, context=context)
+        return True
 
-        found_fonts = {}
+    def _scan_disk(self, cr, uid, context=None):
+        """Scan the file system and register the result in database"""
+        found_fonts = []
         for font_path in customfonts.list_all_sysfonts():
             try:
                 font = ttfonts.TTFontFile(font_path)
                 _logger.debug("Found font %s at %s", font.name, font_path)
-                if not found_fonts.get(font.familyName):
-                    found_fonts[font.familyName] = {'name': font.familyName}
-
-                mode = font.styleName.lower().replace(" ", "")
-
-                customfonts.CustomTTFonts.append((font.familyName, font.name, font_path, mode))
+                found_fonts.append((font.familyName, font.name, font_path, font.styleName))
             except ttfonts.TTFError:
                 _logger.warning("Could not register Font %s", font_path)
 
-        # add default PDF fonts
-        for family in customfonts.BasePDFFonts:
-            if not found_fonts.get(family):
-                found_fonts[family] = {'name': family}
+        for family, name, path, mode in found_fonts:
+            if not self.search(cr, uid, [('family', '=', family), ('name', '=', name)], context=context):
+                self.create(cr, uid, {
+                    'family': family, 'name': name,
+                    'path': path, 'mode': mode,
+                }, context=context)
 
-        # remove deleted fonts
-        existing_font_ids = self.search(cr, uid, [], context=context)
-        existing_font_names = []
-        for font in self.browse(cr, uid, existing_font_ids):
-            existing_font_names.append(font.name)
-            if font.name not in found_fonts.keys():
-                self.unlink(cr, uid, font.id, context=context)
+        # remove fonts not present on the disk anymore
+        existing_font_names = [name for (family, name, path, mode) in found_fonts]
+        inexistant_fonts = self.search(cr, uid, [('name', 'not in', existing_font_names), ('path', '!=', '/dev/null')], context=context)
+        if inexistant_fonts:
+            self.unlink(cr, uid, inexistant_fonts, context=context)
 
-        # add unknown fonts
-        for family, vals in found_fonts.items():
-            if family not in existing_font_names:
-                self.create(cr, uid, vals, context=context)
+        RegistryManager.signal_caches_change(cr.dbname)
+        self._sync(cr, uid, context=context)
         return True
 
-    def init_no_scan(self, cr, uid, context=None):
-        """Add demo data for PDF fonts without scan (faster for db creation)"""
-        for font in customfonts.BasePDFFonts:
-            if not self.search(cr, uid, [('name', '=', font)], context=context):
-                self.create(cr, uid, {'name':font}, context=context)
+    def _sync(self, cr, uid, context=None):
+        """Set the customfonts.CustomTTFonts list to the content of the database"""
+        customfonts.CustomTTFonts = []
+        found_fonts_ids = self.search(cr, uid, [('path', '!=', '/dev/null')], context=context)
+        for font in self.browse(cr, uid, found_fonts_ids, context=None):
+            customfonts.CustomTTFonts.append((font.family, font.name, font.path, font.mode))
         return True
+
+    def clear_caches(self):
+        """Force worker to resync at next report loading by setting an empty font list"""
+        customfonts.CustomTTFonts = []
+        return super(res_font, self).clear_caches()

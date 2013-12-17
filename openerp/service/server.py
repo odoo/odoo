@@ -17,7 +17,6 @@ import subprocess
 import sys
 import threading
 import time
-import traceback
 
 import werkzeug.serving
 
@@ -33,7 +32,7 @@ except ImportError:
 import openerp
 import openerp.tools.config as config
 from openerp.release import nt_service_name
-from openerp.tools.misc import stripped_sys_argv
+from openerp.tools.misc import stripped_sys_argv, dumpstacks
 
 import wsgi_server
 
@@ -183,25 +182,6 @@ class CommonServer(object):
         # runtime
         self.pid = os.getpid()
 
-    def dumpstacks(self):
-        """ Signal handler: dump a stack trace for each existing thread."""
-        # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
-        # modified for python 2.5 compatibility
-        threads_info = dict([(th.ident, {'name': th.name,
-                                        'uid': getattr(th,'uid','n/a')})
-                                    for th in threading.enumerate()])
-        code = []
-        for threadId, stack in sys._current_frames().items():
-            thread_info = threads_info.get(threadId)
-            code.append("\n# Thread: %s (id:%s) (uid:%s)" % \
-                        (thread_info and thread_info['name'] or 'n/a',
-                         threadId,
-                         thread_info and thread_info['uid'] or 'n/a'))
-            for filename, lineno, name, line in traceback.extract_stack(stack):
-                code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
-                if line:
-                    code.append("  %s" % (line.strip()))
-        _logger.info("\n".join(code))
 
     def close_socket(self, sock):
         """ Closes a socket instance cleanly
@@ -243,9 +223,6 @@ class ThreadedServer(CommonServer):
             # restart on kill -HUP
             openerp.phoenix = True
             self.quit_signals_received += 1
-        elif sig == signal.SIGQUIT:
-            # dump stacks on kill -3
-            self.dumpstacks()
 
     def cron_thread(self, number):
         while True:
@@ -295,7 +272,7 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGTERM, self.signal_handler)
             signal.signal(signal.SIGCHLD, self.signal_handler)
             signal.signal(signal.SIGHUP, self.signal_handler)
-            signal.signal(signal.SIGQUIT, self.signal_handler)
+            signal.signal(signal.SIGQUIT, dumpstacks)
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
@@ -372,6 +349,10 @@ class GeventServer(CommonServer):
     def start(self):
         import gevent
         from gevent.wsgi import WSGIServer
+
+        if os.name == 'posix':
+            signal.signal(signal.SIGQUIT, dumpstacks)
+
         gevent.spawn(self.watch_parent)
         self.httpd = WSGIServer((self.interface, self.port), self.app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
@@ -558,9 +539,10 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGTERM, self.signal_handler)
         signal.signal(signal.SIGHUP, self.signal_handler)
         signal.signal(signal.SIGCHLD, self.signal_handler)
-        signal.signal(signal.SIGQUIT, self.signal_handler)
         signal.signal(signal.SIGTTIN, self.signal_handler)
         signal.signal(signal.SIGTTOU, self.signal_handler)
+        signal.signal(signal.SIGQUIT, dumpstacks)
+
         # listen to socket
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

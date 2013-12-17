@@ -3,7 +3,6 @@
 # OpenERP HTTP layer
 #----------------------------------------------------------
 import ast
-import cgi
 import collections
 import contextlib
 import errno
@@ -24,6 +23,7 @@ import urlparse
 import warnings
 
 import babel.core
+import psycopg2
 import simplejson
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
@@ -35,13 +35,20 @@ import werkzeug.wsgi
 
 import openerp
 from openerp.service import security, model as service_model
-from openerp.tools import config
 
 _logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
 # RequestHandler
 #----------------------------------------------------------
+# Thread local global request object
+_request_stack = werkzeug.local.LocalStack()
+
+request = _request_stack()
+"""
+    A global proxy that always redirect to the current request object.
+"""
+
 class WebRequest(object):
     """ Parent class for all OpenERP Web request types, mostly deals with
     initialization and setup of the request object (the dispatching itself has
@@ -137,10 +144,23 @@ class WebRequest(object):
         trying to access this property will raise an exception.
         """
         # some magic to lazy create the cr
-        if not self._cr_cm:
-            self._cr_cm = self.registry.cursor()
-            self._cr = self._cr_cm.__enter__()
+        if not self._cr:
+            self._cr = self.registry.db.cursor()
         return self._cr
+
+    def __enter__(self):
+        _request_stack.push(self)
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        _request_stack.pop()
+        if self._cr:
+            if exc_type is None:
+                self._cr.commit()
+            self._cr.close()
+        # just to be sure no one tries to re-use the request
+        self.disable_db = True
+        self.uid = None
 
     def set_handler(self, func, arguments, auth):
         # is this needed ?
@@ -153,39 +173,30 @@ class WebRequest(object):
         self.auth_method = auth
 
     def _call_function(self, *args, **kwargs):
+        request = self
+        if self.func_request_type != self._request_type:
+            raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
+                % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
+
+        kwargs.update(self.func_arguments)
+
+        # Backward for 7.0
+        if getattr(self.func, '_first_arg_is_req', False):
+            args = (request,) + args
+        # Correct exception handling and concurency retry
+        @service_model.check
+        def checked_call(dbname, *a, **kw):
+            return self.func(*a, **kw)
+
+        # FIXME: code and rollback management could be cleaned
         try:
-            # ugly syntax only to get the __exit__ arguments to pass to self._cr
-            request = self
-            class with_obj(object):
-                def __enter__(self):
-                    pass
-                def __exit__(self, *args):
-                    if request._cr_cm:
-                        request._cr_cm.__exit__(*args)
-                        request._cr_cm = None
-                        request._cr = None
-
-            with with_obj():
-                if self.func_request_type != self._request_type:
-                    raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
-                        % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
-
-                kwargs.update(self.func_arguments)
-
-                # Backward for 7.0
-                if getattr(self.func, '_first_arg_is_req', False):
-                    args = (request,) + args
-                # Correct exception handling and concurency retry
-                @service_model.check
-                def checked_call(dbname, *a, **kw):
-                    return self.func(*a, **kw)
-                if self.db:
-                    return checked_call(self.db, *args, **kwargs)
-                return self.func(*args, **kwargs)
-        finally:
-            # just to be sure no one tries to re-use the request
-            self.disable_db = True
-            self.uid = None
+            if self.db:
+                return checked_call(self.db, *args, **kwargs)
+            return self.func(*args, **kwargs)
+        except Exception:
+            if self._cr:
+                self._cr.rollback()
+            raise
 
     @property
     def debug(self):
@@ -196,7 +207,7 @@ class WebRequest(object):
         warnings.warn('please use request.registry and request.cr directly', DeprecationWarning)
         yield (self.registry, self.cr)
 
-def route(route, type="http", auth="user"):
+def route(route, type="http", auth="user", methods=None):
     """
     Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
     of ``Controller``.
@@ -213,6 +224,7 @@ def route(route, type="http", auth="user"):
         * ``none``: The method is always active, even if there is no database. Mainly used by the framework and
         authentication modules. There request code will not have any facilities to access the database nor have any
         configuration indicating the current database nor the current user.
+    :param methods: A sequence of http methods this route applies to. If not specified, all methods are allowed.
     """
     assert type in ["http", "json"]
     def decorator(f):
@@ -220,6 +232,7 @@ def route(route, type="http", auth="user"):
             f.routes = route
         else:
             f.routes = [route]
+        f.methods = methods
         f.exposed = type
         if getattr(f, "auth", None) is None:
             f.auth = auth
@@ -395,22 +408,9 @@ class HttpRequest(WebRequest):
         self.params = params
 
     def dispatch(self):
-        try:
-            r = self._call_function(**self.params)
-        except werkzeug.exceptions.HTTPException, e:
-            r = e
-        except Exception, e:
-            _logger.exception("An exception occured during an http request")
-            se = serialize_exception(e)
-            error = {
-                'code': 200,
-                'message': "OpenERP Server Error",
-                'data': se
-            }
-            r = werkzeug.exceptions.InternalServerError(cgi.escape(simplejson.dumps(error)))
-        else:
-            if not r:
-                r = werkzeug.wrappers.Response(status=204)  # no content
+        r = self._call_function(**self.params)
+        if not r:
+            r = werkzeug.wrappers.Response(status=204)  # no content
         return r
 
     def make_response(self, data, headers=None, cookies=None):
@@ -449,24 +449,6 @@ def httprequest(f):
     if f.__name__ == "index":
         base = ""
     return route([base, base + "/<path:_ignored_path>"], type="http", auth="user")(f)
-
-#----------------------------------------------------------
-# Thread local global request object
-#----------------------------------------------------------
-_request_stack = werkzeug.local.LocalStack()
-
-request = _request_stack()
-"""
-    A global proxy that always redirect to the current request object.
-"""
-
-@contextlib.contextmanager
-def set_request(req):
-    _request_stack.push(req)
-    try:
-        yield
-    finally:
-        _request_stack.pop()
 
 #----------------------------------------------------------
 # Controller and route registration
@@ -525,7 +507,7 @@ def routing_map(modules, nodb_only, converters=None):
                             url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
                             if url.endswith("/") and len(url) > 1:
                                 url = url[: -1]
-                        routing_map.add(werkzeug.routing.Rule(url, endpoint=mv))
+                        routing_map.add(werkzeug.routing.Rule(url, endpoint=mv, methods=mv.methods))
     return routing_map
 
 #----------------------------------------------------------
@@ -815,6 +797,18 @@ mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
 
+class LazyResponse(werkzeug.wrappers.Response):
+    """ Lazy werkzeug response.
+    API not yet frozen"""
+
+    def __init__(self, callback, **kwargs):
+        super(LazyResponse, self).__init__(mimetype='text/html')
+        self.callback = callback
+        self.params = kwargs
+    def process(self):
+        response = self.callback(**self.params)
+        self.response.append(response)
+
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
@@ -920,11 +914,9 @@ class Root(object):
         return explicit_session
 
     def setup_db(self, httprequest):
-        # if no db is found on the session try to deduce it from the domain
-        db = db_monodb(httprequest)
-        if db != httprequest.session.db:
-            httprequest.session.logout()
-            httprequest.session.db = db
+        if not httprequest.session.db:
+            # allow "admin" routes to works without being logged in when in monodb.
+            httprequest.session.db = db_monodb(httprequest)
 
     def setup_lang(self, httprequest):
         if not "lang" in httprequest.session.context:
@@ -942,6 +934,12 @@ class Root(object):
             return HttpRequest(httprequest)
 
     def get_response(self, httprequest, result, explicit_session):
+        if isinstance(result, LazyResponse):
+            try:
+                result.process()
+            except(Exception), e:
+                result = request.registry['ir.http']._handle_exception(e)
+
         if isinstance(result, basestring):
             response = werkzeug.wrappers.Response(result, mimetype='text/html')
         else:
@@ -975,18 +973,30 @@ class Root(object):
 
             request = self.get_request(httprequest)
 
-            with set_request(request):
-                db = request.session.db 
+            def _dispatch_nodb():
+                func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
+                request.set_handler(func, arguments, "none")
+                result = request.dispatch()
+                return result
+
+            with request:
+                db = request.session.db
                 if db:
                     openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-                    result = request.registry['ir.http']._dispatch()
-                    openerp.modules.registry.RegistryManager.signal_caches_change(db)
+                    try:
+                        ir_http = request.registry['ir.http']
+                    except psycopg2.OperationalError:
+                        # psycopg2 error. At this point, that's mean the database does not exists
+                        # anymore. We unlog the user and failback in nodb mode
+                        request.session.logout()
+                        result = _dispatch_nodb()
+                    else:
+                        result = ir_http._dispatch()
+                        openerp.modules.registry.RegistryManager.signal_caches_change(db)
                 else:
-                    # fallback to non-db handlers
-                    func, arguments = self.nodb_routing_map.bind_to_environ(request.httprequest.environ).match()
-                    request.set_handler(func, arguments, "none")
-                    result = request.dispatch()
-            response =  self.get_response(httprequest, result, explicit_session)
+                    result = _dispatch_nodb()
+
+                response = self.get_response(httprequest, result, explicit_session)
             return response(environ, start_response)
 
         except werkzeug.exceptions.HTTPException, e:

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A. <http://www.openerp.com>
+#    Copyright (C) 2004-2013 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -801,7 +801,7 @@ class ir_actions_server(osv.osv):
             raise osv.except_osv(_('Error'), _("Please specify an action to launch!"))
         return self.pool[action.action_id.type].read(cr, uid, action.action_id.id, context=context)
 
-    def run_action_code(self, cr, uid, action, eval_context=None, context=None):
+    def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):
         eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
         if 'action' in eval_context:
             return eval_context['action']
@@ -933,38 +933,50 @@ class ir_actions_server(osv.osv):
             context = {}
         res = False
         user = self.pool.get('res.users').browse(cr, uid, uid)
-        active_ids = context.get('active_ids', [context.get('active_id', None)])
+        active_ids = context.get('active_ids', [context.get('active_id')])
         for action in self.browse(cr, uid, ids, context):
-            obj = None
             obj_pool = self.pool[action.model_id.model]
-            for active_id in active_ids:
-                if context.get('active_model') == action.model_id.model and active_id:
-                    obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                # run context dedicated to a particular active_id
-                run_context = dict(context, active_ids=[active_id], active_id=active_id)
-                # evaluation context for python strings to evaluate
-                eval_context = {
-                    'self': obj_pool,
-                    'object': obj,
-                    'obj': obj,
-                    'pool': self.pool,
-                    'time': time,
-                    'cr': cr,
-                    'context': dict(run_context),  # copy context to prevent side-effects of eval
-                    'uid': uid,
-                    'user': user
-                }
+            obj = None
+            if context.get('active_model') == action.model_id.model and context.get('active_id'):
+                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
 
-                # evaluate the condition, with the specific case that a void (aka False) condition is considered as True
-                condition = action.condition
-                if action.condition is False:
-                    condition = True
+            # evaluation context for python strings to evaluate
+            eval_context = {
+                'self': obj_pool,
+                'object': obj,
+                'obj': obj,
+                'pool': self.pool,
+                'time': time,
+                'cr': cr,
+                'uid': uid,
+                'user': user,
+            }
+            condition = action.condition
+            if condition is False:
+                # Void (aka False) conditions are considered as True
+                condition = True
+            if hasattr(self, 'run_action_%s_multi' % action.state):
+                # set active_ids in context only needed if one active_id
+                run_context = dict(context, active_ids=active_ids)
+                eval_context["context"] = run_context
                 expr = eval(str(condition), eval_context)
                 if not expr:
                     continue
-                # call the method related to the action: run_action_<STATE>
-                if hasattr(self, 'run_action_%s' % action.state):
-                    res = getattr(self, 'run_action_%s' % action.state)(cr, uid, action, eval_context=eval_context, context=run_context)
+                # call the multi method
+                func = getattr(self, 'run_action_%s_multi' % action.state)
+                res = func(cr, uid, action, eval_context=eval_context, context=run_context)
+
+            elif hasattr(self, 'run_action_%s' % action.state):
+                func = getattr(self, 'run_action_%s' % action.state)
+                for active_id in active_ids:
+                    # run context dedicated to a particular active_id
+                    run_context = dict(context, active_ids=[active_id], active_id=active_id)
+                    eval_context["context"] = run_context
+                    expr = eval(str(condition), eval_context)
+                    if not expr:
+                        continue
+                    # call the single method related to the action: run_action_<STATE>
+                    res = func(cr, uid, action, eval_context=eval_context, context=run_context)
         return res
 
 
