@@ -138,20 +138,24 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     do_search: function (domain, context, group_by) {
         var self = this,
-            col_groupby = context.col_group_by || []; // get_col_groupby('ColGroupBy');
+            col_groupby = context.col_group_by || [];
 
         if (group_by.length || col_groupby.length) {
             this.groupby_mode = 'manual';
         }
 
         this.pivot_table.set_domain(domain);
+
+        var options;
         if (this.groupby_mode === 'manual') {
-            this.pivot_table.set_row_groupby(group_by);
-            this.pivot_table.set_col_groupby(col_groupby);
+            options = {row: group_by, col: col_groupby};
         } else {
-            this.pivot_table.set_row_groupby(_.toArray(this.default_row_groupby));
-            this.pivot_table.set_col_groupby(_.toArray(this.default_col_groupby));
+            options = {
+                row: _.toArray(this.default_row_groupby),
+                col: _.toArray(this.default_col_groupby),
+            };
         }
+        this.pivot_table.set_groupby(options);
         this.display_data();
     },
 

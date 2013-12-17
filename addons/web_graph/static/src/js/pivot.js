@@ -4,8 +4,9 @@
 (function () {
 'use strict';
 
-openerp.web_graph.PivotTable = openerp.web.Class.extend({
+openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherMixin, {
 	init: function (model, domain) {
+        openerp.EventDispatcherMixin.init.call(this);
 		this.rows = { groupby: [], main: null, headers: null };
 		this.cols = { groupby: [], main: null, headers: null };
 		this.cells = [];
@@ -40,23 +41,16 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		}
 	},
 
-	set_row_groupby: function (groupby) {
-        if ((!groupby.length) && (this.rows.main)) {
-            this.fold(this.rows.main);
-        }
-		if (!_.isEqual(groupby, this.rows.groupby)) {
-			this.rows.groupby = groupby;
-			this.invalidate_data();
-		}
-	},
+	set_groupby: function (groupbys) {
+		var col_changed = !_.isEqual(groupbys.col, this.cols.groupby),
+			row_changed = !_.isEqual(groupbys.row, this.rows.groupby);
 
-	set_col_groupby: function (groupby) {
-        if ((!groupby.length) && (this.cols.main)) {
-            this.fold(this.cols.main);
-        }
-		if (!_.isEqual(groupby, this.cols.groupby)) {
-			this.cols.groupby = groupby;
-            this.invalidate_data();
+		this.rows.groupby = groupbys.row;
+		this.cols.groupby = groupbys.col;
+
+		if (col_changed || row_changed) {
+			this.invalidate_data();
+			this.trigger('groupby_changed');
 		}
 	},
 
@@ -141,11 +135,17 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		header.is_expanded = false;
         var fold_lvls = _.map(header.root.headers, function(g) {return g.path.length;});
         var new_groupby_length = _.max(fold_lvls);
+
+        if (new_groupby_length < header.root.groupby.length) {
+			this.trigger('groupby_changed');
+        }
+
         header.root.groupby.splice(new_groupby_length);
         header.children = [];
         this.cells = _.reject(this.cells, function (cell) {
             return (_.contains(ids_to_remove, cell.x) || _.contains(ids_to_remove, cell.y));
         });
+        this.trigger('redraw_required');
 	},
 
 	expand: function (header_id, field_id) {
@@ -154,6 +154,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
         if (header.path.length == header.root.groupby.length) {
             header.root.groupby.push(field_id);
+            this.trigger('groupby_changed');
         }
 
         var otherDim = (header.root === this.cols) ? this.rows : this.cols;
@@ -179,6 +180,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
                     });
                 });
                 header.is_expanded = true;
+                self.trigger('redraw_required');
             });
 	},
 
@@ -203,14 +205,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		var temp = this.rows;
 		this.rows = this.cols;
 		this.cols = temp;
-	},
-
-	fold_rows: function () {
-		this.fold(this.rows.main);
-	},
-
-	fold_cols: function () {
-		this.fold(this.cols.main);
+		this.trigger('groupby_changed');
+		this.trigger('redraw_required');
 	},
 
 	get_total: function (header) {
@@ -255,6 +251,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 			} else {
 				self.no_data = true;
 			}
+			self.trigger('redraw_required');
 		});
 	},
 
