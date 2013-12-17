@@ -112,6 +112,13 @@ td {
     display: table-cell;
     position: relative;
 }
+/* firefox seems to ignore the relative positionning of the subwindow-container
+ * putting this inside subwindow-container fixes it.
+ */ 
+.pos .subwindow .subwindow-container-fix{
+    height: 100%;
+    position: relative;
+}
 
 /* ---- Scrollers ----- */
 
@@ -507,6 +514,7 @@ td {
     background-color: white;
     border-radius: 20px;
     font-family: Lato;
+    font-size: 13px;
 }
 .pos .searchbox input:focus {
     outline: none;
@@ -763,6 +771,7 @@ td {
     padding: 8px;
     border-box: 3px;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     border-radius: 3px;
 }
 .pos .paymentline-name{
@@ -774,6 +783,7 @@ td {
     display: block;
     width: 100%;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     outline: none;
     border: none;
     padding: 6px 8px;
@@ -796,6 +806,7 @@ td {
     padding: 5px;
     text-align: center;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     position: absolute;
     bottom: 10px;
     left: 8px;
@@ -1281,6 +1292,7 @@ td {
     width: 180px;
     border: none;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     border-radius: 3px;
 }
 .pos .debug-widget .status{
