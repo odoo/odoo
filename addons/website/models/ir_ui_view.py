@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 from urlparse import urlparse
 
 from lxml import etree, html
@@ -84,19 +85,24 @@ class view(osv.osv):
         return out
 
     def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
-        # remove branding from replacement section
-        for att in ir.ir_ui_view.MOVABLE_BRANDING:
-            replacement.attrib.pop(att, None)
+        # the root of the arch section shouldn't actually be replaced as it's
+        # not really editable itself, only the content truly is editable.
 
+        [view] = self.browse(cr, uid, [view_id], context=context)
+        arch = etree.fromstring(view.arch.encode('utf-8'))
+        # => get the replacement root
         if not section_xpath:
-            # replace all of the arch, not just a fragment
-            arch = replacement
+            root = arch
         else:
-            arch = etree.fromstring(self.browse(cr, uid, view_id, context=context).arch.encode('utf-8'))
             # ensure there's only one match
-            [previous_section] = arch.xpath(section_xpath)
+            [root] = arch.xpath(section_xpath)
 
-            previous_section.getparent().replace(previous_section, replacement)
+        root.text = replacement.text
+        root.tail = replacement.tail
+        # replace all children
+        del root[:]
+        for child in replacement:
+            root.append(copy.deepcopy(child))
 
         return arch
 

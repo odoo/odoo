@@ -99,6 +99,11 @@ class ir_http(orm.AbstractModel):
                 )
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
+                if values['qweb_template']:
+                    view = request.registry.get("ir.ui.view")
+                    views = view._views_get(request.cr, request.uid, values['qweb_template'], request.context)
+                    to_reset = [view for view in views if view.model_data_id.noupdate == True]
+                    values['views'] = to_reset
             elif code == 403:
                 logger.warn("403 Forbidden:\n\n%s", values['traceback'])
 

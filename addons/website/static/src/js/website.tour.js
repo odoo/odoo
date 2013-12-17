@@ -139,7 +139,7 @@
         },
         redirect: function (url) {
             url = url || new website.UrlParser(window.location.href);
-            var path = (this.startPath && url.pathname !== this.startPath) ? this.startPath : url.pathname;
+            var path = (this.path && url.pathname !== this.path) ? this.path : url.pathname;
             var search = url.activateTutorial(this.id);
             var newUrl = path + search;
             window.location.replace(newUrl);
@@ -333,9 +333,9 @@
                         }
                     }
                     var url = new website.UrlParser(window.location.href);
-                    if (tour.startPath && url.pathname !== tour.startPath) {
+                    if (tour.path && url.pathname !== tour.path) {
                         window.localStorage.setItem(testId, actionSteps[0].stepId);
-                        window.location.href = tour.startPath;
+                        window.location.href = tour.path;
                     } else {
                         var lastStepId = window.localStorage.getItem(testId);
                         var currentStep = actionSteps.shift();
