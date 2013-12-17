@@ -860,7 +860,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template: 'PosWidget',
         init: function() { 
             this._super(arguments[0],{});
-            console.log('UH');
 
             instance.web.blockUI(); 
 
@@ -882,11 +881,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         disable_rubberbanding: function(){
             // prevent the pos body from being scrollable. 
             document.body.addEventListener('touchmove',function(event){
-                console.log('touchmove_prevent',event);
                 var node = event.target;
                 while(node){
                     if(node.classList && node.classList.contains('touch-scrollable')){
-                        console.log('not prevented');
                         return;
                     }
                     node = node.parentNode;
