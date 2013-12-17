@@ -54,7 +54,12 @@
   </div>
 
   <div t-name="CalendarView.quick_create" class="oe_calendar_quick_create openerp">
-    <t t-esc="_t('What : ')"/> <input/>        
+    
+    <div class="form-group">
+        <label for='name' class=' control-label'><t t-esc="_t('Summary\'s event : ')"/></label>  
+        <input name='name' class="form-control"/>
+    </div>     
+    
     <t t-if="widget._buttons">
       <div class="oe_calendar_quick_create_buttons">
         <button class="openerp oe_button oe_highlight oe_calendar_quick_create_add ">Create event</button>

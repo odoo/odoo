@@ -340,13 +340,16 @@ openerp.web_calendar = function(instance) {
                             }
                          );               
                 };
-                
+                this.extraSideBar();
                 
             }
             self.$calendar.fullCalendar(self.get_fc_init_options());
 
             
             return $.when();
+        },
+        extraSideBar: function() {
+            console.log("In extra Side bar from fullcalendar");
         },
 
         open_quick_create: function(data_template) {
@@ -356,6 +359,7 @@ openerp.web_calendar = function(instance) {
             var QuickCreate = get_class(this.quick_create_class);
             
             this.options.disable_quick_create =  this.options.disable_quick_create || !this.quick_add_pop;
+            
             this.quick = new QuickCreate(this, this.dataset, true, this.options, data_template);
             this.quick.on('added', this, this.proxy('quick_created'))
                     .on('slowadded', this, this.proxy('slow_created'))
@@ -366,6 +370,7 @@ openerp.web_calendar = function(instance) {
                     });
             this.quick.replace($(".oe_calendar_qc_placeholder"));
             this.quick.focus();
+            
         },
 
         /**
@@ -616,20 +621,24 @@ openerp.web_calendar = function(instance) {
             var event_end = event.end;
             //Bug when we move an all_day event from week or day view, we don't have a dateend or duration...            
             if (event_end == null) {
-                debugger;
                 event_end = new Date(event.start).addHours(2);
             }
-                
-            
+
             if (event.allDay) {
                 // Sometimes fullcalendar doesn't give any event.end.
                 if (event_end === null || typeof event_end === "undefined")
                     event_end = new Date(event.start);
                 // Avoid inplace changes
-                event_end = (new Date(event_end.getTime())).addDays(1);
                 
-                date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate()))
-                date_stop_day = new Date(Date.UTC(event_end.getFullYear(),event_end.getMonth(),event_end.getDate()))
+                if (this.all_day) {
+                    event_end = (new Date(event_end.getTime())).addDays(1); //midnight to midnight
+                    date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate()))
+                    date_stop_day = new Date(Date.UTC(event_end.getFullYear(),event_end.getMonth(),event_end.getDate()))            
+                }
+                else {
+                    date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7))
+                    date_stop_day = new Date(Date.UTC(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),19))            
+                }                                
                 data[this.date_start] = instance.web.parse_value(date_start_day, this.fields[this.date_start]);
                 if (this.date_stop) {
                     data[this.date_stop] = instance.web.parse_value(date_stop_day, this.fields[this.date_stop]);
@@ -935,10 +944,12 @@ openerp.web_calendar = function(instance) {
         },
         get_title: function () {
             var parent = this.getParent();
-            var title =
-                (typeof parent.field_widget === "undefined") ?
+            if (typeof parent === 'undefined') {
+                return _t("Create")
+            }
+            var title = (typeof parent.field_widget === "undefined") ?
                     (parent.string || parent.name) :
-                parent.field_widget.string || parent.field_widget.name || '';
+                    parent.field_widget.string || parent.field_widget.name || '';
             return _t("Create: ") + title;
         },
         start: function () {
@@ -951,13 +962,21 @@ openerp.web_calendar = function(instance) {
             }
 
             self.$input = this.$el.find('input');
-            self.$input.keyup(function(event) {
+            self.$input.keyup(function enterHandler (event) {
                 if(event.keyCode == 13){
-                    self.quick_add();
+                    self.$input.off('keyup', enterHandler);
+                    if (!self.quick_add()){
+                        self.$input.on('keyup', enterHandler);                    
+                    }
                 }
             });
-            this.$el.find(".oe_calendar_quick_create_add").click(function () {
-                self.quick_add();
+            
+            var submit = this.$el.find(".oe_calendar_quick_create_add");
+            submit.click(function clickHandler() {
+                submit.off('click', clickHandler);
+                if (!self.quick_add()){
+                   submit.on('click', clickHandler);                    
+                }
                 self.focus();
             });
             this.$el.find(".oe_calendar_quick_create_edit").click(function () {
@@ -968,7 +987,7 @@ openerp.web_calendar = function(instance) {
                 ev.preventDefault();
                 self.trigger('close');
             });
-            self.$input.keyup(function(e) {
+            self.$input.keyup(function enterHandler (e) {
                 if (e.keyCode == 27 && self._buttons) {
                     self.trigger('close');
                 }
@@ -993,8 +1012,8 @@ openerp.web_calendar = function(instance) {
          */
         quick_add: function() {
             var val = this.$input.val();
-            if (/^\s*$/.test(val)) { return; }
-            this.quick_create({'name': val});
+            if (/^\s*$/.test(val)) { return false; }
+            return this.quick_create({'name': val}).always(function() { return true });
         },
         
         slow_add: function() {
@@ -1007,7 +1026,7 @@ openerp.web_calendar = function(instance) {
          */
         quick_create: function(data, options) {
             var self = this;
-            this.dataset.create($.extend({}, this.data_template, data), options)
+            return this.dataset.create($.extend({}, this.data_template, data), options)
                 .then(function(id) {
                     self.trigger('added', id);
                     self.$input.val("");
@@ -1021,6 +1040,17 @@ openerp.web_calendar = function(instance) {
         /**
          * Show full form popup
          */
+         get_form_popup_infos: function() {
+            var parent = this.getParent();
+            var infos = {
+                view_id: false,
+                title: this.name,
+            };
+            if (typeof parent !== 'undefined' && typeof parent.ViewManager !== 'undefined') {
+                infos.view_id = parent.ViewManager.get_view_id('form');
+            }
+            return infos;
+        },
         slow_create: function(data) {
             var self = this;
             var def = $.Deferred();
@@ -1034,33 +1064,21 @@ openerp.web_calendar = function(instance) {
                 delete defaults['default_duration'];
             }
 
+            var pop_infos = self.get_form_popup_infos();
             var pop = new instance.web.form.FormOpenPopup(this);
             var context = new instance.web.CompoundContext(this.dataset.context, defaults)
-            pop.show_element(this.dataset.model, null, context, {
+            pop.show_element(this.dataset.model, null, this.dataset.get_context(defaults), {
                 title: this.get_title(),
                 disable_multiple_selection: true,
+                view_id: pop_infos.view_id,
                 // Ensuring we use ``self.dataset`` and DO NOT create a new one.
                 create_function: function(data, options) {
                     return self.dataset.create(data, options).done(function(r) {
-                        // Although ``self.dataset.create`` DOES not call ``dataset_changed`` in O2M
-                        // it gets called thanks to ``create_completed`` -> ``added``
-                        // XXXvlab: why ``create`` does not call dataset_changed AND adds id in dataset.ids
-                        // is a mystery for me ATM.
                     }).fail(function (r, event) {
                        if (!r.data.message) //else manage by openerp
                             throw new Error(r);
                     });
                 },
-
-                // ATM this method should not be attainable as the current pop up is
-                // spawned only for newly created objects.
-
-                // write_function: function(id, data, options) {
-                //     return self.dataset.write(id, data, options).done(function() {
-                //     }).fail(function (r, event) {
-                //         throw new Error(r);
-                //     });
-                // },
                 read_function: function(id, fields, options) {
                     return self.dataset.read_ids.apply(self.dataset, arguments).done(function() {
                     }).fail(function (r, event) {
@@ -1070,14 +1088,9 @@ openerp.web_calendar = function(instance) {
                 },
             });
             pop.on('closed', self, function() {
-                // Hum, this is bad trick happening: we must avoid
-                // calling ``self.trigger('close')`` directly because
-                // it would itself destroy all child element including
-                // the slow create popup, which would then re-trigger
-                // recursively the 'closed' signal.  
-                // 
-                // Thus, here, we use a deferred and its state to cut
-                // the endless recurrence.
+                // ``self.trigger('close')`` would itself destroy all child element including
+                // the slow create popup, which would then re-trigger recursively the 'closed' signal.  
+                // Thus, here, we use a deferred and its state to cut the endless recurrence.
                 if (def.state() === "pending")
                     def.resolve();
             });
@@ -1285,7 +1298,6 @@ openerp.web_calendar = function(instance) {
             }
             var loaded = $.Deferred();
             this.calendar_view.on("calendar_view_loaded", self, function() {
-                alert('Why never here ?');
                 self.initial_is_loaded.resolve();
                 loaded.resolve();
             });
@@ -1404,9 +1416,8 @@ openerp.web_calendar = function(instance) {
         init: function(field_manager, node) {
             this._super(field_manager, node);
             this.dataset.on('dataset_changed', this, function() {
-                // Force dirty state, as if dataset changed, then 'get_value'
-                // result will change because it uses directly the dataset to
-                // compute its result.
+                // Force dirty state, as if dataset changed, then 'get_value' result will change 
+                // because it uses directly the dataset to compute its result.
                 this.trigger('changed_value');
             });
         },
@@ -1454,20 +1465,19 @@ openerp.web_calendar = function(instance) {
         filter_click: function(e) {
             var self = this,
             responsibles = [];
-            //$e = $(e.target);
             self.view.selected_filters = [];
             this.$('div.oe_calendar_responsible input:checked').each(function() {
                 responsibles.push($(this).val());
                 
                 if (e==null && parseInt($(this).val())<0) {
                     $(this).prop('checked',false);
-;                   return;
+                    return;
                 }                    
                 self.view.selected_filters.push(parseInt($(this).val()));
             });
             
             if (e !== null) { //First intialize 
-                self.view.$calendar.fullCalendar('refetchEvents');  //RERENDER ALL...
+                self.view.$calendar.fullCalendar('refetchEvents');  
             }
 
             
@@ -1487,4 +1497,3 @@ openerp.web_calendar = function(instance) {
 
 };
 
-// vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
