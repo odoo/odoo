@@ -9,7 +9,8 @@
         <record id="res_user_another" model="res.users">
             <field name="name" >Another User</field>
             <field name="login" >Another Login</field>
-            <field name="partner_id" ref="base.res_partner_1"/>            
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="company_id" eval="False"/> 
         </record>    
 
         <record id="cal_contact_1" model="web_calendar.contacts">
@@ -87,7 +88,7 @@
         <record id="crm_meeting_6" model="crm.meeting">
             <field eval="1" name="active"/>
             <field name="user_id" ref="res_user_another"/>            
-            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_1'),ref('base.res_partner_4'),ref('base.res_partner_5'),ref('base.res_partner_6'),ref('base.res_partner_7')])]"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_4),ref('base.res_partner_4'),ref('base.res_partner_5'),ref('base.res_partner_6'),ref('base.res_partner_7')])]"/>
             <field name="name">Presentation for new Services</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
             <field eval="time.strftime('%Y-%m-18 2:00:00')" name="date"/>
