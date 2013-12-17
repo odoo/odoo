@@ -24,5 +24,12 @@
                 </div>
             ]]></field>
         </record>
+        
+        <record id="base.group_sale_quote_user" model="res.groups">
+            <field name="name">Post On Quotation</field>
+            <field name="category_id" ref="base.module_category_sales_management"/>
+            <field name="comment">the user wil allow to post on quotation if he has a valid url.</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
     </data>
 </openerp>
