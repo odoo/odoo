@@ -712,44 +712,53 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             // for dragging the debug widget around
             this.dragging  = false;
-            this.drag_x = 0;
-            this.drag_y = 0;
+            this.dragpos = {x:0, y:0};
 
-            this.mouseleave_handler = function(event){
+            function eventpos(event){
+                if(event.touches && event.touches[0]){
+                    return {x: event.touches[0].screenX, y: event.touches[0].screenY};
+                }else{
+                    return {x: event.screenX, y: event.screenY};
+                }
+            }
+
+            this.dragend_handler = function(event){
                 self.dragging = false;
             };
-            this.mouseup_handler = function(event){
-                self.dragging = false;
-            };
-            this.mousedown_handler = function(event){
+            this.dragstart_handler = function(event){
                 self.dragging = true;
-                self.drag_x = event.screenX;
-                self.drag_y = event.screenY;
+                self.dragpos = eventpos(event);
             };
-            this.mousemove_handler = function(event){
+            this.dragmove_handler = function(event){
                 if(self.dragging){
                     var top = this.offsetTop;
                     var left = this.offsetLeft;
-                    var dx   = event.screenX - self.drag_x;
-                    var dy   = event.screenY - self.drag_y;
+                    var pos  = eventpos(event);
+                    var dx   = pos.x - self.dragpos.x; 
+                    var dy   = pos.y - self.dragpos.y; 
 
-                    self.drag_x = event.screenX;
-                    self.drag_y = event.screenY;
+                    self.dragpos = pos;
 
                     this.style.right = 'auto';
                     this.style.bottom = 'auto';
                     this.style.left = left + dx + 'px';
                     this.style.top  = top  + dy + 'px';
                 }
+                event.preventDefault();
+                event.stopPropagation();
             };
         },
         start: function(){
             var self = this;
 
-            this.el.addEventListener('mouseleave', this.mouseleave_handler);
-            this.el.addEventListener('mouseup',    this.mouseup_handler);
-            this.el.addEventListener('mousedown',  this.mousedown_handler);
-            this.el.addEventListener('mousemove',  this.mousemove_handler);
+            this.el.addEventListener('mouseleave', this.dragend_handler);
+            this.el.addEventListener('mouseup',    this.dragend_handler);
+            this.el.addEventListener('touchend',   this.dragend_handler);
+            this.el.addEventListener('touchcancel',this.dragend_handler);
+            this.el.addEventListener('mousedown',  this.dragstart_handler);
+            this.el.addEventListener('touchstart', this.dragstart_handler);
+            this.el.addEventListener('mousemove',  this.dragmove_handler);
+            this.el.addEventListener('touchmove',  this.dragmove_handler);
 
             this.$('.toggle').click(function(){
                 var content = self.$('.content');
