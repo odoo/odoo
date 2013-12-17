@@ -14,7 +14,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 		this.data_loader = new openerp.web_graph.DataLoader(model);
 
-		this.id_seed = 0;
 		this.no_data = true;
 		this.stale_data = true;
 	},
