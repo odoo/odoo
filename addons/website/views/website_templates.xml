@@ -458,6 +458,25 @@
     </div>
 </template>
 
+<template id="403">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="container">
+                <h1 class="mt32">403: Forbidden</h1>
+                <p>The page you were looking for could not be authorized.</p>
+                <p>Maybe you were looking for one of these popular pages ?</p>
+                <ul>
+                    <li><a href="/">Homepage</a></li>
+                    <li><a href="/page/website.contactus/">Contact Us</a></li>
+                </ul>
+            </div>
+            <t t-if="editable or request.debug">
+                <t t-call="website.http_error_debug"/>
+            </t>
+        </div>
+    </t>
+</template>
+
 <template id="404">
     <t t-call="website.layout">
         <div id="wrap">
@@ -486,32 +505,60 @@
 </template>
 
 <template id="500">
-    <t t-call="website.http_error"/>
-</template>
+    <!-- This template should not use any variable except those provided by website.ir_http._handle_exception -->
+    <html>
+        <head>
+            <title t-esc="status_message">Internal Server Error</title>
+            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+            <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            <link rel='stylesheet' href='/website/static/src/css/website.css'/>
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+        </head>
+        <body>
+            <div id="wrapwrap">
+                    <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <div class="collapse navbar-collapse navbar-top-collapse">
+                                <ul class="nav navbar-nav">
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="javascript: window.history.back()">Back</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <div class="mb32">
+                    <div class="oe_structure">
+                        <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
+                    </div>
 
-<template id="403">
-    <t t-call="website.layout">
-      <div id="wrap">
-        <div class="container">
-            <h1 class="mt32">403: Forbidden</h1>
-            <p>
-                The page you were looking for could not be
-                authorized.
-            </p>
-            <p>
-                Maybe you were looking for one of these
-                popular pages ?
-            </p>
-            <ul>
-                <li><a href="/">Homepage</a></li>
-                <li><a href="/page/website.contactus/">Contact Us</a></li>
-            </ul>
-        </div>
-        <t t-if="editable or request.debug">
-            <t t-call="website.http_error_debug"/>
-        </t>
-      </div>
-    </t>
+                    <div class="container" t-if="views">
+                        <div class="bs-callout bs-callout-danger" t-if="qweb_template and editable">
+                            <h4>Template fallback</h4>
+                            <p>An error occured while rendering the template <code t-esc="qweb_template"/>.</p>
+                            <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
+                            <form action="/website/reset_templates" method="post">
+                                <ul class="oe_template_fallback">
+                                    <li t-foreach="views" t-as="view">
+                                        <label>
+                                            <input type="checkbox" name="templates" t-att-value="view.id" t-att-checked="'checked' if view_first else None"/>
+                                            <t t-esc="view.name"/>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <input type="hidden" name="redirect" t-att-value="request.httprequest.path"/>
+                                <input type="submit" value="Reset selected templates" onclick="this.disabled = true"/>
+                            </form>
+                        </div>
+                    </div>
+
+                    <t t-if="editable or request.debug">
+                        <t t-call="website.http_error_debug"/>
+                    </t>
+                </div>
+            </div>
+        </body>
+    </html>
 </template>
 
 <template id="robots">
