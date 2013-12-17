@@ -22,7 +22,8 @@
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 
-class sale_order(osv.Model):
+
+class SaleOrder(osv.Model):
     _inherit = "sale.order"
 
     _columns = {
@@ -30,17 +31,21 @@ class sale_order(osv.Model):
     }
 
     def _get_website_data(self, cr, uid, order, context):
-        return {}
+        return {
+            'partner': order.partner_id.id,
+            'order': order
+        }
 
     def get_total_quantity(self, cr, uid, ids, context=None):
         order = self.browse(cr, uid, ids[0], context=context)
         return int(sum(l.product_uom_qty for l in (order.order_line or [])))
 
 
-class sale_order_line(osv.Model):
+class SaleOrderLine(osv.Model):
     _inherit = "sale.order.line"
 
     def _recalculate_product_values(self, cr, uid, ids, product_id=0, context=None):
+        # TDE FIXME: seems to be defined several times -> fix me ?
         if context is None:
             context = {}
         user_obj = self.pool.get('res.users')

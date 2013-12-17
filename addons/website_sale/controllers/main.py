@@ -589,8 +589,7 @@ class Ecommerce(http.Controller):
         # alread a transaction: forward to confirmation
         tx = context.get('website_sale_transaction')
         if tx and not tx.state == 'draft':
-            print 'embetatn'
-            # return request.redirect('/shop/confirmation/%s' % order.id)
+            return request.redirect('/shop/confirmation/%s' % order.id)
 
         partner_id = False
         shipping_partner_id = False

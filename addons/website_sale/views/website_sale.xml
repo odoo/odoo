@@ -467,13 +467,13 @@
                           <col width="120"/>
                       </colgroup>
                       <thead>
-                          <tr style="border-top: 1px solid #000">
+                          <tr style="border-top: 1px solid #000" id="order_total">
                               <th><h3>Total:</h3></th>
                               <th class="text-right">
                                 <h3><t t-call="website_sale.total"/></h3>
                               </th>
                           </tr>
-                          <tr class="text-muted">
+                          <tr class="text-muted" id="order_total_taxes">
                               <td><abbr title="Taxes may be updated after providing shipping address">Taxes:</abbr></td>
                               <td class="text-right">
                                   <span t-field="website_sale_order.amount_tax" t-field-options='{
@@ -865,14 +865,16 @@
                       <col width="120"/>
                   </colgroup>
                   <thead>
-                      <tr style="border-top: 1px solid #000">
+                      <tr style="border-top: 1px solid #000" id="order_total">
                           <th><h3>Total:</h3></th>
-                          <th class="text-right"><h3><span t-field="website_sale_order.amount_total" t-field-options='{
+                          <th class="text-right">
+                            <h3><span t-field="website_sale_order.amount_total" t-field-options='{
                               "widget": "monetary",
                               "display_currency": "website.pricelist_id.currency_id"
-                          }'/></h3></th>
+                            }'/></h3>
+                          </th>
                       </tr>
-                      <tr class="text-muted">
+                      <tr class="text-muted" id="order_total_taxes">
                           <td>Taxes:</td>
                           <td class="text-right"><span t-field="website_sale_order.amount_tax" t-field-options='{
                               "widget": "monetary",
@@ -907,8 +909,8 @@
             </div>
           </div>
 
-          <div class="js_payment mb64" t-if="acquirers" id="payment_method">
-              <h3>Choose your payment method</h3>
+          <div class="js_payment mb64 row" t-if="acquirers" id="payment_method">
+              <h4>Choose your Payment Method</h4>
               <div class="col-lg-5 col-sm-6">
                   <t t-foreach="acquirers or []" t-as="acquirer">
                       <label t-if="acquirer.button" class="oe_sale_acquirer_logo" style="display: block;">
