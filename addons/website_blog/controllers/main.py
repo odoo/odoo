@@ -209,6 +209,7 @@ class WebsiteBlog(http.Controller):
             'tags': tags,
             'tag': tag and request.registry['blog.tag'].browse(cr, uid, int(tag), context=context) or None,
             'blog_post': blog_post,
+            'main_object': blog_post,
             'pager': pager,
             'nav_list': self.nav_list(),
             'enable_editor': enable_editor,

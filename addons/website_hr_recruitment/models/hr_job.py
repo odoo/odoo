@@ -5,7 +5,8 @@ from openerp.osv import osv, fields
 
 class hr_job(osv.osv):
     """ Override to add website-related columns: published, description. """
-    _inherit = "hr.job"
+    _name = 'hr.job'
+    _inherit = ['hr.job','website.seo.metadata']
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, '')

@@ -81,11 +81,11 @@ class WebsiteCustomer(http.Controller):
             return self.customers(**post)
 
         partner_obj = request.registry['res.partner']
-        if values['partner_data']['assigned_partner_id']:
+        if values['partner_data'].get('assigned_partner_id', None):
             values['assigned_partner_data'] = partner_obj.read(
                 request.cr, openerp.SUPERUSER_ID, [values['partner_data']['assigned_partner_id'][0]],
                 request.website.get_partner_white_list_fields(), context=request.context)[0]
-        if values['partner_data']['implemented_partner_ids']:
+        if values['partner_data'].get('implemented_partner_ids', None):
             implemented_partners_data = partner_obj.read(
                 request.cr, openerp.SUPERUSER_ID, values['partner_data']['implemented_partner_ids'],
                 request.website.get_partner_white_list_fields(), context=request.context)
@@ -94,4 +94,5 @@ class WebsiteCustomer(http.Controller):
                 if data.get('website_published'):
                     values['implemented_partners_data'].append(data)
 
+        values['main_object'] = values['partner']
         return request.website.render("website_customer.details", values)

@@ -69,7 +69,7 @@
                             $doc.one('shown.bs.modal', function () {
                                 $('.modal button.btn-primary').one('click', function () {
                                     $doc.off('hide.bs.modal', onStop);
-                                    self.moveToStep(step.trigger.modal.afterSubmit);
+                                    (callback || self.moveToNextStep).apply(self, [step.trigger.modal.afterSubmit]);
                                 });
                                 (callback || self.moveToNextStep).apply(self);
                             });
@@ -290,6 +290,7 @@
             return this._super();
         },
         registerTour: function (tour) {
+            var self = this;
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
             var test = {
@@ -343,9 +344,17 @@
                                 currentStep = actionSteps.shift();
                             }
                         }
-                        setTimeout(function () {
-                            executeStep(currentStep);
-                        }, 0);
+                        if (currentStep.snippet && $(currentStep.element).length === 0) {
+                            self.on('rte:ready', this, function () {
+                                executeStep(currentStep);
+                            });
+                        } else {
+                            setTimeout(function () {
+                                setTimeout(function () {
+                                   executeStep(currentStep);
+                                }, 0);
+                            }, 0);
+                        }
                     }
                 },
                 reset: function () {
