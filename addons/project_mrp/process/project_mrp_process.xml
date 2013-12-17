@@ -46,14 +46,15 @@
         Process Transition
     -->
 
-        <!-- This "foreign" process node is duplicated here from the corresponding sale_stock node because
+        <!-- This process node is duplicated here from the corresponding sale_stock node because
              `project_mrp` implements a basic procurement system for services without actually using the
-             full-fledged procurement process from sale_stock, and without the dependency. So it stil
-             represents a "procurement system".
-             TODO: To cleanup this invalid foreign external ID, the node should probably be moved to the
+             full-fledged procurement process from sale_stock, and without the dependency. So it still
+             represents a "procurement system". Sharing the external ID causes other problems, so
+             we duplicate it instead.
+             TODO: To cleanup this duplicate node, it should probably be moved to the
              `sale` module directly, and removed from both `sale_stock` and `project_mrp`.
         --> 
-        <record id="sale_stock.process_node_saleprocurement0" model="process.node">
+        <record id="process_node_saleprocurement0" model="process.node">
             <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
             <field name="model_id" ref="procurement.model_procurement_order"/>
             <field name="kind">subflow</field>
@@ -68,7 +69,7 @@
             <field eval="&quot;&quot;&quot;Procurement Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;if product type is 'service' then it creates the task.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_procuretasktask0"/>
-            <field model="process.node" name="source_node_id" ref="sale_stock.process_node_saleprocurement0"/>
+            <field model="process.node" name="source_node_id" ref="process_node_saleprocurement0"/>
         </record>
 
         <record id="process_transition_createtask0" model="process.transition">
