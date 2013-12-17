@@ -878,6 +878,22 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             FastClick.attach(document.body);
 
         },
+
+        disable_rubberbanding: function(){
+            // prevent the pos body from being scrollable. 
+            document.body.addEventListener('touchmove',function(event){
+                console.log('touchmove_prevent',event);
+                var node = event.target;
+                while(node){
+                    if(node.classList && node.classList.contains('touch-scrollable')){
+                        console.log('not prevented');
+                        return;
+                    }
+                    node = node.parentNode;
+                }
+                event.preventDefault();
+            });
+        },
       
         start: function() {
             var self = this;
@@ -893,11 +909,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 $('document').off();
                 $('.oe_web_client').off();
                 $('.openerp_webclient_container').off();
-
-                /*this.el.addEventHandler('click',function(event){
-                    event.stopPropagation();
-                    event.preventDefault();
-                });*/
 
                 self.build_currency_template();
                 self.renderElement();
@@ -1085,6 +1096,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.debug_widget = new module.DebugWidget(this);
                 this.debug_widget.appendTo(this.$('.pos-content'));
             }
+
+            this.disable_rubberbanding();
         },
 
         changed_pending_operations: function () {

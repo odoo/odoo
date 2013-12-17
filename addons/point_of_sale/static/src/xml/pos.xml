@@ -115,7 +115,7 @@
     </t>
 
     <t t-name="PaypadWidget">
-        <div class="paypad">
+        <div class="paypad touch-scrollable">
         </div>
     </t>
 
@@ -197,7 +197,7 @@
 
     <t t-name="ProductListWidget">
         <div class='product-list-container'>
-            <div class="product-list-scroller">
+            <div class="product-list-scroller touch-scrollable">
                 <div class="product-list">
                 </div>
             </div>
@@ -253,7 +253,7 @@
     </t>
 
     <t t-name="PaymentScreenWidget">
-        <div class="payment-screen screen">
+        <div class="payment-screen screen touch-scrollable">
             <div class="pos-payment-container">
                 <div class='payment-due-total'></div>
                 <div class='payment-lines'></div>
@@ -282,7 +282,7 @@
     </t>
 
     <t t-name="ReceiptScreenWidget">
-        <div class="receipt-screen screen" >
+        <div class="receipt-screen screen touch-scrollable" >
             <div class="pos-step-container">
                 <div class="pos-receipt-container">
                 </div>
@@ -305,7 +305,7 @@
 
 
     <t t-name="ScanProductScreenWidget">
-        <div class="scan-product-screen screen">
+        <div class="scan-product-screen screen touch-scrollable">
             <header class='rightpane-header'><h2>Please scan an item</h2></header>
             <img src="/point_of_sale/static/src/img/scan.png" />
         </div>
@@ -444,7 +444,7 @@
 
     <t t-name="OrderWidget">
         <div class="order-container">
-            <div class="order-scroller">
+            <div class="order-scroller touch-scrollable">
                 <div class="order">
                     <ul class="orderlines">
                         <t t-if="orderlines.length === 0">
