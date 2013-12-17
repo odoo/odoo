@@ -19,6 +19,7 @@ class WebsiteCustomer(http.Controller):
         '/customers/country/<model("res.country"):country>/page/<int:page>/'
     ], type='http', auth="public", multilang=True)
     def customers(self, country=None, page=0, **post):
+        website.preload_records(country)
         cr, uid, context = request.cr, request.uid, request.context
         partner_obj = request.registry['res.partner']
         partner_name = post.get('search', '')
@@ -76,6 +77,7 @@ class WebsiteCustomer(http.Controller):
 
     @website.route(['/customers/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
     def customer(self, partner, **post):
+        website.preload_records(partner)
         values = website_partner.get_partner_template_value(partner)
         if not values:
             return self.customers(**post)
