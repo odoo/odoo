@@ -141,8 +141,8 @@ ul.oe_menu_editor
 
 // bootstrap makes .btn elements unselectable -> RTE double-click can't know
 // about them either
-.oe_editable .btn
-    @include user-select(auto)
+.oe_editable .btn, .btn.oe_editable
+    +user-select(auto)
 
 .modal-dialog.select-image
     width: 80%
