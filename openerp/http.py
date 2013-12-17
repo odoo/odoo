@@ -403,7 +403,7 @@ class HttpRequest(WebRequest):
         super(HttpRequest, self).__init__(*args)
         params = self.httprequest.args.to_dict()
         params.update(self.httprequest.form.to_dict())
-        params.update(self.httprequest.files)
+        params.update(self.httprequest.files.to_dict())
         params.pop('session_id', None)
         self.params = params
 
