@@ -78,14 +78,16 @@
         </record>
 
         <record id="action_config_settings_google_calendar" model="ir.actions.act_window">
-            <field name="name">Synchronization</field>
+            <field name="name">API Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">calendar.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_calendar_config_settings" parent="base_calendar.menu_calendar_configuration" action="action_config_settings_google_calendar" groups="base.group_no_one"/>
+        <menuitem id="menu_calendar_google_main" parent="base.menu_administration"  name="Google Calendar"/>
+        <menuitem id="menu_calendar_google_config" name="API credentials" parent="google_calendar.menu_calendar_google_main" action="action_config_settings_google_calendar"/>
+        <menuitem id="menu_calendar_google_tech_config" name="Calendar" parent="base.menu_custom" groups="base.group_no_one"/>
 
     </data>
 </openerp>

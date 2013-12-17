@@ -49,7 +49,6 @@ openerp.google_calendar = function(instance) {
             if (this.dataset.model == "crm.meeting") {
                 var button = QWeb.render('GoogleCalendar.buttonSynchro');
                 this.$el.find('.oe_calendar_filter').prepend(button);
-                console.log("added");
            }
         }
     });
