@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -633,13 +633,6 @@
 }
 .openerp.oe_tooltip .oe_tooltip_message {
   max-width: 310px;
-}
-.tooltip-inner {
-  text-align: left !important;
-}
-.tooltip.bottom .tooltip-arrow {
-  left: 12% !important;
-  margin-top: 0.5px;
 }
 .openerp .oe_notebook {
   margin: 8px 0;
@@ -2298,7 +2291,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkGreen;
+  color: darkgreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -3442,7 +3435,6 @@ div.ui-widget-overlay {
     overflow: hidden !important;
   }
 }
-
 .nav li > a {
   padding: 3px 4px 2px 18px;
   color: #4c4c4c;
@@ -3469,6 +3461,14 @@ div.ui-widget-overlay {
   font-weight: normal;
   font-size: 11px;
   background-color: #7c7bad;
+}
+
+.tooltip-inner {
+  text-align: left;
+}
+
+.tooltip.bottom .tooltip-arrow {
+  left: 35%;
 }
 
 button, body {
