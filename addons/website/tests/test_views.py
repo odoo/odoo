@@ -92,9 +92,16 @@ class TestViewSaving(common.TransactionCase):
         self.eq(View.to_field_ref(self.cr, self.uid, embedded, context=None),
                 h.SPAN({'t-field': 'bob', 'class': 'foo bar', 'id': 'whop'}))
 
-
     def test_replace_arch(self):
         replacement = h.P("Wheee")
+
+        result = self.registry('ir.ui.view').replace_arch_section(
+            self.cr, self.uid, self.view_id, None, replacement)
+
+        self.eq(result, h.DIV("Wheee"))
+
+    def test_replace_arch_2(self):
+        replacement = h.DIV(h.P("Wheee"))
 
         result = self.registry('ir.ui.view').replace_arch_section(
             self.cr, self.uid, self.view_id, None, replacement)
@@ -110,7 +117,7 @@ class TestViewSaving(common.TransactionCase):
 
         self.eq(result, h.DIV(
             h.DIV(
-                h.H1("I am the greatest title alive!"),
+                h.H3("I am the greatest title alive!"),
                 h.UL(
                     h.LI("Item 1"),
                     h.LI("Item 2"),
