@@ -58,6 +58,12 @@ class view_custom(osv.osv):
 class view(osv.osv):
     _name = 'ir.ui.view'
 
+    def _get_model_data(self, cr, uid, ids, *args, **kwargs):
+        ir_model_data = self.pool.get('ir.model.data')
+        data_ids = ir_model_data.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
+        result = dict(zip(ids, data_ids))
+        return result
+
     _columns = {
         'name': fields.char('View Name', required=True),
         'model': fields.char('Object', size=64, select=True),
@@ -77,6 +83,7 @@ class view(osv.osv):
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field',size=64),
+        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data", store=True),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
@@ -167,7 +174,16 @@ class view(osv.osv):
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
         self.read_template.clear_cache(self)
-        return super(view, self).write(cr, uid, ids, vals, context)
+        ret = super(view, self).write(cr, uid, ids, vals, context)
+
+        if not context.get('install_mode', False):
+            # touched views become noupdatable
+            for id in ids:
+                _view = self.browse(cr, uid, id, context=context)
+                _view.model_data_id.write({
+                    'noupdate': True
+                })
+        return ret
 
     # default view selection
 
