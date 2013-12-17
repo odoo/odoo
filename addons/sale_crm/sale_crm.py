@@ -26,6 +26,18 @@ from dateutil import relativedelta
 from openerp import tools
 from openerp.osv import osv, fields
 
+class res_users(osv.Model):
+    _inherit = 'res.users'
+    _columns = {
+        'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
+    }
+
+    def __init__(self, pool, cr):
+        init_res = super(res_users, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        self.SELF_WRITEABLE_FIELDS.extend(['default_section_id'])
+        return init_res
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -33,6 +45,17 @@ class sale_order(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'categ_ids': fields.many2many('crm.case.categ', 'sale_order_category_rel', 'order_id', 'category_id', 'Categories', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]", context="{'object_name': 'crm.lead'}")
+    }
+
+    def _get_default_section_id(self, cr, uid, context=None):
+        """ Gives default section by checking if present in the context """
+        section_id = self.pool.get('crm.lead')._resolve_section_id_from_context(cr, uid, context=context) or False
+        if not section_id:
+            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+        return section_id
+
+    _defaults = {
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
     }
 
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
@@ -91,21 +114,6 @@ class crm_case_section(osv.osv):
 
     def action_forecast(self, cr, uid, id, value, context=None):
         return self.write(cr, uid, [id], {'invoiced_forecast': value}, context=context)
-
-
-class res_users(osv.Model):
-    _inherit = 'res.users'
-    _columns = {
-        'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
-    }
-
-    def __init__(self, pool, cr):
-        init_res = super(res_users, self).__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        self.SELF_WRITEABLE_FIELDS.extend(['default_section_id'])
-        return init_res
-
 
 class sale_crm_lead(osv.Model):
     _inherit = 'crm.lead'
