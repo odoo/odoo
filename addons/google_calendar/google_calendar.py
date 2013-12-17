@@ -115,6 +115,7 @@ class google_calendar(osv.osv):
         params = {
                  'fields': 'items,nextPageToken',
                  'access_token' : token,
+                 'maxResults':1000
 #                 'orderBy' : 'id', #Allow to create the main recurrence event, before instance of it ! DOESNT WORK ACTUALLY ON API GMAIL
                 }
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
@@ -148,6 +149,10 @@ class google_calendar(osv.osv):
            
         update_date = datetime.strptime(content['updated'],"%Y-%m-%dT%H:%M:%S.%fz")
         crm_meeting.write(cr, uid, [oe_event.id], {'oe_update_date':update_date})
+        
+        if context['curr_attendee']:
+            self.pool.get('calendar.attendee').write(cr,uid,[context['curr_attendee']], {'oe_synchro_date':update_date},context)
+
              
     def update_an_event(self, cr, uid,event, context=None):
         gs_pool = self.pool.get('google.service')
@@ -431,7 +436,7 @@ class google_calendar(osv.osv):
                             print "### Should never be here : L462"
                             raise("error L 462")
                             
-                        if event['OE_update'] != event['GG_update']:
+                        if event['OE_update'].split('.')[0] != event['GG_update'].split('.')[0]:
                             if event['OE_update'] < event['GG_update']:
                                 event['td_source'] = 'GG'
                             elif event['OE_update'] > event['GG_update']:
@@ -455,7 +460,7 @@ class google_calendar(osv.osv):
                                     event['td_comment'] = 'Simply Update... I\'m a single event'                                
                                 
                         else:
-                            if event['OE_synchro'] < event['OE_update']:
+                            if not event['OE_synchro'] or event['OE_synchro'].split('.')[0] < event['OE_update'].split('.')[0]:
                                 event['td_source'] = 'OE'
                                 event['td_action'] = "UPDATE"     
                                 event['td_comment'] = 'Event already updated by another user, but not synchro with my google calendar'
@@ -507,18 +512,20 @@ class google_calendar(osv.osv):
                 
                 #############
                 ### DEBUG ###   
-                #############                
-#                 print "  Real Event  %s (%s)" %  (current_event[0],event['OE_event_id'])
-#                 print "    Found       OE:%5s vs GG: %5s" % (event['OE_found'],event['GG_found'])
-#                 print "    Recurrence  OE:%5s vs GG: %5s" % (event['OE_isRecurrence'],event['GG_isRecurrence'])
-#                 print "    Instance    OE:%5s vs GG: %5s" % (event['OE_isInstance'],event['GG_isInstance'])
-#                 print "    Update      OE: %10s " % (event['OE_update'])  
-#                 print "    Update      GG: %10s " % (event['GG_update'])
-#                 print "    Status      OE:%5s vs GG: %5s" % (event['OE_status'],event['GG_status'])
-#                 print "    Action     %s" % (event['td_action'])
-#                 print "    Source     %s" % (event['td_source'])
-#                 print "    comment    %s" % (event['td_comment'])
-         
+                ############# 
+                if event['td_action'] and event['td_action'] != 'None':               
+                    print "  Real Event  %s (%s)" %  (current_event[0],event['OE_event_id'])
+                    print "    Found       OE:%5s vs GG: %5s" % (event['OE_found'],event['GG_found'])
+                    print "    Recurrence  OE:%5s vs GG: %5s" % (event['OE_isRecurrence'],event['GG_isRecurrence'])
+                    print "    Instance    OE:%5s vs GG: %5s" % (event['OE_isInstance'],event['GG_isInstance'])
+                    print "    Synchro      OE: %10s " % (event['OE_synchro']) 
+                    print "    Update      OE: %10s " % (event['OE_update'])  
+                    print "    Update      GG: %10s " % (event['GG_update'])
+                    print "    Status      OE:%5s vs GG: %5s" % (event['OE_status'],event['GG_status'])
+                    print "    Action     %s" % (event['td_action'])
+                    print "    Source     %s" % (event['td_source'])
+                    print "    comment    %s" % (event['td_comment'])
+             
          
                 context['curr_attendee'] = event.get('OE_attendee_id',False)
                  

@@ -968,7 +968,7 @@ class crm_meeting(osv.Model):
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
         #'attendee_ids': fields.many2many('calendar.attendee', 'crmmeeting_attendee_rel', 'crmmeeting_id', 'attendee_id', 'Attendees', ondelete='cascade'),
         'partner_ids': fields.many2many('res.partner', string='Attendees', states={'done': [('readonly', True)]}),
-        'alarm_ids': fields.many2many('calendar.alarm', string='Reminders'),
+        'alarm_ids': fields.many2many('calendar.alarm', string='Reminders',ondelete="restrict"),
     }
     _defaults = {
         'end_type': 'count',
