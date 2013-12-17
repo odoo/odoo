@@ -1866,16 +1866,13 @@ class stock_move(osv.osv):
         return res
 
     def action_consume(self, cr, uid, ids, quantity, location_id=False, context=None):
-        """ Consumed product with specific quatity from specific source location
-        @param cr: the database cursor
-        @param uid: the user id
+        """ Consumed product with specific quantity from specific source location. This correspond to a split of the move (or write if the quantity to consume is >= than the quantity of the move) followed by an action_done
         @param ids: ids of stock move object to be consumed
-        @param quantity : specify consume quantity
+        @param quantity : specify consume quantity (given in move UoM)
         @param location_id : specify source location
-        @param context: context arguments
         @return: Consumed lines
         """
-        #quantity should be given in MOVE UOM
+        uom_obj = self.pool.get('product.uom')
         if context is None:
             context = {}
         if quantity <= 0:
@@ -1883,51 +1880,31 @@ class stock_move(osv.osv):
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
+            uom_qty = uom_obj._compute_qty(cr, uid, move.product_id.uom_id.id, quantity, move.product_uom.id)
             if move_qty <= 0:
                 raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
-            quantity_rest = move.product_qty
-            quantity_rest -= quantity
-            uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
-            if quantity_rest <= 0:
-                quantity_rest = 0
-                uos_qty_rest = 0
-                quantity = move.product_qty
-
-            uos_qty = quantity / move_qty * move.product_uos_qty
+            quantity_rest = move.product_qty - uom_qty
             if quantity_rest > 0:
-                default_val = {
-                    'product_uom_qty': quantity,
-                    'product_uos_qty': uos_qty,
-                    'state': move.state,
-                    'location_id': location_id or move.location_id.id,
-                }
-                current_move = self.copy(cr, uid, move.id, default_val)
-                res += [current_move]
-                update_val = {}
-                update_val['product_uom_qty'] = quantity_rest
-                update_val['product_uos_qty'] = uos_qty_rest
-                self.write(cr, uid, [move.id], update_val)
-
+                ctx = context.copy()
+                if location_id:
+                    ctx['source_location_id'] = location_id
+                res.append(self.split(cr, uid, move, move_qty - quantity_rest, ctx))
             else:
-                quantity_rest = quantity
-                uos_qty_rest =  uos_qty
-                res += [move.id]
-                update_val = {
-                        'product_uom_qty' : quantity_rest,
-                        'product_uos_qty' : uos_qty_rest,
-                        'location_id': location_id or move.location_id.id,
-                }
-                self.write(cr, uid, [move.id], update_val)
+                res.append(move.id)
+                if location_id:
+                    self.write(cr, uid, [move.id], {'location_id': location_id}, context=context)
 
         self.action_done(cr, uid, res, context=context)
         return res
 
     def split(self, cr, uid, move, qty, context=None):
-        """ Splits qty from move move into a new move """
-        if move.product_qty == qty:
+        """ Splits qty from move move into a new move
+        :param move: browse record
+        :param qty: float. quantity to split (given in product UoM)
+        :param context: dictionay. can contains the special key 'source_location_id' in order to force the source location when copying the move
+        """
+        if move.product_qty <= qty or qty == 0:
             return move.id
-        if (move.product_qty < qty) or (qty == 0):
-            return False
 
         uom_obj = self.pool.get('product.uom')
         context = context or {}
@@ -1946,6 +1923,8 @@ class stock_move(osv.osv):
             'move_dest_id': False,
             'reserved_quant_ids': []
         }
+        if context.get('source_location_id'):
+            defaults['location_id'] = context['source_location_id']
         new_move = self.copy(cr, uid, move.id, defaults)
 
         ctx = context.copy()
