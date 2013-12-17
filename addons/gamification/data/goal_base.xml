@@ -81,7 +81,7 @@
         <record model="gamification.challenge" id="challenge_base_discover">
             <field name="name">Complete your Profile</field>
             <field name="period">once</field>
-            <field name="visibility_mode">progressbar</field>
+            <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
@@ -91,7 +91,7 @@
         <record model="gamification.challenge" id="challenge_base_configure">
             <field name="name">Setup your Company</field>
             <field name="period">once</field>
-            <field name="visibility_mode">progressbar</field>
+            <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="user_ids" eval="[(4, ref('base.user_root'))]" />
             <field name="state">inprogress</field>

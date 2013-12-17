@@ -10,7 +10,7 @@
                 <h4><t t-esc="challenge.name" /></h4>
             </div>
 
-            <t t-if="challenge.visibility_mode == 'progressbar'">
+            <t t-if="challenge.visibility_mode == 'personal'">
                 <div class="oe_table oe_goals_list">
                     <div t-foreach="challenge.goals" t-as="goal" t-attf-class="oe_row oe_goal_outer_box #{goal.state == 'reached' ? 'oe_goal_reached' : ''} #{goal.definition_display != 'progress' ? 'oe_no_progress' : ''}">
                             <t t-if="goal.definition_display == 'progress'">
@@ -42,7 +42,7 @@
                 </div>
             </t>
 
-            <t t-if="challenge.visibility_mode == 'board'">
+            <t t-if="challenge.visibility_mode == 'ranking'">
                 <div t-foreach="challenge.lines" t-as="line" class="oe_goals_list oe_table">
                     <div class="oe_row">
                         <div class="oe_cell oe_thead" colspan="3" t-attf-title="#{line.definition_description ? line.definition_description : ''}">

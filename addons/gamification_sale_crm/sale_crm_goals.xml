@@ -129,7 +129,7 @@
         <record model="gamification.challenge" id="challenge_crm_sale">
             <field name="name">Monthly Sales Targets</field>
             <field name="period">monthly</field>
-            <field name="visibility_mode">board</field>
+            <field name="visibility_mode">ranking</field>
             <field name="autojoin_group_id" eval="ref('base.group_sale_salesman')" />
             <field name="report_message_frequency">weekly</field>
             <field name="report_header">The following message contains the current progress of the sale team based on several criterias. The progress is reinitialised each month and shared weekly.</field>
@@ -138,7 +138,7 @@
         <record model="gamification.challenge" id="challenge_crm_marketing">
             <field name="name">Lead Acquisition</field>
             <field name="period">monthly</field>
-            <field name="visibility_mode">progressbar</field>
+            <field name="visibility_mode">ranking</field>
             <field name="autojoin_group_id" eval="ref('base.group_sale_salesman')" />
             <field name="report_message_frequency">weekly</field>
             <field name="report_header">The following message contains the current progress of the marketing team based on several criterias. The progress is reinitialised each month and shared weekly.</field>

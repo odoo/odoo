@@ -101,6 +101,11 @@ class gamification_challenge(osv.Model):
                 res[challenge.id] = False
 
         return res
+    def _get_categories(self, cr, uid, context=None):
+            return [
+                ('hr', 'Human Ressources / Engagement'),
+                ('other', 'Settings / Gamification Tools'),
+            ]
 
     _sort = 'end_date, start_date, name, id'
     _columns = {
@@ -153,8 +158,8 @@ class gamification_challenge(osv.Model):
         'reward_failure': fields.boolean('Reward Bests if not Succeeded?'),
 
         'visibility_mode': fields.selection([
-                ('progressbar', 'Individual Goals'),
-                ('board', 'Leader Board (Group Ranking)'),
+                ('personal', 'Individual Goals'),
+                ('ranking', 'Leader Board (Group Ranking)'),
             ],
             string="Display Mode", required=True),
         'report_message_frequency': fields.selection([
@@ -174,20 +179,16 @@ class gamification_challenge(osv.Model):
             help="Never reminded if no value or zero is specified."),
         'last_report_date': fields.date('Last Report Date'),
         'next_report_date': fields.function(_get_next_report_date,
-            type='date',
-            string='Next Report Date'),
+            type='date', string='Next Report Date', store=True),
 
-        'category': fields.selection([
-                ('hr', 'Human Ressources / Engagement'),
-                ('other', 'Settings / Gamification Tools'),
-            ],
+        'category': fields.selection(lambda s, *a, **k: s._get_categories(*a, **k),
             string="Appears in", help="Define the visibility of the challenge through menus", required=True),
         }
 
     _defaults = {
         'period': 'once',
         'state': 'draft',
-        'visibility_mode': 'progressbar',
+        'visibility_mode': 'personal',
         'report_message_frequency': 'never',
         'last_report_date': fields.date.today,
         'start_date': fields.date.today,
@@ -521,7 +522,7 @@ class gamification_challenge(osv.Model):
         # template_env = TemplateHelper()
         temp_obj = self.pool.get('email.template')
         ctx = context.copy()
-        if challenge.visibility_mode == 'board':
+        if challenge.visibility_mode == 'ranking':
             lines_boards = self.get_board_goal_info(cr, uid, challenge, subset_goal_ids, context)
 
             ctx.update({'lines_boards': lines_boards})

@@ -25,7 +25,7 @@
                     ('user_id','=',user.id),
                     '&amp;',
                         ('challenge_id.user_ids','in',user.id),
-                        ('challenge_id.visibility_mode','=','board')]</field>
+                        ('challenge_id.visibility_mode','=','ranking')]</field>
         </record>
 
         <record id="goal_gamification_manager_visibility" model="ir.rule">

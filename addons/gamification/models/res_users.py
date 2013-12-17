@@ -72,7 +72,7 @@ class res_users_gamification_group(osv.Model):
             user = self.browse(cr, uid, uid, context=context)
             serialized_goals_info['currency'] = user.company_id.currency_id.id
 
-            if challenge.visibility_mode == 'board':
+            if challenge.visibility_mode == 'ranking':
                 # board report should be grouped by line for all users
                 goals_info = challenge_obj.get_board_goal_info(cr, uid, challenge, subset_goal_ids=False, context=context)
 
