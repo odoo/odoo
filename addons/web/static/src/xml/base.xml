@@ -1050,11 +1050,18 @@
     </div>
 </t>
 <t t-name="StageMode.priority">
-    <t t-foreach="res" t-as="rec">
-            <a t-if="widget.get('value') === rec.name" t-att-data="rec.name"  t-att-title="rec.description" >
-                <t t-raw="rec.body" />
-            </a>
+    <ul style="list-style: none;">
+    <t t-foreach="res" t-as="test" >
+        <t t-if="widget.get('value') gte test.name and !test_first">
+            <li class="oe_left"><a  t-att-data-value="test.name - 1" href="#"><t t-raw="test.body"/></a></li>
+        </t>
     </t>
+    <t t-foreach="res" t-as="test" >
+        <t t-if="widget.get('value') lt test.name">
+            <li class="oe_left"><a  t-att-data-value="test.name" href="#"><t t-raw="res[0].body"/></a></li>
+        </t>
+    </t>
+    </ul>
 </t>
 <t t-name="FieldEmail">
     <span class="oe_form_field oe_form_field_email" t-att-style="widget.node.attrs.style">
