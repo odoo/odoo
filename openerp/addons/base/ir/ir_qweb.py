@@ -206,7 +206,9 @@ class QWeb(orm.AbstractModel):
         if name in context.templates:
             return context.templates[name]
 
-        raise KeyError('qweb: template "%s" not found' % name)
+        e = KeyError('qweb: template "%s" not found' % name)
+        setattr(e, 'qweb_template', name)
+        raise e
 
     def eval(self, expr, v):
         try:
