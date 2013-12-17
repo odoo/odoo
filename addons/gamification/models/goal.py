@@ -32,16 +32,15 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class gamification_goal_type(osv.Model):
-    """Goal type definition
+class gamification_goal_definition(osv.Model):
+    """Goal definition
 
-    A goal type defining a way to set an objective and evaluate it
+    A goal definition contains the way to evaluate an objective
     Each module wanting to be able to set goals to the users needs to create
-    a new gamification_goal_type
+    a new gamification_goal_definition
     """
-    _name = 'gamification.goal.type'
-    _description = 'Gamification goal type'
-    _order = 'sequence'
+    _name = 'gamification.goal.definition'
+    _description = 'Gamification goal definition'
 
     def _get_suffix(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, '')
@@ -60,7 +59,7 @@ class gamification_goal_type(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Goal Type', required=True, translate=True),
+        'name': fields.char('Goal Definition', required=True, translate=True),
         'description': fields.text('Goal Description'),
         'monetary': fields.boolean('Monetary Value', help="The target and current value are defined in the company currency."),
         'suffix': fields.char('Suffix', help="The unit of the target and current values", translate=True),
@@ -92,7 +91,7 @@ class gamification_goal_type(osv.Model):
             help="Technical filters rules to apply. Use 'user.id' (without marks) to limit the search to the evaluated user.",
             required=True),
         'compute_code': fields.char('Compute Code',
-            help="The name of the python method that will be executed to compute the current value. See the file gamification/goal_type_data.py for examples."),
+            help="The name of the python method that will be executed to compute the current value. See the file gamification/goal_definition_data.py for examples."),
         'condition': fields.selection([
                 ('higher', 'The higher the better'),
                 ('lower', 'The lower the better')
@@ -100,7 +99,6 @@ class gamification_goal_type(osv.Model):
             string='Goal Performance',
             help='A goal is considered as completed when the current value is compared to the value to reach',
             required=True),
-        'sequence': fields.integer('Sequence', help='Sequence number for ordering', required=True),
         'action_id': fields.many2one('ir.actions.act_window', string="Action",
             help="The action that will be called to update the goal value."),
         'res_id_field': fields.char("ID Field of user",
@@ -108,7 +106,6 @@ class gamification_goal_type(osv.Model):
     }
 
     _defaults = {
-        'sequence': 1,
         'condition': 'higher',
         'computation_mode': 'manually',
         'domain': "[]",
@@ -130,7 +127,7 @@ class gamification_goal(osv.Model):
         """Return the percentage of completeness of the goal, between 0 and 100"""
         res = dict.fromkeys(ids, 0.0)
         for goal in self.browse(cr, uid, ids, context=context):
-            if goal.type_condition == 'higher':
+            if goal.definition_condition == 'higher':
                 if goal.current >= goal.target_goal:
                     res[goal.id] = 100.0
                 else:
@@ -142,21 +139,21 @@ class gamification_goal(osv.Model):
                 res[goal.id] = 0.0
         return res
 
-    def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):
-        goal_type = self.pool.get('gamification.goal.type')
-        if not type_id:
-            return {'value': {'type_id': False}}
-        goal_type = goal_type.browse(cr, uid, type_id, context=context)
-        return {'value': {'computation_mode': goal_type.computation_mode, 'type_condition': goal_type.condition}}
+    def on_change_definition_id(self, cr, uid, ids, definition_id=False, context=None):
+        goal_definition = self.pool.get('gamification.goal.definition')
+        if not definition_id:
+            return {'value': {'definition_id': False}}
+        goal_definition = goal_definition.browse(cr, uid, definition_id, context=context)
+        return {'value': {'computation_mode': goal_definition.computation_mode, 'definition_condition': goal_definition.condition}}
 
     _columns = {
-        'type_id': fields.many2one('gamification.goal.type', string='Goal Type', required=True, ondelete="cascade"),
+        'definition_id': fields.many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade"),
         'user_id': fields.many2one('res.users', string='User', required=True),
-        'planline_id': fields.many2one('gamification.goal.planline', string='Goal Planline', ondelete="cascade"),
-        'plan_id': fields.related('planline_id', 'plan_id',
-            string="Plan",
+        'line_id': fields.many2one('gamification.challenge.line', string='Goal Line', ondelete="cascade"),
+        'challenge_id': fields.related('line_id', 'challenge_id',
+            string="Challenge",
             type='many2one',
-            relation='gamification.goal.plan',
+            relation='gamification.challenge',
             store=True),
         'start_date': fields.date('Start Date'),
         'end_date': fields.date('End Date'),  # no start and end = always active
@@ -177,16 +174,16 @@ class gamification_goal(osv.Model):
             required=True,
             track_visibility='always'),
 
-        'computation_mode': fields.related('type_id', 'computation_mode', type='char', string="Type computation mode"),
+        'computation_mode': fields.related('definition_id', 'computation_mode', type='char', string="Computation mode"),
         'remind_update_delay': fields.integer('Remind delay',
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."),
         'last_update': fields.date('Last Update',
-            help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."),
+            help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in challenge). Ignored in case of non-manual goal or goal not linked to a challenge."),
 
-        'type_description': fields.related('type_id', 'description', type='char', string='Type Description', readonly=True),
-        'type_condition': fields.related('type_id', 'condition', type='char', string='Type Condition', readonly=True),
-        'type_suffix': fields.related('type_id', 'full_suffix', type="char", string="Suffix", readonly=True),
-        'type_display': fields.related('type_id', 'display_mode', type="char", string="Display Mode", readonly=True),
+        'definition_description': fields.related('definition_id', 'description', type='char', string='Definition Description', readonly=True),
+        'definition_condition': fields.related('definition_id', 'condition', type='char', string='Definition Condition', readonly=True),
+        'definition_suffix': fields.related('definition_id', 'full_suffix', type="char", string="Suffix", readonly=True),
+        'definition_display': fields.related('definition_id', 'display_mode', type="char", string="Display Mode", readonly=True),
     }
 
     _defaults = {
@@ -194,7 +191,7 @@ class gamification_goal(osv.Model):
         'state': 'draft',
         'start_date': fields.date.today,
     }
-    _order = 'create_date desc, end_date desc, type_id, id'
+    _order = 'create_date desc, end_date desc, definition_id, id'
 
     def _check_remind_delay(self, cr, uid, goal, context=None):
         """Verify if a goal has not been updated for some time and send a
@@ -230,26 +227,26 @@ class gamification_goal(osv.Model):
                 # skip if goal draft or canceled
                 continue
 
-            if goal.type_id.computation_mode == 'manually':
+            if goal.definition_id.computation_mode == 'manually':
                 towrite.update(self._check_remind_delay(cr, uid, goal, context))
 
-            elif goal.type_id.computation_mode == 'python':
+            elif goal.definition_id.computation_mode == 'python':
                 # execute the chosen method
-                values = {'cr': cr, 'uid': goal.user_id.id, 'context': context, 'self': self.pool.get('gamification.goal.type')}
-                result = safe_eval(goal.type_id.compute_code, values, {})
+                values = {'cr': cr, 'uid': goal.user_id.id, 'context': context, 'self': self.pool.get('gamification.goal.definition')}
+                result = safe_eval(goal.definition_id.compute_code, values, {})
 
                 if type(result) in (float, int, long) and result != goal.current:
                     towrite['current'] = result
                 else:
-                    _logger.exception(_('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
-                    # raise osv.except_osv(_('Error!'), _('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
+                    _logger.exception(_('Unvalid return content from the evaluation of %s' % str(goal.definition_id.compute_code)))
+                    # raise osv.except_osv(_('Error!'), _('Unvalid return content from the evaluation of %s' % str(goal.definition_id.compute_code)))
 
             else:  # count or sum
-                obj = self.pool.get(goal.type_id.model_id.model)
-                field_date_name = goal.type_id.field_date_id.name
+                obj = self.pool.get(goal.definition_id.model_id.model)
+                field_date_name = goal.definition_id.field_date_id.name
 
                 # eval the domain with user replaced by goal user object
-                domain = safe_eval(goal.type_id.domain, {'user': goal.user_id})
+                domain = safe_eval(goal.definition_id.domain, {'user': goal.user_id})
 
                 #add temporal clause(s) to the domain if fields are filled on the goal
                 if goal.start_date and field_date_name:
@@ -257,8 +254,8 @@ class gamification_goal(osv.Model):
                 if goal.end_date and field_date_name:
                     domain.append((field_date_name, '<=', goal.end_date))
 
-                if goal.type_id.computation_mode == 'sum':
-                    field_name = goal.type_id.field_id.name
+                if goal.definition_id.computation_mode == 'sum':
+                    field_name = goal.definition_id.field_id.name
                     res = obj.read_group(cr, uid, domain, [field_name], [''], context=context)
                     new_value = res and res[0][field_name] or 0.0
 
@@ -270,7 +267,7 @@ class gamification_goal(osv.Model):
                     towrite['current'] = new_value
 
             # check goal target reached
-            if (goal.type_id.condition == 'higher' and towrite.get('current', goal.current) >= goal.target_goal) or (goal.type_id.condition == 'lower' and towrite.get('current', goal.current) <= goal.target_goal):
+            if (goal.definition_id.condition == 'higher' and towrite.get('current', goal.current) >= goal.target_goal) or (goal.definition_id.condition == 'lower' and towrite.get('current', goal.current) <= goal.target_goal):
                 towrite['state'] = 'reached'
 
             # check goal failure
@@ -323,7 +320,7 @@ class gamification_goal(osv.Model):
         vals['last_update'] = fields.date.today()
         result = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
         for goal in self.browse(cr, uid, ids, context=context):
-            if goal.state != "draft" and ('type_id' in vals or 'user_id' in vals):
+            if goal.state != "draft" and ('definition_id' in vals or 'user_id' in vals):
                 # avoid drag&drop in kanban view
                 raise osv.except_osv(_('Error!'), _('Can not modify the configuration of a started goal'))
 
@@ -332,8 +329,8 @@ class gamification_goal(osv.Model):
                     # new goals should not be reported
                     continue
 
-                if goal.plan_id and goal.plan_id.report_message_frequency == 'onchange':
-                    self.pool.get('gamification.goal.plan').report_progress(cr, SUPERUSER_ID, goal.plan_id, users=[goal.user_id], context=context)
+                if goal.challenge_id and goal.challenge_id.report_message_frequency == 'onchange':
+                    self.pool.get('gamification.challenge').report_progress(cr, SUPERUSER_ID, goal.challenge_id, users=[goal.user_id], context=context)
         return result
 
     def get_action(self, cr, uid, goal_id, context=None):
@@ -344,13 +341,13 @@ class gamification_goal(osv.Model):
         """
         goal = self.browse(cr, uid, goal_id, context=context)
 
-        if goal.type_id.action_id:
+        if goal.definition_id.action_id:
             #open a the action linked on the goal
-            action = goal.type_id.action_id.read()[0]
+            action = goal.definition_id.action_id.read()[0]
 
-            if goal.type_id.res_id_field:
+            if goal.definition_id.res_id_field:
                 current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-                action['res_id'] = safe_eval(goal.type_id.res_id_field, {'user': current_user})
+                action['res_id'] = safe_eval(goal.definition_id.res_id_field, {'user': current_user})
 
                 # if one element to display, should see it in form mode if possible
                 views = action['views']
@@ -364,7 +361,7 @@ class gamification_goal(osv.Model):
         if goal.computation_mode == 'manually':
             #open a wizard window to update the value manually
             action = {
-                'name': _("Update %s") % goal.type_id.name,
+                'name': _("Update %s") % goal.definition_id.name,
                 'id': goal_id,
                 'type': 'ir.actions.act_window',
                 'views': [[False, 'form']],
@@ -378,7 +375,7 @@ class gamification_goal(osv.Model):
 
 
 class goal_manual_wizard(osv.TransientModel):
-    """Wizard type to update a manual goal"""
+    """Wizard to update a manual goal"""
     _name = 'gamification.goal.wizard'
     _columns = {
         'goal_id': fields.many2one("gamification.goal", string='Goal', required=True),

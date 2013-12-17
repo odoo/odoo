@@ -12,11 +12,11 @@ openerp.gamification = function(instance) {
             this.challenge_suggestions = {};
         },
         events: {
-            // update a plan and related goals
-            'click a.oe_update_plan': function(event) {
+            // update a challenge and related goals
+            'click a.oe_update_challenge': function(event) {
                 var self = this;
-                var plan_id = parseInt(event.currentTarget.id, 10);
-                var goals_updated = new instance.web.Model('gamification.goal.plan').call('quick_update', [plan_id]);
+                var challenge_id = parseInt(event.currentTarget.id, 10);
+                var goals_updated = new instance.web.Model('gamification.challenge').call('quick_update', [challenge_id]);
                 $.when(goals_updated).done(function() {
                     self.get_goal_todo_info();
                 });
@@ -40,12 +40,12 @@ openerp.gamification = function(instance) {
             // get more info about a challenge request
             'click a.oe_challenge_reply': function(event) {
                 var self = this;
-                var plan_id = parseInt(event.currentTarget.id, 10);
-                var plan_action = new instance.web.Model('gamification.goal.plan').call('reply_challenge_wizard', [plan_id]).then(function(res) {
-                    plan_action['action'] = res;
+                var challenge_id = parseInt(event.currentTarget.id, 10);
+                var challenge_action = new instance.web.Model('gamification.challenge').call('reply_challenge_wizard', [challenge_id]).then(function(res) {
+                    challenge_action['action'] = res;
                 });
-                $.when(plan_action).done(function() {
-                    self.do_action(plan_action.action).done(function () {
+                $.when(challenge_action).done(function() {
+                    self.do_action(challenge_action.action).done(function () {
                         self.get_goal_todo_info();
                     });
                 });
@@ -132,7 +132,7 @@ openerp.gamification = function(instance) {
     instance.web_kanban.KanbanRecord.include({
         // open related goals when clicking on challenge kanban view
         on_card_clicked: function() {
-            if (this.view.dataset.model === 'gamification.goal.plan') {
+            if (this.view.dataset.model === 'gamification.challenge') {
                 this.$('.oe_kanban_project_list a').first().click();
             } else {
                 this._super.apply(this, arguments);

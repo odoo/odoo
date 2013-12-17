@@ -2,8 +2,8 @@
 <openerp>
     <data>
 
-        <!-- goal types -->
-        <record model="gamification.goal.type" id="type_base_timezone">
+        <!-- goal definitions -->
+        <record model="gamification.goal.definition" id="definition_base_timezone">
             <field name="name">Set your Timezone</field>
             <field name="description">Configure your profile and specify your timezone</field>
             <field name="computation_mode">count</field>
@@ -14,7 +14,7 @@
             <field name="res_id_field">user.id</field>
         </record>
 
-        <record model="gamification.goal.type" id="type_base_avatar">
+        <record model="gamification.goal.definition" id="definition_base_avatar">
             <field name="name">Set your Avatar</field>
             <field name="description">In your user preference</field>
             <field name="computation_mode">manually</field>
@@ -25,7 +25,7 @@
         </record>
 
 
-        <record model="gamification.goal.type" id="type_base_company_data">
+        <record model="gamification.goal.definition" id="definition_base_company_data">
             <field name="name">Set your Company Data</field>
             <field name="description">Write some information about your company (specify at least a name)</field>
             <field name="computation_mode">count</field>
@@ -37,7 +37,7 @@
             <field name="res_id_field">user.company_id.id</field>
         </record>
 
-        <record model="gamification.goal.type" id="type_base_company_logo">
+        <record model="gamification.goal.definition" id="definition_base_company_logo">
             <field name="name">Set your Company Logo</field>
             <field name="computation_mode">count</field>
             <field name="display_mode">checkbox</field>
@@ -58,7 +58,7 @@
             <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
         </record>
 
-        <record model="gamification.goal.type" id="type_base_invite">
+        <record model="gamification.goal.definition" id="definition_base_invite">
             <field name="name">Invite new Users</field>
             <field name="description">Create at least another user</field>
             <field name="display_mode">checkbox</field>
@@ -68,7 +68,7 @@
             <field name="action_id" eval="ref('action_new_simplified_res_users')" />
         </record>
 
-        <record model="gamification.goal.type" id="type_nbr_following">
+        <record model="gamification.goal.definition" id="definition_nbr_following">
             <field name="name">Mail Group Following</field>
             <field name="description">Follow mail groups to receive news</field>
             <field name="computation_mode">python</field>
@@ -77,8 +77,8 @@
         </record>
 
 
-        <!-- plans -->
-        <record model="gamification.goal.plan" id="plan_base_discover">
+        <!-- challenges -->
+        <record model="gamification.challenge" id="challenge_base_discover">
             <field name="name">Complete your Profile</field>
             <field name="period">once</field>
             <field name="visibility_mode">progressbar</field>
@@ -88,7 +88,7 @@
             <field name="category">other</field>
         </record>
 
-        <record model="gamification.goal.plan" id="plan_base_configure">
+        <record model="gamification.challenge" id="challenge_base_configure">
             <field name="name">Setup your Company</field>
             <field name="period">once</field>
             <field name="visibility_mode">progressbar</field>
@@ -98,32 +98,32 @@
             <field name="category">other</field>
         </record>
 
-        <!-- planlines -->
-        <record model="gamification.goal.planline" id="planline_base_discover1">
-            <field name="type_id" eval="ref('type_base_timezone')" />
+        <!-- lines -->
+        <record model="gamification.challenge.line" id="line_base_discover1">
+            <field name="definition_id" eval="ref('definition_base_timezone')" />
             <field name="target_goal">1</field>
-            <field name="plan_id" eval="ref('plan_base_discover')" />
+            <field name="challenge_id" eval="ref('challenge_base_discover')" />
         </record>
-        <record model="gamification.goal.planline" id="planline_base_discover2">
-            <field name="type_id" eval="ref('type_base_avatar')" />
+        <record model="gamification.challenge.line" id="line_base_discover2">
+            <field name="definition_id" eval="ref('definition_base_avatar')" />
             <field name="target_goal">1</field>
-            <field name="plan_id" eval="ref('plan_base_discover')" />
+            <field name="challenge_id" eval="ref('challenge_base_discover')" />
         </record>
 
-        <record model="gamification.goal.planline" id="planline_base_admin2">
-            <field name="type_id" eval="ref('type_base_company_logo')" />
+        <record model="gamification.challenge.line" id="line_base_admin2">
+            <field name="definition_id" eval="ref('definition_base_company_logo')" />
             <field name="target_goal">1</field>
-            <field name="plan_id" eval="ref('plan_base_configure')" />
+            <field name="challenge_id" eval="ref('challenge_base_configure')" />
         </record>
-        <record model="gamification.goal.planline" id="planline_base_admin1">
-            <field name="type_id" eval="ref('type_base_company_data')" />
+        <record model="gamification.challenge.line" id="line_base_admin1">
+            <field name="definition_id" eval="ref('definition_base_company_data')" />
             <field name="target_goal">0</field>
-            <field name="plan_id" eval="ref('plan_base_configure')" />
+            <field name="challenge_id" eval="ref('challenge_base_configure')" />
         </record>
-        <record model="gamification.goal.planline" id="planline_base_admin3">
-            <field name="type_id" eval="ref('type_base_invite')" />
+        <record model="gamification.challenge.line" id="line_base_admin3">
+            <field name="definition_id" eval="ref('definition_base_invite')" />
             <field name="target_goal">1</field>
-            <field name="plan_id" eval="ref('plan_base_configure')" />
+            <field name="challenge_id" eval="ref('challenge_base_configure')" />
         </record>
     </data>
 
@@ -141,7 +141,7 @@
 
     <p class="oe_grey">${object.report_header or ''}</p>
     
-    <p>You have not updated your progress for the goal ${object.type_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
+    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
 
     <p>If you have not changed your score yet, you can use the button "The current value is up to date" to indicate so.</p>
             ]]></field>
@@ -168,15 +168,15 @@
                 style="font-weight:bold;"
             % endif
             >
-            <td>${goal.type_id.name}</td>
+            <td>${goal.definition_id.name}</td>
             <td>${goal.target_goal}
-            % if goal.type_suffix:
-                ${goal.type_suffix}
+            % if goal.definition_suffix:
+                ${goal.definition_suffix}
             % endif
             </td>
             <td>${goal.current}
-            % if goal.type_suffix:
-                ${goal.type_suffix}
+            % if goal.definition_suffix:
+                ${goal.definition_suffix}
             % endif
             </td>
             <td>${goal.completeness} %</td>
@@ -193,10 +193,10 @@
     </header>
     <p class="oe_grey">${object.report_header or ''}</p>
 
-    % for planline in ctx['planlines_boards']:
+    % for line in ctx['lines_boards']:
         <table width="100%" border="1">
             <tr>
-                <th colspan="4">${planline.goal_type.name}</th>
+                <th colspan="4">${line.goal_definition.name}</th>
             </tr>
             <tr>
                 <th>#</th>
@@ -204,7 +204,7 @@
                 <th>Completeness</th>
                 <th>Current</th>
             </tr>
-            % for idx, goal in planline.board_goals:
+            % for idx, goal in line.board_goals:
                 % if idx < 3 or goal.user_id.id == user.id:
                     <tr
                         % if goal.completeness >= 100:
@@ -215,8 +215,8 @@
                         <td>${goal.user_id.name}</td>
                         <td>${goal.completeness}%</td>
                         <td>${goal.current}/${goal.target_goal}
-                        % if goal.type_suffix:
-                            ${goal.type_suffix}
+                        % if goal.definition_suffix:
+                            ${goal.definition_suffix}
                         % endif
                         </td>
                     </tr>

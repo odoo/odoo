@@ -1,29 +1,29 @@
 -
-  In order to test process of the Goals, I assign the discovery goal plan to all users
+  In order to test process of the Goals, I assign the discovery challenge to all users
 -
-  !record {model: gamification.goal.plan, id: plan_base_discover}:
+  !record {model: gamification.challenge, id: challenge_base_discover}:
     autojoin_group_id: base.group_user
 -
   I verify that the users of the group are added (at least admin and demo)
 -
-  !assert {model: gamification.goal.plan, id: plan_base_discover, string: The autojoin function was not successful}:
+  !assert {model: gamification.challenge, id: challenge_base_discover, string: The autojoin function was not successful}:
     - len(user_ids) >= 2
 -
-  I start the goal plan and verify the change of state
+  I start the challenge and verify the change of state
 -
-  !python {model: gamification.goal.plan}: |
-    plan = self.browse(cr, uid, ref('plan_base_discover'))
-    self.action_start(cr, uid, [plan.id], context=context)
-    assert plan.state == 'inprogress', "Plan failed the change of state"
+  !python {model: gamification.challenge}: |
+    challenge = self.browse(cr, uid, ref('challenge_base_discover'))
+    self.action_start(cr, uid, [challenge.id], context=context)
+    assert challenge.state == 'inprogress', "Challenge failed the change of state"
 -
   I verify the goals are generated correctly
 -
   !python {model: gamification.goal}: |
-    goal_ids = self.search(cr, uid, [('plan_id', '=', ref('plan_base_discover'))], context=context)
+    goal_ids = self.search(cr, uid, [('challenge_id', '=', ref('challenge_base_discover'))], context=context)
     assert len(goal_ids) >= 4, "Not enough goals have been generated"
     for goal in self.browse(cr, uid, goal_ids, context=context):
       assert goal.state != 'draft', "Draft goal have been generated"
-      assert goal.planline_id.plan_id.id == ref('plan_base_discover'), "Linked planline incorrect"
+      assert goal.line_id.challenge_id.id == ref('challenge_base_discover'), "Linked line incorrect"
 -
   I change timezone for demo user
 -
@@ -33,21 +33,21 @@
   I check the goal for demo user is successful
 -
   !python {model: gamification.goal}: |
-    goal_ids = self.search(cr, uid, [('user_id', '=', ref('base.user_demo')),('type_id','=',ref('type_base_timezone'))])
+    goal_ids = self.search(cr, uid, [('user_id', '=', ref('base.user_demo')),('definition_id','=',ref('definition_base_timezone'))])
     self.update(cr, uid, goal_ids, context=context)
     for goal in self.browse(cr, uid, goal_ids, context=context):
       assert goal.state == "reached", "Goal not successful %s" % goal.state
 -
   I add a reward to the challenge
 -
-  !record {model: gamification.goal.plan, id: plan_base_discover}:
+  !record {model: gamification.challenge, id: challenge_base_discover}:
     reward_first_id: gamification.badge_good_job
     reward_failure: True
 -
   I check the demo user received the badge
 -
-  !python {model: gamification.goal.plan}: |
-    plan = self.browse(cr, uid, ref('plan_base_discover'), context=context)
-    self.action_close(cr, uid, [plan.id])
+  !python {model: gamification.challenge}: |
+    challenge = self.browse(cr, uid, ref('challenge_base_discover'), context=context)
+    self.action_close(cr, uid, [challenge.id])
     badge_ids = self.pool.get('gamification.badge.user').search(cr, uid, [('badge_id', '=', ref('badge_good_job')), ('user_id', '=', ref('base.user_demo'))])
     assert badge_ids, "Demo users didn't received the badge"

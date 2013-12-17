@@ -141,11 +141,11 @@ class gamification_badge(osv.Model):
         'remaining_sending': fields.function(_remaining_sending_calc, type='integer',
             string='Remaining Sending Allowed', help="If a maxium is set"),
 
-        'plan_ids': fields.one2many('gamification.goal.plan', 'reward_id',
+        'challenge_ids': fields.one2many('gamification.challenge', 'reward_id',
             string="Reward of Challenges"),
 
-        'goal_type_ids': fields.many2many('gamification.goal.type',
-            string='Goals Linked',
+        'goal_definition_ids': fields.many2many('gamification.goal.definition', 'badge_unlocked_definition_rel',
+            string='Rewarded by',
             help="The users that have succeeded theses goals will receive automatically the badge."),
 
         'owner_ids': fields.one2many('gamification.badge.user', 'badge_id',

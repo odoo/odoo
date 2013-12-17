@@ -13,15 +13,15 @@
                 style="font-weight:bold;"
             % endif
             >
-            <td>${goal.type_id.name}</td>
+            <td>${goal.definition_id.name}</td>
             <td>${goal.target_goal}
-            % if goal.type_suffix:
-                ${goal.type_suffix}
+            % if goal.definition_suffix:
+                ${goal.definition_suffix}
             % endif
             </td>
             <td>${goal.current}
-            % if goal.type_suffix:
-                ${goal.type_suffix}
+            % if goal.definition_suffix:
+                ${goal.definition_suffix}
             % endif
             </td>
             <td>${goal.completeness} %</td>

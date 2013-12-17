@@ -22,14 +22,14 @@
 from openerp.osv import osv
 
 
-class gamification_goal_type_data(osv.Model):
-    """Goal type data
+class gamification_goal_definition_data(osv.Model):
+    """Goal definition data
 
     Methods for more complex goals not possible with the 'sum' and 'count' mode.
     Each method should return the value that will be set in the 'current' field
-    of a user's goal. The return type must be a float or integer.
+    of a user's goal. The return definition must be a float or integer.
     """
-    _inherit = 'gamification.goal.type'
+    _inherit = 'gamification.goal.definition'
 
     def number_following(self, cr, uid, xml_id="mail.thread", context=None):
         """Return the number of 'xml_id' objects the user is following

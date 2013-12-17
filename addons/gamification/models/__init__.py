@@ -18,15 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'CRM Gamification',
-    'version': '1.0',
-    'author': 'OpenERP SA',
-    'category': 'hidden',
-    'depends': ['gamification','sale_crm'],
-    'description': """Example of goal definitions and challenges that can be used related to the usage of the CRM Sale module.""",
 
-    'data': ['sale_crm_goals.xml'],
-    'demo': ['sale_crm_goals_demo.xml'],
-    'auto_install': True,
-}
+import goal
+import challenge
+import res_users
+import badge

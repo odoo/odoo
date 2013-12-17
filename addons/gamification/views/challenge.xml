@@ -2,11 +2,11 @@
 <openerp>
     <data>
 
-        <record id="goal_plan_list_view" model="ir.ui.view">
+        <record id="challenge_list_view" model="ir.ui.view">
             <field name="name">Challenges List</field>
-            <field name="model">gamification.goal.plan</field>
+            <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
-                <tree string="Goal types" colors="blue:state == 'draft';grey:state == 'done'">
+                <tree string="Goal definitions" colors="blue:state == 'draft';grey:state == 'done'">
                     <field name="name"/>
                     <field name="period"/>
                     <field name="manager_id"/>
@@ -15,11 +15,11 @@
             </field>
         </record>
 
-        <record id="goals_from_plan_act" model="ir.actions.act_window">
+        <record id="goals_from_challenge_act" model="ir.actions.act_window">
             <field name="res_model">gamification.goal</field>
             <field name="name">Related Goals</field>
             <field name="view_mode">kanban,tree</field>
-            <field name="context">{'search_default_group_by_type': True, 'search_default_inprogress': True, 'search_default_plan_id': active_id, 'default_plan_id': active_id}</field>
+            <field name="context">{'search_default_group_by_definition': True, 'search_default_inprogress': True, 'search_default_challenge_id': active_id, 'default_challenge_id': active_id}</field>
             <field name="help" type="html">
               <p>
                 There is no goals associated to this challenge matching your search.
@@ -28,11 +28,11 @@
             </field>
         </record>
 
-        <record id="goal_plan_form_view" model="ir.ui.view">
+        <record id="challenge_form_view" model="ir.ui.view">
             <field name="name">Challenge Form</field>
-            <field name="model">gamification.goal.plan</field>
+            <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
-                <form string="Goal types" version="7.0">
+                <form string="Goal definitions" version="7.0">
                     <header>
                         <button string="Start Now" type="object" name="action_start" states="draft" class="oe_highlight"/>
                         <button string="Refresh Challenge" type="object" name="action_check" states="inprogress"/>
@@ -57,7 +57,7 @@
 
                         <!-- action buttons -->
                         <div class="oe_right oe_button_box">
-                            <button type="action" name="%(goals_from_plan_act)d" string="Related Goals" attrs="{'invisible': [('state','=','draft')]}" />
+                            <button type="action" name="%(goals_from_challenge_act)d" string="Related Goals" attrs="{'invisible': [('state','=','draft')]}" />
                         </div>
                         <group>
                             <group>
@@ -72,13 +72,13 @@
                         </group>
                         <notebook>
                             <page string="Goals">
-                                <field name="planline_ids" nolabel="1" colspan="4">
-                                    <tree string="Planline List" version="7.0" editable="bottom" >
+                                <field name="line_ids" nolabel="1" colspan="4">
+                                    <tree string="Line List" version="7.0" editable="bottom" >
                                         <field name="sequence" widget="handle"/>
-                                        <field name="type_id" on_change="on_change_type_id(type_id)" />
-                                        <field name="type_condition"/>
+                                        <field name="definition_id" on_change="on_change_definition_id(definition_id)" />
+                                        <field name="definition_condition"/>
                                         <field name="target_goal"/>
-                                        <field name="type_full_suffix"/>
+                                        <field name="definition_full_suffix"/>
                                     </tree>
                                 </field>
                                 <field name="description" placeholder="Describe the challenge: what is does, who it targets, why it matters..."/>
@@ -98,7 +98,7 @@
                             <page string="Advanced Options">
                                 <group string="Subscriptions">
                                     <field name="autojoin_group_id" />
-                                    <field name="proposed_user_ids" widget="many2many_tags" />
+                                    <field name="invited_user_ids" widget="many2many_tags" />
                                 </group>
                                 <group string="Notification Messages">
                                     <field name="report_message_frequency" />
@@ -126,13 +126,12 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_goal_plan_kanban">
+        <record model="ir.ui.view" id="view_challenge_kanban">
             <field name="name">Challenge Kanban</field>
-            <field name="model">gamification.goal.plan</field>
+            <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
-                    <field name="planline_ids"/>
-                    <field name="planline_count"/>
+                <kanban string="Challenges" class="oe_background_grey" version="7.0">
+                    <field name="line_ids"/>
                     <field name="user_ids"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -147,9 +146,9 @@
 
                                     <h4><field name="name"/></h4>
                                     <div class="oe_kanban_project_list">
-                                        <a type="action" name="%(goals_from_plan_act)d" style="margin-right: 10px"> 
-                                            <span t-if="record.planline_count.raw_value gt 1"><field name="planline_count"/> Goals</span>
-                                            <span t-if="record.planline_count.raw_value lt 2"><field name="planline_count"/> Goal</span>
+                                        <a type="action" name="%(goals_from_challenge_act)d" style="margin-right: 10px"> 
+                                            <span t-if="record.line_ids.length gt 1"><t t-esc="record.line_ids.length"/> Goals</span>
+                                            <span t-if="record.line_ids.length lt 2"><t t-esc="record.line_ids.length"/> Goal</span>
                                         </a>
                                     </div>
                                     <div class="oe_kanban_badge_avatars">
@@ -165,9 +164,9 @@
             </field>
         </record>
 
-        <record id="goal_plan_list_action" model="ir.actions.act_window">
+        <record id="challenge_list_action" model="ir.actions.act_window">
             <field name="name">Challenges</field>
-            <field name="res_model">gamification.goal.plan</field>
+            <field name="res_model">gamification.challenge</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
             <field name="help" type="html">
@@ -182,40 +181,40 @@
             </field>
         </record>
         <!-- Specify form view ID to avoid selecting view_challenge_wizard -->
-        <record id="goal_plan_list_action_view1" model="ir.actions.act_window.view">
+        <record id="challenge_list_action_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">kanban</field>
-            <field name="act_window_id" ref="goal_plan_list_action"/>
-            <field name="view_id" ref="view_goal_plan_kanban"/>
+            <field name="act_window_id" ref="challenge_list_action"/>
+            <field name="view_id" ref="view_challenge_kanban"/>
         </record>
-        <record id="goal_plan_list_action_view2" model="ir.actions.act_window.view">
+        <record id="challenge_list_action_view2" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
             <field name="view_mode">form</field>
-            <field name="act_window_id" ref="goal_plan_list_action"/>
-            <field name="view_id" ref="goal_plan_form_view"/>
+            <field name="act_window_id" ref="challenge_list_action"/>
+            <field name="view_id" ref="challenge_form_view"/>
         </record>
 
-        <!-- Planline -->
-        <record id="goal_planline_list_view" model="ir.ui.view">
-            <field name="name">Goal planline list</field>
-            <field name="model">gamification.goal.planline</field>
+        <!-- Line -->
+        <record id="challenge_line_list_view" model="ir.ui.view">
+            <field name="name">Challenge line list</field>
+            <field name="model">gamification.challenge.line</field>
             <field name="arch" type="xml">
-                <tree string="planline list" >
-                    <field name="type_id"/>
+                <tree string="Challenge Lines" >
+                    <field name="definition_id"/>
                     <field name="target_goal"/>
                 </tree>
             </field>
         </record>
 
 
-        <record id="goal_plan_search_view" model="ir.ui.view">
+        <record id="challenge_search_view" model="ir.ui.view">
             <field name="name">Challenge Search</field>
-            <field name="model">gamification.goal.plan</field>
+            <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
                 <search string="Search Challenges">
                     <filter name="inprogress" string="Running Challenges"
                         domain="[('state', '=', 'inprogress')]"/>
-                    <filter name="hr_plans" string="HR Challenges"
+                    <filter name="hr_challenges" string="HR Challenges"
                         domain="[('category', '=', 'hr')]"/>
                     <field name="name"/>
                     <group expand="0" string="Group By...">
@@ -229,7 +228,7 @@
 
         <record id="view_challenge_wizard" model="ir.ui.view">
             <field name="name">Challenge Wizard</field>
-            <field name="model">gamification.goal.plan</field>
+            <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
                 <form string="Challenge" version="7.0">
                     <field name="reward_failure" invisible="1"/>
@@ -241,16 +240,16 @@
                         <field name="start_date" readonly="1" />
                         <field name="end_date" readonly="1" />
                         <field name="user_ids" string="Participating" readonly="1" widget="many2many_tags" />
-                        <field name="proposed_user_ids" string="Invited" readonly="1" widget="many2many_tags" />
+                        <field name="invited_user_ids" string="Invited" readonly="1" widget="many2many_tags" />
                     </group>
                     <group string="Goals">
-                        <field name="planline_ids" nolabel="1" readonly="1" colspan="4">
-                            <tree string="Planline List" version="7.0" editable="bottom" >
+                        <field name="line_ids" nolabel="1" readonly="1" colspan="4">
+                            <tree string="Challenge Lines" version="7.0" editable="bottom" >
                                 <field name="sequence" widget="handle"/>
-                                <field name="type_id"/>
-                                <field name="type_condition"/>
+                                <field name="definition_id"/>
+                                <field name="definition_condition"/>
                                 <field name="target_goal"/>
-                                <field name="type_full_suffix"/>
+                                <field name="definition_full_suffix"/>
                             </tree>
                         </field>
                     </group>
@@ -281,7 +280,7 @@
 
         <record id="challenge_wizard" model="ir.actions.act_window">
             <field name="name">Challenge Description</field>
-            <field name="res_model">gamification.goal.plan</field>
+            <field name="res_model">gamification.challenge</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_challenge_wizard"/>
             <field name="target">new</field>

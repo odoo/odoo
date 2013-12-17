@@ -2,17 +2,17 @@
 <openerp>
     <data>
 
-        <!-- plans -->
-        <record model="gamification.goal.plan" id="plan_crm_sale">
+        <!-- challenges -->
+        <record model="gamification.challenge" id="challenge_crm_sale">
             <field name="user_ids" eval="[(4,ref('base.user_demo'))]" />
             <field name="state">inprogress</field>
         </record>
 
         <!-- goals -->
         <record model="gamification.goal" id="goal_crm_sale1">
-            <field name="type_id" eval="ref('type_crm_tot_invoices')" />
+            <field name="definition_id" eval="ref('definition_crm_tot_invoices')" />
             <field name="user_id" eval="ref('base.user_demo')" />
-            <field name="planline_id" eval="ref('planline_crm_sale1')" />
+            <field name="line_id" eval="ref('line_crm_sale1')" />
             <field name="start_date" eval="time.strftime('2013-03-01')" />
             <field name="end_date" eval="time.strftime('2013-03-31')" />
             <field name="target_goal">2000</field>

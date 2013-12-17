@@ -1,10 +1,10 @@
 <% extends 'base.mako' %>
 
 <% block body %>
-	% for planline in planlines_boards: 
+	% for line in lines_boards: 
         <table width="100%" border="1">
         	<tr>
-        		<th colspan="4">${planline.goal_type.name}</th>
+        		<th colspan="4">${line.goal_definition.name}</th>
         	</tr>
         	<tr>
 	            <th>#</th>
@@ -12,7 +12,7 @@
 	            <th>Completeness</th>
 	            <th>Current</th>
 	        </tr>
-	        % for idx, goal in planline.board_goals:
+	        % for idx, goal in line.board_goals:
                 % if idx < 3 or goal.user_id.id == uid:
     	            <tr
     	                % if goal.completeness >= 100:
@@ -23,8 +23,8 @@
     	                <td>${goal.user_id.name}</td>
     	                <td>${goal.completeness}%</td>
     	                <td>${goal.current}/${goal.target_goal}
-                        % if goal.type_suffix:
-                            ${goal.type_suffix}
+                        % if goal.definition_suffix:
+                            ${goal.definition_suffix}
                         % endif
                         </td>
     	            </tr>

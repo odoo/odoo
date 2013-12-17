@@ -61,19 +61,19 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
         return (start_date, end_date)
 
 
-class gamification_goal_plan(osv.Model):
-    """Gamification goal plan
+class gamification_challenge(osv.Model):
+    """Gamification challenge
 
-    Set of predifined goals to be able to automate goal settings or
-    quickly apply several goals manually to a group of users
+    Set of predifined objectives assigned to people with rules for recurrence and
+    rewards
 
     If 'user_ids' is defined and 'period' is different than 'one', the set will
     be assigned to the users for each period (eg: every 1st of each month if
     'monthly' is selected)
     """
 
-    _name = 'gamification.goal.plan'
-    _description = 'Gamification goal plan'
+    _name = 'gamification.challenge'
+    _description = 'Gamification challenge'
     _inherit = 'mail.thread'
 
     def _get_next_report_date(self, cr, uid, ids, field_name, arg, context=None):
@@ -82,32 +82,27 @@ class gamification_goal_plan(osv.Model):
 
         :return: a string in DEFAULT_SERVER_DATE_FORMAT representing the date"""
         res = {}
-        for plan in self.browse(cr, uid, ids, context):
-            last = datetime.strptime(plan.last_report_date, DF).date()
-            if plan.report_message_frequency == 'daily':
+        for challenge in self.browse(cr, uid, ids, context):
+            last = datetime.strptime(challenge.last_report_date, DF).date()
+            if challenge.report_message_frequency == 'daily':
                 next = last + timedelta(days=1)
-                res[plan.id] = next.strftime(DF)
-            elif plan.report_message_frequency == 'weekly':
+                res[challenge.id] = next.strftime(DF)
+            elif challenge.report_message_frequency == 'weekly':
                 next = last + timedelta(days=7)
-                res[plan.id] = next.strftime(DF)
-            elif plan.report_message_frequency == 'monthly':
+                res[challenge.id] = next.strftime(DF)
+            elif challenge.report_message_frequency == 'monthly':
                 month_range = calendar.monthrange(last.year, last.month)
                 next = last.replace(day=month_range[1]) + timedelta(days=1)
-                res[plan.id] = next.strftime(DF)
-            elif plan.report_message_frequency == 'yearly':
-                res[plan.id] = last.replace(year=last.year + 1).strftime(DF)
+                res[challenge.id] = next.strftime(DF)
+            elif challenge.report_message_frequency == 'yearly':
+                res[challenge.id] = last.replace(year=last.year + 1).strftime(DF)
             # frequency == 'once', reported when closed only
             else:
-                res[plan.id] = False
+                res[challenge.id] = False
 
         return res
 
-    def _planline_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
-        for plan in self.browse(cr, uid, ids, context):
-            res[plan.id] = len(plan.planline_ids)
-        return res
-
+    _sort = 'end_date, start_date, name, id'
     _columns = {
         'name': fields.char('Challenge Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
@@ -123,10 +118,10 @@ class gamification_goal_plan(osv.Model):
 
         'user_ids': fields.many2many('res.users', 'user_ids',
             string='Users',
-            help="List of users to which the goal will be set"),
+            help="List of users participating to the challenge"),
         'autojoin_group_id': fields.many2one('res.groups',
             string='Auto-subscription Group',
-            help='Group of users whose members will automatically be added to the users'),
+            help='Group of users whose members will be automatically added to user_ids once the challenge is started'),
 
         'period': fields.selection([
                 ('once', 'Non recurring'),
@@ -143,14 +138,13 @@ class gamification_goal_plan(osv.Model):
         'end_date': fields.date('End Date',
             help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
 
-        'proposed_user_ids': fields.many2many('res.users', 'proposed_user_ids',
+        'invited_user_ids': fields.many2many('res.users', 'invited_user_ids',
             string="Suggest to users"),
 
-        'planline_ids': fields.one2many('gamification.goal.planline', 'plan_id',
-            string='Planline',
+        'line_ids': fields.one2many('gamification.challenge.line', 'challenge_id',
+            string='Lines',
             help="List of goals that will be set",
             required=True),
-        'planline_count': fields.function(_planline_count, type='integer', string="Planlines"),
 
         'reward_id': fields.many2one('gamification.badge', string="For Every Succeding User"),
         'reward_first_id': fields.many2one('gamification.badge', string="For 1st user"),
@@ -202,70 +196,53 @@ class gamification_goal_plan(osv.Model):
         'reward_failure': False,
     }
 
-    _sort = 'end_date, start_date, name'
-
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to add the user of groups"""
         context = context or {}
         if not ids:
             return True
 
-        # unsubscribe removed users from the plan
-        # users are not able to manually unsubscribe to challenges so should
-        # do it for them when not concerned anymore
-        if vals.get('user_ids'):
-            for action_tuple in vals['user_ids']:
-                if action_tuple[0] == 3:
-                    # form (3, ID), remove one
-                    self.message_unsubscribe_users(cr, uid, ids, [action_tuple[1]], context=context)
-                if action_tuple[0] == 5:
-                    # form (5,), remove all
-                    for plan in self.browse(cr, uid, ids, context=context):
-                        self.message_unsubscribe_users(cr, uid, [plan.id], [user.id for user in plan.user_ids], context=context)
-                if action_tuple[0] == 6:
-                    # form (6, False, [IDS]), replace by IDS
-                    for plan in self.browse(cr, uid, ids, context=context):
-                        removed_users = set([user.id for user in plan.user_ids]) - set(action_tuple[2])
-                        self.message_unsubscribe_users(cr, uid, [plan.id], list(removed_users), context=context)
-
-        write_res = super(gamification_goal_plan, self).write(cr, uid, ids, vals, context=context)
-
         # add users when change the group auto-subscription
-        if 'autojoin_group_id' in vals:
+        if vals.get('autojoin_group_id'):
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
-            group_user_ids = [user.id for user in new_group.users]
-            for plan in self.browse(cr, uid, ids, context=context):
-                self.write(cr, uid, [plan.id], {'user_ids': [(4, user) for user in group_user_ids]}, context=context)
 
-        # subscribe new users to the plan
-        if 'user_ids' in vals:
-            for plan in self.browse(cr, uid, ids, context=context):
-                self.message_subscribe_users(cr, uid, ids, [user.id for user in plan.user_ids], context=context)
+            if 'user_ids' not in vals:
+                vals['user_ids'] = []
+            vals['user_ids'] += [(4, user.id) for user in new_group.users]
+
+        write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
+
+        # subscribe new users to the challenge
+        if vals.get('user_ids'):
+            # done with browse after super if changes in groups
+            for challenge in self.browse(cr, uid, ids, context=context):
+                self.message_subscribe_users(cr, uid, [challenge.id], [user.id for user in challenge.user_ids], context=context)
+
         return write_res
+
 
     ##### Update #####
 
     def _cron_update(self, cr, uid, context=None, ids=False):
         """Daily cron check.
 
-        Start planned plans (in draft and with start_date = today)
-        Create the goals for planlines not linked to goals (eg: modified the
-            plan to add planlines)
-        Update every plan running
+        - Start planned challenges (in draft and with start_date = today)
+        - Create the missing goals (eg: modified the challenge to add lines)
+        - Update every running challenge
         """
         if not context: context = {}
 
-        # start planned plans
-        planned_plan_ids = self.search(cr, uid, [
+        # start planned challenges
+        planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'draft'),
             ('start_date', '<=', fields.date.today())])
-        self.action_start(cr, uid, planned_plan_ids, context=context)
+        self.action_start(cr, uid, planned_challenge_ids, context=context)
 
-        # close planned plans
-        planned_plan_ids = self.search(cr, uid, [
+        # close planned challenges
+        planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'inprogress'),
             ('end_date', '>=', fields.date.today())])
-        self.action_close(cr, uid, planned_plan_ids, context=context)
+        self.action_close(cr, uid, planned_challenge_ids, context=context)
 
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')], context=context)
@@ -273,17 +250,17 @@ class gamification_goal_plan(osv.Model):
         return self._update_all(cr, uid, ids, context=context)
 
     def _update_all(self, cr, uid, ids, context=None):
-        """Update the plans and related goals
+        """Update the challenges and related goals
 
-        :param list(int) ids: the ids of the plans to update, if False will
-        update only plans in progress."""
+        :param list(int) ids: the ids of the challenges to update, if False will
+        update only challenges in progress."""
         if not context: context = {}
         goal_obj = self.pool.get('gamification.goal')
 
         # we use yesterday to update the goals that just ended
         yesterday = date.today() - timedelta(days=1)
         goal_ids = goal_obj.search(cr, uid, [
-            ('plan_id', 'in', ids),
+            ('challenge_id', 'in', ids),
             '|',
                 ('state', 'in', ('inprogress', 'inprogress_update')),
                 '&',
@@ -292,121 +269,123 @@ class gamification_goal_plan(osv.Model):
                         ('end_date', '>=', yesterday.strftime(DF)),
                         ('end_date', '=', False)
         ], context=context)
-        # update every running goal already generated linked to selected plans
+        # update every running goal already generated linked to selected challenges
         goal_obj.update(cr, uid, goal_ids, context=context)
 
-        for plan in self.browse(cr, uid, ids, context=context):
-            if plan.autojoin_group_id:
-                # check in case of new users in plan, this happens if manager removed users in plan manually
-                self.write(cr, uid, [plan.id], {'user_ids': [(4, user.id) for user in plan.autojoin_group_id.users]}, context=context)
-            self.generate_goals_from_plan(cr, uid, [plan.id], context=context)
+        for challenge in self.browse(cr, uid, ids, context=context):
+            if challenge.autojoin_group_id:
+                # check in case of new users in challenge, this happens if manager removed users in challenge manually
+                self.write(cr, uid, [challenge.id], {'user_ids': [(4, user.id) for user in challenge.autojoin_group_id.users]}, context=context)
+            self.generate_goals_from_challenge(cr, uid, [challenge.id], context=context)
 
             # goals closed but still opened at the last report date
             closed_goals_to_report = goal_obj.search(cr, uid, [
-                ('plan_id', '=', plan.id),
-                ('start_date', '>=', plan.last_report_date),
-                ('end_date', '<=', plan.last_report_date)
+                ('challenge_id', '=', challenge.id),
+                ('start_date', '>=', challenge.last_report_date),
+                ('end_date', '<=', challenge.last_report_date)
             ])
 
             if len(closed_goals_to_report) > 0:
                 # some goals need a final report
-                self.report_progress(cr, uid, plan, subset_goal_ids=closed_goals_to_report, context=context)
+                self.report_progress(cr, uid, challenge, subset_goal_ids=closed_goals_to_report, context=context)
 
-            if fields.date.today() == plan.next_report_date:
-                self.report_progress(cr, uid, plan, context=context)
+            if fields.date.today() == challenge.next_report_date:
+                self.report_progress(cr, uid, challenge, context=context)
 
         self.check_challenge_reward(cr, uid, ids, context=context)
         return True
 
-    def quick_update(self, cr, uid, plan_id, context=None):
-        """Update all the goals of a plan, no generation of new goals"""
+    def quick_update(self, cr, uid, challenge_id, context=None):
+        """Update all the goals of a challenge, no generation of new goals"""
         if not context: context = {}
-        goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('plan_id', '=', plan_id)], context=context)
+        goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', '=', challenge_id)], context=context)
         self.pool.get('gamification.goal').update(cr, uid, goal_ids, context=context)
         return True
+
 
     ##### User actions #####
 
     def action_start(self, cr, uid, ids, context=None):
-        """Start a draft goal plan
+        """Start a draft challenge
 
-        Change the state of the plan to in progress and generate related goals
+        Change the state of the challenge to in progress and generate related goals
         """
         # subscribe users if autojoin group
-        for plan in self.browse(cr, uid, ids, context=context):
-            if plan.autojoin_group_id:
-                self.write(cr, uid, [plan.id], {'user_ids': [(4, user.id) for user in plan.autojoin_group_id.users]}, context=context)
+        for challenge in self.browse(cr, uid, ids, context=context):
+            if challenge.autojoin_group_id:
+                self.write(cr, uid, [challenge.id], {'user_ids': [(4, user.id) for user in challenge.autojoin_group_id.users]}, context=context)
 
-            self.write(cr, uid, plan.id, {'state': 'inprogress'}, context=context)
-            self.message_post(cr, uid, plan.id, body="New challenge started.", context=context)
-        return self.generate_goals_from_plan(cr, uid, ids, context=context)
+            self.write(cr, uid, challenge.id, {'state': 'inprogress'}, context=context)
+            self.message_post(cr, uid, challenge.id, body="New challenge started.", context=context)
+        return self.generate_goals_from_challenge(cr, uid, ids, context=context)
 
     def action_check(self, cr, uid, ids, context=None):
-        """Check a goal plan
+        """Check a challenge
 
-        Create goals that haven't been created yet (eg: if added users of planlines)
+        Create goals that haven't been created yet (eg: if added users)
         Recompute the current value for each goal related"""
         return self._update_all(cr, uid, ids=ids, context=context)
 
     def action_close(self, cr, uid, ids, context=None):
-        """Close a plan in progress
+        """Close a challenge in progress
 
-        Change the state of the plan to in done
+        Change the state of the challenge to in done
         Does NOT close the related goals, this is handled by the goal itself"""
         self.check_challenge_reward(cr, uid, ids, force=True, context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def action_reset(self, cr, uid, ids, context=None):
-        """Reset a closed goal plan
+        """Reset a closed challenge
 
-        Change the state of the plan to in progress
-        Closing a plan does not affect the goals so neither does reset"""
+        Change the state of the challenge to in progress
+        Closing a challenge does not affect the goals so neither does reset"""
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
-        """Cancel a plan in progress
+        """Cancel a challenge in progress
 
-        Change the state of the plan to draft
+        Change the state of the challenge to draft
         Cancel the related goals"""
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
-        goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('plan_id', 'in', ids)], context=context)
+        goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids)], context=context)
         self.pool.get('gamification.goal').write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
 
         return True
 
     def action_report_progress(self, cr, uid, ids, context=None):
         """Manual report of a goal, does not influence automatic report frequency"""
-        for plan in self.browse(cr, uid, ids, context):
-            self.report_progress(cr, uid, plan, context=context)
+        for challenge in self.browse(cr, uid, ids, context):
+            self.report_progress(cr, uid, challenge, context=context)
         return True
+
 
     ##### Automatic actions #####
 
-    def generate_goals_from_plan(self, cr, uid, ids, context=None):
-        """Generate the list of goals linked to a plan.
+    def generate_goals_from_challenge(self, cr, uid, ids, context=None):
+        """Generate the goals for each line and user.
 
-        If goals already exist for this planline, the planline is skipped. This
-        can be called after each change in the user or planline list.
-        :param list(int) ids: the list of plan concerned"""
+        If goals already exist for this line and user, the line is skipped. This
+        can be called after each change in the list of users or lines.
+        :param list(int) ids: the list of challenge concerned"""
 
-        for plan in self.browse(cr, uid, ids, context):
-            (start_date, end_date) = start_end_date_for_period(plan.period)
+        for challenge in self.browse(cr, uid, ids, context):
+            (start_date, end_date) = start_end_date_for_period(challenge.period)
 
-            # if no periodicity, use plan dates
-            if not start_date and plan.start_date:
-                start_date = plan.start_date
-            if not end_date and plan.end_date:
-                end_date = plan.end_date
+            # if no periodicity, use challenge dates
+            if not start_date and challenge.start_date:
+                start_date = challenge.start_date
+            if not end_date and challenge.end_date:
+                end_date = challenge.end_date
 
-            for planline in plan.planline_ids:
-                for user in plan.user_ids:
+            for line in challenge.line_ids:
+                for user in challenge.user_ids:
 
                     goal_obj = self.pool.get('gamification.goal')
-                    domain = [('planline_id', '=', planline.id), ('user_id', '=', user.id)]
+                    domain = [('line_id', '=', line.id), ('user_id', '=', user.id)]
                     if start_date:
                         domain.append(('start_date', '=', start_date))
 
-                    # goal already existing for this planline ?
+                    # goal already existing for this line ?
                     if len(goal_obj.search(cr, uid, domain, context=context)) > 0:
 
                         # resume canceled goals
@@ -419,10 +398,10 @@ class gamification_goal_plan(osv.Model):
                         continue
 
                     values = {
-                        'type_id': planline.type_id.id,
-                        'planline_id': planline.id,
+                        'definition_id': line.definition_id.id,
+                        'line_id': line.id,
                         'user_id': user.id,
-                        'target_goal': planline.target_goal,
+                        'target_goal': line.target_goal,
                         'state': 'inprogress',
                     }
 
@@ -431,8 +410,8 @@ class gamification_goal_plan(osv.Model):
                     if end_date:
                         values['end_date'] = end_date
 
-                    if planline.plan_id.remind_update_delay:
-                        values['remind_update_delay'] = planline.plan_id.remind_update_delay
+                    if challenge.remind_update_delay:
+                        values['remind_update_delay'] = challenge.remind_update_delay
 
                     new_goal_id = goal_obj.create(cr, uid, values, context)
 
@@ -442,17 +421,17 @@ class gamification_goal_plan(osv.Model):
 
     ##### JS utilities #####
 
-    def get_board_goal_info(self, cr, uid, plan, subset_goal_ids=False, context=None):
-        """Get the list of latest goals for a plan, sorted by user ranking for each planline"""
+    def get_board_goal_info(self, cr, uid, challenge, subset_goal_ids=False, context=None):
+        """Get the list of latest goals for a challenge, sorted by user ranking for each line"""
 
         goal_obj = self.pool.get('gamification.goal')
-        planlines_boards = []
-        (start_date, end_date) = start_end_date_for_period(plan.period)
+        lines_boards = []
+        (start_date, end_date) = start_end_date_for_period(challenge.period)
 
-        for planline in plan.planline_ids:
+        for line in challenge.line_ids:
 
             domain = [
-                ('planline_id', '=', planline.id),
+                ('line_id', '=', line.id),
                 ('state', 'in', ('inprogress', 'inprogress_update',
                                  'reached', 'failed')),
             ]
@@ -471,24 +450,24 @@ class gamification_goal_plan(osv.Model):
             board_goals = [goal for goal in goal_obj.browse(cr, uid, common_goal_ids, context=context)]
 
             if len(board_goals) == 0:
-                # planline has no generated goals
+                # line has no generated goals
                 continue
 
             # most complete first, current if same percentage (eg: if several 100%)
             sorted_board = enumerate(sorted(board_goals, key=lambda k: (k.completeness, k.current), reverse=True))
-            planlines_boards.append({'goal_type': planline.type_id, 'board_goals': sorted_board, 'target_goal': planline.target_goal})
-        return planlines_boards
+            lines_boards.append({'goal_definition': line.definition_id, 'board_goals': sorted_board, 'target_goal': line.target_goal})
+        return lines_boards
 
-    def get_indivual_goal_info(self, cr, uid, user_id, plan, subset_goal_ids=False, context=None):
-        """Get the list of latest goals of a user for a plan"""
+    def get_indivual_goal_info(self, cr, uid, user_id, challenge, subset_goal_ids=False, context=None):
+        """Get the list of latest goals of a user for a challenge"""
         domain = [
-            ('plan_id', '=', plan.id),
+            ('challenge_id', '=', challenge.id),
             ('user_id', '=', user_id),
             ('state', 'in', ('inprogress', 'inprogress_update',
                              'reached', 'failed')),
         ]
         goal_obj = self.pool.get('gamification.goal')
-        (start_date, end_date) = start_end_date_for_period(plan.period)
+        (start_date, end_date) = start_end_date_for_period(challenge.period)
 
         if subset_goal_ids:
             # use the domain for safety, don't want irrelevant report if wrong argument
@@ -510,7 +489,7 @@ class gamification_goal_plan(osv.Model):
         for goal in goal_obj.browse(cr, uid, related_goal_ids, context=context):
             if goal.end_date:
                 if goal.end_date < fields.date.today():
-                    # do not include goals of previous plan run
+                    # do not include goals of previous challenge run
                     continue
                 else:
                     all_done = False
@@ -521,24 +500,24 @@ class gamification_goal_plan(osv.Model):
             goals.append(goal)
 
         if all_done:
-            # skip plans where all goal are done or failed
+            # skip challenges where all goal are done or failed
             return False
         else:
             return goals
 
     ##### Reporting #####
 
-    def report_progress(self, cr, uid, plan, context=None, users=False, subset_goal_ids=False):
+    def report_progress(self, cr, uid, challenge, context=None, users=False, subset_goal_ids=False):
         """Post report about the progress of the goals
 
-        :param plan: the plan object that need to be reported
+        :param challenge: the challenge object that need to be reported
         :param users: the list(res.users) of users that are concerned by
           the report. If False, will send the report to every user concerned
-          (goal users and group that receive a copy). Only used for plan with
+          (goal users and group that receive a copy). Only used for challenge with
           a visibility mode set to 'personal'.
-        :param goal_ids: the list(int) of goal ids linked to the plan for
-          the report. If not specified, use the goals for the current plan
-          period. This parameter can be used to produce report for previous plan
+        :param goal_ids: the list(int) of goal ids linked to the challenge for
+          the report. If not specified, use the goals for the current challenge
+          period. This parameter can be used to produce report for previous challenge
           periods.
         :param subset_goal_ids: a list(int) of goal ids to restrict the report
         """
@@ -547,81 +526,81 @@ class gamification_goal_plan(osv.Model):
         # template_env = TemplateHelper()
         temp_obj = self.pool.get('email.template')
         ctx = context.copy()
-        if plan.visibility_mode == 'board':
-            planlines_boards = self.get_board_goal_info(cr, uid, plan, subset_goal_ids, context)
+        if challenge.visibility_mode == 'board':
+            lines_boards = self.get_board_goal_info(cr, uid, challenge, subset_goal_ids, context)
 
-            ctx.update({'planlines_boards': planlines_boards})
+            ctx.update({'lines_boards': lines_boards})
             template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_progress_group', context)
-            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.goal.plan', plan.id, context=context)
+            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.challenge', challenge.id, context=context)
 
-            # body_html = template_env.get_template('group_progress.mako').render({'object': plan, 'planlines_boards': planlines_boards, 'uid': uid})
+            # body_html = template_env.get_template('group_progress.mako').render({'object': challenge, 'lines_boards': lines_boards, 'uid': uid})
 
-            # send to every follower of the plan
-            self.message_post(cr, uid, plan.id,
+            # send to every follower of the challenge
+            self.message_post(cr, uid, challenge.id,
                 body=body_html,
                 context=context,
                 subtype='mail.mt_comment')
-            if plan.report_message_group_id:
-                self.pool.get('mail.group').message_post(cr, uid, plan.report_message_group_id.id,
+            if challenge.report_message_group_id:
+                self.pool.get('mail.group').message_post(cr, uid, challenge.report_message_group_id.id,
                     body=body_html,
                     context=context,
                     subtype='mail.mt_comment')
 
         else:
             # generate individual reports
-            for user in users or plan.user_ids:
-                goals = self.get_indivual_goal_info(cr, uid, user.id, plan, subset_goal_ids, context=context)
+            for user in users or challenge.user_ids:
+                goals = self.get_indivual_goal_info(cr, uid, user.id, challenge, subset_goal_ids, context=context)
                 if not goals:
                     continue
 
                 ctx.update({'goals': goals})
                 template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_progress_perso', context)
-                body_html = temp_obj.render_template(cr, user.id, template_id.body_html, 'gamification.goal.plan', plan.id, context=context)
+                body_html = temp_obj.render_template(cr, user.id, template_id.body_html, 'gamification.challenge', challenge.id, context=context)
                 # send message only to users
                 self.message_post(cr, uid, 0,
                                   body=body_html,
                                   partner_ids=[(4, user.partner_id.id)],
                                   context=context,
                                   subtype='mail.mt_comment')
-                if plan.report_message_group_id:
-                    self.pool.get('mail.group').message_post(cr, uid, plan.report_message_group_id.id,
+                if challenge.report_message_group_id:
+                    self.pool.get('mail.group').message_post(cr, uid, challenge.report_message_group_id.id,
                                                              body=body_html,
                                                              context=context,
                                                              subtype='mail.mt_comment')
-        return self.write(cr, uid, plan.id, {'last_report_date': fields.date.today()}, context=context)
+        return self.write(cr, uid, challenge.id, {'last_report_date': fields.date.today()}, context=context)
 
     ##### Challenges #####
 
-    def accept_challenge(self, cr, uid, plan_ids, context=None, user_id=None):
+    def accept_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
         """The user accept the suggested challenge"""
         context = context or {}
         user_id = user_id or uid
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has joined the challenge" % user.name
-        self.message_post(cr, uid, plan_ids, body=message, context=context)
-        self.write(cr, uid, plan_ids, {'proposed_user_ids': [(3, user_id)], 'user_ids': [(4, user_id)]}, context=context)
-        return self.generate_goals_from_plan(cr, uid, plan_ids, context=context)
+        self.message_post(cr, uid, challenge_ids, body=message, context=context)
+        self.write(cr, uid, challenge_ids, {'invited_user_ids': [(3, user_id)], 'user_ids': [(4, user_id)]}, context=context)
+        return self.generate_goals_from_challenge(cr, uid, challenge_ids, context=context)
 
-    def discard_challenge(self, cr, uid, plan_ids, context=None, user_id=None):
+    def discard_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
         """The user discard the suggested challenge"""
         context = context or {}
         user_id = user_id or uid
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has refused the challenge" % user.name
-        self.message_post(cr, uid, plan_ids, body=message, context=context)
-        return self.write(cr, uid, plan_ids, {'proposed_user_ids': (3, user_id)}, context=context)
+        self.message_post(cr, uid, challenge_ids, body=message, context=context)
+        return self.write(cr, uid, challenge_ids, {'invited_user_ids': (3, user_id)}, context=context)
 
-    def reply_challenge_wizard(self, cr, uid, plan_id, context=None):
+    def reply_challenge_wizard(self, cr, uid, challenge_id, context=None):
         context = context or {}
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         result = mod_obj.get_object_reference(cr, uid, 'gamification', 'challenge_wizard')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['res_id'] = plan_id
+        result['res_id'] = challenge_id
         return result
 
-    def check_challenge_reward(self, cr, uid, plan_ids, force=False, context=None):
+    def check_challenge_reward(self, cr, uid, challenge_ids, force=False, context=None):
         """Actions for the end of a challenge
 
         If a reward was selected, grant it to the correct users.
@@ -632,55 +611,55 @@ class gamification_goal_plan(osv.Model):
         (if no end date, a running challenge is never rewarded)
         """
         context = context or {}
-        for plan in self.browse(cr, uid, plan_ids, context=context):
-            (start_date, end_date) = start_end_date_for_period(plan.period, plan.start_date, plan.end_date)
+        for challenge in self.browse(cr, uid, challenge_ids, context=context):
+            (start_date, end_date) = start_end_date_for_period(challenge.period, challenge.start_date, challenge.end_date)
             yesterday = date.today() - timedelta(days=1)
             if end_date == yesterday.strftime(DF) or force:
                 # open chatter message
-                message_body = _("The challenge %s is finished." % plan.name)
+                message_body = _("The challenge %s is finished." % challenge.name)
 
                 # reward for everybody succeeding
                 rewarded_users = []
-                if plan.reward_id:
-                    for user in plan.user_ids:
+                if challenge.reward_id:
+                    for user in challenge.user_ids:
                         reached_goal_ids = self.pool.get('gamification.goal').search(cr, uid, [
-                            ('plan_id', '=', plan.id),
+                            ('challenge_id', '=', challenge.id),
                             ('user_id', '=', user.id),
                             ('start_date', '=', start_date),
                             ('end_date', '=', end_date),
                             ('state', '=', 'reached')
                         ], context=context)
-                        if len(reached_goal_ids) == len(plan.planline_ids):
-                            self.reward_user(cr, uid, user.id, plan.reward_id.id, context)
+                        if len(reached_goal_ids) == len(challenge.line_ids):
+                            self.reward_user(cr, uid, user.id, challenge.reward_id.id, context)
                             rewarded_users.append(user)
 
                     if rewarded_users:
-                        message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (plan.reward_id.name, ", ".join([user.name for user in rewarded_users])))
+                        message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (challenge.reward_id.name, ", ".join([user.name for user in rewarded_users])))
                     else:
                         message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge.")
 
                 # reward bests
-                if plan.reward_first_id:
-                    (first_user, second_user, third_user) = self.get_top3_users(cr, uid, plan, context)
+                if challenge.reward_first_id:
+                    (first_user, second_user, third_user) = self.get_top3_users(cr, uid, challenge, context)
                     if first_user:
-                        self.reward_user(cr, uid, first_user.id, plan.reward_first_id.id, context)
+                        self.reward_user(cr, uid, first_user.id, challenge.reward_first_id.id, context)
                         message_body += _("<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :")
-                        message_body += "<br/> 1. %s - %s" % (first_user.name, plan.reward_first_id.name)
+                        message_body += "<br/> 1. %s - %s" % (first_user.name, challenge.reward_first_id.name)
                     else:
                         message_body += _("Nobody reached the required conditions to receive special badges.")
 
-                    if second_user and plan.reward_second_id:
-                        self.reward_user(cr, uid, second_user.id, plan.reward_second_id.id, context)
-                        message_body += "<br/> 2. %s - %s" % (second_user.name, plan.reward_second_id.name)
-                    if third_user and plan.reward_third_id:
-                        self.reward_user(cr, uid, third_user.id, plan.reward_second_id.id, context)
-                        message_body += "<br/> 3. %s - %s" % (third_user.name, plan.reward_third_id.name)
+                    if second_user and challenge.reward_second_id:
+                        self.reward_user(cr, uid, second_user.id, challenge.reward_second_id.id, context)
+                        message_body += "<br/> 2. %s - %s" % (second_user.name, challenge.reward_second_id.name)
+                    if third_user and challenge.reward_third_id:
+                        self.reward_user(cr, uid, third_user.id, challenge.reward_second_id.id, context)
+                        message_body += "<br/> 3. %s - %s" % (third_user.name, challenge.reward_third_id.name)
 
-                self.message_post(cr, uid, plan.id, body=message_body, context=context)
+                self.message_post(cr, uid, challenge.id, body=message_body, context=context)
         return True
 
-    def get_top3_users(self, cr, uid, plan, context=None):
-        """Get the top 3 users for a defined plan
+    def get_top3_users(self, cr, uid, challenge, context=None):
+        """Get the top 3 users for a defined challenge
 
         Ranking criterias:
             1. succeed every goal of the challenge
@@ -694,14 +673,14 @@ class gamification_goal_plan(osv.Model):
         higher one (eg: if 'second' == False, 'third' will be False)
         """
         goal_obj = self.pool.get('gamification.goal')
-        (start_date, end_date) = start_end_date_for_period(plan.period, plan.start_date, plan.end_date)
+        (start_date, end_date) = start_end_date_for_period(challenge.period, challenge.start_date, challenge.end_date)
         challengers = []
-        for user in plan.user_ids:
+        for user in challenge.user_ids:
             all_reached = True
             total_completness = 0
             # every goal of the user for the running period
             goal_ids = goal_obj.search(cr, uid, [
-                ('plan_id', '=', plan.id),
+                ('challenge_id', '=', challenge.id),
                 ('user_id', '=', user.id),
                 ('start_date', '=', start_date),
                 ('end_date', '=', end_date)
@@ -709,7 +688,7 @@ class gamification_goal_plan(osv.Model):
             for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
                 if goal.state != 'reached':
                     all_reached = False
-                if goal.type_condition == 'higher':
+                if goal.definition_condition == 'higher':
                     # can be over 100
                     total_completness += 100.0 * goal.current / goal.target_goal
                 elif goal.state == 'reached':
@@ -719,13 +698,13 @@ class gamification_goal_plan(osv.Model):
             challengers.append({'user': user, 'all_reached': all_reached, 'total_completness': total_completness})
         sorted_challengers = sorted(challengers, key=lambda k: (k['all_reached'], k['total_completness']), reverse=True)
 
-        if len(sorted_challengers) == 0 or (not plan.reward_failure and not sorted_challengers[0]['all_reached']):
+        if len(sorted_challengers) == 0 or (not challenge.reward_failure and not sorted_challengers[0]['all_reached']):
             # nobody succeeded
             return (False, False, False)
-        if len(sorted_challengers) == 1 or (not plan.reward_failure and not sorted_challengers[1]['all_reached']):
+        if len(sorted_challengers) == 1 or (not challenge.reward_failure and not sorted_challengers[1]['all_reached']):
             # only one user succeeded
             return (sorted_challengers[0]['user'], False, False)
-        if len(sorted_challengers) == 2 or (not plan.reward_failure and not sorted_challengers[2]['all_reached']):
+        if len(sorted_challengers) == 2 or (not challenge.reward_failure and not sorted_challengers[2]['all_reached']):
             # only one user succeeded
             return (sorted_challengers[0]['user'], sorted_challengers[1]['user'], False)
         return (sorted_challengers[0]['user'], sorted_challengers[1]['user'], sorted_challengers[2]['user'])
@@ -736,66 +715,50 @@ class gamification_goal_plan(osv.Model):
         return self.pool.get('gamification.badge').send_badge(cr, uid, badge_id, [user_badge_id], user_from=None, context=context)
 
 
-class gamification_goal_planline(osv.Model):
-    """Gamification goal planline
+class gamification_challenge_line(osv.Model):
+    """Gamification challenge line
 
-    Predifined goal for 'gamification_goal_plan'
+    Predifined goal for 'gamification_challenge'
     These are generic list of goals with only the target goal defined
-    Should only be created for the gamification_goal_plan object
+    Should only be created for the gamification_challenge object
     """
 
-    _name = 'gamification.goal.planline'
-    _description = 'Gamification generic goal for plan'
-    _order = "sequence, sequence_type, id"
+    _name = 'gamification.challenge.line'
+    _description = 'Gamification generic goal for challenge'
+    _order = "sequence, id"
 
-    def _get_planline_types(self, cr, uid, ids, context=None):
-        """Return the ids of planline items related to the gamification.goal.type
-        objects in 'ids (used to update the value of 'sequence_type')'"""
-
-        result = {}
-        for goal_type in self.pool.get('gamification.goal.type').browse(cr, uid, ids, context=context):
-            domain = [('type_id', '=', goal_type.id)]
-            planline_ids = self.pool.get('gamification.goal.planline').search(cr, uid, domain, context=context)
-            for p_id in planline_ids:
-                result[p_id] = True
-        return result.keys()
-
-    def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):
-        goal_type = self.pool.get('gamification.goal.type')
-        if not type_id:
-            return {'value': {'type_id': False}}
-        goal_type = goal_type.browse(cr, uid, type_id, context=context)
-        ret = {'value': {
-            'type_condition': goal_type.condition,
-            'type_full_suffix': goal_type.full_suffix}}
+    def on_change_definition_id(self, cr, uid, ids, definition_id=False, context=None):
+        goal_definition = self.pool.get('gamification.goal.definition')
+        if not definition_id:
+            return {'value': {'definition_id': False}}
+        goal_definition = goal_definition.browse(cr, uid, definition_id, context=context)
+        ret = {
+            'value': {
+                'definition_condition': goal_definition.condition,
+                'definition_full_suffix': goal_definition.full_suffix
+            }
+        }
         return ret
 
     _columns = {
-        'name': fields.related('type_id', 'name', string="Name"),
-        'plan_id': fields.many2one('gamification.goal.plan',
-            string='Plan',
+        'name': fields.related('definition_id', 'name', string="Name"),
+        'challenge_id': fields.many2one('gamification.challenge',
+            string='Challenge',
             required=True,
             ondelete="cascade"),
-        'type_id': fields.many2one('gamification.goal.type',
-            string='Goal Type',
+        'definition_id': fields.many2one('gamification.goal.definition',
+            string='Goal Definition',
             required=True,
             ondelete="cascade"),
         'target_goal': fields.float('Target Value to Reach',
             required=True),
         'sequence': fields.integer('Sequence',
             help='Sequence number for ordering'),
-        'sequence_type': fields.related('type_id', 'sequence',
-            type='integer',
-            string='Sequence',
-            readonly=True,
-            store={
-                'gamification.goal.type': (_get_planline_types, ['sequence'], 10),
-                }),
-        'type_condition': fields.related('type_id', 'condition', type="selection",
+        'definition_condition': fields.related('definition_id', 'condition', type="selection",
             readonly=True, string="Condition", selection=[('lower', '<='), ('higher', '>=')]),
-        'type_suffix': fields.related('type_id', 'suffix', type="char", readonly=True, string="Unit"),
-        'type_monetary': fields.related('type_id', 'monetary', type="boolean", readonly=True, string="Monetary"),
-        'type_full_suffix': fields.related('type_id', 'full_suffix', type="char", readonly=True, string="Suffix"),
+        'definition_suffix': fields.related('definition_id', 'suffix', type="char", readonly=True, string="Unit"),
+        'definition_monetary': fields.related('definition_id', 'monetary', type="boolean", readonly=True, string="Monetary"),
+        'definition_full_suffix': fields.related('definition_id', 'full_suffix', type="char", readonly=True, string="Suffix"),
     }
 
     _default = {

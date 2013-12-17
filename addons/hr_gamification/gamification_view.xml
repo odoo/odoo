@@ -93,22 +93,22 @@
             <field name="name">Goals History</field>
             <field name="view_mode">tree,kanban</field>
             <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_type': True}</field>
-            <field name="domain">[('plan_id.category', '=', 'hr')]</field>
+            <field name="domain">[('challenge_id.category', '=', 'hr')]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a goal. 
                 </p>
                 <p>
                     A goal is defined by a user and a goal type.
-                    Goals can be created automatically by using goal plans.
+                    Goals can be created automatically by using challenges.
                 </p>
             </field>
         </record>
 
 
-        <record id="goal_plan_list_action2" model="ir.actions.act_window">
+        <record id="challenge_list_action2" model="ir.actions.act_window">
             <field name="name">Challenges</field>
-            <field name="res_model">gamification.goal.plan</field>
+            <field name="res_model">gamification.challenge</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[('category', '=', 'hr')]</field>
             <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
@@ -123,23 +123,23 @@
                 </p>
             </field>
         </record>
-        <record id="goal_plan_list_action2_view1" model="ir.actions.act_window.view">
+        <record id="challenge_list_action2_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">kanban</field>
-            <field name="act_window_id" ref="goal_plan_list_action2"/>
-            <field name="view_id" ref="gamification.view_goal_plan_kanban"/>
+            <field name="act_window_id" ref="challenge_list_action2"/>
+            <field name="view_id" ref="gamification.view_challenge_kanban"/>
         </record>
-        <record id="goal_plan_list_action2_view2" model="ir.actions.act_window.view">
+        <record id="challenge_list_action2_view2" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
             <field name="view_mode">form</field>
-            <field name="act_window_id" ref="goal_plan_list_action2"/>
-            <field name="view_id" ref="gamification.goal_plan_form_view"/>
+            <field name="act_window_id" ref="challenge_list_action2"/>
+            <field name="view_id" ref="gamification.challenge_form_view"/>
         </record>
 
         <menuitem id="menu_hr_gamification" parent="hr.menu_hr_root" name="Engagement" sequence="40"/>
 
         <menuitem id="gamification_badge_menu_hr" parent="menu_hr_gamification" action="gamification.badge_list_action" />
-        <menuitem id="gamification_plan_menu_hr" parent="menu_hr_gamification" action="goal_plan_list_action2" groups="base.group_hr_user"/>
+        <menuitem id="gamification_challenge_menu_hr" parent="menu_hr_gamification" action="challenge_list_action2" groups="base.group_hr_user"/>
         <menuitem id="gamification_goal_menu_hr" parent="menu_hr_gamification" action="goals_menu_groupby_action2" groups="base.group_hr_user"/>
 
     </data>

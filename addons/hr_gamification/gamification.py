@@ -131,7 +131,7 @@ class hr_employee(osv.osv):
         """Return the list of goals assigned to the employee"""
         res = {}
         for employee in self.browse(cr, uid, ids, context=context):
-            res[employee.id] = self.pool.get('gamification.goal').search(cr,uid,[('user_id', '=', employee.user_id.id), ('plan_id.category', '=', 'hr')], context=context)
+            res[employee.id] = self.pool.get('gamification.goal').search(cr,uid,[('user_id', '=', employee.user_id.id), ('challenge_id.category', '=', 'hr')], context=context)
         return res
 
     def _get_employee_badges(self, cr, uid, ids, field_name, arg, context=None):
