@@ -292,7 +292,7 @@ class procurement_order(osv.osv):
                     break
                 done = self.check(cr, uid, ids, context=context)
                 offset += len(ids) - len(done)
-                if use_new_cursor and len(done):
+                if use_new_cursor:
                     cr.commit()
 
         finally:
