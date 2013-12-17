@@ -1862,7 +1862,12 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
                     });
                 },
                 container: 'body',
-                placement: 'bottom',
+                placement: function(tip, trigger) {  //dynamic set position
+                    var offset = $(trigger).offset();
+                    var vert = 0.5 * $(document).outerHeight() - offset.top;
+                    var vertPlacement = vert > 0 ? 'bottom' : 'top';
+                    return vertPlacement;
+                },
                 html: true,
                 opacity: 0.85,
             }, options || {});

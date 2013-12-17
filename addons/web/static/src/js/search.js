@@ -401,7 +401,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 .on('add change reset remove', this.proxy('do_search'))
                 .on('add change reset remove', this.proxy('renderFacets'));
         $('.oe_searchview_unfold_drawer').attr('data-toggle', 'tooltip');
-        $('.oe_searchview_unfold_drawer').tooltip({html: true});
+        $('.oe_searchview_unfold_drawer').tooltip({placement: 'bottom', html: true});
         if (this.options.hidden) {
             this.$el.hide();
         }
