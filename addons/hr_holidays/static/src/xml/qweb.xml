@@ -1,9 +1,13 @@
 <template>
       <div t-name="hr_holidays.QuickCreate" class="oe_calendar_quick_create openerp">
-        <input name='name' class="qc_name"/>
-        <select name='holiday_status_id' class="qc_type">    
-        </select>
-        
+            <div class="form-group">
+                <label for='name' class=' control-label'>Description:</label>  
+                <input name='name' class=" qc_name form-control"/>
+            </div>
+            <div class="form-group">
+                <label for='holiday_status_id' class=' control-label'>Type:</label> 
+                <select name='holiday_status_id' class="qc_type form-control"></select>
+            </div>    
         <t t-if="widget._buttons">
           <div class="oe_calendar_quick_create_buttons">
             <button class="oe_button oe_calendar_quick_create_add ">Add</button>

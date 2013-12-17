@@ -1,7 +1,3 @@
-/*---------------------------------------------------------
- * OpenERP web_calendar
- *---------------------------------------------------------*/
-
 openerp.google_calendar = function(instance) {
     var _t = instance.web._t,
        _lt = instance.web._lt;
@@ -44,6 +40,17 @@ openerp.google_calendar = function(instance) {
                 }
 
             }).always(function(o) { $('div.oe_cal_sync_button').prop('disabled',false); });
+        }
+    });
+    
+    instance.web_calendar.FullCalendarView.include({
+        extraSideBar: function() {
+            this._super();
+            if (this.dataset.model == "crm.meeting") {
+                var button = QWeb.render('GoogleCalendar.buttonSynchro');
+                this.$el.find('.oe_calendar_filter').prepend(button);
+                console.log("added");
+           }
         }
     });
 

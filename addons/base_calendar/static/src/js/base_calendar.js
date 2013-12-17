@@ -145,6 +145,9 @@ openerp.base_calendar = function(instance) {
         });
     }
     
+    
+    
+    
    
 };
 

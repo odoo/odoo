@@ -65,8 +65,10 @@ openerp.hr_holidays = function(instance) {
             var name = this.$el.find(".qc_name").val();
             var type = this.$el.find(".qc_type").val();
             
-            if (/^\s*$/.test(name)) { return; }
-            this.quick_create({'name': name,'holiday_status_id':parseInt(type)});
+            if (/^\s*$/.test(name)) { 
+                return false; 
+            }
+            return this.quick_create({'name': name,'holiday_status_id':parseInt(type)}).always(function() { return true; });
         },
 
         
