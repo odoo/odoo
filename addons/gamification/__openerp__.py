@@ -46,6 +46,8 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'security/ir.model.access.csv',
         'data/goal_base.xml',
         'data/badge.xml',
+        'wizard/update_goal.xml',
+        'wizard/grant_badge.xml',
     ],
     'test': [
         'test/goal_demo.yml'

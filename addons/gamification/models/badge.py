@@ -24,7 +24,6 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 
-# from templates import TemplateHelper
 from datetime import date
 import logging
 
@@ -111,7 +110,6 @@ class gamification_badge(osv.Model):
         'name': fields.char('Badge', required=True, translate=True),
         'description': fields.text('Description'),
         'image': fields.binary("Image", help="This field holds the image used for the badge, limited to 256x256"),
-        # image_select: selection with a on_change to fill image with predefined picts
         'rule_auth': fields.selection([
                 ('everyone', 'Everyone'),
                 ('users', 'A selected list of users'),
@@ -261,39 +259,3 @@ class gamification_badge(osv.Model):
 
         # badge.rule_auth == 'everyone' -> no check
         return 1
-
-
-class grant_badge_wizard(osv.TransientModel):
-    """ Wizard allowing to grant a badge to a user"""
-
-    _name = 'gamification.badge.user.wizard'
-    _columns = {
-        'user_id': fields.many2one("res.users", string='User', required=True),
-        'badge_id': fields.many2one("gamification.badge", string='Badge', required=True),
-        'comment': fields.text('Comment'),
-    }
-
-    def action_grant_badge(self, cr, uid, ids, context=None):
-        """Wizard action for sending a badge to a chosen user"""
-
-        badge_obj = self.pool.get('gamification.badge')
-        badge_user_obj = self.pool.get('gamification.badge.user')
-
-        for wiz in self.browse(cr, uid, ids, context=context):
-            if uid == wiz.user_id.id:
-                raise osv.except_osv(_('Warning!'), _('You can not grant a badge to yourself'))
-
-            #check if the badge granting is legitimate
-            if badge_obj.check_granting(cr, uid, user_from_id=uid, badge_id=wiz.badge_id.id, context=context):
-                #create the badge
-                values = {
-                    'user_id': wiz.user_id.id,
-                    'badge_id': wiz.badge_id.id,
-                    'comment': wiz.comment,
-                }
-                badge_user = badge_user_obj.create(cr, uid, values, context=context)
-                #notify the user
-                result = badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=uid, context=context)
-
-        return result
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

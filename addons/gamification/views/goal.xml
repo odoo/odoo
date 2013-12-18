@@ -278,26 +278,6 @@
             </field>
         </record>
 
-
-        <record id="view_goal_wizard_update_current" model="ir.ui.view">
-            <field name="name">Update the current value of the Goal</field>
-            <field name="model">gamification.goal.wizard</field>
-            <field name="arch" type="xml">
-                <form string="Grant Badge To" version="7.0">
-                    Set the current value you have reached for this goal
-                    <group>
-                        <field name="goal_id" invisible="1"/>
-                        <field name="current" />
-                    </group>
-                    <footer>
-                        <button string="Update" type="object" name="action_update_current" class="oe_highlight" /> or
-                        <button string="Cancel" special="cancel" class="oe_link"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-
         <!-- menus in settings - technical feature required -->
         <menuitem id="gamification_menu" name="Gamification Tools" parent="base.menu_administration" groups="base.group_no_one" />
             <menuitem id="gamification_goal_menu" parent="gamification_menu" action="goal_list_action" sequence="0"/>

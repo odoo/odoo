@@ -19,5 +19,5 @@
 #
 ##############################################################################
 
-import models
-import wizard
+import update_goal
+import grant_badge

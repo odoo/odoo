@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 
 
@@ -54,7 +53,7 @@ class gamification_badge(osv.Model):
         """Overwrite the message_post method to send the badge to the employee"""
         # badge_user included in the send_badge method and 'badge_id' in the wizard view
         if 'badge_user' in context and 'badge_id' in context:
-            badge = self.browse(cr, uid, context['badge_id'], context=context)
+            # badge = self.browse(cr, uid, context['badge_id'], context=context)
             badge_user = context['badge_user']
             if badge_user.employee_id:
                 return self.pool.get('hr.employee').message_post(cr, SUPERUSER_ID,
@@ -79,48 +78,6 @@ class gamification_badge(osv.Model):
             'res_model': 'hr.employee',
             'domain': [('id', 'in', employee_ids)]
         }
-
-class hr_grant_badge_wizard(osv.TransientModel):
-    _name = 'gamification.badge.user.wizard'
-    _inherit = ['gamification.badge.user.wizard']
-
-    _columns = {
-        'employee_id': fields.many2one("hr.employee", string='Employee', required=True),
-        'user_id': fields.related("employee_id", "user_id",
-                                  type="many2one", relation="res.users",
-                                  store=True, string='User')
-    }
-
-    def action_grant_badge(self, cr, uid, ids, context=None):
-        """Wizard action for sending a badge to a chosen employee"""
-        if context is None:
-            context = {}
-
-        badge_obj = self.pool.get('gamification.badge')
-        badge_user_obj = self.pool.get('gamification.badge.user')
-
-        for wiz in self.browse(cr, uid, ids, context=context):
-            if not wiz.user_id:
-                raise osv.except_osv(_('Warning!'), _('You can send badges only to employees linked to a user.'))
-
-            if uid == wiz.user_id.id:
-                raise osv.except_osv(_('Warning!'), _('You can not send a badge to yourself'))
-
-            if badge_obj.check_granting(cr, uid,
-                                         user_from_id=uid,
-                                         badge_id=wiz.badge_id.id,
-                                         context=context):
-
-                values = {
-                    'user_id': wiz.user_id.id,
-                    'badge_id': wiz.badge_id.id,
-                    'employee_id': wiz.employee_id.id,
-                    'comment': wiz.comment,
-                }
-                badge_user = badge_user_obj.create(cr, uid, values, context=context)
-
-                result = badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=uid, context=context)
-        return result
 
 
 class hr_employee(osv.osv):

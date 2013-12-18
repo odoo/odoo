@@ -61,6 +61,7 @@ class res_users_gamification_group(osv.Model):
         all_goals_info = []
         challenge_obj = self.pool.get('gamification.challenge')
 
+        user = self.browse(cr, uid, uid, context=context)
         challenge_ids = challenge_obj.search(cr, uid, [('user_ids', 'in', uid), ('state', '=', 'inprogress')], context=context)
         for challenge in challenge_obj.browse(cr, uid, challenge_ids, context=context):
             # serialize goals info to be able to use it in javascript
@@ -68,9 +69,8 @@ class res_users_gamification_group(osv.Model):
                 'id': challenge.id,
                 'name': challenge.name,
                 'visibility_mode': challenge.visibility_mode,
+                'currency': user.company_id.currency_id.id
             }
-            user = self.browse(cr, uid, uid, context=context)
-            serialized_goals_info['currency'] = user.company_id.currency_id.id
 
             if challenge.visibility_mode == 'ranking':
                 # board report should be grouped by line for all users
