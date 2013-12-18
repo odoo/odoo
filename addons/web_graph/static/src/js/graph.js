@@ -499,33 +499,14 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         var self = this,
             dim_x = this.pivot.rows.groupby.length,
             dim_y = this.pivot.cols.groupby.length,
-            data = [];
+            data;
 
         // No groupby **************************************************************
         if ((dim_x === 0) && (dim_y === 0)) {
             data = [{key: 'Total', values:[{
-                title: 'Total',
-                value: this.pivot.get_value(this.pivot.rows.main.id, this.pivot.cols.main.id),
+                x: 'Total',
+                y: this.pivot.get_value(this.pivot.rows.main.id, this.pivot.cols.main.id),
             }]}];
-            nv.addGraph(function () {
-              var chart = nv.models.discreteBarChart()
-                    .x(function(d) { return d.title;})
-                    .y(function(d) { return d.value;})
-                    .tooltips(false)
-                    .showValues(true)
-                    .width(self.width)
-                    .height(self.height)
-                    .staggerLabels(true);
-
-                d3.select(self.svg)
-                    .datum(data)
-                    .attr('width', self.width)
-                    .attr('height', self.height)
-                    .call(chart);
-
-                nv.utils.windowResize(chart.update);
-                return chart;
-            });
         // Only column groupbys ****************************************************
         } else if ((dim_x === 0) && (dim_y >= 1)){
             data =  _.map(this.pivot.get_columns_depth(1), function (header) {
@@ -534,53 +515,14 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                     values: [{x:header.root.main.title, y: self.pivot.get_total(header)}]
                 };
             });
-            nv.addGraph(function() {
-                var chart = nv.models.multiBarChart()
-                        .stacked(self.bar_ui === 'stacked')
-                        .tooltips(false)
-                        .width(self.width)
-                        .height(self.height)
-                        .showControls(false);
-
-                d3.select(self.svg)
-                    .datum(data)
-                    .attr('width', self.width)
-                    .attr('height', self.height)
-                    .transition()
-                    .duration(500)
-                    .call(chart);
-
-                nv.utils.windowResize(chart.update);
-
-                return chart;
-            });
         // Just 1 row groupby ******************************************************
         } else if ((dim_x === 1) && (dim_y === 0))  {
             data = _.map(this.pivot.rows.main.children, function (pt) {
                 var value = self.pivot.get_value(pt.id, self.pivot.cols.main.id),
                     title = (pt.title !== undefined) ? pt.title : 'Undefined';
-                return {title: title, value: value};
+                return {x: title, y: value};
             });
             data = [{key: this.measure_label(), values:data}];
-            nv.addGraph(function () {
-              var chart = nv.models.discreteBarChart()
-                    .x(function(d) { return d.title;})
-                    .y(function(d) { return d.value;})
-                    .tooltips(false)
-                    .showValues(true)
-                    .width(self.width)
-                    .height(self.height)
-                    .staggerLabels(true);
-
-                d3.select(self.svg)
-                    .datum(data)
-                    .attr('width', self.width)
-                    .attr('height', self.height)
-                    .call(chart);
-
-                nv.utils.windowResize(chart.update);
-                return chart;
-            });
         // 1 row groupby and some col groupbys**************************************
         } else if ((dim_x === 1) && (dim_y >= 1))  {
             data = _.map(this.pivot.get_columns_depth(1), function (colhdr) {
@@ -591,24 +533,6 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                     };
                 });
                 return {key: colhdr.title || 'Undefined', values: values};
-            });
-
-            nv.addGraph(function () {
-              var chart = nv.models.multiBarChart()
-                    .stacked(self.bar_ui === 'stacked')
-                    .staggerLabels(true)
-                    .width(self.width)
-                    .height(self.height)
-                    .tooltips(false);
-
-                d3.select(self.svg)
-                    .datum(data)
-                    .attr('width', self.width)
-                    .attr('height', self.height)
-                    .call(chart);
-
-                nv.utils.windowResize(chart.update);
-                return chart;
             });
         // At least two row groupby*************************************************
         } else {
@@ -627,25 +551,26 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 });
                 return {key:key, values: values};
             });
-
-            nv.addGraph(function () {
-              var chart = nv.models.multiBarChart()
-                    .stacked(self.bar_ui === 'stacked')
-                    .staggerLabels(true)
-                    .width(self.width)
-                    .height(self.height)
-                    .tooltips(false);
-
-                d3.select(self.svg)
-                    .datum(data)
-                    .attr('width', self.width)
-                    .attr('height', self.height)
-                    .call(chart);
-
-                nv.utils.windowResize(chart.update);
-                return chart;
-            });
         }
+
+        nv.addGraph(function () {
+          var chart = nv.models.multiBarChart()
+                .tooltips(false)
+                .width(self.width)
+                .height(self.height)
+                .stacked(self.bar_ui === 'stacked')
+                .staggerLabels(true);
+
+            d3.select(self.svg)
+                .datum(data)
+                .attr('width', self.width)
+                .attr('height', self.height)
+                .call(chart);
+
+            nv.utils.windowResize(chart.update);
+            return chart;
+        });
+
     },
 
     line_chart: function () {
