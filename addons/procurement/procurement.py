@@ -182,8 +182,14 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
+    def get_cancel_ids(self, cr, uid, ids, context=None):
+        return [proc.id for proc in self.browse(cr, uid, ids, context=context) if proc.state != 'done']
+
     def cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+        #cancel only the procurements that aren't done already
+        to_cancel_ids = self.get_cancel_ids(cr, uid, ids, context=context)
+        if to_cancel_ids:
+            return self.write(cr, uid, to_cancel_ids, {'state': 'cancel'}, context=context)
 
     def reset_to_confirmed(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)

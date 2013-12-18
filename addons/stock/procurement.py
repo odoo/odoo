@@ -109,13 +109,14 @@ class procurement_order(osv.osv):
     def cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        to_cancel_ids = self.get_cancel_ids(cr, uid, ids, context=context)
         ctx = context.copy()
         #set the context for the propagation of the procurement cancelation
         ctx['cancel_procurement'] = True
-        for procurement in self.browse(cr, uid, ids, context=ctx):
+        for procurement in self.browse(cr, uid, to_cancel_ids, context=ctx):
             if procurement.rule_id and procurement.rule_id.propagate:
                 self.propagate_cancel(cr, uid, procurement, context=ctx)
-        return super(procurement_order, self).cancel(cr, uid, ids, context=ctx)
+        return super(procurement_order, self).cancel(cr, uid, to_cancel_ids, context=ctx)
 
     def _find_parent_locations(self, cr, uid, procurement, context=None):
         location = procurement.location_id
@@ -196,6 +197,12 @@ class procurement_order(osv.osv):
             'date_expected': newdate,
             'propagate': procurement.rule_id.propagate,
         }
+        #look if the procurement was in exception (because all its moves were cancelled) and cancel the previously made attempt to avoid duplicates
+        cancelled_moves = [m.id for m in procurement.move_ids if m.state == 'cancel']
+        if cancelled_moves:
+            previous_attempt = self.search(cr, uid, [('move_dest_id', 'in', cancelled_moves)], context=context)
+            if previous_attempt:
+                self.cancel(cr, uid, previous_attempt, context=context)
         return vals
 
     def _run(self, cr, uid, procurement, context=None):
@@ -228,7 +235,7 @@ class procurement_order(osv.osv):
                 self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
                 self.message_post(cr, uid, [procurement.id], body=_('All stock moves have been cancelled for this procurement.'), context=context)
                 return False
-            
+
         return super(procurement_order, self)._check(cr, uid, procurement, context)
 
     def do_view_pickings(self, cr, uid, ids, context=None):
