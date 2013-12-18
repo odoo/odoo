@@ -422,7 +422,6 @@
         },
         start: function() {
             var self = this;
-            this.height = null;
             this.saving_mutex = new openerp.Mutex();
 
             this.$('#website-top-edit').hide();
@@ -457,10 +456,9 @@
         },
         check_height: function () {
             var editor_height = this.$el.outerHeight();
-            if (this.height != editor_height) {
-                this.height = editor_height;
-                $(document.body).css('padding-top', this.height);
-                this.trigger('resize', this.height);
+            if (this.get('height') != editor_height) {
+                $(document.body).css('padding-top', editor_height);
+                this.set('height', editor_height);
             }
         },
         edit: function () {

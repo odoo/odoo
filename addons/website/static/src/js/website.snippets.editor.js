@@ -140,8 +140,8 @@
                 e.preventDefault();
             });
 
-            this.getParent().on('resize', this, function (height) {
-                self.$el.css('top', height);
+            this.getParent().on('change:height', this, function (editor) {
+                self.$el.css('top', editor.get('height'));
             });
         },
         fetch_snippet_templates: function () {

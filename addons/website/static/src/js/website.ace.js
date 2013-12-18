@@ -136,9 +136,11 @@
             $('button[data-action=edit]').click(function () {
                self.close();
             });
-            this.getParent().on('resize', this, resizeEditorHeight);
+            this.getParent().on('change:height', this, function (editor) {
+                resizeEditorHeight(editor.get('height'));
+            });
             resizeEditor(readEditorWidth());
-            resizeEditorHeight(this.getParent().height);
+            resizeEditorHeight(this.getParent().get('height'));
         },
         loadViews: function (views) {
             var self = this;
