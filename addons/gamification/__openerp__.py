@@ -38,19 +38,16 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
 """,
 
     'data': [
-        'views/challenge.xml',
+        'wizard/update_goal.xml',
+        'wizard/grant_badge.xml',
         'views/badge.xml',
+        'views/challenge.xml',
         'views/goal.xml',
         'data/cron.xml',
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
         'data/goal_base.xml',
         'data/badge.xml',
-        'wizard/update_goal.xml',
-        'wizard/grant_badge.xml',
-    ],
-    'test': [
-        'test/goal_demo.yml'
     ],
     'installable': True,
     'application': True,

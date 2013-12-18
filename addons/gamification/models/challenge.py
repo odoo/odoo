@@ -197,11 +197,30 @@ class gamification_challenge(osv.Model):
         'reward_failure': False,
     }
 
+
+    def create(self, cr, uid, vals, context=None):
+        """Overwrite the create method to add the user of groups"""
+
+        # add users when change the group auto-subscription
+        if vals.get('autojoin_group_id'):
+            new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
+
+            if 'user_ids' not in vals:
+                vals['user_ids'] = []
+            vals['user_ids'] += [(4, user.id) for user in new_group.users]
+
+        create_res = super(gamification_challenge, self).create(cr, uid, vals, context=context)
+
+        # subscribe new users to the challenge
+        if vals.get('user_ids'):
+            # done with browse after super to be sure catch all after orm process
+            challenge = self.browse(cr, uid, create_res, context=context)
+            self.message_subscribe_users(cr, uid, [challenge.id], [user.id for user in challenge.user_ids], context=context)
+
+        return create_res
+
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to add the user of groups"""
-        if not ids:
-            return True
-
         # add users when change the group auto-subscription
         if vals.get('autojoin_group_id'):
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
@@ -306,6 +325,8 @@ class gamification_challenge(osv.Model):
 
         Change the state of the challenge to in progress and generate related goals
         """
+        if isinstance(ids, (int,long)):
+            ids = [ids]
         # subscribe users if autojoin group
         for challenge in self.browse(cr, uid, ids, context=context):
             if challenge.autojoin_group_id:
@@ -320,6 +341,8 @@ class gamification_challenge(osv.Model):
 
         Create goals that haven't been created yet (eg: if added users)
         Recompute the current value for each goal related"""
+        if isinstance(ids, (int,long)):
+            ids = [ids]
         return self._update_all(cr, uid, ids=ids, context=context)
 
     def action_close(self, cr, uid, ids, context=None):
@@ -342,6 +365,8 @@ class gamification_challenge(osv.Model):
 
         Change the state of the challenge to draft
         Cancel the related goals"""
+        if isinstance(ids, (int,long)):
+            ids = [ids]
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids)], context=context)
         self.pool.get('gamification.goal').write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
@@ -350,6 +375,8 @@ class gamification_challenge(osv.Model):
 
     def action_report_progress(self, cr, uid, ids, context=None):
         """Manual report of a goal, does not influence automatic report frequency"""
+        if isinstance(ids, (int,long)):
+            ids = [ids]
         for challenge in self.browse(cr, uid, ids, context):
             self.report_progress(cr, uid, challenge, context=context)
         return True
@@ -593,7 +620,7 @@ class gamification_challenge(osv.Model):
         result['res_id'] = challenge_id
         return result
 
-    def check_challenge_reward(self, cr, uid, challenge_ids, force=False, context=None):
+    def check_challenge_reward(self, cr, uid, ids, force=False, context=None):
         """Actions for the end of a challenge
 
         If a reward was selected, grant it to the correct users.
@@ -603,8 +630,10 @@ class gamification_challenge(osv.Model):
             - when a challenge is manually closed
         (if no end date, a running challenge is never rewarded)
         """
+        if isinstance(ids, (int,long)):
+            ids = [ids]
         context = context or {}
-        for challenge in self.browse(cr, uid, challenge_ids, context=context):
+        for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period, challenge.start_date, challenge.end_date)
             yesterday = date.today() - timedelta(days=1)
             if end_date == yesterday.strftime(DF) or force:

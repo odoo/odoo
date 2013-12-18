@@ -307,7 +307,8 @@ class gamification_goal(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         """Overwrite the create method to add a 'no_remind_goal' field to True"""
-        context = context or {}
+        if context is None:
+            context = {}
         context['no_remind_goal'] = True
         return super(gamification_goal, self).create(cr, uid, vals, context=context)
 
@@ -317,6 +318,8 @@ class gamification_goal(osv.Model):
         If the current value is changed and the report frequency is set to On
         change, a report is generated
         """
+        if context is None:
+            context = {}
         vals['last_update'] = fields.date.today()
         result = super(gamification_goal, self).write(cr, uid, ids, vals, context=context)
         for goal in self.browse(cr, uid, ids, context=context):

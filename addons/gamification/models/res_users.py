@@ -31,6 +31,7 @@ class res_users_gamification_group(osv.Model):
     _inherit = ['res.users']
 
     def write(self, cr, uid, ids, vals, context=None):
+        """Overwrite to autosubscribe users if added to a group marked as autojoin, user will be added to challenge"""
         write_res = super(res_users_gamification_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('groups_id'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
@@ -41,12 +42,20 @@ class res_users_gamification_group(osv.Model):
             challenge_ids = challenge_obj.search(cr, uid, [('autojoin_group_id', 'in', user_group_ids)], context=context)
             if challenge_ids:
                 challenge_obj.write(cr, uid, challenge_ids, {'user_ids': [(4, user_id) for user_id in ids]}, context=context)
+        return write_res
 
-        if vals.get('image'):
-            goal_definition_id = self.pool.get('ir.model.data').get_object(cr, uid, 'gamification', 'definition_base_avatar', context)
-            goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('definition_id', '=', goal_definition_id.id), ('user_id', 'in', ids)], context=context)
-            values = {'state': 'reached', 'current': 1}
-            self.pool.get('gamification.goal').write(cr, uid, goal_ids, values, context=context)
+    def create(self, cr, uid, vals, context=None):
+        """Overwrite to autosubscribe users if added to a group marked as autojoin, user will be added to challenge"""
+        write_res = super(res_users_gamification_group, self).create(cr, uid, vals, context=context)
+        if vals.get('groups_id'):
+            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+            user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
+            user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
+
+            challenge_obj = self.pool.get('gamification.challenge')
+            challenge_ids = challenge_obj.search(cr, uid, [('autojoin_group_id', 'in', user_group_ids)], context=context)
+            if challenge_ids:
+                challenge_obj.write(cr, uid, challenge_ids, {'user_ids': [(4, write_res)]}, context=context)
         return write_res
 
     def get_goals_todo_info(self, cr, uid, context=None):
@@ -174,4 +183,3 @@ class res_groups_gamification_group(osv.Model):
             if challenge_ids:
                 challenge_obj.write(cr, uid, challenge_ids, {'user_ids': [(4, user_id) for user_id in user_ids]}, context=context)
         return write_res
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

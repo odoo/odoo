@@ -14,17 +14,6 @@
             <field name="res_id_field">user.id</field>
         </record>
 
-        <record model="gamification.goal.definition" id="definition_base_avatar">
-            <field name="name">Set your Avatar</field>
-            <field name="description">In your user preference</field>
-            <field name="computation_mode">manually</field>
-            <field name="display_mode">checkbox</field>
-            <!-- problem : default avatar != False -> manually + check in write function -->
-            <field name="action_id" eval="ref('base.action_res_users_my')" />
-            <field name="res_id_field">user.id</field>
-        </record>
-
-
         <record model="gamification.goal.definition" id="definition_base_company_data">
             <field name="name">Set your Company Data</field>
             <field name="description">Write some information about your company (specify at least a name)</field>
@@ -101,11 +90,6 @@
         <!-- lines -->
         <record model="gamification.challenge.line" id="line_base_discover1">
             <field name="definition_id" eval="ref('definition_base_timezone')" />
-            <field name="target_goal">1</field>
-            <field name="challenge_id" eval="ref('challenge_base_discover')" />
-        </record>
-        <record model="gamification.challenge.line" id="line_base_discover2">
-            <field name="definition_id" eval="ref('definition_base_avatar')" />
             <field name="target_goal">1</field>
             <field name="challenge_id" eval="ref('challenge_base_discover')" />
         </record>
