@@ -962,6 +962,7 @@ class survey_user_input_line(osv.osv):
             'question_id': question.id,
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
+            'skipped': False
         }
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'free_text', 'value_free_text': post[answer_tag]})
@@ -983,6 +984,7 @@ class survey_user_input_line(osv.osv):
             'question_id': question.id,
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
+            'skipped': False
         }
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'text', 'value_text': post[answer_tag]})
@@ -1004,6 +1006,7 @@ class survey_user_input_line(osv.osv):
             'question_id': question.id,
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
+            'skipped': False
         }
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'number', 'value_number': float(post[answer_tag])})
@@ -1025,6 +1028,7 @@ class survey_user_input_line(osv.osv):
             'question_id': question.id,
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
+            'skipped': False
         }
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'date', 'value_date': post[answer_tag]})
@@ -1046,6 +1050,7 @@ class survey_user_input_line(osv.osv):
             'question_id': question.id,
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
+            'skipped': False
         }
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
@@ -1061,6 +1066,8 @@ class survey_user_input_line(osv.osv):
             self.create(cr, uid, vals, context=context)
         return True
 
+
+    # def save_line_multiple_choice:
 
 def dict_keys_startswith(dictionary, string):
     '''Returns a dictionary containing the elements of <dict> whose keys start

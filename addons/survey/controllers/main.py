@@ -205,6 +205,8 @@ class WebsiteSurvey(http.Controller):
                     answer_value = answer.value_number.__str__()
                 elif answer.answer_type == 'date':
                     answer_value = answer.value_date
+                elif answer.answer_type == 'suggestion':
+                    answer_value = answer.value_suggested.id
                 # TODO mettre les QCM ici
                 if answer_value:
                     ret.update({answer_tag: answer_value})
