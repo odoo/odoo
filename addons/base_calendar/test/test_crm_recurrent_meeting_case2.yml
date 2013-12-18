@@ -91,6 +91,5 @@
 -
   !python {model: crm.meeting}: |
      meeting_ids = self.search(cr, uid, [('recurrent_id', '=', ref('crm_meeting_sprintreview0')), ('recurrent_id_date','=','2011-04-25 12:47:00')], context)
-     print ref('crm_meeting_reviewcodewithprogrammer0'),meeting_ids
      assert meeting_ids, 'Meeting is not edited !'
 

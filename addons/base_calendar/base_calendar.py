@@ -230,11 +230,11 @@ class calendar_attendee(osv.osv):
             ids = [ids]
                     
         for attendee in self.browse(cr, uid, ids, context=context):            
-            
+            print"_ZZZ_"
             dummy,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', template_xmlid)
             dummy,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")                
             body = template_pool.browse(cr, uid, template_id, context=context).body_html
-            
+            print"_YYY_"
             if attendee.email and email_from:
                 ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
                 local_context['att_obj'] = attendee
@@ -243,7 +243,7 @@ class calendar_attendee(osv.osv):
                 local_context['dbname'] = cr.dbname
                 local_context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
                 vals = template_pool.generate_email(cr, uid, template_id, attendee.event_id.id, context=local_context)
-                
+                print"_XXX_"
                 if ics_file:
                     vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
                                                 'datas_fname': 'invitation.ics',
@@ -255,13 +255,16 @@ class calendar_attendee(osv.osv):
                 if (vals['email_to']== attendee.partner_id.email):
                     vals['email_to'] = ''
                     vals['recipient_ids'] = [(4,attendee.partner_id.id),] 
-                
+                print"_AAA_"
                 if not attendee.partner_id.opt_out:
                     mail_id.append(mail_pool.create(cr, uid, vals, context=context))
+                print"_BBB_"
                     
         if mail_id:
             try:
+                print"_CCC_"
                 res =  mail_pool.send(cr, uid, mail_id, context=context)
+                print"_DDD_"
             except Exception as e:
                 print e
                 
@@ -603,11 +606,8 @@ class calendar_alarm_manager(osv.osv):
             if mail_ids:
                 try:
                     res =  mail_pool.send(cr, uid, mail_ids, context=local_context)
-                    print "REMINDER SENDED ... EMAIL : ",mail_ids
                 except Exception as e:
                     print e
-        else:
-            print "SHOULD BE AN MAIL ALARM :(   FOR EVENT %s / ALARM %s" % (alert['event_id'],alert['alarm_id'])
         
         return res
 
@@ -633,9 +633,7 @@ class calendar_alarm_manager(osv.osv):
                      'timer' : delta, #Now - event_date - alaram.duration_minute
                      'notify_at' : alert['notify_at'].strftime("%Y-%m-%d %H:%M:%S"), #Now - event_date - alaram.duration_minute 
                      }
-                                        
-        else:
-            print "SHOULD BE AN NOTIF ALARM :(   FOR EVENT %s / ALARM %s" % (alert['event_id'],alert['alarm_id'])
+
 
 
 class calendar_alarm(osv.osv):
@@ -890,7 +888,6 @@ class crm_meeting(osv.Model):
             for event in self.browse(cr, uid, ids, context=context):
                 rdate = event.date 
                 update_data = self._parse_rrule(field_value, dict(data), rdate)
-                print 'UPDATE_DATA = ',update_data
                 data.update(update_data)
                 self.write(cr, uid, ids, data, context=context)
         return True
@@ -1523,7 +1520,7 @@ class crm_meeting(osv.Model):
         if values.get('partner_ids', False):
             attendees_create = self.create_attendees(cr, uid, ids, context)
 
-        if values.get('date', False) and not context.get('install_mode',False) and values.get('active',True): #Not send mail when install data
+        if values.get('date', False) and values.get('active',True): #Not send mail when install data
             the_id = new_id or (ids and int(ids[0]));
              
             if attendees_create:
