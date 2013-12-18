@@ -550,36 +550,33 @@ class Home(http.Controller):
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, db=None, debug=False, **kw):
-        debug = debug != False
+        debug = bool(debug)
 
-        lst = http.db_list(True)
-        if db not in lst:
-            db = None
-        guessed_db = http.db_monodb(request.httprequest)
-        if guessed_db is None and len(lst) > 0:
-            guessed_db = lst[0]
+        # if db not provided, use the session one
+        if db is None:
+            db = request.session.db
 
-        def redirect(db):
-            query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-            query['db'] = db
-            redirect = request.httprequest.path + '?' + urllib.urlencode(query)
-            return redirect_with_hash(redirect)
+        # if no database provided and no database in session, use monodb
+        if db is None:
+            db = http.db_monodb(request.httprequest)
 
-        if db is None and guessed_db is not None:
-            return redirect(guessed_db)
+        # if no db can be found til here, send to the database selector
+        # the database selector will redirect to database manager if needed
+        if db is None:
+            return request.redirect('/database/selector', 303) # TODO: check status code semantic and forward debug
 
-        if db is not None and db != request.session.db:
+        # always switch the session to the computed db
+        if db != request.session.db:
             request.session.logout()
-            request.session.db = db
-            guessed_db = db
+        request.session.db = db
 
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=guessed_db, debug=debug))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=guessed_db, debug=debug))
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db, debug=debug))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=db, debug=debug))
 
         r = html_template % {
             'js': js,
             'css': css,
-            'modules': simplejson.dumps(module_boot(db=guessed_db)),
+            'modules': simplejson.dumps(module_boot(db=db)),
             'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
         }
         return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
