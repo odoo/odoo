@@ -42,6 +42,10 @@ class sale_order_line(osv.osv):
 class sale_order(osv.Model):
     _inherit = 'sale.order'
 
+    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):
+        """ Wrapper because of direct method passing as parameter for function fields """
+        return self._amount_all(cr, uid, ids, field_name, arg, context=context)
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = super(sale_order, self)._amount_all(cr, uid, ids, field_name, arg, context=context)
         Currency = self.pool.get('res.currency')
@@ -62,7 +66,8 @@ class sale_order(osv.Model):
             "delivery.carrier", string="Delivery Method",
             help="Complete this field if you plan to invoice the shipping based on picking."),
         'amount_delivery': fields.function(
-            _amount_all, type='float', digits_compute=decimal_precision.get_precision('Account'), string='Delivery Amount',
+            _amount_all_wrapper, type='float', digits_compute=decimal_precision.get_precision('Account'),
+            string='Delivery Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
@@ -75,7 +80,9 @@ class sale_order(osv.Model):
         result = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         if part:
             dtype = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_delivery_carrier.id
-            result['value']['carrier_id'] = dtype
+            # TDE NOTE: not sure the aded 'if dtype' is valid
+            if dtype:
+                result['value']['carrier_id'] = dtype
         return result
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
