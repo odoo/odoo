@@ -350,7 +350,8 @@ class mrp_repair(osv.osv):
         return self.write(cr,uid,ids,{'state':'cancel'})
 
     def wkf_invoice_create(self, cr, uid, ids, *args):
-        return self.action_invoice_create(cr, uid, ids)
+        self.action_invoice_create(cr, uid, ids)
+        return True
 
     def action_invoice_create(self, cr, uid, ids, group=False, context=None):
         """ Creates invoice(s) for repair order.
