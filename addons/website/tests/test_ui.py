@@ -67,29 +67,31 @@ class WebsiteUiSuite(unittest.TestSuite):
                 else:
                     time.sleep(0.1)
         finally:
-            # If the phantomjs process hasn't quit, kill it
+            # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
 
     def process(self, line, result):
-        result.startTest(self._test)
-        args = json.loads(line)
-        event = args.get('event')
-        message = args.get('message', "")
-
         # Test protocol
         # -------------
         # use console.log in phantomjs to output test results using the following format:
         # - for a success: { "event": "success" }
         # - for a failure: { "event": "failure", "message": "Failure description" }
-        # any other message is treated as an error and should contain a messgae
+        # any other message is treated as an error
+        result.startTest(self._test)
+        try:
+            args = json.loads(line)
+            event = args.get('event')
+            message = args.get('message', "")
 
-        if event == 'success':
-            result.addSuccess(self._test)
-        elif event == 'failure':
-            result.addFailure(self._test, message)
-        else:
-            result.addError(self._test, "Unexpected message: %s" % line)
+            if event == 'success':
+                result.addSuccess(self._test)
+            elif event == 'failure':
+                result.addFailure(self._test, message)
+            else:
+                result.addError(self._test, "Unexpected message: %s" % line)
+        except ValueError:
+             result.addError(self._test, "Unexpected message: %s" % line)
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite('sample_test.js'))
