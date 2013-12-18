@@ -14,7 +14,7 @@
                     <separator/>
                     <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                     <separator/>
-                    <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
+                    <filter string="My Requests" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leave Requests"/>
                     <separator/>
                     <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                     <field name="employee_id"/>
