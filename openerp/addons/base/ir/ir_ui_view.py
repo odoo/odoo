@@ -180,11 +180,10 @@ class view(osv.osv):
 
         if not context.get('install_mode', False):
             # touched views become noupdatable
-            for id in ids:
-                _view = self.browse(cr, uid, id, context=context)
-                _view.model_data_id.write({
-                    'noupdate': True
-                })
+            # TODO: should be doable in a read and a write
+            for view_ in self.browse(cr, uid, ids, context=context):
+                if view_.model_data_id:
+                    view_.model_data_id.write({'noupdate': True})
         return ret
 
     # default view selection
