@@ -5,12 +5,18 @@
         ((((((((((( Demo Cases )))))))))))
     -->
 
-    <!--For Meetings-->
+    <!--For Meetings -->
+        <record id="res_partner_another" model="res.partner">
+            <field name="name">Another Partner</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="customer" eval="False"/>
+            <field name="email">another@partner.com</field>
+        </record>
         <record id="res_user_another" model="res.users">
             <field name="name" >Another User</field>
             <field name="login" >Another Login</field>
-            <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="company_id" eval="False"/> 
+            <field name="partner_id" ref="res_partner_another"/>
+            <field name="company_id" ref="base.main_company" />
         </record>    
 
         <record id="cal_contact_1" model="web_calendar.contacts">
@@ -27,7 +33,7 @@
         <record id="crm_meeting_1" model="crm.meeting">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_1'),ref('base.res_partner_2')])]"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_1'),ref('base.res_partner_6')])]"/>
             <field name="name">Follow-up for Project proposal</field>
             <field name="description">Meeting to discuss project plan and hash out the details of implementation.</field>
             <field eval="time.strftime('%Y-%m-03 10:20:00')" name="date"/>
@@ -40,7 +46,7 @@
         <record id="crm_meeting_2" model="crm.meeting">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_1'),ref('base.res_partner_3')])]"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_4'),ref('base.res_partner_5')])]"/>
             <field name="name">Initial discussion</field>
             <field name="description">Discussion with partner for product.</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet3')])]"/>
@@ -65,7 +71,7 @@
         <record id="crm_meeting_4" model="crm.meeting">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="partner_ids" eval="[(6,0,[ref('base.partner_demo'),ref('base.res_partner_2')])]"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.partner_demo'),ref('base.res_partner_6')])]"/>
             <field name="name">Requirements review</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet3')])]"/>
             <field eval="time.strftime('%Y-%m-20 8:00:00')" name="date"/>
@@ -76,7 +82,7 @@
 
         <record id="crm_meeting_5" model="crm.meeting">
             <field eval="1" name="active"/>
-            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_3')])]"/>
+            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_8')])]"/>
             <field name="name">Changes in Designing</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1')])]"/>
             <field eval="time.strftime('%Y-%m-22 11:05:00')" name="date"/>
@@ -87,8 +93,8 @@
 
         <record id="crm_meeting_6" model="crm.meeting">
             <field eval="1" name="active"/>
-            <field name="user_id" ref="res_user_another"/>            
-            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_4),ref('base.res_partner_4'),ref('base.res_partner_5'),ref('base.res_partner_6'),ref('base.res_partner_7')])]"/>
+            <field name="user_id" ref="base.user_demo"/>            
+            <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_1'),ref('base.res_partner_4'),ref('base.res_partner_6'),ref('base.res_partner_8')])]"/>
             <field name="name">Presentation for new Services</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
             <field eval="time.strftime('%Y-%m-18 2:00:00')" name="date"/>
@@ -96,18 +102,30 @@
             <field eval="8.5" name="duration"/>
             <field name="state">draft</field>
         </record>
-        
 
         <record id="crm_meeting_7" model="crm.meeting">
             <field eval="1" name="active"/>
             <field name="user_id" ref="res_user_another"/>            
-            <field name="partner_ids" eval="[(6,0,[ref('base.res_partner_1'),ref('base.res_partner_4')])]"/>
+            <field name="partner_ids" eval="[(6,0,[ref('res_partner_another'),ref('base.res_partner_8')])]"/>
             <field name="name">Meeting between 2 others users than me</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
-            <field eval="time.strftime('%Y-%m-18 2:00:00')" name="date"/>
-            <field eval="time.strftime('%Y-%m-18 10:30:00')" name="date_deadline"/>
+            <field eval="time.strftime('%Y-%m-16 6:00:00')" name="date"/>
+            <field eval="time.strftime('%Y-%m-16 18:30:00')" name="date_deadline"/>
             <field eval="8.5" name="duration"/>
             <field name="state">draft</field>
         </record>
+        
+        <record id="crm_meeting_8" model="crm.meeting">
+            <field eval="1" name="active"/>
+            <field name="user_id" ref="res_user_another"/>            
+            <field name="partner_ids" eval="[(6,0,[ref('res_partner_another'),ref('base.partner_root')])]"/>
+            <field name="name">Meeting between 2 others users than me</field>
+            <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
+            <field eval="time.strftime('%Y-%m-16 6:00:00')" name="date"/>
+            <field eval="time.strftime('%Y-%m-16 18:30:00')" name="date_deadline"/>
+            <field eval="8.5" name="duration"/>
+            <field name="state">draft</field>
+        </record>
+
     </data>
 </openerp>
