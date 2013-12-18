@@ -3166,7 +3166,7 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
     template: "M2ODialog",
     init: function(parent) {
         this._super(parent, {
-            title: _.str.sprintf(_t("Add %s"), parent.string),
+            title: _.str.sprintf(_t("Create a %s"), parent.string),
             width: 312,
         });
     },
