@@ -93,6 +93,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
 
     @website.route(['/partners/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
     def partners_ref(self, partner, **post):
+        website.preload_records(partner)
         values = website_partner.get_partner_template_value(partner)
         if not values:
             return self.partners(**post)

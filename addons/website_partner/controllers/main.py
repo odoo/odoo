@@ -36,6 +36,7 @@ class WebsitePartner(http.Controller):
     @website.route(['/partners/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
     def partner(self, partner, **post):
         """ Route for displaying a single partner / customer. """
+        website.preload_records(partner)
         values = get_partner_template_value(partner)
         if not values:
             raise werkzeug.exceptions.NotFound

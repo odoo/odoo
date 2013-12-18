@@ -859,7 +859,7 @@
             var plugins = [
                 'a11yhelp', 'basicstyles', 'blockquote',
                 'clipboard', 'colorbutton', 'colordialog', 'dialogadvtab',
-                'elementspath', 'enterkey', 'entities', 'filebrowser',
+                'elementspath', /*'enterkey',*/ 'entities', 'filebrowser',
                 'find', 'floatingspace','format', 'htmlwriter', 'iframe',
                 'indentblock', 'indentlist', 'justify',
                 'list', 'pastefromword', 'pastetext', 'preview',
