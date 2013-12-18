@@ -156,23 +156,25 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     init: function(parent, model, options) {
         this._super(parent);
         this.model = model;
-        this.mode = 'pivot';
         this.important_fields = [];
         this.measure_list = [];
         this.fields = [];
-        this.enabled = true;
-        this.dropdown = null;
-
         this.pivot = new openerp.web_graph.PivotTable(model, []);
-
-        options = options || {};
-
-        // show_ui, hide ui ?, default stacked/grouped?
+        this.mode = 'pivot';
         if (_.has(options, 'mode')) { this.mode = mode; }
-        if (_.has(options, 'measure')) { this.pivot.set_measure(options.measure); }
+        this.enabled = true;
         if (_.has(options, 'enabled')) { this.enabled = options.enabled; }
+        this.visible_ui = true;
+        this.config(options || {});
     },
 
+    // hide ui/show, stacked/grouped
+    config: function (options) {
+        if (_.has(options, 'visible_ui')) {
+            this.visible_ui = options.visible_ui;
+        }
+        this.pivot.config(options);
+    },
 
     start: function() {
         var self = this;
@@ -242,6 +244,11 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         this.$('.graph_main_content svg').remove();
         this.table.empty();
 
+        if (this.visible_ui) {
+            this.$('.graph_header').css('display', 'block');
+        } else {
+            this.$('.graph_header').css('display', 'none');
+        }
         if (pivot.no_data) {
             var msg = 'No data available. Try to remove any filter or add some data.';
             this.table.append($('<tr><td>' + msg + '</td></tr>'));
@@ -251,15 +258,18 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 this.draw_table();
             } else {
                 this.$('.graph_main_content').append($('<div><svg></svg></div>'));
-                var options = {
-                    svg: this.$('.graph_main_content svg')[0],
-                    mode: this.mode,
-                    pivot: this.pivot,
-                    width: this.$el.width(),
-                    height: Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width())),
-                    measure_label: this.measure_label()
-                };
-                openerp.web_graph.draw_chart(options);
+                this.svg = this.$('.graph_main_content svg')[0];
+                this.width = this.$el.width();
+                this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
+                // var options = {
+                //     svg: 
+                //     mode: this.mode,
+                //     width: this.$el.width(),
+                //     height: Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width())),
+                //     measure_label: this.measure_label()
+                // };
+                this[this.mode]();
+                // openerp.web_graph.draw_chart(options);
             }
         }
     },
@@ -274,7 +284,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     measure_selection: function (event) {
         event.preventDefault();
         var measure = event.target.attributes['data-choice'].nodeValue;
-        var actual_measure = (measure === '__count') ? null : measure
+        var actual_measure = (measure === '__count') ? null : measure;
         this.pivot.config({measure:actual_measure});
     },
 
@@ -478,6 +488,238 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         }
     },
 
+/******************************************************************************
+ * Drawing charts methods...
+ ******************************************************************************/
+    bar_chart: function () {
+        var self = this,
+            dim_x = this.pivot.rows.groupby.length,
+            dim_y = this.pivot.cols.groupby.length,
+            data = [];
+
+        // No groupby **************************************************************
+        if ((dim_x === 0) && (dim_y === 0)) {
+            data = [{key: 'Total', values:[{
+                title: 'Total',
+                value: this.pivot.get_value(this.pivot.rows.main.id, this.pivot.cols.main.id),
+            }]}];
+            nv.addGraph(function () {
+              var chart = nv.models.discreteBarChart()
+                    .x(function(d) { return d.title;})
+                    .y(function(d) { return d.value;})
+                    .tooltips(false)
+                    .showValues(true)
+                    .width(self.width)
+                    .height(self.height)
+                    .staggerLabels(true);
+
+                d3.select(self.svg)
+                    .datum(data)
+                    .attr('width', self.width)
+                    .attr('height', self.height)
+                    .call(chart);
+
+                nv.utils.windowResize(chart.update);
+                return chart;
+            });
+        // Only column groupbys ****************************************************
+        } else if ((dim_x === 0) && (dim_y >= 1)){
+            data =  _.map(this.pivot.get_columns_depth(1), function (header) {
+                return {
+                    key: header.title,
+                    values: [{x:header.root.main.title, y: self.pivot.get_total(header)}]
+                };
+            });
+            nv.addGraph(function() {
+                var chart = nv.models.multiBarChart()
+                        .stacked(true)
+                        .tooltips(false)
+                        .width(self.width)
+                        .height(self.height)
+                        .showControls(false);
+
+                d3.select(self.svg)
+                    .datum(data)
+                    .attr('width', self.width)
+                    .attr('height', self.height)
+                    .transition()
+                    .duration(500)
+                    .call(chart);
+
+                nv.utils.windowResize(chart.update);
+
+                return chart;
+            });
+        // Just 1 row groupby ******************************************************
+        } else if ((dim_x === 1) && (dim_y === 0))  {
+            data = _.map(this.pivot.rows.main.children, function (pt) {
+                var value = self.pivot.get_value(pt.id, self.pivot.cols.main.id),
+                    title = (pt.title !== undefined) ? pt.title : 'Undefined';
+                return {title: title, value: value};
+            });
+            data = [{key: this.measure_label(), values:data}];
+            nv.addGraph(function () {
+              var chart = nv.models.discreteBarChart()
+                    .x(function(d) { return d.title;})
+                    .y(function(d) { return d.value;})
+                    .tooltips(false)
+                    .showValues(true)
+                    .width(self.width)
+                    .height(self.height)
+                    .staggerLabels(true);
+
+                d3.select(self.svg)
+                    .datum(data)
+                    .attr('width', self.width)
+                    .attr('height', self.height)
+                    .call(chart);
+
+                nv.utils.windowResize(chart.update);
+                return chart;
+            });
+        // 1 row groupby and some col groupbys**************************************
+        } else if ((dim_x === 1) && (dim_y >= 1))  {
+            data = _.map(this.pivot.get_columns_depth(1), function (colhdr) {
+                var values = _.map(self.pivot.get_rows_depth(1), function (header) {
+                    return {
+                        x: header.title || 'Undefined',
+                        y: self.pivot.get_value(header.id, colhdr.id, 0)
+                    };
+                });
+                return {key: colhdr.title || 'Undefined', values: values};
+            });
+
+            nv.addGraph(function () {
+              var chart = nv.models.multiBarChart()
+                    .stacked(true)
+                    .staggerLabels(true)
+                    .width(self.width)
+                    .height(self.height)
+                    .tooltips(false);
+
+                d3.select(self.svg)
+                    .datum(data)
+                    .attr('width', self.width)
+                    .attr('height', self.height)
+                    .call(chart);
+
+                nv.utils.windowResize(chart.update);
+                return chart;
+            });
+        // At least two row groupby*************************************************
+        } else {
+            var keys = _.uniq(_.map(this.pivot.get_rows_depth(2), function (hdr) {
+                return hdr.title || 'Undefined';
+            }));
+            data = _.map(keys, function (key) {
+                var values = _.map(self.pivot.get_rows_depth(1), function (hdr) {
+                    var subhdr = _.find(hdr.children, function (child) {
+                        return ((child.title === key) || ((child.title === undefined) && (key === 'Undefined')));
+                    });
+                    return {
+                        x: hdr.title || 'Undefined',
+                        y: (subhdr) ? self.pivot.get_total(subhdr) : 0
+                    };
+                });
+                return {key:key, values: values};
+            });
+
+            nv.addGraph(function () {
+              var chart = nv.models.multiBarChart()
+                    .stacked(true)
+                    .staggerLabels(true)
+                    .width(self.width)
+                    .height(self.height)
+                    .tooltips(false);
+
+                d3.select(self.svg)
+                    .datum(data)
+                    .attr('width', self.width)
+                    .attr('height', self.height)
+                    .call(chart);
+
+                nv.utils.windowResize(chart.update);
+                return chart;
+            });
+        }
+    },
+
+    line_chart: function () {
+        var self = this,
+            dim_x = this.pivot.rows.groupby.length,
+            dim_y = this.pivot.cols.groupby.length;
+
+        var data = _.map(this.pivot.get_cols_leaves(), function (col) {
+            var values = _.map(self.pivot.get_rows_depth(dim_x), function (row) {
+                return {x: row.title, y: self.pivot.get_value(row.id,col.id, 0)};
+            });
+            var title = _.map(col.path, function (p) {
+                return p || 'Undefined';
+            }).join('/');
+            if (dim_y === 0) {
+                title = self.measure_label();
+            }
+            return {values: values, key: title};
+        });
+
+        nv.addGraph(function () {
+            var chart = nv.models.lineChart()
+                .x(function (d,u) { return u; })
+                .width(self.width)
+                .height(self.height)
+                .margin({top: 30, right: 20, bottom: 20, left: 60});
+
+            d3.select(self.svg)
+                .attr('width', self.width)
+                .attr('height', self.height)
+                .datum(data)
+                .call(chart);
+
+            return chart;
+          });
+    },
+
+    pie_chart: function () {
+        var self = this,
+            dim_x = this.pivot.rows.groupby.length,
+            dim_y = this.pivot.cols.groupby.length;
+
+        var data = _.map(this.pivot.get_rows_leaves(), function (row) {
+            var title = _.map(row.path, function (p) {
+                return p || 'Undefined';
+            }).join('/');
+            if (dim_x === 0) {
+                title = self.measure_label;
+            }
+            return {x: title, y: self.pivot.get_total(row)};
+        });
+
+        nv.addGraph(function () {
+            var chart = nv.models.pieChart()
+                .color(d3.scale.category10().range())
+                .width(self.width)
+                .height(self.height);
+
+            d3.select(self.svg)
+                .datum(data)
+                .transition().duration(1200)
+                .attr('width', self.width)
+                .attr('height', self.height)
+                .call(chart);
+
+            nv.utils.windowResize(chart.update);
+            return chart;
+        });
+    },
+
 });
 
 };
+
+
+
+
+
+
+
+
