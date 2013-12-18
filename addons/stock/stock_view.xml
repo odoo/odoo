@@ -757,6 +757,10 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
+                    <div class="oe_right oe_button_box">
+		        <button name="do_print_delivery" string="Delivery Order" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', '!=', 'assigned')]}"/>
+                        <button name="do_print_picking" string="Picking List" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('state', '!=', 'assigned')]}"/>
+                    </div>
                     <h1>
                         <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
                     </h1>
@@ -810,6 +814,7 @@
                                     <field name="move_type"/>
                                     <field name="picking_type_id"/>
                                     <field name="priority"/>
+                                    <field name="picking_type_code"/>
                                     <field name="quant_reserved_exist" invisible="1"/>                                    
                                 </group>
                                 <group>
@@ -1392,13 +1397,11 @@
                                 <field name="name"/>
                                 <field name="sequence_id"/>
                                 <field name="warehouse_id"/>
-                                <field name="pack"/>
                             </group>
                             <group>
                                 <field name="code" on_change="onchange_picking_code(code)"/>
                                 <field name="return_picking_type_id"/>
                                 <field name="auto_force_assign"/>
-                                <field name="delivery"/>
                             </group>
                         </group>
                         <separator string="Locations"/>
@@ -2027,6 +2030,10 @@
             <field name="context">{}</field>
             <field name="name">Packages</field>
             <field name="res_model">stock.quant.package</field>
+            <field name="help" type="html">
+                <p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
+                </p>
+            </field>
         </record>
         <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view" groups="product.group_stock_packaging"/>
         

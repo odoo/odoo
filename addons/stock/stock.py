@@ -749,6 +749,7 @@ class stock_picking(osv.osv):
         'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'),
         'pack_operation_exist': fields.function(_get_pack_operation_exist, type='boolean', string='Pack Operation Exists?', help='technical field for attrs in view'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
+        'picking_type_code': fields.related('picking_type_id', 'code', type='char', string='Picking Type Code', help="Technical field used to display the correct label on print button in the picking view"),
 
         'owner_id': fields.many2one('res.partner', 'Owner', help="Default Owner"),
         # Used to search on pickings
@@ -785,6 +786,24 @@ class stock_picking(osv.osv):
             default['backorder_id'] = False
         default['pack_operation_ids'] = []
         return super(stock_picking, self).copy(cr, uid, id, default, context)
+
+    def do_print_delivery(self, cr, uid, ids, context=None):
+        '''This function prints the delivery order'''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        datas = {
+                 'model': 'stock.picking',
+                 'ids': ids,
+        }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list', 'datas': datas, 'nodestroy': True}
+
+    def do_print_picking(self, cr, uid, ids, context=None):
+        '''This function prints the picking list'''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        datas = {
+                 'model': 'stock.picking',
+                 'ids': ids,
+        }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'stock.picking.list.internal', 'datas': datas, 'nodestroy': True}
 
     def action_confirm(self, cr, uid, ids, context=None):
         todo = []
@@ -2673,7 +2692,6 @@ class stock_warehouse(osv.osv):
             'warehouse_id': new_id,
             'code': 'outgoing',
             'sequence_id': out_seq_id,
-            'delivery': True,
             'default_location_src_id': output_loc.id,
             'default_location_dest_id': customer_loc.id,
             'color': color}, context=context)
@@ -2685,7 +2703,6 @@ class stock_warehouse(osv.osv):
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_stock_loc.id,
             'active': True,
-            'pack': False,
             'color': color}, context=context)
         pack_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Pack'),
@@ -2695,7 +2712,6 @@ class stock_warehouse(osv.osv):
             'default_location_src_id': wh_pack_stock_loc.id,
             'default_location_dest_id': output_loc.id,
             'active': delivery_steps == 'pick_pack_ship',
-            'pack': True,
             'color': color}, context=context)
         pick_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Pick'),
@@ -2705,7 +2721,6 @@ class stock_warehouse(osv.osv):
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_pack_stock_loc.id,
             'active': delivery_steps != 'ship_only',
-            'pack': False,
             'color': color}, context=context)
 
         #write picking types on WH
@@ -3579,14 +3594,12 @@ class stock_picking_type(osv.osv):
     _columns = {
         'name': fields.char('Name', translate=True, required=True),
         'complete_name': fields.function(_get_name, type='char', string='Name'),
-        'pack': fields.boolean('Prefill Pack Operations', help='This picking type needs packing interface'),
         'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in source location.'),
         'color': fields.integer('Color'),
-        'delivery': fields.boolean('Print delivery'),
         'sequence_id': fields.many2one('ir.sequence', 'Reference Sequence', required=True),
         'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
-        'code': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Picking type code', required=True),
+        'code': fields.selection([('incoming', 'Suppliers'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Type of Operation', required=True),
         'return_picking_type_id': fields.many2one('stock.picking.type', 'Picking Type for Returns'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', ondelete='cascade'),
         'active': fields.boolean('Active'),
