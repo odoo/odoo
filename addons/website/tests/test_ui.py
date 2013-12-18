@@ -81,6 +81,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         # - for a success: { "event": "success" }
         # - for a failure: { "event": "failure", "message": "Failure description" }
         # any other message is treated as an error
+        # the runner expects only one result per test
         if event == 'success':
             result.addSuccess(self._test)
             result.stopTest(self._test)
@@ -92,7 +93,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         else:
             result.addError(self._test, message)
             result.stopTest(self._test)
-            return False
+            return True
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite('sample_test.js'))
