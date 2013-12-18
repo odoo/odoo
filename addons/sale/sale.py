@@ -669,10 +669,6 @@ class sale_order(osv.osv):
         the procurements to appropriate stock moves in order to bring the goods to the
         sales order's requested location.
 
-        :param browse_record order: sales order to which the order lines belong
-        :param list(browse_record) order_lines: sales order line records to procure
-        :param int picking_id: optional ID of a stock picking to which the created stock moves
-                               will be added. A new picking will be created if omitted.
         :return: True
         """
         procurement_obj = self.pool.get('procurement.order')
@@ -681,9 +677,12 @@ class sale_order(osv.osv):
             proc_ids = []
             vals = self._prepare_procurement_group(cr, uid, order, context=context)
             group_id = self.pool.get("procurement.group").create(cr, uid, vals, context=context)
-            
+
             order.write({'procurement_group_id': group_id}, context=context)
             for line in order.order_line:
+                #cancel existing procurements if any (possible when after a shipping exception the user choose to recreate), to avoid duplicates
+                if line.procurement_ids:
+                    procurement_obj.cancel(cr, uid, [x.id for x in line.procurement_ids if x.state != 'cancel'], context=context)
                 if sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
                     if (line.state == 'done') or not line.product_id:
                         continue
@@ -700,7 +699,7 @@ class sale_order(osv.osv):
                 val['shipped'] = False
 
                 if (order.order_policy == 'manual'):
-                    for line in order.order_line: 
+                    for line in order.order_line:
                         if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
                             val['state'] = 'manual'
                             break
