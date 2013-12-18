@@ -5,6 +5,9 @@
 'use strict';
 
 openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherMixin, {
+
+	// PivotTable require a 'update_data' after init to be ready
+	// to do: add an option to enable/disable update_data at the end of init
 	init: function (model, domain) {
         openerp.EventDispatcherMixin.init.call(this);
 		this.rows = { groupby: [], main: null, headers: null };
@@ -16,7 +19,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		this.data_loader = new openerp.web_graph.DataLoader(model);
 
 		this.no_data = true;
-		this.stale_data = true;
 	},
 
 	visible_fields: function () {
@@ -27,31 +29,42 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		return result;
 	},
 
-	set_domain: function (domain) {
-		if (!_.isEqual(domain, this.domain)) {
-			this.domain = domain;
-			this.stale_data = true;
+	config: function (options) {
+		var changed = false;
+		var groupby_changed = false;
+		var default_options = {
+				update:true, 
+				domain:this.domain, 
+				col_groupby: this.cols.groupby,
+				row_groupby: this.rows.groupby,
+				measure: this.measure,
+				silent:false
+			};
+		var options = _.extend(default_options, options);
+
+		if (!_.isEqual(options.domain, this.domain)) {
+			this.domain = options.domain;
+			changed = true;
 		}
-	},
-
-	set_measure: function (measure) {
-		if (measure !== this.measure) {
-			this.measure = measure;
-			this.stale_data = true;
+		if (options.measure !== this.measure) {
+			this.measure = options.measure;
+			changed = true;
 		}
-	},
-
-	set_groupby: function (groupbys) {
-		var col_changed = !_.isEqual(groupbys.col, this.cols.groupby),
-			row_changed = !_.isEqual(groupbys.row, this.rows.groupby);
-
-		this.rows.groupby = groupbys.row;
-		this.cols.groupby = groupbys.col;
-
-		if (col_changed || row_changed) {
-			this.invalidate_data();
-			this.trigger('groupby_changed');
+		if (!_.isEqual(options.col_groupby, this.cols.groupby)) {
+			this.cols.groupby = options.col_groupby;
+			changed = true;
+			this.cols.headers = null;
+			groupby_changed = true;
 		}
+		if (!_.isEqual(options.row_groupby, this.rows.groupby)) {
+			this.rows.groupby = options.row_groupby;
+			this.rows.headers = null;
+			changed = true;
+			groupby_changed = true;
+		}
+
+		if (!options.silent && groupby_changed) { this.trigger('groupby_changed'); }
+		if (options.update && changed) { this.update_data(); }
 	},
 
 	set_value: function (id1, id2, value) {
@@ -136,15 +149,14 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         var fold_lvls = _.map(header.root.headers, function(g) {return g.path.length;});
         var new_groupby_length = _.max(fold_lvls);
 
-        if (new_groupby_length < header.root.groupby.length) {
-			this.trigger('groupby_changed');
-        }
-
-        header.root.groupby.splice(new_groupby_length);
         header.children = [];
         this.cells = _.reject(this.cells, function (cell) {
             return (_.contains(ids_to_remove, cell.x) || _.contains(ids_to_remove, cell.y));
         });
+        if (new_groupby_length < header.root.groupby.length) {
+			header.root.groupby.splice(new_groupby_length);
+			this.trigger('groupby_changed');
+        }
         this.trigger('redraw_required');
 	},
 
@@ -218,15 +230,6 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		}
 	},
 
-	invalidate_data: function () {
-		this.cells = null;
-		this.rows.main = null;
-		this.cols.main = null;
-		this.rows.headers = null;
-		this.cols.headers = null;
-		this.stale_data = true;
-	},
-
 	update_data: function () {
 		var self = this,
 			options = {
@@ -237,14 +240,16 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 			};
 
 		return this.data_loader.load_data(options).then (function (result) {
-			self.stale_data = false;
 			if (result) {
 				self.no_data = false;
 				if (self.cols.headers) {
 					self.update_headers(self.cols, result.col_headers);
-					self.update_headers(self.rows, result.row_headers);
 				} else {
 					self.expand_headers(self.cols, result.col_headers);
+				}
+				if (self.rows.headers) {
+					self.update_headers(self.rows, result.row_headers);
+				} else {
 					self.expand_headers(self.rows, result.row_headers);
 				}
 				self.cells = result.cells;
@@ -530,8 +535,6 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 		}
 	},
 
-
 });
-
 
 })();

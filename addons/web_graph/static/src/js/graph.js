@@ -13,32 +13,14 @@ var QWeb = instance.web.qweb;
 
 instance.web.views.add('graph', 'instance.web_graph.GraphView');
 
- /**
-  * GraphView 
-  */
 instance.web_graph.GraphView = instance.web.View.extend({
-    template: 'GraphView',
     display_name: _lt('Graph'),
     view_type: 'graph',
 
-    events: {
-        'click .graph_mode_selection li' : 'mode_selection',
-        'click .graph_measure_selection li' : 'measure_selection',
-        'click .graph_options_selection li' : 'option_selection',
-        'click .web_graph_click' : 'cell_click_callback',
-        'click a.field-selection' : 'field_selection',
-    },
-
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
-        this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
         this.dataset = dataset;
-        this.pivot_table = new openerp.web_graph.PivotTable(this.model, dataset.domain);
-        this.set_default_options(options);
-        this.dropdown = null;
-        this.mode = 'pivot'; // pivot, bar_chart, line_chart, pie_chart, heatmap, row_heatmap, col_heatmap
-        this.measure_list = [];
-        this.important_fields = [];
+        this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
         this.search_view = parent.searchview;
         this.groupby_mode = 'default';  // 'default' or 'manual'
         this.default_row_groupby = [];
@@ -58,14 +40,10 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     start: function () {
-        this.table = $('<table></table>');
-        this.$('.graph_main_content').append(this.table);
-        instance.web.bus.on('click', this, function (ev) {
-            if (this.dropdown) {
-                this.dropdown.remove();
-                this.dropdown = null;
-            }
-        });
+        var options = {enabled:false};
+        this.graph_widget = new openerp.web_graph.Graph(this, this.model, options);
+        this.graph_widget.appendTo(this.$el);
+        this.graph_widget.pivot.on('groupby_changed', this, this.proxy('register_groupby'));
         return this.load_view();
     },
 
@@ -77,7 +55,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.mode = 'bar_chart';
         }
 
-        // get the default groupbys and measure defined in the field view
         _.each(fields_view_get.arch.children, function (field) {
             if ('name' in field.attrs) {
                 if ('operator' in field.attrs) {
@@ -91,72 +68,34 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 }
             }
         });
-        this.pivot_table.set_measure(measure);
-
-        // get the most important fields (of the model) by looking at the
-        // groupby filters defined in the search view
-        var options = {model:this.model, view_type: 'search'},
-            deferred1 = instance.web.fields_view_get(options).then(function (search_view) {
-                var groups = _.select(search_view.arch.children, function (c) {
-                    return (c.tag == 'group') && (c.attrs.string != 'Display');
-                });
-                _.each(groups, function(g) {
-                    _.each(g.children, function (g) {
-                        if (g.attrs.context) {
-                            var field_id = py.eval(g.attrs.context).group_by;
-                            self.important_fields.push(field_id);
-                        }
-                    });
-                });
-            });
-
-        // get the fields descriptions from the model
-        var deferred2 = this.model.call('fields_get', []).then(function (fs) {
-            self.fields = fs;
-            var temp = _.map(fs, function (field, name) {
-                return {name:name, type: field.type};
-            });
-            temp = _.filter(temp, function (field) {
-                return (((field.type === 'integer') || (field.type === 'float')) && (field.name !== 'id'));
-            });
-            self.measure_list = _.map(temp, function (field) {
-                return field.name;
-            });
-
-            var measure_selection = self.$('.graph_measure_selection');
-            _.each(self.measure_list, function (measure) {
-                var choice = $('<a></a>').attr('data-choice', measure)
-                                         .attr('href', '#')
-                                         .append(self.fields[measure].string);
-                measure_selection.append($('<li></li>').append(choice));
-
-            });
-        });
-
-        return $.when(deferred1, deferred2);
+        this.graph_widget.pivot.config({measure:measure, update:false});
     },
 
     do_search: function (domain, context, group_by) {
         var self = this,
-            col_groupby = context.col_group_by || [];
+            col_groupby = context.col_group_by || [],
+            options = {domain:domain};
 
         if (group_by.length || col_groupby.length) {
             this.groupby_mode = 'manual';
         }
-
-        this.pivot_table.set_domain(domain);
-
-        var options;
-        if (this.groupby_mode === 'manual') {
-            options = {row: group_by, col: col_groupby};
-        } else {
-            options = {
-                row: _.toArray(this.default_row_groupby),
-                col: _.toArray(this.default_col_groupby),
-            };
+        if (!this.graph_widget.enabled) { 
+            options.update = false;
+            options.silent = true;
         }
-        this.pivot_table.set_groupby(options);
-        this.display_data();
+
+        if (this.groupby_mode === 'manual') {
+            options.row_groupby = group_by;
+            options.col_groupby = col_groupby;
+        } else {
+            options.row_groupby = _.toArray(this.default_row_groupby);
+            options.col_groupby = _.toArray(this.default_col_groupby);
+        }
+        this.graph_widget.pivot.config(options);
+
+        if (!this.graph_widget.enabled) {
+            this.graph_widget.activate_display();
+        }
     },
 
     do_show: function () {
@@ -164,78 +103,15 @@ instance.web_graph.GraphView = instance.web.View.extend({
         return this._super();
     },
 
-    display_data: function () {
-        var pivot = this.pivot_table;
-        if (pivot.stale_data) {
-            pivot.update_data().done(this.proxy('display_data'));
-        } else {
-            this.$('.graph_main_content svg').remove();
-            this.table.empty();
-
-            if (pivot.no_data) {
-                var msg = 'No data available. Try to remove any filter or add some data.';
-                this.table.append($('<tr><td>' + msg + '</td></tr>'));
-            } else {
-                var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
-                if (_.contains(table_modes, this.mode)) {
-                    this.draw_table();
-                } else {
-                    this.$('.graph_main_content').append($('<div><svg></svg></div>'));
-                    var options = {
-                        svg: this.$('.graph_main_content svg')[0],
-                        mode: this.mode,
-                        pivot: this.pivot_table,
-                        width: this.$el.width(),
-                        height: Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width())),
-                        measure_label: this.measure_label()
-                    };
-                    openerp.web_graph.draw_chart(options);
-                }
-            }
-        }
-    },
-
-/******************************************************************************
- * Event handling methods...
- ******************************************************************************/
-    handle_header_event: function (options) {
-        var pivot = this.pivot_table,
-            id = options.id,
-            header = pivot.get_header(id),
-            dim = header.root.groupby.length;
-
-        if (header.is_expanded) {
-            pivot.fold(header);
-            this.register_groupby();
-        } else {
-            if (header.path.length < header.root.groupby.length) {
-                var field = header.root.groupby[header.path.length];
-                pivot.expand(id, field).then(this.proxy('register_groupby'));
-            } else {
-                this.display_dropdown({id:header.id,
-                                       target: $(options.event.target),
-                                       x: options.event.pageX,
-                                       y: options.event.pageY});
-            }
-        }
-    },
-
-    mode_selection: function (event) {
-        event.preventDefault();
-        var mode = event.target.attributes['data-mode'].nodeValue;
-        this.mode = mode;
-        this.display_data();
-    },
-
     register_groupby: function() {
         var self = this,
             query = this.search_view.query;
         this.groupby_mode = 'manual';
 
-        var rows = _.map(this.pivot_table.rows.groupby, function (group) {
+        var rows = _.map(this.graph_widget.pivot.rows.groupby, function (group) {
             return make_facet('GroupBy', group);
         });
-        var cols = _.map(this.pivot_table.cols.groupby, function (group) {
+        var cols = _.map(this.graph_widget.pivot.cols.groupby, function (group) {
             return make_facet('ColGroupBy', group);
         });
 
@@ -259,33 +135,162 @@ instance.web_graph.GraphView = instance.web.View.extend({
             values =  _.map(fields, function (field) {
                 var context = {};
                 context[cat_name] = field;
-                return {label: self.fields[field].string, value: {attrs:{domain: [], context: context}}};
+                return {label: self.graph_widget.fields[field].string, value: {attrs:{domain: [], context: context}}};
             });
             return {category:category, values: values, icon:icon, field: backbone_field};
         }
+    },
+});
+
+instance.web_graph.Graph = instance.web.Widget.extend({
+    template: "GraphWidget",
+
+    events: {
+        'click .graph_mode_selection li' : 'mode_selection',
+        'click .graph_measure_selection li' : 'measure_selection',
+        'click .graph_options_selection li' : 'option_selection',
+        'click .web_graph_click' : 'header_cell_clicked',
+        'click a.field-selection' : 'field_selection',
+    },
+
+    init: function(parent, model, options) {
+        this._super(parent);
+        this.model = model;
+        this.mode = 'pivot';
+        this.important_fields = [];
+        this.measure_list = [];
+        this.fields = [];
+        this.enabled = true;
+        this.dropdown = null;
+
+        this.pivot = new openerp.web_graph.PivotTable(model, []);
+
+        options = options || {};
+
+        // show_ui, hide ui ?, default stacked/grouped?
+        if (_.has(options, 'mode')) { this.mode = mode; }
+        if (_.has(options, 'measure')) { this.pivot.set_measure(options.measure); }
+        if (_.has(options, 'enabled')) { this.enabled = options.enabled; }
+    },
+
+
+    start: function() {
+        var self = this;
+        this.table = $('<table></table>');
+        this.$('.graph_main_content').append(this.table);
+        // get the most important fields (of the model) by looking at the
+        // groupby filters defined in the search view
+        var options = {model:this.model, view_type: 'search'},
+            deferred1 = instance.web.fields_view_get(options).then(function (search_view) {
+                var groups = _.select(search_view.arch.children, function (c) {
+                    return (c.tag == 'group') && (c.attrs.string != 'Display');
+                });
+                _.each(groups, function(g) {
+                    _.each(g.children, function (g) {
+                        if (g.attrs.context) {
+                            var field_id = py.eval(g.attrs.context).group_by;
+                            self.important_fields.push(field_id);
+                        }
+                    });
+                });
+            });
+
+        // get the fields descriptions and measure list from the model
+        var deferred2 = this.model.call('fields_get', []).then(function (fs) {
+            self.fields = fs;
+            var temp = _.map(fs, function (field, name) {
+                return {name:name, type: field.type};
+            });
+            temp = _.filter(temp, function (field) {
+                return (((field.type === 'integer') || (field.type === 'float')) && (field.name !== 'id'));
+            });
+            self.measure_list = _.map(temp, function (field) {
+                return field.name;
+            });
+
+            var measure_selection = self.$('.graph_measure_selection');
+            _.each(self.measure_list, function (measure) {
+                var choice = $('<a></a>').attr('data-choice', measure)
+                                         .attr('href', '#')
+                                         .append(self.fields[measure].string);
+                measure_selection.append($('<li></li>').append(choice));
+
+            });
+        });
+
+        return $.when(deferred1, deferred2).then(function () {
+            if (this.enabled) {
+                this.activate_display();
+            }
+        });
+    },
+
+    activate_display: function () {
+        this.pivot.on('redraw_required', this, this.proxy('display_data'));
+        this.pivot.update_data();
+        this.enabled = true;
+        instance.web.bus.on('click', this, function (ev) {
+            if (this.dropdown) {
+                this.dropdown.remove();
+                this.dropdown = null;
+            }
+        });
+    },
+
+    display_data: function () {
+        var pivot = this.pivot;
+        this.$('.graph_main_content svg').remove();
+        this.table.empty();
+
+        if (pivot.no_data) {
+            var msg = 'No data available. Try to remove any filter or add some data.';
+            this.table.append($('<tr><td>' + msg + '</td></tr>'));
+        } else {
+            var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
+            if (_.contains(table_modes, this.mode)) {
+                this.draw_table();
+            } else {
+                this.$('.graph_main_content').append($('<div><svg></svg></div>'));
+                var options = {
+                    svg: this.$('.graph_main_content svg')[0],
+                    mode: this.mode,
+                    pivot: this.pivot,
+                    width: this.$el.width(),
+                    height: Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width())),
+                    measure_label: this.measure_label()
+                };
+                openerp.web_graph.draw_chart(options);
+            }
+        }
+    },
+
+    mode_selection: function (event) {
+        event.preventDefault();
+        var mode = event.target.attributes['data-mode'].nodeValue;
+        this.mode = mode;
+        this.display_data();
     },
 
     measure_selection: function (event) {
         event.preventDefault();
         var measure = event.target.attributes['data-choice'].nodeValue;
-        this.pivot_table.set_measure((measure === '__count') ? null : measure);
-        this.display_data();
+        var actual_measure = (measure === '__count') ? null : measure
+        this.pivot.config({measure:actual_measure});
     },
 
     option_selection: function (event) {
         event.preventDefault();
         switch (event.target.attributes['data-choice'].nodeValue) {
             case 'swap_axis':
-                this.pivot_table.swap_axis();
-                this.register_groupby();
+                this.pivot.swap_axis();
                 break;
             case 'expand_all':
-                this.pivot_table.invalidate_data();
-                this.display_data();
+                this.pivot.rows.headers = null;
+                this.pivot.cols.headers = null;
+                this.pivot.update_data();
                 break;
             case 'update_values':
-                this.pivot_table.stale_data = true;
-                this.display_data();
+                this.pivot.update_data();
                 break;
             case 'export_data':
                 // Export code...  To do...
@@ -293,12 +298,32 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
     },
 
-
-    cell_click_callback: function (event) {
+    header_cell_clicked: function (event) {
         event.preventDefault();
         event.stopPropagation();
-        var id = event.target.attributes['data-id'].nodeValue;
-        this.handle_header_event({id:id, event:event});
+        var id = event.target.attributes['data-id'].nodeValue,
+            header = this.pivot.get_header(id),
+            self = this,
+            dim = header.root.groupby.length;
+
+        if (header.is_expanded) {
+            this.pivot.fold(header);
+        } else {
+            if (header.path.length < header.root.groupby.length) {
+                var field = header.root.groupby[header.path.length];
+                this.pivot.expand(id, field);
+            } else {
+                var fields = _.map(this.important_fields, function (field) {
+                        return {id: field, value: self.fields[field].string};
+                });
+                this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
+                $(event.target).after(this.dropdown);
+                this.dropdown.css({position:'absolute',
+                                   left:event.pageX,
+                                   top:event.pageY});
+                this.$('.field-selection').next('.dropdown-menu').toggle();
+            }
+        }
     },
 
     field_selection: function (event) {
@@ -306,40 +331,21 @@ instance.web_graph.GraphView = instance.web.View.extend({
             id = event.target.attributes['data-id'].nodeValue,
             field_id = event.target.attributes['data-field-id'].nodeValue;
         event.preventDefault();
-        this.pivot_table.expand(id, field_id).then(function () {
-            self.register_groupby();
-        });
-    },
-
-    display_dropdown: function (options) {
-        var self = this,
-            pivot = this.pivot_table,
-            dropdown_options = {
-                header_id: options.id,
-                fields: _.map(self.important_fields, function (field) {
-                    return {id: field, value: self.fields[field].string};
-            })};
-        this.dropdown = $(QWeb.render('field_selection', dropdown_options));
-        options.target.after(this.dropdown);
-        this.dropdown.css({position:'absolute',
-                           left:options.x,
-                           top:options.y});
-        this.$('.field-selection').next('.dropdown-menu').toggle();
+        this.pivot.expand(id, field_id);
     },
 
 /******************************************************************************
  * Drawing pivot table methods...
  ******************************************************************************/
     draw_table: function () {
-        this.pivot_table.rows.main.title = 'Total';
-        this.pivot_table.cols.main.title = this.measure_label();
+        this.pivot.rows.main.title = 'Total';
+        this.pivot.cols.main.title = this.measure_label();
         this.draw_top_headers();
-        _.each(this.pivot_table.rows.headers, this.proxy('draw_row'));
+        _.each(this.pivot.rows.headers, this.proxy('draw_row'));
     },
 
     measure_label: function () {
-        var pivot = this.pivot_table;
-        return (pivot.measure) ? this.fields[pivot.measure].string : 'Quantity';
+        return (this.pivot.measure) ? this.fields[this.pivot.measure].string : 'Quantity';
     },
 
     make_border_cell: function (colspan, rowspan) {
@@ -358,7 +364,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     draw_top_headers: function () {
         var self = this,
-            pivot = this.pivot_table,
+            pivot = this.pivot,
             height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})),
             header_cells = [[this.make_border_cell(1, height)]];
 
@@ -406,13 +412,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     get_measure_type: function () {
-        var measure = this.pivot_table.measure;
+        var measure = this.pivot.measure;
         return (measure) ? this.fields[measure].type : 'integer';
     },
 
     draw_row: function (row) {
         var self = this,
-            pivot = this.pivot_table,
+            pivot = this.pivot,
             measure_type = this.get_measure_type(),
             html_row = $('<tr></tr>'),
             row_header = this.make_border_cell(1,1)
@@ -471,6 +477,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             return cell;
         }
     },
+
 });
 
 };
