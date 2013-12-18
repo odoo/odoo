@@ -38,7 +38,6 @@ class hr_grant_badge_wizard(osv.TransientModel):
         if context is None:
             context = {}
 
-        badge_obj = self.pool.get('gamification.badge')
         badge_user_obj = self.pool.get('gamification.badge.user')
 
         for wiz in self.browse(cr, uid, ids, context=context):
@@ -56,5 +55,5 @@ class hr_grant_badge_wizard(osv.TransientModel):
             }
 
             badge_user = badge_user_obj.create(cr, uid, values, context=context)
-            result = badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=uid, context=context)
+            result = badge_user_obj._send_badge(cr, uid, [badge_user], user_from=uid, context=context)
         return result

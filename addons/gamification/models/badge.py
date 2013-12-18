@@ -106,7 +106,7 @@ class gamification_badge(osv.Model):
         badge_user_obj = self.pool.get('gamification.badge.user')
         first_month_day = date.today().replace(day=1).strftime(DF)
         for bid in ids:
-            result[id] = {
+            result[bid] = {
                 'stat_my': badge_user_obj.search(cr, uid, [('badge_id', '=', bid), ('user_id', '=', uid)], context=context, count=True),
                 'stat_this_month': badge_user_obj.search(cr, uid, [('badge_id', '=', bid), ('create_date', '>=', first_month_day)], context=context, count=True),
                 'stat_my_this_month': badge_user_obj.search(cr, uid, [('badge_id', '=', bid), ('user_id', '=', uid), ('create_date', '>=', first_month_day)], context=context, count=True),
