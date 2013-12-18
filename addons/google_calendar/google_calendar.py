@@ -308,7 +308,7 @@ class google_calendar(osv.osv):
                 response = self.create_an_event(cr,uid,att.event_id,context=context)
                 update_date = datetime.strptime(response['updated'],"%Y-%m-%dT%H:%M:%S.%fz")
                 crm_meeting.write(cr, uid, att.event_id.id, {'oe_update_date':update_date})
-                att_obj.write(cr, uid, [att.id], {'google_internal_event_id': response['id'], 'oe_syncro_date':update_date})
+                att_obj.write(cr, uid, [att.id], {'google_internal_event_id': response['id'], 'oe_synchro_date':update_date})
                 #Check that response OK and return according to that        
                 cr.commit()
         return True
@@ -723,7 +723,7 @@ class calendar_attendee(osv.osv):
     _inherit = 'calendar.attendee'
     
     _columns = {
-        'google_internal_event_id': fields.char('Google Calendar Event Id', size=124),
+        'google_internal_event_id': fields.char('Google Calendar Event Id', size=256),
         'oe_synchro_date': fields.datetime('OpenERP Synchro Date'),
     }
     

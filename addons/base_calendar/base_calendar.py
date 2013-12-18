@@ -907,20 +907,18 @@ class crm_meeting(osv.Model):
         },
     }
     _columns = {
-        'create_date': fields.datetime('Creation Date', readonly=True),
-        'write_date': fields.datetime('Write Date', readonly=True),
+#         'create_date': fields.datetime('Creation Date', readonly=True),
+#         'write_date': fields.datetime('Write Date', readonly=True),
+         'id': fields.integer('ID', readonly=True),
+
+
         'state': fields.selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', size=16, readonly=True, track_visibility='onchange'),
-        
-        # Meeting fields
+
         'name': fields.char('Meeting Subject', size=128, required=True, states={'done': [('readonly', True)]}),
         'is_attendee': fields.function(_compute, string='Attendee', type="boolean", multi='attendee'),
         'attendee_status': fields.function(_compute, string='Attendee Status', type="selection", multi='attendee'),
         'display_time': fields.function(_compute, string='Event Time', type="char", multi='attendee'),
-        
-        # ---------------------
-        # OLD CALENDAR_EVENT 
-        # ---------------------
-        'id': fields.integer('ID', readonly=True),
+
         'sequence': fields.integer('Sequence'),
         
         'date': fields.datetime('Date', states={'done': [('readonly', True)]}, required=True,track_visibility='onchange'),
@@ -1045,18 +1043,6 @@ class crm_meeting(osv.Model):
             value['duration'] = round(duration, 2)
         
         return {'value': value}
-
-#     def unlink_events(self, cr, uid, ids, context=None):
-#         """
-#         This function deletes event which are linked with the event with recurrent_id
-#                 (Removes the events which refers to the same UID value)
-#         """
-#         if context is None:
-#             context = {}
-#         for event_id in ids:
-#             r_ids = self.search(cr,uid,[('recurrent_id','=',event_id)],context=context)
-#             self.unlink(cr, uid, r_ids, context=context)
-#         return True
 
     def new_invitation_token(self, cr, uid, record, partner_id):
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
@@ -1468,12 +1454,10 @@ class crm_meeting(osv.Model):
         return res        
 
     def write(self, cr, uid, ids, values, context=None):
-        print "Write : ",ids
-        print values
         def _only_changes_to_apply_on_real_ids(field_names):
             ''' return True if changes are only to be made on the real ids'''
             for field in field_names:
-                if field not in ['message_follower_ids']:
+                if field not in ['name','message_follower_ids']:
                     return False
             return True
         
@@ -1567,11 +1551,8 @@ class crm_meeting(osv.Model):
         if vals.get('recurrency', True) and vals.get('end_type', 'count') in ('count', unicode('count')) and \
                 (vals.get('rrule_type') or vals.get('count') or vals.get('date') or vals.get('date_deadline')):
             vals['end_date'] = self._get_recurrency_end_date(vals, context=context)
-                
         
-        print "CREATE WITH VALUES",vals
         res = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        #res = self.write(cr, uid, id_res,vals, context)
         
         self.create_attendees(cr, uid, [res], context=context)
         return res
@@ -1683,16 +1664,16 @@ class crm_meeting(osv.Model):
 
         return super(crm_meeting, self).search(cr, uid, domain, context=context)        
 
-    def delete(self,cr,uid,ids,context=None):
-        if not isinstance(ids, list):
-            ids = [ids]
-        all_ids = []
-        for id_to_unlink in ids:
-            all_ids += self.get_linked_ids(cr, uid, id_to_unlink, context=context)
-        print "in deleTe functIon ===  ids : %s,  all_ids : %s" % (ids,all_ids)
-        all_ids = list(set(all_ids))
-        res = super(crm_meeting, self).unlink(cr, uid, all_ids, context=context)
-        return all_ids
+#     def delete(self,cr,uid,ids,context=None):
+#         if not isinstance(ids, list):
+#             ids = [ids]
+#         all_ids = []
+#         for id_to_unlink in ids:
+#             all_ids += self.get_linked_ids(cr, uid, id_to_unlink, context=context)
+#         print "in deleTe functIon ===  ids : %s,  all_ids : %s" % (ids,all_ids)
+#         all_ids = list(set(all_ids))
+#         res = super(crm_meeting, self).unlink(cr, uid, all_ids, context=context)
+#         return all_ids
         
                     
     def unlink(self, cr, uid, ids,unlink_level=0, context=None):
@@ -1706,15 +1687,14 @@ class crm_meeting(osv.Model):
                 
         #One time moved to google_Calendar, we can specify, an if not in google, and not rec or get_inst = 0, we delete it
         for event_id in ids:
-            #if unlink_level == 1 and len(str(event_id).split('-')) == 1: ## if  ID REAL
             if unlink_level == 1 and len(str(event_id).split('-')) == 1: ## if  ID REAL
                 if self.browse(cr,uid,event_id).recurrent_id:
-                    print "Could not be deleted ! because instance of recursive"
+                  #  print "Could not be deleted ! because instance of recursive"
                     ids_to_exclure.append(event_id)
                 else:
                     ids_to_unlink.append(event_id)                
             else:
-                print "Could not be deleted ! because instance virtual"
+                #print "Could not be deleted ! because instance virtual"
                 ids_to_exclure.append(event_id)
         
 

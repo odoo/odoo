@@ -70,9 +70,8 @@
   I change name of my monthly Sprint Review meeting.
 -
   !python {model: crm.meeting}: |
-     from base_calendar import base_calendar
-     base_cal_id = base_calendar.real_id2base_calendar_id(ref('crm_meeting_sprintreview0'), '2011-09-01 13:01:00')
-     self.write(cr, uid, [base_cal_id], {'name': 'Sprint Review for google modules'})
+     idval = '%d-%s' % (ref('crm_meeting_sprintreview0'), '20110901130100')
+     self.write(cr, uid, [idval], {'name': 'Sprint Review for google modules'})
 -
   I check whether all the records are edited or not.
 -
@@ -85,13 +84,13 @@
   I change description of my weekly meeting Review code with programmer.
 -
   !python {model: crm.meeting}: |
-     from base_calendar import base_calendar
-     base_cal_id = base_calendar.real_id2base_calendar_id(ref('crm_meeting_reviewcodewithprogrammer0'), '2011-04-25 12:47:00')
-     self.write(cr, uid, [base_cal_id], {'description': 'Review code of the module: sync_google_calendar.'})
+     idval = '%d-%s' % (ref('crm_meeting_sprintreview0'), '20110425124700')
+     self.write(cr, uid, [idval], {'description': 'Review code of the module: sync_google_calendar.'})
 -
   I check whether the record is edited perfectly or not.
 -
   !python {model: crm.meeting}: |
-     meeting_ids = self.search(cr, uid, [('recurrent_id', '=', ref('crm_meeting_reviewcodewithprogrammer0')), ('recurrent_id_date','=','2011-04-25 12:47:00')], context)
+     meeting_ids = self.search(cr, uid, [('recurrent_id', '=', ref('crm_meeting_sprintreview0')), ('recurrent_id_date','=','2011-04-25 12:47:00')], context)
+     print ref('crm_meeting_reviewcodewithprogrammer0'),meeting_ids
      assert meeting_ids, 'Meeting is not edited !'
 

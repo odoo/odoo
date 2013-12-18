@@ -28,6 +28,18 @@
      ids = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')], context={'virtual_id': True} )
      assert len(ids) == 9, 'Wrong number of events found'
 -
+  Now I move a virtual event, to see that a real event is well created and depending from the native recurrence
+-
+    !python {model: crm.meeting}: |
+     ids = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')], context={'virtual_id': True} )
+     before = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')], context={'virtual_id': False})
+     self.write(cr, uid,[ids[1]], {'name':'New Name','recurrency' : True}, context={'virtual_id': True})     
+     after = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')], context={'virtual_id': False})
+     assert len(after) == len(before)+1, 'Wrong number of events found, after to have moved a virtual event'
+     new_id = list(set(after)-set(before))[0]    
+     new_event = self.browse(cr,uid,new_id,context=context)
+     assert new_event.recurrent_id == before[0], 'Recurrent_id not correctly passed to the new event'          
+-
   Now I will make All day event and test it
 -
     !record {model: crm.meeting, id: crm_meeting_alldaytestevent0}:
@@ -41,14 +53,14 @@
 -
   In order to check reminder I will first create reminder
 -
-  !record {model: res.alarm, id: res_alarm_daybeforeeventstarts0}:
+  !record {model: calendar.alarm, id: res_alarm_daybeforeeventstarts0}:
     name: 1 Day before event starts
-    trigger_duration: 1
-    trigger_interval: days
-    trigger_occurs: before
-    trigger_related: start
+    duration: 1
+    interval: days
+    type: notification
+        
 -
   Now I will assign this reminder to all day event
 -
     !python {model: crm.meeting}: |
-     self.write(cr, uid, [ref("crm_meeting_alldaytestevent0")], {'alarm_id': ref("res_alarm_daybeforeeventstarts0")})
+     self.write(cr, uid, [ref("crm_meeting_alldaytestevent0")], {'alarm_ids': [(6,0,[ref("res_alarm_daybeforeeventstarts0")])]})
