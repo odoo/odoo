@@ -40,9 +40,9 @@ class sale_quote_template(osv.osv):
         url = "%s/template/%s" % (base_url, quote_id)
         return url
 
-    def create(self, cr, uid, ids, context=None):
-        new_id = super(sale_quote_template, self).create(cr, uid, ids, context)
-        self.write(cr, uid, new_id, {'template_url':self._get_signup_url(cr, uid, new_id, context=context)})
+    def create(self, cr, uid, vals, context=None): 
+        new_id = super(sale_quote_template, self).create(cr, uid, vals, context)
+        self.write(cr, uid, new_id, {'template_url': self._get_signup_url(cr, uid, new_id, context=context)})
         return new_id
 
 class sale_quote_line(osv.osv):
@@ -63,8 +63,7 @@ class sale_quote_line(osv.osv):
 
     def on_change_product_id(self, cr, uid, ids, product, context=None):
         vals = {}
-        product_obj = self.pool.get('product.product')
-        product_obj = product_obj.browse(cr, uid, product, context=context)
+        product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
         vals.update({
             'price_unit': product_obj.list_price,
             'website_description': product_obj.website_description,
@@ -112,12 +111,11 @@ class sale_order(osv.osv):
             url = "%s/quote/%s/%s" % (base_url, id, token)
         return url
 
-
     def action_quotation_send(self, cr, uid, ids, context=None):
         self._create_portal_user(cr, uid, ids, context=context)
         token = self._get_token(cr, uid, ids, context)
         url = self._get_signup_url(cr, uid, ids, token, context)
-        self.write(cr, uid, ids, {'access_token': token,'quote_url': url})
+        self.write(cr, uid, ids, {'access_token': token, 'quote_url': url})
         res = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context)
         return res
 
