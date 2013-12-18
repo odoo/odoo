@@ -60,8 +60,10 @@ class WebsiteUiSuite(unittest.TestSuite):
             while True:
                 line = phantom.stdout.readline()
                 if line:
-                    if self.process(line, result):
-                        break
+                    # the runner expects only one result per test
+                    self.process(line, result)
+                    result.stopTest(self._test)
+                    break
                 else:
                     time.sleep(0.1)
         finally:
@@ -80,20 +82,14 @@ class WebsiteUiSuite(unittest.TestSuite):
         # use console.log in phantomjs to output test results using the following format:
         # - for a success: { "event": "success" }
         # - for a failure: { "event": "failure", "message": "Failure description" }
-        # any other message is treated as an error
-        # the runner expects only one result per test
+        # any other message is treated as an error and should contain a messgae
+
         if event == 'success':
             result.addSuccess(self._test)
-            result.stopTest(self._test)
-            return True;
         elif event == 'failure':
             result.addFailure(self._test, message)
-            result.stopTest(self._test)
-            return True;
         else:
-            result.addError(self._test, message)
-            result.stopTest(self._test)
-            return True
+            result.addError(self._test, "Unexpected message: %s" % line)
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite('sample_test.js'))
