@@ -257,7 +257,11 @@ class calendar_attendee(osv.osv):
                     vals['recipient_ids'] = [(4,attendee.partner_id.id),] 
                 print"_AAA_"
                 if not attendee.partner_id.opt_out:
+                    print"_FFF_"
+                    print vals
                     mail_id.append(mail_pool.create(cr, uid, vals, context=context))
+                    print"_GGG_"
+                
                 print"_BBB_"
                     
         if mail_id:
