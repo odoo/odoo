@@ -17,28 +17,32 @@ class delivery_carrier(orm.Model):
 class SaleOrder(orm.Model):
     _inherit = 'sale.order'
 
+    _columns = {
+        'website_order_line': fields.one2many(
+            'sale.order.line', 'order_id',
+            string='Order Lines displayed on Website', readonly=True,
+            domain=[('is_delivery', '=', False)],
+            help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
+        ),
+    }
+
+    def _add_delivery(self, cr, uid, order, context=None):
+        pass
+
     def _get_website_data(self, cr, uid, order, context=None):
         """ Override to add delivery-related website data. """
         values = super(SaleOrder, self)._get_website_data(cr, uid, order, context=context)
 
         # We need a delivery only if we have stockable products
-        todo = False
+        has_stockable_products = False
         for line in order.order_line:
             if line.product_id.type in ('consu', 'product'):
-                todo = True
-        if not todo:
+                has_stockable_products = True
+        if not has_stockable_products:
             return values
 
-        carrier_obj = self.pool.get('delivery.carrier')
-        dids = carrier_obj.search(cr, uid, [], context=context)
-        context['order_id'] = order.id
-        deliveries = carrier_obj.browse(cr, uid, dids, context=context)
-
-        # By default, select the first carrier
-        # if not order.carrier_id and dids:
-        #     self.pool.get('sale.order').write(cr, uid, [order.id], {'carrier_id': dids[0]}, context=context)
-
-        # recompute delivery costs
-        self.pool.get('sale.order').delivery_set(cr, uid, [order.id], context=context)
-        values['deliveries'] = deliveries
+        delivery_ctx = dict(context, order_id=order.id)
+        DeliveryCarrier = self.pool.get('delivery.carrier')
+        delivery_ids = DeliveryCarrier.search(cr, uid, [], context=context)
+        values['deliveries'] = DeliveryCarrier.browse(cr, uid, delivery_ids, context=delivery_ctx)
         return values

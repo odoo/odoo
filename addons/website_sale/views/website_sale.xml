@@ -13,11 +13,11 @@
 
 <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
   <xpath expr="//header//ul[@id='top_menu']/li" position="before">
-      <li t-att-class="(not website_sale_order or not website_sale_order.get_total_quantity()) and 'hidden' or ''">
+      <li t-att-class="(not website_sale_order or not website_sale_order.get_number_of_products()) and 'hidden' or ''">
           <a href="/shop/mycart/">
               <i class="fa fa-shopping-cart"></i>
               My cart <sup t-attf-class="my_cart_quantity label label-primary"
-                            t-esc="website_sale_order and website_sale_order.get_total_quantity() or ''"/>
+                            t-esc="website_sale_order and website_sale_order.get_number_of_products() or ''"/>
           </a>
       </li>
   </xpath>
@@ -396,10 +396,10 @@
           <h1 class="mb32">Shopping Cart</h1>
           <div class="row">
               <div class="col-md-8 col-sm-9 oe_mycart">
-                  <div t-if="not website_sale_order or not website_sale_order.order_line" class="well well-lg">
+                  <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">
                       Your cart is empty!
                   </div>
-                  <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.order_line">
+                  <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                       <colgroup>
                           <col width="100"/>
                           <col/>
@@ -414,7 +414,7 @@
                           </tr>
                       </thead>
                       <tbody>
-                          <tr t-foreach="website_sale_order.order_line" t-as="line">
+                          <tr t-foreach="website_sale_order.website_order_line" t-as="line">
                               <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                               <td align="center" t-if="line.product_id.product_tmpl_id">
                                   <span t-field="line.product_id.image_small"
@@ -486,7 +486,7 @@
                   </table>
                   <div class="clearfix"/>
                   <a href="/shop" class="btn btn-default mb32"><span class="fa fa-long-arrow-left"/> Continue Shopping</a>
-                  <a t-if="website_sale_order and website_sale_order.order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="fa fa-long-arrow-right"/></a>
+                  <a t-if="website_sale_order and website_sale_order.website_order_line" href="/shop/checkout/" class="btn btn-primary pull-right mb32">Process Checkout <span class="fa fa-long-arrow-right"/></a>
                   <div class="oe_structure"/>
               </div>
               <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
@@ -626,7 +626,7 @@
       <p>
           Have a coupon code? Fill in this field and apply.
       </p>
-      <form t-if="website_sale_order and website_sale_order.order_line" action="/shop/mycart/" method="post" class="mb32">
+      <form t-if="website_sale_order and website_sale_order.website_order_line" action="/shop/mycart/" method="post" class="mb32">
           <div class="input-group">
               <input name="promo" class='form-control' type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or ''"/>
               <div class="input-group-btn">
@@ -821,7 +821,7 @@
           <h1 class="mb32">Validate Order</h1>
           <div class="row">
           <div class="col-lg-8 col-sm-9 oe_mycart">
-              <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.order_line">
+              <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                   <colgroup>
                       <col width="80"/>
                       <col/>
@@ -836,7 +836,7 @@
                       </tr>
                   </thead>
                   <tbody>
-                      <tr t-foreach="website_sale_order.order_line" t-as="line">
+                      <tr t-foreach="website_sale_order.website_order_line" t-as="line">
                           <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                           <td t-if="line.product_id.product_tmpl_id">
                               <a t-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }/">
