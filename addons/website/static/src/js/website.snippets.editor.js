@@ -139,6 +139,10 @@
             $(document).on('click', '.dropdown-submenu a[tabindex]', function (e) {
                 e.preventDefault();
             });
+
+            this.getParent().on('resize', this, function (height) {
+                self.$el.css('top', height);
+            });
         },
         fetch_snippet_templates: function () {
             var self = this;

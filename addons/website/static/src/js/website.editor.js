@@ -374,7 +374,6 @@
                 editor.edit();
             }
         });
-        $body.css('padding-top', '50px'); // Not working properly: editor.$el.outerHeight());
     };
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */
@@ -423,7 +422,7 @@
         },
         start: function() {
             var self = this;
-
+            this.height = null;
             this.saving_mutex = new openerp.Mutex();
 
             this.$('#website-top-edit').hide();
@@ -443,12 +442,26 @@
             this.rte.on('rte:ready', this, function () {
                 self.setup_hover_buttons();
                 self.trigger('rte:ready');
+                self.check_height();
             });
+
+            $(window).on('resize', _.debounce(this.check_height.bind(this), 50));
+            this.check_height();
 
             return $.when(
                 this._super.apply(this, arguments),
                 this.rte.appendTo(this.$('#website-top-edit .nav.pull-right'))
-            );
+            ).then(function () {
+                self.check_height();
+            });
+        },
+        check_height: function () {
+            var editor_height = this.$el.outerHeight();
+            if (this.height != editor_height) {
+                this.height = editor_height;
+                $(document.body).css('padding-top', this.height);
+                this.trigger('resize', this.height);
+            }
         },
         edit: function () {
             this.$buttons.edit.prop('disabled', true);
@@ -456,7 +469,7 @@
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
-            this.rte.start_edition();
+            this.rte.start_edition().then(this.check_height.bind(this));
         },
         rte_changed: function () {
             this.$buttons.save.prop('disabled', false);
