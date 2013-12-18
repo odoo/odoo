@@ -204,12 +204,29 @@ class ManyToOne(orm.AbstractModel):
     _inherit = ['website.qweb.field', 'ir.qweb.field.many2one']
 
     def from_html(self, cr, uid, model, column, element, context=None):
-        # FIXME: this behavior is really weird, what if the user wanted to edit the name of the related thingy? Should m2os really be editable without a widget?
-        matches = self.pool[column._obj].name_search(
-            cr, uid, name=element.text_content().strip(), context=context)
-        # FIXME: no match? More than 1 match?
-        assert len(matches) == 1
-        return matches[0][0]
+        # FIXME: layering violations all the things
+        Model = self.pool[element.get('data-oe-model')]
+        M2O = self.pool[column._obj]
+        field = element.get('data-oe-field')
+        id = int(element.get('data-oe-id'))
+        value = element.text_content().strip()
+
+        # if anything blows up, just ignore it and bail
+        try:
+            # get parent record
+            [obj] = Model.read(cr, uid, [id], [field])
+            # get m2o record id
+            (m2o_id, _) = obj[field]
+            # assume _rec_name and write directly to it
+            M2O.write(cr, uid, [m2o_id], {
+                M2O._rec_name: value
+            }, context=context)
+        except:
+            logger.exception("Could not save %r to m2o field %s of model %s",
+                             value, field, Model._name)
+
+        # not necessary, but might as well be explicit about it
+        return None
 
 class HTML(orm.AbstractModel):
     _name = 'website.qweb.field.html'
@@ -281,7 +298,7 @@ class Image(orm.AbstractModel):
             match.group('module'), 'static', *(rest.split('/')))
 
         if not path:
-            return False
+            return None
 
         try:
             with open(path, 'rb') as f:
@@ -292,7 +309,7 @@ class Image(orm.AbstractModel):
                 return f.read().encode('base64')
         except Exception:
             logger.exception("Failed to load local image %r", url)
-            return False
+            return None
 
     def load_remote_url(self, url):
         try:
@@ -310,7 +327,7 @@ class Image(orm.AbstractModel):
             image.load()
         except Exception:
             logger.exception("Failed to load remote image %r", url)
-            return False
+            return None
 
         # don't use original data in case weird stuff was smuggled in, with
         # luck PIL will remove some of it?
