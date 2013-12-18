@@ -732,9 +732,14 @@ class gamification_challenge(osv.Model):
         return (sorted_challengers[0]['user'], sorted_challengers[1]['user'], sorted_challengers[2]['user'])
 
     def reward_user(self, cr, uid, user_id, badge_id, context=None):
-        """Create a badge user and send the badge to him"""
-        user_badge_id = self.pool.get('gamification.badge.user').create(cr, uid, {'user_id': user_id, 'badge_id': badge_id}, context=context)
-        return self.pool.get('gamification.badge').send_badge(cr, uid, badge_id, [user_badge_id], user_from=None, context=context)
+        """Create a badge user and send the badge to him
+
+        :param user_id: the user to reward
+        :param badge_id: the concerned badge
+        """
+        badge_user_obj = self.pool.get('gamification.badge.user')
+        user_badge_id = badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge_id}, context=context)
+        return badge_user_obj._send_badge(cr, uid, [user_badge_id], user_from=None, context=context)
 
 
 class gamification_challenge_line(osv.Model):

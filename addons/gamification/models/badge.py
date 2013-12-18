@@ -43,8 +43,35 @@ class gamification_badge_user(osv.Model):
         'comment': fields.text('Comment'),
         'badge_name': fields.related('badge_id', 'name', type="char", string="Badge Name"),
         'create_date': fields.datetime('Created', readonly=True),
-        'create_uid': fields.many2one('res.users', 'Creator', readonly=True),
+        'create_uid': fields.many2one('res.users', string='Creator', readonly=True),
     }
+
+
+    def _send_badge(self, cr, uid, ids, user_from=False, context=None):
+        """Send a notification to a user for receiving a badge
+
+        Does not verify constrains on badge granting.
+        The users are added to the owner_ids (create badge_user if needed)
+        The stats counters are incremented
+        :param ids: list(int) of badge users that will receive the badge
+        :param user_from: optional id of the res.users object that has sent the badge
+        """
+        res = True
+        temp_obj = self.pool.get('email.template')
+        user_obj = self.pool.get('res.users')
+        template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
+        ctx = context.copy()
+        for badge_user in self.browse(cr, uid, ids, context=context):
+
+            ctx.update({'user_from': user_obj.browse(cr, uid, user_from).name})
+            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=ctx)
+
+            res = user_obj.message_post(cr, uid, badge_user.user_id.id, body=body_html, context=context)
+        return res
+
+    def create(self, cr, uid, vals, context=None):
+        self.pool.get('gamification.badge').check_granting(cr, uid, badge_id=vals.get('badge_id'), context=context)
+        return super(gamification_badge_user, self).create(cr, uid, vals, context=context)
 
 
 class gamification_badge(osv.Model):
@@ -96,7 +123,7 @@ class gamification_badge(osv.Model):
         """
         result = dict.fromkeys(ids, False)
         for badge in self.browse(cr, uid, ids, context=context):
-            if self._can_grant_badge(cr, uid, uid, badge.id, context) != 1:
+            if self._can_grant_badge(cr, uid, badge.id, context) != 1:
                 # if the user cannot grant this badge at all, result is 0
                 result[badge.id] = 0
             elif not badge.rule_max:
@@ -183,37 +210,13 @@ class gamification_badge(osv.Model):
         'rule_auth': 'everyone',
     }
 
-    def send_badge(self, cr, uid, badge_id, badge_user_ids, user_from=False, context=None):
-        """Send a notification to a user for receiving a badge
+    def check_granting(self, cr, uid, badge_id, context=None):
+        """Check the user 'uid' can grant the badge 'badge_id' and raise the appropriate exception
+        if not
 
-        Does NOT verify constrains on badge granting.
-        The users are added to the owner_ids (create badge_user if needed)
-        The stats counters are incremented
-        :param badge_id: id of the badge to deserve
-        :param badge_user_ids: list(int) of badge users that will receive the badge
-        :param user_from: optional id of the res.users object that has sent the badge
+        Do not check for SUPERUSER_ID
         """
-        badge = self.browse(cr, uid, badge_id, context=context)
-        # template_env = TemplateHelper()
-
-        res = None
-        temp_obj = self.pool.get('email.template')
-        template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
-        ctx = context.copy()
-        for badge_user in self.pool.get('gamification.badge.user').browse(cr, uid, badge_user_ids, context=context):
-
-            ctx.update({'user_from': self.pool.get('res.users').browse(cr, uid, user_from).name})
-
-            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=ctx)
-
-            # as SUPERUSER as normal user don't have write access on a badge
-            res = self.message_post(cr, SUPERUSER_ID, badge.id, partner_ids=[badge_user.user_id.partner_id.id], body=body_html, type='comment', subtype='mt_comment', context=context)
-        return res
-
-    def check_granting(self, cr, uid, user_from_id, badge_id, context=None):
-        """Check the user 'user_from_id' can grant the badge 'badge_id' and raise the appropriate exception
-        if not"""
-        status_code = self._can_grant_badge(cr, uid, user_from_id, badge_id, context=context)
+        status_code = self._can_grant_badge(cr, uid, badge_id, context=context)
         if status_code == 1:
             return True
         elif status_code == 2:
@@ -228,10 +231,10 @@ class gamification_badge(osv.Model):
             _logger.exception("Unknown badge status code: %d" % int(status_code))
         return False
 
-    def _can_grant_badge(self, cr, uid, user_from_id, badge_id, context=None):
+    def _can_grant_badge(self, cr, uid, badge_id, context=None):
         """Check if a user can grant a badge to another user
 
-        :param user_from_id: the id of the res.users trying to send the badge
+        :param uid: the id of the res.users trying to send the badge
         :param badge_id: the granted badge id
         :return: integer representing the permission.
             1: can grant
@@ -240,16 +243,19 @@ class gamification_badge(osv.Model):
             4: don't have the required badges
             5: user's monthly limit reached
         """
+        if uid == SUPERUSER_ID:
+            return 1
+
         badge = self.browse(cr, uid, badge_id, context=context)
 
         if badge.rule_auth == 'nobody':
             return 2
 
-        elif badge.rule_auth == 'users' and user_from_id not in [user.id for user in badge.rule_auth_user_ids]:
+        elif badge.rule_auth == 'users' and uid not in [user.id for user in badge.rule_auth_user_ids]:
             return 3
 
         elif badge.rule_auth == 'having':
-            all_user_badges = self.pool.get('gamification.badge.user').search(cr, uid, [('user_id', '=', user_from_id)], context=context)
+            all_user_badges = self.pool.get('gamification.badge.user').search(cr, uid, [('user_id', '=', uid)], context=context)
             for required_badge in badge.rule_auth_badge_ids:
                 if required_badge.id not in all_user_badges:
                     return 4

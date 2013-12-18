@@ -43,16 +43,13 @@ class grant_badge_wizard(osv.TransientModel):
             if uid == wiz.user_id.id:
                 raise osv.except_osv(_('Warning!'), _('You can not grant a badge to yourself'))
 
-            #check if the badge granting is legitimate
-            if badge_obj.check_granting(cr, uid, user_from_id=uid, badge_id=wiz.badge_id.id, context=context):
-                #create the badge
-                values = {
-                    'user_id': wiz.user_id.id,
-                    'badge_id': wiz.badge_id.id,
-                    'comment': wiz.comment,
-                }
-                badge_user = badge_user_obj.create(cr, uid, values, context=context)
-                #notify the user
-                result = badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=uid, context=context)
+            #create the badge
+            values = {
+                'user_id': wiz.user_id.id,
+                'badge_id': wiz.badge_id.id,
+                'comment': wiz.comment,
+            }
+            badge_user = badge_user_obj.create(cr, uid, values, context=context)
+            result = badge_obj._send_badge(cr, uid, badge_user, user_from=uid, context=context)
 
         return result

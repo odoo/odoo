@@ -56,6 +56,9 @@
                             <field name="description" nolabel="1" placeholder="Badge Description" />
                         </group>
                         <group string="Granting">
+                            <div class="oe_grey">
+                                Security rules to define who is allowed to manually grant badges. Not enforced for administrator.
+                            </div>
                             <field name="rule_auth" widget="radio" />
                             <field name="rule_auth_user_ids" attrs="{'invisible': [('rule_auth','!=','users')]}" widget="many2many_tags" />
                             <field name="rule_auth_badge_ids" attrs="{'invisible': [('rule_auth','!=','having')]}" widget="many2many_tags" />
