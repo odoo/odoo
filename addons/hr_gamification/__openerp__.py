@@ -33,8 +33,8 @@ Badge received are displayed on the user profile.
     'data': [
         'security/ir.model.access.csv',
         'security/gamification_security.xml',
-        'views/gamification.xml',
         'wizard/grant_badge.xml',
+        'views/gamification.xml',
     ],
     'js': ['static/src/js/gamification.js'],
 }
