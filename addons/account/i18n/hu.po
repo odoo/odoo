@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-12-16 21:23+0000\n"
+"PO-Revision-Date: 2013-12-17 19:31+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-17 06:13+0000\n"
+"X-Launchpad-Export-Date: 2013-12-18 05:53+0000\n"
 "X-Generator: Launchpad (build 16869)\n"
 
 #. module: account
@@ -751,6 +751,12 @@ msgid ""
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
 msgstr ""
+"A főkönyvi számla utolsó teljes párosításának dátuma. Ez eltérő dátum lesz a "
+"partnerrel legutóbb elvégzett párosítástól, mivel itt vázoljuk annak a "
+"tényét, hogy ekkor semmivel több párosításra nem került sor. Ez "
+"kétféleképpen lehetséges: vagy az utolsó párosítatlan tartozás/követelés "
+"partner tétel lett párosítva, vagy a felhasználó megnyomta a \"Nincs több "
+"párosítható\" gombot a kézi párosítási műveleteknél."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
@@ -805,6 +811,8 @@ msgid ""
 "The amount expressed in the secondary currency must be positive when the "
 "journal item is a debit and negative when if it is a credit."
 msgstr ""
+"A második pénznemben kifejezett értéknek pozitívnak kell lennie ha a napló "
+"tétel egy tartozás (vásárlói) és negatívnak ha egy követelés (beszállítótól)."
 
 #. module: account
 #: constraint:account.move:0
