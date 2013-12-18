@@ -165,6 +165,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         this.enabled = true;
         if (_.has(options, 'enabled')) { this.enabled = options.enabled; }
         this.visible_ui = true;
+        this.bar_ui = 'group'; // group or stack
         this.config(options || {});
     },
 
@@ -172,6 +173,9 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     config: function (options) {
         if (_.has(options, 'visible_ui')) {
             this.visible_ui = options.visible_ui;
+        }
+        if (_.has(options, 'bar_ui')) {
+            this.bar_ui = options.bar_ui;
         }
         this.pivot.config(options);
     },
@@ -532,7 +536,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             });
             nv.addGraph(function() {
                 var chart = nv.models.multiBarChart()
-                        .stacked(true)
+                        .stacked(self.bar_ui === 'stacked')
                         .tooltips(false)
                         .width(self.width)
                         .height(self.height)
@@ -591,7 +595,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
             nv.addGraph(function () {
               var chart = nv.models.multiBarChart()
-                    .stacked(true)
+                    .stacked(self.bar_ui === 'stacked')
                     .staggerLabels(true)
                     .width(self.width)
                     .height(self.height)
@@ -626,7 +630,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
             nv.addGraph(function () {
               var chart = nv.models.multiBarChart()
-                    .stacked(true)
+                    .stacked(self.bar_ui === 'stacked')
                     .staggerLabels(true)
                     .width(self.width)
                     .height(self.height)
