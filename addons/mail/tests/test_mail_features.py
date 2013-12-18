@@ -366,14 +366,14 @@ class test_mail(TestMail):
         # Data creation
         # --------------------------------------------------
         # 0 - Update existing users-partners
-        self.res_users.write(cr, uid, [uid], {'email': 'a@a', 'notification_email_send': 'comment'})
+        self.res_users.write(cr, uid, [uid], {'email': 'a@a', 'notification_email_send': 'always'})
         self.res_users.write(cr, uid, [self.user_raoul_id], {'email': 'r@r'})
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should receive emails for emails
-        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
+        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'never'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
-        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'all'})
+        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'always'})
         # 4 - Attachments
         attach1_id = self.ir_attachment.create(cr, user_raoul.id, {
             'name': 'Attach1', 'datas_fname': 'Attach1',
@@ -600,9 +600,9 @@ class test_mail(TestMail):
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should receive emails for emails
-        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
+        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'always'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
-        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'all'})
+        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'always'})
         # 4 - Create a Bird mail.group, that will be used to test mass mailing
         group_bird_id = self.mail_group.create(cr, uid,
             {

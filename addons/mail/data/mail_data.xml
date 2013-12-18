@@ -42,7 +42,7 @@
 
         <!-- Admin should not receivve emails at creation -->
         <record id="base.partner_root" model="res.partner">
-            <field name="notification_email_send">none</field>
+            <field name="notification_email_send">never</field>
         </record>
 
         <!-- Catchall Email Alias -->

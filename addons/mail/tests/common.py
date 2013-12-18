@@ -77,7 +77,7 @@ class TestMail(common.TransactionCase):
             'alias_name': 'ernest',
             'email': 'e.e@example.com',
             'signature': '--\nErnest',
-            'notification_email_send': 'comment',
+            'notification_email_send': 'always',
             'groups_id': [(6, 0, [self.group_employee_id])]
         }, {'no_reset_password': True})
         self.user_noone_id = self.res_users.create(cr, uid, {
@@ -86,7 +86,7 @@ class TestMail(common.TransactionCase):
             'alias_name': 'noemie',
             'email': 'n.n@example.com',
             'signature': '--\nNoemie',
-            'notification_email_send': 'comment',
+            'notification_email_send': 'always',
             'groups_id': [(6, 0, [])]
         }, {'no_reset_password': True})
 

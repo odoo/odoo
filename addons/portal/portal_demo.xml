@@ -8,7 +8,7 @@
             <field name="email">demo@portal.example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="True"/>
-            <field name="notification_email_send">none</field>
+            <field name="notification_email_send">never</field>
         </record>
         <record id="demo_user0" model="res.users" context="{'no_reset_password': True}">
             <field name="partner_id" ref="partner_demo_portal"/>
