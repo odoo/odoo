@@ -171,11 +171,20 @@ ul.oe_menu_editor
 // Breaks completely horribly crazy products listing page, so take it out.
 .cke_widget_wrapper
     position: static !important
+
 // prevent inline widgets from entirely disappearing when their (textual)
 // content is removed
-.cke_widget_editable:empty:after
-    content: " "
-    white-space: pre-wrap
+.cke_widget_editable
+    // basic config
+    &:empty:after
+        opacity: 0.3
+        white-space: pre-wrap
+    // no @placeholder -> just add some padding
+    &:not([placeholder]):empty::after
+        content: " "
+    // with placeholder and when not (yet) focused -> display placeholder
+    &[placeholder]:not(:focus):empty::after
+        content: attr(placeholder)
 
 .oe_carlos_danger
     outline: 1px solid red !important

@@ -13,7 +13,7 @@
 
 <template id="website.submenu" name="Submenu">
     <li t-if="not submenu.child_id">
-        <a t-att-href="url_for(submenu.url)" t-ignore="true">
+        <a t-att-href="url_for(submenu.url)" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>

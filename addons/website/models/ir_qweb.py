@@ -73,12 +73,21 @@ class Field(orm.AbstractModel):
 
     def attributes(self, cr, uid, field_name, record, options,
                    source_element, g_att, t_att, qweb_context, context=None):
+        if options is None: options = {}
         column = record._model._all_columns[field_name].column
+        attrs = [('data-oe-translate', 1 if column.translate else 0)]
+
+        placeholder = options.get('placeholder') \
+                   or source_element.getAttribute('placeholder') \
+                   or getattr(column, 'placeholder', None)
+        if placeholder:
+            attrs.append(('placeholder', placeholder))
+
         return itertools.chain(
             super(Field, self).attributes(cr, uid, field_name, record, options,
                                           source_element, g_att, t_att,
                                           qweb_context, context=context),
-            [('data-oe-translate', 1 if column.translate else 0)]
+            attrs
         )
 
     def value_from_string(self, value):
