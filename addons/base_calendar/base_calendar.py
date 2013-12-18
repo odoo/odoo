@@ -230,11 +230,9 @@ class calendar_attendee(osv.osv):
             ids = [ids]
                     
         for attendee in self.browse(cr, uid, ids, context=context):            
-            print"_ZZZ_"
             dummy,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', template_xmlid)
             dummy,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")                
             body = template_pool.browse(cr, uid, template_id, context=context).body_html
-            print"_YYY_"
             if attendee.email and email_from:
                 ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
                 local_context['att_obj'] = attendee
@@ -243,7 +241,6 @@ class calendar_attendee(osv.osv):
                 local_context['dbname'] = cr.dbname
                 local_context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
                 vals = template_pool.generate_email(cr, uid, template_id, attendee.event_id.id, context=local_context)
-                print"_XXX_"
                 if ics_file:
                     vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
                                                 'datas_fname': 'invitation.ics',
@@ -255,20 +252,16 @@ class calendar_attendee(osv.osv):
                 if (vals['email_to']== attendee.partner_id.email):
                     vals['email_to'] = ''
                     vals['recipient_ids'] = [(4,attendee.partner_id.id),] 
-                print"_AAA_"
+
                 if not attendee.partner_id.opt_out:
-                    print"_FFF_"
-                    print vals
+                    if 'partner_to' in vals:
+                        del vals['partner_to'] #hack between mail.mail and template.mail -> tde                    
                     mail_id.append(mail_pool.create(cr, uid, vals, context=context))
-                    print"_GGG_"
-                
-                print"_BBB_"
+                    
                     
         if mail_id:
             try:
-                print"_CCC_"
                 res =  mail_pool.send(cr, uid, mail_id, context=context)
-                print"_DDD_"
             except Exception as e:
                 print e
                 
@@ -606,6 +599,8 @@ class calendar_alarm_manager(osv.osv):
                         vals['recipient_ids'] = [(4,attendee.partner_id.id),] 
                     
                     if not attendee.partner_id.opt_out:
+                        if 'partner_to' in vals:
+                            del vals['partner_to'] #hack between mail.mail and template.mail -> tde
                         mail_ids.append(mail_pool.create(cr, uid, vals, context=local_context))
             if mail_ids:
                 try:
