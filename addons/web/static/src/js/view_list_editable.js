@@ -459,7 +459,7 @@ openerp.web.list_editable = function (instance) {
                 });
             });
 
-            this.editor.$el.on('keyup keydown', function (e) {
+            this.editor.$el.on('keyup keypress keydown', function (e) {
                 if (!self.editor.is_editing()) { return true; }
                 var key = _($.ui.keyCode).chain()
                     .map(function (v, k) { return {name: k, code: v}; })
@@ -494,7 +494,7 @@ openerp.web.list_editable = function (instance) {
                 return self.start_edition(record, options);
             });
         },
-        keyup_ENTER: function () {
+        keypress_ENTER: function () {
             return this._next();
         },
         keydown_ESCAPE: function (e) {
