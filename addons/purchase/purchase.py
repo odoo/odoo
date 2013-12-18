@@ -665,14 +665,15 @@ class purchase_order(osv.osv):
         return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, group_id, context=None):
-        ''' prepare the stock move data from the PO line '''
+        ''' prepare the stock move data from the PO line. This function returns a list of dictionary ready to be used in stock.move's create()'''
+        product_uom = self.pool.get('product.uom')
         price_unit = order_line.price_unit
         if order_line.product_uom.id != order_line.product_id.uom_id.id:
             price_unit *= order_line.product_uom.factor
         if order.currency_id.id != order.company_id.currency_id.id:
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
-        return {
+        res = [{
             'name': order_line.name or '',
             'product_id': order_line.product_id.id,
             'product_uom_qty': order_line.product_qty,
@@ -694,7 +695,25 @@ class purchase_order(osv.osv):
             'group_id': group_id,
             'procurement_id': order_line.procurement_ids and order_line.procurement_ids[0].id or False,
             'route_ids': order.picking_type_id.warehouse_id and [(6, 0, [x.id for x in order.picking_type_id.warehouse_id.route_ids])] or [],
-        }
+        }]
+        #if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
+        #split the future stock move in two because the route followed may be different.
+        if order_line.procurement_ids:
+            procurement = order_line.procurement_ids[0]
+            procurement_quantity = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, to_uom_id=order_line.product_uom.id)
+            diff_quantity = order_line.product_qty - procurement_quantity
+            if diff_quantity > 0:
+                tmp = res[0].copy()
+                res[0]['product_uom_qty'] = diff_quantity
+                res[0]['product_uos_qty'] = diff_quantity
+                res[0]['procurement_id'] = False
+                res[0]['move_dest_id'] = False
+                tmp['product_uom_qty'] = procurement.product_qty
+                tmp['product_uos_qty'] = procurement.product_qty
+                tmp['product_uom'] = procurement.product_uom.id
+                tmp['product_uos'] = procurement.product_uom.id
+                res.append(tmp)
+        return res
 
     def _create_stock_moves(self, cr, uid, order, order_lines, picking_id=False, context=None):
         """Creates appropriate stock moves for given order lines, whose can optionally create a
@@ -715,25 +734,24 @@ class purchase_order(osv.osv):
                                will be added. A new picking will be created if omitted.
         :return: None
         """
-        stock_picking = self.pool.get('stock.picking')
-        todo_moves = []
         stock_move = self.pool.get('stock.move')
-        
+        todo_moves = []
         new_group = False
         if any([(not x.group_id) for x in order_lines]):
-            new_group = self.pool.get("procurement.group").create(cr, uid, {'name':order.name, 'partner_id': order.partner_id.id}, context=context)
-                
+            new_group = self.pool.get("procurement.group").create(cr, uid, {'name': order.name, 'partner_id': order.partner_id.id}, context=context)
+
         for order_line in order_lines:
             if not order_line.product_id:
                 continue
-            
+
             if order_line.product_id.type in ('product', 'consu'):
                 group_id = order_line.group_id and order_line.group_id.id or new_group
-                move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context))
+                for vals in self._prepare_order_line_move(cr, uid, order, order_line, picking_id, group_id, context=context):
+                    move = stock_move.create(cr, uid, vals, context=context)
+                    todo_moves.append(move)
                 if order_line.move_dest_id:
                     order_line.move_dest_id.write({'location_id': order.location_id.id})
-                todo_moves.append(move)
-        
+
         stock_move.action_confirm(cr, uid, todo_moves)
         stock_move.force_assign(cr, uid, todo_moves)
 
