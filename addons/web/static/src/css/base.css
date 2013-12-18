@@ -599,41 +599,6 @@
   font-style: italic;
   text-decoration: none;
 }
-.openerp.oe_tooltip {
-  font-size: 12px;
-  background-color: transparent;
-}
-.openerp.oe_tooltip .oe_tooltip_string {
-  color: #ffdd55;
-  font-weight: bold;
-  font-size: 13px;
-}
-.openerp.oe_tooltip .oe_tooltip_help {
-  white-space: pre-wrap;
-}
-.openerp.oe_tooltip .oe_tooltip_technical {
-  padding: 0 0 4px 0;
-  margin: 5px 0 0 15px;
-}
-.openerp.oe_tooltip .oe_tooltip_technical li {
-  list-style: circle;
-}
-.openerp.oe_tooltip .oe_tooltip_technical_title {
-  font-weight: bold;
-}
-.openerp.oe_tooltip .oe_tooltip_close {
-  margin: -5px 0 0 2px;
-  cursor: default;
-  float: right;
-  color: white;
-}
-.openerp.oe_tooltip .oe_tooltip_close:hover {
-  color: #999999;
-  cursor: pointer;
-}
-.openerp.oe_tooltip .oe_tooltip_message {
-  max-width: 310px;
-}
 .openerp .oe_notebook {
   margin: 8px 0;
   padding: 0 16px;
@@ -3463,13 +3428,50 @@ div.ui-widget-overlay {
   background-color: #7c7bad;
 }
 
-.tooltip-inner {
+.tooltip {
+  padding: 0;
+  margin: 0;
+  font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
+  color: #4c4c4c;
+  font-size: 12px;
+  background: white;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  background-color: transparent;
+}
+.tooltip .tooltip-inner {
   text-align: left !important;
   max-width: 250px;
 }
-
-.tooltip.bottom .tooltip-arrow {
-  left: 50%;
+.tooltip .tooltip-inner .oe_tooltip_string {
+  color: #ffdd55;
+  font-weight: bold;
+  font-size: 13px;
+}
+.tooltip .tooltip-inner .oe_tooltip_help {
+  white-space: pre-wrap;
+}
+.tooltip .tooltip-inner .oe_tooltip_technical {
+  padding: 0 0 4px 0;
+  margin: 5px 0 0 15px;
+}
+.tooltip .tooltip-inner .oe_tooltip_technical li {
+  list-style: circle;
+}
+.tooltip .tooltip-inner .oe_tooltip_technical_title {
+  font-weight: bold;
+}
+.tooltip .tooltip-inner .oe_tooltip_close {
+  margin: -5px 0 0 2px;
+  cursor: default;
+  float: right;
+  color: white;
+}
+.tooltip .tooltip-inner .oe_tooltip_close:hover {
+  color: #999999;
+  cursor: pointer;
+}
+.tooltip .tooltip-inner .oe_tooltip_message {
+  max-width: 310px;
 }
 
 button, body {

@@ -531,34 +531,6 @@ $sheet-padding: 16px
                 text-decoration: none
         margin-bottom: 1px
     // }}}
-    // Tooltips {{{
-    &.oe_tooltip
-        font-size: 12px
-        background-color: transparent
-        .oe_tooltip_string
-            color: #FD5
-            font-weight: bold
-            font-size: 13px
-        .oe_tooltip_help
-            white-space: pre-wrap
-        .oe_tooltip_technical
-            padding: 0 0 4px 0
-            margin: 5px 0 0 15px
-            li
-                list-style: circle
-        .oe_tooltip_technical_title
-            font-weight: bold
-        .oe_tooltip_close
-            margin: -5px 0 0 2px
-            cursor: default
-            float: right
-            color: white
-            &:hover
-                color: #999
-                cursor: pointer
-        .oe_tooltip_message
-            max-width: 310px
-    // }}}
     // Notebook {{{
     .oe_notebook
         margin: 8px 0
@@ -2766,11 +2738,41 @@ div.ui-widget-overlay
 // End of customize
 
 // Customize bootstrap3 for tooltip
-.tooltip-inner
-    text-align: left !important
-    max-width: 250px
-.tooltip.bottom .tooltip-arrow
-    left: 50%
+.tooltip
+    padding: 0
+    margin: 0
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 12px
+    background: white
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
+    background-color: transparent
+    .tooltip-inner
+        text-align: left !important
+        max-width: 250px
+        .oe_tooltip_string
+            color: #FD5
+            font-weight: bold
+            font-size: 13px
+        .oe_tooltip_help
+            white-space: pre-wrap
+        .oe_tooltip_technical
+            padding: 0 0 4px 0
+            margin: 5px 0 0 15px
+            li
+                list-style: circle
+        .oe_tooltip_technical_title
+            font-weight: bold
+        .oe_tooltip_close
+            margin: -5px 0 0 2px
+            cursor: default
+            float: right
+            color: white
+            &:hover
+                color: #999
+                cursor: pointer
+        .oe_tooltip_message
+            max-width: 310px
 // End of customize
 
 // Customize for global tags
