@@ -5,7 +5,6 @@ $(document).ready(function () {
         var href = $link.attr("href");
         var order_id = $link.attr("href").match(/order_id=([0-9]+)/);
         var line_id = href.match(/update_line\/([0-9]+)/);
-        console.log(line_id);
         openerp.jsonRpc("/quote/update_line/", 'call', {
                 'line_id': line_id[1],
                 'order_id': parseInt(order_id[1]),

@@ -45,12 +45,20 @@ class sale_quote(http.Controller):
             user = user_pool.search(request.cr, SUPERUSER_ID, [('partner_id', '=', partner)])[0]
         return user
 
+    def get_message(self, order):
+        total = 0
+        for msg in order.message_ids:
+            if msg.subtype_id.name in ['Sales Order Confirmed', 'Discussions']:
+                total += 1
+        return total
+
     @website.route(["/quote/<model('sale.order'):order>/<token>"], type='http', auth="public")
     def view(self, order=None, token=None,**post):
         assert token == order.access_token, 'No token found'
         values = {}
         values.update({
             'quotation': order,
+            'message': self.get_message(order)
         })
         return request.website.render('website_sale_quote.so_quotation', values)
 
@@ -59,19 +67,20 @@ class sale_quote(http.Controller):
         request.registry.get('sale.order').write(request.cr, SUPERUSER_ID, [order_id], {'state': 'manual'})
         return request.redirect("/quote/%s/%s" % (order_id, self._get_token(order_id)))
 
-    @website.route(['/quote/<int:order_id>/decline'], type='http', auth="public")
-    def decline(self, order_id=None, **post):
-        request.registry.get('sale.order').write(request.cr, SUPERUSER_ID, [order_id], {'state': 'cancel'})
-        return request.redirect("/quote/%s/%s" % (order_id, self._get_token(order_id)))
+    def decline(self, order_id):
+        return request.registry.get('sale.order').write(request.cr, SUPERUSER_ID, [order_id], {'state': 'cancel'})
 
     @website.route(['/quote/<int:order_id>/post'], type='http', auth="public")
     def post(self, order_id=None, **post):
         if post.get('new_message'):
             request.session.body = post.get('new_message')
+        if post.get('decline_message'):
+            self.decline(order_id)
+            request.session.body = post.get('decline_message')
         if 'body' in request.session and request.session.body:
             request.registry.get('sale.order').message_post(request.cr, self._get_partner_user(order_id), order_id,
                     body=request.session.body,
-                    type='email',
+                    type='comment',
                     subtype='mt_comment',
                 )
             request.session.body = False
@@ -83,7 +92,7 @@ class sale_quote(http.Controller):
             return request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID, [int(line_id)], context=request.context)
         val = self._update_order_line(line_id=int(line_id), number=(remove and -1 or 1))
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
-        return [val, order.amount_total]
+        return [str(val), str(order.amount_total)]
 
     def _update_order_line(self, line_id, number):
         order_line_obj = request.registry.get('sale.order.line')

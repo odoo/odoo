@@ -165,7 +165,7 @@
                             </a>
                         </li>
                         <li>
-                            <a type="submit" t-if="quotation.state != 'cancel'" t-href="/quote/#{ quotation.id }/decline">
+                            <a type="submit" t-if="quotation.state != 'cancel'" data-toggle="modal" data-target="#myModal">
                                 <span class="fa-stack">
                                     <i class="fa fa-circle fa-stack-2x" style="color:#d9534f;"></i>
                                     <i class="fa fa-times fa-stack-1x fa-inverse"></i>
@@ -179,7 +179,7 @@
                                     <i class="fa fa-circle fa-stack-2x" style="color:#428bca;"></i>
                                     <i class="fa fa-comment fa-stack-1x fa-inverse"></i>
                                 </span>Discuss
-                                <sup class="label label-info"><t t-esc="len(quotation.message_ids)"/></sup>
+                                <sup class="label label-info"><t t-esc="message"/></sup>
                             </a>
                         </li>
                     </ul>
@@ -195,6 +195,7 @@
                 <div class="panel-body">
                     <ul class="list-group">
                         <t t-foreach="quotation.message_ids" t-as="message">
+                            <t t-if="message.subtype_id.name == 'Sales Order Confirmed' or message.subtype_id.name == 'Discussions'" >
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-xs-2 col-md-1" t-if="message.author_id.image_small">
@@ -210,6 +211,7 @@
                                     </div>
                                 </div>
                             </li>
+                            </t>
                         </t>
                     </ul>
                 </div>
@@ -223,6 +225,25 @@
             <t t-call="website_sale_quote.static_layout">
                 <div class="col-xs-12 col-md-8 tab-content">
                     <t t-call="website_sale_quote.quote_status"/>
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title" id="myModalLabel">Reason</h4>
+                          </div>
+                          <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% (quotation.id)">
+                              <div class="modal-body">
+                                <textarea rows="3" id="decline_message" name="decline_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
+                            </div>
+                          <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post</button>
+                          </div>
+                        </form>
+                        </div>
+                      </div>
+                    </div>
                     <section id="introduction11" class="tab-pane active oe_section jumbotron" t-field="quotation.website_description">
                     </section>
                     <t t-foreach="quotation.order_line" t-as="line">
@@ -241,7 +262,7 @@
                         <t t-foreach="quotation.order_line" t-as="line">
                             <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><i class="icon-chevron-right"></i><t t-raw="line.product_id.name_template"/> </a></li>
                         </t>
-                        <li><a href="#quote" data-toggle="tab"><i class="icon-chevron-right"></i> Quotation</a></li>
+                        <li><a href="#quote" data-toggle="tab"><i class="icon-chevron-right"></i> Pricing</a></li>
                         <li><a href="#terms" data-toggle="tab"><i class="icon-chevron-right"></i> Terms &amp; Conditions</a></li>
                     </ul>
                 </div>
