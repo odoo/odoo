@@ -211,8 +211,14 @@ ul.oe_menu_editor .disclose {
 }
 
 .cke_widget_editable:empty:after {
-  content: " ";
+  opacity: 0.3;
   white-space: pre-wrap;
+}
+.cke_widget_editable:not([placeholder]):empty::after {
+  content: " ";
+}
+.cke_widget_editable[placeholder]:not(:focus):empty::after {
+  content: attr(placeholder);
 }
 
 .oe_carlos_danger {
