@@ -838,6 +838,7 @@ class users_view(osv.osv):
                     'selection': [(False, '')] + [(g.id, g.name) for g in gs],
                     'help': '\n'.join(tips),
                     'exportable': False,
+                    'selectable': False,
                 }
             else:
                 # boolean group fields
@@ -847,6 +848,7 @@ class users_view(osv.osv):
                         'string': g.name,
                         'help': g.comment,
                         'exportable': False,
+                        'selectable': False,
                     }
         return res
 
