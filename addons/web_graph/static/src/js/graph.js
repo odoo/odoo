@@ -22,6 +22,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.dataset = dataset;
         this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
         this.search_view = parent.searchview;
+        this.search_view_groupby = [];
         this.groupby_mode = 'default';  // 'default' or 'manual'
         this.default_row_groupby = [];
         this.default_col_groupby = [];
@@ -76,6 +77,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             col_groupby = context.col_group_by || [],
             options = {domain:domain};
 
+        this.search_view_groupby = group_by;
         if (group_by.length || col_groupby.length) {
             this.groupby_mode = 'manual';
         }
@@ -106,8 +108,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
     register_groupby: function() {
         var self = this,
             query = this.search_view.query;
-        this.groupby_mode = 'manual';
 
+        this.groupby_mode = 'manual';
+        if (_.isEqual(this.search_view_groupby, this.graph_widget.pivot.rows.groupby)) {
+            return;
+        }
         var rows = _.map(this.graph_widget.pivot.rows.groupby, function (group) {
             return make_facet('GroupBy', group);
         });
