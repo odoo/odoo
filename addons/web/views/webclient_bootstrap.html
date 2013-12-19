@@ -18,7 +18,7 @@
                 {% if init %}
                     {{ init }}
                 {% else %}
-                    var wc = new s.web.WebClient({% if client_options %}{{ client_options | json | safe }}{% endif %});
+                    var wc = new s.web.WebClient({% if client_options %}null, {{ client_options | json | safe }}{% endif %});
                     wc.appendTo($(document.body));
                 {% endif %}
             });
