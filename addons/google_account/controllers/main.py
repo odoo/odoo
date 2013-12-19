@@ -21,7 +21,7 @@ class google_auth(http.Controller):
         
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
-            if kw.get('code'):
+            if kw.get('code',False):
                 registry.get('google.%s' % service).set_all_tokens(cr,request.session.uid,kw['code'])
                 return werkzeug.utils.redirect(url_return)
             

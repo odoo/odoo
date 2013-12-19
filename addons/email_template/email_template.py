@@ -416,13 +416,14 @@ class email_template(osv.osv):
         
         #Convert Partner_to (a string of ID) into recipient_ids'
         recipient_ids = []
-        if 'partner_to' in values and values['partner_to']:
-            partner_to = safe_eval(values['partner_to'])
-#             if not hasattr(partner_to, '__iter__'):
-#                 partner_to = [partner_to]
-            for partner_id in partner_to:  
-                recipient_ids.append((4,partner_id))
-            values['recipient_ids'] = recipient_ids
+        if 'partner_to' in values:
+            if values['partner_to']:
+                partner_to = safe_eval(values['partner_to'])
+                #  if not hasattr(partner_to, '__iter__'):
+                #      partner_to = [partner_to]
+                for partner_id in partner_to:  
+                    recipient_ids.append((4,partner_id))
+                values['recipient_ids'] = recipient_ids
             del values['partner_to']  
             
         attachment_ids = values.pop('attachment_ids', [])

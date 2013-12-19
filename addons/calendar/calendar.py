@@ -242,12 +242,6 @@ class calendar_attendee(osv.osv):
                 the_mailmess = mail_pool.browse(cr,uid,mail_id,context=context).mail_message_id
                 mailmess_pool.write(cr,uid,[the_mailmess.id],vals,context=context)
                 mail_ids.append(mail_id)
-                
-                   
-# 
-#                 if not attendee.partner_id.opt_out:
-#                     if 'partner_to' in vals:
-#                         del vals['partner_to'] #hack between mail.mail and template.mail -> tde                    
                     
         if mail_ids:
             try:
@@ -568,8 +562,6 @@ class calendar_alarm_manager(osv.osv):
                 if LastFound:
                     for alert in LastFound:
                         self.do_mail_reminder(cr,uid,alert,context=context)                    
-                
-            #Purge all done
     
     def get_next_event(self,cr,uid,context=None):
         ajax_check_every_seconds = 300
@@ -627,31 +619,28 @@ class calendar_alarm_manager(osv.osv):
                      'declined':'red'                 
             }
             
-            for attendee in event.attendee_ids:            
+            for attendee in event.attendee_ids:
                 dummy,template_id = data_pool.get_object_reference(cr, uid, 'calendar', 'crm_email_template_meeting_reminder')
                 dummy,act_id = data_pool.get_object_reference(cr, uid, 'calendar', "view_crm_meeting_calendar")                
-                body = template_pool.browse(cr, uid, template_id, context=context).body_html
-                
-                #mail_from = tools.config.get('email_from',event.user_id.email)
+
                 if attendee.email:
-                    local_context['att_obj'] = attendee
+
                     local_context['color'] = color
                     local_context['action_id'] = self.pool.get('ir.actions.act_window').search(cr, uid, [('view_id','=',act_id)], context=context)[0]
                     local_context['dbname'] = cr.dbname
                     local_context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-                    vals = template_pool.generate_email(cr, uid, template_id, attendee.event_id.id, context=local_context)
+                    vals = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
                     
+                    vals =  {}
+                    if ics_file:
+                        vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
+                                                    'datas_fname': 'invitation.ics',
+                                                    'datas': str(ics_file).encode('base64')})]
                     vals['model'] = None #We don't want to have the mail in the tchatter while in queue!
-                    vals['auto_delete'] = True #We don't need mail after it has been sended !
-                    
-                    if (vals['email_to']== attendee.partner_id.email):
-                        vals['email_to'] = ''
-                        vals['recipient_ids'] = [(4,attendee.partner_id.id),] 
-                    
-                    if not attendee.partner_id.opt_out:
-                        if 'partner_to' in vals:
-                            del vals['partner_to'] #hack between mail.mail and template.mail -> tde
-                        mail_ids.append(mail_pool.create(cr, uid, vals, context=local_context))
+                    the_mailmess = mail_pool.browse(cr,uid,mail_id,context=context).mail_message_id
+                    mailmess_pool.write(cr,uid,[the_mailmess.id],vals,context=context)
+                    mail_ids.append(mail_id)
+
             if mail_ids:
                 try:
                     res =  mail_pool.send(cr, uid, mail_ids, context=local_context)

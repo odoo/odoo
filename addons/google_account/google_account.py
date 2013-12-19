@@ -100,7 +100,7 @@ class google_service(osv.osv_memory):
             'client_id': client_id,
             'client_secret': client_secret,
             'grant_type' : 'authorization_code',
-            #'redirect_uri': base_url + '/google_account/authentication'
+            'redirect_uri': base_url + '/google_account/authentication'
         }
                 
         headers = {"content-type": "application/x-www-form-urlencoded"}
