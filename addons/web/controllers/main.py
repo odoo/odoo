@@ -560,6 +560,7 @@ html_template = """<!DOCTYPE html>
 """
 
 def webclient_bootstrap(**options):
+    # `options` can contain `client_options` dict. See chrome.js for more information about client_options.
     for res in ['js', 'css']:
         if res not in options:
             options[res] = manifest_list(res, db=options.get('db'), debug=options.get('debug', request.debug))
@@ -577,7 +578,7 @@ class Home(http.Controller):
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, db=None, debug=False, **kw):
-        debug = bool(debug)
+        debug = debug is not False # we just check presence of `debug` query param
 
         # if db not provided, use the session one
         if db is None:
@@ -782,15 +783,18 @@ class Database(http.Controller):
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, debug=False):
+        debug = debug is not False # we just check presence of `debug` query param
         dbs = http.db_list(True)
         if not dbs:
             return redirect_with_hash('/web/database/manager', keep_query=['debug'])
         return env.get_template("database_selector.html").render({
-            'databases': dbs
+            'databases': dbs,
+            'debug': debug,
         })
 
     @http.route('/web/database/manager', type='http', auth="none")
     def manager(self, debug=False):
+        debug = debug is not False # we just check presence of `debug` query param
         options = {
             'action': 'database_manager'
         }
