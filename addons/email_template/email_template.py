@@ -411,7 +411,13 @@ class email_template(osv.osv):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
+        
+        recipient_ids = []
+        for partner_id in (values['partner_to'] and values['partner_to'].split(',') or []):  
+            recipient_ids.append((4,partner_id))
+        values['recipient_ids'] = recipient_ids
         del values['partner_to']  # TODO Properly use them.
+        
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)
