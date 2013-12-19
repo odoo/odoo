@@ -659,7 +659,7 @@ instance.web.Login =  instance.web.Widget.extend({
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.db_list = null;
-        this.selected_db = null;
+        this.selected_db = this.client_options.dbname || null;
         this.selected_login = null;
         this.params = action.params || {};
         if (_.isEmpty(this.params)) {
@@ -1246,6 +1246,7 @@ instance.web.FullscreenWidget = instance.web.Widget.extend({
 instance.web.Client = instance.web.Widget.extend({
     init: function(parent, origin) {
         instance.client = instance.webclient = this;
+        this.client_options = {};
         this._super(parent);
         this.origin = origin;
     },
@@ -1316,8 +1317,11 @@ instance.web.WebClient = instance.web.Client.extend({
     events: {
         'click .oe_logo_edit_admin': 'logo_edit'
     },
-    init: function(parent) {
+    init: function(parent, client_options) {
         this._super(parent);
+        if (client_options) {
+            _.extend(this.client_options, client_options);
+        }
         this._current_state = null;
         this.menu_dm = new instance.web.DropMisordered();
         this.action_mutex = new $.Mutex();
