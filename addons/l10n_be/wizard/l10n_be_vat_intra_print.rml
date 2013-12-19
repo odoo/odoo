@@ -105,7 +105,7 @@
             <para style="terp_default_9">[[ l['vat'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ l['code'] (l['intra_code']) ]]</para>
+            <para style="terp_default_9">[[ u'%s (%s)' % (l['code'], l['intra_code']) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l['amount'], currency_obj=company.currency_id) ]]</para>
