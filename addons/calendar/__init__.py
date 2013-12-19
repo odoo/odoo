@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import base_calendar
+import calendar
 import controllers
 #import res_config
 

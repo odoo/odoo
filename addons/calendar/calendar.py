@@ -39,16 +39,16 @@ from openerp.tools.translate import _
 
 
 
-def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
+def calendar_id2real_id(calendar_id=None, with_date=False):
     """
     Convert a "virtual/recurring event id" (type string) into a real event id (type int).
     E.g. virtual/recurring event id is 4-20091201100000, so it will return 4.
-    @param base_calendar_id: id of calendar
-    @param with_date: if a value is passed to this param it will return dates based on value of withdate + base_calendar_id
+    @param calendar_id: id of calendar
+    @param with_date: if a value is passed to this param it will return dates based on value of withdate + calendar_id
     @return: real event id
     """
-    if base_calendar_id and isinstance(base_calendar_id, (str, unicode)):
-        res = base_calendar_id.split('-')
+    if calendar_id and isinstance(calendar_id, (str, unicode)):
+        res = calendar_id.split('-')
         if len(res) >= 2:
             real_id = res[0]
             if with_date:
@@ -58,16 +58,16 @@ def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
                 return (int(real_id), real_date, end.strftime("%Y-%m-%d %H:%M:%S"))
             return int(real_id)
 
-    return base_calendar_id and int(base_calendar_id) or base_calendar_id
+    return calendar_id and int(calendar_id) or calendar_id
 
 def get_real_ids(ids):
     if isinstance(ids, (str, int, long)):
-        return base_calendar_id2real_id(ids)
+        return calendar_id2real_id(ids)
 
     if isinstance(ids, (list, tuple)):
         res = []
         for id in ids:
-            res.append(base_calendar_id2real_id(id))
+            res.append(calendar_id2real_id(id))
         return res
 
 class calendar_attendee(osv.osv):
@@ -221,8 +221,8 @@ class calendar_attendee(osv.osv):
             ids = [ids]
                     
         for attendee in self.browse(cr, uid, ids, context=context):            
-            dummy,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar',template_xmlid)
-            dummy,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")                
+            dummy,template_id = data_pool.get_object_reference(cr, uid, 'calendar',template_xmlid)
+            dummy,act_id = data_pool.get_object_reference(cr, uid, 'calendar', "view_crm_meeting_calendar")                
 
             if attendee.email and email_from:
                 ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
@@ -280,8 +280,8 @@ class calendar_attendee(osv.osv):
             ids = [ids]
                     
         for attendee in self.browse(cr, uid, ids, context=context):            
-            dummy,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', template_xmlid)
-            dummy,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")                
+            dummy,template_id = data_pool.get_object_reference(cr, uid, 'calendar', template_xmlid)
+            dummy,act_id = data_pool.get_object_reference(cr, uid, 'calendar', "view_crm_meeting_calendar")                
             body = template_pool.browse(cr, uid, template_id, context=context).body_html
             if attendee.email and email_from:
                 ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
@@ -347,7 +347,7 @@ class calendar_attendee(osv.osv):
         meeting_obj =  self.pool.get('crm.meeting')
         res = self.write(cr, uid, ids, {'state': 'accepted'}, context)
         for attendee in self.browse(cr, uid, ids, context=context):
-            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has accepted invitation") % (attendee.cn)),subtype="base_calendar.subtype_invitation", context=context)
+            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has accepted invitation") % (attendee.cn)),subtype="calendar.subtype_invitation", context=context)
                 
         return res
     
@@ -361,7 +361,7 @@ class calendar_attendee(osv.osv):
         meeting_obj = self.pool.get('crm.meeting')
         res = self.write(cr, uid, ids, {'state': 'declined'}, context)
         for attendee in self.browse(cr, uid, ids, context=context):
-            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has declined invitation") % (attendee.cn)),subtype="base_calendar.subtype_invitation", context=context)
+            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has declined invitation") % (attendee.cn)),subtype="calendar.subtype_invitation", context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -628,8 +628,8 @@ class calendar_alarm_manager(osv.osv):
             }
             
             for attendee in event.attendee_ids:            
-                dummy,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar', 'crm_email_template_meeting_reminder')
-                dummy,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")                
+                dummy,template_id = data_pool.get_object_reference(cr, uid, 'calendar', 'crm_email_template_meeting_reminder')
+                dummy,act_id = data_pool.get_object_reference(cr, uid, 'calendar', "view_crm_meeting_calendar")                
                 body = template_pool.browse(cr, uid, template_id, context=context).body_html
                 
                 #mail_from = tools.config.get('email_from',event.user_id.email)
@@ -726,7 +726,7 @@ class ir_values(osv.osv):
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
-                new_model.append((data[0], base_calendar_id2real_id(data[1])))
+                new_model.append((data[0], calendar_id2real_id(data[1])))
             else:
                 new_model.append(data)
         return super(ir_values, self).set(cr, uid, key, key2, name, new_model, \
@@ -738,7 +738,7 @@ class ir_values(osv.osv):
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
-                new_model.append((data[0], base_calendar_id2real_id(data[1])))
+                new_model.append((data[0], calendar_id2real_id(data[1])))
             else:
                 new_model.append(data)
         return super(ir_values, self).get(cr, uid, key, key2, new_model, \
@@ -758,7 +758,7 @@ class ir_model(osv.osv):
                         context=context, load=load)
         if data:
             for val in data:
-                val['id'] = base_calendar_id2real_id(val['id'])
+                val['id'] = calendar_id2real_id(val['id'])
         return isinstance(ids, (str, int, long)) and data[0] or data
 
 
@@ -772,9 +772,9 @@ def exp_report(db, uid, object, ids, data=None, context=None):
         original_exp_report(db, uid, object, ids, data, context)
     new_ids = []
     for id in ids:
-        new_ids.append(base_calendar_id2real_id(id))
+        new_ids.append(calendar_id2real_id(id))
     if data.get('id', False):
-        data['id'] = base_calendar_id2real_id(data['id'])
+        data['id'] = calendar_id2real_id(data['id'])
     return original_exp_report(db, uid, object, new_ids, data, context)
 
 openerp.service.report.exp_report = exp_report
@@ -946,10 +946,10 @@ class crm_meeting(osv.Model):
 
     _track = {
         'location': {
-            'base_calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
+            'calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
         },
        'date': {
-            'base_calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
+            'calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
         },
     }
     _columns = {
@@ -1133,7 +1133,7 @@ class crm_meeting(osv.Model):
                     mail_from = current_user.email or tools.config.get('email_from', False)
                     print "Send mail... from ",mail_from, " to ",att_id 
                     if self.pool.get('calendar.attendee')._send_mail_to_attendees(cr, uid, att_id, email_from = mail_from, context=context):
-                        self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,),subtype="base_calendar.subtype_invitation", context=context)
+                        self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee %s") % (partner.name,),subtype="calendar.subtype_invitation", context=context)
             
             if  new_attendees:
                 self.write(cr, uid, [event.id], {'attendee_ids': [(4, att) for att in new_attendees]},context=context)
@@ -1226,7 +1226,7 @@ class crm_meeting(osv.Model):
 
                 if [True for item in new_pile if not item]:
                     continue
-                # idval = real_id2base_calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
+                # idval = real_id2calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
                 idval = '%d-%s' % (ev.id, r_date.strftime("%Y%m%d%H%M%S"))    
                 result.append(idval)
 
@@ -1365,7 +1365,7 @@ class crm_meeting(osv.Model):
     def message_get_subscription_data(self, cr, uid, ids, user_pid=None, context=None):
         res = {}
         for virtual_id in ids:
-            real_id = base_calendar_id2real_id(virtual_id)
+            real_id = calendar_id2real_id(virtual_id)
             result = super(crm_meeting, self).message_get_subscription_data(cr, uid, [real_id], user_pid=None, context=context)
             res[virtual_id] = result[real_id]
         return res
@@ -1423,7 +1423,7 @@ class crm_meeting(osv.Model):
 
             if current_user.email:
                 if self.pool.get('calendar.attendee')._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], email_from = current_user.email, context=context):
-                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), subtype="base_calendar.subtype_invitation", context=context)
+                    self.message_post(cr, uid, event.id, body=_("An invitation email has been sent to attendee(s)"), subtype="calendar.subtype_invitation", context=context)
         return;
     
     def get_attendee(self, cr, uid, meeting_id, context=None):
@@ -1501,7 +1501,7 @@ class crm_meeting(osv.Model):
         default['attendee_ids'] = False
         
         
-        res = super(crm_meeting, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
+        res = super(crm_meeting, self).copy(cr, uid, calendar_id2real_id(id), default, context)
         return res        
 
     def write(self, cr, uid, ids, values, context=None):
@@ -1524,7 +1524,7 @@ class crm_meeting(osv.Model):
                 continue
             
             ids.remove(event_id)
-            real_event_id = base_calendar_id2real_id(event_id)
+            real_event_id = calendar_id2real_id(event_id)
 
             # if we are setting the recurrency flag to False or if we are only changing fields that
             # should be only updated on the real ID and not on the virtual (like message_follower_ids):
@@ -1586,7 +1586,7 @@ class crm_meeting(osv.Model):
             if mail_to_ids:
                 current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
                 if self.pool.get('calendar.attendee')._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='crm_email_template_meeting_changedate',email_from=current_user.email, context=context):
-                    self.message_post(cr, uid, the_id, body=_("A email has been send to specify that the date has been changed !"),subtype="base_calendar.subtype_invitation", context=context)
+                    self.message_post(cr, uid, the_id, body=_("A email has been send to specify that the date has been changed !"),subtype="calendar.subtype_invitation", context=context)
                 else:
                     print 'Send mail return false'
         return res or True and False
@@ -1643,25 +1643,25 @@ class crm_meeting(osv.Model):
         else:
             select = ids
 
-        select = map(lambda x: (x, base_calendar_id2real_id(x)), select)
+        select = map(lambda x: (x, calendar_id2real_id(x)), select)
         result = []
 
-        real_data = super(crm_meeting, self).read(cr, uid, [real_id for base_calendar_id, real_id in select], fields=fields2, context=context, load=load)
+        real_data = super(crm_meeting, self).read(cr, uid, [real_id for calendar_id, real_id in select], fields=fields2, context=context, load=load)
         real_data = dict(zip([x['id'] for x in real_data], real_data))
         
         
-        for base_calendar_id, real_id in select:
+        for calendar_id, real_id in select:
             res = real_data[real_id].copy()
                 
             res = real_data[real_id].copy()
-            ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
+            ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 #recurrent_dates = [d.strftime("%Y-%m-%d %H:%M:%S") for d in get_recurrent_dates(res['rrule'], res['date'], res['exdate'],res['vtimezone'], context=context)]
                 #if not (ls[1] in recurrent_dates or ls[1] in res['exdate']): #when update a recurrent event
                     
                 res['date'] = ls[1]
                 res['date_deadline'] = ls[2]
-            res['id'] = base_calendar_id
+            res['id'] = calendar_id
             result.append(res)
 
         for r in result:

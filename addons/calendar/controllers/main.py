@@ -8,7 +8,7 @@ import json
 from openerp.addons.web.http import SessionExpiredException
 from werkzeug.exceptions import BadRequest
 
-class meetting_invitation(http.Controller):
+class meeting_invitation(http.Controller):
 
     def check_security(self, db, token):
         registry = openerp.modules.registry.RegistryManager.get(db)
@@ -31,9 +31,8 @@ class meetting_invitation(http.Controller):
             raise BadRequest(error_message)
         return True
 
-    @http.route('/meeting_invitation/accept', type='http', auth="none")
+    @http.route('/calendar/meeting/accept', type='http', auth="none")
     def accept(self, db, token, action, id):
-        # http://hostname:8069/meeting_invitation/accept?db=#token=&action=&id=
         self.check_security(db, token)
         registry = openerp.modules.registry.RegistryManager.get(db)
         attendee_pool = registry.get('calendar.attendee')
@@ -43,9 +42,8 @@ class meetting_invitation(http.Controller):
                 attendee_pool.do_accept(cr, openerp.SUPERUSER_ID, attendee_id)
         return self.view(db, token, action, id, view='form')
 
-    @http.route('/meeting_invitation/decline', type='http', auth="none")
+    @http.route('/calendar/meeting/decline', type='http', auth="none")
     def declined(self, db, token, action, id):
-        # http://hostname:8069/meeting_invitation/decline?db=#token=&action=&id=
         self.check_security(db, token)
         registry = openerp.modules.registry.RegistryManager.get(db)
         attendee_pool = registry.get('calendar.attendee')
@@ -55,9 +53,8 @@ class meetting_invitation(http.Controller):
                 attendee_pool.do_decline(cr, openerp.SUPERUSER_ID, attendee_id)
         return self.view(db, token, action, id, view='form')
 
-    @http.route('/meeting_invitation/view', type='http', auth="none")
+    @http.route('/calendar/meeting/view', type='http', auth="none")
     def view(self, db, token, action, id, view='calendar'):
-        # http://hostname:8069/meeting_invitation/view?db=#token=&action=&id=
         self.check_security(db, token)
         registry = openerp.modules.registry.RegistryManager.get(db)
         meeting_pool = registry.get('crm.meeting')
@@ -75,7 +72,7 @@ class meetting_invitation(http.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(webmain.module_boot(db)),
-            'init': "s.base_calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)),
+            'init': "s.calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)),
         }
         
     @http.route('/calendar/NextNotify', type='json', auth="none")

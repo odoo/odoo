@@ -3,7 +3,7 @@
     <data noupdate="1">
     
          <!-- Expense-related subtypes for messaging / Chatter -->
-        <record id="base_calendar.subtype_invitation" model="mail.message.subtype">
+        <record id="calendar.subtype_invitation" model="mail.message.subtype">
             <field name="name">Invitation</field>
             <field name="res_model">crm.meeting</field>
             <field name="description">Warning, a mandatory field has been modified since the creation of this event</field>
@@ -122,7 +122,7 @@
             <field name="name">Meeting Invitation</field>
             <field name="email_from">${object.event_id.user_id.email or ''}</field>
             <field name="subject">${object.event_id.name}</field>
-            <field name="model_id" ref="base_calendar.model_calendar_attendee"/>
+            <field name="model_id" ref="calendar.model_calendar_attendee"/>
             
             <field name="email_to" >${('' if object.partner_id and object.partner_id.email and object.partner_id.email==object.email else object.email|safe)}</field>
             <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
@@ -230,9 +230,9 @@
                                 </table>
                             </div>
                             <div style="height: auto;width:450px; margin:0 auto;padding-top:20px;padding-bottom:40px;">
-                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/meeting_invitation/accept?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Accept</a>
-                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/meeting_invitation/decline?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Decline</a>
-                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/meeting_invitation/view?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">View</a>
+                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/calendar/meeting/accept?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Accept</a>
+                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/calendar/meeting/decline?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Decline</a>
+                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/calendar/meeting/view?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">View</a>
                             </div> 
                         </div>
                     </body>
@@ -245,7 +245,7 @@
             <field name="name">Meeting Invitation</field>
             <field name="email_from">${object.event_id.user_id.email or ''}</field>
             <field name="subject">${object.event_id.name} - Date has been updated</field>
-            <field name="model_id" ref="base_calendar.model_calendar_attendee"/>
+            <field name="model_id" ref="calendar.model_calendar_attendee"/>
             
             <field name="email_to" >${('' if object.partner_id and object.partner_id.email and object.partner_id.email==object.email else object.email|safe)}</field>
             <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>
@@ -355,9 +355,9 @@
                                 </table>
                             </div>
                             <div style="height: auto;width:450px; margin:0 auto;padding-top:20px;padding-bottom:40px;">
-                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/meeting_invitation/accept?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Accept</a>
-                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/meeting_invitation/decline?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Decline</a>
-                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/meeting_invitation/view?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">View</a>
+                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#8A89BA;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/calendar/meeting/accept?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Accept</a>
+                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#808080;margin : 0 15px 0 0;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/calendar/meeting/decline?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">Decline</a>
+                                    <a style="padding: 8px 30px 8px 30px;border-radius: 6px;border: 1px solid #CCCCCC;background:#D8D8D8;text-decoration: none;color:#FFFFFF;" href="${ctx['base_url']}/calendar/meeting/view?db=${ctx['dbname']}&token=${object.access_token}&action=${ctx['action_id']}&id=${object.event_id.id}">View</a>
                             </div>                             
                         </div>
                     </body>
@@ -370,7 +370,7 @@
             <field name="name">Meeting Invitation</field>
             <field name="email_from">${object.event_id.user_id.email or ''}</field>
             <field name="subject">${object.event_id.name} - Reminder</field>
-            <field name="model_id" ref="base_calendar.model_calendar_attendee"/>
+            <field name="model_id" ref="calendar.model_calendar_attendee"/>
             
             <field name="email_to" >${('' if object.partner_id and object.partner_id.email and object.partner_id.email==object.email else object.email|safe)}</field>
             <field name="partner_to">${object.partner_id and object.partner_id.email and object.partner_id.email==object.email and object.partner_id.id or False }</field>

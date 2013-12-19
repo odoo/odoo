@@ -216,7 +216,7 @@
         <field name="arch" type="xml">                          
             <calendar string="Meetings" date_start="date" date_stop="date_deadline" date_delay="duration" all_day="allday" 
                          display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
-                         use_contacts="True" quick_add="True" event_open_popup="%(base_calendar.view_crm_meeting_form_popup)s">
+                         use_contacts="True" quick_add="True" event_open_popup="%(calendar.view_crm_meeting_form_popup)s">
             
                 <field name="name"/>
                 <field name="user_id"/>

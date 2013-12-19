@@ -1,7 +1,7 @@
-openerp.base_calendar = function(instance) {
+openerp.calendar = function(instance) {
     var _t = instance.web._t;
     var QWeb = instance.web.qweb;
-    instance.base_calendar = {}
+    instance.calendar = {}
     
 
     instance.web.WebClient = instance.web.WebClient.extend({
@@ -28,7 +28,7 @@ openerp.base_calendar = function(instance) {
                                 
                                  $(".link2event").on('click', function() { 
                                     self.rpc("/web/action/load", {
-                                        action_id: "base_calendar.action_crm_meeting_notify",
+                                        action_id: "calendar.action_crm_meeting_notify",
                                     }).then( function(r) { 
                                         r.res_id = res.event_id;
                                         return self.action_manager.do_action(r);                                         
@@ -71,7 +71,7 @@ openerp.base_calendar = function(instance) {
     });
     
 
-    instance.base_calendar.invitation = instance.web.Widget.extend({
+    instance.calendar.invitation = instance.web.Widget.extend({
 
         init: function(parent, db, action, id, view, attendee_data) {
             this._super();
@@ -139,9 +139,9 @@ openerp.base_calendar = function(instance) {
         'many2manyattendee' : 'instance.web.form.Many2ManyAttendee',
     });
 
-    instance.base_calendar.event = function (db, action, id, view, attendee_data) {
+    instance.calendar.event = function (db, action, id, view, attendee_data) {
         instance.session.session_bind(instance.session.origin).done(function () {
-            new instance.base_calendar.invitation(null,db,action,id,view,attendee_data).appendTo($("body").addClass('openerp'));
+            new instance.calendar.invitation(null,db,action,id,view,attendee_data).appendTo($("body").addClass('openerp'));
         });
     }
     

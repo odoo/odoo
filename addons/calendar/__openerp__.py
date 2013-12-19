@@ -38,28 +38,28 @@ If you need to manage your meetings, you should install the CRM module.
     'author': 'OpenERP SA',
     'category': 'Hidden/Dependency',
     'website': 'http://www.openerp.com',
-    'demo': ['base_calendar_demo.xml'],
+    'demo': ['calendar_demo.xml'],
     'data': [
         'security/calendar_security.xml',
         'security/ir.model.access.csv',
-        'base_calendar_view.xml',
-        'base_calendar_data.xml',        
+        'calendar_view.xml',
+        'calendar_data.xml',        
     ],
     'js': [
         'static/src/js/*.js'
     ],
     'qweb': ['static/src/xml/*.xml'],
     'css': [
-        'static/src/css/base_calender.css'
+        'static/src/css/calendar.css'
     ],
     'test' : [
-              'test/base_calendar_test.yml',
+              'test/calendar_test.yml',
               'test/test_crm_recurrent_meeting_case2.yml'
               ],
     'installable': True,
     'application': True,
     'auto_install': False,
-    'images': ['images/base_calendar1.jpeg','images/base_calendar2.jpeg','images/base_calendar3.jpeg','images/base_calendar4.jpeg'],
+    'images': ['images/calendar1.jpeg','images/calendar2.jpeg','images/calendar3.jpeg','images/calendar4.jpeg'],
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
