@@ -371,7 +371,7 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 	// calls to readgroup.  For example, if row.groupby = [r1, r2, r3] and 
 	// col.groupby = [c1, c2, c3, c4], then a minimal set of calls is done 
 	// with the following groupby:
-	// [], [c1, c2, c3, c4], r1, c1, c2, c3, c4], [r1, r2, c1, c2, c3, c4],
+	// [], [c1, c2, c3, c4], [r1, c1, c2, c3, c4], [r1, r2, c1, c2, c3, c4],
 	// [r1, r2, r3, c1, c2, c3, c4]
 	// To simplify the code, we will always do 2 + row.groupby.length calls,
 	// unless col.groupby.length = 0, in which case we do 2 calls ([] and 
@@ -412,6 +412,10 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 		});
 	},
 
+	get_value: function (data, measure) {
+		var attr = data.attributes;
+		return (measure) ? attr.aggregates[measure] : attr.length;
+	},
 
 	format_data: function (total, col_data, row_data, cell_data, options) {
 		var self = this,
@@ -430,25 +434,20 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 			make_cells(cell_data[0], dim_row, []);
 			make_cells(cell_data[1], 0, []);
 		}
-
 		return {col_headers: col_headers,
                 row_headers: row_headers,
                 cells: cells};
 
 		function make_headers (data, depth) {
 			var main = {
-				id: _.uniqueId(),
-				path: [],
-				parent: null,
-				children: [],
-				title: '',
-				domain: options.domain,
-			};
-			if (measure) {
-				main.total = total.attributes.aggregates[measure];
-			} else {
-				main.total = total.attributes.length;
-			}
+					id: _.uniqueId(),
+					path: [],
+					parent: null,
+					children: [],
+					title: '',
+					domain: options.domain,
+					total: self.get_value(total, measure), 
+				};
 
 			if (depth > 0) {
 				main.children = _.map(data, function (data_pt) {
@@ -467,20 +466,15 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 		}
 
 		function make_tree_headers (data_pt, parent, max_depth) {
-			var value = data_pt.attributes.value,
-				node = {
+			var node = {
 					id: _.uniqueId(),
-					path: parent.path.concat(value),
-					title: value,
+					path: parent.path.concat(data_pt.attributes.value),
+					title: data_pt.attributes.value,
 					domain: data_pt.model._domain,
 					parent: parent,
 					children: [],
+					total : self.get_value(data_pt, measure), 
 				};
-			if (measure) {
-				node.total = data_pt.attributes.aggregates[measure];
-			} else {
-				node.total = data_pt.attributes.length;
-			}
 
 			if (node.path.length < max_depth) {
 				node.children = _.map(data_pt.subgroups_data, function (child) {
