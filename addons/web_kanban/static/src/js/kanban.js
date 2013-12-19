@@ -362,7 +362,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     });
                     record = ui.item.data('widget');
                     record.$el.bind('mouseup',function(ev,ui){
-                        if(is_folded)record.$el.hide();
+                        if (is_folded) {
+                            record.$el.hide();
+                        }
                         record.$el.unbind('mouseup');
                     })
                     ui.placeholder.height(ui.item.height());
@@ -371,7 +373,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     var parent = $(event.target).parent();
                     prev_widget.highlight(false);
                     is_folded = parent.hasClass('oe_kanban_group_folded'); 
-                    if(is_folded){
+                    if (is_folded) {
                         var widget = parent.data('widget');
                         widget.highlight(true);
                         prev_widget = widget;
@@ -454,7 +456,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             this.dataset.write(record.id, data, {}).done(function() {
                 record.do_reload();
                 new_group.do_save_sequences();
-                if(new_group.state.folded){
+                if (new_group.state.folded) {
                     new_group.do_action_toggle_fold();
                     record.prependTo(new_group.$records.find('.oe_kanban_column_cards'));
                 }
