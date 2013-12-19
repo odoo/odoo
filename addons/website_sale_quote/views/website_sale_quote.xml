@@ -1,96 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <template id="static_layout">&lt;!DOCTYPE html&gt;
-            <html t-att-lang="lang.replace('_', '-')"
-                      t-att-data-editable="'1' if editable else None"
-                      t-att-data-translatable="'1' if translatable else None"
-                      t-att-data-view-xmlid="xmlid if editable else None"
-                      t-att-data-main-object="repr(main_object) if editable else None"
-                      t-att-data-report-margin-top="40"
-                      t-att-data-report-innerheight="30">
-                    <head>
-
-                        <link rel='stylesheet' href='/report/static/src/css/report.css'/>
-
-                        <t t-if="main_object and 'website_meta_title' in main_object">
-                            <t t-set="title" t-value="main_object.website_meta_title"/>
-                        </t>
-                        <t t-if="not title and main_object and 'name' in main_object">
-                            <t t-set="additional_title" t-value="main_object.name"/>
-                        </t>
-                        <t t-if="not title">
-                            <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
-                        </t>
-                        <title><t t-esc="title"/></title>
-                        <meta name="openerp.company" t-att-value="res_company.name"/>
-                        <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
-                            and main_object.website_meta_description or website_meta_description"/>
-                        <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
-                            and main_object.website_meta_keywords or website_meta_keywords"/>
-
-                        <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-                        <t t-if="editable">
-                            <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-                            <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
-                            <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
-                        </t>
-                        <t t-call="website.theme"/>
-
-
-                        <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
-                        <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
-                        <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
-                        <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
-                        <script type="text/javascript" src="/website/static/lib/bootstrap/js/bootstrap.js"></script>
-                        <script type="text/javascript">
-                            // Bootstrap and jQuery UI conflicts
-                            $.fn.bstooltip = $.fn.tooltip;
-                            $.fn.bsbutton = $.fn.button;
-                        </script>
-
-                        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-                        <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
-
-                        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-                        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
-
-                        <t t-if="editable" id="editable_scripts_hook">
-                            <link rel="stylesheet" href="/select2/static/lib/select2/select2.css"/>
-                            <link rel="stylesheet" href="/website/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
-                            <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
-
-                            <script type="text/javascript" src="/select2/static/lib/select2/select2.js"></script>
-                            <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
-                            <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
-                            <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-                            <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
-                            <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
-                            <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
-                            <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
-                            <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
-
-                            <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
-                            <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
-                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
-                            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
-                            <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
-                        </t>
-                        <script type="text/javascript" src="/website_sale_quote/static/src/js/sale_quote.js"></script>
-                    </head>
-                    <body>
-                        <div id="wrapwrap">
-                            <t t-raw="0" />
-                        </div>
-                    </body>
-            </html>
-        </template>
         <template id="pricing" name="Quotation Pricing">
             <section id="quote" class="tab-pane oe_section">
                 <table class="table table-hover">
@@ -222,7 +132,7 @@
             </form>
         </template>
         <template id="so_quotation" name="Product Quotation">
-            <t t-call="website_sale_quote.static_layout">
+            <t t-call="website.layout">
                 <div class="col-xs-12 col-md-8 tab-content">
                     <t t-call="website_sale_quote.quote_status"/>
                     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
