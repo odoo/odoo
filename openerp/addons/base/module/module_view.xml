@@ -111,10 +111,10 @@
                                 <field name="application"/>
                                 <field name="state"/>
                             </group>
-                            <h2><label for="views_by_module" string="Created Views"/></h2>
-                            <p class="oe_grey" attrs="{'invisible': [('views_by_module','not in',[None,False])]}"> -This module does not create views.</p>
+                            <group for="views_by_module" string="Created Views" attrs="{'invisible':[('state','!=','installed')]}"/>
+                            <p class="oe_grey" attrs="{'invisible': ['|',('views_by_module','not in',[None,False]),('state','!=','installed')]}"> -This module does not create views.</p>
                             <field name="views_by_module"/>
-                            <h2><label for="dependencies_id"/></h2>
+                            <group for="dependencies_id" string="Dependencies"/>
                             <p class="oe_grey" attrs="{'invisible': [('dependencies_id','not in',[None,False])]}"> -This module does not create dependencies.</p>
                             <field name="dependencies_id">
                                 <tree string="Dependencies">
@@ -124,10 +124,10 @@
                             </field>
                         </page>
                         <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
-                            <h2><label for="menus_by_module" string="Created Menus"/></h2>
+                            <group for="menus_by_module" string="Created Menus"/>
                             <p class="oe_grey" attrs="{'invisible': [('menus_by_module','not in',[None,False])]}"> -This module does not create menu.</p>
                             <field name="menus_by_module"/>
-                            <h2><label for="reports_by_module" string="Defined Reports"/></h2>
+                            <group for="reports_by_module" string="Defined Reports"/>
                             <p class="oe_grey" attrs="{'invisible': [('reports_by_module','not in',[None,False])]}"> -This module does not create report.</p>
                             <field name="reports_by_module"/>
                         </page>
