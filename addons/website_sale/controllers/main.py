@@ -412,7 +412,7 @@ class Ecommerce(http.Controller):
         quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
         order = self.get_order()
         return [quantity,
-                order.get_total_quantity(),
+                order.get_number_of_products(),
                 order.amount_total,
                 request.website._render("website_sale.total", {'website_sale_order': order})]
 
@@ -541,7 +541,6 @@ class Ecommerce(http.Controller):
 
         shipping_id = None
         if post.get('shipping_different'):
-            print post
             shipping_info = {
                 'phone': post['shipping_phone'],
                 'zip': post['shipping_zip'],
@@ -554,9 +553,8 @@ class Ecommerce(http.Controller):
                 'country_id': post['shipping_country_id'],
                 'state_id': post['shipping_state_id'],
             }
-            domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and value and int(value) or False)
-                for key, value in shipping_info.items() if key in info.mandatory_billing_fields + ["type", "parent_id"]]
-            print domain
+            domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and value and int(value) or value)
+                      for key, value in shipping_info.items() if key in info.mandatory_billing_fields + ["type", "parent_id"]]
 
             shipping_ids = orm_parter.search(cr, SUPERUSER_ID, domain, context=context)
             if shipping_ids:
