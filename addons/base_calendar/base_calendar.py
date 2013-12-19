@@ -77,16 +77,6 @@ class calendar_attendee(osv.osv):
     _name = 'calendar.attendee'
     _description = 'Attendee information'
 
-#     def _get_address(self, name=None, email=None):
-#         """
-#         Gives email information in ical CAL-ADDRESS type format.
-#         @param name: name for CAL-ADDRESS value
-#         @param email: email address for CAL-ADDRESS value
-#         """
-#         if name and email:
-#             name += ':'
-#         return (name or '') + (email and ('MAILTO:' + email) or '')
-
     def _compute_data(self, cr, uid, ids, name, arg, context=None):
         """
         Compute data on function fields for attendee values.
@@ -214,6 +204,66 @@ class calendar_attendee(osv.osv):
         """
         res = False
         
+        mail_ids = []
+        data_pool = self.pool.get('ir.model.data')
+        mailmess_pool = self.pool.get('mail.message')
+        mail_pool = self.pool.get('mail.mail')
+        template_pool = self.pool.get('email.template')
+        local_context = context.copy()
+        color = {
+                 'needsAction' : 'grey',
+                 'accepted' :'green',
+                 'tentative' :'#FFFF00',
+                 'declined':'red'                 
+        }
+        
+        if not isinstance(ids, (tuple, list)):
+            ids = [ids]
+                    
+        for attendee in self.browse(cr, uid, ids, context=context):            
+            dummy,template_id = data_pool.get_object_reference(cr, uid, 'base_calendar',template_xmlid)
+            dummy,act_id = data_pool.get_object_reference(cr, uid, 'base_calendar', "view_crm_meeting_calendar")                
+
+            if attendee.email and email_from:
+                ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
+                local_context['color'] = color
+                local_context['action_id'] = self.pool.get('ir.actions.act_window').search(cr, uid, [('view_id','=',act_id)], context=context)[0]
+                local_context['dbname'] = cr.dbname
+                local_context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
+                mail_id = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
+                
+                
+                vals =  {}
+                if ics_file:
+                    vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
+                                                'datas_fname': 'invitation.ics',
+                                                'datas': str(ics_file).encode('base64')})]
+                vals['model'] = None #We don't want to have the mail in the tchatter while in queue!
+                the_mailmess = mail_pool.browse(cr,uid,mail_id,context=context).mail_message_id
+                mailmess_pool.write(cr,uid,[the_mailmess.id],vals,context=context)
+                mail_ids.append(mail_id)
+                
+                   
+# 
+#                 if not attendee.partner_id.opt_out:
+#                     if 'partner_to' in vals:
+#                         del vals['partner_to'] #hack between mail.mail and template.mail -> tde                    
+                    
+        if mail_ids:
+            try:
+                res =  mail_pool.send(cr, uid, mail_ids, context=context)
+            except Exception as e:
+                print e
+                
+        return res
+    
+    def ORI_send_mail_to_attendees(self, cr, uid, ids, email_from=tools.config.get('email_from', False), template_xmlid='crm_email_template_meeting_invitation', context=None):
+        """
+        Send mail for event invitation to event attendees.
+        @param email_from: email address for user sending the mail
+        """
+        res = False
+        
         mail_id = []
         data_pool = self.pool.get('ir.model.data')
         mail_pool = self.pool.get('mail.mail')
@@ -256,7 +306,7 @@ class calendar_attendee(osv.osv):
                 if not attendee.partner_id.opt_out:
                     if 'partner_to' in vals:
                         del vals['partner_to'] #hack between mail.mail and template.mail -> tde                    
-                    mail_id.append(mail_pool.create(cr, uid, vals, context=context))
+                    mail_id.append(mail_pool.create(cr, SUPERUSER_ID, vals, context=context))
                     
                     
         if mail_id:
@@ -1061,12 +1111,17 @@ class crm_meeting(osv.Model):
                 if partner.id in attendees:                    
                     continue
                 access_token = self.new_invitation_token(cr, uid, event, partner.id)
-                att_id = self.pool.get('calendar.attendee').create(cr, uid, {
+                values = {
                     'partner_id': partner.id,
                     'event_id': event.id,
                     'access_token': access_token,
                     'email': partner.email,
-                }, context=context)
+                }
+                
+                if partner.id == current_user.partner_id.id:
+                  values['state']='accepted'
+                
+                att_id = self.pool.get('calendar.attendee').create(cr, uid,values, context=context)
 #                 if partner.email:
 #                     mail_to = mail_to + " " + partner.email
                 
