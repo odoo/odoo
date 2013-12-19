@@ -14,6 +14,9 @@ _logger = logging.getLogger(__name__)
 
 class ProxyController(http.Controller):
     def __init__(self):
+        self.scale = 'closed'
+        self.scale_weight = 0.0
+        pass
 
     @http.route('/hw_proxy/test_connection', type='json', auth='admin')
     def test_connection(self):

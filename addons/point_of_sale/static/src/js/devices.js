@@ -118,7 +118,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 callbacks[i](params);
             }
             if(this.connected){
-                return this.connection.rpc('/pos/' + name, params || {});       
+                return this.connection.rpc('/hw_proxy/' + name, params || {});       
             }else{
                 return (new $.Deferred()).reject();
             }
