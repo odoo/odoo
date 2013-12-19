@@ -139,6 +139,10 @@
             $(document).on('click', '.dropdown-submenu a[tabindex]', function (e) {
                 e.preventDefault();
             });
+
+            this.getParent().on('change:height', this, function (editor) {
+                self.$el.css('top', editor.get('height'));
+            });
         },
         fetch_snippet_templates: function () {
             var self = this;

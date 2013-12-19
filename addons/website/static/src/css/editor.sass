@@ -203,7 +203,7 @@ ul.oe_menu_editor
     position: fixed
     left: 0px
     right: 0px
-    top: 51px
+    // top property is set programmatically
     background: rgb(40,40,40)
     +box-shadow(0px 10px 10px -10px black inset)
     z-index: 1010
@@ -520,11 +520,10 @@ $highlighted_text_color: #ffffff
 
 $editorbar_height: 30px
 // TODO Fix => might break with themes
-$navbar_height: 51px
 
 .oe_ace_view_editor
     position: fixed
-    top: $navbar_height
+    // top property is set programmatically
     right: 0
     z-index: 1000
     height: 100%
@@ -546,7 +545,7 @@ $navbar_height: 51px
         position: absolute
         top: $editorbar_height
         right: 0
-        bottom: $navbar_height
+        // bottom property is set programmatically
         left: 0
         .ace_gutter
             cursor: ew-resize

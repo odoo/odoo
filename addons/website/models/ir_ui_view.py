@@ -70,9 +70,11 @@ class view(osv.osv):
             el.get('data-oe-type'))
         value = converter.from_html(cr, uid, Model, column, el)
 
-        Model.write(cr, uid, [int(el.get('data-oe-id'))], {
-            field: value
-        }, context=context)
+        if value is not None:
+            # TODO: batch writes?
+            Model.write(cr, uid, [int(el.get('data-oe-id'))], {
+                field: value
+            }, context=context)
 
     def to_field_ref(self, cr, uid, el, context=None):
         # filter out meta-information inserted in the document
