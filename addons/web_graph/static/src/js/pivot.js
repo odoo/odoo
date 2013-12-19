@@ -495,24 +495,12 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 				var attr = group.attributes,
 					group_val = (attr.value instanceof Array) ? attr.value[1] : attr.value,
 					path = current_path,
-					value;
+					value = (measure) ? attr.aggregates[measure] : attr.length;
 
-				if (group_val === false) {
-					group_val = undefined;
-				}
-
-				if (measure) {
-					value = attr.aggregates[measure];
-				} else {
-					value = attr.length;
-				}
+				group_val = (group_val === false) ? undefined : group_val;
 
 				if (attr.grouped_on !== undefined) {
-					if (attr.value === false) {
-						path = path.concat('undefined');
-					} else {
-						path = path.concat(group_val);
-					}
+					path = path.concat((attr.value === false) ? 'undefined' : group_val);
 				}
 
 				var rowpath = path.slice(0, index),
