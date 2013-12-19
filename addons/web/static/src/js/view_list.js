@@ -1104,10 +1104,11 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 record.set(column.id, false);
             }
         }
-        return column.format(record.toForm().data, {
+         var value = column.format(record.toForm().data, {
             model: this.dataset.model,
             id: record.get('id')
         });
+         return _.unescape(value)
     },
     render: function () {
         this.$current.empty().append(

@@ -1040,17 +1040,17 @@
                 <t t-raw="rec.body" /> 
             </a>
     </t>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu with-arrow">
         <t t-foreach="res" t-as="rec">
             <t t-if="widget.get('value') !== rec.name">
-                <li><a  t-att-data-value="rec.name" href="#"><t t-raw="rec.body" /></a></li>
+                <li><a  t-att-data-value="rec.name" href="#"><t t-raw="rec.body" /><t t-raw="rec.legend_name" /></a></li>
             </t>
         </t>
     </ul>
     </div>
 </t>
 <t t-name="StageMode.priority">
-    <ul style="list-style: none;">
+    <ul style="list-style: none; padding-left: 2px;">
     <t t-foreach="res" t-as="test" >
         <t t-if="widget.get('value') gte test.name and !test_first">
             <li class="oe_left"><a  t-att-data-value="test.name - 1" href="#"><t t-raw="test.body"/></a></li>

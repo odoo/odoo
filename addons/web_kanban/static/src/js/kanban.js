@@ -34,6 +34,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         };
         this.groups = [];
         this.aggregates = {};
+        this.legend = {};
         this.group_operators = ['avg', 'max', 'min', 'sum', 'count'];
         this.qweb = new QWeb2.Engine();
         this.qweb.debug = instance.session.debug;
@@ -624,7 +625,10 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         }
         this.$el.data('widget', this);
         this.$records.data('widget', this);
-        this.$has_been_started.resolve();
+        var def_tooltip = this.fetch_tooltip();
+        $.when(def_tooltip).done(function (){
+            self.$has_been_started.resolve();
+        });
         var add_btn = this.$el.find('.oe_kanban_add');
         add_btn.tipsy({delayIn: 500, delayOut: 1000});
         this.$records.find(".oe_kanban_column_cards").click(function (ev) {
@@ -635,8 +639,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             }
         });
         this.is_started = true;
-        var def_tooltip = this.fetch_tooltip();
-        return $.when(def_tooltip);
     },
     fetch_tooltip: function() {
         if (! this.group)
@@ -665,8 +667,9 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         if (this.value) {
             return (new instance.web.Model(field.relation)).query([options.tooltip_on_group_by])
                     .filter([["id", "=", this.value]]).first().then(function(res) {
-                self.tooltip = res[options.tooltip_on_group_by];
-                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip || self.title || "").tipsy({html: true});
+                    self.legend = res[options.tooltip_on_group_by];
+                    var title = self.legend.tooltip || self.legend || self.title || ""
+                    self.$(".oe_kanban_group_title_text").attr("title", title).tipsy({html: true,className: 'oe_tooltip_kanban_message'});
             });
         }
     },

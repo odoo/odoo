@@ -2843,6 +2843,31 @@ h5
     li
         a,a:hover,a:focus
             color: #eeeeee
+.dropdown-menu.with-arrow
+    background: #FFF
+    background: #FFF !important
+.dropdown-menu.with-arrow:before
+    position: absolute
+    top: -12px
+    left: 9px
+    display: inline-block
+    border-right: 12px solid transparent
+    border-bottom: 12px solid #ccc
+    border-left: 12px solid transparent
+    border-bottom-color: rgba(0, 0, 0, 0.2)
+    content: ''
+.dropdown-menu.with-arrow:after
+    position: absolute
+    top: -11px
+    left: 10px
+    display: inline-block
+    border-right: 11px solid transparent
+    border-bottom: 11px solid #ffffff
+    border-left: 11px solid transparent
+    content: ''
+.dropdown-menu.with-arrow li a
+    color: #000
+    font-weight: bold
 // End hack }}}
 
 // Hack for ui icon {{{

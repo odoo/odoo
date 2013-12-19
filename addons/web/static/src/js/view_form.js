@@ -2334,14 +2334,15 @@ instance.web.form.StageMode = instance.web.form.FieldChar.extend({
     init: function (field_manager, node) {
         this._super(field_manager, node);
         this.options = py.eval(node.attrs.options) 
-        this.stage_dataset  = new instance.web.DataSetStatic(this, this.options.stage_model, this.build_context());
+        this.stage_dataset  = new instance.web.DataSetStatic(this, 'ir.ui.legend', this.build_context());
         this.stage_field = this.options.stage_field;
     },
     
     get_stage_value: function(){
         var def = $.Deferred();
         var stage_id = this.field_manager.fields[this.stage_field].get_value()
-        this.stage_dataset.call('search_read', [[[this.stage_field,'=', stage_id],['type','=',this.name]]]).then(function (res){
+        var model = this.field_manager.fields[this.stage_field].field.relation
+        this.stage_dataset.call('search_read', [[['res_id','=', stage_id],['type','=',this.name],['res_model','=',model]]]).then(function (res){
                     def.resolve(res);
                 })
         return def
