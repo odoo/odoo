@@ -1091,6 +1091,36 @@ class survey_user_input_line(osv.osv):
             self.create(cr, uid, vals, context=context)
         return True
 
+    def save_line_matrix(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
+        vals = {
+            'user_input_id': user_input_id,
+            'question_id': question.id,
+            'page_id': question.page_id.id,
+            'survey_id': question.survey_id.id,
+            'skipped': False
+        }
+        old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
+                                        ('survey_id', '=', question.survey_id.id),
+                                        ('question_id', '=', question.id)],
+                              context=context)
+        if old_uil:
+            self.unlink(cr, uid, old_uil, context=context)
+
+        ca = dict_keys_startswith(post, answer_tag)
+
+        no_answers = True
+        for col in question.labels_ids:
+            for row in question.labels_ids_2:
+                a_tag = "%s_%s_%s" % (answer_tag, row.id, col.id)
+                if a_tag in ca:
+                    no_answers = False
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': col.id, 'value_suggested_row': row.id})
+                    self.create(cr, uid, vals, context=context)
+        if no_answers:
+            vals.update({'answer_type': None, 'skipped': True})
+            self.create(cr, uid, vals, context=context)
+        return True
+
 
 def dict_keys_startswith(dictionary, string):
     '''Returns a dictionary containing the elements of <dict> whose keys start
@@ -1099,5 +1129,13 @@ def dict_keys_startswith(dictionary, string):
     .. note::
         This function uses dictionary comprehensions (Python >= 2.7)'''
     return {k: dictionary[k] for k in filter(lambda key: key.startswith(string), dictionary.keys())}
+
+
+def dict_soft_update(dictionary, key, value):
+    ''' Insert the pair <key>: <value> into the <dictionary> '''
+    if key in dictionary:
+        dictionary[key].append(value)
+    else:
+        dictionary.update({key: [value]})
 
 # vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:

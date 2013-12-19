@@ -575,7 +575,7 @@
                             <field name="value_number" colspan='2' attrs="{'invisible': [('answer_type','!=','number')]}"/>
                             <field name="value_date" colspan='2' attrs="{'invisible': [('answer_type','!=','date')]}"/>
                             <field name="value_free_text" colspan='2' attrs="{'invisible': [('answer_type','!=','free_text')]}"/>
-                            <field name="value_suggested_row" colspan='2' attrs="{'invisible': [('value_suggested_row','is','None')]}"/>
+                            <field name="value_suggested_row" colspan='2' />
                             <field name="value_suggested" colspan='2' attrs="{'invisible': [('answer_type','!=','suggestion')]}"/>
                         </group>
                     </sheet>
