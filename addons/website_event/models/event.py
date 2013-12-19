@@ -139,11 +139,3 @@ class sale_order_line(osv.osv):
             res.update({'price_unit': order_line.event_ticket_id.price})
 
         return res
-
-
-class Website(orm.Model):
-    _inherit = 'website'
-
-    def get_website_sale_domain(self):
-        # remove product event from the website content grid and list view (not removed in detail view)
-        return super(Website, self).get_website_sale_domain() + [('event_ok', '=', False)]

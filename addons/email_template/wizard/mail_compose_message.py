@@ -46,7 +46,7 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
         res = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
-        if res.get('composition_mode') != 'mass_mail' and context.get('default_template_id'):
+        if res.get('composition_mode') != 'mass_mail' and context.get('default_template_id') and res.get('model') and res.get('res_id'):
             res.update(
                 self.onchange_template_id(
                     cr, uid, [], context['default_template_id'], res.get('composition_mode'),
