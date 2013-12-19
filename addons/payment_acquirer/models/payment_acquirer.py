@@ -107,7 +107,7 @@ class PaymentAcquirer(osv.Model):
         acquirer = self.browse(cr, uid, id, context=context)
 
         if tx_id:
-            tx = self.browse(cr, uid, id, context=context)
+            tx = self.pool.get('payment.transaction').browse(cr, uid, tx_id, context=context)
             tx_data = {
                 'reference': tx.reference,
                 'amount': tx.amount,
