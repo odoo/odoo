@@ -350,7 +350,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         if (this.group_by) {
             // Kanban cards drag'n'drop
-            var prev_widget,is_folded,record;
+            var prev_widget, is_folded, record;
             var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards, .oe_kanban_column .oe_kanban_folded_column_cards');
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
