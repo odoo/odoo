@@ -11,7 +11,7 @@ from openerp.addons.website.models import website
 PPG = 20                        # Products Per Page
 PPR = 4                         # Products Per Row
 
-class CheckoutInfo(object):
+class CheckoutInfo(object): 
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
     optional_billing_fields = ["company", "state_id"]
     string_billing_fields = ["name", "phone", "email", "street", "city", "zip"]

@@ -2,12 +2,12 @@
 <openerp>
     <data>
         <template id="pricing" name="Quotation Pricing">
-            <section id="quote" class="tab-pane oe_section">
+            <section id="quote" class="tab-pan">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Product</th>
-                            <th>#</th>
+                            <th>Quantity</th>
                             <th class="text-center">Unit Price</th>
                         </tr>
                     </thead>
@@ -62,7 +62,7 @@
             </section>
         </template>
         <template id="quote_status">
-            <div class="navbar navbar-default  navbar-fix-top">
+            <div class="navbar navbar-default navbar-fix-top">
                 <div class="collapse navbar-collapse navbar-top-collapse">
                     <ul class="nav navbar-nav" id="top_menu">
                         <li>
@@ -75,7 +75,7 @@
                             </a>
                         </li>
                         <li>
-                            <a type="submit" t-if="quotation.state != 'cancel'" data-toggle="modal" data-target="#myModal">
+                            <a type="submit" t-if="quotation.state != 'cancel'" data-toggle="modal" data-target="#modeldecline">
                                 <span class="fa-stack">
                                     <i class="fa fa-circle fa-stack-2x" style="color:#d9534f;"></i>
                                     <i class="fa fa-times fa-stack-1x fa-inverse"></i>
@@ -99,8 +99,9 @@
         <template id="chatter">
             <div id="chat" class="panel panel-default panel-chatter">
                 <div class="panel-heading">
-                    <span class="glyphicon glyphicon-comment"></span>
-                    <h3 class="panel-title">Recent Comments</h3>
+                    <h3 class="panel-title">
+                        <i class="fa fa-comment fa-flip-horizontal"></i> Recent Comments
+                    </h3>
                 </div>
                 <div class="panel-body">
                     <ul class="list-group">
@@ -135,12 +136,12 @@
             <t t-call="website.layout">
                 <div class="col-xs-12 col-md-8 tab-content">
                     <t t-call="website_sale_quote.quote_status"/>
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
                       <div class="modal-dialog">
                         <div class="modal-content">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                            <h4 class="modal-title" id="myModalLabel">Reason</h4>
+                            <h4 class="modal-title">Reason</h4>
                           </div>
                           <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% (quotation.id)">
                               <div class="modal-body">
@@ -154,10 +155,10 @@
                         </div>
                       </div>
                     </div>
-                    <section id="introduction11" class="tab-pane active oe_section jumbotron" t-field="quotation.website_description">
+                    <section id="introduction11" class="tab-pane active" t-field="quotation.website_description">
                     </section>
                     <t t-foreach="quotation.order_line" t-as="line">
-                        <section class="tab-pane oe_section jumbotron" t-att-id="line.id">
+                        <section class="tab-pane" t-att-id="line.id">
                             <div t-field="line.website_description" class="oe_structure"/>
                         </section>
                     </t>
@@ -166,7 +167,7 @@
                     <t t-call="website_sale_quote.product_recommendation"/>
                     <t t-call="website_sale_quote.chatter"/>
                 </div>
-                <div class="col-xs-6 col-md-4 sidebar oe_section" id="sidebar">
+                <div class="col-xs-6 col-md-4 sidebar" id="sidebar">
                     <ul class="nav nav-pills nav-stacked" data-spy="affix">
                         <li class="active"><a href="#introduction11" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
                         <t t-foreach="quotation.order_line" t-as="line">
@@ -194,7 +195,7 @@
             </div>
         </template>
         <template id="terms_and_conditions" name="Terms &amp; Conditions">
-            <section id="terms" class="tab-pane oe_section">
+            <section id="terms" class="tab-pane oe_section jumbotron">
                 <div class="container panel panel-default tab-pane oe_section">
                     <div class="row panel-body">
                         <div class="text-center">
@@ -207,16 +208,16 @@
         </template>
 
         <template id="so_template" name="SO Template">
-            <t t-call="website_sale_quote.static_layout">
+            <t t-call="website.layout">
                 <div class="col-xs-12 col-md-8 tab-content">
-                    <section id="template_introduction" class="tab-pane active oe_section jumbotron" t-field="template.website_description">
+                    <section id="template_introduction" class="tab-pane active" t-field="template.website_description">
                     </section>
                     <t t-foreach="template.quote_line" t-as="line">
-                        <section class="tab-pane oe_section jumbotron" t-att-id="line.id">
+                        <section class="tab-pane" t-att-id="line.id">
                             <div t-field="line.website_description" class="oe_structure"/>
                         </section>
                     </t>
-                    <section id="templateterms" class="tab-pane oe_section">
+                    <section id="templateterms" class="tab-pane oe_section jumbotron">
                         <div class="container panel panel-default tab-pane oe_section">
                             <div class="row panel-body">
                                 <div class="text-center">
@@ -227,7 +228,7 @@
                         </div>
                     </section>
                 </div>
-                <div class="col-xs-6 col-md-4 sidebar oe_section" id="sidebar">
+                <div class="col-xs-6 col-md-4 sidebar" id="sidebar">
                     <ul class="nav nav-pills nav-stacked" data-spy="affix">
                         <li class="active"><a href="#template_introduction" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
                         <t t-foreach="template.quote_line" t-as="line">

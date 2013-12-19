@@ -27,11 +27,6 @@ from openerp.addons.website.models import website
 
 class sale_quote(http.Controller):
 
-    def _get_quote(self, token):
-        order_pool = request.registry.get('sale.order')
-        order_id = order_pool.search(request.cr, SUPERUSER_ID, [('access_token', '=', token)], context=request.context)
-        return order_id
-
     def _get_token(self, order_id):
         order_pool = request.registry.get('sale.order')
         access_token = order_pool.browse(request.cr, SUPERUSER_ID, order_id, context=request.context).access_token
