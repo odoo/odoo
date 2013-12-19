@@ -47,61 +47,14 @@
             </field>
         </record>
 
-        <record id="edit_holiday_new" model="ir.ui.view">
+        <!-- Holidays: Allocation Request -->
+        <record model="ir.ui.view" id="edit_holiday_new">
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
-            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Leave Request" version="7.0">
                 <field name="can_reset" invisible="1"/>
-                <header>
-                    <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
-                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Reset to Draft" name="reset" type="workflow"
-                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
-                </header>
-                <sheet string="Leave Request">
-                    <group>
-                        <group>
-                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                            <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-                            <label for="number_of_days_temp" string="Duration" help="The default duration interval between the start date and the end date is 8 hours.  Feel free to adapt it to your needs."/>
-                            <div>
-                                <group col="3">
-                                    <field name="date_from" nolabel="1" on_change="onchange_date_from(date_to, date_from)" required="1" class="oe_inline"/><label string="-" class="oe_inline"/>
-                                    <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)" required="1" class="oe_inline"/>
-                                </group>
-                                <div>
-                                    <field name="number_of_days_temp" class="oe_inline"/> days
-                                </div>
-                            </div>
-                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','=','employee')], 'readonly':[('state','!=','draft'), ('state','!=','confirm')]}"/>
-                        </group>
-                        <group>
-                            <field name="holiday_type" on_change="onchange_type(holiday_type, employee_id)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_user"/>
-                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
-                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
-                        </group>
-                    </group>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
-                </form>
-            </field>
-        </record>
-
-        <!-- Holidays: Allocation Request -->
-        <record model="ir.ui.view" id="allocation_leave_new">
-            <field name="name">Allocation Request</field>
-            <field name="model">hr.holidays</field>
-            <field name="arch" type="xml">
-                <form string="Allocation Request" version="7.0">
-                <field name="can_reset" invisible="1"/>
+                <field name="type" invisible="1"/>
                 <header>
                     <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
@@ -114,21 +67,27 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name" required="1" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')], 'required': [('type', '=', 'add')]}"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-                            <label for="number_of_days_temp"/>
+                                <label for="number_of_days_temp" string="Duration"/>
                             <div>
-                                <field name="number_of_days_temp" class="oe_inline"/> days
+                                <group col="3" attrs="{'invisible': [('type', '=', 'add')]}">
+                                    <field name="date_from" nolabel="1" on_change="onchange_date_from(date_to, date_from)" required="1" class="oe_inline"/><label string="-" class="oe_inline"/>
+                                    <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)" required="1" class="oe_inline"/>
+                                </group>
+                                <div>
+                                    <field name="number_of_days_temp" class="oe_inline"/> days
+                                </div>
                             </div>
                         </group>
                         <group>
-                            <field name="holiday_type" on_change="onchange_type(holiday_type)"/>
-                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}"/>
-                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','=','employee')]}"/>
-                            <field name="department_id" attrs="{'invisible':[('holiday_type','=','category')]}"/>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('type', '=', 'remove'),('state','!=','draft')]}" string="Mode" groups="base.group_hr_user"/>
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
+                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('type', '=', 'remove'),('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','=','employee')]}"/>
+                            <field name="department_id" attrs="{'readonly':['|', ('type','=','add'),('holiday_type','=','category')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                         </group>
                     </group>
-                    <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..."/>
+                    <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..." attrs="{'invisible': [('type', '=', 'remove')]}"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -231,7 +190,7 @@
         <menuitem name="Leaves" parent="hr.menu_hr_root" id="menu_open_ask_holidays" sequence="20"/>
 
         <record model="ir.actions.act_window" id="open_ask_holidays">
-            <field name="name">Leave Requests</field>
+            <field name="name">Leave Request</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_holiday_new"/>
@@ -305,7 +264,7 @@
             <field name="view_type">form</field>
             <field name="context">{'default_type':'add', 'search_default_my_leaves':1}</field>
             <field name="domain">[('type','=','add')]</field>
-            <field name="view_id" ref="allocation_leave_new"/>
+            <field name="view_id" ref="edit_holiday_new"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
@@ -319,7 +278,7 @@
         <record model="ir.actions.act_window.view" id="action_open_allocation_holidays_form">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="allocation_leave_new"/>
+            <field name="view_id" ref="edit_holiday_new"/>
             <field name="act_window_id" ref="open_allocation_holidays"/>
         </record>
 
@@ -331,7 +290,7 @@
             <field name="view_type">form</field>
             <field name="context">{'default_type': 'add', 'search_default_approve':1}</field>
             <field name="domain">[('type','=','add')]</field>
-            <field name="view_id" ref="allocation_leave_new"/>
+            <field name="view_id" ref="edit_holiday_new"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
@@ -345,7 +304,7 @@
         <record model="ir.actions.act_window.view" id="action_request_approve_allocation_form">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="allocation_leave_new"/>
+            <field name="view_id" ref="edit_holiday_new"/>
             <field name="act_window_id" ref="request_approve_allocation"/>
         </record>
 
