@@ -3,6 +3,7 @@
 import ast
 import base64
 import csv
+import functools
 import glob
 import itertools
 import logging
@@ -35,7 +36,9 @@ from openerp.tools.translate import _
 from openerp.tools import config
 from openerp import http
 
-from openerp.http import request
+from openerp.http import request, serialize_exception as _serialize_exception
+
+_logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -89,17 +92,29 @@ db_list = http.db_list
 
 db_monodb = http.db_monodb
 
-def redirect_with_hash(url, code=303):
-    redirect_code = "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
-    if request.httprequest.user_agent.browser == 'msie':
+def serialize_exception(f):
+    @functools.wraps(f)
+    def wrap(*args, **kwargs):
         try:
-            version = float(request.httprequest.user_agent.version)
-            if version < 10:
-                return redirect_code
-        except Exception:
-            pass
-    elif request.httprequest.user_agent.browser == 'safari':
-        return redirect_code
+            return f(*args, **kwargs)
+        except Exception, e:
+            _logger.exception("An exception occured during an http request")
+            se = _serialize_exception(e)
+            error = {
+                'code': 200,
+                'message': "OpenERP Server Error",
+                'data': se
+            }
+            return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
+    return wrap
+
+def redirect_with_hash(url, code=303):
+    if request.httprequest.user_agent.browser in ('msie', 'safari'): 
+        # Most IE and Safari versions decided not to preserve location.hash upon
+        # redirect. And even if IE10 pretends to support it, it still fails
+        # inexplicably in case of multiple redirects (and we do have some).
+        # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
+        return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
     return werkzeug.utils.redirect(url, code)
 
 def module_topological_sort(modules):
@@ -546,14 +561,14 @@ class Home(http.Controller):
 
         def redirect(db):
             query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-            query.update({'db': db})
+            query['db'] = db
             redirect = request.httprequest.path + '?' + urllib.urlencode(query)
             return redirect_with_hash(redirect)
 
         if db is None and guessed_db is not None:
             return redirect(guessed_db)
 
-        if db is not None and db != guessed_db:
+        if db is not None and db != request.session.db:
             request.session.logout()
             request.session.db = db
             guessed_db = db
@@ -1224,6 +1239,7 @@ class Binary(http.Controller):
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
     @http.route('/web/binary/saveas', type='http', auth="user")
+    @serialize_exception
     def saveas(self, model, field, id=None, filename_field=None, **kw):
         """ Download link for files stored as binary fields.
 
@@ -1257,6 +1273,7 @@ class Binary(http.Controller):
                  ('Content-Disposition', content_disposition(filename))])
 
     @http.route('/web/binary/saveas_ajax', type='http', auth="user")
+    @serialize_exception
     def saveas_ajax(self, data, token):
         jdata = simplejson.loads(data)
         model = jdata['model']
@@ -1290,6 +1307,7 @@ class Binary(http.Controller):
                 cookies={'fileToken': token})
 
     @http.route('/web/binary/upload', type='http', auth="user")
+    @serialize_exception
     def upload(self, callback, ufile):
         # TODO: might be useful to have a configuration flag for max-length file uploads
         out = """<script language="javascript" type="text/javascript">
@@ -1305,6 +1323,7 @@ class Binary(http.Controller):
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
+    @serialize_exception
     def upload_attachment(self, callback, model, id, ufile):
         Model = request.session.model('ir.attachment')
         out = """<script language="javascript" type="text/javascript">
@@ -1594,6 +1613,7 @@ class ExportFormat(object):
 class CSVExport(ExportFormat, http.Controller):
 
     @http.route('/web/export/csv', type='http', auth="user")
+    @serialize_exception
     def index(self, data, token):
         return self.base(data, token)
 
@@ -1631,6 +1651,7 @@ class CSVExport(ExportFormat, http.Controller):
 class ExcelExport(ExportFormat, http.Controller):
 
     @http.route('/web/export/xls', type='http', auth="user")
+    @serialize_exception
     def index(self, data, token):
         return self.base(data, token)
 
@@ -1677,6 +1698,7 @@ class Reports(http.Controller):
     }
 
     @http.route('/web/report', type='http', auth="user")
+    @serialize_exception
     def index(self, action, token):
         action = simplejson.loads(action)
 

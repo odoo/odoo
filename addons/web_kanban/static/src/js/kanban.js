@@ -460,7 +460,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 }
             }).fail(function(error, evt) {
                 evt.preventDefault();
-                alert(_t("An error has occured while moving the record to this group: ") + data.message);
+                alert(_t("An error has occured while moving the record to this group: ") + error.data.message);
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }
@@ -1095,13 +1095,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     kanban_color: function(variable) {
         var color = this.kanban_getcolor(variable);
         return color === '' ? '' : 'oe_kanban_color_' + color;
-    },
-    kanban_gravatar: function(email, size) {
-        size = size || 22;
-        email = _.str.trim(email || '').toLowerCase();
-        var default_ = _.str.isBlank(email) ? 'mm' : 'identicon';
-        var email_md5 = $.md5(email);
-        return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
     },
     kanban_image: function(model, field, id, cache, options) {
         options = options || {};

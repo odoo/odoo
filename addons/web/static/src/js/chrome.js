@@ -256,7 +256,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             new (handler)(this, error).display();
             return;
         }
-        if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
+        if (error.data.name === "openerp.http.SessionExpiredException") {
             this.show_warning({type: "Session Expired", data: { message: _t("Your OpenERP session expired. Please refresh the current web page.") }});
             return;
         }
@@ -442,10 +442,10 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         self.$el.html(QWeb.render("DatabaseManager", { widget : self }));
         $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
         $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
-        $('ul.oe_secondary_submenu > li:first').addClass('oe_active');
+        $('ul.oe_secondary_submenu > li:first').addClass('active');
         $('ul.oe_secondary_submenu > li').bind('click', function (event) {
             var menuitem = $(this);
-            menuitem.addClass('oe_active').siblings().removeClass('oe_active');
+            menuitem.addClass('active').siblings().removeClass('active');
             var form_id =menuitem.find('a').attr('href');
             $(form_id).show().siblings().hide();
             event.preventDefault();
@@ -969,7 +969,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.needaction_data = data;
         _.each(this.needaction_data, function (item, menu_id) {
             var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
-            $item.find('.oe_menu_counter').remove();
+            $item.find('.badge').remove();
             if (item.needaction_counter && item.needaction_counter > 0) {
                 $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
             }
@@ -982,8 +982,8 @@ instance.web.Menu =  instance.web.Widget.extend({
     reflow: function() {
         var self = this;
         this.$el.height('auto').show();
-        var $more_container = this.$('.oe_menu_more_container').hide();
-        var $more = this.$('.oe_menu_more');
+        var $more_container = this.$('#menu_more_container').hide();
+        var $more = this.$('#menu_more');
         $more.children('li').insertBefore($more_container);
         var $toplevel_items = this.$el.children('li').not($more_container).hide();
         $toplevel_items.each(function() {
@@ -1026,8 +1026,8 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
 
         // Activate current main menu
-        this.$el.find('.oe_active').removeClass('oe_active');
-        $main_menu.addClass('oe_active');
+        this.$el.find('.active').removeClass('active');
+        $main_menu.addClass('active');
 
         // Show current sub menu
         this.$secondary_menus.find('.oe_secondary_menu').hide();
@@ -1037,13 +1037,13 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.$secondary_menus.parent('.oe_leftbar').toggle(!!$sub_menu.children().length);
 
         // Activate current menu item and show parents
-        this.$secondary_menus.find('.oe_active').removeClass('oe_active');
+        this.$secondary_menus.find('.active').removeClass('active');
         if ($main_menu !== $clicked_menu) {
             $clicked_menu.parents().show();
             if ($clicked_menu.is('.oe_menu_toggler')) {
                 $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggle();
             } else {
-                $clicked_menu.parent().addClass('oe_active');
+                $clicked_menu.parent().addClass('active');
             }
         }
     },
@@ -1129,7 +1129,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     on_menu_click: function(ev) {
         ev.preventDefault();
-        var needaction = $(ev.target).is('div.oe_menu_counter');
+        var needaction = $(ev.target).is('div#menu_counter');
         this.menu_click($(ev.currentTarget).data('menu'), needaction);
     },
 });
@@ -1143,7 +1143,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.$el.on('click', '.oe_dropdown_menu li a[data-menu]', function(ev) {
+        this.$el.on('click', '.dropdown-menu li a[data-menu]', function(ev) {
             ev.preventDefault();
             var f = self['on_menu_' + $(this).data('menu')];
             if (f) {
@@ -1304,7 +1304,7 @@ instance.web.Client = instance.web.Widget.extend({
         self.action_manager.appendTo(self.$('.oe_application'));
     },
     toggle_bars: function(value) {
-        this.$('tr:has(td.oe_topbar),.oe_leftbar').toggle(value);
+        this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);
     },
     has_uncommitted_changes: function() {
         return false;

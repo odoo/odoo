@@ -1155,7 +1155,8 @@ openerp.Model = openerp.Class.extend({
             kwargs = args;
             args = [];
         }
-        return this.session().rpc('/web/dataset/call_kw', {
+        var call_kw = '/web/dataset/call_kw/' + this.name + '/' + method;
+        return this.session().rpc(call_kw, {
             model: this.name,
             method: method,
             args: args,
@@ -1236,15 +1237,14 @@ openerp.TranslationDataBase = openerp.Class.extend(/** @lends instance.Translati
 openerp._t = new openerp.TranslationDataBase().build_translation_function();
 
 openerp.get_cookie = function(c_name) {
-    if (document.cookie.length > 0) {
-        var c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1) {
-            c_start = c_start + c_name.length + 1;
-            var c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) {
-                c_end = document.cookie.length;
-            }
-            return unescape(document.cookie.substring(c_start, c_end));
+    var cookies = document.cookie ? document.cookie.split('; ') : [];
+    for (var i = 0, l = cookies.length; i < l; i++) {
+        var parts = cookies[i].split('=');
+        var name = parts.shift();
+        var cookie = parts.join('=');
+
+        if (c_name && c_name === name) {
+            return cookie;
         }
     }
     return "";
@@ -1292,7 +1292,10 @@ openerp.str_to_datetime = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid datetime");
     }
-    var tmp = new Date(0);
+    var tmp = new Date(2000,0,1);
+    tmp.setUTCMonth(1970);
+    tmp.setUTCMonth(0);
+    tmp.setUTCDate(1);
     tmp.setUTCFullYear(parseFloat(res[1]));
     tmp.setUTCMonth(parseFloat(res[2]) - 1);
     tmp.setUTCDate(parseFloat(res[3]));
@@ -1324,7 +1327,7 @@ openerp.str_to_date = function(str) {
     if ( !res ) {
         throw new Error("'" + str + "' is not a valid date");
     }
-    var tmp = new Date(0);
+    var tmp = new Date(2000,0,1);
     tmp.setFullYear(parseFloat(res[1]));
     tmp.setMonth(parseFloat(res[2]) - 1);
     tmp.setDate(parseFloat(res[3]));
