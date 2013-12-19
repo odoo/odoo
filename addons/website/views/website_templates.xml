@@ -597,7 +597,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="company_description" name="Company Description">
     <address>
-        <div t-field="res_company.partner_id">Name</div>
+        <div t-field="res_company.name">Name</div>
         <br />
         <div>&amp;#x2706; <span t-field="res_company.phone"></span></div>
         <div class="fa fa-envelope" t-field="res_company.email"></div>

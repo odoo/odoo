@@ -1,35 +1,34 @@
 (function () {
     'use strict';
 
-    var globalEditor;
-
     var hash = "#advanced-view-editor";
 
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.ace.xml');
 
-    website.ready().then(function () {
-        if (window.location.hash.indexOf(hash) >= 0) {
-            launch();
-        }
-    });
-
-    function launch () {
-        if (globalEditor) {
-            globalEditor.open();
-        } else {
-            globalEditor = new website.ace.ViewEditor();
-            globalEditor.appendTo($(document.body));
-        }
-    }
-
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action=ace]': 'launchAce',
         }),
+        start: function () {
+            var self = this;
+            this.globalEditor = null;
+            return this._super.apply(this, arguments).then(function () {
+                if (window.location.hash.indexOf(hash) >= 0) {
+                    self.launchAce();
+                }
+            });
+        },
         launchAce: function (e) {
-            e.preventDefault();
-            launch();
+            if (e) {
+                e.preventDefault();
+            }
+            if (this.globalEditor) {
+                this.globalEditor.open();
+            } else {
+                this.globalEditor = new website.ace.ViewEditor(this);
+                this.globalEditor.appendTo($(document.body));
+            }
         },
     });
 
@@ -104,6 +103,10 @@
                 self.aceEditor.resize();
                 self.$el.width(width);
             }
+            function resizeEditorHeight(height) {
+                self.$el.css('top', height);
+                self.$('.ace_editor').css('bottom', height);
+            }
             function storeEditorWidth() {
                 window.localStorage.setItem('ace_editor_width', self.$el.width());
             }
@@ -133,7 +136,11 @@
             $('button[data-action=edit]').click(function () {
                self.close();
             });
+            this.getParent().on('change:height', this, function (editor) {
+                resizeEditorHeight(editor.get('height'));
+            });
             resizeEditor(readEditorWidth());
+            resizeEditorHeight(this.getParent().get('height'));
         },
         loadViews: function (views) {
             var self = this;

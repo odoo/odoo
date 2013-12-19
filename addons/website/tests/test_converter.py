@@ -63,20 +63,6 @@ class TestConvertBack(common.TransactionCase):
 
         self.field_roundtrip('char', "ⒸⓄⓇⒼⒺ")
 
-    def test_m2o(self):
-        Sub = self.registry('website.converter.test.sub')
-        sub = partial(Sub.create, self.cr, self.uid)
-        ids = [
-            sub({'name': "Foo"}),
-            sub({'name': "Bar"}),
-            sub({'name': "Baz"}),
-        ]
-
-        self.field_rountrip_result(
-            'many2one',
-            ids[2],
-            ids[2])
-
     def test_selection(self):
         self.field_roundtrip('selection', 3)
 
@@ -104,3 +90,47 @@ class TestConvertBack(common.TransactionCase):
             You never know
             You never know until you go
         """)
+
+    def test_m2o(self):
+        """ the M2O field conversion (from html) is markedly different from
+        others as it directly writes into the m2o and returns nothing at all.
+        """
+        model = 'website.converter.test'
+        field = 'many2one'
+
+        Sub = self.registry('website.converter.test.sub')
+        sub_id = Sub.create(self.cr, self.uid, {'name': "Foo"})
+
+        Model = self.registry(model)
+        id = Model.create(self.cr, self.uid, {field: sub_id})
+        [record] = Model.browse(self.cr, self.uid, [id])
+
+        e = document.createElement('span')
+        field_value = 'record.%s' % field
+        e.setAttribute('t-field', field_value)
+
+        rendered = self.registry('website.qweb').render_tag_field(
+            e, {'field': field_value}, '', ir_qweb.QWebContext(self.cr, self.uid, {
+                'record': record,
+            }))
+
+        element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
+        # emulate edition
+        element.text = "New content"
+
+        column = Model._all_columns[field].column
+        converter = self.registry('website.qweb').get_converter_for(
+            element.get('data-oe-type'))
+
+        value_back = converter.from_html(
+            self.cr, self.uid, model, column, element)
+
+        self.assertIsNone(
+            value_back, "the m2o converter should return None to avoid spurious"
+                        " or useless writes on the parent record")
+
+        self.assertEqual(
+            Sub.browse(self.cr, self.uid, sub_id).name,
+            "New content",
+            "element edition should have been written directly to the m2o record"
+        )

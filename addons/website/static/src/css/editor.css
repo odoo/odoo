@@ -1,4 +1,4 @@
-/* ---- CKEditor Minimal Reset ---- */
+/* ---- CKEditor Minimal Reset ---- {{{ */
 .navbar.navbar-inverse .cke_chrome {
   border: none;
 }
@@ -28,7 +28,7 @@
   box-shadow: none;
 }
 
-/* ---- OpenERP Style ---- */
+/* ---- OpenERP Style ---- {{{ */
 .oe_website_editorbar {
   position: fixed;
   top: 0;
@@ -103,7 +103,7 @@
   top: 2px;
 }
 
-/* ---- EDITOR BAR ---- */
+/* ---- EDITOR BAR ---- {{{ */
 table.editorbar-panel {
   cursor: pointer;
   width: 100%;
@@ -115,6 +115,7 @@ table.editorbar-panel td.selected {
   background-color: #b1c9d9;
 }
 
+/* ---- TRANSLATIONS ---- {{{ */
 .oe_translate_or {
   color: white;
   padding: 0 0 0 1em;
@@ -145,6 +146,7 @@ table.editorbar-panel td.selected {
   background: #ffffb6;
 }
 
+/* ---- MENU ---- {{{ */
 div.oe_menu_buttons {
   top: -8px;
   right: -8px;
@@ -171,11 +173,12 @@ ul.oe_menu_editor .disclose {
   display: none;
 }
 
-/* ---- RTE ---- */
+/* ---- RTE ---- {{{ */
 .oe_editable .btn, .btn.oe_editable {
   -webkit-user-select: auto;
   -moz-user-select: auto;
   user-select: auto;
+  cursor: text !important;
 }
 
 .modal-dialog.select-image {
@@ -233,12 +236,11 @@ ul.oe_menu_editor .disclose {
   z-index: 1000;
 }
 
-/* ---- SNIPPET EDITOR ---- */
+/* ---- SNIPPET EDITOR ---- {{{ */
 #oe_snippets {
   position: fixed;
   left: 0px;
   right: 0px;
-  top: 51px;
   background: #282828;
   -webkit-box-shadow: 0px 10px 10px -10px black inset;
   -moz-box-shadow: 0px 10px 10px -10px black inset;
@@ -368,7 +370,7 @@ ul.oe_menu_editor .disclose {
   background: #747474, radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
 }
 
-/* ---- SNIPPETS DROP ZONES ---- */
+/* ---- SNIPPETS DROP ZONES ---- {{{ */
 .oe_drop_zone.oe_insert {
   display: block;
   height: 48px;
@@ -429,7 +431,7 @@ ul.oe_menu_editor .disclose {
   padding-top: 12px;
 }
 
-/* ---- SNIPPET MANIPULATOR ---- */
+/* ---- SNIPPET MANIPULATOR ---- {{{ */
 .oe_overlay {
   display: none;
   position: absolute;
@@ -599,7 +601,7 @@ ul.oe_menu_editor .disclose {
   cursor: move !important;
 }
 
-/* ---- MOBILE PREVIEW ---- */
+/* ---- MOBILE PREVIEW ---- {{{ */
 .oe_mobile_preview.modal .modal-content {
   height: 660px;
   background-color: black;
@@ -655,7 +657,7 @@ ul.oe_menu_editor .disclose {
   background-color: black;
 }
 
-/* ---- SEO TOOLS ---- */
+/* ---- SEO TOOLS ---- {{{ */
 .oe_seo_configuration .modal-dialog {
   width: 80%;
 }
@@ -674,10 +676,9 @@ ul.oe_menu_editor .disclose {
   border-radius: 0.4em;
 }
 
-/* ---- ACE EDITOR ---- */
+/* ---- ACE EDITOR ---- {{{ */
 .oe_ace_view_editor {
   position: fixed;
-  top: 51px;
   right: 0;
   z-index: 1000;
   height: 100%;
@@ -707,7 +708,6 @@ ul.oe_menu_editor .disclose {
   position: absolute;
   top: 30px;
   right: 0;
-  bottom: 51px;
   left: 0;
 }
 .oe_ace_view_editor .ace_editor .ace_gutter {
@@ -723,7 +723,7 @@ ul.oe_menu_editor .disclose {
   opacity: 0;
 }
 
-/* ---- EDITOR TOUR ---- */
+/* ---- EDITOR TOUR ---- {{{ */
 div.tour-backdrop {
   z-index: 2009;
 }
