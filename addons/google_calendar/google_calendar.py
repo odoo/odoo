@@ -678,7 +678,7 @@ class google_calendar(osv.osv):
                 
         vals = {}
         vals['google_%s_rtoken' % self.STR_SERVICE] = all_token.get('refresh_token')
-        vals['google_%s_token_validity' % self.STR_SERVICE] = datetime.now() + timedelta(seconds=all_token.get('expires_in')) #NEED A CALCUL
+        vals['google_%s_token_validity' % self.STR_SERVICE] = datetime.now() + timedelta(seconds=all_token.get('expires_in'))
         vals['google_%s_token' % self.STR_SERVICE] = all_token.get('access_token')           
         self.pool.get('res.users').write(cr,SUPERUSER_ID,uid,vals,context=context)
          

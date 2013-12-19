@@ -45,7 +45,7 @@ class calendar_config_settings(osv.osv_memory):
         
         cal_client_id = params.get_param(cr, uid, 'google_calendar_client_id',default='',context=context)
         cal_client_secret = params.get_param(cr, uid, 'google_calendar_client_secret',default='',context=context)
-        server_uri= "%s/googleauth/oauth2callback" % params.get_param(cr, uid, 'web.base.url',default="http://yourcompany.my.openerp.com",context=context)          
+        server_uri= "%s/google_account/authentication" % params.get_param(cr, uid, 'web.base.url',default="http://yourcompany.my.openerp.com",context=context)          
         return dict(cal_client_id=cal_client_id,cal_client_secret=cal_client_secret,server_uri=server_uri)
         
         

@@ -18,7 +18,7 @@ openerp.google_calendar = function(instance) {
             //$('div.oe_cal_sync_button').hide();
             $('div.oe_cal_sync_button').prop('disabled',true);
             
-            self.rpc('/web_calendar_sync/sync_calendar/sync_data', {
+            self.rpc('/google_calendar/sync_data', {
                 arch: res.arch,
                 fields: res.fields,
                 model:res.model,
