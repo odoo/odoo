@@ -1659,6 +1659,9 @@
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="do_view_pickings" string="Group's Pickings" type="object"/>
                 </xpath>
+                <xpath expr="//field[@name='rule_id']" position="replace">
+                    <field name="rule_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_id)]"/>
+                </xpath>
             </field>
         </record>
         <record id="view_procurement_tree_stock_inherit" model="ir.ui.view">
