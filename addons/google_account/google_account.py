@@ -82,7 +82,7 @@ class google_service(osv.osv_memory):
             'state' : simplejson.dumps(state_obj),
             'scope': scope or 'https://www.googleapis.com/auth/%s' % (service,),
             'redirect_uri': base_url + '/google_account/authentication',
-            #'approval_prompt':'force',
+            'approval_prompt':'force',
             'access_type':'offline'
         }
         
