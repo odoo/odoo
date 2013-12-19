@@ -270,15 +270,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 this.svg = this.$('.graph_main_content svg')[0];
                 this.width = this.$el.width();
                 this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
-                // var options = {
-                //     svg: 
-                //     mode: this.mode,
-                //     width: this.$el.width(),
-                //     height: Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width())),
-                //     measure_label: this.measure_label()
-                // };
                 this[this.mode]();
-                // openerp.web_graph.draw_chart(options);
             }
         }
     },
