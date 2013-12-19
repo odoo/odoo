@@ -1340,6 +1340,10 @@ instance.web.WebClient = instance.web.Client.extend({
             } else {
                 self.show_application();
             }
+            if (self.client_options.action) {
+                self.action_manager.do_action(self.client_options.action);
+                delete(self.client_options.action);
+            }
         });
     },
     to_kitten: function() {
@@ -1422,6 +1426,10 @@ instance.web.WebClient = instance.web.Client.extend({
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();
+        if (self.client_options.action_post_login) {
+            self.action_manager.do_action(self.client_options.action_post_login);
+            delete(self.client_options.action_post_login);
+        }
     },
     update_logo: function() {
         var img = this.session.url('/web/binary/company_logo');
