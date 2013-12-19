@@ -40,7 +40,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 				measure: this.measure,
 				silent:false
 			};
-		var options = _.extend(default_options, options);
+		options = _.extend(default_options, options);
 
 		if (!_.isEqual(options.domain, this.domain)) {
 			this.domain = options.domain;
@@ -306,12 +306,11 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 
 	get_groups: function (fields, domain, groupbys, options) {
 		var self = this,
-			options = (options) ? options : {},
-			groupings = (options.first_groupby) ? [options.first_groupby].concat(groupbys) : groupbys;
+			groupings = ((options || {}).first_groupby) ? [(options || {}).first_groupby].concat(groupbys) : groupbys;
 
 		return this.query_db(fields, domain, groupings).then(function (groups) {
 			return _.map(groups, function (group) {
-				return (options.add_path) ?self.add_path(group, []) : group;
+				return ((options || {}).add_path) ? self.add_path(group, []) : group;
 			});
 		});
 
@@ -368,14 +367,10 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 
 	// To obtain all the values required to draw the full table, we have to do 
 	// at least      2 + min(row.groupby.length, col.groupby.length)
-	// calls to readgroup.  For example, if row.groupby = [r1, r2, r3] and 
-	// col.groupby = [c1, c2, c3, c4], then a minimal set of calls is done 
-	// with the following groupby:
-	// [], [c1, c2, c3, c4], [r1, c1, c2, c3, c4], [r1, r2, c1, c2, c3, c4],
-	// [r1, r2, r3, c1, c2, c3, c4]
-	// To simplify the code, we will always do 2 + row.groupby.length calls,
-	// unless col.groupby.length = 0, in which case we do 2 calls ([] and 
-	// row_groupbys), but this can be optimized later.
+	// calls to readgroup. To simplify the code, we will always do 
+	// 2 + row.groupby.length calls. For example, if row.groupby = [r1, r2, r3] 
+	// and col.groupby = [c1, c2], then we will make the call with the following 
+	// groupbys: [r1,r2,r3], [c1,r1,r2,r3], [c1,c2,r1,r2,r3], [].
 	load_data: function (options) {
 		var self = this,
 			cols = options.col_groupby,
@@ -399,6 +394,7 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 				col_data = (cols.length !== 0) ? data[data.length - 2] : [],
 				total = data[data.length - 1][0];
 
+			options.total = total;
 			return (total === undefined) ? undefined
                     : self.format_data(total, col_data, row_data, data, options);
 		});
@@ -413,93 +409,70 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 		var self = this,
 			dim_row = options.row_groupby.length,
 			dim_col = options.col_groupby.length,
-			measure = options.measure,
-			col_headers = make_headers(col_data, dim_col),
-			row_headers = make_headers(row_data, dim_row),
+			col_headers = make_list(this.make_headers(col_data, dim_col, options)),
+			row_headers = make_list(this.make_headers(row_data, dim_row, options)),
 			cells = [];
 
 		_.each(cell_data, function (data, index) {
-			make_cells(data, index, []);
+			self.make_cells(data, index, [], cells, row_headers, col_headers, options);
 		}); // make it more functional?
 
 		return {col_headers: col_headers,
                 row_headers: row_headers,
                 cells: cells};
 
-		function make_headers (data, depth) {
-			var main = {
-					id: _.uniqueId(),
-					path: [],
-					parent: null,
-					children: [],
-					title: '',
-					domain: options.domain,
-					total: self.get_value(total, measure), 
-				};
+        function make_list (tree) {
+			return [].concat.apply([tree], _.map(tree.children, make_list));
+        }
+	},
 
-			main.children = _.map(data, function (data_pt) {
-				return make_tree_headers (data_pt, main, depth);
+	make_headers: function (data, depth, options, parent) {
+		var self = this,
+			main = {
+				id: _.uniqueId(),
+				path: (parent) ? parent.path.concat(data.attributes.value) : [],
+				parent: parent,
+				children: [],
+				title: (parent) ? data.attributes.value : '',
+				domain: (parent) ? data.model._domain : options.domain,
+				total: this.get_value(options.total, options.measure),
+			};
+
+		if (main.path.length < depth) {
+			main.children = _.map(data.subgroups_data || data, function (data_pt) {
+				return self.make_headers (data_pt, depth, options, main);
 			});
-
-			var result = [],
-				make_list = function (tree) {
-					result.push(tree);
-					_.each(tree.children, make_list);
-				};
-
-			make_list(main);
-			return result;
 		}
+		return main;
+	},
 
-		function make_tree_headers (data_pt, parent, max_depth) {
-			var node = {
-					id: _.uniqueId(),
-					path: parent.path.concat(data_pt.attributes.value),
-					title: data_pt.attributes.value,
-					domain: data_pt.model._domain,
-					parent: parent,
-					children: [],
-					total : self.get_value(data_pt, measure), 
-				};
+	make_cells: function (data, index, current_path, current_cells, rows, cols, options) {
+		var self = this;
+		_.each(data, function (group) {
+			var attr = group.attributes,
+				group_val = (attr.value instanceof Array) ? attr.value[1] : attr.value,
+				path = current_path,
+				value = (options.measure) ? attr.aggregates[options.measure] : attr.length;
 
-			if (node.path.length < max_depth) {
-				node.children = _.map(data_pt.subgroups_data, function (child) {
-					return make_tree_headers (child, node, max_depth);
-				});
+			group_val = (group_val === false) ? undefined : group_val;
+
+			if (attr.grouped_on !== undefined) {
+				path = path.concat((attr.value === false) ? 'undefined' : group_val);
 			}
-			return node;
-		}
-
-		function make_cells (data, index, current_path) {
-			_.each(data, function (group) {
-				var attr = group.attributes,
-					group_val = (attr.value instanceof Array) ? attr.value[1] : attr.value,
-					path = current_path,
-					value = (measure) ? attr.aggregates[measure] : attr.length;
-
-				group_val = (group_val === false) ? undefined : group_val;
-
-				if (attr.grouped_on !== undefined) {
-					path = path.concat((attr.value === false) ? 'undefined' : group_val);
-				}
-
-				var colpath = path.slice(0, index),
-					rowpath = path.slice(index);
-				var row = _.find(row_headers, function (header) {
-					return _.isEqual(header.path, rowpath);
-				});
-				var col = _.find(col_headers, function (header) {
-					return _.isEqual(header.path, colpath);
-				});
-				cells.push({x: Math.min(row.id, col.id),
-							y: Math.max(row.id, col.id),
-							value: value});
-
-				if (attr.has_children) {
-					make_cells (group.subgroups_data, index, path);
-				}
+			var row = _.find(rows, function (header) {
+				return _.isEqual(header.path, path.slice(index));
 			});
-		}
+			var col = _.find(cols, function (header) {
+				return _.isEqual(header.path, path.slice(0, index));
+			});
+			current_cells.push({x: Math.min(row.id, col.id),
+						y: Math.max(row.id, col.id),
+						value: value});
+
+			if (attr.has_children) {
+				self.make_cells (group.subgroups_data, index, path, current_cells, rows, cols, options);
+			}
+		});
 	},
 
 });
