@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>OpenERP</title>
+    <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/web/static/src/css/full.css">
+    <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/web/static/src/css/base.css">
+<body>
+
+<div class="openerp openerp_webclient_container">
+    <table class="oe_webclient">
+    <tr>
+        <td>
+            <div class="oe_login">
+                <div class="oe_login_bottom"> </div>
+                <div class="oe_login_pane" style="top: 60%">
+                    <div class="oe_login_logo"><img src="/web/static/src/img/logo2.png" alt="OpenERP"></div>
+                    <form action="/web" method="get">
+                    <ul>
+                        <li>Select database</li>
+                        <li>
+                            <select name="db">
+                                <option></option>
+                                {% for db in databases %}
+                                    <option value="{{ db }}">{{ db }}</option>
+                                {% endfor %}
+                            </select>
+                        </li>
+                        <li class="pull-right" style="margin-top: 20px">
+                            <button name="submit">Continue</button>
+                        </li>
+                    </ul>
+                    </form>
+                    <div class="oe_login_footer">
+                        <a class="oe_login_manage_db" href="#" data-modes="default">Manage Databases</a> |
+                        <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    </table>
+</div>
+
+</body>
+</html>

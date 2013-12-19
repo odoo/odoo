@@ -6,6 +6,7 @@ import csv
 import functools
 import glob
 import itertools
+import jinja2
 import logging
 import operator
 import datetime
@@ -39,6 +40,12 @@ from openerp import http
 from openerp.http import request, serialize_exception as _serialize_exception
 
 _logger = logging.getLogger(__name__)
+
+env = jinja2.Environment(
+    loader=jinja2.PackageLoader('openerp.addons.web', "views"),
+    autoescape=True
+)
+env.filters["json"] = simplejson.dumps
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -108,8 +115,19 @@ def serialize_exception(f):
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
     return wrap
 
-def redirect_with_hash(url, code=303):
-    if request.httprequest.user_agent.browser in ('msie', 'safari'): 
+def redirect_with_hash(path, keep_query=None, exclude_query=[], code=303):
+    url = path
+    if keep_query:
+        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
+        for key in exclude_query:
+            query.pop(key, None)
+        if hasattr(keep_query, '__iter__'):
+            for key in query.keys():
+                if key not in keep_query:
+                    query.pop(key)
+        url = path + '?' + urllib.urlencode(query)
+
+    if request.httprequest.user_agent.browser in ('msie', 'safari'):
         # Most IE and Safari versions decided not to preserve location.hash upon
         # redirect. And even if IE10 pretends to support it, it still fails
         # inexplicably in case of multiple redirects (and we do have some).
@@ -514,6 +532,7 @@ def content_disposition(filename):
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
+# TODO: obsoleted by webclient_bootstrap() but need to change edi and pos addons
 html_template = """<!DOCTYPE html>
 <html style="height: 100%%">
     <head>
@@ -540,13 +559,21 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
+def webclient_bootstrap(**options):
+    for res in ['js', 'css']:
+        if res not in options:
+            options[res] = manifest_list(res, db=options.get('db'), debug=options.get('debug', request.debug))
+
+    if 'modules' not in options:
+        options['modules'] = module_boot(db=options.get('db'))
+
+    return env.get_template("webclient_bootstrap.html").render(options)
+
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, debug=False, **kw):
-        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-        redirect = '/web' + '?' + urllib.urlencode(query)
-        return redirect_with_hash(redirect)
+        return redirect_with_hash('web', keep_query=True)
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, db=None, debug=False, **kw):
@@ -563,7 +590,7 @@ class Home(http.Controller):
         # if no db can be found til here, send to the database selector
         # the database selector will redirect to database manager if needed
         if db is None:
-            return request.redirect('/database/selector', 303) # TODO: check status code semantic and forward debug
+            return redirect_with_hash('/web/database/selector', keep_query=['debug'])
 
         # always switch the session to the computed db
         if db != request.session.db:
@@ -752,6 +779,22 @@ class Proxy(http.Controller):
         return Client(request.httprequest.app, BaseResponse).get(path).data
 
 class Database(http.Controller):
+
+    @http.route('/web/database/selector', type='http', auth="none")
+    def selector(self, debug=False):
+        dbs = http.db_list(True)
+        if not dbs:
+            return redirect_with_hash('/web/database/manager', keep_query=['debug'])
+        return env.get_template("database_selector.html").render({
+            'databases': dbs
+        })
+
+    @http.route('/web/database/manager', type='http', auth="none")
+    def manager(self, debug=False):
+        options = {
+            'action': 'database_manager'
+        }
+        return webclient_bootstrap(client_options=options)
 
     @http.route('/web/database/get_list', type='json', auth="none")
     def get_list(self):

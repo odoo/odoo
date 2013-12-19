@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html style="height: 100%%">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>OpenERP</title>
+        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="/web/static/src/css/full.css" />
+        {% for css_file in css %}
+            <link rel="stylesheet" href="{{ css_file }}">
+        {% endfor %}
+        {% for js_file in js %}
+            <script type="text/javascript" src="{{ js_file }}"></script>
+        {% endfor %}
+        <script type="text/javascript">
+            $(function() {
+                var s = new openerp.init({{ modules | json | safe }});
+                {% if init %}
+                    {{ init }}
+                {% else %}
+                    var wc = new s.web.WebClient({% if client_options %}{{ client_options | json | safe }}{% endif %});
+                    wc.appendTo($(document.body));
+                {% endif %}
+            });
+        </script>
+    </head>
+    <body>
+        <!--[if lte IE 8]>
+        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script>CFInstall.check({mode: "overlay"});</script>
+        <![endif]-->
+    </body>
+</html>
