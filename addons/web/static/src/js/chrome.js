@@ -659,7 +659,7 @@ instance.web.Login =  instance.web.Widget.extend({
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.db_list = null;
-        this.selected_db = this.client_options.dbname || null;
+        this.selected_db = instance.webclient.client_options.dbname || null;
         this.selected_login = null;
         this.params = action.params || {};
         if (_.isEmpty(this.params)) {
