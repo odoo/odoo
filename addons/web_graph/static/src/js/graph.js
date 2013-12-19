@@ -53,7 +53,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             measure = null;
 
         if (fields_view_get.arch.attrs.type === 'bar') {
-            this.mode = 'bar_chart';
+            this.graph_widget.mode = 'bar_chart';
         }
 
         _.each(fields_view_get.arch.children, function (field) {
