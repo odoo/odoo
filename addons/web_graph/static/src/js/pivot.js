@@ -380,35 +380,27 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 		var self = this,
 			cols = options.col_groupby,
 			rows = options.row_groupby,
-			measure = options.measure,
-			domain = options.domain,
-			visible_fields = rows.concat(cols),
-			def_array,
-			groupbys;
+			visible_fields = rows.concat(cols);
 
-		if (measure) { visible_fields = visible_fields.concat(measure); }
+		if (options.measure) { visible_fields = visible_fields.concat(options.measure); }
 
-		if (cols.length > 0) {
-			groupbys = _.map(_.range(rows.length + 1), function (i) {
-				return rows.slice(0, i).concat(cols);
-			});
-			groupbys.push([]);
-		} else {
-			groupbys = [rows, []];
-		}
-		def_array = _.map(groupbys, function (groupby) {
-			return self.get_groups(visible_fields, domain, groupby);
+		var groupbys = _.map(_.range(cols.length + 1), function (i) {
+			return cols.slice(0, i).concat(rows);
+		});
+		groupbys.push([]);
+
+		var def_array = _.map(groupbys, function (groupby) {
+			return self.get_groups(visible_fields, options.domain, groupby);
 		});
 
 		return $.when.apply(null, def_array).then(function () {
-			var args = Array.prototype.slice.call(arguments),
-				col_data = _.first(args),
-				total = _.last(args)[0],
-				row_data = _.last(_.initial(args)),
-				cell_data = args;
+			var data = Array.prototype.slice.call(arguments),
+				row_data = data[0],
+				col_data = (cols.length !== 0) ? data[data.length - 2] : [],
+				total = data[data.length - 1][0];
 
 			return (total === undefined) ? undefined
-                    : self.format_data(total, col_data, row_data, cell_data, options);
+                    : self.format_data(total, col_data, row_data, data, options);
 		});
 	},
 
@@ -426,14 +418,10 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 			row_headers = make_headers(row_data, dim_row),
 			cells = [];
 
-		if (dim_col > 0) {
-			_.each(cell_data, function (data, index) {
-				make_cells(data, index, []);
-			}); // make it more functional?
-		} else {
-			make_cells(cell_data[0], dim_row, []);
-			make_cells(cell_data[1], 0, []);
-		}
+		_.each(cell_data, function (data, index) {
+			make_cells(data, index, []);
+		}); // make it more functional?
+
 		return {col_headers: col_headers,
                 row_headers: row_headers,
                 cells: cells};
@@ -449,11 +437,9 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 					total: self.get_value(total, measure), 
 				};
 
-			if (depth > 0) {
-				main.children = _.map(data, function (data_pt) {
-					return make_tree_headers (data_pt, main, depth);
-				});
-			}
+			main.children = _.map(data, function (data_pt) {
+				return make_tree_headers (data_pt, main, depth);
+			});
 
 			var result = [],
 				make_list = function (tree) {
@@ -497,9 +483,8 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 					path = path.concat((attr.value === false) ? 'undefined' : group_val);
 				}
 
-				var rowpath = path.slice(0, index),
-					colpath = path.slice(index);
-
+				var colpath = path.slice(0, index),
+					rowpath = path.slice(index);
 				var row = _.find(row_headers, function (header) {
 					return _.isEqual(header.path, rowpath);
 				});
