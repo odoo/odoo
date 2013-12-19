@@ -1,8 +1,6 @@
-@charset "utf-8"
-
 @import "common"
 
-/* ---- CKEditor Minimal Reset ---- */
+/* ---- CKEditor Minimal Reset ---- {{{ */
 
 .navbar.navbar-inverse .cke_chrome
     border: none
@@ -26,7 +24,9 @@
     border: none
     +box-shadow(none)
 
-/* ---- OpenERP Style ---- */
+// }}}
+
+/* ---- OpenERP Style ---- {{{ */
 
 .oe_website_editorbar
     position: fixed
@@ -85,7 +85,9 @@
         position: relative !important
         top: +2px
 
-/* ---- EDITOR BAR ---- */
+// }}}
+
+/* ---- EDITOR BAR ---- {{{ */
 
 table.editorbar-panel
     cursor: pointer
@@ -95,7 +97,10 @@ table.editorbar-panel
     td.selected
         background-color: #b1c9d9
 
-// ---- TRANSLATIONS ---- {{{
+// }}}
+
+/* ---- TRANSLATIONS ---- {{{ */
+
 .oe_translate_or
     color: white
     padding: 0 0 0 1em
@@ -112,9 +117,11 @@ table.editorbar-panel
     padding: 0 10px
 .oe_translatable_todo
     background: rgb(255, 255, 182)
+
 // }}}
 
-// -------- MENU -------- {{{
+/* ---- MENU ---- {{{ */
+
 div.oe_menu_buttons
     top: -8px
     right: -8px
@@ -137,7 +144,7 @@ ul.oe_menu_editor
 
 // }}}
 
-/* ---- RTE ---- */
+/* ---- RTE ---- {{{ */
 
 // bootstrap makes .btn elements unselectable -> RTE double-click can't know
 // about them either
@@ -197,7 +204,9 @@ ul.oe_menu_editor
     // This z-index is due to .navbar of bootstrap
     z-index: 1000
 
-/* ---- SNIPPET EDITOR ---- */
+// }}}
+
+/* ---- SNIPPET EDITOR ---- {{{ */
 
 #oe_snippets
     position: fixed
@@ -286,7 +295,9 @@ ul.oe_menu_editor
 #oe_snippets .oe_snippet_thumbnail
     @include background(#747474, radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4)))
 
-/* ---- SNIPPETS DROP ZONES ---- */
+// }}}}
+
+/* ---- SNIPPETS DROP ZONES ---- {{{ */
 
 .oe_drop_zone.oe_insert
     display: block
@@ -333,7 +344,9 @@ ul.oe_menu_editor
     margin-bottom: 32px
     padding-top: 12px
 
-/* ---- SNIPPET MANIPULATOR ---- */
+// }}}
+
+/* ---- SNIPPET MANIPULATOR ---- {{{ */
 
 .oe_overlay
     display: none
@@ -454,8 +467,9 @@ ul.oe_menu_editor
 .move-important, .move-important *
     cursor: move !important
 
+// }}}
 
-/* ---- MOBILE PREVIEW ---- */
+/* ---- MOBILE PREVIEW ---- {{{ */
 
 $mobile_preview_background: #000000
 $mobile_preview_border: #1C1F1F
@@ -498,7 +512,9 @@ $icon_close: #E00101
         .modal-footer
             background-color: $mobile_preview_background
 
-/* ---- SEO TOOLS ---- */
+// }}}
+
+/* ---- SEO TOOLS ---- {{{ */
 
 $remove_color: $icon_close
 $in_title_color: #5cb85c
@@ -516,7 +532,9 @@ $highlighted_text_color: #ffffff
         padding: .2em .4em .2em .5em
         +border-radius(.4em)
 
-/* ---- ACE EDITOR ---- */
+// }}}
+
+/* ---- ACE EDITOR ---- {{{ */
 
 $editorbar_height: 30px
 // TODO Fix => might break with themes
@@ -555,9 +573,15 @@ $editorbar_height: 30px
         z-index: -1000
         +opacity(0)
 
-/* ---- EDITOR TOUR ---- */
+// }}}
+
+/* ---- EDITOR TOUR ---- {{{ */
+
 div.tour-backdrop
     z-index: 2009
 .popover.tour
     z-index: 2010
+
+// }}}
+
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
