@@ -213,7 +213,7 @@ class TxPaypal(osv.Model):
             return tx.write(data)
         elif status in ['Pending', 'Expired']:
             _logger.info('Received notification for Paypal payment %s: set as pending' % (tx.reference))
-            data.udpate(state='pending', state_message=data.get('pending_reason', ''))
+            data.update(state='pending', state_message=data.get('pending_reason', ''))
             return tx.write(data)
         else:
             error = 'Received unrecognized status for Paypal payment %s: %s, set as error' % (tx.reference, status)
