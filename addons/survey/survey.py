@@ -725,7 +725,7 @@ class survey_question(osv.osv):
                 errors.update({answer_tag: question.constr_error_msg})
             else:
                 pass  # Everything is okay
-            return errors
+        return errors
 
 
 class survey_label(osv.osv):
