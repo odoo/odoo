@@ -242,6 +242,10 @@ class hr_holidays(osv.osv):
                 result['value'] = {
                     'employee_id': ids_employee[0]
                 }
+        elif holiday_type != 'employee':
+            result['value'] = {
+                    'employee_id': False
+                }
         return result
 
     def onchange_employee(self, cr, uid, ids, employee_id):
