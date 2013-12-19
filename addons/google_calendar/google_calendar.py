@@ -663,7 +663,7 @@ class google_calendar(osv.osv):
     def need_authorize(self,cr,uid,context=None):
         current_user = self.pool.get('res.users').browse(cr,uid,uid,context=context)        
         return current_user.google_calendar_rtoken == False
-            
+                
     def get_calendar_scope(self,RO=False):
         readonly = RO and '.readonly' or '' 
         return 'https://www.googleapis.com/auth/calendar%s' % (readonly)        
@@ -671,6 +671,9 @@ class google_calendar(osv.osv):
     def authorize_google_uri(self,cr,uid,from_url='http://www.openerp.com',context=None):
         url = self.pool.get('google.service')._get_authorize_uri(cr,uid,from_url,self.STR_SERVICE,scope=self.get_calendar_scope(),context=context)
         return url        
+    
+    def can_authorize_google(self,cr,uid,context=None):
+        return self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
         
     def set_all_tokens(self,cr,uid,authorization_code,context=None):
         gs_pool = self.pool.get('google.service')

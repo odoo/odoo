@@ -32,8 +32,16 @@ openerp.google_calendar = function(instance) {
                     window.location = o.url;
                 }
                 else if (o.status == "NeedConfigFromAdmin") {
-                    alert(_t("Admin need to configure Google Synchronization before to use it !"));
-                    window.location = o.url;
+                    
+                    if (typeof o.action !== 'undefined' && parseInt(o.action)) {
+                        if (confirm(_t("An admin need to configure Google Synchronization before to use it, do you want to configure it now ? !"))) {
+                            self.do_action(o.action);                        
+                        }
+                    }
+                    else {
+                        alert(_t("An admin need to configure Google Synchronization before to use it !"));
+                    }
+                    //window.location = o.url;
                 }
                 else if (o.status == "NeedRefresh"){
                     self.$calendar.fullCalendar('refetchEvents');

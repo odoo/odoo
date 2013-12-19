@@ -28,9 +28,14 @@ class google_calendar_controller(http.Controller):
             client_id = gs_obj.get_client_id(request.cr, request.uid,'calendar',context=kw.get('LocalContext'))
 
             if not client_id or client_id == '':
+                action = ''
+                if gc_obj.can_authorize_google(request.cr,request.uid):
+                    dummy, action = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'google_calendar', 'action_config_settings_google_calendar')
+                
                 return {
                         "status" :  "NeedConfigFromAdmin",
-                        "url" : '' 
+                        "url" : '',
+                        "action" : action
                         }
                         
             # Checking that user have already  accepted OpenERP to access his calendar !
