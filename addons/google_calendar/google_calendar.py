@@ -731,7 +731,7 @@ class calendar_attendee(osv.osv):
         'oe_synchro_date': fields.datetime('OpenERP Synchro Date'),
     }
     
-    _sql_constraints = [('google_id_uniq','unique(google_internal_event_id)', 'Google ID must be unique!')]
+    #_sql_constraints = [('google_id_uniq','unique(google_internal_event_id)', 'Google ID must be unique!')]
     
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
