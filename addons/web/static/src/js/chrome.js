@@ -260,7 +260,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             new (handler)(this, error).display();
             return;
         }
-        if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
+        if (error.data.name === "openerp.http.SessionExpiredException") {
             this.show_warning({type: "Session Expired", data: { message: _t("Your OpenERP session expired. Please refresh the current web page.") }});
             return;
         }
