@@ -30,7 +30,7 @@
             <field name="name">Direct Sales</field>
             <field name="code">DM</field>
             <field name="use_leads">True</field>
-            <field name="alias_name">info</field>
+            <field name="alias_name">salesinfo</field>
             <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
@@ -54,6 +54,13 @@
         <record model="crm.payment.mode" id="payment_mode_4">
             <field name="name">Demand Draft</field>
             <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+
+        <!--default alias for leads-->
+        <record id="mail_alias_lead_info" model="mail.alias">
+            <field name="alias_name">info</field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_root"/>
         </record>
 
         <!-- notify all employees of module installation -->

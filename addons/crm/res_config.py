@@ -66,7 +66,48 @@ class crm_configuration(osv.TransientModel):
         'group_multi_salesteams': fields.boolean("Organize Sales activities into multiple Sales Teams",
             implied_group='base.group_multi_salesteams',
             help="""Allows you to use Sales Teams to manage your leads and opportunities."""),
+        'alias_prefix': fields.char('Default Alias Name for Leads'),
+        'alias_domain' : fields.char('Alias Domain'),
     }
 
+    def get_default_alias_prefix(self, cr, uid, ids, context=None):
+        alias_name = ''
+        mail_alias = self.pool.get('mail.alias')
+        try:
+            alias_name = self.pool.get('ir.model.data').get_object(cr, uid, 'crm', 'mail_alias_lead_info').alias_name
+        except Exception:
+            model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.lead')], context=context)
+            alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0]),('alias_defaults', '=', '{}')], context=context)
+            if alias_ids:
+                alias_name = mail_alias.browse(cr, uid, alias_ids[0], context=context).alias_name
+        return {'alias_prefix': alias_name}
+
+    def set_default_alias_prefix(self, cr, uid, ids, context=None):
+        mail_alias = self.pool.get('mail.alias')
+        record = self.browse(cr, uid, ids[0], context=context)
+        default_alias_prefix = self.get_default_alias_prefix(cr, uid, ids, context=context)['alias_prefix']
+        if record.alias_prefix != default_alias_prefix:
+            try:
+                alias = self.pool.get('ir.model.data').get_object(cr, uid, 'crm', 'mail_alias_lead_info')
+                if alias:
+                    alias.write({'alias_name': record.alias_prefix})
+            except Exception:
+                model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.lead')], context=context)
+                alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0]),('alias_defaults', '=', '{}')], context=context)
+                if alias_ids:
+                    mail_alias.write(cr, uid, alias_ids[0], {'alias_name': record.alias_prefix}, context=context)
+                else:
+                    mail_alias.create_unique_alias(cr, uid, {'alias_name': record.alias_prefix}, model_name="crm.lead", context=context)
+        return True
+
+    def get_default_alias_domain(self, cr, uid, ids, context=None):
+        alias_domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
+        if not alias_domain:
+            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
+            try:
+                alias_domain = urlparse.urlsplit(domain).netloc.split(':')[0]
+            except Exception:
+                pass
+        return {'alias_domain': alias_domain}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

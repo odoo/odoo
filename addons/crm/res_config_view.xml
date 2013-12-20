@@ -26,8 +26,16 @@
                     <group>
                         <label for="id" string="Manage Sales Teams"/>
                         <div>
+                        <div>
                             <field name="group_multi_salesteams" class="oe_inline"/>
                             <label for="group_multi_salesteams"/>
+                        </div>
+                        <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <label string="Default Lead email address"/>
+                            <field name="alias_prefix" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
+                            @
+                            <field name="alias_domain" class="oe_inline" readonly="1"/>
+                        </div>
                         </div>
                     </group>
 	            </div>

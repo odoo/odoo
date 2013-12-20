@@ -965,6 +965,11 @@ class crm_lead(format_address, osv.osv):
         default['stage_id'] = self._get_default_stage_id(cr, uid, local_context)
         return super(crm_lead, self).copy(cr, uid, id, default, context=context)
 
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_model'] = 'crm.case.section'
+        context['empty_list_help_id'] = context.get('default_section_id', None)
+        return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
+
     # ----------------------------------------
     # Mail Gateway
     # ----------------------------------------
