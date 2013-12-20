@@ -189,8 +189,6 @@ class google_calendar(osv.osv):
     def update_from_google(self, cr, uid, event, single_event_dict, type, context):
         if context is None:
             context= []
-        context_UFG = context.copy()
-        context_UFG['UpdateFromGoogle'] = True
         
         crm_meeting = self.pool['crm.meeting']
         res_partner_obj = self.pool['res.partner']
@@ -253,7 +251,7 @@ class google_calendar(osv.osv):
             'description': single_event_dict.get('description',False),
             'location':single_event_dict.get('location',False),
             'class':single_event_dict.get('visibility','public'),
-            'oe_update_date':update_date,
+            'oe_update_date':update_date, #event['GG_event']['update']
 #            'google_internal_event_id': single_event_dict.get('id',False),
         })
         
@@ -359,6 +357,9 @@ class google_calendar(osv.osv):
         }
     
     def update_events(self, cr, uid, context):
+        if context is None:
+            context = {}
+                            
         crm_meeting = self.pool['crm.meeting']
         user_obj = self.pool['res.users']
         att_obj = self.pool['calendar.attendee']
@@ -474,10 +475,14 @@ class google_calendar(osv.osv):
                         event['td_comment'] = "Both are already deleted"  
                 # New in openERP...  Create on create_events of synchronize function
                 elif event['OE_found'] and not event['GG_found']:
-                    #Has been deleted form gmail
-                    event['td_source'] = 'OE'
-                    event['td_action'] = 'DELETE'
-                    event['td_comment'] = 'Removed from GOOGLE ?'        
+                    #Has been deleted from gmail
+                    if event['OE_status']:
+                        event['td_source'] = 'OE'
+                        event['td_action'] = 'DELETE'
+                        event['td_comment'] = 'Removed from GOOGLE ?'
+                    else:
+                        event['td_action'] = "None"  
+                        event['td_comment'] = "Already Deleted in gmail and unlinked in OpenERP"  
                 elif event['GG_found'] and not event['OE_found']:
                     event['td_source'] = 'GG'
                     if not event['GG_status'] and not event['GG_isInstance']:
@@ -538,13 +543,15 @@ class google_calendar(osv.osv):
                     if actToDo == 'None':
                         continue
                     elif actToDo == 'CREATE':
+                        context_tmp = context.copy()
+                        context_tmp['NewMeeting'] = True
                         if actSrc == 'GG':
-                            res = self.update_from_google(cr, uid, False, event['GG_event'], "create", context)
+                            res = self.update_from_google(cr, uid, False, event['GG_event'], "create", context=context_tmp)
                             event['OE_event_id'] = res
                             meeting = crm_meeting.browse(cr,uid,res,context=context)
                             attendee_record_id = att_obj.search(cr, uid, [('partner_id','=', myPartnerID), ('event_id','=',res)], context=context)
-                            self.pool.get('calendar.attendee').write(cr,uid,attendee_record_id, {'oe_synchro_date':meeting.oe_update_date,'google_internal_event_id': event['GG_event']['id']},context)
-                            
+                            self.pool.get('calendar.attendee').write(cr,uid,attendee_record_id, {'oe_synchro_date':meeting.oe_update_date,'google_internal_event_id': event['GG_event']['id']},context=context_tmp)
+                            #==> should be = event['GG_event']['updated']
                         elif  actSrc == 'OE':
                             raise "Should be never here, creation for OE is done before update !"
                         #Add to batch
@@ -699,10 +706,19 @@ class res_users(osv.osv):
 
 class crm_meeting(osv.osv):
     _inherit = "crm.meeting"
-    
+#     
+#     def create(self, cr, uid, vals, context=None):
+#         if context is None:
+#             context = {}
+#         context_tmp = context.copy()
+#         context_tmp['NewMeeting'] = True
+#         return super(crm_meeting, self).create(cr, uid, vals, context=context_tmp)
+        
     def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context= {}
         sync_fields = set(['name', 'description', 'date', 'date_closed', 'date_deadline', 'attendee_ids', 'location', 'class'])
-        if (set(vals.keys()) & sync_fields) and 'oe_update_date' not in vals.keys():
+        if (set(vals.keys()) & sync_fields) and 'oe_update_date' not in vals.keys() and 'NewMeeting' not in context:
             vals['oe_update_date'] = datetime.now()
         
         return super(crm_meeting, self).write(cr, uid, ids, vals, context=context)
@@ -731,7 +747,7 @@ class calendar_attendee(osv.osv):
         'oe_synchro_date': fields.datetime('OpenERP Synchro Date'),
     }
     
-    #_sql_constraints = [('google_id_uniq','unique(google_internal_event_id)', 'Google ID must be unique!')]
+    _sql_constraints = [('google_id_uniq','unique(google_internal_event_id,partner_id,event_id)', 'Google ID should be unique!')]
     
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
@@ -741,7 +757,7 @@ class calendar_attendee(osv.osv):
             ref = vals.get('event_id',self.browse(cr,uid,id,context=context).event_id.id)
             
             #No update the date when attendee come from update_from_google
-            if not context.get('curr_attendee', False):
+            if not context.get('curr_attendee', False) and not context.get('NewMeeting', False):
                 self.pool.get('crm.meeting').write(cr, uid, ref, {'oe_update_date':datetime.now()},context)
             
         return super(calendar_attendee, self).write(cr, uid, ids, vals, context=context)

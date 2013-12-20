@@ -1593,7 +1593,6 @@ class crm_meeting(osv.Model):
             vals['end_date'] = self._get_recurrency_end_date(vals, context=context)
         
         res = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        
         self.create_attendees(cr, uid, [res], context=context)
         return res
 
