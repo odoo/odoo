@@ -197,12 +197,6 @@ class procurement_order(osv.osv):
             'date_expected': newdate,
             'propagate': procurement.rule_id.propagate,
         }
-        #look if the procurement was in exception (because all its moves were cancelled) and cancel the previously made attempt to avoid duplicates
-        cancelled_moves = [m.id for m in procurement.move_ids if m.state == 'cancel']
-        if cancelled_moves:
-            previous_attempt = self.search(cr, uid, [('move_dest_id', 'in', cancelled_moves)], context=context)
-            if previous_attempt:
-                self.cancel(cr, uid, previous_attempt, context=context)
         return vals
 
     def _run(self, cr, uid, procurement, context=None):
