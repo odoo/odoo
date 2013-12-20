@@ -2343,7 +2343,10 @@ instance.web.Legend = instance.web.Widget.extend({
         var self = this;
         self.record_id = record_id;
         var content = QWeb.render("Legend."+ self.parent.name, data);
-        this.parent.$el.html(content);
+        if (data.view_mode === 'form')
+            this.parent.$el.html(content);
+        else
+            this.parent.$el = $(content);
         if (!this.parent.get("effective_readonly")){
             this.parent.$el.find('.oe_legend').click(self.do_action.bind(self));
         }
@@ -2374,6 +2377,7 @@ instance.web.form.Legend = instance.web.form.FieldChar.extend({
         self.legend.render_value(this.view.datarecord.id, {
             'widget': self, 
             'legend_value': legend_value,
+            'view_mode':'form'
             });
     },
 });
