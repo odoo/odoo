@@ -2683,6 +2683,10 @@ class stock_warehouse(osv.osv):
         if available_colors:
             color = available_colors[0]
 
+        #order the picking types with a sequence allowing to have the following suit for each warehouse: reception, internal, pick, pack, ship. 
+        max_sequence = self.pool.get('stock.picking.type').search_read(cr, uid, [], ['sequence'], order='sequence desc')
+        max_sequence = max_sequence and max_sequence[0]['sequence'] or 0
+
         in_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receptions'),
             'warehouse_id': new_id,
@@ -2691,6 +2695,7 @@ class stock_warehouse(osv.osv):
             'sequence_id': in_seq_id,
             'default_location_src_id': supplier_loc.id,
             'default_location_dest_id': input_loc.id,
+            'sequence': max_sequence + 1,
             'color': color}, context=context)
         out_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Delivery Orders'),
@@ -2699,6 +2704,7 @@ class stock_warehouse(osv.osv):
             'sequence_id': out_seq_id,
             'default_location_src_id': output_loc.id,
             'default_location_dest_id': customer_loc.id,
+            'sequence': max_sequence + 4,
             'color': color}, context=context)
         int_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Internal Transfers'),
@@ -2708,6 +2714,7 @@ class stock_warehouse(osv.osv):
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_stock_loc.id,
             'active': True,
+            'sequence': max_sequence + 2,
             'color': color}, context=context)
         pack_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Pack'),
@@ -2717,6 +2724,7 @@ class stock_warehouse(osv.osv):
             'default_location_src_id': wh_pack_stock_loc.id,
             'default_location_dest_id': output_loc.id,
             'active': delivery_steps == 'pick_pack_ship',
+            'sequence': max_sequence + 3,
             'color': color}, context=context)
         pick_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Pick'),
@@ -2726,6 +2734,7 @@ class stock_warehouse(osv.osv):
             'default_location_src_id': wh_stock_loc.id,
             'default_location_dest_id': wh_pack_stock_loc.id,
             'active': delivery_steps != 'ship_only',
+            'sequence': max_sequence + 2,
             'color': color}, context=context)
 
         #write picking types on WH
@@ -3452,6 +3461,7 @@ class stock_warehouse_orderpoint(osv.osv):
 class stock_picking_type(osv.osv):
     _name = "stock.picking.type"
     _description = "The picking type determines the picking view"
+    _order = 'sequence'
 
     def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
         """ Generic method to generate data for bar chart values using SparklineBarWidget.
@@ -3601,6 +3611,7 @@ class stock_picking_type(osv.osv):
         'complete_name': fields.function(_get_name, type='char', string='Name'),
         'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in source location.'),
         'color': fields.integer('Color'),
+        'sequence': fields.integer('Sequence', help="Used to order the 'All Operations' kanban view"),
         'sequence_id': fields.many2one('ir.sequence', 'Reference Sequence', required=True),
         'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
