@@ -258,16 +258,6 @@ class hr_applicant(osv.Model):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
-    
-    def _get_mail_template(self, cr, uid, ids, template, context):
-        mail_obj = self.pool.get('mail.mail')
-        assert template._name == 'email.template'
-        for applications in self.browse(cr, uid, ids, context):
-            if applications.email_from:
-                mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, applications.id, True, context=context)
-                mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
-                if mail_state and mail_state['state'] == 'exception':
-                    raise self.pool.get('res.config.settings').get_config_warning(cr, _("Cannot send email: no outgoing email server configured.\nYou can configure it under %(menu:base_setup.menu_general_configuration)s."), context)
 
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         if job_id:
@@ -406,20 +396,45 @@ class hr_applicant(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        res = True
+
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
-            stage_obj = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals.get('stage_id'), context=context)
-            if stage_obj and stage_obj.template_id:
-                self._get_mail_template(cr, uid, ids, stage_obj.template_id, context)
             for applicant in self.browse(cr, uid, ids, context=None):
                 vals['last_stage_id'] = applicant.stage_id.id
                 res = super(hr_applicant, self).write(cr, uid, [applicant.id], vals, context=context)
-            return res
-        return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+        else:
+            res = super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+
+        # post processing: if stage changed, post a message in the chatter
+        if vals.get('stage_id'):
+            stage = self.pool['hr.recruitment.stage'].browse(cr, uid, vals['stage_id'], context=context)
+            if stage.template_id:
+                # TDENOTE: probably factorize me in a message_post_with_template generic method FIXME
+                compose_ctx = dict(context,
+                                   active_ids=ids)
+                compose_id = self.pool['mail.compose.message'].create(
+                    cr, uid, {
+                        'model': self._name,
+                        'composition_mode': 'mass_mail',
+                        'template_id': stage.template_id.id,
+                        'same_thread': True,
+                        'post': True,
+                        'notify': True,
+                    }, context=compose_ctx)
+                self.pool['mail.compose.message'].write(
+                    cr, uid, [compose_id],
+                    self.pool['mail.compose.message'].onchange_template_id(
+                        cr, uid, [compose_id],
+                        stage.template_id.id, 'mass_mail', self._name, False,
+                        context=compose_ctx)['value'],
+                    context=compose_ctx)
+                self.pool['mail.compose.message'].send_mail(cr, uid, [compose_id], context=compose_ctx)
+        return res
 
     def create_employee_from_applicant(self, cr, uid, ids, context=None):
         """ Create an hr.employee from the hr.applicants """
