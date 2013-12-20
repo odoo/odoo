@@ -97,7 +97,7 @@
             </div>
         </template>
         <template id="chatter">
-            <div id="chat" class="panel panel-default panel-chatter">
+            <div id="chat" class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <i class="fa fa-comment fa-flip-horizontal"></i> Recent Comments
@@ -134,6 +134,11 @@
         </template>
         <template id="so_quotation" name="Product Quotation">
             <t t-call="website.layout">
+                <t t-set="head">
+                    <link rel='stylesheet' href='/website_sale_quote/static/src/css/sale_quote.css'/>
+                    <script type="text/javascript" src="/website_sale_quote/static/src/js/sale_quote.js"></script>
+                    <t t-raw="head or ''"/>
+                </t>
                 <div class="col-xs-12 col-md-8 tab-content">
                     <t t-call="website_sale_quote.quote_status"/>
                     <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
