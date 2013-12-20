@@ -237,7 +237,10 @@ class procurement_order(osv.osv):
             :param procurement: browse record
             :rtype: boolean
         '''
-        if procurement.product_id.type != 'service':
+        #if the procurement already has a rule assigned, we keep it (it has a higher priority as it may have been chosen manually)
+        if procurement.rule_id:
+            return True
+        elif procurement.product_id.type != 'service':
             rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
             if rule_id:
                 self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
