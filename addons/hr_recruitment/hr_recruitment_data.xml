@@ -22,7 +22,7 @@
         <field name="name">Application refused</field>
         <field name="subject">Application refused</field>
         <field name="email_to">${object.email_from}</field>
-        <field name="partner_id">${object.partner_id and object.partner_id.id or ''}</field>
+        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
         <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="0"/>
@@ -40,7 +40,7 @@
         <field name="name">Application approved</field>
         <field name="subject">Application approved</field>
         <field name="email_to">${object.email_from}</field>
-        <field name="partner_id">${object.partner_id and object.partner_id.id or ''}</field>
+        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
         <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="0"/>
