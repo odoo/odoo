@@ -144,16 +144,18 @@ class google_service(osv.osv_memory):
         
     def _do_request(self,cr,uid,uri,params={},headers={},type='POST', context=None):
         res = False
-        
-#         print "#########################################"
-#         print "###  URI : %s ###" % (uri)
-#         print "###  HEADERS : %s ###" % (headers)
-#         print "###  METHOD : %s ###" % (type)
-#         if type=='GET':
-#             print "###  PARAMS : %s ###" % urllib.urlencode(params)
-#         else:
-#             print "###  PARAMS : %s ###" % (params)        
-#         print "#########################################"
+        ######################
+        ###    FOR DEBUG   ###
+        ######################
+        #  print "#########################################"
+        #  print "###  URI : %s ###" % (uri)
+        #  print "###  HEADERS : %s ###" % (headers)
+        #  print "###  METHOD : %s ###" % (type)
+        #  if type=='GET':
+        #      print "###  PARAMS : %s ###" % urllib.urlencode(params)
+        #  else:
+        #      print "###  PARAMS : %s ###" % (params)        
+        #  print "#########################################"
         
         try:
             if type.upper() == 'GET' or type.upper() == 'DELETE':

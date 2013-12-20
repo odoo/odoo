@@ -19,14 +19,13 @@ class meeting_invitation(http.Controller):
             if not attendee_id:
                 # if token is not match
                 error_message = """Invalid Invitation Token."""
-            elif request.session.uid and request.session.login != 'anonymous':
-                # if valid session but user is not match
-                attendee = attendee_pool.browse(cr, openerp.SUPERUSER_ID, attendee_id[0])
-                user = registry.get('res.users').browse(cr, openerp.SUPERUSER_ID, request.session.uid)
-                if attendee.partner_id.user_id.id != user.id:
-                    #error_message  = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
-                    #error_message =  "attendee.partner_id.user_id.id != user.id: ", attendee.partner_id.user_id.id ," VS ", user.id
-                    print "ErRRRRRRRRRROOOOOOOrrrrrr"
+#             elif request.session.uid and request.session.login != 'anonymous':
+#                 # if valid session but user is not match
+#                 attendee = attendee_pool.browse(cr, openerp.SUPERUSER_ID, attendee_id[0])
+#                 user = registry.get('res.users').browse(cr, openerp.SUPERUSER_ID, request.session.uid)
+#                 if attendee.partner_id.user_id.id != user.id:
+#                     error_message  = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
+
         if error_message:
             raise BadRequest(error_message)
         return True
@@ -74,7 +73,8 @@ class meeting_invitation(http.Controller):
             'modules': simplejson.dumps(webmain.module_boot(db)),
             'init': "s.calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)),
         }
-        
+    
+    # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
     @http.route('/calendar/NextNotify', type='json', auth="none")
     def NextNotify(self, type=''):
         registry = openerp.modules.registry.RegistryManager.get(request.session.db)

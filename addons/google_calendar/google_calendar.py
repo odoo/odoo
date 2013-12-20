@@ -164,9 +164,7 @@ class google_calendar(osv.osv):
         data['access_token'] = self.get_token(cr,uid,context) 
         
         response = gs_pool._do_request(cr, uid, url, data, headers, type='GET', context=context)
-        
         #TO_CHECK : , if http fail, no event, do DELETE ?
-                
         return response
         
     def update_recurrent_event_exclu(self, cr, uid,instance_id,event_ori_google_id,event_new, context=None):
@@ -371,7 +369,7 @@ class google_calendar(osv.osv):
         all_new_event_from_google = all_event_from_google.copy()
         
         # Select all events from OpenERP which have been already synchronized in gmail
-        #events_ids = crm_meeting.search(cr, uid,[('partner_ids', 'in', myPartnerID),('google_internal_event_id', '!=', False),('oe_update_date','!=', False)],order='google_internal_event_id',context=context_novirtual)
+        # events_ids = crm_meeting.search(cr, uid,[('partner_ids', 'in', myPartnerID),('google_internal_event_id', '!=', False),('oe_update_date','!=', False)],order='google_internal_event_id',context=context_novirtual)
         my_att_ids = att_obj.search(cr, uid,[('partner_id', '=', myPartnerID),('google_internal_event_id', '!=', False)], context=context_novirtual)
         event_to_synchronize = {}
         for att in att_obj.browse(cr,uid,my_att_ids,context=context):
@@ -508,25 +506,22 @@ class google_calendar(osv.osv):
             event_to_synchronize[base_event] = sorted(event_to_synchronize[base_event].iteritems(),key=operator.itemgetter(0))
             for current_event in event_to_synchronize[base_event]:
                 cr.commit()
-                event = current_event[1]
-                
-               
-                
+                event = current_event[1] 
                 #############
                 ### DEBUG ###   
                 ############# 
-                if event['td_action'] and event['td_action'] != 'None':               
-                    print "  Real Event  %s (%s)" %  (current_event[0],event['OE_event_id'])
-                    print "    Found       OE:%5s vs GG: %5s" % (event['OE_found'],event['GG_found'])
-                    print "    Recurrence  OE:%5s vs GG: %5s" % (event['OE_isRecurrence'],event['GG_isRecurrence'])
-                    print "    Instance    OE:%5s vs GG: %5s" % (event['OE_isInstance'],event['GG_isInstance'])
-                    print "    Synchro      OE: %10s " % (event['OE_synchro']) 
-                    print "    Update      OE: %10s " % (event['OE_update'])  
-                    print "    Update      GG: %10s " % (event['GG_update'])
-                    print "    Status      OE:%5s vs GG: %5s" % (event['OE_status'],event['GG_status'])
-                    print "    Action     %s" % (event['td_action'])
-                    print "    Source     %s" % (event['td_source'])
-                    print "    comment    %s" % (event['td_comment'])
+#                 if event['td_action'] and event['td_action'] != 'None':               
+#                     print "  Real Event  %s (%s)" %  (current_event[0],event['OE_event_id'])
+#                     print "    Found       OE:%5s vs GG: %5s" % (event['OE_found'],event['GG_found'])
+#                     print "    Recurrence  OE:%5s vs GG: %5s" % (event['OE_isRecurrence'],event['GG_isRecurrence'])
+#                     print "    Instance    OE:%5s vs GG: %5s" % (event['OE_isInstance'],event['GG_isInstance'])
+#                     print "    Synchro      OE: %10s " % (event['OE_synchro']) 
+#                     print "    Update      OE: %10s " % (event['OE_update'])  
+#                     print "    Update      GG: %10s " % (event['GG_update'])
+#                     print "    Status      OE:%5s vs GG: %5s" % (event['OE_status'],event['GG_status'])
+#                     print "    Action     %s" % (event['td_action'])
+#                     print "    Source     %s" % (event['td_source'])
+#                     print "    comment    %s" % (event['td_comment'])
              
          
                 context['curr_attendee'] = event.get('OE_attendee_id',False)
@@ -549,7 +544,7 @@ class google_calendar(osv.osv):
                             self.pool.get('calendar.attendee').write(cr,uid,attendee_record_id, {'oe_synchro_date':meeting.oe_update_date,'google_internal_event_id': event['GG_event']['id']},context=context_tmp)
                         elif  actSrc == 'OE':
                             raise "Should be never here, creation for OE is done before update !"
-                        #Add to batch
+                        #TODO Add to batch
                     elif actToDo == 'UPDATE':
                         if actSrc == 'GG':
                             self.update_from_google(cr, uid, event['OE_event'], event['GG_event'], 'write', context)
@@ -701,21 +696,14 @@ class res_users(osv.osv):
 
 class crm_meeting(osv.osv):
     _inherit = "crm.meeting"
-#     
-#     def create(self, cr, uid, vals, context=None):
-#         if context is None:
-#             context = {}
-#         context_tmp = context.copy()
-#         context_tmp['NewMeeting'] = True
-#         return super(crm_meeting, self).create(cr, uid, vals, context=context_tmp)
-        
+
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context= {}
         sync_fields = set(['name', 'description', 'date', 'date_closed', 'date_deadline', 'attendee_ids', 'location', 'class'])
         if (set(vals.keys()) & sync_fields) and 'oe_update_date' not in vals.keys() and 'NewMeeting' not in context:
             vals['oe_update_date'] = datetime.now()
-        
+
         return super(crm_meeting, self).write(cr, uid, ids, vals, context=context)
     
     def copy(self, cr, uid, id, default=None, context=None):
@@ -733,7 +721,7 @@ class crm_meeting(osv.osv):
         'oe_update_date': fields.datetime('OpenERP Update Date'),
     }
     
-# If attendees are updated, we need to specify that next synchro need an action    
+    
 class calendar_attendee(osv.osv):
     _inherit = 'calendar.attendee'
     
@@ -751,7 +739,8 @@ class calendar_attendee(osv.osv):
         for id in ids:
             ref = vals.get('event_id',self.browse(cr,uid,id,context=context).event_id.id)
             
-            #No update the date when attendee come from update_from_google
+            # If attendees are updated, we need to specify that next synchro need an action
+            # Except if come from an update_from_google
             if not context.get('curr_attendee', False) and not context.get('NewMeeting', False):
                 self.pool.get('crm.meeting').write(cr, uid, ref, {'oe_update_date':datetime.now()},context)
             
