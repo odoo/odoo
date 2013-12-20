@@ -50,26 +50,43 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     view_loading: function (fields_view_get) {
         var self = this,
-            measure = null;
+            arch = fields_view_get.arch,
+            measure = null,
+            stacked = false;
 
-        if (fields_view_get.arch.attrs.type === 'bar') {
+        if (arch.attrs.type === 'bar' || !_.has(arch.attrs, 'type')) {
             this.graph_widget.mode = 'bar_chart';
         }
+        if (arch.attrs.stacked === "True") {
+            stacked = true;
+        }
 
-        _.each(fields_view_get.arch.children, function (field) {
-            if ('name' in field.attrs) {
+        _.each(arch.children, function (field) {
+            if (_.has(field.attrs, 'type')) {
+                switch (field.attrs.type) {
+                    case "row":
+                        self.default_row_groupby.push(field.attrs.name);
+                        break;
+                    case "col":
+                        self.default_col_groupby.push(field.attrs.name);
+                        break;
+                    case "measure":
+                        measure = field.attrs.name;
+                        break;
+                }
+            } else {  // old style, kept for backward compatibility
                 if ('operator' in field.attrs) {
                     measure = field.attrs.name;
                 } else {
-                    if (measure) {
-                        self.default_col_groupby.push(field.attrs.name);
-                    } else {
-                        self.default_row_groupby.push(field.attrs.name);
-                    }
+                    self.default_row_groupby.push(field.attrs.name);
                 }
             }
         });
-        this.graph_widget.pivot.config({measure:measure, update:false});
+        this.graph_widget.config({
+            measure:measure, 
+            update:false,
+            bar_ui: (stacked) ? 'stack' : 'group'
+        });
     },
 
     do_search: function (domain, context, group_by) {
@@ -249,7 +266,6 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     },
 
     display_data: function () {
-        var pivot = this.pivot;
         this.$('.graph_main_content svg').remove();
         this.table.empty();
 
@@ -258,7 +274,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         } else {
             this.$('.graph_header').css('display', 'none');
         }
-        if (pivot.no_data) {
+        if (this.pivot.no_data) {
             var msg = 'No data available. Try to remove any filter or add some data.';
             this.table.append($('<tr><td>' + msg + '</td></tr>'));
         } else {
@@ -555,7 +571,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 .tooltips(false)
                 .width(self.width)
                 .height(self.height)
-                .stacked(self.bar_ui === 'stacked')
+                .stacked(self.bar_ui === 'stack')
                 .staggerLabels(true);
 
             d3.select(self.svg)
