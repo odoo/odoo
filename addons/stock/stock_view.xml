@@ -1869,7 +1869,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 
-                <xpath expr="//group[@name='general']" position="after" >
+                <xpath expr="//group[@name='procurement_uom']" position="after" >
                    <newline/>
                    <group string="Supply Chain Information" attrs="{'invisible': [('type', '=', 'service')]}">
                        <field name="route_ids" widget="many2many_checkboxes"/>

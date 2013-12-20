@@ -543,7 +543,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                 <xpath expr="//group[@name='procurement_uom']" position="before">
+                 <xpath expr="//group[@name='procurement_uom']" position="after">
                     <group name="delay" string="Delays" attrs="{'invisible':[('type','=','service')]}">
                         <label for="produce_delay" />
                         <div attrs="{'invisible':[('type','=','service')]}">
