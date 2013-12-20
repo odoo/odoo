@@ -2344,17 +2344,18 @@ instance.web.form.Legend = instance.web.form.FieldChar.extend({
             'widget': self, 
             'legend_value': legend_value,
             });
-        self.$el.html(content);
-        self.$el.find("li").click(self.execute_action.bind(self));
+        this.$el.html(content);
+        this.$el.find('li').click(self.execute_action.bind(self));
     },
     execute_action: function(e){
-        e.preventDefault();
         var self = this;
-        $this = $(e.target)
-        var value = $this.data('value') || $this.parent().data('value');
-        return this.view.dataset.call_button(self.options.action, [this.view.datarecord.id, value, this.view.dataset.get_context()]).done(function(r) {
-            self.view.reload();
-        });
+        var li = $(e.target).closest( "li" );
+        if (li.length){
+            var value = li.data('value');
+            return this.view.dataset.call_button(self.options.action, [this.view.datarecord.id, value, this.view.dataset.get_context()]).done(function(r) {
+                self.view.reload();
+            });
+        }
     }
 });
 instance.web.form.FieldID = instance.web.form.FieldChar.extend({

@@ -1230,7 +1230,39 @@ instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanb
     },
 });
 
+instance.web_kanban.Legend = instance.web_kanban.AbstractField.extend({
+    init: function(parent, field, $node) {
+        this._super.apply(this, arguments);
+        this.parent = parent;
+        this.name = $node.attr('name')
+    },
+    renderElement: function() {
+        var self = this;
+        var legend_field = this.options.legend_field;
+        var legend_field_value = this.parent.record[legend_field].raw_value 
+        var content = QWeb.render("Legend." + self.name, {
+            'widget': self, 
+            'legend_value':  legend_field_value,
+            });
+        this.$el.html(content);
+        this.$el.click(self.execute_action.bind(self));
+    },
+    execute_action: function(e){
+        e.preventDefault();
+        var li = $(e.target).closest( "li" );
+        if (li.length){
+            var parent = this.parent
+            var value = li.data('value');
+            return parent.view.dataset.call_button(this.options.action, [parent.id, value, parent.view.dataset.get_context()]).done(function(r) {
+                parent.do_reload();
+            });
+        }
+    } 
+});
+
+
 instance.web_kanban.fields_registry = new instance.web.Registry({});
+instance.web_kanban.fields_registry.add('legend','instance.web_kanban.Legend');
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

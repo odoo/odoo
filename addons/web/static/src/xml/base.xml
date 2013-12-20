@@ -1043,7 +1043,7 @@
     <ul class="dropdown-menu with-arrow">
         <t t-foreach="widget.get('value')" t-as="rec">
             <t t-if="legend_value !== rec.name">
-                <li><a  t-att-data-value="rec.name" href="#"><t t-raw="rec.body" /><t t-raw="rec.legend_name" /></a></li>
+                <li t-att-data-value="rec.name"><a href="#"><t t-raw="rec.body" /><t t-raw="rec.legend_name" /></a></li>
             </t>
         </t>
     </ul>
@@ -1053,12 +1053,12 @@
     <ul style="list-style: none; padding-left: 5px;">
     <t t-foreach="widget.get('value')" t-as="test" >
         <t t-if="legend_value gte test.name and !test_first">
-            <li class="oe_left"><a  t-att-data-value="test.name - 1" href="#"><t t-raw="test.body"/></a></li>
+            <li  t-att-data-value="test.name - 1"  class="oe_left"><a href="#"><t t-raw="test.body"/></a></li>
         </t>
     </t>
     <t t-foreach="widget.get('value')" t-as="test" >
         <t t-if="legend_value lt test.name">
-            <li class="oe_left"><a  t-att-data-value="test.name" href="#"><t t-raw="widget.get('value')[0].body"/></a></li>
+            <li  t-att-data-value="test.name" class="oe_left"><a  href="#"><t t-raw="widget.get('value')[0].body"/></a></li>
         </t>
     </t>
     </ul>
