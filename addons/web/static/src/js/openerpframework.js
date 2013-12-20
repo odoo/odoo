@@ -1155,7 +1155,7 @@ openerp.Model = openerp.Class.extend({
             kwargs = args;
             args = [];
         }
-        var call_kw = _.str.sprintf('/web/dataset/call_kw/%s/%s', this.name, method);
+        var call_kw = '/web/dataset/call_kw/' + this.name + '/' + method;
         return this.session().rpc(call_kw, {
             model: this.name,
             method: method,
