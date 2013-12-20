@@ -21,6 +21,7 @@
 
 import base64
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.tools import mute_logger
 
 
 class test_message_compose(TestMailBase):
@@ -199,3 +200,39 @@ class test_message_compose(TestMailBase):
         # Generate messsage with default email and partner on template
         mail_value = mail_compose.generate_email_for_composer(cr, uid, email_template_id, uid)
         self.assertEqual(set(mail_value['partner_ids']), set(send_to), 'mail.message partner_ids list created by template is incorrect')
+
+    @mute_logger('openerp.osv.orm', 'openerp.osv.orm')
+    def test_10_email_templating(self):
+        """ Tests designed for the mail.compose.message wizard updated by email_template. """
+        cr, uid, context = self.cr, self.uid, {}
+
+        # create the email.template on mail.group model
+        group_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'mail.group')])[0]
+        email_template = self.registry('email.template')
+        email_template_id = email_template.create(cr, uid, {
+            'model_id': group_model_id,
+            'name': 'Pigs Template',
+            'email_from': 'Raoul Grosbedon <raoul@example.com>',
+            'subject': '${object.name}',
+            'body_html': '${object.description}',
+            'user_signature': True,
+            'email_to': 'b@b.b c@c.c',
+            'email_cc': 'd@d.d',
+            'email_recipients': '${user.partner_id.id},%s,%s,-1' % (self.user_raoul.partner_id.id, self.user_bert.partner_id.id)
+        })
+
+        # not force send: email_recipients is not taken into account
+        msg_id = email_template.send_mail(cr, uid, email_template_id, self.group_pigs_id, context=context)
+        mail = self.mail_mail.browse(cr, uid, msg_id, context=context)
+        self.assertEqual(mail.subject, 'Pigs', 'email_template: send_mail: wrong subject')
+        self.assertEqual(mail.email_to, 'b@b.b c@c.c', 'email_template: send_mail: wrong email_to')
+        self.assertEqual(mail.email_cc, 'd@d.d', 'email_template: send_mail: wrong email_cc')
+
+        # force send: take email_recipients into account
+        email_template.send_mail(cr, uid, email_template_id, self.group_pigs_id, force_send=True, context=context)
+        sent_emails = self._build_email_kwargs_list
+        email_to_lst = ['"Followers of Pigs" <admin@example.com>', '"Followers of Pigs" <raoul@raoul.fr>', '"Followers of Pigs" <bert@bert.fr>']
+        self.assertEqual(len(sent_emails), 3, 'email_template: send_mail: 3 valid email recipients -> should send 3 emails')
+        for email in sent_emails:
+            self.assertEqual(len(email['email_to']), 1, 'email_template: send_mail: email_recipient should send email to one recipient at a time')
+            self.assertIn(email['email_to'][0], email_to_lst, 'email_template: send_mail: wrong email_recipients')

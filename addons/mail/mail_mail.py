@@ -282,7 +282,9 @@ class mail_mail(osv.Model):
                 # specific behavior to customize the send email for notified partners
                 email_list = []
                 if recipient_ids:
-                    for partner in self.pool.get('res.partner').browse(cr, SUPERUSER_ID, recipient_ids, context=context):
+                    partner_obj = self.pool.get('res.partner')
+                    existing_recipient_ids = partner_obj.exists(cr, SUPERUSER_ID, recipient_ids, context=context)
+                    for partner in partner_obj.browse(cr, SUPERUSER_ID, existing_recipient_ids, context=context):
                         email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
                 else:
                     email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))
