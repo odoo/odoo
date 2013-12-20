@@ -67,7 +67,7 @@ $(document).ready(function () {
                 console.log(json_data);
                 _.each(json_data, function(value, key){
                     the_form.find(".form-control[name=" + key + "]").val(value);
-                    the_form.find("input[type='radio'][name=" + key + "]").val([value]);
+                    the_form.find("input[name=" + key + "]").val([value]);
                 });
             })
             .fail(function(){

@@ -205,9 +205,12 @@ class WebsiteSurvey(http.Controller):
                     answer_value = answer.value_number.__str__()
                 elif answer.answer_type == 'date':
                     answer_value = answer.value_date
-                elif answer.answer_type == 'suggestion':
+                elif answer.answer_type == 'suggestion' and not answer.value_suggested_row:
                     answer_value = answer.value_suggested.id
-                # TODO mettre les QCM ici
+                elif answer.answer_type == 'suggestion' and answer.value_suggested_row:
+                    answer_tag = "%s_%s_%s" % (answer_tag, answer.value_suggested_row.id, answer.value_suggested.id)
+                    answer_value = answer.value_suggested.id
+                    # TODO vérifier QCM et matrices
                 if answer_value:
                     ret.update({answer_tag: answer_value})
                 else:
@@ -274,11 +277,21 @@ class WebsiteSurvey(http.Controller):
         return json.dumps(ret)
 
     # Printing routes
-    @website.route(['/survey/print/<model("survey.survey"):survey>/'],
+    @website.route(['/survey/print/<model("survey.survey"):survey>/',
+                    '/survey/print/<model("survey.survey"):survey>/<string:token>/'],
                    type='http', auth='user', multilang=True)
-    def print_empty_survey(self, survey=None, **post):
-        '''Display an empty survey in printable view'''
+    def print_survey(self, survey, token=None, **post):
+        '''Display an survey in printable view; if <token> is set, it will
+        grab the answers of the user_input_id that has <token>.'''
         return request.website.render('survey.survey_print',
                                       {'survey': survey, 'page_nr': 0})
+
+
+def dict_soft_update(dictionary, key, value):
+    ''' Insert the pair <key>: <value> into the <dictionary> '''
+    if key in dictionary:
+        dictionary[key].append(value)
+    else:
+        dictionary.update({key: [value]})
 
 # vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:

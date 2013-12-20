@@ -1109,6 +1109,7 @@ class survey_user_input_line(osv.osv):
         ca = dict_keys_startswith(post, answer_tag)
 
         no_answers = True
+        # TODO gérer le cas des matrices monochoix
         for col in question.labels_ids:
             for row in question.labels_ids_2:
                 a_tag = "%s_%s_%s" % (answer_tag, row.id, col.id)
@@ -1129,13 +1130,5 @@ def dict_keys_startswith(dictionary, string):
     .. note::
         This function uses dictionary comprehensions (Python >= 2.7)'''
     return {k: dictionary[k] for k in filter(lambda key: key.startswith(string), dictionary.keys())}
-
-
-def dict_soft_update(dictionary, key, value):
-    ''' Insert the pair <key>: <value> into the <dictionary> '''
-    if key in dictionary:
-        dictionary[key].append(value)
-    else:
-        dictionary.update({key: [value]})
 
 # vim: exp and tab: smartindent: tabstop=4: softtabstop=4: shiftwidth=4:
