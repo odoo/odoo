@@ -238,6 +238,10 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(dialog)")) {
             this.$el.dialog('destroy');
         }
+        //For Remove tooltip from dialog box when destroy
+        //Bad fix, bootstrap mouseleave method call very late
+        //before that this.$el and its contained removed because that tooltip sticks on page.
+        $($.find('.tooltip.fade.in')).remove();
         this._super();
     }
 });
@@ -1287,7 +1291,6 @@ instance.web.Client = instance.web.Widget.extend({
         });
         instance.web.bus.on('click', this, function(ev) {
             $.fn.tooltip('destroy');
-            this.$el.find('.oe_systray').find('div')
             if (!$(ev.target).is('input[type=file]')) {
                 self.$el.find('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
             }
