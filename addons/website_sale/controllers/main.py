@@ -11,13 +11,15 @@ from openerp.addons.website.models import website
 PPG = 20                        # Products Per Page
 PPR = 4                         # Products Per Row
 
+
 class CheckoutInfo(object):
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
     optional_billing_fields = ["company", "state_id"]
     string_billing_fields = ["name", "phone", "email", "street", "city", "zip"]
+
     mandatory_shipping_fields = ["shipping_name", "shipping_phone", "shipping_street", "shipping_city", "shipping_country_id", "shipping_zip"]
-    string_shipping_fields = ["shipping_name", "shipping_phone", "shipping_street", "shipping_city", "shipping_zip"]
     optional_shipping_field = ["shipping_state_id"]
+    string_shipping_fields = ["shipping_name", "shipping_phone", "shipping_street", "shipping_city", "shipping_zip"]
 
     def mandatory_fields(self):
         return self.mandatory_billing_fields + self.mandatory_shipping_fields
@@ -31,11 +33,16 @@ class CheckoutInfo(object):
     def empty(self):
         return dict.fromkeys(self.all_fields(), '')
 
-    def from_partner(self, partner):
-        result = dict((field_name, getattr(partner, field_name)) for field_name in self.string_billing_fields if getattr(partner, field_name))
-        result['state_id'] = partner.state_id and partner.state_id.id or ''
-        result['country_id'] = partner.country_id and partner.country_id.id or ''
-        result['company'] = partner.parent_id and partner.parent_id.name or ''
+    def from_partner(self, partner, address_type='billing'):
+        assert address_type in ('billing', 'shipping')
+        if address_type == 'billing':
+            prefix = ''
+        else:
+            prefix = 'shipping_'
+        result = dict((prefix + field_name, getattr(partner, field_name)) for field_name in self.string_billing_fields if getattr(partner, field_name))
+        result[prefix + 'state_id'] = partner.state_id and partner.state_id.id or ''
+        result[prefix + 'country_id'] = partner.country_id and partner.country_id.id or ''
+        result[prefix + 'company'] = partner.parent_id and partner.parent_id.name or ''
         return result
 
     def from_post(self, post):
@@ -101,17 +108,23 @@ class table_compute(object):
             rows[col] = map(lambda x: x[1], cols)
         return filter(bool, rows)
 
+
 class Ecommerce(http.Controller):
 
     _order = 'website_published desc, website_sequence desc'
 
     def get_attribute_ids(self):
-        attributes_obj = request.registry.get('product.attribute')
+        attributes_obj = request.registry['product.attribute']
         attributes_ids = attributes_obj.search(request.cr, request.uid, [], context=request.context)
         return attributes_obj.browse(request.cr, request.uid, attributes_ids, context=request.context)
 
     def get_pricelist(self):
-        return request.registry.get('website').get_pricelist_id(request.cr, request.uid, None, context=request.context)
+        """ Shortcut to get the pricelist from the website model """
+        return request.registry['website'].ecommerce_get_pricelist_id(request.cr, request.uid, None, context=request.context)
+
+    def get_order(self):
+        """ Shortcut to get the current ecommerce quotation from the website model """
+        return request.registry['website'].ecommerce_get_current_order(request.cr, request.uid, context=request.context)
 
     def get_products(self, product_ids):
         product_obj = request.registry.get('product.template')
@@ -179,7 +192,7 @@ class Ecommerce(http.Controller):
     @website.route(['/shop/pricelist'], type='http', auth="public", multilang=True)
     def shop_promo(self, code, **post):
         assert code, 'No pricelist code provided'
-        request.registry.get('website').change_pricelist_id(request.cr, request.uid, code, context=request.context)
+        request.registry['website']._ecommerce_change_pricelist(request.cr, request.uid, code=code, context=request.context)
         return request.redirect("/shop")
 
     @website.route([
@@ -191,7 +204,7 @@ class Ecommerce(http.Controller):
     def shop(self, category=0, page=0, filters='', search='', **post):
         cr, uid, context = request.cr, request.uid, request.context
         product_obj = request.registry.get('product.template')
-        domain = request.registry.get('website').get_website_sale_domain()
+        domain = request.registry.get('website').ecommerce_get_product_domain()
         if search:
             domain += ['|',
                 ('name', 'ilike', "%%%s%%" % search),
@@ -286,9 +299,9 @@ class Ecommerce(http.Controller):
         order_line_obj = request.registry.get('sale.order.line')
         order_obj = request.registry.get('sale.order')
 
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        order = self.get_order()
         if not order:
-            order = request.registry['website']._get_order(request.cr, request.uid, context=request.context)
+            order = request.registry['website'].ecommerce_get_new_order(request.cr, request.uid, context=request.context)
 
         request.context = dict(request.context, pricelist=self.get_pricelist())
 
@@ -300,8 +313,9 @@ class Ecommerce(http.Controller):
             else:
                 order_line_id = None
         else:
-            order_line_ids = order_line_obj.search(request.cr, SUPERUSER_ID, 
-                [('order_id', '=', order.id),('product_id', '=', product_id)], context=request.context)
+            order_line_ids = order_line_obj.search(
+                request.cr, SUPERUSER_ID,
+                [('order_id', '=', order.id), ('product_id', '=', product_id)], context=request.context)
             if order_line_ids:
                 order_line_id = order_line_ids[0]
 
@@ -349,7 +363,7 @@ class Ecommerce(http.Controller):
         prod_obj = request.registry.get('product.product')
 
         # must have a draft sale order with lines at this point, otherwise reset
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        order = self.get_order()
         if order and order.state != 'draft':
             request.registry['website'].sale_reset_order(cr, uid, context=context)
             return request.redirect('/shop/')
@@ -396,9 +410,9 @@ class Ecommerce(http.Controller):
     @website.route(['/shop/add_cart_json/'], type='json', auth="public")
     def add_cart_json(self, product_id=None, order_line_id=None, remove=None):
         quantity = self.add_product_to_cart(product_id=product_id, order_line_id=order_line_id, number=(remove and -1 or 1))
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        order = self.get_order()
         return [quantity,
-                order.get_total_quantity(),
+                order.get_number_of_products(),
                 order.amount_total,
                 request.website._render("website_sale.total", {'website_sale_order': order})]
 
@@ -411,15 +425,15 @@ class Ecommerce(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         # must have a draft sale order with lines at this point, otherwise reset
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        order = self.get_order()
         if not order or order.state != 'draft' or not order.order_line:
-            request.registry['website'].sale_reset_order(cr, uid, context=context)
+            request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect('/shop/')
         # if transaction pending / done: redirect to confirmation
         tx = context.get('website_sale_transaction')
         if tx and tx.state != 'draft':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
-        
+
         self.get_pricelist()
 
         orm_partner = registry.get('res.partner')
@@ -452,17 +466,11 @@ class Ecommerce(http.Controller):
         if partner:
             partner_info = info.from_partner(partner)
             checkout.update(partner_info)
-            shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], context=context)
+            shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], limit=1, context=context)
             if shipping_ids:
                 values['shipping'] = "true"
                 shipping_partner = orm_partner.browse(cr, SUPERUSER_ID, shipping_ids[0], context)
-                checkout['shipping_name'] = getattr(shipping_partner, 'name')
-                checkout['shipping_phone'] = getattr(shipping_partner, 'phone')
-                checkout['shipping_street'] = getattr(shipping_partner, 'street')
-                checkout['shipping_zip'] = getattr(shipping_partner, 'zip')
-                checkout['shipping_city'] = getattr(shipping_partner, 'city')
-                checkout['shipping_country_id'] = getattr(shipping_partner, 'country_id')
-                checkout['shipping_state_id'] = getattr(shipping_partner, 'state_id')
+                checkout.update(info.from_partner(shipping_partner, address_type='shipping'))
 
         for field_name in info.mandatory_fields():
             if not checkout[field_name]:
@@ -476,9 +484,9 @@ class Ecommerce(http.Controller):
         order_line_obj = request.registry.get('sale.order')
 
         # must have a draft sale order with lines at this point, otherwise redirect to shop
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        order = self.get_order()
         if not order or order.state != 'draft' or not order.order_line:
-            request.registry['website'].sale_reset_order(cr, uid, context=context)
+            request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect('/shop/')
         # if transaction pending / done: redirect to confirmation
         tx = context.get('website_sale_transaction')
@@ -545,8 +553,8 @@ class Ecommerce(http.Controller):
                 'country_id': post['shipping_country_id'],
                 'state_id': post['shipping_state_id'],
             }
-            domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and value and int(value) or False)
-                for key, value in shipping_info.items() if key in info.mandatory_billing_fields + ["type", "parent_id"]]
+            domain = [(key, '_id' in key and '=' or 'ilike', '_id' in key and value and int(value) or value)
+                      for key, value in shipping_info.items() if key in info.mandatory_billing_fields + ["type", "parent_id"]]
 
             shipping_ids = orm_parter.search(cr, SUPERUSER_ID, domain, context=context)
             if shipping_ids:
@@ -582,15 +590,14 @@ class Ecommerce(http.Controller):
         payment_obj = request.registry.get('payment.acquirer')
 
         # if no sale order at this stage: back to checkout beginning
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        order = self.get_order()
         if not order or not order.state == 'draft' or not order.order_line:
-            request.registry['website'].sale_reset_order(cr, uid, context=context)
+            request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect("/shop/")
         # alread a transaction: forward to confirmation
         tx = context.get('website_sale_transaction')
         if tx and not tx.state == 'draft':
-            print 'embetatn'
-            # return request.redirect('/shop/confirmation/%s' % order.id)
+            return request.redirect('/shop/confirmation/%s' % order.id)
 
         partner_id = False
         shipping_partner_id = False
@@ -645,7 +652,7 @@ class Ecommerce(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        order = self.get_order()
 
         if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/shop/checkout/")
@@ -712,7 +719,7 @@ class Ecommerce(http.Controller):
             tx = request.registry['payment.transaction'].browse(cr, uid, transaction_id, context=context)
 
         if sale_order_id is None:
-            order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+            order = self.get_order()
         else:
             order = request.registry['sale.order'].browse(cr, uid, sale_order_id, context=context)
 
@@ -734,7 +741,7 @@ class Ecommerce(http.Controller):
             request.registry['mail.compose.message'].send_mail(cr, uid, [compose_id], context=create_ctx)
 
         # clean context and session, then redirect to the confirmation page
-        request.registry['website'].sale_reset_order(cr, uid, context=context)
+        request.registry['website'].ecommerce_reset(cr, uid, context=context)
 
         return request.redirect('/shop/confirmation/%s' % order.id)
 
