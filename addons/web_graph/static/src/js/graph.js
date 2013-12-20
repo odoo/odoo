@@ -127,7 +127,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
             query = this.search_view.query;
 
         this.groupby_mode = 'manual';
-        if (_.isEqual(this.search_view_groupby, this.graph_widget.pivot.rows.groupby)) {
+        if (_.isEqual(this.search_view_groupby, this.graph_widget.pivot.rows.groupby) ||
+            (!_.has(this.search_view, '_s_groupby'))) {
             return;
         }
         var rows = _.map(this.graph_widget.pivot.rows.groupby, function (group) {
@@ -340,6 +341,9 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 var field = header.root.groupby[header.path.length];
                 this.pivot.expand(id, field);
             } else {
+                if (!this.important_fields.length) {
+                    return;
+                }
                 var fields = _.map(this.important_fields, function (field) {
                         return {id: field, value: self.fields[field].string};
                 });
