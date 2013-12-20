@@ -117,11 +117,10 @@ class google_calendar(osv.osv):
                  'fields': 'items,nextPageToken',
                  'access_token' : token,
                  'maxResults':1000
-#                 'orderBy' : 'id', #Allow to create the main recurrence event, before instance of it ! DOESNT WORK ACTUALLY ON API GMAIL
-                }
+        }
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             
-        url = "/calendar/v3/calendars/%s/events" % 'primary' #?fields=%s&access_token=%s" % ('primary',urllib.quote('items,nextPageToken'), token)
+        url = "/calendar/v3/calendars/%s/events" % 'primary' 
         if nextPageToken:
             params['pageToken'] = nextPageToken
                 
@@ -166,7 +165,7 @@ class google_calendar(osv.osv):
         
         response = gs_pool._do_request(cr, uid, url, data, headers, type='GET', context=context)
         
-        #TODO, il http fail, no event, do DELETE ! ?
+        #TO_CHECK : , if http fail, no event, do DELETE ?
                 
         return response
         
@@ -212,7 +211,7 @@ class google_calendar(osv.osv):
                     continue
                 attendee_id = res_partner_obj.search(cr, uid,[('email', '=', google_attendee['email'])], context=context)
                 if not attendee_id:
-                    attendee_id = [res_partner_obj.create(cr, uid,{'email': google_attendee['email'], 'name': google_attendee.get("displayName",False) or google_attendee['email'] }, context=context)]
+                    attendee_id = [res_partner_obj.create(cr, uid,{'email': google_attendee['email'],'Customer': False, 'name': google_attendee.get("displayName",False) or google_attendee['email'] }, context=context)]
                 attendee = res_partner_obj.read(cr, uid, attendee_id[0], ['email'], context=context)
                 partner_record.append((4, attendee.get('id')))
                 attendee['partner_id'] = attendee.pop('id')                
@@ -251,7 +250,7 @@ class google_calendar(osv.osv):
             'description': single_event_dict.get('description',False),
             'location':single_event_dict.get('location',False),
             'class':single_event_dict.get('visibility','public'),
-            'oe_update_date':update_date, #event['GG_event']['update']
+            'oe_update_date':update_date, 
 #            'google_internal_event_id': single_event_dict.get('id',False),
         })
         
@@ -308,7 +307,6 @@ class google_calendar(osv.osv):
                 update_date = datetime.strptime(response['updated'],"%Y-%m-%dT%H:%M:%S.%fz")
                 crm_meeting.write(cr, uid, att.event_id.id, {'oe_update_date':update_date})
                 att_obj.write(cr, uid, [att.id], {'google_internal_event_id': response['id'], 'oe_synchro_date':update_date})
-                #Check that response OK and return according to that        
                 cr.commit()
         return True
     
@@ -434,10 +432,8 @@ class google_calendar(osv.osv):
                         event['td_source'] = (event['OE_status'] and "OE") or (event['GG_status'] and "GG")
                     #If event is not deleted !     
                     elif event['OE_status'] and event['GG_status']:
-                        if not event['GG_update']:
-                            print "### Should never be here : L462"
-                            raise("error L 462")
-                            
+#                         if not event['GG_update']:
+#                             print "### Should never be here 
                         if event['OE_update'].split('.')[0] != event['GG_update'].split('.')[0]:
                             if event['OE_update'] < event['GG_update']:
                                 event['td_source'] = 'GG'
@@ -551,7 +547,6 @@ class google_calendar(osv.osv):
                             meeting = crm_meeting.browse(cr,uid,res,context=context)
                             attendee_record_id = att_obj.search(cr, uid, [('partner_id','=', myPartnerID), ('event_id','=',res)], context=context)
                             self.pool.get('calendar.attendee').write(cr,uid,attendee_record_id, {'oe_synchro_date':meeting.oe_update_date,'google_internal_event_id': event['GG_event']['id']},context=context_tmp)
-                            #==> should be = event['GG_event']['updated']
                         elif  actSrc == 'OE':
                             raise "Should be never here, creation for OE is done before update !"
                         #Add to batch
@@ -665,7 +660,7 @@ class google_calendar(osv.osv):
         vals['google_%s_token_validity' % self.STR_SERVICE] = datetime.now() + timedelta(seconds=all_token.get('expires_in')) 
         vals['google_%s_token' % self.STR_SERVICE] = all_token.get('access_token')  
     
-        self.pool.get('res.users').write(cr,uid,uid,vals,context=context)
+        self.pool.get('res.users').write(cr,SUPERUSER_ID,uid,vals,context=context)
 
     def need_authorize(self,cr,uid,context=None):
         current_user = self.pool.get('res.users').browse(cr,uid,uid,context=context)        

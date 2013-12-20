@@ -31,7 +31,6 @@ from openerp.osv import osv, fields
 from openerp import tools
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
-from openerp.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -418,9 +417,7 @@ class email_template(osv.osv):
         recipient_ids = []
         if 'partner_to' in values:
             if values['partner_to']:
-                partner_to = safe_eval(values['partner_to'])
-                #  if not hasattr(partner_to, '__iter__'):
-                #      partner_to = [partner_to]
+                partner_to = values['partner_to'].split(',')
                 for partner_id in partner_to:  
                     recipient_ids.append((4,partner_id))
                 values['recipient_ids'] = recipient_ids

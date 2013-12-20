@@ -370,8 +370,12 @@ class hr_holidays(osv.osv):
                     'date': record.date_from,
                     'end_date': record.date_to,
                     'date_deadline': record.date_to,
-                    'state': 'open',            # to block that meeting date in the calendar
-                }
+                    'state': 'open',            # to block that meeting date in the calendar                    
+                }   
+                #Add the partner_id (if exist) as an attendee             
+                if record.user_id and record.user_id.partner_id:
+                    meeting_vals['partner_ids'] = [(4,record.user_id.partner_id.id)]
+                    
                 meeting_id = meeting_obj.create(cr, uid, meeting_vals)
                 self._create_resource_leave(cr, uid, [record], context=context)
                 self.write(cr, uid, ids, {'meeting_id': meeting_id})
