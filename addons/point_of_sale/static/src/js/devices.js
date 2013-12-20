@@ -331,6 +331,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
          *    }
          */
         print_receipt: function(receipt){
+            console.log('PRINT RECEIPT:', receipt);
             return this.message('print_receipt',{receipt: receipt});
         },
 

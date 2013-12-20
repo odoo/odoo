@@ -845,7 +845,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     date: date.getDate(),       // day of the month 
                     day: date.getDay(),         // day of the week 
                     hour: date.getHours(), 
-                    minute: date.getMinutes() 
+                    minute: date.getMinutes() ,
+                    isostring: date.toISOString(),
                 }, 
                 company:{
                     email: company.email,

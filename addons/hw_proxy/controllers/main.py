@@ -5,6 +5,10 @@ import os
 import openerp
 import time
 import random
+import subprocess
+import usb.core
+import escpos 
+import escpos.printer
 
 from openerp import http
 from openerp.http import request
@@ -12,11 +16,18 @@ from openerp.addons.web.controllers.main import manifest_list, module_boot, html
 
 _logger = logging.getLogger(__name__)
 
-class ProxyController(http.Controller):
+class Proxy(http.Controller):
     def __init__(self):
         self.scale = 'closed'
         self.scale_weight = 0.0
         pass
+
+    def connected_usb_devices(self,devices):
+        connected = []
+        for device in devices:
+            if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
+                connected.append(device)
+        return connected
 
     @http.route('/hw_proxy/test_connection', type='json', auth='admin')
     def test_connection(self):
