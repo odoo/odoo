@@ -2673,11 +2673,15 @@ class stock_warehouse(osv.osv):
             output_loc = wh_stock_loc
 
         #choose the next available color for the picking types of this warehouse
-        all_used_colors = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')
-        not_used_colors = list(set(range(0, 9)) - set([x['color'] for x in all_used_colors]))
         color = 0
-        if not_used_colors:
-            color = not_used_colors[0]
+        available_colors = [c%9 for c in range(3, 12)]  # put flashy colors first
+        all_used_colors = self.pool.get('stock.picking.type').search_read(cr, uid, [('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')
+        #don't use sets to preserve the list order
+        for x in all_used_colors:
+            if x['color'] in available_colors:
+                available_colors.remove(x['color'])
+        if available_colors:
+            color = available_colors[0]
 
         in_type_id = picking_type_obj.create(cr, uid, vals={
             'name': _('Receptions'),
