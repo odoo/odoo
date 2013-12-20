@@ -2330,33 +2330,52 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         });
     }
 });
-instance.web.form.Legend = instance.web.form.FieldChar.extend({
-    init: function (field_manager, node) {
-        this._super(field_manager, node);
-        this.options = py.eval(node.attrs.options) 
-        this.legend_field = this.options.legend_field;
+
+instance.web.Legend = instance.web.Widget.extend({
+    init: function (parent, dataset, options) {
+        this._super(parent);
+        this.parent = parent;
+        this.dataset = dataset;
+        this.options = options; 
     },
     
-    render_value: function() {
+    render_value: function(record_id, data) {
         var self = this;
-        var legend_value = this.field_manager.fields[this.legend_field].get_value()
-        var content = QWeb.render("Legend."+ self.name, {
-            'widget': self, 
-            'legend_value': legend_value,
-            });
-        this.$el.html(content);
-        this.$el.find('li').click(self.execute_action.bind(self));
+        self.record_id = record_id;
+        var content = QWeb.render("Legend."+ self.parent.name, data);
+        this.parent.$el.html(content);
+        if (!this.parent.get("effective_readonly")){
+            this.parent.$el.find('.oe_legend').click(self.do_action.bind(self));
+        }
     },
-    execute_action: function(e){
+    do_action: function(e){
         var self = this;
         var li = $(e.target).closest( "li" );
         if (li.length){
             var value = li.data('value');
-            return this.view.dataset.call_button(self.options.action, [this.view.datarecord.id, value, this.view.dataset.get_context()]).done(function(r) {
-                self.view.reload();
-            });
+            return self.dataset.call_button(self.options.action, [self.record_id, value, self.dataset.get_context()]).done(self.parent.reload_record.bind(self.parent));
         }
     }
+});
+
+instance.web.form.Legend = instance.web.form.FieldChar.extend({
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
+        this.legend = new instance.web.Legend(this, this.view.dataset, py.eval(node.attrs.options));
+    },
+    
+    reload_record: function(){
+        this.view.reload();
+    },
+    render_value: function() {
+        var self = this;
+        var legend_field = this.options.legend_field;
+        var legend_value = this.field_manager.fields[legend_field].get_value();
+        self.legend.render_value(this.view.datarecord.id, {
+            'widget': self, 
+            'legend_value': legend_value,
+            });
+    },
 });
 instance.web.form.FieldID = instance.web.form.FieldChar.extend({
     process_modifiers: function () {

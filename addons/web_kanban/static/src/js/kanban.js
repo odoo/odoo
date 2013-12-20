@@ -1233,31 +1233,22 @@ instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanb
 instance.web_kanban.Legend = instance.web_kanban.AbstractField.extend({
     init: function(parent, field, $node) {
         this._super.apply(this, arguments);
-        this.parent = parent;
         this.name = $node.attr('name')
+        this.parent = parent;
+        this.legend = new instance.web.Legend(this, parent.view.dataset, this.options);
+    },
+    reload_record: function(){
+        this.parent.do_reload();
     },
     renderElement: function() {
         var self = this;
         var legend_field = this.options.legend_field;
-        var legend_field_value = this.parent.record[legend_field].raw_value 
-        var content = QWeb.render("Legend." + self.name, {
+        var legend_field_value = this.parent.record[legend_field].raw_value
+        self.legend.render_value(this.parent.id, {
             'widget': self, 
             'legend_value':  legend_field_value,
             });
-        this.$el.html(content);
-        this.$el.click(self.execute_action.bind(self));
     },
-    execute_action: function(e){
-        e.preventDefault();
-        var li = $(e.target).closest( "li" );
-        if (li.length){
-            var parent = this.parent
-            var value = li.data('value');
-            return parent.view.dataset.call_button(this.options.action, [parent.id, value, parent.view.dataset.get_context()]).done(function(r) {
-                parent.do_reload();
-            });
-        }
-    } 
 });
 
 
