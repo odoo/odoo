@@ -172,28 +172,11 @@ class hr_applicant(osv.Model):
                     duration = float(ans.days)
                     res[issue.id][field] = abs(float(duration))
         return res
-    
 
-    def attachment_tree_view(self, cr, uid, ids, context):
-        domain = ['&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', ids)]
-        res_id = ids and ids[0] or False
-        return {
-            'name': _('Attachments'),
-            'domain': domain,
-            'res_model': 'ir.attachment',
-            'type': 'ir.actions.act_window',
-            'view_id': False,
-            'view_mode': 'tree,form',
-            'view_type': 'form',
-            'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
-        }
-
-    def _compute_attachments(self, cr, uid, ids, fields, args, context=None):
-        res = {}
-        attachment_pool = self.pool.get('ir.attachment')
-        for applicant in ids:
-            res[applicant] = attachment_pool.search_count(cr, uid, [('res_model', '=', 'hr.applicant'), ('res_id', '=', applicant)], context=context)
+    def _get_attachment_number(self, cr, uid, ids, fields, args, context=None):
+        res = dict.fromkeys(ids, 0)
+        for app_id in ids:
+            res[app_id] = self.pool['ir.attachment'].search_count(cr, uid, [('res_model', '=', 'hr.applicant'), ('res_id', '=', app_id)], context=context)
         return res
 
     _columns = {
@@ -240,9 +223,8 @@ class hr_applicant(osv.Model):
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', string='Employee', help='Employee linked to the applicant.'),
-        'attachment_number': fields.function(_compute_attachments, string='Number of Attachments', \
-                                 type="integer"),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
+        'attachment_number': fields.function(_get_attachment_number, string='Number of Attachments', type="integer"),
     }
 
     _defaults = {
@@ -260,13 +242,11 @@ class hr_applicant(osv.Model):
     }
 
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
+        department_id = False
         if job_id:
             job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
-            if job_record and job_record.department_id:
-                return {'value': {'department_id': job_record.department_id.id}}
-            else:
-                return {'value': {'department_id': False}}
-        return {}
+            department_id = job_record and job_record.department_id and job_record.department_id.id or False
+        return {'value': {'department_id': department_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
         if not stage_id:
@@ -325,7 +305,7 @@ class hr_applicant(osv.Model):
         category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
         res['context'] = {
-            'default_partner_ids': applicant_ids or False,
+            'default_partner_ids': applicant_ids,
             'default_user_id': uid,
             'default_name': applicant.name,
             'default_categ_ids': category and [category.id] or False,
@@ -350,6 +330,20 @@ class hr_applicant(osv.Model):
         context.update({'survey_id': record.survey.id, 'response_id': [record.response], 'response_no': 0, })
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
+
+    def action_get_attachment_tree_view(self, cr, uid, ids, context):
+        domain = ['&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', ids)]
+        return {
+            'name': _('Attachments'),
+            'domain': domain,
+            'res_model': 'ir.attachment',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'limit': 80,
+            'context': "{'default_res_model': '%s'}" % (self._name)
+        }
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(hr_applicant, self).message_get_suggested_recipients(cr, uid, ids, context=context)

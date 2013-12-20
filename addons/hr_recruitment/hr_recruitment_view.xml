@@ -83,7 +83,7 @@
                     <button name="action_print_survey" type="object"
                         string="Print Interview" help="Print interview report"
                         attrs="{'invisible':[('survey','=',False)]}"/>
-                    <button name="attachment_tree_view" string="Documents" type="object"/>
+                    <button name="action_get_attachment_tree_view" string="Documents" type="object"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -295,10 +295,7 @@
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>
-                                    <a t-if="record.attachment_number.raw_value == 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Document</a> 
-							
-                                    <a t-if="record.attachment_number.raw_value gt 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a> 
-
+                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a> 
                                 </div>
                             
                             </div>
