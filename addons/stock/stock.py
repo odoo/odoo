@@ -1011,6 +1011,7 @@ class stock_picking(osv.osv):
                     qty_on_link = min(move.remaining_qty, qty_to_assign)
                     link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
                     qty_to_assign -= qty_on_link
+                    move.refresh()
                     if qty_to_assign <= 0:
                         break
 
