@@ -27,7 +27,7 @@
    <t t-name="CalendarView.sidebar.responsible">
        <div class="oe_calendar_all_responsibles"> 
             <div t-foreach="filters" class="oe_calendar_responsible" > 
-                <t t-if="filters_value.value&gt;=-1"> <!-- don't display if no it given -->
+                <t t-if="filters_value.value&gt;=-1"> <!-- don't display if no value given (or undefined) -->
                    <input type="checkbox" name="selection" t-att-value="filters_value.value" checked="checked" />
                    <t t-if="filters_value.value == -1">
                        <span><i t-attf-class="fa fa-users fa-fw cal_avatar" ></i></span>
@@ -65,7 +65,6 @@
       <div class="oe_calendar_quick_create_buttons">
         <button class="openerp oe_button oe_highlight oe_calendar_quick_create_add ">Create event</button>
         <button class="oe_button oe_form_button oe_link oe_calendar_quick_create_edit" ><span>Edit Event <![CDATA[]]></span></button>
-        <!--or <a href="#" class="oe_calendar_quick_create_close">Cancel</a>-->
       </div>
     </t>
   </div>

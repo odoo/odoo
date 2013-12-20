@@ -1,5 +1,3 @@
-/*globals: openerp, $, console */
-
 /*---------------------------------------------------------
  * OpenERP web_calendar
  *---------------------------------------------------------*/
@@ -145,6 +143,8 @@ openerp.web_calendar = function(instance) {
                 this.colorIsAttendee = true;
                 
 /*
+            Will be more logic to do it in futur, but see below to stay Retro-compatible
+            
             if (isNull(attrs.avatar_model)) {
                 this.avatar_model = 'res.partner'; 
             }
@@ -513,7 +513,7 @@ openerp.web_calendar = function(instance) {
                         if (value === false)
                             temp_ret[fieldname] = null;
                         else if (value instanceof Array) 
-                            temp_ret[fieldname] = value[1]; // Yipee, no name_get to make
+                            temp_ret[fieldname] = value[1]; // no name_get to make
                         else
                             throw new Error("Incomplete data received from dataset for record " + evt.id);
                     }
@@ -555,12 +555,7 @@ openerp.web_calendar = function(instance) {
                             attendee_showed += 1;
                             if (attendee_showed<= MAX_ATTENDEES) {                            
                                 if (self.avatar_model != null) {
-                                    //if (self.all_filters[the_attendee_people] != undefined) {
                                        the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head" src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';                                
-                                    //}
-                                    //else {
-                                    //    the_title_avatar += '<i class="fa fa-user attendee_head color_'+self.all_filters[-1].color+'" style="font-size:18px" title="' + self.all_attendees[the_attendee_people] + '" ></i>' ;                                
-                                    //}
                                 }
                                 else {
                                     if (!self.colorIsAttendee || the_attendee_people != temp_ret[self.color_field]) {
@@ -606,12 +601,11 @@ openerp.web_calendar = function(instance) {
                     if (typeof color_key === "object") {
                         color_key = color_key[0];
                     }
-                    //r.color = this.get_color(color_key);
                     r.className = 'cal_opacity calendar_color_'+ this.get_color(color_key);                                
                 }
             }
             else  { // if form all, get color -1
-//                r.color = self.all_filters[-1].color;
+
                   r.className = 'cal_opacity calendar_color_'+ self.all_filters[-1].color;
             }
             
@@ -705,8 +699,7 @@ openerp.web_calendar = function(instance) {
                                     return null;
                                 }   
                             }
-                            else { //We adds all events # TO TEST ?       if (self.isInArray(self.selected_filters,e[self.color_field])){
-                                
+                            else { //We adds all events 
                                 return e;
                             }                            
                             return null;                            
@@ -787,9 +780,6 @@ openerp.web_calendar = function(instance) {
                  [this.date_start, '<=', format(end.clone())]]);
         },
 
-        // do_show: function () {
-        //     this.$el.show();
-        // },
 
         /**
          * Updates record identified by ``id`` with values in object ``data``
@@ -850,19 +840,6 @@ openerp.web_calendar = function(instance) {
                     );
                     $('.editme').click(
                         function() { 
-                        /*
-                             var action = {
-                                type: 'ir.actions.act_window',
-                                res_model: 'crm.meeting',
-                                view_mode: 'form',
-                                view_type: 'form',
-                                views: [[false, 'form']],
-                                res_id: id,
-                                context: {},
-                                mode:"edit",
-                            };
-                            self.do_action(action);
-                         */
                             $('.oe_form_button_cancel').trigger('click'); 
 
                             var index = self.dataset.get_id_index(id);
