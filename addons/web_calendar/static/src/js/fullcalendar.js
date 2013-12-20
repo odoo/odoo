@@ -144,6 +144,7 @@ openerp.web_calendar = function(instance) {
             else
                 this.colorIsAttendee = true;
                 
+/*
             if (isNull(attrs.avatar_model)) {
                 this.avatar_model = 'res.partner'; 
             }
@@ -154,7 +155,15 @@ openerp.web_calendar = function(instance) {
                 else {  
                     this.avatar_model = attrs.avatar_model;
                 }
+            }            
+*/
+            if (isNull(attrs.avatar_model)) {
+                this.avatar_model = null; 
             }
+            else {
+                this.avatar_model = attrs.avatar_model;
+            }
+
            
             if (isNull(attrs.avatar_title)) {
                 this.avatar_title = this.avatar_model; 
@@ -310,13 +319,15 @@ openerp.web_calendar = function(instance) {
                                 var filter_item = {
                                         value: filter_value,
                                         label: result.partner_id[1] + " [Me]",
-                                        color: self.get_color(filter_value)
+                                        color: self.get_color(filter_value),
+                                        avatar_model: self.avatar_model
                                     };
                                 sidebar_items[filter_value] = filter_item ;
                                 filter_item = {
                                         value: -1,
                                         label: "All...",
-                                        color: self.get_color(-1)
+                                        color: self.get_color(-1),
+                                        avatar_model: self.avatar_model
                                     };
                                 sidebar_items[-1] = filter_item ;
 
@@ -326,7 +337,8 @@ openerp.web_calendar = function(instance) {
                                         filter_item = {
                                             value: filter_value,
                                             label: item.partner_id[1],
-                                            color: self.get_color(filter_value)
+                                            color: self.get_color(filter_value),
+                                            avatar_model: self.avatar_model
                                         };
                                         sidebar_items[filter_value] = filter_item ;
                                     });
@@ -349,7 +361,6 @@ openerp.web_calendar = function(instance) {
             return $.when();
         },
         extraSideBar: function() {
-            console.log("In extra Side bar from fullcalendar");
         },
 
         open_quick_create: function(data_template) {
@@ -713,7 +724,8 @@ openerp.web_calendar = function(instance) {
                                 filter_item = {
                                     value: filter_value,
                                     label: e[self.color_field][1],
-                                    color: self.get_color(filter_value)
+                                    color: self.get_color(filter_value),
+                                    avatar_model: self.avatar_model
                                 };
                                 if (!now_filters[e[self.color_field][0]]) 
                                     now_filters[e[self.color_field][0]] = filter_item;
@@ -1493,9 +1505,9 @@ openerp.web_calendar = function(instance) {
         },
         addUpdateButton: function() {
             var self=this;
-            var button = "<button class='oe_button oe_form_button oe_link' style='margin-top:10px'><span class='add_contacts_link' >Manage coworker's calendar</span></button>";
+            var button = "<button class='oe_button oe_form_button oe_link add_contacts_link_btn' style='margin-top:10px'><span class='add_contacts_link'>See Employee's Meeting</span></button>";
             this.$('div.oe_calendar_all_responsibles').append(button);
-            this.$(".add_contacts_link").on('click', function() {  
+            this.$(".add_contacts_link_btn").on('click', function() {  
                 self.rpc("/web/action/load", { 
                     action_id: "web_calendar.action_calendar_contacts" 
                 }).then( function(result) { return self.do_action(result); });

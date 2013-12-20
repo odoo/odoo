@@ -5,7 +5,7 @@ class web_calendar_contacts(osv.osv):
 
     _columns = {
         'user_id': fields.many2one('res.users','Me'),
-        'partner_id': fields.many2one('res.partner','Contact',required=True),
+        'partner_id': fields.many2one('res.partner','Employee',required=True, domain=[('customer','=',True)]),
         'active':fields.boolean('active'),        
      }
     _defaults = {
