@@ -96,14 +96,13 @@
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
                                     <group name="general">
+                                        <field name="active"/>
                                         <field name="standard_price"/>
                                     </group>
                                     <group name="procurement_uom" groups="product.group_uom" string="Purchase">
                                         <field name="uom_po_id"/>
                                     </group>
                                 </group>
-                                <label for="active"/>
-                                <field name="active"/>
                                 <separator string="Description for Suppliers"/>
                                 <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
                             </page>

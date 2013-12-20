@@ -1871,7 +1871,7 @@
                 
                 <xpath expr="//group[@name='general']" position="after" >
                    <newline/>
-                   <group string="Supply Chain Information">
+                   <group string="Supply Chain Information" attrs="{'invisible': [('type', '=', 'service')]}">
                        <field name="route_ids" widget="many2many_checkboxes"/>
                    </group>
                    <newline/>

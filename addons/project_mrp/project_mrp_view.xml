@@ -16,10 +16,12 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="type" position="after">
-                    <field name="project_id" attrs="{'invisible':[('type','!=','service')]}" />
-                    <field name="auto_create_task" attrs="{'invisible': [('type', '!=', 'service')]}"/>
-                </field>
+                <xpath expr="//group[@name='general']" position="after">
+                    <group string="Project Management Information" attrs="{'invisible': [('type', '!=', 'service')]}">
+                        <field name="auto_create_task"/>
+                        <field name="project_id" attrs="{'invisible':['|', ('type','!=','service'), ('auto_create_task', '=', False)]}"/>
+                    </group>
+                </xpath>
             </field>
         </record>
         <record id="task_type_edit_mrp_inherit" model="ir.ui.view">
