@@ -19,17 +19,18 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
-
-# from templates import TemplateHelper
 
 from datetime import date, datetime, timedelta
 import calendar
 import logging
 _logger = logging.getLogger(__name__)
 
+# display top 3 in ranking, could be db variable
+MAX_VISIBILITY_RANKING = 3
 
 def start_end_date_for_period(period, default_start_date=False, default_end_date=False):
     """Return the start and end date for a goal period based on today
@@ -107,7 +108,7 @@ class gamification_challenge(osv.Model):
                 ('other', 'Settings / Gamification Tools'),
             ]
 
-    _sort = 'end_date, start_date, name, id'
+    _order = 'end_date, start_date, name, id'
     _columns = {
         'name': fields.char('Challenge Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
@@ -444,89 +445,137 @@ class gamification_challenge(osv.Model):
 
     ##### JS utilities #####
 
-    def get_board_goal_info(self, cr, uid, challenge, subset_goal_ids=False, context=None):
-        """Get the list of latest goals for a challenge, sorted by user ranking for each line"""
+    def _get_serialized_challenge_lines(self, cr, uid, challenge, user_id=False, restrict_goal_ids=False, restrict_top=False, context=None):
+        """Return a serialised version of the goals information
 
+        :challenge: browse record of challenge to compute
+        :user_id: res.users id of the user retrieving progress (False if no distinction, only for ranking challenges)
+        :restrict_goal_ids: <list(int)> compute only the results for this subset if gamification.goal ids, if False retrieve every goal of current running challenge
+        :restrict_top: <int> for challenge lines where visibility_mode == 'ranking', retrieve only these bests results and itself, if False retrieve all
+            restrict_goal_ids has priority over restrict_top
+
+        format list
+        # if visibility_mode == 'ranking'
+        {
+            'name': <gamification.goal.description name>,
+            'description': <gamification.goal.description description>,
+            'condition': <reach condition {lower,higher}>,
+            'computation_mode': <target computation {manually,count,sum,python}>,
+            'monetary': <{True,False}>,
+            'suffix': <value suffix>,
+            'action': <{True,False}>,
+            'display_mode': <{progress,boolean}>,
+            'target': <challenge line target>,
+            'own_goal_id': <gamification.goal id where user_id == uid>,
+            'goals': [
+                {
+                    'id': <gamification.goal id>,
+                    'rank': <user ranking>,
+                    'user_id': <res.users id>,
+                    'name': <res.users name>,
+                    'state': <gamification.goal state {draft,inprogress,inprogress_update,reached,failed,canceled}>,
+                    'completeness': <percentage>,
+                    'current': <current value>,
+                }
+            ]
+        },
+        # if visibility_mode == 'personal'
+        {
+            'id': <gamification.goal id>,
+            'name': <gamification.goal.description name>,
+            'description': <gamification.goal.description description>,
+            'condition': <reach condition {lower,higher}>,
+            'computation_mode': <target computation {manually,count,sum,python}>,
+            'monetary': <{True,False}>,
+            'suffix': <value suffix>,
+            'action': <{True,False}>,
+            'display_mode': <{progress,boolean}>,
+            'target': <challenge line target>,
+            'state': <gamification.goal state {draft,inprogress,inprogress_update,reached,failed,canceled}>,                                
+            'completeness': <percentage>,
+            'current': <current value>,
+        }
+        """
         goal_obj = self.pool.get('gamification.goal')
-        lines_boards = []
         (start_date, end_date) = start_end_date_for_period(challenge.period)
 
+        res_lines = []
         for line in challenge.line_ids:
-
+            line_data = {
+                'name': line.definition_id.name,
+                'description': line.definition_id.description,
+                'condition': line.definition_id.condition,
+                'computation_mode': line.definition_id.computation_mode,
+                'monetary': line.definition_id.monetary,
+                'suffix': line.definition_id.suffix,
+                'action': True if line.definition_id.action_id else False,
+                'display_mode': line.definition_id.display_mode,
+                'target': line.target_goal,
+            }
             domain = [
                 ('line_id', '=', line.id),
-                ('state', 'in', ('inprogress', 'inprogress_update',
-                                 'reached', 'failed')),
+                ('state', '!=', 'draft'),
             ]
-
-            if subset_goal_ids:
-                goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                common_goal_ids = [goal for goal in goal_ids if goal in subset_goal_ids]
+            if restrict_goal_ids:
+                domain.append(('ids', 'in', restrict_goal_ids))
             else:
                 # if no subset goals, use the dates for restriction
                 if start_date:
                     domain.append(('start_date', '=', start_date))
                 if end_date:
                     domain.append(('end_date', '=', end_date))
-                common_goal_ids = goal_obj.search(cr, uid, domain, context=context)
 
-            board_goals = [goal for goal in goal_obj.browse(cr, uid, common_goal_ids, context=context)]
-
-            if len(board_goals) == 0:
-                # line has no generated goals
-                continue
-
-            # most complete first, current if same percentage (eg: if several 100%)
-            sorted_board = enumerate(sorted(board_goals, key=lambda k: (k.completeness, k.current), reverse=True))
-            lines_boards.append({'goal_definition': line.definition_id, 'board_goals': sorted_board, 'target_goal': line.target_goal})
-        return lines_boards
-
-    def get_indivual_goal_info(self, cr, uid, user_id, challenge, subset_goal_ids=False, context=None):
-        """Get the list of latest goals of a user for a challenge"""
-        domain = [
-            ('challenge_id', '=', challenge.id),
-            ('user_id', '=', user_id),
-            ('state', 'in', ('inprogress', 'inprogress_update',
-                             'reached', 'failed')),
-        ]
-        goal_obj = self.pool.get('gamification.goal')
-        (start_date, end_date) = start_end_date_for_period(challenge.period)
-
-        if subset_goal_ids:
-            # use the domain for safety, don't want irrelevant report if wrong argument
-            goal_ids = goal_obj.search(cr, uid, domain, context=context)
-            related_goal_ids = [goal for goal in goal_ids if goal in subset_goal_ids]
-        else:
-            # if no subset goals, use the dates for restriction
-            if start_date:
-                domain.append(('start_date', '=', start_date))
-            if end_date:
-                domain.append(('end_date', '=', end_date))
-            related_goal_ids = goal_obj.search(cr, uid, domain, context=context)
-
-        if len(related_goal_ids) == 0:
-            return False
-
-        goals = []
-        all_done = True
-        for goal in goal_obj.browse(cr, uid, related_goal_ids, context=context):
-            if goal.end_date:
-                if goal.end_date < fields.date.today():
-                    # do not include goals of previous challenge run
-                    continue
-                else:
-                    all_done = False
+            if challenge.visibility_mode == 'personal':
+                if not user_id:
+                    raise osv.except_osv(_('Error!'),_("Retrieving progress for personal challenge without user information"))
+                domain.append(('user_id', '=', user_id))
+                sorting = goal_obj._order
+                limit = 1
+                # initialise in case search returns no results
+                line_data.update({
+                    'id': 0,
+                    'current': 0,
+                    'completeness': 0,
+                    'state': 'draft',
+                })
             else:
-                if goal.state == 'inprogress' or goal.state == 'inprogress_update':
-                    all_done = False
+                line_data.update({
+                    'own_goal_id': False,
+                    'goals': [],
+                })
+                sorting = "completeness desc, current desc"
+                limit = False
 
-            goals.append(goal)
+            goal_ids = goal_obj.search(cr, uid, domain, order=sorting, limit=limit, context=context)
+            ranking = 0
+            for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
+                if challenge.visibility_mode == 'personal':
+                    # limit=1 so only one result
+                    line_data.update({
+                        'id': goal.id,
+                        'current': goal.current,
+                        'completeness': goal.completeness,
+                        'state': goal.state,
+                    })
+                else:
+                    ranking += 1
+                    if user_id and goal.user_id.id == user_id:
+                        line_data['own_goal_id'] = goal.id
+                    elif restrict_top and ranking > restrict_top:
+                        # not own goal, over top, skipping
+                        continue
 
-        if all_done:
-            # skip challenges where all goal are done or failed
-            return False
-        else:
-            return goals
+                    line_data['goals'].append({
+                        'id': goal.id,
+                        'user_id': goal.user_id.id,
+                        'name': goal.user_id.name,
+                        'rank': ranking,
+                        'current': goal.current,
+                        'completeness': goal.completeness,
+                        'state': goal.state,
+                    })
+            res_lines.append(line_data)
+        return res_lines
 
     ##### Reporting #####
 
@@ -550,11 +599,11 @@ class gamification_challenge(osv.Model):
         temp_obj = self.pool.get('email.template')
         ctx = context.copy()
         if challenge.visibility_mode == 'ranking':
-            lines_boards = self.get_board_goal_info(cr, uid, challenge, subset_goal_ids, context)
+            lines_boards = self._get_serialized_challenge_lines(cr, uid, challenge, user_id=False, restrict_goal_ids=subset_goal_ids, restrict_top=False, context=context)
 
-            ctx.update({'lines_boards': lines_boards})
-            template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_progress_group', context)
-            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.challenge', challenge.id, context=context)
+            ctx.update({'challenge_lines': lines_boards})
+            template_id = self.pool.get('ir.model.data').get_object(cr, uid, 'gamification', 'email_template_goal_progress_group', context)
+            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
 
             # body_html = template_env.get_template('group_progress.mako').render({'object': challenge, 'lines_boards': lines_boards, 'uid': uid})
 
@@ -572,14 +621,14 @@ class gamification_challenge(osv.Model):
         else:
             # generate individual reports
             for user in users or challenge.user_ids:
-                goals = self.get_indivual_goal_info(cr, uid, user.id, challenge, subset_goal_ids, context=context)
+                goals = self._get_serialized_challenge_lines(cr, uid, challenge, user.id, restrict_goal_ids=subset_goal_ids, context=context)
                 if not goals:
                     continue
 
-                ctx.update({'goals': goals})
+                ctx.update({'challenge_lines': goals})
                 template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_progress_perso', context)
-                body_html = temp_obj.render_template(cr, user.id, template_id.body_html, 'gamification.challenge', challenge.id, context=context)
-                # send message only to users
+                body_html = temp_obj.render_template(cr, user.id, template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
+                # send message only to users, not on the challenge
                 self.message_post(cr, uid, 0,
                                   body=body_html,
                                   partner_ids=[(4, user.partner_id.id)],
@@ -600,7 +649,7 @@ class gamification_challenge(osv.Model):
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has joined the challenge" % user.name
         self.message_post(cr, uid, challenge_ids, body=message, context=context)
-        self.write(cr, uid, challenge_ids, {'invited_user_ids': [(3, user_id)], 'user_ids': [(4, user_id)]}, context=context)
+        self.write(cr, SUPERUSER_ID, challenge_ids, {'invited_user_ids': [(3, user_id)], 'user_ids': [(4, user_id)]}, context=context)
         return self.generate_goals_from_challenge(cr, uid, challenge_ids, context=context)
 
     def discard_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
@@ -608,7 +657,7 @@ class gamification_challenge(osv.Model):
         user_id = user_id or uid
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has refused the challenge" % user.name
-        self.message_post(cr, uid, challenge_ids, body=message, context=context)
+        self.message_post(cr, SUPERUSER_ID, challenge_ids, body=message, context=context)
         return self.write(cr, uid, challenge_ids, {'invited_user_ids': (3, user_id)}, context=context)
 
     def reply_challenge_wizard(self, cr, uid, challenge_id, context=None):
@@ -710,7 +759,7 @@ class gamification_challenge(osv.Model):
             for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
                 if goal.state != 'reached':
                     all_reached = False
-                if goal.definition_condition == 'higher':
+                if goal.condition == 'higher':
                     # can be over 100
                     total_completness += 100.0 * goal.current / goal.target_goal
                 elif goal.state == 'reached':
@@ -761,7 +810,7 @@ class gamification_challenge_line(osv.Model):
         goal_definition = goal_definition.browse(cr, uid, definition_id, context=context)
         ret = {
             'value': {
-                'definition_condition': goal_definition.condition,
+                'condition': goal_definition.condition,
                 'definition_full_suffix': goal_definition.full_suffix
             }
         }
@@ -781,7 +830,7 @@ class gamification_challenge_line(osv.Model):
             required=True),
         'sequence': fields.integer('Sequence',
             help='Sequence number for ordering'),
-        'definition_condition': fields.related('definition_id', 'condition', type="selection",
+        'condition': fields.related('definition_id', 'condition', type="selection",
             readonly=True, string="Condition", selection=[('lower', '<='), ('higher', '>=')]),
         'definition_suffix': fields.related('definition_id', 'suffix', type="char", readonly=True, string="Unit"),
         'definition_monetary': fields.related('definition_id', 'monetary', type="boolean", readonly=True, string="Monetary"),

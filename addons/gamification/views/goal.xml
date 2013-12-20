@@ -154,7 +154,7 @@
                                     </div>
                                     <field name="user_id" />
                                     <div class="oe_goal_state_block">
-                                        <t t-if="record.definition_display.raw_value == 'checkbox'">
+                                        <t t-if="record.definition_display.raw_value == 'boolean'">
                                             <div class="oe_goal_state oe_e">
                                                 <t t-if="record.state.raw_value=='reached'"><span class="oe_green" title="Goal Reached">W</span></t>
                                                 <t t-if="record.state.raw_value=='inprogress' || record.state.raw_value=='inprogress_update'"><span title="Goal in Progress">N</span></t>

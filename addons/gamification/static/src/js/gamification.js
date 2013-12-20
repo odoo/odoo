@@ -2,12 +2,12 @@ openerp.gamification = function(instance) {
     var QWeb = instance.web.qweb;
 
     instance.gamification.Sidebar = instance.web.Widget.extend({
-        template: 'gamification.user_wall_sidebar',
+        template: 'gamification.UserWallSidebar',
         init: function (parent, action) {
             var self = this;
             this._super(parent, action);
             this.deferred = $.Deferred();
-            this.res_user = new instance.web.DataSetSearch(this, 'res.users');
+            // this.res_user = new instance.web.DataSetSearch(this, 'res.users');
             this.goals_info = {};
             this.challenge_suggestions = {};
         },
@@ -51,54 +51,53 @@ openerp.gamification = function(instance) {
                 });
             }
         },
-        renderElement: function() {
+        start: function() {
             var self = this;
             this._super.apply(this, arguments);
             self.get_goal_todo_info();
             self.get_challenge_suggestions();
         },
-        render_template: function(target,template) {
-            var self = this;
-            target.append(QWeb.render(template,{'widget': self}));
-        },
+        // render_template: function(target,template) {
+        //     var self = this;
+        //     target.append(QWeb.render(template,{'widget': self}));
+        // },
         render_template_replace: function(target,template) {
             var self = this;
             target.html(QWeb.render(template,{'widget': self}));
         },
         get_goal_todo_info: function() {
             var self = this;
-            var goals_info = this.res_user.call('get_goals_todo_info', {}).then(function(res) {
-                self.goals_info['info'] = res;
-            });
-            $.when(goals_info).done(function() {
-                if(self.goals_info.info.length > 0){
-                    self.render_template_replace(self.$el.filter(".oe_gamification_goal"),'gamification.goal_list_to_do');
-                    self.render_money_fields(self.goals_info.info[0].currency);
-                    self.render_user_avatars();
+            var challenges = new instance.web.Model('res.users').call('get_serialised_gamification_summary', []).then(function(result) {
+                if (result.length === 0) {
+                    self.$el.find(".oe_gamification_challenge_list").hide();
                 } else {
-                    self.$el.filter(".oe_gamification_goal").hide();
+                    _.each(result, function(item){
+                        console.log(item);
+                        var $item = $(QWeb.render("gamification.ChallengeSummary", {challenge: item}));
+                        self.render_money_fields($item);
+                        self.render_user_avatars($item);
+                        self.$el.find('.oe_gamification_challenge_list').append($item);
+                    });
                 }
             });
         },
         get_challenge_suggestions: function() {
             var self = this;
-            var challenge_suggestions = this.res_user.call('get_challenge_suggestions', {}).then(function(res) {
-                self.challenge_suggestions['info'] = res;
-            });
-            $.when(challenge_suggestions).done(function() {
-                if(self.challenge_suggestions.info.length > 0){
-                    self.render_template_replace(self.$el.filter(".oe_gamification_suggestion"),'gamification.challenge_suggestions');
+            var challenge_suggestions = new instance.web.Model('res.users').call('get_challenge_suggestions', []).then(function(result) {
+                if (result.length === 0) {
+                    self.$el.find(".oe_gamification_suggestion").hide();
                 } else {
-                    self.$el.filter(".oe_gamification_suggestion").hide();
+                    var $item = $(QWeb.render("gamification.ChallengeSuggestion", {challenges: result}));
+                    self.$el.find('.oe_gamification_suggestion').append($item);
                 }
             });
         },
-        render_money_fields: function(currency_id) {
+        render_money_fields: function(item) {
             var self = this;
-
             self.dfm = new instance.web.form.DefaultFieldManager(self);
             // Generate a FieldMonetary for each .oe_goal_field_monetary
-            self.$(".oe_goal_field_monetary").each(function() {
+            item.find(".oe_goal_field_monetary").each(function() {
+                var currency_id = parseInt( $(this).attr('data-id'), 10);
                 money_field = new instance.web.form.FieldMonetary(self.dfm, {
                     attrs: {
                         modifiers: '{"readonly": true}'
@@ -110,9 +109,9 @@ openerp.gamification = function(instance) {
                 money_field.replace($(this));
             });
         },
-        render_user_avatars: function() {
+        render_user_avatars: function(item) {
             var self = this;
-            self.$(".oe_user_avatar").each(function() {
+            item.find(".oe_user_avatar").each(function() {
                 var user_id = parseInt( $(this).attr('data-id'), 10);
                 var url = instance.session.url('/web/binary/image', {model: 'res.users', field: 'image_small', id: user_id});
                 $(this).attr("src", url);

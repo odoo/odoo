@@ -76,7 +76,7 @@
                                     <tree string="Line List" version="7.0" editable="bottom" >
                                         <field name="sequence" widget="handle"/>
                                         <field name="definition_id" on_change="on_change_definition_id(definition_id)" />
-                                        <field name="definition_condition"/>
+                                        <field name="condition"/>
                                         <field name="target_goal"/>
                                         <field name="definition_full_suffix"/>
                                     </tree>
@@ -101,6 +101,9 @@
                                     <field name="invited_user_ids" widget="many2many_tags" />
                                 </group>
                                 <group string="Notification Messages">
+                                    <div class="oe_grey">
+                                    <p>Depending on the Diasplay mode, reports will be individual or shared.</p>
+                                </div>
                                     <field name="report_message_frequency" />
                                     <field name="report_header" placeholder="e.g. The following message contains the current progress of the sale team..." attrs="{'invisible': [('report_message_frequency','=','never')]}" />
                                     <field name="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
@@ -247,7 +250,7 @@
                             <tree string="Challenge Lines" version="7.0" editable="bottom" >
                                 <field name="sequence" widget="handle"/>
                                 <field name="definition_id"/>
-                                <field name="definition_condition"/>
+                                <field name="condition"/>
                                 <field name="target_goal"/>
                                 <field name="definition_full_suffix"/>
                             </tree>

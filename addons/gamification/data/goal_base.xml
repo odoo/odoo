@@ -7,7 +7,7 @@
             <field name="name">Set your Timezone</field>
             <field name="description">Configure your profile and specify your timezone</field>
             <field name="computation_mode">count</field>
-            <field name="display_mode">checkbox</field>
+            <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('base.model_res_users')" />
             <field name="domain">[('id','=',user.id),('partner_id.tz', '!=', False)]</field>
             <field name="action_id" eval="ref('base.action_res_users_my')" />
@@ -18,7 +18,7 @@
             <field name="name">Set your Company Data</field>
             <field name="description">Write some information about your company (specify at least a name)</field>
             <field name="computation_mode">count</field>
-            <field name="display_mode">checkbox</field>
+            <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
             <field name="domain">[('user_ids', 'in', [user.id]), ('name', '=', 'Your Company')]</field>
             <field name="condition">lower</field>
@@ -29,7 +29,7 @@
         <record model="gamification.goal.definition" id="definition_base_company_logo">
             <field name="name">Set your Company Logo</field>
             <field name="computation_mode">count</field>
-            <field name="display_mode">checkbox</field>
+            <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
             <field name="domain">[('user_ids', 'in', user.id),('logo', '!=', False)]</field>
             <field name="action_id" eval="ref('base.action_res_company_form')" />
@@ -50,7 +50,7 @@
         <record model="gamification.goal.definition" id="definition_base_invite">
             <field name="name">Invite new Users</field>
             <field name="description">Create at least another user</field>
-            <field name="display_mode">checkbox</field>
+            <field name="display_mode">boolean</field>
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('base.model_res_users')" />
             <field name="domain">[('id', '!=', user.id)]</field>
@@ -146,24 +146,24 @@
         <th>Current</th>
         <th>Completeness</th>
     </tr>
-    % for goal in ctx["goals"]:
+    % for line in ctx["challenge_lines"]:
         <tr
-            % if goal.completeness >= 100:
+            % if line['completeness'] >= 100:
                 style="font-weight:bold;"
             % endif
             >
-            <td>${goal.definition_id.name}</td>
-            <td>${goal.target_goal}
-            % if goal.definition_suffix:
-                ${goal.definition_suffix}
+            <td>${line['name']}</td>
+            <td>${line['target']}
+            % if line['suffix']:
+                ${line['suffix']}
             % endif
             </td>
-            <td>${goal.current}
-            % if goal.definition_suffix:
-                ${goal.definition_suffix}
+            <td>${line['current']}
+            % if line['suffix']:
+                ${line['suffix']}
             % endif
             </td>
-            <td>${goal.completeness} %</td>
+            <td>${line['completeness']} %</td>
         </tr>
     % endfor
     </table>]]></field>
@@ -177,10 +177,10 @@
     </header>
     <p class="oe_grey">${object.report_header or ''}</p>
 
-    % for line in ctx['lines_boards']:
+    % for line in ctx["challenge_lines"]:
         <table width="100%" border="1">
             <tr>
-                <th colspan="4">${line.goal_definition.name}</th>
+                <th colspan="4">${line['name']}</th>
             </tr>
             <tr>
                 <th>#</th>
@@ -188,23 +188,21 @@
                 <th>Completeness</th>
                 <th>Current</th>
             </tr>
-            % for idx, goal in line.board_goals:
-                % if idx < 3 or goal.user_id.id == user.id:
-                    <tr
-                        % if goal.completeness >= 100:
-                            style="font-weight:bold;"
-                        % endif
-                        >
-                        <td>${idx+1}</td>
-                        <td>${goal.user_id.name}</td>
-                        <td>${goal.completeness}%</td>
-                        <td>${goal.current}/${goal.target_goal}
-                        % if goal.definition_suffix:
-                            ${goal.definition_suffix}
-                        % endif
-                        </td>
-                    </tr>
-                % endif
+            % for goal in line['goals']:
+                <tr
+                    % if goal.completeness >= 100:
+                        style="font-weight:bold;"
+                    % endif
+                    >
+                    <td>${goal['rank']}</td>
+                    <td>${goal['name']}</td>
+                    <td>${goal['completeness']}%</td>
+                    <td>${goal['current']}/${line['target']}
+                    % if line['suffix']:
+                        ${line['suffix']}
+                    % endif
+                    </td>
+                </tr>
             % endfor
         </table>
 

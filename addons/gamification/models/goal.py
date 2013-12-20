@@ -76,6 +76,7 @@ class gamification_goal_definition(osv.Model):
         'display_mode': fields.selection([
                 ('progress', 'Progressive (using numerical values)'),
                 ('checkbox', 'Checkbox (done or not-done)'),
+                ('boolean', 'Exclusive (done or not-done)'),
             ],
             string="Displayed as", required=True),
         'model_id': fields.many2one('ir.model',
