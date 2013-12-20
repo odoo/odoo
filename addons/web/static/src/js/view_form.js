@@ -2330,34 +2330,22 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         });
     }
 });
-instance.web.form.StageMode = instance.web.form.FieldChar.extend({
+instance.web.form.Legend = instance.web.form.FieldChar.extend({
     init: function (field_manager, node) {
         this._super(field_manager, node);
         this.options = py.eval(node.attrs.options) 
-        this.stage_dataset  = new instance.web.DataSetStatic(this, 'ir.ui.legend', this.build_context());
-        this.stage_field = this.options.stage_field;
-    },
-    
-    get_stage_value: function(){
-        var def = $.Deferred();
-        var stage_id = this.field_manager.fields[this.stage_field].get_value()
-        var model = this.field_manager.fields[this.stage_field].field.relation
-        this.stage_dataset.call('search_read', [[['res_id','=', stage_id],['type','=',this.name],['res_model','=',model]]]).then(function (res){
-                    def.resolve(res);
-                })
-        return def
+        this.legend_field = this.options.legend_field;
     },
     
     render_value: function() {
         var self = this;
-        self.get_stage_value().then(function (res){
-            var content = QWeb.render("StageMode."+self.name, {
-                'widget': self, 
-                'res': res,
-                });
-            self.$el.html(content);
-            self.$el.find("li").click(self.execute_action.bind(self));
-        })
+        var legend_value = this.field_manager.fields[this.legend_field].get_value()
+        var content = QWeb.render("Legend."+ self.name, {
+            'widget': self, 
+            'legend_value': legend_value,
+            });
+        self.$el.html(content);
+        self.$el.find("li").click(self.execute_action.bind(self));
     },
     execute_action: function(e){
         e.preventDefault();
@@ -5891,7 +5879,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
-    'stage_mode':'instance.web.form.StageMode'
+    'legend':'instance.web.form.Legend'
 });
 
 /**
