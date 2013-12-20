@@ -29,6 +29,11 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+CAN_GRANT = 1
+NOBODY_CAN_GRANT = 2
+USER_NOT_VIP = 3
+BADGE_REQUIRED = 4
+TOO_MANY = 5
 
 class gamification_badge_user(osv.Model):
     """User having received a badge"""
@@ -217,15 +222,15 @@ class gamification_badge(osv.Model):
         Do not check for SUPERUSER_ID
         """
         status_code = self._can_grant_badge(cr, uid, badge_id, context=context)
-        if status_code == 1:
+        if status_code == CAN_GRANT:
             return True
-        elif status_code == 2:
+        elif status_code == NOBODY_CAN_GRANT:
             raise osv.except_osv(_('Warning!'), _('This badge can not be sent by users.'))
-        elif status_code == 3:
+        elif status_code == USER_NOT_VIP:
             raise osv.except_osv(_('Warning!'), _('You are not in the user allowed list.'))
-        elif status_code == 4:
+        elif status_code == BADGE_REQUIRED:
             raise osv.except_osv(_('Warning!'), _('You do not have the required badges.'))
-        elif status_code == 5:
+        elif status_code == TOO_MANY:
             raise osv.except_osv(_('Warning!'), _('You have already sent this badge too many time this month.'))
         else:
             _logger.exception("Unknown badge status code: %d" % int(status_code))
@@ -237,31 +242,26 @@ class gamification_badge(osv.Model):
         :param uid: the id of the res.users trying to send the badge
         :param badge_id: the granted badge id
         :return: integer representing the permission.
-            1: can grant
-            2: nobody can send
-            3: user not in the allowed list
-            4: don't have the required badges
-            5: user's monthly limit reached
         """
         if uid == SUPERUSER_ID:
-            return 1
+            return CAN_GRANT
 
         badge = self.browse(cr, uid, badge_id, context=context)
 
         if badge.rule_auth == 'nobody':
-            return 2
+            return NOBODY_CAN_GRANT
 
         elif badge.rule_auth == 'users' and uid not in [user.id for user in badge.rule_auth_user_ids]:
-            return 3
+            return USER_NOT_VIP
 
         elif badge.rule_auth == 'having':
             all_user_badges = self.pool.get('gamification.badge.user').search(cr, uid, [('user_id', '=', uid)], context=context)
             for required_badge in badge.rule_auth_badge_ids:
                 if required_badge.id not in all_user_badges:
-                    return 4
+                    return BADGE_REQUIRED
 
         if badge.rule_max and badge.stat_my_monthly_sending >= badge.rule_max_number:
-            return 5
+            return TOO_MANY
 
         # badge.rule_auth == 'everyone' -> no check
-        return 1
+        return CAN_GRANT
