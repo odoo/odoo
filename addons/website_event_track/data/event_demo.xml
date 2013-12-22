@@ -79,5 +79,54 @@
             <field name="partner_id" ref="base.res_partner_14"/>
         </record>
 
+        <!-- Tracks -->
+
+        <record id="track_1" model="event.track">
+            <field name="name">A Better Future With OpenERP eCommerce</field>
+            <field name="event_id" ref="event.event_0"/>
+            <field name="website_published" eval="True"/>
+            <field name="duration" eval="1"/>
+            <field name="date">2014-12-01 10:00:00</field>
+            <field name="speaker_ids" eval="[(6, 0, [ref('base.res_partner_address_12')])]"/>
+            <field name="location_id" ref="website_event_track.event_track_location2"/>
+            <field name="stage_id" ref="website_event_track.event_track_stage3"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('website_event_track.event_track_tag2'), ref('website_event_track.event_track_tag3')])]"/>
+            <field name="description" type="xml">
+                <section data-snippet-id="text-block">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h2>A Better Future With OpenERP Commerce</h2>
+                                <h3 class="text-muted mt0">by Georges Lucas, OpenCorp Director</h3>
+                            </div>
+                            <div class="col-md-12">
+                                <p>
+                                Apart from being an enterprise management software, OpenERP is
+                                used nowadays for a great variety of enterprise frontends.
+                                </p><p>
+                                The talk illustrates the impact of OpenERP in areas such as the
+                                company website, online events management, eCommerce, online
+                                recruitments, social media marketing, etc.
+                                </p>
+                            </div>
+                            <div class="col-md-12">
+                                <h3>About The Author</h3>
+                                <p>
+                                    Georges Lucas is <b>Director at OpenElec</b>. He develops software
+                                    since he has 13 years old. 
+                                    He sold his first company at 30 years old and manage to
+                                    grow OpenCorp from 1 to 55 employees mostly by reselling
+                                    services on OpenERP.
+                                </p><p>
+                                    Georges is the <b>author of several books</b>, including Amazon best seller
+                                    "How OpenERP will change the business world!".
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </field>
+        </record>
+
     </data>
 </openerp>
