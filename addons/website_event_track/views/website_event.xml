@@ -221,6 +221,26 @@
                         </div>
                     </div>
 
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Social Stream</h4>
+                        </div>
+                        <div class="panel-body">
+                            <t t-call="website_mail.follow"><t t-set="object" t-value="event"/></t>
+                            <div t-if="event.twitter_hashtag" class="mt16">
+                                <p><strong>Participate on Twitter</strong></p>
+                                <p class="text-muted">
+                                    Find out what others are seeing and
+                                    saying about this event, and join the
+                                    conversation.
+                                </p>
+                                <p><strong>Use this tag:
+                                    <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
+                                </strong></p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="panel panel-default" t-if="False">
                         <div class="panel-heading">
                             <h4>Documents</h4>
