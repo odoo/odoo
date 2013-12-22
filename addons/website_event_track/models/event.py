@@ -76,7 +76,7 @@ class event_track(osv.osv):
         'stage_id': fields.many2one('event.track.stage'),
         'description': fields.html('Track Description'),
         'date': fields.datetime('Track Date'),
-        'duration': fields.float('Duration (Hours)'),
+        'duration': fields.integer('Duration'),
         'location_id': fields.many2one('event.track.location', 'Location'),
         'show_attachments': fields.boolean('Show Documents'),
         'event_id': fields.many2one('event.event', 'Event', required=True),
@@ -97,7 +97,7 @@ class event_track(osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid,
         'website_published': lambda self, cr, uid, ctx: False,
         'show_attachments': lambda self, cr, uid, ctx: True,
-        'duration': lambda *args: 0,
+        'duration': lambda *args: 60,
         'stage_id': _default_stage_id,
         'priority': '2'
     }

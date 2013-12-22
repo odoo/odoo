@@ -116,20 +116,21 @@
                     <t t-foreach="track.tag_ids" t-as="tag_id">
                         <span class="label label-default" t-field="tag_id.name"/>
                     </t>
-                </div>
-                <div class="panel-body">
-                    <b>Responsible</b><br/>
-                    <span t-field="track.user_id"/><br/>
-                    <b>Speakers</b><br/>
-                    <span t-field="track.speaker_ids"/><br/>
                     <b>Date</b><br/>
                     <span t-field="track.date"/><br/>
                     <b>Duration</b><br/>
-                    <span t-field="track.duration"/><br/>
+                    <span t-field="track.duration"/> minutes<br/>
                     <b>Location</b><br/>
                     <span t-field="track.location_id"/><br/>
-                    <b>Stage</b><br/>
-                    <span t-field="track.stage_id"/><br/>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Speakers</h4>
+                </div>
+                <div class="panel-body">
+                    <b>Speakers</b><br/>
+                    <span t-field="track.speaker_ids"/>
                 </div>
             </div>
         </div>

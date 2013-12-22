@@ -312,7 +312,10 @@
                             </group>
                             <group>
                                 <field name="date"/>
-                                <field name="duration" widget="float_time"/>
+                                <label for="duration"/>
+                                <div>
+                                    <field name="duration"/> minutes
+                                </div>
                                 <field name="tag_ids" widget="many2many_tags"/>
                             </group>
                         </group>
