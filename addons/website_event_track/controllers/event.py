@@ -38,6 +38,15 @@ class website_event(http.Controller):
         values = { 'track': track, 'event': track.event_id, 'main_object': track }
         return request.website.render("website_event_track.track_view", values)
 
+    @website.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", multilang=True)
+    def event_agenda(self, event, tag=None, **post):
+        website.preload_records(event, on_error="website_event.404")
+        values = {
+            'event': event,
+            'main_object': event,
+        }
+        return request.website.render("website_event_track.agenda", values)
+
     @website.route([
         '/event/<model("event.event"):event>/track/',
         '/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'
@@ -68,6 +77,8 @@ class website_event(http.Controller):
             'html2text': html2text
         }
         return request.website.render("website_event_track.tracks", values)
+
+
 
     @website.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", multilang=True)
     def event_track_proposal(self, event, **post):

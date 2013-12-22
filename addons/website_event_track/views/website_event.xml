@@ -29,9 +29,87 @@
     </xpath>
 </template>
 
+<template id="agenda">
+    <t t-call="website_event.event_details">
+        <div id="left_column">
+        </div>
+        <div class="col-md-12" id="right_column">
+            <h3 class="page-header">Monday, 3rd June</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                    <tr>
+                        <th></th>
+                        <th class="active"><a href="#">Room 1</a></th>
+                        <th class="active"><a href="#">Room 2</a></th>
+                        <th class="active"><a href="#">Room 3</a></th>
+                        <th class="active"><a href="#">Room 5</a></th>
+                        <th class="active"><a href="#">Room 6</a></th>
+                    </tr>
+                    <tr>
+                        <td class="active"><b>09:00</b><br/><span class="text-muted">10:00</span></td>
+                        <th colspan="5" class="success text-center">
+                            <a href="#">Plenary Session</a><br/>
+                            Room 5
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
+                        <td><a href="#">fkdsj kl jkl sdfjksdfj kl</a></td>
+                        <td rowspan="2"><a href="#">Learning Python</a></td>
+                        <td></td>
+                        <td><a href="#">Learning Pytdon</a></td>
+                        <td><a href="#">Boost your Sales Witd OpenERP CRM</a></td>
+                    </tr>
+                    <tr>
+                        <th class="active">10:30<br/><span class="text-muted">11:00</span></th>
+                        <td></td>
+                        <td>Boost your Sales Witd OpenERP CRM</td>
+                        <td>Learning Pytdon</td>
+                        <td rowspan="2">fkdsj kl jkl sdfjksdfj kl</td>
+                    </tr>
+                    <tr>
+                        <th class="active">11:00<br/><span class="text-muted">12:00</span></th>
+                        <td>Learning Pytdon</td>
+                        <td>Boost your Sales Witd OpenERP CRM</td>
+                        <td>Learning Pytdon</td>
+                        <td>this is a test</td>
+                    </tr>
+                    <tr class="active">
+                        <td colspan="6" class="text-center text-muted"><span class="fa fa-clock-o"/></td>
+                    </tr>
+                    <tr>
+                        <th class="active">14:00<br/><span class="text-muted">15:00</span></th>
+                        <td>Boost your Sales Witd OpenERP CRM</td>
+                        <td>Learning Pytdon</td>
+                        <td></td>
+                        <td>fkdsj kl jkl sdfjksdfj kl</td>
+                        <td>fkdsj kl jkl sdfjksdfj kl</td>
+                    </tr><tr>
+                        <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
+                        <td>fkdsj kl jkl sdfjksdfj kl</td>
+                        <td rowspan="2">Learning Python</td>
+                        <td></td>
+                        <td>Learning Pytdon</td>
+                        <td>Boost your Sales Witd OpenERP CRM</td>
+                    </tr>
+                    <tr>
+                        <th class="active">10:30<br/><span class="text-muted">11:00</span></th>
+                        <td></td>
+                        <td>Boost your Sales Witd OpenERP CRM</td>
+                        <td>Learning Pytdon</td>
+                        <td rowspan="2">fkdsj kl jkl sdfjksdfj kl</td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </t>
+</template>
+
+
 <template id="tracks">
     <t t-call="website_event.event_details">
-        <div name="left_column">
+        <div id="left_column">
         </div>
         <div class="col-md-9">
             <div class="row mb32" t-foreach="tracks" t-as="track">
@@ -72,7 +150,7 @@
 </template>
 
 <template id="tracks_filter" inherit_id="website_event_track.tracks" inherit_option_id="website_event_track.tracks" name="Filter on Tags">
-    <xpath expr="//div[@name='left_column']" position="inside">
+    <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked">
             <li t-att-class="'' if searches.get('tag') else 'active'"><a t-href="/event/#{ slug(event) }/track/">All Tags</a></li>
             <t t-foreach="tags" t-as="tag">
@@ -84,7 +162,7 @@
             </t>
         </ul>
     </xpath>
-    <xpath expr="//div[@name='left_column']" position="attributes">
+    <xpath expr="//div[@id='left_column']" position="attributes">
         <attribute name="class">col-md-3 css_no_print</attribute>
     </xpath>
 </template>
