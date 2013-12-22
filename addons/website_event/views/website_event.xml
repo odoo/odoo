@@ -145,7 +145,7 @@
         </div>
     </xpath>
 </template>
-<template id="event_category" inherit_id="website_event.event_left_column" inherit_option_id="website_event.event_left_column" name="Filter by Category">
+<template id="event_category" inherit_option_id="website_event.event_left_column" name="Filter by Category">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types">
@@ -158,7 +158,7 @@
         </ul>
     </xpath>
 </template>
-<template id="event_location" inherit_id="website_event.event_left_column" inherit_option_id="website_event.event_left_column" name="Filter by Country">
+<template id="event_location" inherit_option_id="website_event.event_left_column" name="Filter by Country">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries">
