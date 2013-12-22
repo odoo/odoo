@@ -69,12 +69,6 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event_track.tracks", values)
 
-    @website.route(['/event/detail/<model("event.event"):event>'], type='http', auth="public", multilang=True)
-    def event_detail(self, event, **post):
-        website.preload_records(event, on_error="website_event.404")
-        values = { 'event': event, 'main_object': event }
-        return request.website.render("website_event_track.event_home", values)
-
     @website.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", multilang=True)
     def event_track_proposal(self, event, **post):
         website.preload_records(event, on_error="website_event.404")

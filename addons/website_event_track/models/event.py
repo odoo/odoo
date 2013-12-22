@@ -58,7 +58,7 @@ class event_track_location(osv.osv):
 
 class event_track(osv.osv):
     _name = "event.track"
-    _order = 'date'
+    _order = 'priority, date'
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata']
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
