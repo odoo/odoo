@@ -159,14 +159,16 @@ class DateTime(orm.AbstractModel):
         if isinstance(value, basestring):
             value = datetime.datetime.strptime(
                 value, DEFAULT_SERVER_DATETIME_FORMAT)
-        value = column.context_timestamp(
-            cr, uid, timestamp=value, context=context)
+        if value:
+            value = column.context_timestamp(
+                cr, uid, timestamp=value, context=context)
+            value = value.strftime(openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         attrs = super(DateTime, self).attributes(
             cr, uid, field_name, record, options, source_element, g_att, t_att,
             qweb_context, context=None)
         return itertools.chain(attrs, [
-            ('data-oe-original', value.strftime(openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT))
+            ('data-oe-original', value)
         ])
 
     def from_html(self, cr, uid, model, column, element, context=None):
