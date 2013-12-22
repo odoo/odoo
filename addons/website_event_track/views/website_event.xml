@@ -115,6 +115,9 @@
         <div id="left_column">
         </div>
         <div class="col-md-9">
+            <div class="alert alert-warning" t-if="not len(tracks)">
+                No tracks found!
+            </div>
             <div class="row mb32" t-foreach="tracks" t-as="track">
                 <div class="col-sm-2">
                     <t t-if="len(track.speaker_ids)">
