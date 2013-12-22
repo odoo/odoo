@@ -206,7 +206,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" id="right_column">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4>Practical Info</h4>
@@ -218,26 +218,6 @@
                             <span t-field="track.duration"/> minutes<br/>
                             <b>Location</b><br/>
                             <span t-field="track.location_id"/><br/>
-                        </div>
-                    </div>
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4>Social Stream</h4>
-                        </div>
-                        <div class="panel-body">
-                            <t t-call="website_mail.follow"><t t-set="object" t-value="event"/></t>
-                            <div t-if="event.twitter_hashtag" class="mt16">
-                                <p><strong>Participate on Twitter</strong></p>
-                                <p class="text-muted">
-                                    Find out what others are seeing and
-                                    saying about this event, and join the
-                                    conversation.
-                                </p>
-                                <p><strong>Use this tag:
-                                    <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
-                                </strong></p>
-                            </div>
                         </div>
                     </div>
 
@@ -257,6 +237,29 @@
     </t>
 </template>
 
+<template id="event_track_social" name="Social Widgets" inherit_option_id="website_event_track.track_view">
+    <xpath expr="//div[@id='right_column']" position="inside">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Social Stream</h4>
+            </div>
+            <div class="panel-body">
+                <t t-call="website_mail.follow"><t t-set="object" t-value="event"/></t>
+                <div t-if="event.twitter_hashtag" class="mt16">
+                    <p><strong>Participate on Twitter</strong></p>
+                    <p class="text-muted">
+                        Find out what others are seeing and
+                        saying about this event, and join the
+                        conversation.
+                    </p>
+                    <p><strong>Use this tag:
+                        <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
+                    </strong></p>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
 
 <template id="event_track_proposal">
     <t t-call="website_event.layout">
