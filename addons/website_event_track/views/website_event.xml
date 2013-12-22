@@ -107,21 +107,20 @@
             <section class="row mt32">
                 <div class="col-md-8">
                     <div t-field="track.description"/>
-
-                    <hr/>
-                    <div t-foreach="track.speaker_ids" t-as="speaker" class="row">
-                        <div class="col-sm-2">
-                            <span t-field="speaker.image"
-                                t-field-options='{"widget": "image", "class": "img-circle"}'/>
-                        </div><div class="col-sm-10">
-                           <h4 t-field="speaker.name" class="mb4"/>
-                           <div class="fa fa-home mb16" t-if="speaker.website">
-                               <a t-att-href="speaker.website"><span t-field="speaker.website"/></a>
-                           </div>
-                           <div t-field="speaker.website_description"/>
+                    <div t-foreach="track.speaker_ids" t-as="speaker" class="well">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <span t-field="speaker.image"
+                                    t-field-options='{"widget": "image", "class": "img-circle"}'/>
+                            </div><div class="col-sm-10">
+                               <h4 t-field="speaker.name" class="mb4"/>
+                               <div class="fa fa-home mb16" t-if="speaker.website">
+                                   <a t-att-href="speaker.website"><span t-field="speaker.website"/></a>
+                               </div>
+                               <div t-field="speaker.website_description"/>
+                            </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">
