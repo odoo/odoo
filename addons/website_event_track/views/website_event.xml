@@ -34,38 +34,38 @@
         <div name="left_column">
         </div>
         <div class="col-md-9">
-            <div class="row">
-                <t t-foreach="tracks" t-as="track">
-                    <div class="col-sm-2">
-                        <t t-if="len(track.speaker_ids)">
-                            <span t-field="track.speaker_ids[0].image"
-                                t-field-options='{"widget": "image", "class": "img-circle"}'/>
-                        </t>
-                    </div>
-                    <div class="col-sm-10">
-                        <h3 class="mt0 mb0">
-                            <a t-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
-                            <small t-if="not track.website_published" class="label label-danger">not published</small>
-                        </h3>
-                        <ul class="list-inline mb0">
-                            <li t-if="track.speaker_ids" class="text-muted fa fa-user">
-                                <t t-foreach="track.speaker_ids" t-as="speaker">
-                                    <t t-esc="speaker.name"/>, 
-                                </t>
-                            </li>
-                            <li class="text-muted fa fa-calendar"><span t-field="track.date"/></li>
-                        </ul>
-                        <ul class="list-inline">
-                            <li t-foreach="track.tag_ids" t-as="tag_id" class="text-muted fa fa-tags">
-                                <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
-                                    <span t-field="tag_id.name"/>
-                                </a>
-                            </li>
-                        </ul>
-                        <p class="mt8"><t t-esc="html2text(track.description or '')[0:500]"/>...</p>
-                    </div>
-                    <div class="clearfix mb32"/>
-                </t>
+            <div class="row mb32" t-foreach="tracks" t-as="track">
+                <div class="col-sm-2">
+                    <t t-if="len(track.speaker_ids)">
+                        <span t-field="track.speaker_ids[0].image"
+                            t-field-options='{"widget": "image", "class": "img-circle"}'/>
+                    </t>
+                </div>
+                <div class="col-sm-10">
+                    <h3 class="mt0 mb0">
+                        <a t-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
+                        <small t-if="not track.website_published" class="label label-danger">not published</small>
+                    </h3>
+                    <ul class="list-inline mb0">
+                        <li t-if="track.speaker_ids" class="text-muted fa fa-user">
+                            <t t-foreach="track.speaker_ids" t-as="speaker">
+                                <t t-esc="speaker.name"/>, 
+                            </t>
+                        </li>
+                        <li class="text-muted fa fa-calendar"> <span t-field="track.date"/></li>
+                        <li class="text-muted fa fa-map-marker" t-if="track.location_id">
+                            <span t-field="track.location_id"/>
+                        </li>
+                    </ul>
+                    <ul class="list-inline">
+                        <li t-foreach="track.tag_ids" t-as="tag_id" class="text-muted fa fa-tags">
+                            <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
+                                <span t-field="tag_id.name"/>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="mt8"><t t-esc="html2text(track.description or '')[0:500]"/>...</p>
+                </div>
             </div>
         </div>
     </t>
@@ -92,37 +92,64 @@
 
 
 <template id="track_view">
-    <t t-call="website_event.event_details">
-        <div class="col-md-8">
-            <h2 t-field="track.name"/>
-            <div t-field="track.description"/>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>Informations</h4>
+    <t t-call="website_event.layout">
+        <div class="container">
+            <h2 t-field="track.name" class="text-center"/>
+            <h3 t-field="event.name" class="text-center text-muted"/>
+            <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
+                <li t-foreach="track.tag_ids" t-as="tag_id" class="fa fa-tags">
+                    <a t-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
+                        <span t-field="tag_id.name"/>
+                    </a>
+                </li>
+            </ul>
+
+            <section class="row mt32">
+                <div class="col-md-8">
+                    <div t-field="track.description"/>
+
+                    <hr/>
+                    <div t-foreach="track.speaker_ids" t-as="speaker" class="row">
+                        <div class="col-sm-2">
+                            <span t-field="speaker.image"
+                                t-field-options='{"widget": "image", "class": "img-circle"}'/>
+                        </div><div class="col-sm-10">
+                           <h4 t-field="speaker.name" class="mb4"/>
+                           <div class="fa fa-home mb16" t-if="speaker.website">
+                               <a t-att-href="speaker.website"><span t-field="speaker.website"/></a>
+                           </div>
+                           <div t-field="speaker.website_description"/>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="panel-body">
-                    <t t-foreach="track.tag_ids" t-as="tag_id">
-                        <span class="label label-default" t-field="tag_id.name"/>
-                    </t>
-                    <b>Date</b><br/>
-                    <span t-field="track.date"/><br/>
-                    <b>Duration</b><br/>
-                    <span t-field="track.duration"/> minutes<br/>
-                    <b>Location</b><br/>
-                    <span t-field="track.location_id"/><br/>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>Practical Info</h4>
+                        </div>
+                        <div class="panel-body">
+                            <b>Date</b><br/>
+                            <span t-field="track.date"/><br/>
+                            <b>Duration</b><br/>
+                            <span t-field="track.duration"/> minutes<br/>
+                            <b>Location</b><br/>
+                            <span t-field="track.location_id"/><br/>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default" t-if="False">
+                        <div class="panel-heading">
+                            <h4>Documents</h4>
+                        </div>
+                        <div class="panel-body">
+                            Put here the list of documents, like slides of
+                            the presentations. Remove the above t-if when
+                            it's implemented.
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>Speakers</h4>
-                </div>
-                <div class="panel-body">
-                    <b>Speakers</b><br/>
-                    <span t-field="track.speaker_ids"/>
-                </div>
-            </div>
+            </section>
         </div>
     </t>
 </template>

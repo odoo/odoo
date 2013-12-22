@@ -143,7 +143,7 @@ class event_event(osv.osv):
         context = context or {}
         result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
         if event.show_tracks:
-            result.append( (_('Agenda'), '/event/%s/track/' % event.id))
+            result.append( (_('Talks'), '/event/%s/track/' % event.id))
         if event.blog_id:
             result.append( (_('News'), '/blogpost/'+str(event.blog_ig.id)))
         if event.show_track_proposal:

@@ -95,10 +95,6 @@
                 <section data-snippet-id="text-block">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-12 text-center">
-                                <h2>A Better Future With OpenERP Commerce</h2>
-                                <h3 class="text-muted mt0">by Georges Lucas, OpenCorp Director</h3>
-                            </div>
                             <div class="col-md-12">
                                 <p>
                                 Apart from being an enterprise management software, OpenERP is
@@ -130,10 +126,6 @@
                 <section data-snippet-id="text-block">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-12 text-center">
-                                <h2>A Better Future With OpenERP Commerce</h2>
-                                <h3 class="text-muted mt0">by Georges Lucas, OpenCorp Director</h3>
-                            </div>
                             <div class="col-md-12">
                                 <p>
                                 Apart from being an enterprise management software, OpenERP is
@@ -150,6 +142,22 @@
             </field>
         </record>
 
+        <record id="base.res_partner_address_16" model="res.partner">
+            <field name="website">http://facebook.com/openerp</field>
+            <field name="website_description" type="xml">
+                <p>
+                    Ayaan has in the IT sector <b>since 20 years</b>. He
+                    develops software to help develop websites.  He sold his
+                    first company at 30 years old and manage to grow OpenCorp
+                    from 1 to 55 employees mostly by reselling services on
+                    OpenERP.
+                </p><p>
+                    Ayaan is the <b>author of several books</b>, including Amazon best seller
+                    "How OpenERP will change the business world!".
+                </p>
+            </field>
+        </record>
+
         <record id="track_3" model="event.track">
             <field name="name">Social Marketing As a Source of Leads</field>
             <field name="event_id" ref="event.event_0"/>
@@ -163,35 +171,16 @@
             <field name="tag_ids" eval="[(6, 0, [ref('website_event_track.event_track_tag4')])]"/>
             <field name="description" type="xml">
                 <section data-snippet-id="text-block">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <h2>Social Marketing As a Source of Leads</h2>
-                                <h3 class="text-muted mt0">by Georges Lucas, OpenCorp Director</h3>
-                            </div>
-                            <div class="col-md-12">
-                                <p>
-                                Apart from being an enterprise management software, OpenERP is
-                                used nowadays for a great variety of enterprise frontends.
-                                </p><p>
-                                The talk illustrates the impact of OpenERP in areas such as the
-                                company website, online events management, eCommerce, online
-                                recruitments, social media marketing, etc.
-                                </p>
-                            </div>
-                            <div class="col-md-12">
-                                <h3>About The Author</h3>
-                                <p>
-                                    Georges Lucas is <b>Director at OpenElec</b>. He develops software
-                                    since he has 13 years old. 
-                                    He sold his first company at 30 years old and manage to
-                                    grow OpenCorp from 1 to 55 employees mostly by reselling
-                                    services on OpenERP.
-                                </p><p>
-                                    Georges is the <b>author of several books</b>, including Amazon best seller
-                                    "How OpenERP will change the business world!".
-                                </p>
-                            </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                            Apart from being an enterprise management software, OpenERP is
+                            used nowadays for a great variety of enterprise frontends.
+                            </p><p>
+                            The talk illustrates the impact of OpenERP in areas such as the
+                            company website, online events management, eCommerce, online
+                            recruitments, social media marketing, etc.
+                            </p>
                         </div>
                     </div>
                 </section>
