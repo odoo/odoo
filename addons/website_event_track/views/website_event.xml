@@ -10,7 +10,7 @@
         </t>
     </xpath>
     <xpath expr="//div[@id='wrap']" position="inside">
-        <div class="container mt32 mb16" t-if="event.sponsor_ids">
+        <div class="container mt32 mb16 hidden-print" t-if="event.sponsor_ids">
             <section data-snippet-id="title">
                 <h2 class="text-center mb32">Our Sponsors</h2>
             </section>
@@ -30,15 +30,20 @@
 </template>
 
 <template id="agenda">
-    <t t-call="website_event.event_details">
-        <div id="left_column">
-        </div>
-        <div class="col-md-12" id="right_column">
-            <h3 class="page-header mt0">
-                Monday, 3rd June
-                <small>23 talks</small>
-            </h3>
-            <div class="table-responsive">
+    <t t-call="website_event.layout">
+        <section data-snippet-id="title">
+            <h1 class="text-center mb0" t-field="event.name"/>
+        </section>
+        <section class="container">
+          <div class="row">
+            <div id="left_column">
+            </div>
+            <div class="col-md-12" id="right_column">
+                <p class="text-muted">You can click on cells to highlight your interests.</p>
+                <h3 class="page-header mt0">
+                    Monday, 3rd June
+                    <small>23 talks</small>
+                </h3>
                 <table class="table table-bordered table-condensed">
                     <tr>
                         <th></th>
@@ -58,7 +63,7 @@
                     <tr>
                         <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
                         <td><a href="#">fkdsj kl jkl sdfjksdfj kl</a></td>
-                        <td rowspan="2"><a href="#">Learning Python</a></td>
+                        <td rowspan="2" class="danger"><a href="#">Learning Python</a></td>
                         <td></td>
                         <td><a href="#">Learning Pytdon</a></td>
                         <td><a href="#">Boost your Sales Witd OpenERP CRM</a></td>
@@ -72,7 +77,7 @@
                     </tr>
                     <tr>
                         <th class="active">11:00<br/><span class="text-muted">12:00</span></th>
-                        <td>Learning Pytdon</td>
+                        <td class="danger">Learning Pytdon</td>
                         <td>Boost your Sales Witd OpenERP CRM</td>
                         <td>Learning Pytdon</td>
                         <td>this is a test</td>
@@ -83,14 +88,14 @@
                     <tr>
                         <th class="active">14:00<br/><span class="text-muted">15:00</span></th>
                         <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
+                        <td class="danger">Learning Pytdon</td>
                         <td></td>
                         <td>fkdsj kl jkl sdfjksdfj kl</td>
                         <td>fkdsj kl jkl sdfjksdfj kl</td>
                     </tr><tr>
                         <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
                         <td>fkdsj kl jkl sdfjksdfj kl</td>
-                        <td rowspan="2">Learning Python</td>
+                        <td rowspan="2" class="danger">Learning Python</td>
                         <td></td>
                         <td>Learning Pytdon</td>
                         <td>Boost your Sales Witd OpenERP CRM</td>
@@ -102,10 +107,10 @@
                         <td>Learning Pytdon</td>
                         <td rowspan="2">fkdsj kl jkl sdfjksdfj kl</td>
                     </tr>
-
                 </table>
             </div>
-        </div>
+          </div>
+        </section>
     </t>
 </template>
 
