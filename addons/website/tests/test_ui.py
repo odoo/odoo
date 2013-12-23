@@ -43,7 +43,7 @@ class WebsiteUiTest(unittest.TestCase):
 
 class WebsiteUiSuite(unittest.TestSuite):
     # timeout is in seconds
-    def __init__(self, testfile, timeout=5):
+    def __init__(self, testfile, timeout=20):
         self.testfile = testfile
         self.timeout = timeout
         self._test = None
@@ -93,7 +93,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         proc_stdout = LineReader(phantom.stdout.fileno())
         readable = [proc_stdout]
         try:
-            while readable and last_check_time < self.start_time + self.timeout:
+            while phantom.poll() is None and readable and last_check_time < self.start_time + self.timeout:
                 ready, _, _ = select.select(readable, [], [], 0.1)
                 if not ready:
                     last_check_time = time.time()
@@ -104,18 +104,19 @@ class WebsiteUiSuite(unittest.TestSuite):
                         # got EOF on this stream
                         readable.remove(stream)
                         break;
-                    for line in lines:
-                        self.process(line, result)
+                    else:
+                        self.process(lines[0], result)
                         # the runner expects only one output line
                         # any subsequent line is ignored
-                        break
+                        readable.remove(stream)
+
             if last_check_time >= (self.start_time + self.timeout):
                 result.addError(self._test, "Timeout after %s s" % (last_check_time - self.start_time ))
-            result.stopTest(self._test)
         finally:
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
+            result.stopTest(self._test)
 
     def process(self, line, result):
         # Test protocol
@@ -134,11 +135,11 @@ class WebsiteUiSuite(unittest.TestSuite):
                 message = args.get('message', "")
                 result.addFailure(self._test, message)
             else:
-                result.addError(self._test, "Unexpected message: %s" % line)
+                result.addError(self._test, 'Unexpected message: "%s"' % line)
         except ValueError:
-             result.addError(self._test, "Unexpected message: %s" % line)
+             result.addError(self._test, 'Unexpected message: "%s"' % line)
 
 def load_tests(loader, base, _):
-    base.addTest(WebsiteUiSuite('sample_test.js'))
-    base.addTest(WebsiteUiSuite('banner_tour.js'))
+    base.addTest(WebsiteUiSuite('dummy_test.js'))
+    base.addTest(WebsiteUiSuite('dom_test.js'))
     return base
