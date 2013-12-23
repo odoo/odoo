@@ -229,29 +229,6 @@ class hr_employee(osv.osv):
         'color': 0,
     }
 
-    def create(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
-        create_ctx = dict(context, mail_create_nolog=True)
-        employee_id = super(hr_employee, self).create(cr, uid, data, context=create_ctx)
-        employee = self.browse(cr, uid, employee_id, context=context)
-        if employee.user_id:
-            res_users = self.pool['res.users']
-            # send a copy to every user of the company
-            # TODO: post to the `Whole Company` mail.group when we'll be able to link to the employee record  
-            _model, group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')
-            user_ids = res_users.search(cr, uid, [('company_id', '=', employee.user_id.company_id.id),
-                                                  ('groups_id', 'in', group_id)])
-            partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, uid, user_ids, context=context)))
-        else:
-            partner_ids = []
-        self.message_post(cr, uid, [employee_id],
-            body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
-            partner_ids=partner_ids,
-            subtype='mail.mt_comment', context=context
-        )
-        return employee_id
-
     def unlink(self, cr, uid, ids, context=None):
         resource_ids = []
         for employee in self.browse(cr, uid, ids, context=context):
