@@ -173,6 +173,12 @@
                 </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page string="Tracks">
+                        <div class="oe_right oe_button_box">
+                            <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Tracks"/>
+                        </div>
+                        <group col="2" class="oe_title">
+                            <field name="allowed_track_tag_ids" widget="many2many_tags"/>
+                        </group>
                         <field name="track_ids" context="{'default_event_id': active_id}"/>
                     </page>
                     <page string="Sponsorships">
@@ -189,10 +195,6 @@
                     </page>
                 </xpath>
                 <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
-                    <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Tracks"/>
-                </xpath>
-                <xpath expr="//field[@name='organizer_id']" position="after">
-                    <field name="allowed_track_tag_ids" widget="many2many_tags"/>
                 </xpath>
             </field>
         </record>
@@ -288,8 +290,12 @@
                         <field name="stage_id" widget="statusbar"/>
                     </header>
                     <sheet string="Track">
+                        <div class="oe_right oe_button_box">
+                            <field name="website_url" invisible="1"/>
+                            <field name="website_published" class="pull-right" widget="website_button"/>
+                        </div>
                         <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                            <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name"/>
                             </h1>
@@ -306,10 +312,12 @@
                             </group>
                             <group>
                                 <field name="date"/>
-                                <field name="duration" widget="float_time"/>
+                                <label for="duration"/>
+                                <div>
+                                    <field name="duration" class="oe_inline"/> minutes
+                                </div>
                                 <field name="tag_ids" widget="many2many_tags"/>
                             </group>
-                            <field name="description" colspan="4"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">

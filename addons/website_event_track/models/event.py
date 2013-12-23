@@ -58,8 +58,16 @@ class event_track_location(osv.osv):
 
 class event_track(osv.osv):
     _name = "event.track"
-    _order = 'date'
+    _order = 'priority, date'
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata']
+
+    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, '')
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        for track in self.browse(cr, uid, ids, context=context):
+            res[track.id] = "%s/event/%d/track/%d" % (base_url, track.event_id.id, track.id)
+        return res
+
     _columns = {
         'name': fields.char('Track Title', required=True),
         'user_id': fields.many2one('res.users', 'Responsible'),
@@ -68,13 +76,14 @@ class event_track(osv.osv):
         'stage_id': fields.many2one('event.track.stage'),
         'description': fields.html('Track Description'),
         'date': fields.datetime('Track Date'),
-        'duration': fields.float('Duration (Hours)'),
+        'duration': fields.integer('Duration'),
         'location_id': fields.many2one('event.track.location', 'Location'),
         'show_attachments': fields.boolean('Show Documents'),
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'color': fields.integer('Color Index'),
         'priority': fields.selection([('3','Low'),('2','Medium (*)'),('1','High (**)'),('0','Highest (***)')], 'Priority', required=True),
         'website_published': fields.boolean('Available in the website'),
+        'website_url': fields.function(_website_url, string="Website url", type="char"),
     }
     def set_priority(self, cr, uid, ids, priority, context={}):
         return self.write(cr, uid, ids, {'priority' : priority})
@@ -86,8 +95,9 @@ class event_track(osv.osv):
 
     _defaults = {
         'user_id': lambda self, cr, uid, ctx: uid,
+        'website_published': lambda self, cr, uid, ctx: False,
         'show_attachments': lambda self, cr, uid, ctx: True,
-        'duration': lambda *args: 0,
+        'duration': lambda *args: 60,
         'stage_id': _default_stage_id,
         'priority': '2'
     }
@@ -122,7 +132,7 @@ class event_event(osv.osv):
         'show_tracks': fields.boolean('Multiple Tracks'),
         'show_blog': fields.boolean('News'),
         'tracks_tag_ids': fields.function(_get_tracks_tag_ids, type='one2many', relation='event.track.tag', string='Tags of Tracks'),
-        'allowed_track_tag_ids': fields.many2many('event.track.tag', string='Accepted Tracks'),
+        'allowed_track_tag_ids': fields.many2many('event.track.tag', string='Accepted Tags', help="List of available tags for track proposals."),
     }
     _defaults = {
         'show_track_proposal': False,
@@ -133,7 +143,8 @@ class event_event(osv.osv):
         context = context or {}
         result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)
         if event.show_tracks:
-            result.append( (_('Agenda'), '/event/%s/track/' % event.id))
+            result.append( (_('Talks'), '/event/%s/track/' % event.id))
+            result.append( (_('Agenda'), '/event/%s/agenda/' % event.id))
         if event.blog_id:
             result.append( (_('News'), '/blogpost/'+str(event.blog_ig.id)))
         if event.show_track_proposal:

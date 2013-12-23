@@ -23,7 +23,9 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 from openerp.addons.website.controllers.main import Website as controllers
+
 import re
+import werkzeug.utils
 
 controllers = controllers()
 
@@ -35,6 +37,15 @@ class website_event(http.Controller):
         website.preload_records(track)
         values = { 'track': track, 'event': track.event_id, 'main_object': track }
         return request.website.render("website_event_track.track_view", values)
+
+    @website.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", multilang=True)
+    def event_agenda(self, event, tag=None, **post):
+        website.preload_records(event, on_error="website_event.404")
+        values = {
+            'event': event,
+            'main_object': event,
+        }
+        return request.website.render("website_event_track.agenda", values)
 
     @website.route([
         '/event/<model("event.event"):event>/track/',
@@ -67,11 +78,7 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event_track.tracks", values)
 
-    @website.route(['/event/detail/<model("event.event"):event>'], type='http', auth="public", multilang=True)
-    def event_detail(self, event, **post):
-        website.preload_records(event, on_error="website_event.404")
-        values = { 'event': event, 'main_object': event }
-        return request.website.render("website_event_track.event_home", values)
+
 
     @website.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", multilang=True)
     def event_track_proposal(self, event, **post):
@@ -79,8 +86,49 @@ class website_event(http.Controller):
         values = { 'event': event }
         return request.website.render("website_event_track.event_track_proposal", values)
 
-    @website.route(['/event/<model("event.event"):event>/track_proposal/success/'], type='http', auth="public", multilang=True)
-    def event_track_proposal_success(self, event, **post):
-        website.preload_records(event, on_error="website_event.404")
-        values = { 'event': event }
+    @website.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", multilang=True)
+    def event_track_proposal_post(self, event, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+
+        tobj = request.registry['event.track']
+
+        tags = []
+        for tag in event.allowed_track_tag_ids:
+            if post.get('tag_'+str(tag.id)):
+                tags.append(tag.id)
+
+        e = werkzeug.utils.escape
+        track_description = '''<section data-snippet-id="text-block">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h2>%s</h2>
+            </div>
+            <div class="col-md-12">
+                <p>%s</p>
+            </div>
+            <div class="col-md-12">
+                <h3>About The Author</h3>
+                <p>%s</p>
+            </div>
+        </div>
+    </div>
+</section>''' % (e(post['track_name']), 
+            e(post['description']), e(post['biography']))
+
+        track_id = tobj.create(cr, uid, {
+            'name': post['track_name'],
+            'event_id': event.id,
+            'tag_ids': [(6, 0, tags)],
+            'user_id': False,
+            'description': track_description
+        }, context=context)
+
+        tobj.message_post(cr, uid, [track_id], body="""Proposed By: %s<br/>
+          Mail: <a href="mailto:%s">%s</a><br/>
+          Phone: %s""" % (e(post['partner_name']), e(post['email_from']), 
+            e(post['email_from']), e(post['phone'])), context=context)
+
+        track = tobj.browse(cr, uid, track_id, context=context)
+        values = {'track': track}
         return request.website.render("website_event_track.event_track_proposal_success", values)
