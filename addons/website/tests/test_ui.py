@@ -43,9 +43,10 @@ class WebsiteUiTest(unittest.TestCase):
 
 class WebsiteUiSuite(unittest.TestSuite):
     # timeout in seconds
-    def __init__(self, testfile, timeout=10.0):
-        self.testfile = testfile
-        self.timeout = timeout
+    def __init__(self, testfile, options, timeout=10.0):
+        self._testfile = testfile
+        self._timeout = timeout
+        self._options = options
         self._test = None
 
     def __iter__(self):
@@ -71,26 +72,24 @@ class WebsiteUiSuite(unittest.TestSuite):
             del result._exc_info_to_string
 
     def _run(self, result):
-        self._test = WebsiteUiTest(self.testfile)
-        self.start_time = time.time()
+        self._test = WebsiteUiTest(self._testfile)
+        start_time = time.time()
         last_check_time = time.time()
 
-        phantomOptions = json.dumps({
-            'timeout': self.timeout,
-            'port': tools.config['xmlrpc_port']
-        })
+        self._options['timeout'] = self._timeout
+        self._options['port'] = tools.config['xmlrpc_port']
 
         phantom = subprocess.Popen([
                 'phantomjs',
-                os.path.join(ROOT, self.testfile),
-                phantomOptions
+                os.path.join(ROOT, self._testfile),
+                json.dumps(self._options)
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT)
         proc_stdout = LineReader(phantom.stdout.fileno())
         readable = [proc_stdout]
         try:
-            while phantom.poll() is None and readable and last_check_time < self.start_time + self.timeout:
+            while phantom.poll() is None and readable and last_check_time < start_time + self._timeout:
                 ready, _, _ = select.select(readable, [], [], 0.1)
                 if not ready:
                     last_check_time = time.time()
@@ -105,8 +104,8 @@ class WebsiteUiSuite(unittest.TestSuite):
                         # the runner expects only one output line
                         # any subsequent line is ignored
                         readable.remove(stream)
-            if last_check_time >= (self.start_time + self.timeout):
-                result.addError(self._test, "Timeout after %s s" % (last_check_time - self.start_time ))
+            if last_check_time >= (start_time + self._timeout):
+                result.addError(self._test, "Timeout after %s s" % (last_check_time - start_time ))
         finally:
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
@@ -139,6 +138,6 @@ class WebsiteUiSuite(unittest.TestSuite):
              result.addError(self._test, 'Unexpected message: "%s"' % line)
 
 def load_tests(loader, base, _):
-    base.addTest(WebsiteUiSuite('dummy_test.js'))
-    base.addTest(WebsiteUiSuite('banner_tour_test.js'))
+    base.addTest(WebsiteUiSuite('dummy_test.js', {}))
+    base.addTest(WebsiteUiSuite('banner_tour_test.js', { 'path': '/web#action=website.action_website_homepage&login=admin&password=admin' }))
     return base
