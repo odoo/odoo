@@ -287,9 +287,6 @@
                     tour.start();
                 }
             });
-            document.addEventListener('ui-tests:ready', function() {
-                alert("TOTO_DOM");
-            }, false);
             if (document.dispatchEvent) {
                 document.dispatchEvent(new Event('ui-tests:ready', { bubbles: true, cancelable: false }));
             }
