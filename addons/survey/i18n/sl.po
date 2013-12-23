@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-11-21 11:45+0000\n"
+"PO-Revision-Date: 2013-12-22 12:26+0000\n"
 "Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-22 06:03+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2013-12-23 05:47+0000\n"
+"X-Generator: Launchpad (build 16872)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -1403,42 +1403,44 @@ msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
 "use a number that is smaller than %d."
 msgstr ""
+"#zahtevano odgovor, ki ste ga vnesli, je večji kot število odgovorov. "
+"Prosimo, vnesite število, manjše od %d."
 
 #. module: survey
 #: help:survey,max_response_limit:0
 msgid "Set to one if survey is answerable only once"
-msgstr ""
+msgstr "Nastavite na ena, če se na anketo odgovarja le enkrat."
 
 #. module: survey
 #: selection:survey.response,state:0
 msgid "Finished "
-msgstr ""
+msgstr "Končano "
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_column_heading
 msgid "Survey Question Column Heading"
-msgstr ""
+msgstr "Naziv stolpca anketnega vprašanja"
 
 #. module: survey
 #: field:survey.answer,average:0
 msgid "#Avg"
-msgstr ""
+msgstr "#Povprečno"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Choices (Multiple Answers Per Row)"
-msgstr ""
+msgstr "Matrika možnosti (več odgovorov na vrstico)"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_name
 msgid "Give Survey Answer"
-msgstr ""
+msgstr "Podajte anketni odgovor"
 
 #. module: survey
 #: help:survey.browse.answer,response_id:0
 msgid ""
 "If this field is empty, all answers of the selected survey will be print."
-msgstr ""
+msgstr "Če je to polje prazno, bodo natisnjeni vsi odgovori izbrane ankete"
 
 #. module: survey
 #: selection:survey.response.line,state:0
@@ -1448,28 +1450,28 @@ msgstr "Odgovorjeno"
 #. module: survey
 #: field:survey,send_response:0
 msgid "Email Notification on Answer"
-msgstr ""
+msgstr "Elektronsko sporočilo na odgovor"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:445
 #, python-format
 msgid "Complete Survey Answer"
-msgstr ""
+msgstr "Zaključi odgovor ankete"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Comment/Essay Box"
-msgstr ""
+msgstr "Polje za komentar"
 
 #. module: survey
 #: field:survey.answer,type:0
 msgid "Type of Answer"
-msgstr ""
+msgstr "Tip odgovora"
 
 #. module: survey
 #: field:survey.question,required_type:0
 msgid "Respondent must answer"
-msgstr ""
+msgstr "Pozvani mora odgovoriti"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_send_invitation
@@ -1481,22 +1483,22 @@ msgstr "Pošlji vabilo"
 #: code:addons/survey/wizard/survey_selection.py:80
 #, python-format
 msgid "You cannot give response for this survey more than %s times."
-msgstr ""
+msgstr "Ne morete odgovoriti na to anketo več kot %s krat."
 
 #. module: survey
 #: view:survey.question:0
 msgid "Search Question"
-msgstr ""
+msgstr "Iskanje vprašanja"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Single Textbox"
-msgstr ""
+msgstr "Enostaven tekstovni okvirček"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
 msgid "Survey Questions"
-msgstr ""
+msgstr "Vprašanje ankete"
 
 #. module: survey
 #: field:survey,note:0
@@ -1522,37 +1524,37 @@ msgstr "survey.send.invitation.log"
 #: selection:survey.print,orientation:0
 #: selection:survey.print.answer,orientation:0
 msgid "Portrait(Vertical)"
-msgstr ""
+msgstr "Pokončno (vertikalno)"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_send_invitation.py:67
 #: code:addons/survey/wizard/survey_send_invitation.py:68
 #, python-format
 msgid "Invitation for %s"
-msgstr ""
+msgstr "Povabilo za %s"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be Specific Length"
-msgstr ""
+msgstr "Mora biti določene dolžine"
 
 #. module: survey
 #: model:survey.type,name:survey.survey_type3
 msgid "Supplier Selection"
-msgstr ""
+msgstr "Izbira dobavitelja"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:992
 #, python-format
 msgid "You cannot select same answer more than one time.'"
-msgstr ""
+msgstr "Ne morete izbrati istega odgovora več kot enkrat."
 
 #. module: survey
 #: code:addons/survey/survey.py:685
 #, python-format
 msgid "You cannot duplicate the resource!"
-msgstr ""
+msgstr "Ne morete podvojiti vira!"
 
 #. module: survey
 #: code:addons/survey/survey.py:523
@@ -1561,22 +1563,24 @@ msgid ""
 "Minimum Required Answer you entered is greater than the number of answer. "
 "Please use a number that is smaller than %d."
 msgstr ""
+"Minimalni zahtevan odgovor, ki ste ga vnesli, je večji kot številka "
+"odgovora. Prosimo, uporabite število, ki je manjše od %d."
 
 #. module: survey
 #: view:survey:0
 msgid "All Open Survey"
-msgstr ""
+msgstr "Vse odprte ankete"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_browse_response
 #: field:survey.browse.answer,response_id:0
 msgid "Survey Answers"
-msgstr ""
+msgstr "Anketni odgovori"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_answer
 msgid "Surveys Answers"
-msgstr ""
+msgstr "Odgovori anket"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_pages
@@ -1591,12 +1595,14 @@ msgid ""
 "than the number of answer.                                    Please use a "
 "number that is smaller than %d."
 msgstr ""
+"#zahtevan odgovor, ki ste ga vnesli, je večji kot število odgovorov. "
+"Prosimo, uporabite število, manjše od %d."
 
 #. module: survey
 #: selection:survey.print,paper_size:0
 #: selection:survey.print.answer,paper_size:0
 msgid "Legal (8.5\" x 14\")"
-msgstr ""
+msgstr "Legal (8.5\" x 14\")"
 
 #. module: survey
 #: field:survey.type,name:0
@@ -1606,17 +1612,17 @@ msgstr "Ime"
 #. module: survey
 #: view:survey.page:0
 msgid "#Questions"
-msgstr ""
+msgstr "#vprašanj"
 
 #. module: survey
 #: field:survey.question,numeric_required_sum:0
 msgid "Sum of all choices"
-msgstr ""
+msgstr "Vsota vseh izbir"
 
 #. module: survey
 #: view:survey.request:0
 msgid "Request"
-msgstr ""
+msgstr "Zahteva"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response
@@ -1690,6 +1696,8 @@ msgid ""
 "greater than the number of answer.                                    Please "
 "use a number that is smaller than %d."
 msgstr ""
+"Minimalni zahtevan odgovor, ki ste ga vnesli, je večji kot število "
+"odgovorov. Prosimo, uporabite število, manjše od %d."
 
 #. module: survey
 #: field:survey.answer,menu_choice:0
@@ -1707,12 +1715,12 @@ msgstr "ID"
 msgid ""
 "Maximum Required Answer is greater                                     than "
 "Minimum Required Answer"
-msgstr ""
+msgstr "Maksimalni zahtevan odgovor je večji kot minimalni zahtevan odgovor."
 
 #. module: survey
 #: view:survey.send.invitation.log:0
 msgid "User creation"
-msgstr ""
+msgstr "Kreiranje uporabnika"
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -1723,17 +1731,17 @@ msgstr "Vse"
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be An Email Address"
-msgstr ""
+msgstr "Mora biti elektronski naslov"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Choice (Only One Answer)"
-msgstr ""
+msgstr "Več izbir (Samo en odgovor)"
 
 #. module: survey
 #: field:survey.answer,in_visible_answer_type:0
 msgid "Is Answer Type Invisible??"
-msgstr ""
+msgstr "Ali tip odgovora ni viden?"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print_answer
@@ -1763,7 +1771,7 @@ msgstr "ali"
 #. module: survey
 #: field:survey,title:0
 msgid "Survey Title"
-msgstr ""
+msgstr "Naziv ankete"
 
 #. module: survey
 #: field:survey.question.column.heading,rating_weight:0
@@ -1792,17 +1800,17 @@ msgstr "Naziv stolpca"
 #: model:ir.ui.menu,name:survey.menu_survey_page_form1
 #: view:survey.page:0
 msgid "Survey Pages"
-msgstr ""
+msgstr "Strani ankete"
 
 #. module: survey
 #: field:survey.question,type:0
 msgid "Question Type"
-msgstr ""
+msgstr "Tip vprašanja"
 
 #. module: survey
 #: field:survey.question,in_visible_answer_type:0
 msgid "Is Answer Type Invisible?"
-msgstr ""
+msgstr "Ali je tip neviden?"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1814,20 +1822,20 @@ msgstr "Razpredelnica"
 #: code:addons/survey/wizard/survey_answer.py:117
 #, python-format
 msgid "You cannot answer because the survey is not open."
-msgstr ""
+msgstr "Ne morete odgovarjati, ker anketa ni odprta."
 
 #. module: survey
 #: field:survey.question,comment_minimum_date:0
 #: field:survey.question,validation_minimum_date:0
 msgid "Minimum date"
-msgstr ""
+msgstr "Minimalni datum"
 
 #. module: survey
 #: field:survey,response_user:0
 msgid "Maximum Answer per User"
-msgstr ""
+msgstr "Maksimalno odgovorov po uporabniku"
 
 #. module: survey
 #: field:survey.name.wiz,page:0
 msgid "Page Position"
-msgstr ""
+msgstr "Pozicija strani"
