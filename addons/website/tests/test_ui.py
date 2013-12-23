@@ -13,7 +13,7 @@ __all__ = ['load_tests', 'WebsiteUiSuite']
 def _exc_info_to_string(err, test):
     return err
 
-class LineReader(object):
+class LineReader:
     def __init__(self, fd):
         self._fd = fd
         self._buf = ''
@@ -106,8 +106,9 @@ class WebsiteUiSuite(unittest.TestSuite):
                         readable.remove(stream)
                         break;
                     for line in lines:
-                        # the runner expects only one output line
                         self.process(line, result)
+                        # the runner expects only one output line
+                        # any subsequent line is ignored
                         break
 
             if last_check_time >= (self.start_time + self.timeout):
