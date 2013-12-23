@@ -49,7 +49,7 @@ class hr_grant_badge_wizard(osv.TransientModel):
 
             values = {
                 'user_id': wiz.user_id.id,
-                'user_from_id': uid,
+                'sender_id': uid,
                 'badge_id': wiz.badge_id.id,
                 'employee_id': wiz.employee_id.id,
                 'comment': wiz.comment,

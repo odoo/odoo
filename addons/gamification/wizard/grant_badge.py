@@ -46,7 +46,7 @@ class grant_badge_wizard(osv.TransientModel):
             #create the badge
             values = {
                 'user_id': wiz.user_id.id,
-                'user_from_id': uid,
+                'sender_id': uid,
                 'badge_id': wiz.badge_id.id,
                 'comment': wiz.comment,
             }

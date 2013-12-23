@@ -29,12 +29,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-CAN_GRANT = 1
-NOBODY_CAN_GRANT = 2
-USER_NOT_VIP = 3
-BADGE_REQUIRED = 4
-TOO_MANY = 5
-
 class gamification_badge_user(osv.Model):
     """User having received a badge"""
 
@@ -44,7 +38,7 @@ class gamification_badge_user(osv.Model):
 
     _columns = {
         'user_id': fields.many2one('res.users', string="User", required=True),
-        'user_from_id': fields.many2one('res.users', string="User From"),
+        'sender_id': fields.many2one('res.users', string="Sender", help="The user who has send the badge"),
         'badge_id': fields.many2one('gamification.badge', string='Badge', required=True),
         'comment': fields.text('Comment'),
         'badge_name': fields.related('badge_id', 'name', type="char", string="Badge Name"),
@@ -65,11 +59,8 @@ class gamification_badge_user(osv.Model):
         temp_obj = self.pool.get('email.template')
         user_obj = self.pool.get('res.users')
         template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
-        ctx = context.copy()
         for badge_user in self.browse(cr, uid, ids, context=context):
-
-            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=ctx)
-
+            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=context)
             res = user_obj.message_post(cr, uid, badge_user.user_id.id, body=body_html, context=context)
         return res
 
@@ -80,6 +71,12 @@ class gamification_badge_user(osv.Model):
 
 class gamification_badge(osv.Model):
     """Badge object that users can send and receive"""
+
+    CAN_GRANT = 1
+    NOBODY_CAN_GRANT = 2
+    USER_NOT_VIP = 3
+    BADGE_REQUIRED = 4
+    TOO_MANY = 5
 
     _name = 'gamification.badge'
     _description = 'Gamification badge'
@@ -223,15 +220,15 @@ class gamification_badge(osv.Model):
         Do not check for SUPERUSER_ID
         """
         status_code = self._can_grant_badge(cr, uid, badge_id, context=context)
-        if status_code == CAN_GRANT:
+        if status_code == self.CAN_GRANT:
             return True
-        elif status_code == NOBODY_CAN_GRANT:
+        elif status_code == self.NOBODY_CAN_GRANT:
             raise osv.except_osv(_('Warning!'), _('This badge can not be sent by users.'))
-        elif status_code == USER_NOT_VIP:
+        elif status_code == self.USER_NOT_VIP:
             raise osv.except_osv(_('Warning!'), _('You are not in the user allowed list.'))
-        elif status_code == BADGE_REQUIRED:
+        elif status_code == self.BADGE_REQUIRED:
             raise osv.except_osv(_('Warning!'), _('You do not have the required badges.'))
-        elif status_code == TOO_MANY:
+        elif status_code == self.TOO_MANY:
             raise osv.except_osv(_('Warning!'), _('You have already sent this badge too many time this month.'))
         else:
             _logger.exception("Unknown badge status code: %d" % int(status_code))
@@ -245,27 +242,27 @@ class gamification_badge(osv.Model):
         :return: integer representing the permission.
         """
         if uid == SUPERUSER_ID:
-            return CAN_GRANT
+            return self.CAN_GRANT
 
         badge = self.browse(cr, uid, badge_id, context=context)
 
         if badge.rule_auth == 'nobody':
-            return NOBODY_CAN_GRANT
+            return self.NOBODY_CAN_GRANT
 
         elif badge.rule_auth == 'users' and uid not in [user.id for user in badge.rule_auth_user_ids]:
-            return USER_NOT_VIP
+            return self.USER_NOT_VIP
 
         elif badge.rule_auth == 'having':
             all_user_badges = self.pool.get('gamification.badge.user').search(cr, uid, [('user_id', '=', uid)], context=context)
             for required_badge in badge.rule_auth_badge_ids:
                 if required_badge.id not in all_user_badges:
-                    return BADGE_REQUIRED
+                    return self.BADGE_REQUIRED
 
         if badge.rule_max and badge.stat_my_monthly_sending >= badge.rule_max_number:
-            return TOO_MANY
+            return self.TOO_MANY
 
         # badge.rule_auth == 'everyone' -> no check
-        return CAN_GRANT
+        return self.CAN_GRANT
 
     def check_progress(self, cr, uid, context=None):
         try:
