@@ -250,7 +250,15 @@ class account_analytic_line(osv.osv):
         #if we don't get the dates from the timesheet, we return the default value from super()
         return res
 
-
+class account_analytic_account(osv.osv):
+    _inherit = "account.analytic.account"
+    
+    def name_create(self, cr, uid, name, context=None):
+        if not context.get('default_use_timesheets') == True:
+            return super(account_analytic_account, self).name_create(cr, uid, name, context=context)
+        rec_id = self.create(cr, uid, {self._rec_name: name}, context)
+        return self.name_get(cr, uid, [rec_id], context)[0]
+    
 class hr_timesheet_line(osv.osv):
     _inherit = "hr.analytic.timesheet"
 
