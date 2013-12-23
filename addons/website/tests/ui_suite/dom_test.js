@@ -8,16 +8,15 @@ page.onError = function(message, trace) {
 };
 
 function waitFor(ready, timeout) {
-    var maxtimeOutMillis = timeout ? timeout*1000 : 10000;
+    var timeOutMillis = timeout ? timeout*1000 : 10000;
     var start = new Date().getTime();
     var condition = ready();
     var interval = setInterval(function() {
-        if ((new Date().getTime() - start < maxtimeOutMillis) && !condition ) {
-            alert("TOTO")
+        if ((new Date().getTime() - start < timeOutMillis) && !condition ) {
             condition = ready();
         } else {
             if(!condition) {
-                console.log('{ "event": "error", "message": "Timeout after'+maxtimeOutMillis+' ms" }');
+                console.log('{ "event": "error", "message": "Timeout after'+timeOutMillis+' ms" }');
                 phantom.exit(1);
             } else {
                 clearInterval(interval);
@@ -27,6 +26,7 @@ function waitFor(ready, timeout) {
     }, 100);
 };
 
+page.viewportSize = { width: 1920, height: 1080 };
 page.open(url, function (status) {
     if (status !== 'success') {
         console.log('{ "event": "failure", "message": "'+url+' failed to load"}');
@@ -34,7 +34,7 @@ page.open(url, function (status) {
     } else {
         waitFor(function () {
             return page.evaluate(function () {
-                return window.openerp && window.openerp.website && window.openerp.website.editor;
+                return window.openerp && window.openerp.website && window.openerp.website.TestConsole;
             });
         }, options.timeout);
     }

@@ -287,9 +287,6 @@
                     tour.start();
                 }
             });
-            if (document.dispatchEvent) {
-                document.dispatchEvent(new Event('ui-tests:ready', { bubbles: true, cancelable: false }));
-            }
             return this._super();
         },
         registerTour: function (tour) {
