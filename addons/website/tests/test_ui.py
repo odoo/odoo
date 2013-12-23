@@ -103,7 +103,6 @@ class WebsiteUiSuite(unittest.TestSuite):
                     if lines is None:
                         # got EOF on this stream
                         readable.remove(stream)
-                        break;
                     else:
                         self.process(lines[0], result)
                         # the runner expects only one output line
