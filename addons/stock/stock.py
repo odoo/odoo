@@ -526,17 +526,6 @@ class stock_quant(osv.osv):
     def _price_update(self, cr, uid, ids, newprice, context=None):
         self.write(cr, SUPERUSER_ID, ids, {'cost': newprice}, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        #We want to trigger the move with nothing on reserved_quant_ids for the store of the remaining quantity
-        if 'reservation_id' in vals:
-            reservation_ids = self.browse(cr, uid, ids, context=context)
-            moves_to_warn = set()
-            for reser in reservation_ids:
-                if reser.reservation_id:
-                    moves_to_warn.add(reser.reservation_id.id)
-            self.pool.get('stock.move').write(cr, uid, list(moves_to_warn), {'reserved_quant_ids': []}, context=context)
-        return super(stock_quant, self).write(cr, SUPERUSER_ID, ids, vals, context=context)
-
     def quants_unreserve(self, cr, uid, move, context=None):
         related_quants = [x.id for x in move.reserved_quant_ids]
         return self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False, 'link_move_operation_id': False}, context=context)
@@ -1417,6 +1406,10 @@ class stock_move(osv.osv):
         quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, move_ids, context=context):
             quant_obj.quants_unreserve(cr, uid, move, context=context)
+            putaway_values = []
+            for putaway_rec in move.putaway_ids:
+                putaway_values.append((2, putaway_rec.id))
+            self.write(cr, uid, [move.id], {'state': 'confirmed', 'putaway_ids': putaway_values}, context=context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
         origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or "/")
@@ -1462,18 +1455,25 @@ class stock_move(osv.osv):
         return True
 
     # Create the stock.move.putaway records
-    def _putaway_apply(self, cr, uid, ids, context=None):
+    def _putaway_apply(self, cr, uid, move, putaway, context=None):
+        # Should call different methods here in later versions
         moveputaway_obj = self.pool.get('stock.move.putaway')
+        quant_obj = self.pool.get('stock.quant')
+        if putaway.method == 'fixed' and putaway.location_spec_id:
+            for row in quant_obj.read_group(cr, uid, [('reservation_id', '=', move.id)], ['qty', 'lot_id'], ['lot_id'], context=context):
+                vals = {
+                    'move_id': move.id,
+                    'location_id': putaway.location_spec_id.id,
+                    'quantity': row['qty'],
+                    'lot_id': row.get('lot_id') and row['lot_id'][0] or False,
+                }
+                moveputaway_obj.create(cr, SUPERUSER_ID, vals, context=context)
+
+    def _putaway_check(self, cr, uid, ids, context=None):
         for move in self.browse(cr, uid, ids, context=context):
             putaway = self.pool.get('stock.location').get_putaway_strategy(cr, uid, move.location_dest_id, move.product_id, context=context)
             if putaway:
-                # Should call different methods here in later versions
-                # TODO: take care of lots
-                if putaway.method == 'fixed' and putaway.location_spec_id:
-                    moveputaway_obj.create(cr, SUPERUSER_ID, {'move_id': move.id,
-                                                     'location_id': putaway.location_spec_id.id,
-                                                     'quantity': move.product_qty}, context=context)
-        return True
+                self._putaway_apply(cr, uid, move, putaway, context=context)
 
     def _create_procurement(self, cr, uid, move, context=None):
         """ This will create a procurement order """
@@ -1750,7 +1750,7 @@ class stock_move(osv.osv):
                     quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                     quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
-        self._putaway_apply(cr, uid, ids, context=context)
+        self._putaway_check(cr, uid, ids, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the moves and if all moves are cancelled it cancels the picking.
