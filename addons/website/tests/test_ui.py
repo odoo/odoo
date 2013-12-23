@@ -43,7 +43,7 @@ class WebsiteUiTest(unittest.TestCase):
 
 class WebsiteUiSuite(unittest.TestSuite):
     # timeout is in seconds
-    def __init__(self, testfile, timeout=60.0):
+    def __init__(self, testfile, timeout=10.0):
         self.testfile = testfile
         self.timeout = timeout
         self._test = None
@@ -141,5 +141,5 @@ class WebsiteUiSuite(unittest.TestSuite):
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite('dummy_test.js'))
-    base.addTest(WebsiteUiSuite('dom_test.js'))
+    base.addTest(WebsiteUiSuite('banner_tour_test.js'))
     return base
