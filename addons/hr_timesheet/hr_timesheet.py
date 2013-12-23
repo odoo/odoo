@@ -206,9 +206,6 @@ class account_analytic_account(osv.osv):
     _columns = {
         'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
     }
-    _defaults = {
-        'use_timesheets': True
-    }
 
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
