@@ -21,12 +21,15 @@
 
 import time
 from openerp.report import report_sxw
+from openerp.tools.translate import _
 
 class picking(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(picking, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
+            'get_internal_picking_src_lines': self.get_internal_picking_src_lines,
+            'get_internal_picking_dest_lines': self.get_internal_picking_dest_lines,
             'get_product_desc': self.get_product_desc,
         })
     def get_product_desc(self, move_line):
@@ -35,6 +38,56 @@ class picking(report_sxw.rml_parse):
             desc = '[' + move_line.product_id.default_code + ']' + ' ' + desc
         return desc
 
-report_sxw.report_sxw('report.stock.picking.list','stock.picking','addons/stock/report/picking.rml',parser=picking)
-report_sxw.report_sxw('report.stock.picking.list.internal','stock.picking','addons/stock/report/picking_internal.rml',parser=picking, header='internal')
+    def get_internal_picking_src_lines(self, picking):
+        res = []
+        for line in picking.move_lines:
+            if line.state not in ('confirmed', 'done', 'assigned', 'waiting') or line.scrapped:
+                continue
+            state_label = line.state == 'done' and _('Done') or (line.state == 'confirmed' and _('Waiting Availability') or (line.state == 'assigned' and _('Available') or _('Waiting Availability')))
+            row = {
+                'state': state_label,
+                'description': self.get_product_desc(line),
+            }
+            if not line.lot_ids:
+                row['quantity'] = line.product_uom_qty
+                row['lot_id'] = ''
+                row['uom'] = line.product_uom.name
+                row['location_id'] = line.location_id.name
+                row['barcode'] = line.product_id.ean13
+                res.append(row)
+            else:
+                for quant in line.lot_ids:
+                    row2 = row.copy()
+                    row2['quantity'] = quant.qty
+                    row2['uom'] = line.product_id.uom_id.name
+                    row2['location_id'] = quant.location_id.name
+                    row2['lot_id'] = quant.lot_id and quant.lot_id.name or ''
+                    row2['barcode'] = quant.lot_id and quant.lot_id.name or line.product_id.ean13
+                    res.append(row2)
+        return res
+
+    def get_internal_picking_dest_lines(self, picking):
+        res = []
+        for line in picking.move_lines:
+            row = {'description': self.get_product_desc(line)}
+            if not line.putaway_ids:
+                row['quantity'] = line.product_uom_qty
+                row['uom'] = line.product_uom.name
+                row['location_id'] = line.location_dest_id.name
+                row['barcode'] = line.product_id.ean13
+                row['lot_id'] = ''
+                res.append(row)
+            else:
+                for rec in line.putaway_ids:
+                    row2 = row.copy()
+                    row2['quantity'] = rec.quantity
+                    row2['uom'] = line.product_id.uom_id.name
+                    row2['location_id'] = rec.location_id.name
+                    row2['lot_id'] = rec.lot_id and rec.lot_id.name or ''
+                    row2['barcode'] = rec.lot_id and rec.lot_id.name or line.product_id.ean13
+                    res.append(row2)
+        return res
+
+report_sxw.report_sxw('report.stock.picking.list', 'stock.picking', 'addons/stock/report/picking.rml', parser=picking)
+report_sxw.report_sxw('report.stock.picking.list.internal', 'stock.picking', 'addons/stock/report/picking_internal.rml', parser=picking, header='internal')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
