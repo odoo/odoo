@@ -76,11 +76,13 @@ class WebsiteUiSuite(unittest.TestSuite):
     def _run(self, result):
         self._test = WebsiteUiTest(self.testfile)
         self.start_time = time.time()
+        last_check_time = time.time()
 
         phantomOptions = json.dumps({
             'timeout': self.timeout,
             'port': tools.config['xmlrpc_port']
         })
+
         phantom = subprocess.Popen([
             'phantomjs',
             os.path.join(ROOT, self.testfile),
@@ -88,14 +90,11 @@ class WebsiteUiSuite(unittest.TestSuite):
         ],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT)
-
         proc_stdout = LineReader(phantom.stdout.fileno())
         readable = [proc_stdout]
-
-        last_check_time = time.time()
         try:
             while readable and last_check_time < self.start_time + self.timeout:
-                ready, _, _ = select.select(readable, [], [], 0)
+                ready, _, _ = select.select(readable, [], [], 0.1)
                 if not ready:
                     last_check_time = time.time()
                     continue
@@ -110,7 +109,6 @@ class WebsiteUiSuite(unittest.TestSuite):
                         # the runner expects only one output line
                         # any subsequent line is ignored
                         break
-
             if last_check_time >= (self.start_time + self.timeout):
                 result.addError(self._test, "Timeout after %s s" % (last_check_time - self.start_time ))
             result.stopTest(self._test)
