@@ -1,8 +1,7 @@
 var testTemplate = require('./ui_test_template.js');
 
-var waitFor = testTemplate.waitFor;
-
-function test (page) {
+testTemplate.runTest(function testBannerTour (page) {
+    var waitFor = testTemplate.waitFor;
     page.evaluate(function () {
         localStorage.clear();
     });
@@ -28,6 +27,4 @@ function test (page) {
             phantom.exit();
         });
     });
-}
-
-testTemplate.runTest(test);
+});

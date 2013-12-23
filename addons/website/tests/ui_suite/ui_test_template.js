@@ -1,5 +1,3 @@
-
-
 function waitFor(ready, callback, timeout) {
     var timeoutMillis = timeout ? Math.round(timeout*1000) : 30000;
     var start = new Date().getTime();
@@ -19,22 +17,17 @@ function waitFor(ready, callback, timeout) {
     }, 100);
 };
 
-
-
 function runTest (test) {
     var options = JSON.parse(phantom.args);
     var port = options.port ? ':'+options.port : '';
     var path = options.path ? options.path : '';
     var url = 'http://localhost'+port+path;
-
     var page = require('webpage').create();
-
     page.viewportSize = { width: 1920, height: 1080 };
     page.onError = function(message, trace) {
         console.log('{ "event": "error", "message": "'+message+'"}');
         phantom.exit(1);
     };
-
     page.open(url, function (status) {
         if (status !== 'success') {
             console.log('{ "event": "failure", "message": "'+url+' failed to load"}');
