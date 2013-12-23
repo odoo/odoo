@@ -1035,7 +1035,7 @@ class node_dir(node_database):
                     print "Cannot eval %s." % dfld.expr
                     print e
                     pass
-    
+
     def __eq__(self, other):
         if type(self) != type(other):
             return False
