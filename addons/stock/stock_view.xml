@@ -1465,24 +1465,15 @@
                                             <a name="%(action_picking_tree_late)d" type="action">
                                                 <field name="count_picking_late"/> Late
                                             </a>
-                                            <a name="%(action_picking_tree_late)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="latest_picking_late" widget="stock_sparkline" options="{'type': 'tristate'}"/>
-                                            </a>
                                         </div>
                                         <div t-if="record.count_picking_backorders.raw_value &gt; 0">
                                             <a name="%(action_picking_tree_backorder)d" type="action">
                                                 <field name="count_picking_backorders"/> Backorders
                                             </a>
-                                            <a name="%(action_picking_tree_backorder)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="latest_picking_backorders" widget="stock_sparkline" options="{'type': 'tristate'}"/>
-                                            </a>
                                         </div>
                                         <div t-if="record.count_picking_waiting.raw_value &gt; 0">
                                             <a name="%(action_picking_tree_waiting)d" type="action">
                                                 <field name="count_picking_waiting"/> Waiting
-                                            </a>
-                                            <a name="%(action_picking_tree_waiting)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="latest_picking_waiting" widget="stock_sparkline" options="{'type': 'tristate'}"/>
                                             </a>
                                         </div>
                                         <div>
@@ -1490,8 +1481,8 @@
                                         </div>
                                     </div>
                                     <div class="oe_center oe_stock_justgage">
-                                        <field name="rate_picking_late" widget="stock_gage" style="width:160px; height: 120px;">Late (%%)</field>
-                                        <field name="rate_picking_backorders" widget="stock_gage" style="width:160px; height: 120px;">Backorders (%%)</field>
+                                        <field name="rate_picking_late" widget="stock_gage" style="width:150px; height: 110px;">Late (%%)</field>
+                                        <field name="rate_picking_backorders" widget="stock_gage" style="width:150px; height: 110px;">Backorders (%%)</field>
                                     </div>
 
                                 </div>
