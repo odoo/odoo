@@ -14,23 +14,23 @@ def _exc_info_to_string(err, test):
     return err
 
 class LineReader:
-    def __init__(self, fd):
-        self._fd = fd
-        self._buf = ''
+    def __init__(self, file_descriptor):
+        self._file_descriptor = file_descriptor
+        self._buffer = ''
 
     def fileno(self):
-        return self._fd
+        return self._file_descriptor
 
     def readlines(self):
-        data = os.read(self._fd, 4096)
+        data = os.read(self._file_descriptor, 4096)
         if not data:
             # EOF
             return None
-        self._buf += data
+        self._buffer += data
         if '\n' not in data:
             return []
-        tmp = self._buf.split('\n')
-        lines, self._buf = tmp[:-1], tmp[-1]
+        tmp = self._buffer.split('\n')
+        lines, self._buffer = tmp[:-1], tmp[-1]
         return lines
 
 class WebsiteUiTest(unittest.TestCase):
@@ -42,7 +42,7 @@ class WebsiteUiTest(unittest.TestCase):
         return self.name
 
 class WebsiteUiSuite(unittest.TestSuite):
-    # timeout is in seconds
+    # timeout in seconds
     def __init__(self, testfile, timeout=10.0):
         self.testfile = testfile
         self.timeout = timeout
@@ -52,14 +52,11 @@ class WebsiteUiSuite(unittest.TestSuite):
         return iter([self])
 
     def run(self, result):
-        # Test if phantom is correctly installed
+        # is PhantomJS correctly installed?
         try:
-            subprocess.call([
-                'phantomjs',
-                '-v'
-            ],
-            stdout=open(os.devnull, 'w'),
-            stderr=subprocess.STDOUT)
+            subprocess.call([ 'phantomjs', '-v' ],
+                stdout=open(os.devnull, 'w'),
+                stderr=subprocess.STDOUT)
         except OSError:
             test = WebsiteUiTest('UI Tests')
             result.startTest(test)
@@ -84,12 +81,12 @@ class WebsiteUiSuite(unittest.TestSuite):
         })
 
         phantom = subprocess.Popen([
-            'phantomjs',
-            os.path.join(ROOT, self.testfile),
-            phantomOptions
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
+                'phantomjs',
+                os.path.join(ROOT, self.testfile),
+                phantomOptions
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT)
         proc_stdout = LineReader(phantom.stdout.fileno())
         readable = [proc_stdout]
         try:
@@ -101,14 +98,13 @@ class WebsiteUiSuite(unittest.TestSuite):
                 for stream in ready:
                     lines = stream.readlines()
                     if lines is None:
-                        # got EOF on this stream
+                        # EOF
                         readable.remove(stream)
                     else:
                         self.process(lines[0], result)
                         # the runner expects only one output line
                         # any subsequent line is ignored
                         readable.remove(stream)
-
             if last_check_time >= (self.start_time + self.timeout):
                 result.addError(self._test, "Timeout after %s s" % (last_check_time - self.start_time ))
         finally:
@@ -123,6 +119,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         # use console.log in phantomjs to output test results using the following format:
         # - for a success: { "event": "success" }
         # - for a failure: { "event": "failure", "message": "Failure description" }
+        # - for an error:  { "event": "error",   "message": "Error description" }
         # any other message is treated as an error
         result.startTest(self._test)
         try:
@@ -133,6 +130,9 @@ class WebsiteUiSuite(unittest.TestSuite):
             elif event == 'failure':
                 message = args.get('message', "")
                 result.addFailure(self._test, message)
+            elif event == 'error':
+                message = args.get('message', "")
+                result.addError(self._test, message)
             else:
                 result.addError(self._test, 'Unexpected JSON: "%s"' % line)
         except ValueError:
