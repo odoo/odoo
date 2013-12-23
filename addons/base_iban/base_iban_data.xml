@@ -13,7 +13,7 @@
         <record id="bank_swift_field" model="res.partner.bank.type.field">
             <field name="name">bank_bic</field>
             <field name="bank_type_id" ref="bank_iban"/>
-            <field eval="True" name="required"/>
+            <field eval="False" name="required"/>
             <field eval="False" name="readonly"/>
         </record>
         <record id="bank_country_field" model="res.partner.bank.type.field">
