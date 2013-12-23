@@ -268,7 +268,7 @@ class gamification_goal(osv.Model):
                     towrite['current'] = new_value
 
             # check goal target reached
-            if (goal.definition_id.condition == 'higher' and towrite.get('current', goal.current) >= goal.target_goal) or (goal.definition_id.condition == 'lower' and towrite.get('current', goal.current) <= goal.target_goal):
+            if (goal.definition_condition == 'higher' and towrite.get('current', goal.current) >= goal.target_goal) or (goal.definition_condition == 'lower' and towrite.get('current', goal.current) <= goal.target_goal):
                 towrite['state'] = 'reached'
 
             # check goal failure

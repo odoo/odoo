@@ -90,10 +90,7 @@ class gamification_badge(osv.Model):
         """
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            res = set()
-            for owner in obj.owner_ids:
-                res.add(owner.user_id.id)
-            res = list(res)
+            res = list(set(owner.user_id.id for owner in obj.owner_ids))
             result[obj.id] = {
                 'unique_owner_ids': res,
                 'stat_count': len(obj.owner_ids),

@@ -206,7 +206,7 @@ class gamification_challenge(osv.Model):
         if vals.get('autojoin_group_id'):
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
 
-            if 'user_ids' not in vals:
+            if not vals.get('user_ids'):
                 vals['user_ids'] = []
             vals['user_ids'] += [(4, user.id) for user in new_group.users]
 
@@ -226,7 +226,7 @@ class gamification_challenge(osv.Model):
         if vals.get('autojoin_group_id'):
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
 
-            if 'user_ids' not in vals:
+            if not vals.get('user_ids'):
                 vals['user_ids'] = []
             vals['user_ids'] += [(4, user.id) for user in new_group.users]
 
@@ -758,7 +758,7 @@ class gamification_challenge(osv.Model):
             for goal in goal_obj.browse(cr, uid, goal_ids, context=context):
                 if goal.state != 'reached':
                     all_reached = False
-                if goal.condition == 'higher':
+                if goal.definition_condition == 'higher':
                     # can be over 100
                     total_completness += 100.0 * goal.current / goal.target_goal
                 elif goal.state == 'reached':
