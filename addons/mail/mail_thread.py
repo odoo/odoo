@@ -821,11 +821,11 @@ class mail_thread(osv.AbstractModel):
                 message = message.encode('utf-8')
             message = email.message_from_string(message)
 
-        message_id = message['message-id']
+        message_id = message['Message-Id']
         if not message_id:
             # Very unusual situation, be we should be fault-tolerant here
             message_id = "<%s@localhost>" % time.time()
-            _logger.debug('Parsing Message without message-id, generating a random one: %s', message_id)
+            _logger.debug('Parsing Message without Message-Id, generating a random one: %s', message_id)
         msg_dict['message_id'] = message_id
 
         if message.get('Subject'):
@@ -857,7 +857,7 @@ class mail_thread(osv.AbstractModel):
                     stored_date = parsed_date.astimezone(tz=pytz.utc)
             except Exception:
                 _logger.warning('Failed to parse Date header %r in incoming mail '
-                                'with message-id %r, assuming current date/time.',
+                                'with Message-Id %r, assuming current date/time.',
                                 message.get('Date'), message_id)
                 stored_date = datetime.datetime.now()
             msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
