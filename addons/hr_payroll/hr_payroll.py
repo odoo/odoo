@@ -145,8 +145,9 @@ class hr_contract(osv.osv):
         @param contract_ids: list of contracts
         @return: the structures linked to the given contracts, ordered by hierachy (parent=False first, then first level children and so on) and without duplicata
         """
-        all_structures = []
-        structure_ids = [contract.struct_id.id for contract in self.browse(cr, uid, contract_ids, context=context)]
+        structure_ids = [contract.struct_id.id for contract in self.browse(cr, uid, contract_ids, context=context) if contract.struct_id]
+        if not structure_ids:
+            return []
         return list(set(self.pool.get('hr.payroll.structure')._get_parent_structure(cr, uid, structure_ids, context=context)))
 
 hr_contract()
