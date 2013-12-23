@@ -44,6 +44,7 @@ class gamification_badge_user(osv.Model):
 
     _columns = {
         'user_id': fields.many2one('res.users', string="User", required=True),
+        'user_from_id': fields.many2one('res.users', string="User From"),
         'badge_id': fields.many2one('gamification.badge', string='Badge', required=True),
         'comment': fields.text('Comment'),
         'badge_name': fields.related('badge_id', 'name', type="char", string="Badge Name"),
@@ -52,14 +53,13 @@ class gamification_badge_user(osv.Model):
     }
 
 
-    def _send_badge(self, cr, uid, ids, user_from=False, context=None):
+    def _send_badge(self, cr, uid, ids, context=None):
         """Send a notification to a user for receiving a badge
 
         Does not verify constrains on badge granting.
         The users are added to the owner_ids (create badge_user if needed)
         The stats counters are incremented
         :param ids: list(int) of badge users that will receive the badge
-        :param user_from: optional id of the res.users object that has sent the badge
         """
         res = True
         temp_obj = self.pool.get('email.template')
@@ -68,7 +68,6 @@ class gamification_badge_user(osv.Model):
         ctx = context.copy()
         for badge_user in self.browse(cr, uid, ids, context=context):
 
-            ctx.update({'user_from': user_obj.browse(cr, uid, user_from).name})
             body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=ctx)
 
             res = user_obj.message_post(cr, uid, badge_user.user_id.id, body=body_html, context=context)
@@ -180,6 +179,7 @@ class gamification_badge(osv.Model):
 
         'owner_ids': fields.one2many('gamification.badge.user', 'badge_id',
             string='Owners', help='The list of instances of this badge granted to users'),
+        'active': fields.boolean('Active'),
         'unique_owner_ids': fields.function(_get_owners_info,
             string='Unique Owners',
             help="The list of unique users having received this badge.",
@@ -213,6 +213,7 @@ class gamification_badge(osv.Model):
 
     _defaults = {
         'rule_auth': 'everyone',
+        'active': True,
     }
 
     def check_granting(self, cr, uid, badge_id, context=None):
@@ -265,3 +266,17 @@ class gamification_badge(osv.Model):
 
         # badge.rule_auth == 'everyone' -> no check
         return CAN_GRANT
+
+    def check_progress(self, cr, uid, context=None):
+        try:
+            model, res_id = template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'badge_hidden')
+        except ValueError:
+            return True
+        badge_user_obj = self.pool.get('gamification.badge.user')
+        if not badge_user_obj.search(cr, uid, [('user_id', '=', uid), ('badge_id', '=', res_id)], context=context):
+            values = {
+                'user_id': uid,
+                'badge_id': res_id,
+            }
+            badge_user_obj.create(cr, SUPERUSER_ID, values, context=context)
+        return True

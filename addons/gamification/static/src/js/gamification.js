@@ -57,14 +57,6 @@ openerp.gamification = function(instance) {
             self.get_goal_todo_info();
             self.get_challenge_suggestions();
         },
-        // render_template: function(target,template) {
-        //     var self = this;
-        //     target.append(QWeb.render(template,{'widget': self}));
-        // },
-        render_template_replace: function(target,template) {
-            var self = this;
-            target.html(QWeb.render(template,{'widget': self}));
-        },
         get_goal_todo_info: function() {
             var self = this;
             var challenges = new instance.web.Model('res.users').call('get_serialised_gamification_summary', []).then(function(result) {
@@ -72,7 +64,6 @@ openerp.gamification = function(instance) {
                     self.$el.find(".oe_gamification_challenge_list").hide();
                 } else {
                     _.each(result, function(item){
-                        console.log(item);
                         var $item = $(QWeb.render("gamification.ChallengeSummary", {challenge: item}));
                         self.render_money_fields($item);
                         self.render_user_avatars($item);
@@ -122,9 +113,35 @@ openerp.gamification = function(instance) {
     instance.mail.Widget.include({
         start: function() {
             this._super();
-            var self = this;
-            var sidebar = new instance.gamification.Sidebar(self);
+            var sidebar = new instance.gamification.Sidebar(this);
             sidebar.appendTo($('.oe_mail_wall_aside'));
+        }
+    });
+
+    instance.web_kanban.KanbanView.include({
+        start: function() {
+            this._super();
+            $(document).off('keydown.klistener');
+        },
+        events: {
+            'click': function(event) {
+                var self = this;
+                if (this.ViewManager.dataset.model === 'gamification.badge') {
+                    this.kkeys = [];
+                    $(document).off('keydown.klistener');
+                    $(document).on('keydown.klistener', function(event) {
+                        if ("37,38,39,40,65,66".indexOf(event.keyCode) < 0) {
+                            $(document).off('keydown.klistener');
+                        } else {
+                            self.kkeys.push(event.keyCode);
+                            if (self.kkeys.toString().indexOf("38,38,40,40,37,39,37,39,66,65") >= 0) {
+                                new instance.web.Model('gamification.badge').call('check_progress', []);
+                                $(document).off('keydown.klistener');
+                            }
+                        }
+                    });
+                }
+            }
         }
     });
 
@@ -136,7 +153,7 @@ openerp.gamification = function(instance) {
             } else {
                 this._super.apply(this, arguments);
             }
-        }
+        },
     });
     
 };

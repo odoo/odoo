@@ -49,11 +49,12 @@ class hr_grant_badge_wizard(osv.TransientModel):
 
             values = {
                 'user_id': wiz.user_id.id,
+                'user_from_id': uid,
                 'badge_id': wiz.badge_id.id,
                 'employee_id': wiz.employee_id.id,
                 'comment': wiz.comment,
             }
 
             badge_user = badge_user_obj.create(cr, uid, values, context=context)
-            result = badge_user_obj._send_badge(cr, uid, [badge_user], user_from=uid, context=context)
+            result = badge_user_obj._send_badge(cr, uid, [badge_user], context=context)
         return result

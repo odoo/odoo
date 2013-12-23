@@ -49,17 +49,6 @@ class gamification_badge(osv.Model):
     _name = 'gamification.badge'
     _inherit = ['gamification.badge']
 
-    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
-        """Overwrite the message_post method to send the badge to the employee"""
-        # badge_user included in the send_badge method and 'badge_id' in the wizard view
-        if 'badge_user' in context and 'badge_id' in context:
-            # badge = self.browse(cr, uid, context['badge_id'], context=context)
-            badge_user = context['badge_user']
-            if badge_user.employee_id:
-                return self.pool.get('hr.employee').message_post(cr, SUPERUSER_ID,
-                    badge_user.employee_id.id, context=context, **kwargs)
-        return super(gamification_badge, self).message_post(cr, uid, thread_id, context=context, **kwargs)
-
     def get_granted_employees(self, cr, uid, badge_ids, context=None):
         if context is None:
             context = {}

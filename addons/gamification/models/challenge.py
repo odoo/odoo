@@ -626,7 +626,7 @@ class gamification_challenge(osv.Model):
                     continue
 
                 ctx.update({'challenge_lines': goals})
-                template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_progress_perso', context)
+                template_id = self.pool.get('ir.model.data').get_object(cr, uid, 'gamification', 'email_template_goal_progress_perso', context)
                 body_html = temp_obj.render_template(cr, user.id, template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
                 # send message only to users, not on the challenge
                 self.message_post(cr, uid, 0,
@@ -642,7 +642,6 @@ class gamification_challenge(osv.Model):
         return self.write(cr, uid, challenge.id, {'last_report_date': fields.date.today()}, context=context)
 
     ##### Challenges #####
-
     def accept_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
         """The user accept the suggested challenge"""
         user_id = user_id or uid
@@ -788,7 +787,7 @@ class gamification_challenge(osv.Model):
         """
         badge_user_obj = self.pool.get('gamification.badge.user')
         user_badge_id = badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge_id}, context=context)
-        return badge_user_obj._send_badge(cr, uid, [user_badge_id], user_from=None, context=context)
+        return badge_user_obj._send_badge(cr, uid, [user_badge_id], context=context)
 
 
 class gamification_challenge_line(osv.Model):
