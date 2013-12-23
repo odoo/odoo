@@ -254,7 +254,9 @@ class account_analytic_account(osv.osv):
     _inherit = "account.analytic.account"
     
     def name_create(self, cr, uid, name, context=None):
-        if context.get('default_use_timesheets') == False:
+        if context is None:
+            context = {}
+        if not context.get('default_use_timesheets', False):
             return super(account_analytic_account, self).name_create(cr, uid, name, context=context)
         rec_id = self.create(cr, uid, {self._rec_name: name}, context)
         return self.name_get(cr, uid, [rec_id], context)[0]
