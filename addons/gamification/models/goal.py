@@ -89,7 +89,7 @@ class gamification_goal_definition(osv.Model):
             string='Date Field',
             help='The date to use for the time period evaluated'),
         'domain': fields.char("Filter Domain",
-            help="Technical filters rules to apply. Use 'user.id' (without marks) to limit the search to the evaluated user.",
+            help="Domain for filtering records. The rule can contain reference to 'user' that is a browse record of the current user, e.g. [('user_id', '=', user.id)].",
             required=True),
         'compute_code': fields.char('Compute Code',
             help="The name of the python method that will be executed to compute the current value. See the file gamification/goal_definition_data.py for examples."),
@@ -124,7 +124,7 @@ class gamification_goal(osv.Model):
     _description = 'Gamification goal instance'
     _inherit = 'mail.thread'
 
-    def _get_completeness(self, cr, uid, ids, field_name, arg, context=None):
+    def _get_completion(self, cr, uid, ids, field_name, arg, context=None):
         """Return the percentage of completeness of the goal, between 0 and 100"""
         res = dict.fromkeys(ids, 0.0)
         for goal in self.browse(cr, uid, ids, context=context):
@@ -162,7 +162,7 @@ class gamification_goal(osv.Model):
             required=True,
             track_visibility='always'),  # no goal = global index
         'current': fields.float('Current Value', required=True, track_visibility='always'),
-        'completeness': fields.function(_get_completeness, type='float', string='Completeness'),
+        'completeness': fields.function(_get_completion, type='float', string='Completeness'),
         'state': fields.selection([
                 ('draft', 'Draft'),
                 ('inprogress', 'In progress'),
@@ -346,7 +346,7 @@ class gamification_goal(osv.Model):
         goal = self.browse(cr, uid, goal_id, context=context)
 
         if goal.definition_id.action_id:
-            #open a the action linked on the goal
+            # open a the action linked to the goal
             action = goal.definition_id.action_id.read()[0]
 
             if goal.definition_id.res_id_field:
@@ -354,25 +354,20 @@ class gamification_goal(osv.Model):
                 action['res_id'] = safe_eval(goal.definition_id.res_id_field, {'user': current_user})
 
                 # if one element to display, should see it in form mode if possible
-                views = action['views']
-                for (view_id, mode) in action['views']:
-                    if mode == "form":
-                        views = [(view_id, mode)]
-                        break
-                action['views'] = views
+                action['views'] = [(view_id, mode) for (view_id, mode) in action['views'] if mode == 'form'] or action['views']
             return action
 
         if goal.computation_mode == 'manually':
-            #open a wizard window to update the value manually
+            # open a wizard window to update the value manually
             action = {
                 'name': _("Update %s") % goal.definition_id.name,
                 'id': goal_id,
                 'type': 'ir.actions.act_window',
                 'views': [[False, 'form']],
                 'target': 'new',
+                'context': {'default_goal_id': goal_id, 'default_current': goal.current},
+                'res_model': 'gamification.goal.wizard'
             }
-            action['context'] = {'default_goal_id': goal_id, 'default_current': goal.current}
-            action['res_model'] = 'gamification.goal.wizard'
             return action
 
         return False
