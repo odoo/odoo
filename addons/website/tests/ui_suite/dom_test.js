@@ -1,5 +1,5 @@
 var options = JSON.parse(phantom.args);
-var url = 'http://localhost:'+options.port;
+var url = 'http://localhost:'+options.port+'/web#action=website.action_website&login=admin&password=admin';
 
 var page = require('webpage').create();
 
@@ -34,8 +34,8 @@ page.open(url, function (status) {
     } else {
         waitFor(function () {
             return page.evaluate(function () {
-                return window.openerp && window.openerp.website;
+                return window.openerp && window.openerp.website && window.openerp.website.editor;
             });
-        }, 5);
+        }, options.timeout);
     }
 });
