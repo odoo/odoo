@@ -8,7 +8,7 @@ page.onError = function(message, trace) {
 };
 
 function waitFor(ready, timeout) {
-    var timeOutMillis = timeout ? timeout*1000 : 10000;
+    var timeOutMillis = timeout ? Math.round(timeout*1000) : 10000;
     var start = new Date().getTime();
     var condition = ready();
     var interval = setInterval(function() {

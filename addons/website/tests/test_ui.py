@@ -43,7 +43,7 @@ class WebsiteUiTest(unittest.TestCase):
 
 class WebsiteUiSuite(unittest.TestSuite):
     # timeout is in seconds
-    def __init__(self, testfile, timeout=10):
+    def __init__(self, testfile, timeout=10.0):
         self.testfile = testfile
         self.timeout = timeout
         self._test = None
@@ -135,7 +135,7 @@ class WebsiteUiSuite(unittest.TestSuite):
                 message = args.get('message', "")
                 result.addFailure(self._test, message)
             else:
-                result.addError(self._test, 'Unexpected message: "%s"' % line)
+                result.addError(self._test, 'Unexpected JSON: "%s"' % line)
         except ValueError:
              result.addError(self._test, 'Unexpected message: "%s"' % line)
 
