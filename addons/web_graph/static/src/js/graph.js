@@ -579,6 +579,8 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 .stacked(self.bar_ui === 'stack')
                 .staggerLabels(true);
 
+            if (dim_x === 1 && dim_y === 0) { chart.showControls(false); }
+
             d3.select(self.svg)
                 .datum(data)
                 .attr('width', self.width)
