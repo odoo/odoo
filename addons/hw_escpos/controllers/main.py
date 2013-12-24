@@ -2,14 +2,19 @@
 import logging
 import simplejson
 import os
+import io
+import base64
 import openerp
 import time
 import random
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
 import usb.core
-import escpos 
-import escpos.printer
+from .. import escpos
+from ..escpos import printer
+#import escpos 
+#import escpos.printer
+from PIL import Image
 
 from openerp import http
 from openerp.http import request
@@ -54,20 +59,39 @@ class EscposDriver(hw_proxy.Proxy):
 
             return ' ' * indent + left + right + '\n'
 
+        logo = None
+
+
+        if receipt['company']['logo']:
+            img = receipt['company']['logo']
+            img = img[img.find(',')+1:]
+            f = io.BytesIO('img')
+            f.write(base64.decodestring(img))
+            f.seek(0)
+            logo_rgba = Image.open(f)
+            logo = Image.new('RGB', logo_rgba.size, (255,255,255))
+            logo.paste(logo_rgba, mask=logo_rgba.split()[3]) 
+            width = 300
+            wfac  = width/float(logo_rgba.size[0])
+            height = int(logo_rgba.size[1]*wfac)
+            logo   = logo.resize((width,height), Image.ANTIALIAS)
 
         if len(printers) > 0:
             printer = printers[0]
 
             eprint = escpos.printer.Usb(printer['vendor'], printer['product'])
-            #eprint.image(os.path.join(os.path.dirname(__file__),'logo_grayscale.png'))
             
             # Receipt Header
-            eprint.set(align='center',type='b',height=2,width=2)
-            eprint.text(receipt['shop']['name'] + '\n')
+            if logo:
+                eprint._convert_image(logo)
+                eprint.text('\n')
+            else:
+                eprint.set(align='center',type='b',height=2,width=2)
+                eprint.text(receipt['company']['name'] + '\n')
 
             eprint.set(align='center',type='b')
-            if check(receipt['company']['name']):
-                eprint.text(receipt['company']['name'] + '\n')
+            if check(receipt['shop']['name']):
+                eprint.text(receipt['shop']['name'] + '\n')
             if check(receipt['company']['contact_address']):
                 eprint.text(receipt['company']['contact address'] + '\n')
             if check(receipt['company']['phone']):

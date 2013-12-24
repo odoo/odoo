@@ -28,6 +28,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 
             
             // Business data; loaded from the server at launch
+            this.accounting_precision = 2; //TODO
+            this.company_logo = null;
+            this.company_logo_base64 = '';
             this.currency = null;
             this.shop = null;
             this.company = null;
@@ -153,6 +156,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(currencies){
                     self.currency = currencies[0];
 
+                    /*
+                    return (new instance.web.Model('decimal.precision')).call('get_precision',[['Account']]);
+                }).then(function(precision){
+                    self.accounting_precision = precision;
+                    console.log("PRECISION",precision);
+*/
                     return self.fetch('product.packaging',['ean','product_id']);
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
@@ -197,6 +206,27 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         }
                     }
                     self.cashregisters = bankstatements;
+
+                    // Load the company Logo
+
+                    self.company_logo = new Image();
+                    self.company_logo.crossOrigin = 'anonymous';
+                    var  logo_loaded = new $.Deferred();
+                    self.company_logo.onload = function(){
+                        var c = document.createElement('canvas');
+                            c.width  = self.company_logo.width;
+                            c.height = self.company_logo.height; 
+                        var ctx = c.getContext('2d');
+                            ctx.drawImage(self.company_logo,0,0);
+                        self.company_logo_base64 = c.toDataURL();
+                        logo_loaded.resolve();
+                    };
+                    self.company_logo.onerror = function(){
+                        logo_loaded.reject();
+                    };
+                    self.company_logo.src = window.location.origin + '/web/binary/company_logo';
+
+                    return logo_loaded;
                 });
         
             return loaded;
@@ -856,6 +886,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     vat: company.vat,
                     name: company.name,
                     phone: company.phone,
+                    logo:  this.pos.company_logo_base64,
                 },
                 shop:{
                     name: shop.name,
