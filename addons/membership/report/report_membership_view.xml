@@ -64,10 +64,8 @@
             <field name="model">report.membership</field>
             <field name="arch" type="xml">
                 <graph string="Membership" type="bar">
-                    <field name="year" />
-                    <field name="num_waiting" operator="+"/>
-                    <field name="num_invoiced" operator="+"/>
-                    <field name="num_paid" operator="+"/>
+                    <field name="year" type="row" />
+                    <field name="num_paid" type="measure"/>
                 </graph>
             </field>
         </record>
