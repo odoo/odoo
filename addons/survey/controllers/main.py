@@ -165,7 +165,8 @@ class WebsiteSurvey(http.Controller):
                 data.update({'last': True})
             return request.website.render('survey.survey', data)
         elif user_input.state == 'done':  # Display success message
-            return request.website.render('survey.finished', {'survey': survey})
+            return request.website.render('survey.sfinished', {'survey': survey,
+                                                               'token': token})
         elif user_input.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
             page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=flag, context=context)
@@ -278,7 +279,9 @@ class WebsiteSurvey(http.Controller):
         '''Display an survey in printable view; if <token> is set, it will
         grab the answers of the user_input_id that has <token>.'''
         return request.website.render('survey.survey_print',
-                                      {'survey': survey, 'page_nr': 0})
+                                      {'survey': survey,
+                                       'token': token,
+                                       'page_nr': 0})
 
 
 def dict_soft_update(dictionary, key, value):
