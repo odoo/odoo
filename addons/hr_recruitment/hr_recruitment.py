@@ -240,16 +240,6 @@ class hr_applicant(osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        res = super(hr_applicant, self).default_get(cr, uid, fields, context=context)
-        #NOTE:to set default user_id in applicant if applicant directly created from kanban action of job because currently web is not parsing value in context on action.
-        if context.get('active_model') == "hr.job" and context.get('active_id'):
-            job = self.pool.get('hr.job').browse(cr, uid, context.get('active_id'), context=context)
-            res.update({'user_id': job.user_id.id})
-        return res
-
     def onchange_job(self, cr, uid, ids, job_id=False, context=None):
         department_id = False
         if job_id:
@@ -505,12 +495,11 @@ class hr_job(osv.osv):
     _inherits = {'mail.alias': 'alias_id'}
 
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context=None):
-        """Calculate total attached CV to applications and documents per job"""
         res = {}
         attachment_obj = self.pool.get('ir.attachment')
         for job_id in ids:
             applicant_ids = self.pool.get('hr.applicant').search(cr, uid, [('job_id', '=', job_id)], context=context)
-            res[job_id] = attachment_obj.search(cr, uid, ['|', '&',('res_model', '=', 'hr.job'), ('res_id', '=', job_id), '&',('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)], count=True, context=context)
+            res[job_id] = attachment_obj.search(cr, uid, ['|', '&',('res_model', '=', 'hr.job'), ('res_id', '=', job_id), '&',('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)], context=context)
         return res
 
     _columns = {
@@ -520,7 +509,7 @@ class hr_job(osv.osv):
                                          "create new applicants for this job position."),
         'application_ids': fields.one2many('hr.applicant', 'job_id', 'Applications'),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
-        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int'),
+        'document_ids': fields.function(_get_attached_docs, method=True, type='one2many', relation='ir.attachment', string='Applications'),
         'user_id': fields.many2one('res.users', 'Recruitment Responsible', track_visibility='onchange'),
     }
 
@@ -564,6 +553,13 @@ class hr_job(osv.osv):
             'context': context,
             'nodestroy': True,
         }
+
+    def open_applicants(self, cr, uid, ids, context=None):
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_recruitment','action_hr_job_applications')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        job = self.browse(cr, uid, ids[0], context=context)
+        action['context'] = str({'search_default_job_id': [job.id], 'default_job_id': job.id, 'default_user_id': job.user_id.id})
+        return action
 
     def attachment_tree_view(self, cr, uid, ids, context):
         applicant_ids = self.pool.get('hr.applicant').search(cr, uid, [('job_id', 'in', ids)], context=context)

@@ -364,7 +364,7 @@
                 <field name="user_id" class="oe_inline"/>
             </xpath>
             <div name="buttons" position="inside">
-                <button string="Applications" name="%(action_hr_job_applications)d" type="action"/>
+                <button string="Applications" name="%(action_hr_job_applications)d" context="{'default_user_id': user_id}" type="action"/>
                 <button name="attachment_tree_view" string="Documents" type="object"/>
             </div>
         </field>
@@ -380,6 +380,7 @@
                     <field name="no_of_recruitment"/>
                     <field name="color"/>
                     <field name="application_ids"/>
+                    <field name="document_ids"/>
                     <field name="no_of_hired_employee"/>
                     <field name="manager_id"/>
                     <field name="survey_id"/>
@@ -424,14 +425,14 @@
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
-                                            <a name="%(action_hr_job_applications)d" type="action">
+                                            <a name="open_applicants" type="object">
                                                 <span t-if="record.application_ids.raw_value.length gt 1"><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
                                                 <span t-if="record.application_ids.raw_value.length lt 2"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
                                             </a>
                                             <br/>
-                                            <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object"> 
-                                                <span t-if="record.doc_count.raw_value gt 1"><field name="doc_count"/> Documents</span>
-                                                <span t-if="record.doc_count.raw_value lt 2"><field name="doc_count"/> Document</span>
+                                            <a t-if="record.document_ids.raw_value.length gt 0" name="attachment_tree_view" type="object">
+                                                <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
+                                                <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
                                             </a>
                                         </div>
                                         <div class="oe_job_justgage">
