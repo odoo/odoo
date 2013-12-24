@@ -1348,12 +1348,20 @@ instance.web.View = instance.web.Widget.extend({
         var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
         var handler = function (action) {
             if (action && action.constructor == Object) {
-                var ncontext = new instance.web.CompoundContext(context);
+                // filter out context keys that are specific to the action model.
+                // Wrong default_ and search_default values will no give the expected views
+                // Wrong group_by values will simply fail and forbid rendering of the destination view
+                var ncontext = new instance.web.CompoundContext(
+                    _.reject(_.keys(dataset.get_context().eval()), function(key) {
+                        return key.match('^(?:(?:default_|search_default_).+|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
+                    })
+                );
+                ncontext.add(action_data.context || {});
+                ncontext.add({active_model: dataset.model});
                 if (record_id) {
                     ncontext.add({
                         active_id: record_id,
                         active_ids: [record_id],
-                        active_model: dataset.model
                     });
                 }
                 ncontext.add(action.context || {});
