@@ -39,10 +39,10 @@
             <field name="name">crm.lead.report.graph</field>
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
-                <graph orientation="vertical" string="Leads Analysis" type="bar">
-                    <field name="stage_id"/>
-                    <field name="nbr" operator="+"/>
-                    <field group="True" name="user_id"/>
+                <graph string="Leads Analysis" type="bar" stacked="True">
+                    <field name="stage_id" type="row"/>
+                    <field name="user_id" type="col"/>
+                    <field name="nbr" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -51,10 +51,10 @@
             <field name="name">crm.opportunity.report.graph</field>
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
-                <graph orientation="vertical" string="Leads Analysis" type="bar">
-                    <field name="stage_id"/>
-                    <field name="planned_revenue" operator="+"/>
-                    <field group="True" name="user_id"/>
+                <graph string="Leads Analysis" type="bar" stacked="True">
+                    <field name="stage_id" type="row"/>
+                    <field name="user_id" type="col"/>
+                    <field name="planned_revenue" type="measure"/>
                 </graph>
             </field>
         </record>

@@ -34,10 +34,10 @@
             <field name="name">crm.phonecall.report.graph</field>
             <field name="model">crm.phonecall.report</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Phone calls" type="bar">
-                    <field name="state"/>
-                    <field name="nbr" operator="+"/>
-                    <field group="True" name="user_id"/>
+                <graph orientation="horizontal" string="Phone calls" type="bar" stacked="True">
+                    <field name="user_id" type="row"/>
+                    <field name="state" type="col"/>
+                    <field name="nbr" type="measure"/>
                 </graph>
             </field>
         </record>
