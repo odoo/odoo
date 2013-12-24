@@ -533,7 +533,7 @@ class Ecommerce(http.Controller):
         billing_info = dict(checkout)
         billing_info['parent_id'] = company_id
 
-        if not request.uid == request.registry['website'].get_public_user(cr, uid, context):
+        if request.uid != request.registry['website'].get_public_user(cr, uid, context):
             partner_id = orm_user.browse(cr, uid, uid, context=context).partner_id.id
             orm_parter.write(cr, uid, [partner_id], billing_info, context=context)
         else:
@@ -569,7 +569,9 @@ class Ecommerce(http.Controller):
             'partner_invoice_id': partner_id,
             'partner_shipping_id': shipping_id or partner_id
         }
-        order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], order.partner_id.id, context=context)['value'])
+        print order_info
+        order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
+        print order_info
 
         order_line_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
@@ -599,18 +601,15 @@ class Ecommerce(http.Controller):
         if tx and not tx.state == 'draft':
             return request.redirect('/shop/confirmation/%s' % order.id)
 
-        partner_id = False
         shipping_partner_id = False
         if order:
-            if order.partner_id.id:
-                partner_id = order.partner_id.id
-                shipping_partner_id = order.partner_id.id
             if order.partner_shipping_id.id:
                 shipping_partner_id = order.partner_shipping_id.id
+            else:
+                shipping_partner_id = order.partner_invoice_id.id
 
         values = {
-            'partner': partner_id,
-            'order': order
+            'order': request.registry['sale.order'].browse(cr, SUPERUSER_ID, order.id, context=context)
         }
         values.update(request.registry.get('sale.order')._get_website_data(cr, uid, order, context))
 
@@ -624,7 +623,7 @@ class Ecommerce(http.Controller):
         for acquirer in values['acquirers']:
             render_ctx['tx_url'] = '/shop/payment/transaction/%s' % acquirer.id
             acquirer.button = payment_obj.render(
-                cr, uid, acquirer.id,
+                cr, SUPERUSER_ID, acquirer.id,
                 order.name,
                 order.amount_total,
                 order.pricelist_id.currency_id.id,
@@ -660,7 +659,7 @@ class Ecommerce(http.Controller):
         # find an already existing transaction
         tx = context.get('website_sale_transaction')
         if not tx:
-            tx_id = transaction_obj.create(cr, uid, {
+            tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
                 'type': 'form',
                 'amount': order.amount_total,
@@ -734,11 +733,6 @@ class Ecommerce(http.Controller):
         elif tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
-
-        if email_act:
-            create_ctx = email_act.get('context', context)
-            compose_id = request.registry['mail.compose.message'].create(cr, uid, {}, context=create_ctx)
-            request.registry['mail.compose.message'].send_mail(cr, uid, [compose_id], context=create_ctx)
 
         # clean context and session, then redirect to the confirmation page
         request.registry['website'].ecommerce_reset(cr, uid, context=context)

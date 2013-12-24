@@ -888,7 +888,7 @@
             </div>
             <div class="col-lg-3 col-lg-offset-1 col-sm-3 text-muted" id="right_column">
                 <h4>Bill To:</h4>
-                <div t-field="website_sale_order.partner_invoice_id" t-field-options='{
+                <div t-field="order.partner_invoice_id" t-field-options='{
                     "widget": "contact",
                     "fields": ["address", "name", "phone", "email"]
                     }'/>
@@ -897,10 +897,12 @@
                 </div>
 
                 <h4 class="mt32">Ship To:</h4>
-                <div t-if="website_sale_order.partner_shipping_id.id != website_sale_order.partner_invoice_id.id" t-field="website_sale_order.partner_shipping_id" t-field-options='{
+                <t t-if="website_sale_order.partner_shipping_id and website_sale_order.partner_shipping_id.id != website_sale_order.partner_invoice_id.id">
+                  <div t-field="order.partner_shipping_id" t-field-options='{
                     "widget": "contact",
                     "fields": ["address", "name", "phone"]
                     }'/>
+                </t>
                 <address t-if="website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">Ship to the same address</address>
                 <div class="mb32">
                   <a href="/shop/checkout"><span class="fa fa-arrow-right"/> Change Address</a>

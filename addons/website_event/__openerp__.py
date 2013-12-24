@@ -21,8 +21,7 @@ Online Events
     ],
     'qweb': ['static/src/xml/*.xml'],
     'demo': [
-        'data/event_demo.xml',
-        'data/website_event_homepage_demo.xml',
+        'data/event_demo.xml'
     ],
     'installable': True,
 }
