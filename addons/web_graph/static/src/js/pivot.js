@@ -33,8 +33,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		var changed = false;
 		var groupby_changed = false;
 		var default_options = {
-				update:true, 
-				domain:this.domain, 
+				update:true,
+				domain:this.domain,
 				col_groupby: this.cols.groupby,
 				row_groupby: this.rows.groupby,
 				measure: this.measure,

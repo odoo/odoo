@@ -57,20 +57,20 @@ instance.web_graph.GraphView = instance.web.View.extend({
         if (arch.attrs.type === 'bar' || !_.has(arch.attrs, 'type')) {
             this.graph_widget.mode = 'bar_chart';
         }
-        if (arch.attrs.stacked === "True") {
+        if (arch.attrs.stacked === 'True') {
             stacked = true;
         }
 
         _.each(arch.children, function (field) {
             if (_.has(field.attrs, 'type')) {
                 switch (field.attrs.type) {
-                    case "row":
+                    case 'row':
                         self.default_row_groupby.push(field.attrs.name);
                         break;
-                    case "col":
+                    case 'col':
                         self.default_col_groupby.push(field.attrs.name);
                         break;
-                    case "measure":
+                    case 'measure':
                         measure = field.attrs.name;
                         break;
                 }
@@ -83,15 +83,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
         });
         this.graph_widget.config({
-            measure:measure, 
+            measure:measure,
             update:false,
             bar_ui: (stacked) ? 'stack' : 'group'
         });
     },
 
     do_search: function (domain, context, group_by) {
-        var self = this,
-            col_groupby = context.col_group_by || [],
+        var col_groupby = context.col_group_by || [],
             options = {domain:domain};
 
         this.search_view_groupby = group_by;
@@ -99,12 +98,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
         if (group_by.length && this.groupby_mode !== 'manual') {
             if (_.isEqual(col_groupby, [])) {
                 col_groupby = this.default_col_groupby;
-            } 
+            }
         }
         if (group_by.length || col_groupby.length) {
             this.groupby_mode = 'manual';
         }
-        if (!this.graph_widget.enabled) { 
+        if (!this.graph_widget.enabled) {
             options.update = false;
             options.silent = true;
         }
@@ -172,7 +171,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 });
 
 instance.web_graph.Graph = instance.web.Widget.extend({
-    template: "GraphWidget",
+    template: 'GraphWidget',
 
     events: {
         'click .graph_mode_selection li' : 'mode_selection',
@@ -263,7 +262,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         this.pivot.on('redraw_required', this, this.proxy('display_data'));
         this.pivot.update_data();
         this.enabled = true;
-        instance.web.bus.on('click', this, function (ev) {
+        instance.web.bus.on('click', this, function () {
             if (this.dropdown) {
                 this.dropdown.remove();
                 this.dropdown = null;
@@ -336,8 +335,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         event.stopPropagation();
         var id = event.target.attributes['data-id'].nodeValue,
             header = this.pivot.get_header(id),
-            self = this,
-            dim = header.root.groupby.length;
+            self = this;
 
         if (header.is_expanded) {
             this.pivot.fold(header);
@@ -363,8 +361,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     },
 
     field_selection: function (event) {
-        var self = this,
-            id = event.target.attributes['data-id'].nodeValue,
+        var id = event.target.attributes['data-id'].nodeValue,
             field_id = event.target.attributes['data-field-id'].nodeValue;
         event.preventDefault();
         this.pivot.expand(id, field_id);
@@ -631,8 +628,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
     pie_chart: function () {
         var self = this,
-            dim_x = this.pivot.rows.groupby.length,
-            dim_y = this.pivot.cols.groupby.length;
+            dim_x = this.pivot.rows.groupby.length;
 
         var data = _.map(this.pivot.get_rows_leaves(), function (row) {
             var title = _.map(row.path, function (p) {
