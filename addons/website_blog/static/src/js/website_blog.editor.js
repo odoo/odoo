@@ -16,7 +16,7 @@
                                 .call('name_search', [], { context: website.get_context() });
                     },
                 }).then(function (cat_id) {
-                    document.location = '/blog/' + cat_id + '/new';
+                    document.location = '/blogpost/new?category_id=' + cat_id;
                 });
             }
         }),

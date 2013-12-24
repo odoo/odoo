@@ -260,7 +260,7 @@ class hr_payslip(osv.osv):
 
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True, states={'draft': [('readonly', False)]}, help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),
-        'name': fields.char('Description', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Payslip Name', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'number': fields.char('Reference', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_from': fields.date('Date From', readonly=True, states={'draft': [('readonly', False)]}, required=True),
@@ -281,7 +281,7 @@ class hr_payslip(osv.osv):
         'worked_days_line_ids': fields.one2many('hr.payslip.worked_days', 'payslip_id', 'Payslip Worked Days', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'input_line_ids': fields.one2many('hr.payslip.input', 'payslip_id', 'Payslip Inputs', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'note': fields.text('Description', readonly=True, states={'draft':[('readonly',False)]}),
+        'note': fields.text('Internal Note', readonly=True, states={'draft':[('readonly',False)]}),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'details_by_salary_rule_category': fields.function(_get_lines_salary_rule_category, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Rule Category'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another", readonly=True, states={'draft': [('readonly', False)]}),

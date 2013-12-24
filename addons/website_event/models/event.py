@@ -19,8 +19,11 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
+from openerp.osv import orm, osv, fields
 from openerp import SUPERUSER_ID
+
+from openerp.tools.translate import _
+import re
 
 
 # defined for access rules
@@ -35,6 +38,51 @@ class event(osv.osv):
     _name = 'event.event'
     _inherit = ['event.event','website.seo.metadata']
 
+    def _get_new_menu_pages(self, cr, uid, event, context=None):
+        context = context or {}
+        todo = [
+            (_('Introduction'), 'website_event.template_intro'),
+            (_('Location'), 'website_event.template_location')
+        ]
+        web = self.pool.get('website')
+        result = []
+        for name,path in todo:
+            name2 = name+' '+event.name
+            newpath = web.new_page(cr, uid, name2, path, ispage=False, context=context)
+            url = "/event/"+str(event.id)+"/page/" + newpath
+            result.append((name, url))
+        return result
+
+    def _set_show_menu(self, cr, uid, ids, name, value, arg, context=None):
+        menuobj = self.pool.get('website.menu')
+        eventobj = self.pool.get('event.event')
+        for event in self.browse(cr, uid, [ids], context=context):
+            if event.menu_id and not value:
+                menuobj.unlink(cr, uid, [event.menu_id.id], context=context)
+            elif value and not event.menu_id:
+                root = menuobj.create(cr, uid, {
+                    'name': event.name
+                }, context=context)
+                tocreate = self._get_new_menu_pages(cr, uid, event, context)
+                tocreate.append((_('Register'), '/event/%s/register' % str(event.id)))
+                sequence = 0
+                for name,url in tocreate:
+                    menuobj.create(cr, uid, {
+                        'name': name,
+                        'url': url,
+                        'parent_id': root,
+                        'sequence': sequence
+                    }, context=context)
+                    sequence += 1
+                eventobj.write(cr, uid, [event.id], {'menu_id': root}, context=context)
+        return True
+
+    def _get_show_menu(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, '')
+        for event in self.browse(cr, uid, ids, context=context):
+            res[event.id] = bool(event.menu_id)
+        return res
+
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, '')
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
@@ -42,9 +90,13 @@ class event(osv.osv):
             res[event.id] = "%s/event/%s/" % (base_url, event.id)
         return res
 
+    def _default_hashtag(self, cr, uid, context={}):
+        name = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+        return re.sub("[- \\.\\(\\)]+", "", name).lower()
+
     _columns = {
         'twitter_hashtag': fields.char('Twitter Hashtag'),
-        'website_published': fields.boolean('Available in the website'),
+        'website_published': fields.boolean('Visible in Website'),
         # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
@@ -54,10 +106,13 @@ class event(osv.osv):
             string='Website Messages',
             help="Website communication history",
         ),
-        'website_url': fields.function(_website_url, string="Website url"),
+        'website_url': fields.function(_website_url, string="Website url", type="char"),
+        'show_menu': fields.function(_get_show_menu, fnct_inv=_set_show_menu, type='boolean', string='Dedicated Menu'),
+        'menu_id': fields.many2one('website.menu', 'Event Menu'),
     }
     _defaults = {
-        'website_published': False,
+        'show_menu': False,
+        'twitter_hashtag': _default_hashtag
     }
 
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):

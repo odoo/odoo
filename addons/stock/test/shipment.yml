@@ -67,6 +67,8 @@
   !python {model: stock.partial.picking}: |
     context.update({'active_model': 'stock.picking', 'active_id': ref('incomming_shipment'), 'active_ids': [ref('incomming_shipment')]})
 -
+  I make a partial picking and moves done.
+-
   !python {model: stock.partial.picking}: |
     partial = []
     for move in self.pool.get('stock.picking').browse(cr, uid, ref("incomming_shipment")).move_lines:

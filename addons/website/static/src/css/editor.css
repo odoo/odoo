@@ -1,5 +1,4 @@
-@charset "utf-8";
-/* ---- CKEditor Minimal Reset ---- */
+/* ---- CKEditor Minimal Reset ---- {{{ */
 .navbar.navbar-inverse .cke_chrome {
   border: none;
 }
@@ -29,7 +28,7 @@
   box-shadow: none;
 }
 
-/* ---- OpenERP Style ---- */
+/* ---- OpenERP Style ---- {{{ */
 .oe_website_editorbar {
   position: fixed;
   top: 0;
@@ -86,6 +85,10 @@
   display: none;
 }
 
+.cke_editable .css_editable_mode_hidden {
+  display: none;
+}
+
 .oe_carousel_options {
   cursor: pointer;
   position: absolute;
@@ -100,7 +103,7 @@
   top: 2px;
 }
 
-/* ---- EDITOR BAR ---- */
+/* ---- EDITOR BAR ---- {{{ */
 table.editorbar-panel {
   cursor: pointer;
   width: 100%;
@@ -112,6 +115,7 @@ table.editorbar-panel td.selected {
   background-color: #b1c9d9;
 }
 
+/* ---- TRANSLATIONS ---- {{{ */
 .oe_translate_or {
   color: white;
   padding: 0 0 0 1em;
@@ -142,15 +146,16 @@ table.editorbar-panel td.selected {
   background: #ffffb6;
 }
 
+/* ---- MENU ---- {{{ */
 div.oe_menu_buttons {
   top: -8px;
   right: -8px;
 }
 
-ul.oe_menu_editor .icon-home {
+ul.oe_menu_editor .fa-home {
   display: none;
 }
-ul.oe_menu_editor > li:first-child .icon-home {
+ul.oe_menu_editor > li:first-child > div > span > .fa-home {
   display: block;
 }
 ul.oe_menu_editor .oe_menu_placeholder {
@@ -168,11 +173,12 @@ ul.oe_menu_editor .disclose {
   display: none;
 }
 
-/* ---- RTE ---- */
-.oe_editable .btn {
+/* ---- RTE ---- {{{ */
+.oe_editable .btn, .btn.oe_editable {
   -webkit-user-select: auto;
   -moz-user-select: auto;
   user-select: auto;
+  cursor: text !important;
 }
 
 .modal-dialog.select-image {
@@ -187,6 +193,10 @@ ul.oe_menu_editor .disclose {
   margin-bottom: 0.5em;
 }
 
+.modal-footer {
+  text-align: left;
+}
+
 .modal.nosave .modal-footer button.save {
   display: none;
 }
@@ -195,17 +205,23 @@ ul.oe_menu_editor .disclose {
   visibility: visible !important;
 }
 
+.existing-attachments .pager .disabled {
+  display: none;
+}
+
 .cke_widget_wrapper {
   position: static !important;
 }
 
-.cke_widget_drag_handler_container {
-  display: none !important;
-}
-
 .cke_widget_editable:empty:after {
-  content: " ";
+  opacity: 0.3;
   white-space: pre-wrap;
+}
+.cke_widget_editable:not([placeholder]):empty::after {
+  content: " ";
+}
+.cke_widget_editable[placeholder]:not(:focus):empty::after {
+  content: attr(placeholder);
 }
 
 .oe_carlos_danger {
@@ -213,12 +229,18 @@ ul.oe_menu_editor .disclose {
   background-color: #ffd9dd !important;
 }
 
-/* ---- SNIPPET EDITOR ---- */
+.hover-edition-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* ---- SNIPPET EDITOR ---- {{{ */
 #oe_snippets {
   position: fixed;
   left: 0px;
   right: 0px;
-  top: 51px;
   background: #282828;
   -webkit-box-shadow: 0px 10px 10px -10px black inset;
   -moz-box-shadow: 0px 10px 10px -10px black inset;
@@ -348,7 +370,7 @@ ul.oe_menu_editor .disclose {
   background: #747474, radial-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.4));
 }
 
-/* ---- SNIPPETS DROP ZONES ---- */
+/* ---- SNIPPETS DROP ZONES ---- {{{ */
 .oe_drop_zone.oe_insert {
   display: block;
   height: 48px;
@@ -380,6 +402,10 @@ ul.oe_menu_editor .disclose {
   margin: 0px -24px !important;
 }
 .oe_drop_zone.oe_insert.oe_overlay {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   background: rgba(153, 0, 255, 0.5);
 }
@@ -405,7 +431,7 @@ ul.oe_menu_editor .disclose {
   padding-top: 12px;
 }
 
-/* ---- SNIPPET MANIPULATOR ---- */
+/* ---- SNIPPET MANIPULATOR ---- {{{ */
 .oe_overlay {
   display: none;
   position: absolute;
@@ -433,11 +459,20 @@ ul.oe_menu_editor .disclose {
   box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 0px 0px 0px 1px rgba(255, 255, 255, 0.3) inset;
   border-color: rgba(0, 0, 0, 0.5);
 }
-.oe_overlay.oe_active .oe_handle {
+.oe_overlay .oe_handle {
   display: block !important;
   pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  margin: -2px;
 }
-.oe_overlay.oe_active .oe_handle:before {
+.oe_overlay .oe_handle:before {
   position: relative;
   top: 50%;
   left: 50%;
@@ -462,23 +497,49 @@ ul.oe_menu_editor .disclose {
   -o-transition: background 100ms linear;
   transition: background 100ms linear;
 }
-.oe_overlay.oe_active .oe_handle:hover:before {
+.oe_overlay .oe_handle:hover:before {
   background: rgba(0, 0, 0, 0.5);
   color: white;
   -webkit-box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
   -moz-box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
   box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
 }
-.oe_overlay.oe_active .oe_handle.e:before {
+.oe_overlay .oe_handle.e {
+  left: auto;
+  top: 2px;
+  height: 100%;
+  right: -4px;
+  cursor: w-resize;
+}
+.oe_overlay .oe_handle.e:before {
   content: "\F061";
 }
-.oe_overlay.oe_active .oe_handle.s:before {
+.oe_overlay .oe_handle.s {
+  top: auto;
+  left: 2px;
+  width: 100%;
+  bottom: -4px;
+  cursor: n-resize;
+}
+.oe_overlay .oe_handle.s:before {
   content: "\F063";
 }
-.oe_overlay.oe_active .oe_handle.w:before {
+.oe_overlay .oe_handle.w {
+  top: 2px;
+  height: 100%;
+  left: -4px;
+  cursor: e-resize;
+}
+.oe_overlay .oe_handle.w:before {
   content: "\F060";
 }
-.oe_overlay.oe_active .oe_handle.n:before {
+.oe_overlay .oe_handle.n {
+  left: 2px;
+  width: 100%;
+  top: -4px;
+  cursor: s-resize;
+}
+.oe_overlay .oe_handle.n:before {
   content: "\F062";
 }
 .oe_overlay .icon.btn {
@@ -520,36 +581,6 @@ ul.oe_menu_editor .disclose {
   margin: -4px;
 }
 
-.oe_handle.n {
-  left: 2px;
-  width: 100%;
-  top: 0px;
-  cursor: s-resize;
-}
-
-.oe_handle.e {
-  left: auto;
-  top: 2px;
-  height: 100%;
-  right: 0px;
-  cursor: w-resize;
-}
-
-.oe_handle.s {
-  top: auto;
-  left: 2px;
-  width: 100%;
-  bottom: 0px;
-  cursor: n-resize;
-}
-
-.oe_handle.w {
-  top: 2px;
-  height: 100%;
-  left: 0px;
-  cursor: e-resize;
-}
-
 .s-resize-important, .s-resize-important * {
   cursor: s-resize !important;
 }
@@ -570,7 +601,7 @@ ul.oe_menu_editor .disclose {
   cursor: move !important;
 }
 
-/* ---- MOBILE PREVIEW ---- */
+/* ---- MOBILE PREVIEW ---- {{{ */
 .oe_mobile_preview.modal .modal-content {
   height: 660px;
   background-color: black;
@@ -626,7 +657,7 @@ ul.oe_menu_editor .disclose {
   background-color: black;
 }
 
-/* ---- SEO TOOLS ---- */
+/* ---- SEO TOOLS ---- {{{ */
 .oe_seo_configuration .modal-dialog {
   width: 80%;
 }
@@ -645,10 +676,9 @@ ul.oe_menu_editor .disclose {
   border-radius: 0.4em;
 }
 
-/* ---- ACE EDITOR ---- */
+/* ---- ACE EDITOR ---- {{{ */
 .oe_ace_view_editor {
   position: fixed;
-  top: 51px;
   right: 0;
   z-index: 1000;
   height: 100%;
@@ -678,7 +708,6 @@ ul.oe_menu_editor .disclose {
   position: absolute;
   top: 30px;
   right: 0;
-  bottom: 51px;
   left: 0;
 }
 .oe_ace_view_editor .ace_editor .ace_gutter {
@@ -694,7 +723,7 @@ ul.oe_menu_editor .disclose {
   opacity: 0;
 }
 
-/* ---- EDITOR TOUR ---- */
+/* ---- EDITOR TOUR ---- {{{ */
 div.tour-backdrop {
   z-index: 2009;
 }

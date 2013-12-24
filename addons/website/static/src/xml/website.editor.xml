@@ -2,11 +2,11 @@
     <t t-extend="website.editorbar">
         <t t-jquery="#website-top-view" t-operation="after">
             <div class="navbar-inner" id="website-top-edit">
-                <form class="navbar-form pull-left">
+                <form class="navbar-form pull-left text-muted">
                     <button type="button" data-action="save"
                             class="btn btn-primary">Save</button>
-                    <button type="button" data-action="cancel"
-                            class="btn">Cancel</button>
+                    or
+                    <a href="#" data-action="cancel">Discard</a>
                 </form>
                 <ul class="nav navbar-nav pull-right">
                 </ul>
@@ -23,9 +23,10 @@
                     </div>
                     <div class="modal-body"><t t-raw="__content__"/></div>
                     <div class="modal-footer">
-                        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Discard</button>
+                        <button type="button" class="btn btn-primary save">Save</button>
                         <button type="button" class="btn hidden wait" disabled="disabled"/>
-                        <button type="button" class="btn btn-primary save">Save Changes</button>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
                     </div>
                 </div>
             </div>
@@ -41,23 +42,12 @@
                 <ul class="list-group">
                     <li class="list-group-item form-group active">
                         <h4 class="list-group-item-heading">
-                            <label for="link-existing" class="control-label">
-                                Existing page
+                            <label for="link-page" class="control-label">
+                                Page
                             </label>
                         </h4>
-                        <select class="existing form-control url-source"
-                                id="link-existing">
-                            <option/>
-                        </select>
-                    </li>
-                    <li class="list-group-item form-group">
-                        <h4 class="list-group-item-heading">
-                            <label for="link-new" class="control-label">
-                                New page
-                            </label>
-                        </h4>
-                        <input type="text" class="form-control pages url-source"
-                            id="link-new" placeholder="Page Name"/>
+                        <input class="page form-control url-source"
+                               id="link-page" type="hidden"/>
                     </li>
                     <li class="list-group-item form-group clearfix">
                         <div class="pull-right">
@@ -149,7 +139,7 @@
                         <div class="existing-attachments"/>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Discard</button>
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
                     </div>
                 </div>
             </div>
@@ -179,6 +169,38 @@
                 <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
             </tbody>
         </table>
+    </t>
+
+    <t t-name="website.editor.discard">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Discard edition</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            If you discard the current edition, <em>all</em>
+                            unsaved changes will be lost.
+                        </p>
+                        <p>You can cancel to return to the edition mode.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger">Discard</button>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.editor.hoverbutton">
+        <button type="button" contenteditable="false"
+                t-attf-class="btn btn-primary hover-edition-button #{classes or ''}">
+            <t t-esc="label"/>
+        </button>
     </t>
 
 </templates>

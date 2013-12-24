@@ -32,58 +32,29 @@ MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 class Website(openerp.addons.web.controllers.main.Home):
     @website.route('/', type='http', auth="public", multilang=True)
     def index(self, **kw):
-        # TODO: check if plain SQL is needed
-        menu = request.registry['website.menu']
-        root_domain = [('parent_id', '=', False)] # TODO: multiwebsite ('website_id', '=', request.website.id),
-        root_id = menu.search(request.cr, request.uid, root_domain, limit=1, context=request.context)[0]
-        first_menu = menu.search_read(
-            request.cr, request.uid, [('parent_id', '=', root_id)], ['url'],
-            limit=1, order='sequence', context=request.context)
-        if first_menu:
-            first_menu = first_menu[0]['url']
-        if first_menu and first_menu != '/':
-            return request.redirect(first_menu)
-        else:
-            return self.page("website.homepage")
+        try:
+            main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
+            first_menu = main_menu.child_id and main_menu.child_id[0]
+            if first_menu and first_menu.url != '/':
+                return request.redirect(first_menu.url)
+        except:
+            pass
+        return self.page("website.homepage")
 
     @website.route('/pagenew/<path:path>', type='http', auth="user")
     def pagenew(self, path, noredirect=NOPE):
-        module = 'website'
-        # completely arbitrary max_length
-        idname = slugify(path, max_length=50)
-
-        request.cr.execute('SAVEPOINT pagenew')
-        imd = request.registry['ir.model.data']
-        view = request.registry['ir.ui.view']
-        view_model, view_id = imd.get_object_reference(
-            request.cr, request.uid, 'website', 'default_page')
-        newview_id = view.copy(
-            request.cr, request.uid, view_id, context=request.context)
-        newview = view.browse(
-            request.cr, request.uid, newview_id, context=request.context)
-        newview.write({
-            'arch': newview.arch.replace("website.default_page",
-                                         "%s.%s" % (module, idname)),
-            'name': path,
-            'page': True,
-        })
-        # Fuck it, we're doing it live
+        web = request.registry['website']
         try:
-            imd.create(request.cr, request.uid, {
-                'name': idname,
-                'module': module,
-                'model': 'ir.ui.view',
-                'res_id': newview_id,
-                'noupdate': True
-            }, context=request.context)
+            path = web.new_page(request.cr, request.uid, path, context=request.context)
         except psycopg2.IntegrityError:
             logger.exception('Unable to create ir_model_data for page %s', path)
-            request.cr.execute('ROLLBACK TO SAVEPOINT pagenew')
-            return werkzeug.exceptions.InternalServerError()
-        else:
-            request.cr.execute('RELEASE SAVEPOINT pagenew')
-
-        url = "/page/%s" % idname
+            response = request.website.render('website.creation_failed', {
+                    'page': path,
+                    'path': '/page/' + request.website.page_for_name(name=path)
+                })
+            response.status_code = 409
+            return response
+        url = "/page/" + path
         if noredirect is not NOPE:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
@@ -112,15 +83,37 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @website.route(['/website/snippets'], type='json', auth="public")
     def snippets(self):
-        return request.website.render('website.snippets')
+        return request.website._render('website.snippets')
 
-    @website.route('/page/<path:path>', type='http', auth="public", multilang=True)
-    def page(self, path, **kwargs):
+    @website.route('/page/<page:page>', type='http', auth="public", multilang=True)
+    def page(self, page, **opt):
         values = {
-            'path': path,
+            'path': page,
         }
+        try:
+            request.website.get_template(page)
+        except (Exception), e:
+            if request.context['editable']:
+                page = 'website.page_404'
+            else:
+                return request.registry['ir.http']._handle_exception(e, 404)
+        return request.website.render(page, values)
 
-        return request.website.render(path, values)
+    @website.route('/website/reset_templates', type='http', auth='user', methods=['POST'])
+    def reset_template(self, templates, redirect='/'):
+        templates = request.httprequest.form.getlist('templates')
+        modules_to_update = []
+        for temp_id in templates:
+            view = request.registry['ir.ui.view'].browse(request.cr, request.uid, int(temp_id), context=request.context)
+            view.model_data_id.write({
+                'noupdate': False
+            })
+            if view.model_data_id.module not in modules_to_update:
+                modules_to_update.append(view.model_data_id.module)
+        module_obj = request.registry['ir.module.module']
+        module_ids = module_obj.search(request.cr, request.uid, [('name', 'in', modules_to_update)], context=request.context)
+        module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
+        return request.redirect(redirect)
 
     @website.route('/website/customize_template_toggle', type='json', auth='user')
     def customize_template_set(self, view_id):
@@ -152,6 +145,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     result.append({
                         'name': v.inherit_option_id.name,
                         'id': v.id,
+                        'inherit_id': v.inherit_id.id,
                         'header': True,
                         'active': False
                     })
@@ -159,6 +153,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                 result.append({
                     'name': v.name,
                     'id': v.id,
+                    'inherit_id': v.inherit_id.id,
                     'header': False,
                     'active': (v.inherit_id.id == v.inherit_option_id.id) or (not optional and v.inherit_id.id)
                 })
@@ -255,29 +250,29 @@ class Website(openerp.addons.web.controllers.main.Home):
         obj = _object.browse(request.cr, request.uid, _id)
         return bool(obj.website_published)
 
-    @website.route(['/website/kanban/'], type='http', auth="public")
+    @website.route(['/website/kanban/'], type='http', auth="public", methods=['POST'])
     def kanban(self, **post):
         return request.website.kanban_col(**post)
 
     @website.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
-        body = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
-        return request.make_response(body, headers=[('Content-Type', 'text/plain')])
+        response = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
+        response.mimetype = 'text/plain'
+        return response
 
     @website.route('/sitemap', type='http', auth='public', multilang=True)
     def sitemap(self):
-        return request.website.render('website.sitemap', {'pages': request.website.list_pages()})
+        return request.website.render('website.sitemap', {
+            'pages': request.website.enumerate_pages()
+        })
 
     @website.route('/sitemap.xml', type='http', auth="public")
     def sitemap_xml(self):
-        body = request.website.render('website.sitemap_xml', {
-            'pages': request.website.list_pages()
+        response = request.website.render('website.sitemap_xml', {
+            'pages': request.website.enumerate_pages()
         })
-
-        return request.make_response(body, [
-            ('Content-Type', 'application/xml;charset=utf-8')
-        ])
-
+        response.headers['Content-Type'] = 'application/xml;charset=utf-8'
+        return response
 
 class Images(http.Controller):
     def placeholder(self, response):

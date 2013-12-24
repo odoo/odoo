@@ -1,35 +1,34 @@
 (function () {
     'use strict';
 
-    var globalEditor;
-
     var hash = "#advanced-view-editor";
 
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.ace.xml');
 
-    website.ready().then(function () {
-        if (window.location.hash.indexOf(hash) >= 0) {
-            launch();
-        }
-    });
-
-    function launch () {
-        if (globalEditor) {
-            globalEditor.open();
-        } else {
-            globalEditor = new website.ace.ViewEditor();
-            globalEditor.appendTo($(document.body));
-        }
-    }
-
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action=ace]': 'launchAce',
         }),
+        start: function () {
+            var self = this;
+            this.globalEditor = null;
+            return this._super.apply(this, arguments).then(function () {
+                if (window.location.hash.indexOf(hash) >= 0) {
+                    self.launchAce();
+                }
+            });
+        },
         launchAce: function (e) {
-            e.preventDefault();
-            launch();
+            if (e) {
+                e.preventDefault();
+            }
+            if (this.globalEditor) {
+                this.globalEditor.open();
+            } else {
+                this.globalEditor = new website.ace.ViewEditor(this);
+                this.globalEditor.appendTo($(document.body));
+            }
         },
     });
 
@@ -59,8 +58,12 @@
     website.ace.ViewOption = openerp.Widget.extend({
         template: 'website.ace_view_option',
         init: function (parent, options) {
+            var indent = "- ";
             this.view_id = options.id;
             this.view_name = options.name;
+            for (var i = 0; i<options.level; i++) {
+                this.view_name = indent + this.view_name;
+            }
             this._super(parent);
         },
     });
@@ -100,6 +103,10 @@
                 self.aceEditor.resize();
                 self.$el.width(width);
             }
+            function resizeEditorHeight(height) {
+                self.$el.css('top', height);
+                self.$('.ace_editor').css('bottom', height);
+            }
             function storeEditorWidth() {
                 window.localStorage.setItem('ace_editor_width', self.$el.width());
             }
@@ -129,22 +136,55 @@
             $('button[data-action=edit]').click(function () {
                self.close();
             });
+            this.getParent().on('change:height', this, function (editor) {
+                resizeEditorHeight(editor.get('height'));
+            });
             resizeEditor(readEditorWidth());
+            resizeEditorHeight(this.getParent().get('height'));
         },
         loadViews: function (views) {
             var self = this;
-            var activeViews = _.uniq(_.filter(views, function (view) {
-               return view.active;
-            }), false, function (view) {
-                return view.id;
-            });
             var $viewList = self.$('#ace-view-list');
-            _.each(activeViews, function (view) {
+            var views = this.buildViewGraph(views);
+            _.each(views, function (view) {
                 if (view.id) {
                     new website.ace.ViewOption(self, view).appendTo($viewList);
                     self.loadView(view.id);
                 }
             });
+        },
+        buildViewGraph: function (views) {
+            var activeViews = _.uniq(_.filter(views, function (view) {
+               return view.active;
+            }), false, function (view) {
+                return view.id;
+            });
+            var index = {};
+            var roots = [];
+            _.each(activeViews, function (view) {
+                index[view.id] = view;
+                view.children = [];
+            });
+            _.each(index, function (view) {
+                var parentId = view.inherit_id;
+                if (parentId && index[parentId]) {
+                    index[parentId].children.push(view);
+                } else {
+                    roots.push(view);
+                }
+            });
+            var result = [];
+            function visit (node, level) {
+                node.level = level;
+                result.push(node);
+                _.each(node.children, function (child) {
+                    visit(child, level + 1);
+                });
+            }
+            _.each(roots, function (node) {
+                visit(node, 0);
+            });
+            return result;
         },
         loadView: function (id) {
             var viewId = parseInt(id, 10);

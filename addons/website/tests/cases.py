@@ -6,10 +6,11 @@ class URLCase(unittest2.TestCase):
     URLCase moved out of test_requests, otherwise discovery attempts to
     instantiate and run it
     """
-    def __init__(self, user, url, result):
+    def __init__(self, user, url, source, result):
         super(URLCase, self).__init__()
         self.user = user
         self.url = url
+        self.source = source
         self.result = result
 
     @property
@@ -17,6 +18,8 @@ class URLCase(unittest2.TestCase):
         return self.user or "Anonymous Coward"
 
     def __str__(self):
+        if self.source:
+            return "%s (from %s, as %s)" % (self.url, self.source, self.username)
         return "%s (as %s)" % (self.url, self.username)
 
     __repr__ = __str__

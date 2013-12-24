@@ -1,131 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+<data>
 
-    <!-- Layout add nav and footer -->
-    <template id="footer_custom" inherit_id="website.layout" name="Footer Associations Link">
-        <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a href="/members/">Members</a></li>
-        </xpath>
-    </template>
+<!-- Layout add nav and footer -->
+<template id="footer_custom" inherit_id="website.layout" name="Footer Associations Link">
+    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+        <li><a href="/members/">Members</a></li>
+    </xpath>
+</template>
 
-    <template id="index" name="Members">
-        <t t-call="website.layout">
-            <t t-set="additional_title">Members</t>
-            <div id="wrap">
-                <div class="oe_structure">
-                    <section data-snippet-id="title">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h1 class="text-center">Our Members Directory</h1>
-                                    <h3 class="text-muted text-center">Find a business partner</h3>
-                                </div>
+<template id="index" name="Members">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Members</t>
+        <div id="wrap">
+            <div class="oe_structure">
+                <section data-snippet-id="title">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1 class="text-center">Our Members Directory</h1>
+                                <h3 class="text-muted text-center">Find a business partner</h3>
                             </div>
                         </div>
-                    </section>
-                </div>
-                <div class="container">
-                    <div class="row">
-
-                <div class="col-md-4" id="left_column">
-                    <ul class="nav nav-pills nav-stacked mt16">
-                        <li class="nav-header"><h3>Associations</h3></li>
-                        <li t-att-class="membership and '' or 'active'"><a href="/members/">All</a></li>
-                        <t t-foreach="memberships" t-as="membership_id">
-                            <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
-                                <a t-href="/members/association/#{ membership_id.id }"><t t-esc="membership_id.name"/></a>
-                            </li>
-                        </t>
-                    </ul>
-                </div>
-                <div class="col-md-8" id="ref_content">
-                    <div class='navbar'>
-                        <t t-call="website.pager">
-                           <t t-set="classname">pull-left</t>
-                        </t>
-                        <form action="/members/" method="get" class="navbar-search pull-right pagination form-inline">
-                            <div class="form-group">
-                                <input type="text" name="name" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="post.get('name', '')"/>
-                            </div>
-                        </form>
                     </div>
-                    <div>
-                        <t t-if="not membership_lines">
-                            <p>No result found.</p>
-                        </t>
-                        <t t-foreach="membership_lines" t-as="membership_line_id">
-                            <t t-if="current_membership_id != membership_line_id.membership_id.id">
-                                <t t-set="current_membership_id" t-value="membership_line_id.membership_id.id"/>
-                                <h3 class="text-center"><span t-field="membership_line_id.membership_id"/></h3>
-                            </t>
-                            <t t-set="partner" t-value="membership_line_id.partner"/>
-                            <div class="media">
-                                <t t-call="website.publish_management">
-                                    <t t-set="object" t-value="partner"/>
-                                </t>
-                                <a class="pull-left" t-href="/members/#{ partner.id }/">
-                                    <img class="media-object" t-att-src="partner.img('image_small')"/>
-                                </a>
-                                <div class="media-body" style="min-height: 64px;">
-                                    <a class="media-heading" t-href="/members/#{ partner.id }/"><span t-field="partner.parent_id"/> <span t-field="partner.name"/></a>
-                                    <div t-field="partner.website_short_description"/>
-                                </div>
-                            </div>
-                        </t>
-                    </div>
-                </div>
-
-                    </div>
-                </div>
-                <div class="oe_structure"/>
+                </section>
             </div>
-        </t>
-    </template>
+            <div class="container">
+                <div class="row">
 
-    <template id="opt_index_country" name="Location"
-            inherit_option_id="website_membership.index" inherit_id="website_membership.index">
-        <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
-            <ul class="nav nav-pills nav-stacked mt16">
-                <li class="nav-header"><h3>Location</h3></li>
-                <t t-foreach="countries">
-                    <li t-if="country_id" t-att-class="post.get('country_id', '0') == str(country_id and country_id[0]) and 'active' or ''">
-                        <a t-href="/members/#{ search }&amp;country_id=#{ country_id[0] }"><t t-esc="country_id[1]"/>
-                            <span class="badge pull-right"><t t-esc="country_id_count"/></span>
-                        </a>
-                    </li>
-                </t>
-            </ul>
-        </xpath>
-    </template>
-
-    <!-- Option: index: Left Google Map -->
-    <template id="opt_index_google_map" name="Left World Map"
-            inherit_option_id="website_membership.index" inherit_id="website_membership.index">
-        <xpath expr="//div[@id='left_column']/ul[1]" position="before">
-            <ul class="nav nav-pills nav-stacked mt16">
-                <li class="nav-header"><h3>World Map</h3></li>
-                <ul class="nav">
-                    <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
-                        style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
+            <div class="col-md-4" id="left_column">
+                <ul class="nav nav-pills nav-stacked mt16">
+                    <li class="nav-header"><h3>Associations</h3></li>
+                    <li t-att-class="'' if membership else 'active'"><a href="/members/">All</a></li>
+                    <t t-foreach="memberships" t-as="membership_id">
+                        <li t-att-class="membership and membership_id.id == membership.id and 'active' or ''">
+                            <a t-href="/members/association/#{ membership_id.id }"><t t-esc="membership_id.name"/></a>
+                        </li>
+                    </t>
                 </ul>
-            </ul>
-        </xpath>
-    </template>
-
-    <template id="partner" name="Members">
-        <t t-call="website.layout">
-            <div id="wrap">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <t t-call="website_partner.partner_detail"/>
-                    </div>
-                </div>
-                <div class="oe_structure"/>
             </div>
-        </t>
-    </template>
+            <div class="col-md-8" id="ref_content">
+                <div class='navbar'>
+                    <t t-call="website.pager">
+                       <t t-set="classname">pull-left</t>
+                    </t>
+                    <form action="/members/" method="get" class="navbar-search pull-right pagination form-inline">
+                        <div class="form-group">
+                            <input type="text" name="name" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="post.get('name', '')"/>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <t t-if="not membership_lines">
+                        <p>No result found.</p>
+                    </t>
+                    <t t-foreach="membership_lines" t-as="membership_line_id">
+                        <t t-if="current_membership_id != membership_line_id.membership_id.id">
+                            <t t-set="current_membership_id" t-value="membership_line_id.membership_id.id"/>
+                            <h3 class="text-center"><span t-field="membership_line_id.membership_id"/></h3>
+                        </t>
+                        <t t-set="partner_data" t-value="partners_data[membership_line_id.partner.id]"/>
+                        <div class="media">
+                            <a class="pull-left" t-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                                <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
+                            </a>
+                            <div class="media-body" style="min-height: 64px;">
+                                <a class="media-heading" t-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/"><t t-if="partner_data.get('parent_id')"><span t-esc="partner_data.get('parent_id')[1]"/></t> <span t-esc="partner_data.get('name')"/></a>
+                                <div t-raw="partner_data.get('website_short_description')"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
 
- </data>
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<template id="opt_index_country" name="Location"
+        inherit_option_id="website_membership.index" inherit_id="website_membership.index">
+    <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
+        <ul class="nav nav-pills nav-stacked mt16">
+            <li class="nav-header"><h3>Location</h3></li>
+            <t t-foreach="countries">
+                <li t-if="country_id" t-att-class="post.get('country_id', '0') == str(country_id and country_id[0]) and 'active' or ''">
+                    <a t-href="/members/#{ search }&amp;country_id=#{ country_id[0] }"><t t-esc="country_id[1]"/>
+                        <span class="badge pull-right"><t t-esc="country_id_count"/></span>
+                    </a>
+                </li>
+            </t>
+        </ul>
+    </xpath>
+</template>
+
+<!-- Option: index: Left Google Map -->
+<template id="opt_index_google_map" name="Left World Map"
+        inherit_option_id="website_membership.index" inherit_id="website_membership.index">
+    <xpath expr="//div[@id='left_column']/ul[1]" position="before">
+        <ul class="nav nav-pills nav-stacked mt16">
+            <li class="nav-header"><h3>World Map</h3></li>
+            <ul class="nav">
+                <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                    style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
+            </ul>
+        </ul>
+    </xpath>
+</template>
+
+<template id="partner" name="Members">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure"/>
+            <div class="container">
+                <div class="row">
+                    <t t-call="website_partner.partner_detail"/>
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+</data>
 </openerp>

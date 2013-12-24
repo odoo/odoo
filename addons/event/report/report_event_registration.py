@@ -44,7 +44,6 @@ class report_event_registration(osv.osv):
         'user_id': fields.many2one('res.users', 'Event Responsible', readonly=True),
         'user_id_registration': fields.many2one('res.users', 'Register', readonly=True),
         'name_registration': fields.char('Participant / Contact Name',size=45, readonly=True),
-        'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
     _order = 'event_date desc'
@@ -64,7 +63,6 @@ class report_event_registration(osv.osv):
                 r.user_id AS user_id_registration,
                 r.name AS name_registration,
                 e.company_id AS company_id,
-                e.main_speaker_id AS speaker_id,
                 to_char(e.date_begin, 'YYYY-MM-DD') AS event_date,
                 to_char(e.date_begin, 'YYYY') AS year,
                 to_char(e.date_begin, 'MM') AS month,
@@ -91,7 +89,6 @@ class report_event_registration(osv.osv):
                 e.user_id,
                 event_state,
                 e.company_id,
-                e.main_speaker_id,
                 year,
                 month,
                 e.register_max,

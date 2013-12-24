@@ -5,26 +5,22 @@
     website.menu = {};
     website.add_template_file('/website/static/src/xml/website.menu.xml');
 
-    var globalEditor;
-
     website.EditorBar.include({
         events: _.extend({}, website.EditorBar.prototype.events, {
             'click a[data-action="edit-structure"]': 'editStructure',
         }),
         editStructure: function () {
             var self = this;
-            globalEditor = self;
             var context = website.get_context();
             openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website.menu',
                 method: 'get_tree',
-                args: [[context.website_id]],
+                args: [context.website_id],
                 kwargs: {
                     context: context
                 },
             }).then(function (menu) {
                 var result = new website.menu.EditMenuDialog(menu).appendTo(document.body);
-                self.trigger('tour:menu_editor_dialog_ready');
                 return result;
             });
         },
@@ -104,7 +100,7 @@
                         new_window: link[1],
                     });
                     var $menu = self.$('[data-menu-id="' + id + '"]');
-                    $menu.find('> div > span').text(menu_obj.name);
+                    $menu.find('.js_menu_label').first().text(menu_obj.name);
                 });
                 dialog.appendTo(document.body);
             } else {
@@ -155,7 +151,6 @@
         template: 'website.menu.dialog.add',
         init: function (editor, data) {
             this.data = data;
-            this.update_mode = !!this.data;
             return this._super.apply(this, arguments);
         },
         start: function () {
@@ -165,14 +160,13 @@
                     self.bind_data(self.data.name, self.data.url, self.data.new_window);
                 }
                 var $link_text = self.$('#link-text').focus();
-                self.$('#link-existing').change(function () {
-                    if (!$link_text.val()) {
-                        $link_text.val($(this).find('option:selected').text());
-                        $link_text.focus();
-                    }
+                self.$('#link-page').change(function (e) {
+                    if ($link_text.val()) { return; }
+                    var data = $(this).select2('data');
+                    $link_text.val(data.create ? data.id : data.text);
+                    $link_text.focus();
                 });
             });
-            globalEditor.trigger('tour:new_menu_entry_dialog_ready');
             return result;
         },
         save: function () {
@@ -193,7 +187,6 @@
             }
         },
         destroy: function () {
-            globalEditor.trigger('tour:new_menu_entry_dialog_closed');
             this._super.apply(this, arguments);
         },
     });

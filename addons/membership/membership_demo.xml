@@ -7,7 +7,7 @@
         <field name="membership">True</field>
         <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
         <field eval="time.strftime('%Y-12-01')" name="membership_date_to"/>
-        <field name="name">Golden Membership</field>
+        <field name="name">Gold Membership</field>
         <field name="list_price">180</field>
         <field name="categ_id" ref="product.product_category_1"/>
         <field name="type">service</field>
@@ -42,21 +42,43 @@
 
     <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_18'), ref('membership_1'), {'amount':180})"/>
     <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_21'), ref('membership_1'), {'amount':180})"/>
+    <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_22'), ref('membership_1'), {'amount':180})"/>
+    <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_23'), ref('membership_1'), {'amount':180})"/>
 
     <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_9'), ref('membership_2'), {'amount':180})"/>
+    <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_11'), ref('membership_2'), {'amount':180})"/>
+    <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_5'), ref('membership_2'), {'amount':180})"/>
+    <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_3'), ref('membership_2'), {'amount':180})"/>
 
     <!-- Demo data for free member -->
     <record id="base.res_partner_18" model="res.partner">
         <field name="free_member">True</field>
     </record>
+    <record id="base.res_partner_7" model="res.partner">
+        <field name="free_member">True</field>
+    </record>
+    <record id="base.res_partner_9" model="res.partner">
+        <field name="free_member">True</field>
+    </record>
+    <record id="base.res_partner_26" model="res.partner">
+        <field name="free_member">True</field>
+    </record>
 
     <!-- Demo data for associate member -->
-    <record id="base.res_partner_9" model="res.partner">
+    <record id="base.res_partner_12" model="res.partner">
         <field name="associate_member" ref="base.res_partner_2"/>
     </record>
     <record id="base.res_partner_8" model="res.partner">
         <field name="associate_member" ref="base.res_partner_2"/>
     </record>
-
+    <record id="base.res_partner_3" model="res.partner">
+        <field name="associate_member" ref="base.res_partner_2"/>
+    </record>
+    <record id="base.res_partner_4" model="res.partner">
+        <field name="associate_member" ref="base.res_partner_2"/>
+    </record>
+    <record id="base.res_partner_17" model="res.partner">
+        <field name="associate_member" ref="base.res_partner_2"/>
+    </record>
     </data>
 </openerp>

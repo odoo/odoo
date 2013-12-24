@@ -34,7 +34,6 @@ class mail_group(osv.Model):
     _mail_flat_thread = False
     _inherit = ['mail.thread']
     _inherits = {'mail.alias': 'alias_id'}
-    _mail_post_access = 'read'
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)

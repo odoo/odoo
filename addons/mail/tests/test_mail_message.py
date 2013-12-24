@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.common import TestMail
+from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
@@ -258,13 +259,13 @@ class TestMailMessage(TestMail):
         # ----------------------------------------
 
         # Do: Bert creates a message on Pigs -> ko, no creation rights
-        self.assertRaises(except_orm, self.mail_message.create,
+        self.assertRaises(AccessError, self.mail_message.create,
             cr, user_bert_id, {'model': 'mail.group', 'res_id': self.group_pigs_id, 'body': 'Test'})
         # Do: Bert create a message on Jobs -> ko, no creation rights
-        self.assertRaises(except_orm, self.mail_message.create,
+        self.assertRaises(AccessError, self.mail_message.create,
             cr, user_bert_id, {'model': 'mail.group', 'res_id': self.group_jobs_id, 'body': 'Test'})
         # Do: Bert create a private message -> ko, no creation rights
-        self.assertRaises(except_orm, self.mail_message.create,
+        self.assertRaises(AccessError, self.mail_message.create,
             cr, user_bert_id, {'body': 'Test'})
 
         # Do: Raoul creates a message on Jobs -> ok, write access to the related document
@@ -410,15 +411,15 @@ class TestMailMessage(TestMail):
         for message in bert_jobs.message_ids:
             trigger_read = message.subject
         for partner in bert_jobs.message_follower_ids:
-            with self.assertRaises(except_orm):
+            with self.assertRaises(AccessError):
                 trigger_read = partner.name
         # Do: Bert comments Jobs, ko because no creation right
-        self.assertRaises(except_orm,
+        self.assertRaises(AccessError,
                           self.mail_group.message_post,
                           cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
 
         # Do: Bert writes on its own profile, ko because no message create access
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.res_users.message_post(cr, user_bert_id, user_bert_id, body='I love Bert')
             self.res_partner.message_post(cr, user_bert_id, partner_bert_id, body='I love Bert')
 

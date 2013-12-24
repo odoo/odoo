@@ -26,7 +26,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
 import openerp.addons.decimal_precision as dp
-from openerp import netsvc
+from openerp import workflow
 
 class sale_order(osv.osv):
     _name = "sale.order"
@@ -39,10 +39,6 @@ class sale_order(osv.osv):
         },
     }
 
-    # Hook for website_sale to inherit (website_sale_delivery)
-    def _get_website_data(self, cr, uid, order, context):
-        return {}
-
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -51,6 +47,7 @@ class sale_order(osv.osv):
             'state': 'draft',
             'invoice_ids': [],
             'date_confirm': False,
+            'client_order_ref': '',
             'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
@@ -60,6 +57,10 @@ class sale_order(osv.osv):
         for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.product_id, line.order_id.partner_id)['taxes']:
             val += c.get('amount', 0.0)
         return val
+
+    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):
+        """ Wrapper because of direct method passing as parameter for function fields """
+        return self._amount_all(cr, uid, ids, field_name, arg, context=context)
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
@@ -202,19 +203,19 @@ class sale_order(osv.osv):
             fnct_search=_invoiced_search, type='boolean', help="It indicates that sales order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
-        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The amount without tax.", track_visibility='always'),
-        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
+        'amount_tax': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Taxes',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The tax amount."),
-        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
+        'amount_total': fields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
@@ -321,6 +322,9 @@ class sale_order(osv.osv):
             context = {}
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
+        if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
+            defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context)['value']
+            vals = dict(defaults, **vals)
         context.update({'mail_create_nolog': True})
         new_id = super(sale_order, self).create(cr, uid, vals, context=context)
         self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=context)
@@ -795,9 +799,8 @@ class sale_order_line(osv.osv):
                 sales.add(line.order_id.id)
                 create_ids.append(inv_id)
         # Trigger workflow events
-        wf_service = netsvc.LocalService("workflow")
         for sale_id in sales:
-            wf_service.trg_write(uid, 'sale.order', sale_id, cr)
+            workflow.trg_write(uid, 'sale.order', sale_id, cr)
         return create_ids
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -810,10 +813,9 @@ class sale_order_line(osv.osv):
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
     def button_done(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
         res = self.write(cr, uid, ids, {'state': 'done'})
         for line in self.browse(cr, uid, ids, context=context):
-            wf_service.trg_write(uid, 'sale.order', line.order_id.id, cr)
+            workflow.trg_write(uid, 'sale.order', line.order_id.id, cr)
         return res
 
     def uos_change(self, cr, uid, ids, product_uos, product_uos_qty=0, product_id=None):
@@ -835,6 +837,24 @@ class sale_order_line(osv.osv):
         except ZeroDivisionError:
             pass
         return {'value': value}
+
+    def create(self, cr, uid, values, context=None):
+        if values.get('order_id') and values.get('product_id') and  any(f not in values for f in ['name', 'price_unit', 'type', 'product_uom_qty', 'product_uom']):
+            order = self.pool['sale.order'].read(cr, uid, values['order_id'], ['pricelist_id', 'partner_id', 'date_order', 'fiscal_position'], context=context)
+            defaults = self.product_id_change(cr, uid, [], order['pricelist_id'][0], values['product_id'],
+                qty=float(values.get('product_uom_qty', False)),
+                uom=values.get('product_uom', False),
+                qty_uos=float(values.get('product_uos_qty', False)),
+                uos=values.get('product_uos', False),
+                name=values.get('name', False),
+                partner_id=order['partner_id'][0],
+                date_order=order['date_order'],
+                fiscal_position=order['fiscal_position'][0] if order['fiscal_position'] else False,
+                flag=False,  # Force name update
+                context=context
+            )['value']
+            values = dict(defaults, **values)
+        return super(sale_order_line, self).create(cr, uid, values, context=context)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -981,9 +1001,9 @@ class mail_compose_message(osv.Model):
 
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
-        if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
+        if context.get('active_model') == 'sale.order' and context.get('active_ids') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
-            self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
+            self.pool.get('sale.order').signal_quotation_sent(cr, uid, context['active_ids'])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 
@@ -1005,9 +1025,8 @@ class account_invoice(osv.Model):
         if len(invoice_ids) == len(ids):
             #Cancel invoice(s) first before deleting them so that if any sale order is associated with them
             #it will trigger the workflow to put the sale order in an 'invoice exception' state
-            wf_service = netsvc.LocalService("workflow")
             for id in ids:
-                wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
+                workflow.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
         return super(account_invoice, self).unlink(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

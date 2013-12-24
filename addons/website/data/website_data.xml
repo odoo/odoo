@@ -23,7 +23,7 @@
             <field name="name">Contact us</field>
             <field name="url">/page/website.contactus</field>
             <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">20</field>
+            <field name="sequence" type="int">60</field>
         </record>
 
         <record id="public_user" model="res.users">
@@ -37,7 +37,20 @@
         </record>
 
         <record id="base.group_public" model="res.groups">
-            <field name="users" eval="[(4, ref('public_user'))]"/>
+            <field name="users" eval="[(4, ref('website.public_user'))]"/>
+        </record>
+
+        <record id="base.group_website_publisher" model="res.groups">
+            <field name="name">Display Editor Bar on Website</field>
+            <field name="category_id" ref="base.module_category_website"/>
+        </record>
+
+        <!-- Access rules to edit ir.ui.view with qWeb type -->
+        <record id="base.group_website_designer" model="res.groups">
+            <field name="name">Manage Website and qWeb view</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_website_publisher'))]"/>
+            <field name="category_id" ref="base.module_category_website"/>
         </record>
 
         <record id="action_module_website" model="ir.actions.act_window">
@@ -59,7 +72,12 @@
         </record>
         <record id="action_website_tutorial" model="ir.actions.act_url">
             <field name="name">Website With Tutorial</field>
-            <field name="url">/?banner-tutorial=true</field>
+            <field name="url">/?tutorial.banner=true</field>
+            <field name="target">self</field>
+        </record>
+        <record id="action_website_homepage" model="ir.actions.act_url">
+            <field name="name">Website Homepage</field>
+            <field name="url">/page/website.homepage</field>
             <field name="target">self</field>
         </record>
 
@@ -117,10 +135,10 @@
 
         <record model="ir.attachment">
             <field name="name">gears</field>
-            <field name="datas_fname">gears.jpg</field>
+            <field name="datas_fname">gears.png</field>
             <field name="res_model">ir.ui.view</field>
             <field name="type">url</field>
-            <field name="url">/website/static/src/img/library/gears.jpg</field>
+            <field name="url">/website/static/src/img/library/gears.png</field>
         </record>
 
         <record model="ir.attachment">

@@ -26,11 +26,6 @@ class google_map(http.Controller):
         domain_public = domain + [('website_published', '=', True)]
         partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID,
                                          domain_public, context=request.context)
-        if not request.context['is_public_user']:
-            partner_ids += partner_obj.search(request.cr, request.uid, domain,
-                                              context=request.context)
-            partner_ids = list(set(partner_ids))
-
         return partner_obj.google_map_json(request.cr, openerp.SUPERUSER_ID,
                                            partner_ids, request.context)
 
@@ -42,14 +37,13 @@ class google_map(http.Controller):
         latitude = post.get('latitude') and float(post['latitude'])
         longitude = post.get('longitude') and float(post['longitude'])
 
-        if not request.context['is_public_user'] and partner_id and (latitude or longitude):
-            values = {
-                'partner_latitude': latitude,
-                'partner_longitude': longitude,
-                'date_localization': datetime.now().strftime('%Y-%m-%d'),
-            }
-            partner_obj.write(request.cr, request.uid, [partner_id], values,
-                              request.context)
+        values = {
+            'partner_latitude': latitude,
+            'partner_longitude': longitude,
+            'date_localization': datetime.now().strftime('%Y-%m-%d'),
+        }
+        partner_obj.write(request.cr, request.uid, [partner_id], values,
+                          request.context)
 
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

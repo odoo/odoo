@@ -5,12 +5,16 @@
         <!-- Create a partner, that is also a portal user -->
         <record id="partner_demo_portal" model="res.partner">
             <field name="name">Demo Portal User</field>
-            <field name="email">demo@portal.example.com</field>
+            <field name="email">demo.portal@yourcompany.example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="True"/>
             <field name="notification_email_send">none</field>
+            <field name="city">Vivegnis</field>
+            <field name="zip">4683</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="street">Rue Cesar de Paepe, 43</field>
         </record>
-        <record id="demo_user0" model="res.users">
+        <record id="demo_user0" model="res.users" context="{'no_reset_password': True}">
             <field name="partner_id" ref="partner_demo_portal"/>
             <field name="login">portal</field>
             <field name="password">portal</field>

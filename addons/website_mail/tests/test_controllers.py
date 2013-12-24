@@ -31,9 +31,7 @@ class TestControllers(TestMail):
         # print request
 
         cr, uid = self.cr, self.uid
-        # context = {
-        #     'is_public_user': True,
-        # }
+        # context = { }
         # email = 'Marcel Dupuis <marcel.dupuis@example.com>'
         # website_mail = WebsiteMail()
 

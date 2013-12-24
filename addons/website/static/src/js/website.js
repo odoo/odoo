@@ -13,6 +13,31 @@
         }, dict);
     };
 
+    website.parseQS = function (qs) {
+        var match,
+            params = {},
+            pl     = /\+/g,  // Regex for replacing addition symbol with a space
+            search = /([^&=]+)=?([^&]*)/g;
+
+        while ((match = search.exec(qs))) {
+            var name = decodeURIComponent(match[1].replace(pl, " "));
+            var value = decodeURIComponent(match[2].replace(pl, " "));
+            params[name] = value;
+        }
+        return params;
+    };
+
+    var parsedSearch;
+    website.parseSearch = function () {
+        if (!parsedSearch) {
+            parsedSearch = website.parseQS(window.location.search.substring(1));
+        }
+        return parsedSearch;
+    };
+    website.parseHash = function () {
+        return website.parseQS(window.location.hash.substring(1));
+    };
+
     /* ----- TEMPLATE LOADING ---- */
     var templates_def = $.Deferred().resolve();
     website.add_template_file = function(template) {
@@ -173,7 +198,7 @@
             init: function() {}
         }, options || {});
 
-        var type = _.intersect(Object.keys(options), ['input', 'textarea', 'select']);
+        var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
         type = type.length ? type[0] : 'text';
         options.field_type = type;
         options.field_name = options.field_name || options[type];
@@ -211,11 +236,27 @@
         if (field.is('input[type="text"], select')) {
             field.keypress(function (e) {
                 if (e.which == 13) {
+                    e.preventDefault();
                     dialog.find('.btn-primary').trigger('click');
                 }
             });
         }
         return def;
+    };
+
+    website.form = function (url, method, params) {
+        var form = document.createElement('form');
+        form.action = url;
+        form.method = method;
+        _.each(params, function (v, k) {
+            var param = document.createElement('input');
+            param.type = 'hidden';
+            param.name = k;
+            param.value = v;
+            form.appendChild(param);
+        });
+        document.body.appendChild(form);
+        form.submit();
     };
 
     dom_ready.then(function () {
@@ -225,15 +266,14 @@
 
         /* ----- PUBLISHING STUFF ---- */
         $(document).on('click', '.js_publish_management .js_publish_btn', function () {
-            var $data = $(this).parent(".js_publish_management");
-	    var self=this;
+            var $data = $(this).parents(".js_publish_management:first");
+            var self=this;
             openerp.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
                 .then(function (result) {
                     $data.toggleClass("css_unpublished css_published");
-                    $(self).toggleClass("btn-success btn-danger");
                     $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
                 }).fail(function (err, data) {
-                    website.error(data, '/web#model='+$data.data('object')+'&id='+$data.data('id'));
+                    website.error(data, '/web#return_label=Website&model='+$data.data('object')+'&id='+$data.data('id'));
                 });
         });
 

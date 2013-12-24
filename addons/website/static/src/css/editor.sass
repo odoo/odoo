@@ -1,21 +1,6 @@
-@charset "utf-8"
+@import "common"
 
-@import "compass/css3"
-@import "compass/css3/user-interface"
-@import "compass/css3/transition"
-
-//smartphones, iPhone, portrait 480x320 phones
-$smart_phone: 320px
-//portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide.*/
-$small-tablet: 481px
-//portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones
-$portrait-tablet: 641px
-//tablet, landscape iPad, lo-res laptops ands desktops
-$tablet: 961px
-//big landscape tablets, laptops, and desktops
-$desktop: 1025px
-
-/* ---- CKEditor Minimal Reset ---- */
+/* ---- CKEditor Minimal Reset ---- {{{ */
 
 .navbar.navbar-inverse .cke_chrome
     border: none
@@ -39,7 +24,9 @@ $desktop: 1025px
     border: none
     +box-shadow(none)
 
-/* ---- OpenERP Style ---- */
+// }}}
+
+/* ---- OpenERP Style ---- {{{ */
 
 .oe_website_editorbar
     position: fixed
@@ -83,6 +70,9 @@ $desktop: 1025px
 .css_non_editable_mode_hidden
     display: none
 
+.cke_editable .css_editable_mode_hidden
+    display: none
+
 .oe_carousel_options
     cursor: pointer
     position: absolute
@@ -95,7 +85,9 @@ $desktop: 1025px
         position: relative !important
         top: +2px
 
-/* ---- EDITOR BAR ---- */
+// }}}
+
+/* ---- EDITOR BAR ---- {{{ */
 
 table.editorbar-panel
     cursor: pointer
@@ -105,7 +97,10 @@ table.editorbar-panel
     td.selected
         background-color: #b1c9d9
 
-// ---- TRANSLATIONS ---- {{{
+// }}}
+
+/* ---- TRANSLATIONS ---- {{{ */
+
 .oe_translate_or
     color: white
     padding: 0 0 0 1em
@@ -122,17 +117,19 @@ table.editorbar-panel
     padding: 0 10px
 .oe_translatable_todo
     background: rgb(255, 255, 182)
+
 // }}}
 
-// -------- MENU -------- {{{
+/* ---- MENU ---- {{{ */
+
 div.oe_menu_buttons
     top: -8px
     right: -8px
 
 ul.oe_menu_editor
-    .icon-home
+    .fa-home
         display: none
-    > li:first-child .icon-home
+    > li:first-child > div > span > .fa-home
         display: block
     .oe_menu_placeholder
         outline: 1px dashed #4183C4
@@ -147,12 +144,13 @@ ul.oe_menu_editor
 
 // }}}
 
-/* ---- RTE ---- */
+/* ---- RTE ---- {{{ */
 
 // bootstrap makes .btn elements unselectable -> RTE double-click can't know
 // about them either
-.oe_editable .btn
-    @include user-select(auto)
+.oe_editable .btn, .btn.oe_editable
+    +user-select(auto)
+    cursor: text !important
 
 .modal-dialog.select-image
     width: 80%
@@ -164,6 +162,9 @@ ul.oe_menu_editor
 .modal .image-preview
     margin-bottom: 0.5em
 
+.modal-footer
+    text-align: left
+
 .modal.nosave .modal-footer
     button.save
         display: none
@@ -171,30 +172,48 @@ ul.oe_menu_editor
         display: inline-block !important
         visibility: visible !important
 
+.existing-attachments .pager .disabled
+    display: none
+
 // wrapper positioned relatively for drag&drop widget which is disabled below.
 // Breaks completely horribly crazy products listing page, so take it out.
 .cke_widget_wrapper
     position: static !important
-// "remove" drag & drop of CKE widgets
-.cke_widget_drag_handler_container
-    display: none !important
+
 // prevent inline widgets from entirely disappearing when their (textual)
 // content is removed
-.cke_widget_editable:empty:after
-    content: " "
-    white-space: pre-wrap
+.cke_widget_editable
+    // basic config
+    &:empty:after
+        opacity: 0.3
+        white-space: pre-wrap
+    // no @placeholder -> just add some padding
+    &:not([placeholder]):empty::after
+        content: " "
+    // with placeholder and when not (yet) focused -> display placeholder
+    &[placeholder]:not(:focus):empty::after
+        content: attr(placeholder)
 
 .oe_carlos_danger
     outline: 1px solid red !important
     background-color: #ffd9dd !important
 
-/* ---- SNIPPET EDITOR ---- */
+.hover-edition-button
+    position: absolute
+    top: 0
+    left: 0
+    // This z-index is due to .navbar of bootstrap
+    z-index: 1000
+
+// }}}
+
+/* ---- SNIPPET EDITOR ---- {{{ */
 
 #oe_snippets
     position: fixed
     left: 0px
     right: 0px
-    top: 51px
+    // top property is set programmatically
     background: rgb(40,40,40)
     +box-shadow(0px 10px 10px -10px black inset)
     z-index: 1010
@@ -277,7 +296,9 @@ ul.oe_menu_editor
 #oe_snippets .oe_snippet_thumbnail
     @include background(#747474, radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4)))
 
-/* ---- SNIPPETS DROP ZONES ---- */
+// }}}}
+
+/* ---- SNIPPETS DROP ZONES ---- {{{ */
 
 .oe_drop_zone.oe_insert
     display: block
@@ -303,7 +324,7 @@ ul.oe_menu_editor
         position: relative
         margin: 0px -24px !important
     &.oe_overlay
-        border-radius: 3px
+        +border-radius(3px)
         //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.1) ,rgba(255,255,255,.1) 35px, rgba(0,0,0,.1) 35px, rgba(0,0,0,.1) 75px))
         //background-size: 100px 100px
         background: rgba(153, 0, 255,.5)
@@ -324,7 +345,9 @@ ul.oe_menu_editor
     margin-bottom: 32px
     padding-top: 12px
 
-/* ---- SNIPPET MANIPULATOR ---- */
+// }}}
+
+/* ---- SNIPPET MANIPULATOR ---- {{{ */
 
 .oe_overlay
     display: none
@@ -341,37 +364,66 @@ ul.oe_menu_editor
         border-width: 1px
         +box-shadow(0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset)
         border-color: rgba(0, 0, 0, 0.5)
-        .oe_handle
-            display: block !important
-            pointer-events: auto
-            &:before
-                position: relative
-                top: 50%
-                left: 50%
-                display: block
-                background: rgba(255, 255, 255, 1)
-                border: solid 1px rgba(0, 0, 0, .2)
-                +border-radius(5px)
-                width: 18px
-                height: 18px
-                margin: -9px
-                padding-left: 1px
-                font-size: 14px
-                line-height: 14px
-                font-family: FontAwesome
-                color: rgba(0,0,0,.5)
-                @include transition(background 100ms linear)
-            &:hover:before
-                background: rgba(0, 0, 0, .5)
-                color: #fff
-                +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
-        .oe_handle.e:before
+    .oe_handle
+        display: block !important
+        pointer-events: auto
+        position: absolute
+        top: 50%
+        left: 50%
+        +box-sizing(border-box)
+        width: 12px
+        height: 12px
+        margin: -2px
+        &:before
+            position: relative
+            top: 50%
+            left: 50%
+            display: block
+            background: rgba(255, 255, 255, 1)
+            border: solid 1px rgba(0, 0, 0, .2)
+            +border-radius(5px)
+            width: 18px
+            height: 18px
+            margin: -9px
+            padding-left: 1px
+            font-size: 14px
+            line-height: 14px
+            font-family: FontAwesome
+            color: rgba(0,0,0,.5)
+            @include transition(background 100ms linear)
+        &:hover:before
+            background: rgba(0, 0, 0, .5)
+            color: #fff
+            +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
+    .oe_handle.e
+        left: auto
+        top: 2px
+        height: 100%
+        right: -4px
+        cursor: w-resize
+        &:before
             content: "\F061"
-        .oe_handle.s:before
+    .oe_handle.s
+        top: auto
+        left: 2px
+        width: 100%
+        bottom: -4px
+        cursor: n-resize
+        &:before
             content: "\F063"
-        .oe_handle.w:before
+    .oe_handle.w
+        top: 2px
+        height: 100%
+        left: -4px
+        cursor: e-resize
+        &:before
             content: "\F060"
-        .oe_handle.n:before
+    .oe_handle.n
+        left: 2px
+        width: 100%
+        top: -4px
+        cursor: s-resize
+        &:before
             content: "\F062"
 
     .icon.btn
@@ -405,29 +457,6 @@ ul.oe_menu_editor
     height: 8px
     margin: -4px
 
-.oe_handle.n
-    left: 2px
-    width: 100%
-    top: 0px
-    cursor: s-resize
-.oe_handle.e
-    left: auto
-    top: 2px
-    height: 100%
-    right: 0px
-    cursor: w-resize
-.oe_handle.s
-    top: auto
-    left: 2px
-    width: 100%
-    bottom: 0px
-    cursor: n-resize
-.oe_handle.w
-    top: 2px
-    height: 100%
-    left: 0px
-    cursor: e-resize
-
 .s-resize-important, .s-resize-important *
     cursor: s-resize !important
 .n-resize-important, .n-resize-important *
@@ -439,8 +468,9 @@ ul.oe_menu_editor
 .move-important, .move-important *
     cursor: move !important
 
+// }}}
 
-/* ---- MOBILE PREVIEW ---- */
+/* ---- MOBILE PREVIEW ---- {{{ */
 
 $mobile_preview_background: #000000
 $mobile_preview_border: #1C1F1F
@@ -483,7 +513,9 @@ $icon_close: #E00101
         .modal-footer
             background-color: $mobile_preview_background
 
-/* ---- SEO TOOLS ---- */
+// }}}
+
+/* ---- SEO TOOLS ---- {{{ */
 
 $remove_color: $icon_close
 $in_title_color: #5cb85c
@@ -501,19 +533,16 @@ $highlighted_text_color: #ffffff
         padding: .2em .4em .2em .5em
         +border-radius(.4em)
 
-/* ---- ACE EDITOR ---- */
+// }}}
+
+/* ---- ACE EDITOR ---- {{{ */
 
 $editorbar_height: 30px
 // TODO Fix => might break with themes
-$navbar_height: 51px
 
-@mixin editor-font
-    font-size: 14px
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
-    line-height: normal
 .oe_ace_view_editor
     position: fixed
-    top: $navbar_height
+    // top property is set programmatically
     right: 0
     z-index: 1000
     height: 100%
@@ -535,7 +564,7 @@ $navbar_height: 51px
         position: absolute
         top: $editorbar_height
         right: 0
-        bottom: $navbar_height
+        // bottom property is set programmatically
         left: 0
         .ace_gutter
             cursor: ew-resize
@@ -545,9 +574,15 @@ $navbar_height: 51px
         z-index: -1000
         +opacity(0)
 
-/* ---- EDITOR TOUR ---- */
+// }}}
+
+/* ---- EDITOR TOUR ---- {{{ */
+
 div.tour-backdrop
     z-index: 2009
 .popover.tour
     z-index: 2010
+
+// }}}
+
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

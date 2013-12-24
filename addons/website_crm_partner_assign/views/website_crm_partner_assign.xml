@@ -2,120 +2,119 @@
 <openerp>
 <data>
 
+<!-- Layout add nav and footer -->
+<template id="footer_custom" inherit_id="website.layout" name="Footer Partners Link">
+    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+        <li><a href="/partners/">Resellers</a></li>
+    </xpath>
+</template>
 
-    <!-- Layout add nav and footer -->
-    <template id="footer_custom" inherit_id="website.layout" name="Footer Partners Link">
-        <xpath expr="//footer//div[@name='info']/ul" position="inside">
-            <li><a href="/partners/">Resellers</a></li>
-        </xpath>
-    </template>
+<!-- Page --> 
+<template id="layout" name="Partners Layout">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Resellers</t>
+        <div id="wrap">
+            <div class="oe_structure"/>
+            <div class="container">
+                <div class="row">
+                    <t t-raw="ref_content" />
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
 
-    <!-- Page --> 
-    <template id="layout" name="Partners Layout">
-        <t t-call="website.layout">
-            <t t-set="additional_title">Resellers</t>
-            <div id="wrap">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <t t-raw="ref_content" />
+<template id="index" name="Find Resellers">
+    <t t-call="website_crm_partner_assign.layout">
+        <t t-set="ref_content">
+            <div class="col-md-12">
+                <h1 class="text-center">
+                    Looking For a Local Store?
+                </h1><h2 class="text-center text-muted">
+                    Contact a reseller
+                </h2>
+            </div>
+            <div class="col-md-4" id="partner_left">
+                <h3>Resellers by Country</h3>
+                <ul class="nav nav-pills nav-stacked mt16">
+                    <t t-foreach="countries" t-as="country_dict">
+                        <t t-if="country_dict['country_id']">
+                            <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
+                                <a t-href="/partners/country/#{ country_dict['country_id'][0] }">
+                                    <t t-esc="country_dict['country_id'][1]"/> <small>(<t t-esc="country_dict['country_id_count']"/>)</small>
+                                </a>
+                            </li>
+                        </t>
+                    </t>
+                </ul>
+            </div>
+            <div class="col-md-8" id="ref_content">
+                <div class='navbar'>
+                    <div>
+                        <t t-call="website.pager">
+                           <t t-set="classname">pull-left</t>
+                        </t>
+                        <form action="/partners/" method="get" class="navbar-search pull-right pagination form-inline">
+                            <div class="form-group">
+                                <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="name_search"/>
+                            </div>
+                            <div class="form-group">
+                                <select class="search-query col-md-2 mt4 form-control" name="grade" t-if="len(grades) > 1" onchange="submit()">
+                                    <t t-foreach="grades">
+                                        <t t-if="grade_id">
+                                            <option t-att-selected="searches.get('grade') == str(grade_id and grade_id[0]) and 'selected'" t-att-value="grade_id[0]">
+                                                <t t-esc="grade_id[1]"/> (<t t-esc="grade_id_count"/>)
+                                            </option>
+                                        </t>
+                                    </t>
+                                </select>
+                            </div>
+                        </form>
                     </div>
+                </div>
+                <div>
+                    <t t-foreach="partners_data" t-as="partner_data">
+                        <t t-if="internal_gid != partner_data['grade_id'][1]">
+                            <h3 class="text-center">
+                                <span t-esc="partner_data['grade_id'][1]"/> Partners
+                                <t t-if="current_country"> in <t t-esc="current_country.name"/></t>
+                            </h3>
+                            <t t-set="internal_gid" t-value="partner_data['grade_id'][1]"/>
+                        </t>
+                        <div class="media thumbnail">
+                            <a class="pull-left" t-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                                <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data['image_small']}"/>
+                            </a>
+                            <div class="media-body" style="min-height: 64px;">
+                                <a class="media-heading" t-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/"><t t-if="partner_data['parent_id']"><span t-esc="partner_data['parent_id'][1]"/></t> <span t-esc="partner_data['name']"/></a> - <span t-esc="partner_data['grade_id'][1]"/>
+                                <div t-esc="partner_data['website_short_description']"/>
+                            </div>
+                        </div>
+                    </t>
                 </div>
             </div>
         </t>
-    </template>
+    </t>
+</template>
 
-    <template id="index" name="Find Resellers">
-        <t t-call="website_crm_partner_assign.layout">
-            <t t-set="ref_content">
-                <div class="col-md-12">
-                    <h1 class="text-center">
-                        Looking For a Local Store?
-                    </h1><h2 class="text-center text-muted">
-                        Contact a reseller
-                    </h2>
-                </div>
-                <div class="col-md-4" id="partner_left">
-                    <h3>Resellers by Country</h3>
-                    <ul class="nav nav-pills nav-stacked mt16">
-                        <t t-foreach="countries" t-as="country_dict">
-                            <t t-if="country_dict['country_id']">
-                                <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                                    <a t-href="/partners/country/#{ country_dict['country_id'][0] }">
-                                        <t t-esc="country_dict['country_id'][1]"/> <small>(<t t-esc="country_dict['country_id_count']"/>)</small>
-                                    </a>
-                                </li>
-                            </t>
-                        </t>
-                    </ul>
-                </div>
-                <div class="col-md-8" id="ref_content">
-                    <div class='navbar'>
-                        <div>
-                            <t t-call="website.pager">
-                               <t t-set="classname">pull-left</t>
-                            </t>
-                            <form action="/partners/" method="get" class="navbar-search pull-right pagination form-inline">
-                                <div class="form-group">
-                                    <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="name_search"/>
-                                </div>
-                                <div class="form-group">
-                                    <select class="search-query col-md-2 mt4 form-control" name="grade" t-if="len(grades) > 1" onchange="submit()">
-                                        <t t-foreach="grades">
-                                            <t t-if="grade_id">
-                                                <option t-att-selected="searches.get('grade') == str(grade_id and grade_id[0]) and 'selected'" t-att-value="grade_id[0]">
-                                                    <t t-esc="grade_id[1]"/> (<t t-esc="grade_id_count"/>)
-                                                </option>
-                                            </t>
-                                        </t>
-                                    </select>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div>
-                        <t t-foreach="partners" t-as="partner_id">
-                            <t t-if="internal_gid != partner_id.grade_id.id">
-                                <t t-set="internal_gid" t-value="partner_id.grade_id.id"/>
-                                <h3 class="text-center">
-                                    <span t-field="partner_id.grade_id"/> Partners
-                                    <t t-if="current_country"> in <t t-esc="current_country.name"/></t>
-                                </h3>
-                            </t>
-                            <div class="media thumbnail">
-                                <t t-call="website.publish_management"><t t-set="object" t-value="partner_id"/></t>
-                                <a class="pull-left" t-href="/partners/#{ partner_id.id }/">
-                                    <img class="media-object" t-att-src="partner_id.img('image_small')"/>
-                                </a>
-                                <div class="media-body" style="min-height: 64px;">
-                                    <a class="media-heading" t-href="/partners/#{ partner_id.id }/"><span t-field="partner_id.parent_id"/> <span t-field="partner_id.name"/></a> - <span t-field="partner_id.grade_id"/>
-                                    <div t-field="partner_id.website_short_description"/>
-                                </div>
-                            </div>
-                        </t>
-                    </div>
-                </div>
-            </t>
+<template id="ref_country" inherit_id="website_crm_partner_assign.index" inherit_option_id="website_crm_partner_assign.index" name="Left World Map">
+    <xpath expr="//div[@id='partner_left']//ul" position="after">
+        <h3>World Map</h3>
+        <ul class="nav">
+            <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
+                style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
+        </ul>
+    </xpath>
+</template>
+
+<template id="partner" name="Partner Detail">
+    <t t-call="website_crm_partner_assign.layout">
+        <t t-set="ref_content">
+            <t t-call="website_partner.partner_detail"/>
         </t>
-    </template>
+    </t>
+</template>
 
-    <template id="ref_country" inherit_id="website_crm_partner_assign.index" inherit_option_id="website_crm_partner_assign.index" name="Left World Map">
-        <xpath expr="//div[@id='partner_left']//ul" position="after">
-            <h3>World Map</h3>
-            <ul class="nav">
-                <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
-                    style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
-            </ul>
-        </xpath>
-    </template>
-
-    <template id="partner" name="Partner Detail">
-        <t t-call="website_crm_partner_assign.layout">
-            <t t-set="ref_content">
-                <t t-call="website_partner.partner_detail"/>
-            </t>
-        </t>
-    </template>
-
- </data>
+</data>
 </openerp>

@@ -5,7 +5,6 @@ import inspect
 import logging
 import math
 import itertools
-import traceback
 import urllib
 import urlparse
 
@@ -15,55 +14,20 @@ import werkzeug.exceptions
 import werkzeug.wrappers
 
 import openerp
-from openerp.exceptions import AccessError, AccessDenied
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
 
 from openerp.addons.web import http
-from openerp.addons.web.http import request
-
+from openerp.addons.web.http import request, LazyResponse
+from ..utils import slugify
 
 logger = logging.getLogger(__name__)
 
 def route(routes, *route_args, **route_kwargs):
     def decorator(f):
-        new_routes = routes if isinstance(routes, list) else [routes]
         f.cms = True
-        f.multilang = route_kwargs.get('multilang', False)
-        f.methods = route_kwargs.pop('methods', None)
-        if f.multilang:
-            route_kwargs.pop('multilang')
-            for r in list(new_routes):
-                new_routes.append('/<string(length=5):lang_code>' + r)
-        @http.route(new_routes, *route_args, **route_kwargs)
-        @functools.wraps(f, assigned=functools.WRAPPER_ASSIGNMENTS + ('func_name',))
-        def wrap(*args, **kwargs):
-            request.route_lang = kwargs.pop('lang_code', None)
-            if not hasattr(request, 'website'):
-                request.multilang = f.multilang
-                # TODO: Select website, currently hard coded
-                request.website = request.registry['website'].browse(
-                    request.cr, request.uid, 1, context=request.context)
-
-                if request.route_lang:
-                    lang_ok = [lg.code for lg in request.website.language_ids if lg.code == request.route_lang]
-                    if not lang_ok:
-                        return request.not_found()
-                request.website.preprocess_request(request)
-            if f.methods and request.httprequest.method not in f.methods:
-                return werkzeug.exceptions.MethodNotAllowed(valid_methods=f.methods)
-            try:
-                return f(*args, **kwargs)
-            except Exception, err:
-                logger.exception("Website Rendering Error.")
-                if request.context['is_public_user']:
-                    return request.website.render("website.401")
-                else:
-                    return request.website.render("website.500", {
-                        'traceback': traceback.format_exc(),
-                        'controller': [f.__module__, "%s.%s" % (args[0].__class__.__name__, f.__name__)],
-                    })
-        return wrap
+        f.multilang = route_kwargs.pop('multilang', False)
+        return http.route(routes, *route_args, **route_kwargs)(f)
     return decorator
 
 def url_for(path_or_uri, lang=None, keep_query=None):
@@ -71,10 +35,10 @@ def url_for(path_or_uri, lang=None, keep_query=None):
     url = urlparse.urlparse(location)
     if request and not url.netloc and not url.scheme:
         location = urlparse.urljoin(request.httprequest.path, location)
-        langs = request.context.get('langs')
-        if location[0] == '/' and (len(langs) > 1 or lang):
+        lang = lang or request.context.get('lang')
+        langs = [lg[0] for lg in request.website.get_languages()]
+        if location[0] == '/' and len(langs) > 1 and lang != request.website.default_lang_code:
             ps = location.split('/')
-            lang = lang or request.context.get('lang')
             if ps[1] in langs:
                 ps[1] = lang
             else:
@@ -94,6 +58,15 @@ def url_for(path_or_uri, lang=None, keep_query=None):
 
     return location
 
+def slug(value):
+    if isinstance(value, orm.browse_record):
+        # [(id, name)] = value.name_get()
+        id, name = value.id, value[value._rec_name]
+    else:
+        # assume name_search result tuple
+        id, name = value
+    return "%s-%d" % (slugify(name), id)
+
 def urlplus(url, params):
     if not params:
         return url
@@ -104,7 +77,41 @@ def urlplus(url, params):
         for k, v in params.iteritems()
     ))
 
+def quote_plus(value):
+    return urllib.quote_plus(value.encode('utf-8') if isinstance(value, unicode) else str(value))
+
+def preload_records(*args, **kwargs):
+    """ This helper allows to check the existence and prefetch one or many browse_records at once.
+        If the browse record(s) does not exists in the db it will raise a LazyResponse
+    """
+    field = kwargs.pop('field', 'name')
+    on_error = kwargs.pop('on_error', 'website.404')
+    error_code = kwargs.pop('error_code', 404)
+    try:
+        for arg in args:
+            if isinstance(arg, orm.browse_record):
+                arg[field]
+            elif isinstance(arg, orm.browse_record_list):
+                [record[field] for record in arg]
+    except:
+        lazy_error = request.website.render(on_error, status_code=error_code)
+        raise werkzeug.exceptions.HTTPException(response=lazy_error)
+
 class website(osv.osv):
+    def _get_menu_website(self, cr, uid, ids, context=None):
+        # IF a menu is changed, update all websites
+        return self.search(cr, uid, [], context=context)
+        
+    def _get_menu(self, cr, uid, ids, name, arg, context=None):
+        root_domain = [('parent_id', '=', False)]
+        menus = self.pool.get('website.menu').search(cr, uid, root_domain, order='id', context=context)
+        menu = menus and menus[0] or False
+        return dict( map(lambda x: (x, menu), ids) )
+
+    def _get_public_user(self, cr, uid, ids, name='public_user', arg=(), context=None):
+        ref = self.get_public_user(cr, uid, context=context)
+        return dict( map(lambda x: (x, ref), ids) )
+
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
@@ -112,62 +119,117 @@ class website(osv.osv):
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
         'default_lang_id': fields.many2one('res.lang', string="Default language"),
+        'default_lang_code': fields.related('default_lang_id', 'code', type="char", string="Default language code", store=True),
         'social_twitter': fields.char('Twitter Account'),
         'social_facebook': fields.char('Facebook Account'),
         'social_github': fields.char('GitHub Account'),
         'social_linkedin': fields.char('LinkedIn Account'),
         'social_youtube': fields.char('Youtube Account'),
         'social_googleplus': fields.char('Google+ Account'),
+        'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User'),
+        'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
+            store= {
+                'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
+            })
     }
 
-    public_user = None
+    def write(self, cr, uid, ids, vals, context=None):
+        self._get_languages.clear_cache(self)
+        return super(website, self).write(cr, uid, ids, vals, context)
 
-    def get_public_user(self, cr, uid, context=None):
-        if not self.public_user:
-            uid = openerp.SUPERUSER_ID
-            ref = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
-            self.public_user = self.pool[ref[0]].browse(cr, uid, ref[1])
-        return self.public_user
+    def new_page(self, cr, uid, name, template='website.default_page', ispage=True, context=None):
+        context=context or {}
+        # completely arbitrary max_length
+        idname = slugify(name, max_length=50)
 
-    def preprocess_request(self, cr, uid, ids, request, context=None):
-        def redirect(url):
-            return werkzeug.utils.redirect(url_for(url))
-        request.redirect = redirect
+        imd = self.pool.get('ir.model.data')
+        view = self.pool.get('ir.ui.view')
 
-        is_public_user = request.uid == self.get_public_user(cr, uid, context).id
+        module, tmp_page = template.split('.')
+        view_model, view_id = imd.get_object_reference(cr, uid, module, tmp_page)
+
+        cr.execute('SAVEPOINT new_page')
+        try:
+            newview_id = view.copy(cr, uid, view_id, context=context)
+            newview = view.browse(cr, uid, newview_id, context=context)
+            newview.write({
+                'arch': newview.arch.replace(template, "%s.%s" % (module, idname)),
+                'name': name,
+                'page': ispage,
+            })
+            imd.create(cr, uid, {
+                'name': idname,
+                'module': module,
+                'model': 'ir.ui.view',
+                'res_id': newview_id,
+                'noupdate': True
+            }, context=context)
+            cr.execute('RELEASE SAVEPOINT new_page')
+            return "%s.%s" % (module, idname)
+        except:
+            cr.execute("ROLLBACK TO SAVEPOINT new_page")
+            raise
+
+    def page_for_name(self, cr, uid, ids, name, module='website', context=None):
+        # whatever
+        return '%s.%s' % (module, slugify(name, max_length=50))
+
+    def page_exists(self, cr, uid, ids, name, module='website', context=None):
+        page = self.page_for_name(cr, uid, ids, name, module=module, context=context)
 
         try:
-            self.pool.get("ir.ui.view").check_access_rights(request.cr, request.uid, 'write')
-            editable = True
+            return self.get_template(
+                cr, uid, ids, template=page, context=context
+            ).exists()
         except:
-            editable = False
+            return False
 
-        # Select current language
-        if hasattr(request, 'route_lang'):
-            lang = request.route_lang
-        else:
-            lang = request.params.get('lang', None) or request.httprequest.cookies.get('lang', None)
-        if lang not in [lg.code for lg in request.website.language_ids]:
-            lang = request.website.default_lang_id.code
+    def get_public_user(self, cr, uid, context=None):
+        uid = openerp.SUPERUSER_ID
+        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'website', 'public_user')
+        return res and res[1] or False
 
-        is_master_lang = lang == request.website.default_lang_id.code
-        request.context.update({
-            'lang': lang,
-            'lang_selected': [lg for lg in request.website.language_ids if lg.code == lang],
-            'langs': [lg.code for lg in request.website.language_ids],
-            'multilang': request.multilang,
-            'is_public_user': is_public_user,
-            'is_master_lang': is_master_lang,
-            'has_access_write': True,
-            'editable': editable,
-            'translatable': not is_public_user and not is_master_lang and request.multilang,
-        })
+    @openerp.tools.ormcache(skiparg=3)
+    def _get_languages(self, cr, uid, id, context=None):
+        website = self.browse(cr, uid, id)
+        return [(lg.code, lg.name) for lg in website.language_ids]
+    def get_languages(self, cr, uid, ids, context=None):
+        return self._get_languages(cr, uid, ids[0])
 
-    def render(self, cr, uid, ids, template, values=None, context=None):
-        view = self.pool.get("ir.ui.view")
-        IMD = self.pool.get("ir.model.data")
+    def get_current_website(self, cr, uid, context=None):
+        # TODO: Select website, currently hard coded
+        return self.pool['website'].browse(cr, uid, 1, context=context)
+
+    def preprocess_request(self, cr, uid, ids, request, context=None):
+        # TODO FP: is_website_publisher and editable in context should be removed
+        # for performance reasons (1 query per image to load) but also to be cleaner
+        # I propose to replace this by a group 'base.group_website_publisher' on the
+        # view that requires it.
+        Access = request.registry['ir.model.access']
+        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
+
+        lang = request.context['lang']
+        is_master_lang = lang == request.website.default_lang_code
+
+        request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
+        request.context.update(
+            is_master_lang=is_master_lang,
+            editable=is_website_publisher,
+            translatable=not is_master_lang,
+        )
+
+    def get_template(self, cr, uid, ids, template, context=None):
+        IMD = self.pool["ir.model.data"]
+        try:
+            module, xmlid = template.split('.', 1)
+            model, id = IMD.get_object_reference(cr, uid, module, xmlid)
+        except ValueError: # catches both unpack errors and gor errors
+            module, xmlid = 'website', template
+            model, id = IMD.get_object_reference(cr, uid, module, xmlid)
+        return self.pool["ir.ui.view"].browse(cr, uid, id, context=context)
+
+    def _render(self, cr, uid, ids, template, values=None, context=None):
         user = self.pool.get("res.users")
-
         if not context:
             context = {}
 
@@ -181,58 +243,30 @@ class website(osv.osv):
             json=simplejson,
             website=request.website,
             url_for=url_for,
+            slug=slug,
             res_company=request.website.company_id,
             user_id=user.browse(cr, uid, uid),
+            quote_plus=quote_plus,
         )
 
         context.update(
             inherit_branding=qweb_context.setdefault('editable', False),
         )
 
-        view_ref = None
-        # check if xmlid of the template exists
-        try:
-            module, xmlid = template.split('.', 1)
-            view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
-        except ValueError: # catches both unpack errors and gor errors
-            module, xmlid = 'website', template
-            try:
-                view_ref = IMD.get_object_reference(cr, uid, module, xmlid)
-            except ValueError:
-                return self.error(cr, uid, 404, qweb_context, context=context)
+        view = self.get_template(cr, uid, ids, template)
 
         if 'main_object' not in qweb_context:
-            try:
-                main_object = self.pool[view_ref[0]].browse(cr, uid, view_ref[1])
-                qweb_context['main_object'] = main_object
-            except Exception:
-                pass
+            qweb_context['main_object'] = view
+        #context['debug'] = True
+        result = view.render(qweb_context, engine='website.qweb', context=context)
+        return result
 
-        try:
-            return view.render(
-                cr, uid, "%s.%s" % (module, xmlid), qweb_context,
-                engine='website.qweb', context=context)
-        except (AccessError, AccessDenied), err:
-            logger.error(err)
-            qweb_context['error'] = err[1]
-            logger.warn("Website Rendering Error.\n\n%s" % traceback.format_exc())
-            return self.error(cr, uid, 401, qweb_context, context=context)
-        except Exception, e:
-            qweb_context['template'] = getattr(e, 'qweb_template', '')
-            node = getattr(e, 'qweb_node', None)
-            qweb_context['node'] = node and node.toxml()
-            qweb_context['expr'] = getattr(e, 'qweb_eval', '')
-            qweb_context['traceback'] = traceback.format_exc()
-            logger.exception("Website Rendering Error.\n%(template)s\n%(expr)s\n%(node)s" % qweb_context)
-            return self.error(cr, uid, 500 if qweb_context['editable'] else 404,
-                              qweb_context, context=context)
-
-    def error(self, cr, uid, code, qweb_context, context=None):
-        View = request.registry['ir.ui.view']
-        return werkzeug.wrappers.Response(
-            View.render(cr, uid, 'website.%d' % code, qweb_context),
-            status=code,
-            content_type='text/html;charset=utf-8')
+    def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
+        def callback(template, values, context):
+            return self._render(cr, uid, ids, template, values, context)
+        if values is None:
+            values = {}
+        return LazyResponse(callback, status_code=status_code, template=template, values=values, context=context)
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
@@ -282,7 +316,6 @@ class website(osv.osv):
             ]
         }
 
-
     def rule_is_enumerable(self, rule):
         """ Checks that it is possible to generate sensible GET queries for
         a given rule (if the endpoint matches its own requirements)
@@ -292,16 +325,18 @@ class website(osv.osv):
         """
         endpoint = rule.endpoint
         methods = rule.methods or ['GET']
+        converters = rule._converters.values()
 
         return (
                 'GET' in methods
             and endpoint.exposed == 'http'
             and endpoint.auth in ('none', 'public')
             and getattr(endpoint, 'cms', False)
+            # preclude combinatorial explosion by only allowing a single converter
+            and len(converters) <= 1
             # ensure all converters on the rule are able to generate values for
             # themselves
-            and all(hasattr(converter, 'generate')
-                    for converter in rule._converters.itervalues())
+            and all(hasattr(converter, 'generate') for converter in converters)
         ) and self.endpoint_is_enumerable(rule)
 
     def endpoint_is_enumerable(self, rule):
@@ -311,20 +346,10 @@ class website(osv.osv):
         :type rule: werkzeug.routing.Rule
         :rtype: bool
         """
+        spec = inspect.getargspec(rule.endpoint)
 
-        # apparently the decorator package makes getargspec work correctly
-        # on functions it decorates. That's not the case for
-        # @functools.wraps, so hack around to get the original function
-        # (and hope a single decorator was applied or we're hosed)
-        # FIXME: this is going to blow up if we want/need to use multiple @route (with various configurations) on a method
-        undecorated_func = rule.endpoint.func_closure[0].cell_contents
-
-        # If this is ever ported to py3, use signatures, it doesn't suck as much
-        spec = inspect.getargspec(undecorated_func)
-
-        # if *args or **kwargs, just bail the fuck out, only dragons can
-        # live there
-        if spec.varargs or spec.keywords:
+        # if *args bail the fuck out, only dragons can live there
+        if spec.varargs:
             return False
 
         # remove all arguments with a default value from the list
@@ -340,45 +365,79 @@ class website(osv.osv):
             (arg == 'self' or arg in rule._converters)
             for arg in args)
 
-    def list_pages(self, cr, uid, ids, context=None):
+    def enumerate_pages(self, cr, uid, ids, query_string=None, context=None):
         """ Available pages in the website/CMS. This is mostly used for links
         generation and can be overridden by modules setting up new HTML
         controllers for dynamic pages (e.g. blog).
 
         By default, returns template views marked as pages.
 
+        :param str query_string: a (user-provided) string, fetches pages
+                                 matching the string
         :returns: a list of mappings with two keys: ``name`` is the displayable
                   name of the resource (page), ``url`` is the absolute URL
                   of the same.
         :rtype: list({name: str, url: str})
         """
-        # FIXME: possibility to add custom converters without editing server
-        #        would allow the creation of a pages converter generating page
-        #        urls on its own
-        View = self.pool['ir.ui.view']
-        views = View.search_read(cr, uid, [['page', '=', True]],
-                                 fields=['name'], order='name', context=context)
-        xids = View.get_external_id(cr, uid, [view['id'] for view in views], context=context)
-        for view in views:
-            if xids[view['id']]:
-                yield {
-                    'name': view['name'],
-                    'url': '/page/' + xids[view['id']],
-                }
-
         router = request.httprequest.app.get_db_router(request.db)
+        # Force enumeration to be performed as public user
+        uid = self.get_public_user(cr, uid, context=context)
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
 
-            generated = map(dict, itertools.product(*(
-                itertools.izip(itertools.repeat(name), converter.generate())
-                for name, converter in rule._converters.iteritems()
-            )))
+            converters = rule._converters
+            filtered = bool(converters)
+            if converters:
+                # allow single converter as decided by fp, checked by
+                # rule_is_enumerable
+                [(name, converter)] = converters.items()
+                converter_values = converter.generate(
+                    request.cr, uid, query=query_string, context=context)
+                generated = ({k: v} for k, v in itertools.izip(
+                    itertools.repeat(name), converter_values))
+            else:
+                # force single iteration for literal urls
+                generated = [{}]
 
             for values in generated:
                 domain_part, url = rule.build(values, append_unknown=False)
-                yield {'name': url, 'url': url }
+                page = {'name': url, 'url': url}
+
+                if not filtered and query_string and not self.page_matches(cr, uid, page, query_string, context=context):
+                    continue
+                yield page
+
+    def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
+        return list(itertools.islice(
+            self.enumerate_pages(cr, uid, ids, query_string=needle, context=context),
+            limit))
+
+    def page_matches(self, cr, uid, page, needle, context=None):
+        """ Checks that a "page" matches a user-provide search string.
+
+        The default implementation attempts to perform a non-contiguous
+        substring match of the page's name.
+
+        :param page: {'name': str, 'url': str}
+        :param needle: str
+        :rtype: bool
+        """
+        haystack = page['name'].lower()
+
+        needle = iter(needle.lower())
+        n = next(needle)
+        end = object()
+
+        for char in haystack:
+            if char != n: continue
+
+            n = next(needle, end)
+            # found all characters of needle in haystack in order
+            if n is end:
+                return True
+
+        return False
 
     def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
         step = step and int(step) or 10
@@ -440,7 +499,7 @@ class website(osv.osv):
             'range': range,
             'template': template,
         }
-        return request.website.render("website.kanban_contain", values)
+        return request.website._render("website.kanban_contain", values)
 
     def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby, context=None):
         html = ""
@@ -451,11 +510,9 @@ class website(osv.osv):
         object_ids = model_obj.search(cr, uid, domain, limit=step, offset=offset, order=orderby)
         object_ids = model_obj.browse(cr, uid, object_ids)
         for object_id in object_ids:
-            html += request.website.render(template, {'object_id': object_id})
+            html += request.website._render(template, {'object_id': object_id})
         return html
 
-    def get_menu(self, cr, uid, ids, context=None):
-        return self.pool['website.menu'].get_menu(cr, uid, ids[0], context=context)
 
 class website_menu(osv.osv):
     _name = "website.menu"
@@ -475,17 +532,13 @@ class website_menu(osv.osv):
     _defaults = {
         'url': '',
         'sequence': 0,
+        'new_window': False,
     }
     _parent_store = True
-    _parent_order = 'sequence, name'
-    _order = "parent_left"
+    _parent_order = 'sequence'
+    _order = "sequence"
 
-    def get_menu(self, cr, uid, website_id, context=None):
-        root_domain = [('parent_id', '=', False)] # ('website_id', '=', website_id),
-        menu_ids = self.search(cr, uid, root_domain, context=context)
-        menu = self.browse(cr, uid, menu_ids, context=context)
-        return menu[0]
-
+    # would be better to take a menu_id as argument
     def get_tree(self, cr, uid, website_id, context=None):
         def make_tree(node):
             menu_node = dict(
@@ -500,7 +553,7 @@ class website_menu(osv.osv):
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
             return menu_node
-        menu = self.get_menu(cr, uid, website_id, context=context)
+        menu = self.pool.get('website').browse(cr, uid, website_id, context=context).menu_id
         return make_tree(menu)
 
     def save(self, cr, uid, website_id, data, context=None):

@@ -35,17 +35,10 @@ class product_template(osv.Model):
     _name = 'product.template'
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        """ TDE-NOTE: as someone wrote this method without any clue on about what it
-        does, fixing bugs about product_variant_ids not existing will be done
-        based on the weather, the sun and Lilo's feelings about pigs.
-
-        If you see this comment in trunk, this means that the website branch has
-        been merged without any review, which is quite questionable. """
         res = dict.fromkeys(ids, '')
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for product in self.browse(cr, uid, ids, context=context):
-            if product.product_variant_ids:
-                res[product.id] = "%s/shop/product/%s/" % (base_url, product.product_variant_ids[0].id)
+            res[product.id] = "%s/shop/product/%s/" % (base_url, product.id)
         return res
 
     _columns = {
@@ -57,7 +50,7 @@ class product_template(osv.Model):
         'website_size_y': fields.integer('Size Y'),
         'website_style_ids': fields.many2many('website.product.style', 'product_website_style_rel', 'product_id', 'style_id', 'Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
-        'website_url': fields.function(_website_url, string="Website url"),
+        'website_url': fields.function(_website_url, string="Website url", type="char"),
     }
     _defaults = {
         'website_size_x': 1,
@@ -111,7 +104,7 @@ class product_product(osv.Model):
         return res
 
     _columns = {
-        'website_url': fields.function(_website_url, string="Website url"),
+        'website_url': fields.function(_website_url, string="Website url", type="char"),
     }
 
     def img(self, cr, uid, ids, field='image_small', context=None):

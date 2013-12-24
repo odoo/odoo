@@ -2,18 +2,16 @@
 <t t-name="website.menu.dialog.submenu">
     <li t-att-data-menu-id="submenu.id">
         <div class="input-group">
-            <span class="input-group-addon icon-reorder"/>
+            <span class="input-group-addon fa fa-bars"/>
             <span class="form-control" style="padding-top: 0; padding-bottom: 0;">
-                <t t-esc="submenu.name"/>
-                <i class="pull-right icon-home" style="margin-top: 3px"/>
+                <span class="js_menu_label">
+                    <t t-esc="submenu.name"/>
+                </span>
+                <i class="pull-right fa fa-home" style="margin-top: 3px"/>
             </span>
             <span class="input-group-btn">
-                <button type="button" class="btn btn-primary js_edit_menu">
-                    <i class="icon-edit"/>
-                </button>
-                <button type="button" class="btn btn-danger js_delete_menu">
-                    <i class="icon-trash"/>
-                </button>
+                <button type="button" class="btn btn-primary js_edit_menu fa fa-edit"/>
+                <button type="button" class="btn btn-danger js_delete_menu fa fa-trash-o"/>
             </span>
         </div>
         <t t-set="children" t-value="submenu.children"/>
@@ -34,11 +32,11 @@
         </ul>
         <div class="mt16">
             <div class="pull-right text-muted">
-                <span class="icon-indent-right"/> right indent for multi-level menus
+                <span class="fa fa-indent"/> right indent for multi-level menus
             </div>
             <div>
                 <a href="#" class="js_add_menu">
-                    <i class="icon-plus-sign"/> Add Menu Entry
+                    <i class="fa fa-plus-circle"/> Add Menu Entry
                 </a>
             </div>
         </div>

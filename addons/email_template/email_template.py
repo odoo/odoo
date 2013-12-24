@@ -369,7 +369,7 @@ class email_template(osv.osv):
                     attachment_ids=[attach.id for attach in template.attachment_ids],
                 )
 
-            # Add report in attachments
+            # Add report in attachments: generate once for all template_res_ids
             if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
@@ -378,7 +378,7 @@ class email_template(osv.osv):
                     # Ensure report is rendered using template's language
                     ctx = context.copy()
                     if template.lang:
-                        ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, res_id, context)  # take 0 ?
+                        ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)[res_id]  # take 0 ?
                     result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
                     result = base64.b64encode(result)
                     if not report_name:
@@ -387,8 +387,7 @@ class email_template(osv.osv):
                     if not report_name.endswith(ext):
                         report_name += ext
                     attachments.append((report_name, result))
-
-                    values['attachments'] = attachments
+                    results[res_id]['attachments'] = attachments
 
         return results
 
