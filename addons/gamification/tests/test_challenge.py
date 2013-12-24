@@ -63,7 +63,7 @@ class test_challenge(common.TransactionCase):
     def test_10_reach_challenge(self):
         cr, uid, context = self.cr, self.uid, {}
         
-        self.challenge_obj.action_start(cr, uid, [self.challenge_base_id], context=context)
+        self.challenge_obj.write(cr, uid, [self.challenge_base_id], {'state': 'inprogress'}, context=context)
         challenge = self.challenge_obj.browse(cr, uid, self.challenge_base_id, context=context)
         challenge_user_ids = [user.id for user in challenge.user_ids]
 

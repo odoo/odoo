@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-from openerp import SUPERUSER_ID
 
 
 class hr_gamification_badge_user(osv.Model):

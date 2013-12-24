@@ -241,7 +241,7 @@ class gamification_challenge(osv.Model):
             vals['user_ids'] += [(4, user.id) for user in new_group.users]
 
         if vals.get('state') == 'inprogress':
-
+            # starting a challenge
             if not vals.get('autojoin_group_id'):
                 # starting challenge, add users in autojoin group
                 if not vals.get('user_ids'):
@@ -284,13 +284,13 @@ class gamification_challenge(osv.Model):
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'draft'),
             ('start_date', '<=', fields.date.today())])
-        self.action_start(cr, uid, planned_challenge_ids, context=context)
+        self.write(cr, uid, planned_challenge_ids, {'state': 'inprogress'}, context=context)
 
         # close planned challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'inprogress'),
             ('end_date', '>=', fields.date.today())])
-        self.action_close(cr, uid, planned_challenge_ids, context=context)
+        self.write(cr, uid, planned_challenge_ids, {'state': 'done'}, context=context)
 
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')], context=context)
