@@ -44,9 +44,8 @@
             <field name="model">report.project.task.user</field>
             <field name="arch" type="xml">
                 <graph string="Tasks Analysis" type="bar">
-                     <field name="name"/>
-                     <field name="stage_id" group="True"/>
-                     <field name="no_of_days" operator="+"/>
+                     <field name="name" type="row"/>
+                     <field name="no_of_days" type="measure"/>
                  </graph>
              </field>
         </record>
