@@ -1,5 +1,99 @@
 <?xml version="1.0"?>
 <openerp>
+    <!-- Mail template is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="0">
+        <!--Email template -->
+        
+        <record id="email_template_goal_reminder" model="email.template">
+            <field name="name">Reminder for Goal Update</field>
+            <field name="body_html"><![CDATA[
+    <header>
+        <strong>Reminder ${object.name}</strong>
+    </header>
+    
+    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
+
+    <p>If you have not changed your score yet, you can use the button "The current value is up to date" to indicate so.</p>
+            ]]></field>
+        </record>
+        
+        <record id="simple_report_template" model="email.template">
+            <field name="name">Simple Challenge Report Progress</field>
+            <field name="body_html"><![CDATA[
+<header>
+    <strong>${object.name}</strong>
+</header>
+<p class="oe_grey">The following message contains the current progress for the challenge ${object.name}</p>
+
+% if object.visibility_mode == 'personal':
+    <table width="100%" border="1">
+    <tr>
+        <th>Goal</th>
+        <th>Target</th>
+        <th>Current</th>
+        <th>Completeness</th>
+    </tr>
+    % for line in ctx["challenge_lines"]:
+        <tr
+            % if line['completeness'] >= 100:
+                style="font-weight:bold;"
+            % endif
+            >
+            <td>${line['name']}</td>
+            <td>${line['target']}
+            % if line['suffix']:
+                ${line['suffix']}
+            % endif
+            </td>
+            <td>${line['current']}
+            % if line['suffix']:
+                ${line['suffix']}
+            % endif
+            </td>
+            <td>${line['completeness']} %</td>
+        </tr>
+    % endfor
+    </table>
+% else:
+    % for line in ctx["challenge_lines"]:
+        <table width="100%" border="1">
+            <tr>
+                <th colspan="4">${line['name']}</th>
+            </tr>
+            <tr>
+                <th>#</th>
+                <th>Person</th>
+                <th>Completeness</th>
+                <th>Current</th>
+            </tr>
+            % for goal in line['goals']:
+                <tr
+                    % if goal.completeness >= 100:
+                        style="font-weight:bold;"
+                    % endif
+                    >
+                    <td>${goal['rank']}</td>
+                    <td>${goal['name']}</td>
+                    <td>${goal['completeness']}%</td>
+                    <td>${goal['current']}/${line['target']}
+                    % if line['suffix']:
+                        ${line['suffix']}
+                    % endif
+                    </td>
+                </tr>
+            % endfor
+        </table>
+
+        <br/><br/>
+
+    % endfor
+% endif
+            ]]></field>
+        </record>
+
+    </data>
+
     <data>
 
         <!-- goal definitions -->
@@ -111,97 +205,4 @@
         </record>
     </data>
 
-    <!-- Mail template is done in a NOUPDATE block
-         so users can freely customize/delete them -->
-    <data noupdate="0">
-        <!--Email template -->
-        
-        <record id="email_template_goal_reminder" model="email.template">
-            <field name="name">Reminder for Goal Update</field>
-            <field name="body_html"><![CDATA[
-    <header>
-        <strong>Reminder ${object.name}</strong>
-    </header>
-    
-    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
-
-    <p>If you have not changed your score yet, you can use the button "The current value is up to date" to indicate so.</p>
-            ]]></field>
-        </record>
-        
-        <record id="simple_report_template" model="email.template">
-            <field name="name">Simple Challenge Report Progress</field>
-            <field name="body_html"><![CDATA[
-<header>
-    <strong>${object.name}</strong>
-</header>
-<p class="oe_grey">The following message contains the current progress for the challenge ${object.name}</p>
-
-% if object.visibility_mode == 'personal':
-    <table width="100%" border="1">
-    <tr>
-        <th>Goal</th>
-        <th>Target</th>
-        <th>Current</th>
-        <th>Completeness</th>
-    </tr>
-    % for line in ctx["challenge_lines"]:
-        <tr
-            % if line['completeness'] >= 100:
-                style="font-weight:bold;"
-            % endif
-            >
-            <td>${line['name']}</td>
-            <td>${line['target']}
-            % if line['suffix']:
-                ${line['suffix']}
-            % endif
-            </td>
-            <td>${line['current']}
-            % if line['suffix']:
-                ${line['suffix']}
-            % endif
-            </td>
-            <td>${line['completeness']} %</td>
-        </tr>
-    % endfor
-    </table>
-% else:
-    % for line in ctx["challenge_lines"]:
-        <table width="100%" border="1">
-            <tr>
-                <th colspan="4">${line['name']}</th>
-            </tr>
-            <tr>
-                <th>#</th>
-                <th>Person</th>
-                <th>Completeness</th>
-                <th>Current</th>
-            </tr>
-            % for goal in line['goals']:
-                <tr
-                    % if goal.completeness >= 100:
-                        style="font-weight:bold;"
-                    % endif
-                    >
-                    <td>${goal['rank']}</td>
-                    <td>${goal['name']}</td>
-                    <td>${goal['completeness']}%</td>
-                    <td>${goal['current']}/${line['target']}
-                    % if line['suffix']:
-                        ${line['suffix']}
-                    % endif
-                    </td>
-                </tr>
-            % endfor
-        </table>
-
-        <br/><br/>
-
-    % endfor
-% endif
-            ]]></field>
-        </record>
-
-    </data>
 </openerp>
