@@ -35,7 +35,7 @@
                 <form string="Goal definitions" version="7.0">
                     <header>
                         <button string="Refresh Challenge" type="object" name="action_check" states="inprogress"/>
-                        <button string="Report Progress" type="object" name="action_report_progress" states="inprogress,done" groups="base.group_no_one"/>
+                        <button string="Send Report" type="object" name="action_report_progress" states="inprogress,done" groups="base.group_no_one"/>
                         <field name="state" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -101,7 +101,7 @@
                                         <p>Depending on the Display mode, reports will be individual or shared.</p>
                                     </div>
                                     <field name="report_message_frequency" />
-                                    <field name="report_header" placeholder="e.g. The following message contains the current progress of the sale team..." attrs="{'invisible': [('report_message_frequency','=','never')]}" />
+                                    <field name="report_template_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
                                     <field name="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />
                                 </group>
                                 <group string="Reminders for Manual Goals">

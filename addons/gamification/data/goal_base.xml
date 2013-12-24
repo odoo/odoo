@@ -122,23 +122,22 @@
     <header>
         <strong>Reminder ${object.name}</strong>
     </header>
-
-    <p class="oe_grey">${object.report_header or ''}</p>
     
     <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
 
     <p>If you have not changed your score yet, you can use the button "The current value is up to date" to indicate so.</p>
             ]]></field>
         </record>
-
-        <record id="email_template_goal_progress_perso" model="email.template">
-            <field name="name">Personal Goal Progress</field>
+        
+        <record id="simple_report_template" model="email.template">
+            <field name="name">Simple Challenge Report Progress</field>
             <field name="body_html"><![CDATA[
-    <header>
-        <strong>${object.name}</strong>
-    </header>
-    <p class="oe_grey">${object.report_header or ''}</p>
+<header>
+    <strong>${object.name}</strong>
+</header>
+<p class="oe_grey">The following message contains the current progress for the challenge ${object.name}</p>
 
+% if object.visibility_mode == 'personal':
     <table width="100%" border="1">
     <tr>
         <th>Goal</th>
@@ -166,17 +165,8 @@
             <td>${line['completeness']} %</td>
         </tr>
     % endfor
-    </table>]]></field>
-        </record>
-
-        <record id="email_template_goal_progress_group" model="email.template">
-            <field name="name">Group Goal Progress</field>
-            <field name="body_html"><![CDATA[
-    <header>
-        <strong>${object.name}</strong>
-    </header>
-    <p class="oe_grey">${object.report_header or ''}</p>
-
+    </table>
+% else:
     % for line in ctx["challenge_lines"]:
         <table width="100%" border="1">
             <tr>
@@ -209,7 +199,9 @@
         <br/><br/>
 
     % endfor
-]]></field>
+% endif
+            ]]></field>
         </record>
+
     </data>
 </openerp>

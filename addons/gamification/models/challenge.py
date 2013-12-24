@@ -102,11 +102,18 @@ class gamification_challenge(osv.Model):
                 res[challenge.id] = False
 
         return res
+    
     def _get_categories(self, cr, uid, context=None):
-            return [
-                ('hr', 'Human Ressources / Engagement'),
-                ('other', 'Settings / Gamification Tools'),
-            ]
+        return [
+            ('hr', 'Human Ressources / Engagement'),
+            ('other', 'Settings / Gamification Tools'),
+        ]
+
+    def _get_report_template(self, cr, uid, context=None):
+        try:
+            return self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'simple_report_template')[1]
+        except ValueError:
+            return False
 
     _order = 'end_date, start_date, name, id'
     _columns = {
@@ -163,6 +170,7 @@ class gamification_challenge(osv.Model):
                 ('ranking', 'Leader Board (Group Ranking)'),
             ],
             string="Display Mode", required=True),
+
         'report_message_frequency': fields.selection([
                 ('never', 'Never'),
                 ('onchange', 'On change'),
@@ -175,7 +183,7 @@ class gamification_challenge(osv.Model):
         'report_message_group_id': fields.many2one('mail.group',
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
-        'report_header': fields.text('Report Header'),
+        'report_template_id': fields.many2one('email.template', string="Report Template", required=True),
         'remind_update_delay': fields.integer('Non-updated manual goals will be reminded after',
             help="Never reminded if no value or zero is specified."),
         'last_report_date': fields.date('Last Report Date'),
@@ -196,6 +204,7 @@ class gamification_challenge(osv.Model):
         'manager_id': lambda s, cr, uid, c: uid,
         'category': 'hr',
         'reward_failure': False,
+        'report_template_id': lambda s, *a, **k: s._get_report_template(*a, **k),
     }
 
 
@@ -232,7 +241,6 @@ class gamification_challenge(osv.Model):
                 vals['user_ids'] = []
             vals['user_ids'] += [(4, user.id) for user in new_group.users]
 
-        print vals.get('state')
         if vals.get('state') == 'inprogress':
 
             if not vals.get('autojoin_group_id'):
@@ -575,17 +583,14 @@ class gamification_challenge(osv.Model):
         """
         if context is None:
             context = {}
-        # template_env = TemplateHelper()
+
         temp_obj = self.pool.get('email.template')
         ctx = context.copy()
         if challenge.visibility_mode == 'ranking':
             lines_boards = self._get_serialized_challenge_lines(cr, uid, challenge, user_id=False, restrict_goal_ids=subset_goal_ids, restrict_top=False, context=context)
 
             ctx.update({'challenge_lines': lines_boards})
-            template_id = self.pool.get('ir.model.data').get_object(cr, uid, 'gamification', 'email_template_goal_progress_group', context)
-            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
-
-            # body_html = template_env.get_template('group_progress.mako').render({'object': challenge, 'lines_boards': lines_boards, 'uid': uid})
+            body_html = temp_obj.render_template(cr, uid, challenge.report_template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
 
             # send to every follower of the challenge
             self.message_post(cr, uid, challenge.id,
@@ -606,8 +611,8 @@ class gamification_challenge(osv.Model):
                     continue
 
                 ctx.update({'challenge_lines': goals})
-                template_id = self.pool.get('ir.model.data').get_object(cr, uid, 'gamification', 'email_template_goal_progress_perso', context)
-                body_html = temp_obj.render_template(cr, user.id, template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
+                body_html = temp_obj.render_template(cr, user.id,  challenge.report_template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
+
                 # send message only to users, not on the challenge
                 self.message_post(cr, uid, 0,
                                   body=body_html,
@@ -640,11 +645,9 @@ class gamification_challenge(osv.Model):
         return self.write(cr, uid, challenge_ids, {'invited_user_ids': (3, user_id)}, context=context)
 
     def reply_challenge_wizard(self, cr, uid, challenge_id, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        act_obj = self.pool.get('ir.actions.act_window')
-        result = mod_obj.get_object_reference(cr, uid, 'gamification', 'challenge_wizard')
+        result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'challenge_wizard')
         id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result = self.pool.get('ir.actions.act_window').read(cr, uid, [id], context=context)[0]
         result['res_id'] = challenge_id
         return result
 
