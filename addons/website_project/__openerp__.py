@@ -15,5 +15,5 @@ OpenERP Projects
         'views/website_project.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'installable': True,
+    'installable': False,
 }

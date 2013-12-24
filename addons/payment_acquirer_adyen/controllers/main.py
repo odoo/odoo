@@ -19,7 +19,7 @@ class AdyenController(http.Controller):
 
     @website.route([
         '/payment/adyen/return/',
-    ], type='http', auth='public', methods=['POST'])
+    ], type='http', auth='public')
     def adyen_return(self, **post):
         """ Paypal IPN. """
         _logger.info('Beginning Adyen form_feedback with post data %s', pprint.pformat(post))  # debug

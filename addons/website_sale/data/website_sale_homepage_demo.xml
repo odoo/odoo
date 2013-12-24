@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!--  Shop Banner for homepage -->
+
+        <template id="website_sale_homepage" inherit_id="website.homepage" name="Shop banner for Homepage">
+            <xpath expr="//div[@id='wrap']/section" position="before">
+
+                <div id="shop_banner" contenteditable="false" class="oe_snippet_body carousel slide oe_medium mb32" data-snippet-id="carousel">
+                    <div class="carousel-inner">
+                        <div style="background-image: url('/website/static/src/img/banner/color_splash.jpg')" class="item text_only active">
+                            <div class="container">
+                                <div contenteditable="false" class="carousel-caption content">
+                                    <h2>OpenERP e-Commerce</h2>
+
+                                    <h3>An Awesome Shopping Experience</h3>
+
+                                    <p>
+                                        <a href="/shop" class="btn btn-success btn-large">Visit Shop</a>
+                                    </p>
+                                </div>
+
+                                <div class="carousel-image hidden-xs">
+                                    <img src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image" contenteditable="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </xpath>
+        </template>
+
+    </data>
+</openerp>
