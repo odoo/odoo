@@ -101,9 +101,9 @@
                                     <field name="invited_user_ids" widget="many2many_tags" />
                                 </group>
                                 <group string="Notification Messages">
-                                    <div class="oe_grey">
-                                    <p>Depending on the Diasplay mode, reports will be individual or shared.</p>
-                                </div>
+                                    <div class="oe_grey" colspan="4">
+                                        <p>Depending on the Display mode, reports will be individual or shared.</p>
+                                    </div>
                                     <field name="report_message_frequency" />
                                     <field name="report_header" placeholder="e.g. The following message contains the current progress of the sale team..." attrs="{'invisible': [('report_message_frequency','=','never')]}" />
                                     <field name="report_message_group_id" attrs="{'invisible': [('report_message_frequency','=','never')]}" />

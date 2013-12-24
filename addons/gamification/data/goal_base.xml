@@ -61,7 +61,7 @@
             <field name="name">Mail Group Following</field>
             <field name="description">Follow mail groups to receive news</field>
             <field name="computation_mode">python</field>
-            <field name="compute_code">self.number_following(cr, uid, 'mail.group')</field>
+            <field name="compute_code">result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)</field>
             <field name="action_id" eval="ref('mail.action_view_groups')" />
         </record>
 

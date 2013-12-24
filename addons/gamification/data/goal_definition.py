@@ -30,12 +30,3 @@ class gamification_goal_definition_data(osv.Model):
     of a user's goal. The return definition must be a float or integer.
     """
     _inherit = 'gamification.goal.definition'
-
-    def number_following(self, cr, uid, xml_id="mail.thread", context=None):
-        """Return the number of 'xml_id' objects the user is following
-
-        The model specified in 'xml_id' must inherit from mail.thread
-        """
-        ref_obj = self.pool.get(xml_id)
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return ref_obj.search(cr, uid, [('message_follower_ids', '=', user.partner_id.id)], count=True, context=context)

@@ -7,9 +7,9 @@ openerp.gamification = function(instance) {
             var self = this;
             this._super(parent, action);
             this.deferred = $.Deferred();
-            // this.res_user = new instance.web.DataSetSearch(this, 'res.users');
             this.goals_info = {};
             this.challenge_suggestions = {};
+            $(document).off('keydown.klistener');
         },
         events: {
             // update a challenge and related goals
@@ -49,6 +49,21 @@ openerp.gamification = function(instance) {
                         self.get_goal_todo_info();
                     });
                 });
+            },
+            'click .oe_goal h4': function(event) {
+                var self = this;
+                this.kkeys = [];
+                $(document).on('keydown.klistener', function(event) {
+                    if ("37,38,39,40,65,66".indexOf(event.keyCode) < 0) {
+                        $(document).off('keydown.klistener');
+                    } else {
+                        self.kkeys.push(event.keyCode);
+                        if (self.kkeys.toString().indexOf("38,38,40,40,37,39,37,39,66,65") >= 0) {
+                            new instance.web.Model('gamification.badge').call('check_progress', []);
+                            $(document).off('keydown.klistener');
+                        }
+                    }
+                });
             }
         },
         start: function() {
@@ -63,6 +78,7 @@ openerp.gamification = function(instance) {
                 if (result.length === 0) {
                     self.$el.find(".oe_gamification_challenge_list").hide();
                 } else {
+                    self.$el.find(".oe_gamification_challenge_list").empty();
                     _.each(result, function(item){
                         var $item = $(QWeb.render("gamification.ChallengeSummary", {challenge: item}));
                         self.render_money_fields($item);
@@ -115,34 +131,7 @@ openerp.gamification = function(instance) {
             this._super();
             var sidebar = new instance.gamification.Sidebar(this);
             sidebar.appendTo($('.oe_mail_wall_aside'));
-        }
-    });
-
-    instance.web_kanban.KanbanView.include({
-        start: function() {
-            this._super();
-            $(document).off('keydown.klistener');
         },
-        events: {
-            'click': function(event) {
-                var self = this;
-                if (this.ViewManager.dataset.model === 'gamification.badge') {
-                    this.kkeys = [];
-                    $(document).off('keydown.klistener');
-                    $(document).on('keydown.klistener', function(event) {
-                        if ("37,38,39,40,65,66".indexOf(event.keyCode) < 0) {
-                            $(document).off('keydown.klistener');
-                        } else {
-                            self.kkeys.push(event.keyCode);
-                            if (self.kkeys.toString().indexOf("38,38,40,40,37,39,37,39,66,65") >= 0) {
-                                new instance.web.Model('gamification.badge').call('check_progress', []);
-                                $(document).off('keydown.klistener');
-                            }
-                        }
-                    });
-                }
-            }
-        }
     });
 
     instance.web_kanban.KanbanRecord.include({

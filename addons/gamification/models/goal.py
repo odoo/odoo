@@ -25,9 +25,9 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.safe_eval import safe_eval
 from openerp.tools.translate import _
 
-from datetime import date, datetime, timedelta
-
 import logging
+import time
+from datetime import date, datetime, timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -75,7 +75,6 @@ class gamification_goal_definition(osv.Model):
             required=True),
         'display_mode': fields.selection([
                 ('progress', 'Progressive (using numerical values)'),
-                ('checkbox', 'Checkbox (done or not-done)'),
                 ('boolean', 'Exclusive (done or not-done)'),
             ],
             string="Displayed as", required=True),
@@ -91,8 +90,8 @@ class gamification_goal_definition(osv.Model):
         'domain': fields.char("Filter Domain",
             help="Domain for filtering records. The rule can contain reference to 'user' that is a browse record of the current user, e.g. [('user_id', '=', user.id)].",
             required=True),
-        'compute_code': fields.char('Compute Code',
-            help="The name of the python method that will be executed to compute the current value. See the file gamification/goal_definition_data.py for examples."),
+        'compute_code': fields.text('Python Code',
+            help="Python code to be executed for each user. 'result' should contains the new current value. Evaluated user can be access through object.user_id."),
         'condition': fields.selection([
                 ('higher', 'The higher the better'),
                 ('lower', 'The lower the better')
@@ -113,6 +112,15 @@ class gamification_goal_definition(osv.Model):
         'monetary': False,
         'display_mode': 'progress',
     }
+
+    def number_following(self, cr, uid, model_name="mail.thread", context=None):
+        """Return the number of 'model_name' objects the user is following
+
+        The model specified in 'model_name' must inherit from mail.thread
+        """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return self.pool.get('mail.followers').search(cr, uid, [('res_model', '=', model_name), ('partner_id', '=', user.partner_id.id)], count=True, context=context)
+
 
 
 class gamification_goal(osv.Model):
@@ -221,6 +229,8 @@ class gamification_goal(osv.Model):
         If a goal reaches the target value, the status is set to reached
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed."""
+        if context is None:
+            context = {}
 
         for goal in self.browse(cr, uid, ids, context=context):
             towrite = {}
@@ -233,14 +243,25 @@ class gamification_goal(osv.Model):
 
             elif goal.definition_id.computation_mode == 'python':
                 # execute the chosen method
-                values = {'cr': cr, 'uid': goal.user_id.id, 'context': context, 'self': self.pool.get('gamification.goal.definition')}
-                result = safe_eval(goal.definition_id.compute_code, values, {})
-
-                if type(result) in (float, int, long) and result != goal.current:
-                    towrite['current'] = result
+                cxt = {
+                    'self': self.pool.get('gamification.goal'),
+                    'object': goal,
+                    'pool': self.pool,
+                    'cr': cr,
+                    'context': dict(context), # copy context to prevent side-effects of eval
+                    'uid': uid,
+                    'result': False,
+                    'date': date, 'datetime': datetime, 'timedelta': timedelta, 'time': time
+                }
+                code = goal.definition_id.compute_code.strip()
+                safe_eval(code, cxt, mode="exec", nocopy=True)
+                # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
+                result = cxt.get('result', False)
+                if result and type(result) in (float, int, long):
+                    if result != goal.current:
+                        towrite['current'] = result
                 else:
-                    _logger.exception(_('Unvalid return content from the evaluation of %s' % str(goal.definition_id.compute_code)))
-                    # raise osv.except_osv(_('Error!'), _('Unvalid return content from the evaluation of %s' % str(goal.definition_id.compute_code)))
+                    _logger.exception(_('Invalid return content from the evaluation of %s' % code))
 
             else:  # count or sum
                 obj = self.pool.get(goal.definition_id.model_id.model)
@@ -249,7 +270,7 @@ class gamification_goal(osv.Model):
                 # eval the domain with user replaced by goal user object
                 domain = safe_eval(goal.definition_id.domain, {'user': goal.user_id})
 
-                #add temporal clause(s) to the domain if fields are filled on the goal
+                # add temporal clause(s) to the domain if fields are filled on the goal
                 if goal.start_date and field_date_name:
                     domain.append((field_date_name, '>=', goal.start_date))
                 if goal.end_date and field_date_name:
@@ -263,7 +284,7 @@ class gamification_goal(osv.Model):
                 else:  # computation mode = count
                     new_value = obj.search(cr, uid, domain, context=context, count=True)
 
-                #avoid useless write if the new value is the same as the old one
+                # avoid useless write if the new value is the same as the old one
                 if new_value != goal.current:
                     towrite['current'] = new_value
 
