@@ -40,8 +40,8 @@
          <field name="model">account.invoice.report</field>
          <field name="arch" type="xml">
              <graph string="Invoices Analysis" type="bar">
-                 <field name="product_id"/>
-                 <field name="price_total"/>
+                 <field name="product_id" type="row"/>
+                 <field name="price_total" type="measure"/>
              </graph>
          </field>
     </record>
