@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="website_homepage_demo" inherit_id="website.homepage" name="Homepage for Website">
+
+            <xpath expr="//div[@id='wrap']" position="attributes">
+                <attribute name="class">oe_structure</attribute>
+            </xpath>
+
+            <xpath expr="//div[@id='wrap']" position="inside">
+                <section data-snippet-id="title" class="mt32 mb32">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12" data-snippet-id="colmd">
+                                <h1 class="text-center">Build Great Website</h1>
+                                <h3 class="text-muted text-center">Super Easy. Fully Inline Edition.</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-snippet-id="image-text" class="mt32 mb32 dark">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 mt16 mb16" data-snippet-id="colmd">
+                                <img src="/website/static/src/img/image_text.jpg" class="img-responsive shadow"/>
+                            </div>
+                            <div class="col-md-6 mt32" data-snippet-id="colmd">
+                                <h3>A Section Subtitle</h3>
+                                <p>
+                                    Write one or two paragraphs describing your product,
+                                    services or a specific feature. To be successful
+                                    your content needs to be useful to your readers.
+                                </p>
+                                <p>
+                                    Start with the customer – find out what they want
+                                    and give it to them.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div data-snippet-id="parallax">
+                    <div style="background-image: url('/website/static/src/img/banner/greenfields.jpg')" class="parallax oe_structure mt32 mb32 oe_big">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 mt128 mb32" data-snippet-id="colmd">
+                                    <h1 class="text-center">
+                                        <b>A Great Title</b>
+                                    </h1>
+                                    <h3 class="text-center">
+                                        And a motivating subtitle
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="mt32 mb32" data-snippet-id="three-columns">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center mt16 mb16" data-snippet-id="colmd">
+                                <h2>A Great Title</h2>
+                                <h3 class="text-muted">And a good subtitle</h3>
+                            </div>
+                            <div class="col-md-4" data-snippet-id="colmd">
+                                <img src="/website/static/src/img/china_thumb.jpg" class="img-rounded img-responsive"/>
+                                <h4 class="mt16">Streamline Recruitments</h4>
+                                <p>
+                                    Post job offers and keep track of each application
+                                    received. Follow applicants in your recruitment process
+                                    with the smart kanban view.
+                                </p><p>
+                                    Save time by automating some communications with email
+                                    templates. Resumes are indexed automatically, allowing
+                                    you to easily find for specific profiles.
+                                </p>
+                            </div>
+                            <div class="col-md-4" data-snippet-id="colmd">
+                                <img src="/website/static/src/img/desert_thumb.jpg" class="img-rounded img-responsive"/>
+                                <h4 class="mt16">Enterprise Social Network</h4>
+                                <p>
+                                    Break down information silos. Share knowledge and best
+                                    practices amongst all employees. Follow specific people
+                                    or documents and join groups of interests to share
+                                    expertise and documents.
+                                </p><p>
+                                    Interact with your collegues in real time with live chat.
+                                </p>
+                            </div>
+                            <div class="col-md-4" data-snippet-id="colmd">
+                                <img src="/website/static/src/img/deers_thumb.jpg" class="img-rounded img-responsive"/>
+                                <h4 class="mt16">Leaves Management</h4>
+                                <p>
+                                    Keep track of the vacation days accrued by each
+                                    employee. Employees enter their requests (paid
+                                    holidays, sick leave, etc), for managers to approve and
+                                    validate. It's all done in just a few clicks. The
+                                    agenda of each employee is updated accordingly.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="mt32 mb32" data-snippet-id="cta">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-md-12 text-center mt16 mb16" data-snippet-id="colmd">
+                            <a href="/page/website.aboutus" class="btn btn-info btn-lg">About us</a>
+                            <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
+                        </div>
+                      </div>
+                    </div>
+                </section>
+            </xpath>
+
+        </template>
+
+    </data>
+</openerp>
