@@ -282,7 +282,9 @@ class WebsiteSurvey(http.Controller):
 
 
 def dict_soft_update(dictionary, key, value):
-    ''' Insert the pair <key>: <value> into the <dictionary> '''
+    ''' Insert the pair <key>: <value> into the <dictionary>. If <key> is
+    already present, this function will append <value> to the list of
+    existing data (instead of erasing it) '''
     if key in dictionary:
         dictionary[key].append(value)
     else:
