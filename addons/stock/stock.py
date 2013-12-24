@@ -3257,7 +3257,7 @@ class stock_pack_operation(osv.osv):
             if quant:
                 if operation.product_id:
                     #if a product + a package information is given, we consider that we took a part of an existing package (unpacking)
-                    quant_obj.write(cr, uid, quant.id, {'package_id': operation.result_package_id.id}, context=context)
+                    quant_obj.write(cr, SUPERUSER_ID, quant.id, {'package_id': operation.result_package_id.id}, context=context)
                 elif operation.package_id and operation.result_package_id:
                     #move the whole pack into the final package if any
                     pack_obj.write(cr, uid, [operation.package_id.id], {'parent_id': operation.result_package_id.id}, context=context)
