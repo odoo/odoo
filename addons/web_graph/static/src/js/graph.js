@@ -272,6 +272,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
     display_data: function () {
         this.$('.graph_main_content svg').remove();
+        this.$('.graph_main_content div').remove();
         this.table.empty();
 
         if (this.visible_ui) {
@@ -280,8 +281,9 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             this.$('.graph_header').css('display', 'none');
         }
         if (this.pivot.no_data) {
-            var msg = 'No data available. Try to remove any filter or add some data.';
-            this.table.append($('<tr><td>' + msg + '</td></tr>'));
+            this.$('.graph_main_content').append($(QWeb.render('graph_no_data')));
+            // var msg = 'No data available. Try to remove any filter or add some data.';
+            // this.table.append($('<tr><td>' + msg + '</td></tr>'));
         } else {
             var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
             if (_.contains(table_modes, this.mode)) {
