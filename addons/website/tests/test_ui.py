@@ -13,24 +13,24 @@ __all__ = ['load_tests', 'WebsiteUiSuite']
 def _exc_info_to_string(err, test):
     return err
 
-class LineReader(object):
-    def __init__(self, fd):
-        self._fd = fd
-        self._buf = ''
+class LineReader:
+    def __init__(self, file_descriptor):
+        self._file_descriptor = file_descriptor
+        self._buffer = ''
 
     def fileno(self):
-        return self._fd
+        return self._file_descriptor
 
     def readlines(self):
-        data = os.read(self._fd, 4096)
+        data = os.read(self._file_descriptor, 4096)
         if not data:
             # EOF
             return None
-        self._buf += data
+        self._buffer += data
         if '\n' not in data:
             return []
-        tmp = self._buf.split('\n')
-        lines, self._buf = tmp[:-1], tmp[-1]
+        tmp = self._buffer.split('\n')
+        lines, self._buffer = tmp[:-1], tmp[-1]
         return lines
 
 class WebsiteUiTest(unittest.TestCase):
@@ -42,24 +42,22 @@ class WebsiteUiTest(unittest.TestCase):
         return self.name
 
 class WebsiteUiSuite(unittest.TestSuite):
-    # timeout is in seconds
-    def __init__(self, testfile, timeout=5):
-        self.testfile = testfile
-        self.timeout = timeout
+    # timeout in seconds
+    def __init__(self, testfile, options, timeout=10.0):
+        self._testfile = testfile
+        self._timeout = timeout
+        self._options = options
         self._test = None
 
     def __iter__(self):
         return iter([self])
 
     def run(self, result):
-        # Test if phantom is correctly installed
+        # is PhantomJS correctly installed?
         try:
-            subprocess.call([
-                'phantomjs',
-                '-v'
-            ],
-            stdout=open(os.devnull, 'w'),
-            stderr=subprocess.STDOUT)
+            subprocess.call([ 'phantomjs', '-v' ],
+                stdout=open(os.devnull, 'w'),
+                stderr=subprocess.STDOUT)
         except OSError:
             test = WebsiteUiTest('UI Tests')
             result.startTest(test)
@@ -74,49 +72,45 @@ class WebsiteUiSuite(unittest.TestSuite):
             del result._exc_info_to_string
 
     def _run(self, result):
-        self._test = WebsiteUiTest(self.testfile)
-        self.start_time = time.time()
+        self._test = WebsiteUiTest(self._testfile)
+        start_time = time.time()
+        last_check_time = time.time()
 
-        phantomOptions = json.dumps({
-            'timeout': self.timeout,
-            'port': tools.config['xmlrpc_port']
-        })
+        self._options['timeout'] = self._timeout
+        self._options['port'] = tools.config['xmlrpc_port']
+
         phantom = subprocess.Popen([
-            'phantomjs',
-            os.path.join(ROOT, self.testfile),
-            phantomOptions
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-
+                'phantomjs',
+                os.path.join(ROOT, self._testfile),
+                json.dumps(self._options)
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT)
         proc_stdout = LineReader(phantom.stdout.fileno())
         readable = [proc_stdout]
-
-        last_check_time = time.time()
         try:
-            while readable and last_check_time < self.start_time + self.timeout:
-                ready, _, _ = select.select(readable, [], [], 0)
+            while phantom.poll() is None and readable and last_check_time < start_time + self._timeout:
+                ready, _, _ = select.select(readable, [], [], 0.1)
                 if not ready:
                     last_check_time = time.time()
                     continue
                 for stream in ready:
                     lines = stream.readlines()
                     if lines is None:
-                        # got EOF on this stream
+                        # EOF
                         readable.remove(stream)
-                        break;
-                    for line in lines:
+                    else:
+                        self.process(lines[0], result)
                         # the runner expects only one output line
-                        self.process(line, result)
-                        break
-
-            if last_check_time >= (self.start_time + self.timeout):
-                result.addError(self._test, "Timeout after %s s" % (last_check_time - self.start_time ))
-            result.stopTest(self._test)
+                        # any subsequent line is ignored
+                        readable.remove(stream)
+            if last_check_time >= (start_time + self._timeout):
+                result.addError(self._test, "Timeout after %s s" % (last_check_time - start_time ))
         finally:
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
+            result.stopTest(self._test)
 
     def process(self, line, result):
         # Test protocol
@@ -124,6 +118,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         # use console.log in phantomjs to output test results using the following format:
         # - for a success: { "event": "success" }
         # - for a failure: { "event": "failure", "message": "Failure description" }
+        # - for an error:  { "event": "error",   "message": "Error description" }
         # any other message is treated as an error
         result.startTest(self._test)
         try:
@@ -134,12 +129,15 @@ class WebsiteUiSuite(unittest.TestSuite):
             elif event == 'failure':
                 message = args.get('message', "")
                 result.addFailure(self._test, message)
+            elif event == 'error':
+                message = args.get('message', "")
+                result.addError(self._test, message)
             else:
-                result.addError(self._test, "Unexpected message: %s" % line)
+                result.addError(self._test, 'Unexpected JSON: "%s"' % line)
         except ValueError:
-             result.addError(self._test, "Unexpected message: %s" % line)
+             result.addError(self._test, 'Unexpected message: "%s"' % line)
 
 def load_tests(loader, base, _):
-    base.addTest(WebsiteUiSuite('sample_test.js'))
-    base.addTest(WebsiteUiSuite('banner_tour.js'))
+    base.addTest(WebsiteUiSuite('dummy_test.js', {}))
+    base.addTest(WebsiteUiSuite('banner_tour_test.js', { 'path': '/web#action=website.action_website_homepage&login=admin&password=admin' }))
     return base
