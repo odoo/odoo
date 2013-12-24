@@ -1107,16 +1107,24 @@ class survey_user_input_line(osv.osv):
             self.unlink(cr, uid, old_uil, context=context)
 
         ca = dict_keys_startswith(post, answer_tag)
-
         no_answers = True
-        # TODO gérer le cas des matrices monochoix
-        for col in question.labels_ids:
+
+        if question.matrix_subtype == 'simple':
             for row in question.labels_ids_2:
-                a_tag = "%s_%s_%s" % (answer_tag, row.id, col.id)
+                a_tag = "%s_%s" % (answer_tag, row.id)
                 if a_tag in ca:
                     no_answers = False
-                    vals.update({'answer_type': 'suggestion', 'value_suggested': col.id, 'value_suggested_row': row.id})
+                    vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a_tag], 'value_suggested_row': row.id})
                     self.create(cr, uid, vals, context=context)
+
+        elif question.matrix_subtype == 'multiple':
+            for col in question.labels_ids:
+                for row in question.labels_ids_2:
+                    a_tag = "%s_%s_%s" % (answer_tag, row.id, col.id)
+                    if a_tag in ca:
+                        no_answers = False
+                        vals.update({'answer_type': 'suggestion', 'value_suggested': col.id, 'value_suggested_row': row.id})
+                        self.create(cr, uid, vals, context=context)
         if no_answers:
             vals.update({'answer_type': None, 'skipped': True})
             self.create(cr, uid, vals, context=context)
