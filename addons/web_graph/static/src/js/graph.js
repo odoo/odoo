@@ -76,7 +76,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 }
             } else {  // old style, kept for backward compatibility
                 if ('operator' in field.attrs) {
-                    measure = field.attrs.name;
+                    measure = (measure) ? measure : field.attrs.name;
                 } else {
                     self.default_row_groupby.push(field.attrs.name);
                 }
@@ -95,6 +95,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
             options = {domain:domain};
 
         this.search_view_groupby = group_by;
+
+        if (group_by.length && this.groupby_mode !== 'manual') {
+            if (_.isEqual(col_groupby, [])) {
+                col_groupby = this.default_col_groupby;
+            } 
+        }
         if (group_by.length || col_groupby.length) {
             this.groupby_mode = 'manual';
         }
@@ -243,7 +249,6 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                                          .attr('href', '#')
                                          .append(self.fields[measure].string);
                 measure_selection.append($('<li></li>').append(choice));
-
             });
         });
 
@@ -572,7 +577,6 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
         nv.addGraph(function () {
           var chart = nv.models.multiBarChart()
-                .tooltips(false)
                 .width(self.width)
                 .height(self.height)
                 .stacked(self.bar_ui === 'stack')
