@@ -29,10 +29,10 @@
             <field name="name">hr.evaluation.report.graph</field>
             <field name="model">hr.evaluation.report</field>
             <field name="arch" type="xml">
-            <graph string="Appraisal Analysis" type="bar">
-                 <field name="employee_id"/>
-                 <field name="nbr" operator="+"/>
-                 <field name="state" group="True"/>
+            <graph string="Appraisal Analysis" type="bar" stacked="True">
+                 <field name="employee_id" type="row"/>
+                 <field name="nbr" type="measure"/>
+                 <field name="state" type="col"/>
              </graph>
          </field>
     </record>
