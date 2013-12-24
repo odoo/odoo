@@ -124,8 +124,7 @@ class gamification_challenge(osv.Model):
                 ('inprogress', 'In Progress'),
                 ('done', 'Done'),
             ],
-            string='State',
-            required=True),
+            string='State', required=True, track_visibility='onchange'),
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
 
@@ -250,9 +249,7 @@ class gamification_challenge(osv.Model):
                 for challenge in self.browse(cr, uid, ids, context=context):
                     if challenge.autojoin_group_id:
                         vals['user_ids'] += [(4, user.id) for user in challenge.autojoin_group_id.users]
-                    if challenge.state == 'draft':
-                        # going from draft to inprogress
-                        self.message_post(cr, uid, challenge.id, body="New challenge started.", context=context)
+
             self.generate_goals_from_challenge(cr, uid, ids, context=context)
 
         elif vals.get('state') == 'done':
