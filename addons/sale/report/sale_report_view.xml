@@ -32,10 +32,10 @@
          <field name="name">sale.report.graph</field>
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
-             <graph string="Sales Analysis" type="bar">
-                 <field name="product_id"/>
-                 <field name="price_total"/>
-                 <field name="state" group="True"/>
+             <graph string="Sales Analysis" type="bar" stacked="True">
+                 <field name="product_id" type="row"/>
+                 <field name="price_total" type="measure"/>
+                 <field name="state" type="col"/>
              </graph>
          </field>
     </record>

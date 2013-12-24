@@ -28,8 +28,8 @@
             <field name="priority" eval="32"/>
             <field name="arch" type="xml">
                 <graph string="Monthly Turnover" type="bar">
-                    <field name="month"/>
-                    <field name="price_total" operator="+"/>
+                    <field name="month" type="row"/>
+                    <field name="price_total" type="measure"/>
                 </graph>
             </field>
         </record>
