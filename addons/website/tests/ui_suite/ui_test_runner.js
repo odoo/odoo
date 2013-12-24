@@ -17,7 +17,7 @@ function waitFor(ready, callback, timeout) {
     }, 100);
 };
 
-function runTest (test) {
+function run (test) {
     var options = JSON.parse(phantom.args);
     var port = options.port ? ':'+options.port : '';
     var path = options.path ? options.path : '';
@@ -40,5 +40,5 @@ function runTest (test) {
 
 module.exports = {
     waitFor: waitFor,
-    runTest: runTest
+    run: run
 }
