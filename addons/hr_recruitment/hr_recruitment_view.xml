@@ -160,10 +160,10 @@
         <field name="name">Jobs - Recruitment Graph</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-              <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
-                <field name="job_id"/>
-                <field name="salary_expected" operator="+"/>
-                <field name="stage_id" group="True"/>
+              <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical" stacked="True">
+                <field name="job_id" type="row"/>
+                <field name="stage_id" type="col"/>
+                <field name="salary_expected" type="measure"/>
             </graph>
         </field>
     </record>
