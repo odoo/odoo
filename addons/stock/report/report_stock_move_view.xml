@@ -43,8 +43,8 @@
          <field name="model">report.stock.move</field>
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
-                 <field name="product_id"/>
-                 <field name="product_qty" operator="+"/>
+                 <field name="product_id" type="row"/>
+                 <field name="product_qty" type="measure"/>
              </graph>
          </field>
     </record>
@@ -128,8 +128,8 @@
          <field name="model">report.stock.inventory</field>
          <field name="arch" type="xml">
              <graph string="Inventory Analysis" type="bar">
-                 <field name="product_id"/>
-                 <field name="product_qty"/>
+                 <field name="product_id" type="row"/>
+                 <field name="product_qty" type="measure"/>
              </graph>
          </field>
     </record>
