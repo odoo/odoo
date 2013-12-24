@@ -504,12 +504,11 @@
         <record model="ir.ui.view" id="fleet_vehicle_log_contract_graph">
            <field name="name">fleet.vehicle.log.contract.graph</field>
            <field name="model">fleet.vehicle.log.contract</field>
-           <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
-                <graph string="Contract Costs Per Month">
-                    <field name="date" />
-                    <field name="cost_amount" operator="+"/>
-                    <field name="vehicle_id" group="True"/>
+                <graph string="Contract Costs Per Month" type="bar" stacked="True">
+                    <field name="date" type="row"/>
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_amount" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -586,12 +585,10 @@
         <record model="ir.ui.view" id="fleet_vehicle_odometer_graph">
            <field name="name">fleet.vehicle.odometer.graph</field>
            <field name="model">fleet.vehicle.odometer</field>
-           <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
-                <graph string="Odometer Values Per Month">
-                    <field name="date" />
-                    <field name="value" operator="+"/>
-                    <field name="vehicle_id" group="True"/> 
+                <graph string="Odometer Values Per Vehicle">
+                    <field name="vehicle_id" type="row"/> 
+                    <field name="value" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -694,12 +691,10 @@
         <record model="ir.ui.view" id="fleet_vehicle_log_fuel_graph">
            <field name="name">fleet.vehicle.log.fuel.graph</field>
            <field name="model">fleet.vehicle.log.fuel</field>
-           <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
                 <graph string="Fuel Costs Per Month">
-                    <field name="date" /> 
-                    <field name="cost_amount" operator="+"/>
-                    <field name="vehicle_id" group="True"/>
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_amount" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -789,10 +784,10 @@
            <field name="name">fleet.vehicle.log.services.graph</field>
            <field name="model">fleet.vehicle.log.services</field>
            <field name="arch" type="xml">
-                <graph string="Services Costs Per Month">
-                    <field name="date" />
-                    <field name="cost_amount" operator="+"/>
-                    <field name="vehicle_id" group="True"/> 
+                <graph string="Services Costs Per Month" stacked="True">
+                    <field name="date" type="row"/>
+                    <field name="vehicle_id" type="row"/> 
+                    <field name="cost_amount" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -921,9 +916,8 @@
            <field name="model">fleet.vehicle.cost</field>
            <field name="arch" type="xml">
                 <graph string="Costs Per Month">
-                    <field name="date" />
-                    <field name="amount"/>
-                    <field name="vehicle_id" group="True"/>
+                    <field name="vehicle_id" type="row"/>
+                    <field name="amount" type="measure"/>
                 </graph>
             </field>
         </record>
