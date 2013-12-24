@@ -31,9 +31,9 @@
             <field name="name">mrp.workorder.graph</field>
             <field name="model">mrp.workorder</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Work Orders" type="bar">
-                    <field name="state"/>
-                    <field name="nbr" operator="+"/>
+                <graph string="Work Orders" type="bar">
+                    <field name="state" type="row"/>
+                    <field name="nbr" type="measure"/>
                 </graph>
             </field>
         </record>
