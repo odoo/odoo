@@ -83,7 +83,7 @@ class test_challenge(common.TransactionCase):
 
         # reward for two firsts as admin may have timezone
         self.challenge_obj.write(cr, uid, self.challenge_base_id, {'reward_first_id': self.badge_id, 'reward_second_id': self.badge_id}, context=context)
-        self.challenge_obj.action_close(cr, uid, self.challenge_base_id, context=context)
+        self.challenge_obj.write(cr, uid, self.challenge_base_id,  {'state': 'done'}, context=context)
 
         badge_ids = self.badge_user_obj.search(cr, uid, [('badge_id', '=', self.badge_id), ('user_id', '=', self.demo_user_id)])
         self.assertGreater(len(badge_ids), 0, "Demo user has not received the badge")

@@ -13,8 +13,8 @@
             <field name="definition_id" eval="ref('definition_crm_tot_invoices')" />
             <field name="user_id" eval="ref('base.user_demo')" />
             <field name="line_id" eval="ref('line_crm_sale1')" />
-            <field name="start_date" eval="time.strftime('2013-03-01')" />
-            <field name="end_date" eval="time.strftime('2013-03-31')" />
+            <field name="start_date" eval="time.strftime('%Y-%m-01')" />
+            <field name="end_date" eval="time.strftime('%Y-%m-31')" />
             <field name="target_goal">2000</field>
             <field name="state">inprogress</field>
         </record>
