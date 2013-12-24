@@ -561,21 +561,13 @@ class hr_job(osv.osv):
         action['context'] = str({'search_default_job_id': [job.id], 'default_job_id': job.id, 'default_user_id': job.user_id.id})
         return action
 
-    def attachment_tree_view(self, cr, uid, ids, context):
+    def open_attachments(self, cr, uid, ids, context):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base','action_attachment')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
         applicant_ids = self.pool.get('hr.applicant').search(cr, uid, [('job_id', 'in', ids)], context=context)
-        domain = ['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', ids), '&',('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)]
-        res_id = ids and ids[0] or False
-        return {
-            'name': _('Attachments'),
-            'domain': domain,
-            'res_model': 'ir.attachment',
-            'type': 'ir.actions.act_window',
-            'view_id': False,
-            'view_mode': 'tree,form',
-            'view_type': 'form',
-            'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
-        }
+        action['domain'] = str(['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', ids), '&',('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)])
+        return action
 
 class applicant_category(osv.osv):
     """ Category of applicant """

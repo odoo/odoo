@@ -365,7 +365,7 @@
             </xpath>
             <div name="buttons" position="inside">
                 <button string="Applications" name="%(action_hr_job_applications)d" context="{'default_user_id': user_id}" type="action"/>
-                <button name="attachment_tree_view" string="Documents" type="object"/>
+                <button name="open_attachments" string="Documents" type="object"/>
             </div>
         </field>
     </record>
@@ -430,7 +430,7 @@
                                                 <span t-if="record.application_ids.raw_value.length lt 2"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
                                             </a>
                                             <br/>
-                                            <a t-if="record.document_ids.raw_value.length gt 0" name="attachment_tree_view" type="object">
+                                            <a t-if="record.document_ids.raw_value.length gt 0" name="open_attachments" type="object">
                                                 <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
                                                 <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
                                             </a>
