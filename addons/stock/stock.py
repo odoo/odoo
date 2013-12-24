@@ -3481,31 +3481,31 @@ class stock_picking_type(osv.osv):
         """
         month_begin = date.today().replace(day=1)
         section_result = [{
-                            'value': 0,
-                            'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
-                            } for i in range(10, -1, -1)]
+            'value': 0,
+            'tooltip': (month_begin + relativedelta.relativedelta(months=i)).strftime('%B'),
+        } for i in range(-2, 2, 1)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
         for group in group_obj:
             group_begin_date = datetime.strptime(group['__domain'][0][2], DEFAULT_SERVER_DATE_FORMAT)
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
-            section_result[10 - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+            section_result[-month_delta.months + 2] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
             inner_groupby = (group.get('__context', {})).get('group_by',[])
             if inner_groupby:
                 groupby_picking = obj.read_group(cr, uid, group.get('__domain'), read_fields, inner_groupby, context=context)
                 for groupby in groupby_picking:
-                    section_result[10 - (month_delta.months + 1)]['value'] = groupby.get(value_field, 0)
+                    section_result[-month_delta.months + 2]['value'] = groupby.get(value_field, 0)
         return section_result
 
     def _get_picking_data(self, cr, uid, ids, field_name, arg, context=None):
         obj = self.pool.get('stock.picking')
         res = dict.fromkeys(ids, False)
         month_begin = date.today().replace(day=1)
-        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(DEFAULT_SERVER_DATE_FORMAT)
-        groupby_end = (month_begin + relativedelta.relativedelta(months=3)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-2)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        groupby_end = (month_begin + relativedelta.relativedelta(months=2)).strftime(DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             created_domain = [
                 ('picking_type_id', '=', id),
-                ('state', 'not in', ['done', 'cancel']),
+                ('state', '=', 'assigned'),
                 ('date', '>=', groupby_begin),
                 ('date', '<', groupby_end),
             ]

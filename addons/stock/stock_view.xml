@@ -912,6 +912,23 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
 
+        <record id="action_picking_tree_ready_grouped" model="ir.actions.act_window">
+            <field name="name">Ready Transfers</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{
+                    'search_default_picking_type_id': [active_id],
+                    'default_picking_type_id': active_id,
+                    'contact_display': 'partner_address',
+                    'search_default_available': 1,
+                    'group_by': ['date'],
+            }
+            </field>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
+        </record>
 
         <record id="action_picking_tree_waiting" model="ir.actions.act_window">
             <field name="name">Waiting Transfers</field>
@@ -1456,8 +1473,8 @@
                                                 <field name="count_picking_ready"/> Ready
                                             </a>
                                             <t t-if="record.count_picking_ready.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree_ready)d" type="action">
-                                                <field name="weekly_picking" widget="stock_sparkline">Weekly Moves</field>
+                                            <a name="%(action_picking_tree_ready_grouped)d" type="action">
+                                                <field name="weekly_picking" widget="stock_sparkline">Monthly Ready Operations</field>
                                             </a>
                                             </t>
                                         </div>
