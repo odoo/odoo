@@ -244,7 +244,8 @@ class hr_applicant(osv.Model):
         if context is None:
             context = {}
         res = super(hr_applicant, self).default_get(cr, uid, fields, context=context)
-        if context.get('active_id'):
+        #NOTE:to set default user_id in applicant if applicant directly created from kanban action of job because currently web is not parsing value in context on action.
+        if context.get('active_model') == "hr.job" and context.get('active_id'):
             job = self.pool.get('hr.job').browse(cr, uid, context.get('active_id'), context=context)
             res.update({'user_id': job.user_id.id})
         return res
@@ -503,17 +504,8 @@ class hr_job(osv.osv):
     _name = "hr.job"
     _inherits = {'mail.alias': 'alias_id'}
 
-    def _application_count(self, cr, uid, ids, field_name, arg, context=None):
-        """Calculate total Applications per job"""
-        res = dict.fromkeys(ids, 0)
-        applicant_obj = self.pool.get('hr.applicant')
-        applicant_ids = applicant_obj.search(cr, uid, [('job_id', 'in', ids)], context=context)
-        for applicant in applicant_obj.browse(cr, uid, applicant_ids, context=context):
-            res[applicant.job_id.id] += 1
-        return res
-        
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context=None):
-        """Calculate total attached CV per job"""
+        """Calculate total attached CV to applications and documents per job"""
         res = {}
         attachment_obj = self.pool.get('ir.attachment')
         for job_id in ids:
@@ -526,7 +518,7 @@ class hr_job(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
-        'application_count': fields.function(_application_count, type='integer', string="Total Applications"),
+        'application_ids': fields.one2many('hr.applicant', 'job_id', 'Applications'),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int'),
         'user_id': fields.many2one('res.users', 'Recruitment Responsible', track_visibility='onchange'),

@@ -10,5 +10,4 @@ openerp.hr_recruitment = function (openerp) {
       },
   });
 
-  openerp.web_kanban.fields_registry.add("justgage", "openerp.hr_recruitment.GaugeWidget");
 }

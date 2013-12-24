@@ -379,11 +379,10 @@
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
                     <field name="color"/>
-                    <field name="application_count"/>
+                    <field name="application_ids"/>
                     <field name="no_of_hired_employee"/>
                     <field name="manager_id"/>
                     <field name="survey_id"/>
-                    <field name="message_summary"/>
                     <field name="state"/>
                     <field name="user_id"/>
                     <templates>
@@ -426,8 +425,8 @@
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
                                             <a name="%(action_hr_job_applications)d" type="action">
-                                                <span t-if="record.application_count.value gt 1"><field name="application_count"/> Applications</span>
-                                                <span t-if="record.application_count.value lt 2"><field name="application_count"/> Application</span>
+                                                <span t-if="record.application_ids.raw_value.length gt 1"><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
+                                                <span t-if="record.application_ids.raw_value.length lt 2"><t t-esc="record.application_ids.raw_value.length"/> Application</span>
                                             </a>
                                             <br/>
                                             <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object"> 

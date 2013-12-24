@@ -37,6 +37,10 @@ class hr_applicant_settings(osv.osv_memory):
         'alias_domain' : fields.char('Alias Domain'),
     }
 
+    _defaults = {
+        'alias_domain': lambda self, cr, uid, context:self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context),
+    }
+
     def get_default_alias_prefix(self, cr, uid, ids, context=None):
         alias_name = ''
         mail_alias = self.pool.get('mail.alias')
@@ -66,13 +70,3 @@ class hr_applicant_settings(osv.osv_memory):
                 else:
                     mail_alias.create_unique_alias(cr, uid, {'alias_name': record.alias_prefix}, model_name="hr.applicant", context=context)
         return True
-
-    def get_default_alias_domain(self, cr, uid, ids, context=None):
-        alias_domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
-        if not alias_domain:
-            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
-            try:
-                alias_domain = urlparse.urlsplit(domain).netloc.split(':')[0]
-            except Exception:
-                pass
-        return {'alias_domain': alias_domain}
