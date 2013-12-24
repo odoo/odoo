@@ -411,7 +411,17 @@ class email_template(osv.osv):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
-        del values['partner_to']  # TODO Properly use them.
+
+        # process partner_to field that is a comma separated list of partner_ids -> recipient_ids
+        # NOTE: only usable if force_send is True, because otherwise the value is
+        # not stored on the mail_mail, and therefore lost -> fixed in v8
+        values['recipient_ids'] = []
+        partner_to = values.pop('partner_to', '')
+        if partner_to:
+            # placeholders could generate '', 3, 2 due to some empty field values
+            tpl_partner_ids = [pid for pid in partner_to.split(',') if pid]
+            values['recipient_ids'] += [(4, pid) for pid in self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)]
+
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)
@@ -420,11 +430,11 @@ class email_template(osv.osv):
         # manage attachments
         for attachment in attachments:
             attachment_data = {
-                    'name': attachment[0],
-                    'datas_fname': attachment[0],
-                    'datas': attachment[1],
-                    'res_model': 'mail.message',
-                    'res_id': mail.mail_message_id.id,
+                'name': attachment[0],
+                'datas_fname': attachment[0],
+                'datas': attachment[1],
+                'res_model': 'mail.message',
+                'res_id': mail.mail_message_id.id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
