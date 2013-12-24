@@ -208,19 +208,13 @@ class WebsiteSurvey(http.Controller):
                 elif answer.answer_type == 'suggestion' and not answer.value_suggested_row:
                     answer_value = answer.value_suggested.id
                 elif answer.answer_type == 'suggestion' and answer.value_suggested_row:
-                    answer_tag = "%s_%s_%s" % (answer_tag, answer.value_suggested_row.id, answer.value_suggested.id)
+                    answer_tag = "%s_%s" % (answer_tag, answer.value_suggested_row.id)
                     answer_value = answer.value_suggested.id
-                    # TODO vérifier QCM et matrices
                 if answer_value:
-                    ret.update({answer_tag: answer_value})
+                    dict_soft_update(ret, answer_tag, answer_value)
                 else:
-                    _logger.warning("[survey] Fetching None answer for question %s" % answer_tag)
-
+                    _logger.warning("[survey] No answer has been found for question %s marked as non skipped" % answer_tag)
         return json.dumps(ret)
-
-    # load all the user input lines corresponding to token & page (or survey)
-    # format them into a json dict
-    # return them to JS
 
     # AJAX validation of some questions
     # @website.route(['/survey/validate/<model("survey.survey"):survey>'],

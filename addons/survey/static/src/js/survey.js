@@ -64,10 +64,11 @@ $(document).ready(function () {
     function prefill(){
         var prefill_def = $.ajax(prefill_controller, {dataType: "json"})
             .done(function(json_data){
-                console.log(json_data);
                 _.each(json_data, function(value, key){
                     the_form.find(".form-control[name=" + key + "]").val(value);
-                    the_form.find("input[name=" + key + "]").val([value]);
+                    the_form.find("input[name^=" + key + "]").each(function(){
+                        $(this).val(value);
+                    });
                 });
             })
             .fail(function(){
