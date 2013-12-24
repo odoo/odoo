@@ -7,10 +7,8 @@
             <field name="model">report.event.registration</field>
             <field name="arch" type="xml">
                 <graph string="Events Filling Status" type="bar" >
-                    <field name="event_id"/>
-                    <field name="draft_state" operator="+"/>
-                    <field name="confirm_state" operator="+"/>
-                    <field name="register_max" operator="+"/>
+                    <field name="event_id" type="row"/>
+                    <field name="draft_state" type="measure"/>
                 </graph>
             </field>
         </record>

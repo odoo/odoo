@@ -32,11 +32,9 @@
             <field name="name">report.event.registration.graph</field>
             <field name="model">report.event.registration</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Event on Registration"  type="bar" >
-                    <field name="event_id"/>
-                    <field name="draft_state" operator="+"/>
-                    <field name="confirm_state" operator="+"/>
-                    <field name="register_max" operator="+"/>
+                <graph string="Event on Registration"  type="bar" >
+                    <field name="event_id" type="row"/>
+                    <field name="draft_state" type="measure"/>
                 </graph>
             </field>
         </record>
