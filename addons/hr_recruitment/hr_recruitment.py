@@ -472,7 +472,7 @@ class hr_job(osv.osv):
         'application_count': fields.function(_application_count, type='integer', string="Total Applications"),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int'),
-        'user_id': fields.many2one('res.users', 'Recruitment Responsible'),
+        'user_id': fields.many2one('res.users', 'Recruitment Responsible', track_visibility='onchange'),
     }
 
     _defaults = {

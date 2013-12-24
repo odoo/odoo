@@ -470,7 +470,7 @@
     <record id="mt_job_applicant_stage" model="mail.message.subtype">
         <field name="name">Application Stage Changed</field>
         <field name="res_model">hr.job</field>
-        <field name="default" eval="False"/>
+        <field name="default" eval="True"/>
         <field name="parent_id" eval="ref('mt_applicant_stage_changed')"/>
         <field name="relation_field">job_id</field>
     </record>
@@ -478,7 +478,7 @@
     <record id="mt_applicant_employee" model="mail.message.subtype">
         <field name="name">Applicant Assigned</field>
         <field name="res_model">hr.job</field>
-        <field name="default" eval="False"/>
+        <field name="default" eval="True"/>
         <field name="description">Applicant Hired</field>
     </record>
 
