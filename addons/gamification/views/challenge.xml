@@ -34,13 +34,9 @@
             <field name="arch" type="xml">
                 <form string="Goal definitions" version="7.0">
                     <header>
-                        <button string="Start Now" type="object" name="action_start" states="draft" class="oe_highlight"/>
                         <button string="Refresh Challenge" type="object" name="action_check" states="inprogress"/>
-                        <button string="Close Challenge" type="object" name="action_close" states="inprogress" class="oe_highlight"/>
-                        <button string="Reset to Draft" type="object" name="action_cancel" states="inprogress"/>
-                        <button string="Reset Completion" type="object" name="action_reset" states="done"/>
                         <button string="Report Progress" type="object" name="action_report_progress" states="inprogress,done" groups="base.group_no_one"/>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
 

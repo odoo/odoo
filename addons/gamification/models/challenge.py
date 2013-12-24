@@ -221,7 +221,9 @@ class gamification_challenge(osv.Model):
         return create_res
 
     def write(self, cr, uid, ids, vals, context=None):
-        """Overwrite the write method to add the user of groups"""
+        if isinstance(ids, (int,long)):
+            ids = [ids]
+
         # add users when change the group auto-subscription
         if vals.get('autojoin_group_id'):
             new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
@@ -230,6 +232,29 @@ class gamification_challenge(osv.Model):
                 vals['user_ids'] = []
             vals['user_ids'] += [(4, user.id) for user in new_group.users]
 
+        print vals.get('state')
+        if vals.get('state') == 'inprogress':
+
+            if not vals.get('autojoin_group_id'):
+                # starting challenge, add users in autojoin group
+                if not vals.get('user_ids'):
+                    vals['user_ids'] = []
+                for challenge in self.browse(cr, uid, ids, context=context):
+                    if challenge.autojoin_group_id:
+                        vals['user_ids'] += [(4, user.id) for user in challenge.autojoin_group_id.users]
+                    if challenge.state == 'draft':
+                        # going from draft to inprogress
+                        self.message_post(cr, uid, challenge.id, body="New challenge started.", context=context)
+            self.generate_goals_from_challenge(cr, uid, ids, context=context)
+
+        elif vals.get('state') == 'done':
+            self.check_challenge_reward(cr, uid, ids, force=True, context=context)
+
+        elif vals.get('state') == 'draft':
+            # resetting progress
+            if self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids), ('state', 'in', ['inprogress', 'inprogress_update'])], context=context):
+                raise osv.except_osv("Error", "You can not reset a challenge with unfinished goals.")
+        
         write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
 
         # subscribe new users to the challenge
@@ -272,6 +297,9 @@ class gamification_challenge(osv.Model):
 
         :param list(int) ids: the ids of the challenges to update, if False will
         update only challenges in progress."""
+        if isinstance(ids, (int,long)):
+            ids = [ids]
+
         goal_obj = self.pool.get('gamification.goal')
 
         # we use yesterday to update the goals that just ended
@@ -319,60 +347,12 @@ class gamification_challenge(osv.Model):
         return True
 
 
-    ##### User actions #####
-
-    def action_start(self, cr, uid, ids, context=None):
-        """Start a draft challenge
-
-        Change the state of the challenge to in progress and generate related goals
-        """
-        if isinstance(ids, (int,long)):
-            ids = [ids]
-        # subscribe users if autojoin group
-        for challenge in self.browse(cr, uid, ids, context=context):
-            if challenge.autojoin_group_id:
-                self.write(cr, uid, [challenge.id], {'user_ids': [(4, user.id) for user in challenge.autojoin_group_id.users]}, context=context)
-
-            self.write(cr, uid, challenge.id, {'state': 'inprogress'}, context=context)
-            self.message_post(cr, uid, challenge.id, body="New challenge started.", context=context)
-        return self.generate_goals_from_challenge(cr, uid, ids, context=context)
-
     def action_check(self, cr, uid, ids, context=None):
         """Check a challenge
 
         Create goals that haven't been created yet (eg: if added users)
         Recompute the current value for each goal related"""
-        if isinstance(ids, (int,long)):
-            ids = [ids]
         return self._update_all(cr, uid, ids=ids, context=context)
-
-    def action_close(self, cr, uid, ids, context=None):
-        """Close a challenge in progress
-
-        Change the state of the challenge to in done
-        Does NOT close the related goals, this is handled by the goal itself"""
-        self.check_challenge_reward(cr, uid, ids, force=True, context=context)
-        return self.write(cr, uid, ids, {'state': 'done'}, context=context)
-
-    def action_reset(self, cr, uid, ids, context=None):
-        """Reset a closed challenge
-
-        Change the state of the challenge to in progress
-        Closing a challenge does not affect the goals so neither does reset"""
-        return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        """Cancel a challenge in progress
-
-        Change the state of the challenge to draft
-        Cancel the related goals"""
-        if isinstance(ids, (int,long)):
-            ids = [ids]
-        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
-        goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids)], context=context)
-        self.pool.get('gamification.goal').write(cr, uid, goal_ids, {'state': 'canceled'}, context=context)
-
-        return True
 
     def action_report_progress(self, cr, uid, ids, context=None):
         """Manual report of a goal, does not influence automatic report frequency"""
