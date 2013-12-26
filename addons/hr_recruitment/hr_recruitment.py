@@ -447,7 +447,7 @@ class hr_applicant(osv.Model):
                 contact_name = self.pool.get('res.partner').name_get(cr, uid, [applicant.partner_id.id])[0][1]
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
-                emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or contact_name,
+                emp_id = hr_employee.create(cr, uid, {'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id or False,
