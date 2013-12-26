@@ -17,6 +17,43 @@
         <field name="name">Interview</field>
     </record>
 
+    <!-- Templates for interest / refusing applicants -->
+    <record id="applicant_refuse" model="email.template">
+        <field name="name">Application refused</field>
+        <field name="subject">Application refused</field>
+        <field name="email_to">${object.email_from}</field>
+        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
+        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="user_signature" eval="0"/>
+        <field name="body_html"><![CDATA[<p>Dear ${object.partner_name or 'applicant'},</p>
+        <p>We thank you for your interest in our company and for your application.
+        Unfortunately, your profile does not match with our needs or our recruitment
+        campaign has reached its term.</p>
+        <p>If you want more details, feel free to contact us by phone.</p>
+        <p>Kind regards,</p>
+        <br/>
+         ${object.user_id and object.user_id.signature or ''}]]></field>
+    </record>
+
+    <record id="applicant_interest" model="email.template">
+        <field name="name">Application approved</field>
+        <field name="subject">Application approved</field>
+        <field name="email_to">${object.email_from}</field>
+        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
+        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="user_signature" eval="0"/>
+        <field name="body_html"><![CDATA[<p>Dear ${object.partner_name or 'applicant'},</p>
+        <p>Congrats! Your resume's got our interest!
+        I will call you as soon as possible to make a 10 minutes phone interview and  plan a first meeting.</p>
+        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030
+        If I do not answer, please let me a message with some schedules to call you back.</p>
+        <p>Kind regards,</p>
+        <br/>
+         ${object.user_id.signature}]]></field>
+    </record>
+
         <!--    HR Recruitment Source        -->
 
     <record model="hr.recruitment.source" id="source_linkedin">
@@ -58,6 +95,7 @@
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
+        <field name="template_id" ref="applicant_interest"/>
         <field name="sequence">2</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">
@@ -76,6 +114,7 @@
     <record model="hr.recruitment.stage" id="stage_job6">
         <field name="name">Refused</field>
         <field name="sequence">6</field>
+        <field name="template_id" ref="applicant_refuse"/>
         <field name="fold" eval="True"/>
     </record>
 
@@ -470,7 +509,7 @@
     <record id="mt_job_applicant_stage" model="mail.message.subtype">
         <field name="name">Application Stage Changed</field>
         <field name="res_model">hr.job</field>
-        <field name="default" eval="False"/>
+        <field name="default" eval="True"/>
         <field name="parent_id" eval="ref('mt_applicant_stage_changed')"/>
         <field name="relation_field">job_id</field>
     </record>
@@ -478,7 +517,7 @@
     <record id="mt_applicant_employee" model="mail.message.subtype">
         <field name="name">Applicant Assigned</field>
         <field name="res_model">hr.job</field>
-        <field name="default" eval="False"/>
+        <field name="default" eval="True"/>
         <field name="description">Applicant Hired</field>
     </record>
 

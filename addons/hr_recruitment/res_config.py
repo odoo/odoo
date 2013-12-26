@@ -26,7 +26,7 @@ class hr_applicant_settings(osv.osv_memory):
     _inherit = ['hr.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'module_document_ftp': fields.boolean('Allow the automatic indexation of resumes',
+        'module_document': fields.boolean('Allow the automatic indexation of resumes',
             help='Manage your CV\'s and motivation letter related to all applicants.\n'
                  '-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)'),
         'fetchmail_applicants': fields.boolean('Create applicants from an incoming email account',
@@ -35,6 +35,10 @@ class hr_applicant_settings(osv.osv_memory):
                  'and create automatically application documents in the system.'),
         'alias_prefix': fields.char('Default Alias Name for Jobs'),
         'alias_domain' : fields.char('Alias Domain'),
+    }
+
+    _defaults = {
+        'alias_domain': lambda self, cr, uid, context:self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context),
     }
 
     def get_default_alias_prefix(self, cr, uid, ids, context=None):
@@ -66,13 +70,3 @@ class hr_applicant_settings(osv.osv_memory):
                 else:
                     mail_alias.create_unique_alias(cr, uid, {'alias_name': record.alias_prefix}, model_name="hr.applicant", context=context)
         return True
-
-    def get_default_alias_domain(self, cr, uid, ids, context=None):
-        alias_domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
-        if not alias_domain:
-            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
-            try:
-                alias_domain = urlparse.urlsplit(domain).netloc.split(':')[0]
-            except Exception:
-                pass
-        return {'alias_domain': alias_domain}

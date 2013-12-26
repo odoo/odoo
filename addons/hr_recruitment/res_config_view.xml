@@ -15,14 +15,8 @@
             <field name="arch" type="xml">
                 <div name="recruitment" position="inside">
                     <div>
-                        <field name="fetchmail_applicants" class="oe_inline"/>
-                        <label for="fetchmail_applicants"/>
-                        <button name="configure_fetchmail_applicants" type="object" string="Configure" icon="gtk-go-forward"
-                            attrs="{'invisible': [('fetchmail_applicants','=',False)]}" class="oe_link"/>
-                    </div>
-                    <div>
-                        <field name="module_document_ftp" class="oe_inline"/>
-                        <label for="module_document_ftp"/>
+                        <field name="module_document" class="oe_inline"/>
+                        <label for="module_document"/>
                     </div>
                 </div>
                 <xpath expr="//div[@name='hr_recruitment']" position="after">

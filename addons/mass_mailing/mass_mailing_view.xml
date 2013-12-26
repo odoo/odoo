@@ -252,6 +252,9 @@
                                         <t t-if="widget.view.is_action_enabled('edit')">
                                             <li><a type="edit">Settings</a></li>
                                         </t>
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a name="%(action_mail_mass_mailing_create)d" type="action">New Wave</a></li>
+                                        </t>
                                         <t t-if="widget.view.is_action_enabled('delete')">
                                             <li><a type="delete">Delete</a></li>
                                         </t>

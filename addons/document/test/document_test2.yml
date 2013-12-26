@@ -59,6 +59,23 @@
         ids = self.search(cr, uid, [('res_model', '=', 'res.country'), ('res_id', '=', ref("base.za"))])
         assert ids == [ ref("attach_3rd")], ids
 -
+    I test that I can't create duplicate directories (even when duplicates are hidden by a record rule)
+- 
+    !python {model: document.directory}: |
+        duplicate_detected = False
+        from openerp.osv.osv import except_osv
+        try:
+            demo_uid = ref('base.user_demo')
+            dir_vals = {
+                'name': 'Testing (will be deleted!)',
+                'parent_id': ref('document.dir_root')
+            }
+            new_dir_id = self.create(cr, demo_uid, dir_vals, context=None)
+            self.unlink(cr, uid, [new_dir_id], context=None)
+        except except_osv, e:
+            duplicate_detected = e.value == u'Directory name must be unique!'
+        assert duplicate_detected is True, 'Failed to detect duplicate directory'
+-
     I delete the attachments
 -
     !python {model: ir.attachment}: |

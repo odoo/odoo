@@ -144,13 +144,13 @@ class hr_job(osv.osv):
     def action_employee_to_hire(self, cr, uid, id, value, context=None):
         return self.write(cr, uid, [id], {'no_of_recruitment': value}, context=context)
 
-    def job_recruitment(self, cr, uid, ids, *args):
+    def job_recruitment(self, cr, uid, ids, context=None):
         for job in self.browse(cr, uid, ids):
             no_of_recruitment = job.no_of_recruitment == 0 and 1 or job.no_of_recruitment
             self.write(cr, uid, [job.id], {'state': 'recruit', 'no_of_recruitment': no_of_recruitment})
         return True
 
-    def job_open(self, cr, uid, ids, *args):
+    def job_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0,'no_of_hired_employee': 0})
         return True
 
