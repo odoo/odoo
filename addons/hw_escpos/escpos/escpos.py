@@ -11,6 +11,13 @@ import qrcode
 import time
 import copy
 
+try:
+    import jcconv
+except:
+    jcconv = None
+    print 'ESC/POS: please install jcconv for improved Japanese receipt printing:'
+    print ' # pip install jcconv'
+
 from constants import *
 from exceptions import *
 
@@ -174,6 +181,8 @@ class Escpos:
 
     def text(self,txt):
         """ Print Utf8 encoded alpha-numeric text """
+        if not txt:
+            return
         try:
             txt = txt.decode('utf-8')
         except:
@@ -182,9 +191,16 @@ class Escpos:
             except:
                 pass
 
-        def encode_char(char):
+        self.extra_chars = 0
+        
+        def encode_char(char):  
+            """ 
+            Encodes a single utf-8 character into a sequence of 
+            esc-pos code page change instructions and character declarations 
+            """ 
+            char_utf8 = char.encode('utf-8')
             encoded  = ''
-            encoding = self.encoding
+            encoding = self.encoding # we reuse the last encoding to prevent code page switches at every character
             encodings = {
                     'cp437': TXT_ENC_PC437,
                     'cp850': TXT_ENC_PC850,
@@ -194,38 +210,74 @@ class Escpos:
                     'cp863': TXT_ENC_PC863,
                     'cp865': TXT_ENC_PC865,
                     'cp866': TXT_ENC_PC866,
+                    'katakana' : TXT_ENC_KATAKANA,
+                    # TODO Support other encodings not natively supported by python
             }
             remaining = copy.copy(encodings)
 
             if not encoding :
                 encoding = 'cp437'
 
-            while True:
+            while True: # Trying all encoding until one succeeds
                 try:
-                    encoded = char.encode(encoding)
-                    break
-                except ValueError:
+                    if encoding == 'katakana': # Japanese characters
+                        if jcconv:
+                            # try to convert japanese text to a half-katakanas 
+                            kata = jcconv.kata2half(jcconv.hira2kata(char_utf8))
+                            if kata != char_utf8:
+                                self.extra_chars += len(kata.decode('utf-8')) - 1
+                                # the conversion may result in multiple characters
+                                return encode_str(kata.decode('utf-8')) 
+                        else:
+                             kata = char_utf8
+                        
+                        if kata in TXT_ENC_KATAKANA_MAP:
+                            encoded = TXT_ENC_KATAKANA_MAP[kata]
+                            break
+                        else: 
+                            raise ValueError()
+                    else:
+                        encoded = char.encode(encoding)
+                        break
+
+                except ValueError: #the encoding failed, select another one and retry
                     if encoding in remaining:
                         del remaining[encoding]
                     if len(remaining) >= 1:
                         encoding = remaining.items()[0][0]
                     else:
-                        print 'COULD NOT ENCODE:',char, char.__repr__()
-                        encoded = '\xA8'    # could not encode, output error character
+                        encoding = 'cp437'
+                        encoded  = '\xb1'    # could not encode, output error character
                         break;
 
             if encoding != self.encoding:
+                # if the encoding changed, remember it and prefix the character with
+                # the esc-pos encoding change sequence
                 self.encoding = encoding
                 encoded = encodings[encoding] + encoded
 
             return encoded
+        
+        def encode_str(txt):
+            buffer = ''
+            for c in txt:
+                buffer += encode_char(c)
+            return buffer
 
-        buffer = ''
-        for char in txt:
-            buffer += encode_char(char)
+        txt = encode_str(txt)
 
-        if buffer:
-            self._raw(buffer)
+        # if the utf-8 -> codepage conversion inserted extra characters, 
+        # remove double spaces to try to restore the original string length
+        # and prevent printing alignment issues
+        while self.extra_chars > 0: 
+            dspace = txt.find('  ')
+            if dspace > 0:
+                txt = txt[:dspace] + txt[dspace+1:]
+                self.extra_chars -= 1
+            else:
+                break
+
+        self._raw(txt)
         
     def set(self, align='left', font='a', type='normal', width=1, height=1):
         """ Set text properties """

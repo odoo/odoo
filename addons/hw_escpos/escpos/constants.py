@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """ ESC/POS Commands (Constants) """
 
 # Feed control sequences
@@ -30,6 +32,7 @@ TXT_FONT_B      = '\x1b\x4d\x01' # Font type B
 TXT_ALIGN_LT    = '\x1b\x61\x00' # Left justification
 TXT_ALIGN_CT    = '\x1b\x61\x01' # Centering
 TXT_ALIGN_RT    = '\x1b\x61\x02' # Right justification
+
 # Text Encoding
 
 TXT_ENC_PC437   = '\x1b\x74\x00' # PC437 USA
@@ -46,9 +49,78 @@ TXT_ENC_PC866   = '\x1b\x74\x11' # PC866 Cyrillic #2
 TXT_ENC_PC852   = '\x1b\x74\x12' # PC852 Latin2
 TXT_ENC_PC858   = '\x1b\x74\x13' # PC858 Euro
 
+TXT_ENC_KATAKANA_MAP = {
+  # Maps UTF-8 Katakana symbols to KATAKANA Page Codes
 
+  # Half-Width Katakanas
+  '\xef\xbd\xa1':'\xa1',  # ｡
+  '\xef\xbd\xa2':'\xa2',  # ｢
+  '\xef\xbd\xa3':'\xa3',  # ｣
+  '\xef\xbd\xa4':'\xa4',  # ､
+  '\xef\xbd\xa5':'\xa5',  # ･
 
-# Barcode format
+  '\xef\xbd\xa6':'\xa6',  # ｦ
+  '\xef\xbd\xa7':'\xa7',  # ｧ
+  '\xef\xbd\xa8':'\xa8',  # ｨ
+  '\xef\xbd\xa9':'\xa9',  # ｩ
+  '\xef\xbd\xaa':'\xaa',  # ｪ
+  '\xef\xbd\xab':'\xab',  # ｫ
+  '\xef\xbd\xac':'\xac',  # ｬ
+  '\xef\xbd\xad':'\xad',  # ｭ
+  '\xef\xbd\xae':'\xae',  # ｮ
+  '\xef\xbd\xaf':'\xaf',  # ｯ
+  '\xef\xbd\xb0':'\xb0',  # ｰ
+  '\xef\xbd\xb1':'\xb1',  # ｱ
+  '\xef\xbd\xb2':'\xb2',  # ｲ
+  '\xef\xbd\xb3':'\xb3',  # ｳ
+  '\xef\xbd\xb4':'\xb4',  # ｴ
+  '\xef\xbd\xb5':'\xb5',  # ｵ
+  '\xef\xbd\xb6':'\xb6',  # ｶ
+  '\xef\xbd\xb7':'\xb7',  # ｷ
+  '\xef\xbd\xb8':'\xb8',  # ｸ
+  '\xef\xbd\xb9':'\xb9',  # ｹ
+  '\xef\xbd\xba':'\xba',  # ｺ
+  '\xef\xbd\xbb':'\xbb',  # ｻ
+  '\xef\xbd\xbc':'\xbc',  # ｼ
+  '\xef\xbd\xbd':'\xbd',  # ｽ
+  '\xef\xbd\xbe':'\xbe',  # ｾ
+  '\xef\xbd\xbf':'\xbf',  # ｿ
+  '\xef\xbe\x80':'\xc0',  # ﾀ
+  '\xef\xbe\x81':'\xc1',  # ﾁ
+  '\xef\xbe\x82':'\xc2',  # ﾂ
+  '\xef\xbe\x83':'\xc3',  # ﾃ
+  '\xef\xbe\x84':'\xc4',  # ﾄ
+  '\xef\xbe\x85':'\xc5',  # ﾅ
+  '\xef\xbe\x86':'\xc6',  # ﾆ
+  '\xef\xbe\x87':'\xc7',  # ﾇ
+  '\xef\xbe\x88':'\xc8',  # ﾈ
+  '\xef\xbe\x89':'\xc9',  # ﾉ
+  '\xef\xbe\x8a':'\xca',  # ﾊ
+  '\xef\xbe\x8b':'\xcb',  # ﾋ
+  '\xef\xbe\x8c':'\xcc',  # ﾌ
+  '\xef\xbe\x8d':'\xcd',  # ﾍ
+  '\xef\xbe\x8e':'\xce',  # ﾎ
+  '\xef\xbe\x8f':'\xcf',  # ﾏ
+  '\xef\xbe\x90':'\xd0',  # ﾐ
+  '\xef\xbe\x91':'\xd1',  # ﾑ
+  '\xef\xbe\x92':'\xd2',  # ﾒ
+  '\xef\xbe\x93':'\xd3',  # ﾓ
+  '\xef\xbe\x94':'\xd4',  # ﾔ
+  '\xef\xbe\x95':'\xd5',  # ﾕ
+  '\xef\xbe\x96':'\xd6',  # ﾖ
+  '\xef\xbe\x97':'\xd7',  # ﾗ
+  '\xef\xbe\x98':'\xd8',  # ﾘ
+  '\xef\xbe\x99':'\xd9',  # ﾙ
+  '\xef\xbe\x9a':'\xda',  # ﾚ
+  '\xef\xbe\x9b':'\xdb',  # ﾛ
+  '\xef\xbe\x9c':'\xdc',  # ﾜ
+  '\xef\xbe\x9d':'\xdd',  # ﾝ
+
+  '\xef\xbe\x9e':'\xde',  # ﾞ
+  '\xef\xbe\x9f':'\xdf',  # ﾟ
+}
+
+# Barcod format
 BARCODE_TXT_OFF = '\x1d\x48\x00' # HRI barcode chars OFF
 BARCODE_TXT_ABV = '\x1d\x48\x01' # HRI barcode chars above
 BARCODE_TXT_BLW = '\x1d\x48\x02' # HRI barcode chars below

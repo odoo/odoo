@@ -869,6 +869,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 client: client ? client.name : null ,
                 invoice_id: null,   //TODO
                 cashier: cashier ? cashier.name : null,
+                precision: {
+                    price: 2,
+                    money: 2,
+                    quantity: 3,
+                },
                 date: { 
                     year: date.getFullYear(), 
                     month: date.getMonth(), 
