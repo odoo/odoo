@@ -559,6 +559,7 @@ class hr_job(osv.osv):
         model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base','action_attachment')
         action = self.pool.get(model).read(cr, uid, action_id, context=context)
         applicant_ids = self.pool.get('hr.applicant').search(cr, uid, [('job_id', 'in', ids)], context=context)
+        action['context'] = {'default_res_model': self._name,'default_res_id': ids[0]}
         action['domain'] = str(['|', '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', ids), '&',('res_model', '=', 'hr.applicant'), ('res_id', 'in', applicant_ids)])
         return action
 
