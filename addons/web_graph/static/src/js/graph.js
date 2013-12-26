@@ -283,8 +283,6 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         }
         if (this.pivot.no_data) {
             this.$('.graph_main_content').append($(QWeb.render('graph_no_data')));
-            // var msg = 'No data available. Try to remove any filter or add some data.';
-            // this.table.append($('<tr><td>' + msg + '</td></tr>'));
         } else {
             var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
             if (_.contains(table_modes, this.mode)) {
