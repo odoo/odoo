@@ -1348,12 +1348,21 @@ instance.web.View = instance.web.Widget.extend({
         var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
         var handler = function (action) {
             if (action && action.constructor == Object) {
-                var ncontext = new instance.web.CompoundContext(context);
+                // filter out context keys that are specific to the action model.
+                // Wrong default_ and search_default values will no give the expected views
+                // Wrong group_by values will simply fail and forbid rendering of the destination view
+                var view_refs = _(action.views).map(function(view){return view[1] + '_view_ref';}).join('|');
+                var ncontext = new instance.web.CompoundContext(
+                    self.object(_.reject(self.pairs(dataset.get_context().eval()), function(pair) {
+                      return pair[0].match('^(?:(?:default_|search_default_)|(?:'+view_refs+')|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
+                    }))
+                );
+                ncontext.add(action_data.context || {});
+                ncontext.add({active_model: dataset.model});
                 if (record_id) {
                     ncontext.add({
                         active_id: record_id,
                         active_ids: [record_id],
-                        active_model: dataset.model
                     });
                 }
                 ncontext.add(action.context || {});
@@ -1396,6 +1405,31 @@ instance.web.View = instance.web.Widget.extend({
         } else  {
             return dataset.exec_workflow(record_id, action_data.name).then(handler);
         }
+    },
+    // Convert an object into a list of `[key, value]` pairs.
+    pairs: function(obj) {
+        var keys = _.keys(obj);
+        var length = keys.length;
+        var pairs = new Array(length);
+        for (var i = 0; i < length; i++) {
+          pairs[i] = [keys[i], obj[keys[i]]];
+        }
+        return pairs;
+    },
+    // Converts lists into objects. Pass either a single array of `[key, value]`
+    // pairs, or two parallel arrays of the same length -- one of keys, and one of
+    // the corresponding values.
+    object: function(list, values) {
+        if (list == null) return {};
+        var result = {};
+        for (var i = 0, length = list.length; i < length; i++) {
+          if (values) {
+            result[list[i]] = values[i];
+          } else {
+            result[list[i][0]] = list[i][1];
+          }
+        }
+        return result;
     },
     /**
      * Directly set a view to use instead of calling fields_view_get. This method must
