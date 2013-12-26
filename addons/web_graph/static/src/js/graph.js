@@ -119,6 +119,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         if (!this.graph_widget.enabled) {
             this.graph_widget.activate_display();
+            this.ViewManager.on('switch_mode', this, function () {this.graph_widget.pivot.update_data(); });
         }
     },
 
