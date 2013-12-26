@@ -952,7 +952,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     result, rows, warning_msg, dummy = registry[model].import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
     if result < 0:
         # Report failed import and abort module install
-        raise Exception(_('Module loading failed: file %s/%s could not be processed:\n %s') % (module, fname, warning_msg))
+        raise Exception(_('Module loading %s failed: file %s could not be processed:\n %s') % (module, fname, warning_msg))
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
         data[fname_partial] = 0
