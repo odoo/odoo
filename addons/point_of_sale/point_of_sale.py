@@ -714,13 +714,14 @@ class pos_order(osv.osv):
             }, context=context)
             self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
             location_id = order.warehouse_id.lot_stock_id.id
-            output_id = order.warehouse_id.lot_output_id.id
+            if order.partner_id:
+                destination_id = order.partner_id.property_stock_customer.id
+            else:
+                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
 
             for line in order.lines:
                 if line.product_id and line.product_id.type == 'service':
                     continue
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
 
                 move_obj.create(cr, uid, {
                     'name': line.name,
@@ -732,11 +733,9 @@ class pos_order(osv.osv):
                     'product_qty': abs(line.qty),
                     'tracking_id': False,
                     'state': 'draft',
-                    'location_id': location_id,
-                    'location_dest_id': output_id,
+                    'location_id': location_id if line.qty >= 0 else destination_id,
+                    'location_dest_id': destination_id if line.qty >= 0 else location_id,
                 }, context=context)
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
             
             picking_obj.signal_button_confirm(cr, uid, [picking_id])
             picking_obj.force_assign(cr, uid, [picking_id], context)
@@ -747,7 +746,6 @@ class pos_order(osv.osv):
         @return: True
         """
         stock_picking_obj = self.pool.get('stock.picking')
-        wf_service = netsvc.LocalService("workflow")
         for order in self.browse(cr, uid, ids, context=context):
             stock_picking_obj.signal_button_cancel(cr, uid, [order.picking_id.id])
             if stock_picking_obj.browse(cr, uid, order.picking_id.id, context=context).state <> 'cancel':

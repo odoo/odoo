@@ -252,13 +252,10 @@ class mail_thread(osv.AbstractModel):
                 new = set(command[2])
 
         # remove partners that are no longer followers
-        fol_ids = fol_obj.search(cr, SUPERUSER_ID,
-            [('res_model', '=', self._name), ('res_id', '=', id), ('partner_id', 'not in', list(new))])
-        fol_obj.unlink(cr, SUPERUSER_ID, fol_ids)
+        self.message_unsubscribe(cr, uid, [id], list(old-new))
 
         # add new followers
-        for partner_id in new - old:
-            fol_obj.create(cr, SUPERUSER_ID, {'res_model': self._name, 'res_id': id, 'partner_id': partner_id})
+        self.message_subscribe(cr, uid, [id], list(new-old))
 
     def _search_followers(self, cr, uid, obj, name, args, context):
         """Search function for message_follower_ids
@@ -346,6 +343,7 @@ class mail_thread(osv.AbstractModel):
         """
         if context is None:
             context = {}
+
         thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
@@ -355,6 +353,7 @@ class mail_thread(osv.AbstractModel):
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
+
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
         for key, val in context.iteritems():
@@ -363,20 +362,27 @@ class mail_thread(osv.AbstractModel):
         self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
 
         # track values
-        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        track_ctx = dict(context)
+        if 'lang' not in track_ctx:
+            track_ctx['lang'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).lang
+        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
         if tracked_fields:
             initial_values = {thread_id: dict((item, False) for item in tracked_fields)}
-            self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=context)
-
+            self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=track_ctx)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
+        if context is None:
+            context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
         # Track initial values of tracked fields
-        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        track_ctx = dict(context)
+        if 'lang' not in track_ctx:
+            track_ctx['lang'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).lang
+        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=track_ctx)
         if tracked_fields:
-            records = self.browse(cr, uid, ids, context=context)
+            records = self.browse(cr, uid, ids, context=track_ctx)
             initial_values = dict((this.id, dict((key, getattr(this, key)) for key in tracked_fields.keys())) for this in records)
 
         # Perform write, update followers
@@ -385,7 +391,7 @@ class mail_thread(osv.AbstractModel):
 
         # Perform the tracking
         if tracked_fields:
-            self.message_track(cr, uid, ids, tracked_fields, initial_values, context=context)
+            self.message_track(cr, uid, ids, tracked_fields, initial_values, context=track_ctx)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
@@ -716,8 +722,8 @@ class mail_thread(osv.AbstractModel):
         # Private message: should not contain any thread_id
         if not model and thread_id:
             if assert_model:
-                assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message).'
-            _warn('posting a message without model should be with a null res_id (private message), resetting thread_id')
+                assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message), received %s.' % thread_id
+            _warn('posting a message without model should be with a null res_id (private message), received %s, resetting thread_id' % thread_id)
             thread_id = 0
         # Private message: should have a parent_id (only answers)
         if not model and not message_dict.get('parent_id'):
@@ -814,6 +820,7 @@ class mail_thread(osv.AbstractModel):
            :return: list of [model, thread_id, custom_values, user_id, alias]
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
+        mail_msg_obj = self.pool['mail.message']
         fallback_model = model
 
         # Get email.message.Message variables for future processing
@@ -822,31 +829,54 @@ class mail_thread(osv.AbstractModel):
         email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
-
-        # 1. Verify if this is a reply to an existing thread
         thread_references = references or in_reply_to
+
+        # 1. message is a reply to an existing message (exact match of message_id)
+        msg_references = thread_references.split()
+        mail_message_ids = mail_msg_obj.search(cr, uid, [('message_id', 'in', msg_references)], context=context)
+        if mail_message_ids:
+            original_msg = mail_msg_obj.browse(cr, SUPERUSER_ID, mail_message_ids[0], context=context)
+            model, thread_id = original_msg.model, original_msg.res_id
+            _logger.info(
+                'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                email_from, email_to, message_id, model, thread_id, custom_values, uid)
+            route = self.message_route_verify(
+                cr, uid, message, message_dict,
+                (model, thread_id, custom_values, uid, None),
+                update_author=True, assert_model=True, create_fallback=True, context=context)
+            return route and [route] or []
+
+        # 2. message is a reply to an existign thread (6.1 compatibility)
         ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
             thread_id = int(ref_match.group(1))
             model = ref_match.group(2) or fallback_model
             if thread_id and model in self.pool:
                 model_obj = self.pool[model]
-                if model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
-                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                                    email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                    route = self.message_route_verify(cr, uid, message, message_dict,
-                                    (model, thread_id, custom_values, uid, None),
-                                    update_author=True, assert_model=True, create_fallback=True, context=context)
+                compat_mail_msg_ids = mail_msg_obj.search(
+                    cr, uid, [
+                        ('message_id', '=', False),
+                        ('model', '=', model),
+                        ('res_id', '=', thread_id),
+                    ], context=context)
+                if compat_mail_msg_ids and model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
+                    _logger.info(
+                        'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                        email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                    route = self.message_route_verify(
+                        cr, uid, message, message_dict,
+                        (model, thread_id, custom_values, uid, None),
+                        update_author=True, assert_model=True, create_fallback=True, context=context)
                     return route and [route] or []
 
         # 2. Reply to a private message
         if in_reply_to:
-            mail_message_ids = self.pool.get('mail.message').search(cr, uid, [
+            mail_message_ids = mail_msg_obj.search(cr, uid, [
                                 ('message_id', '=', in_reply_to),
                                 '!', ('message_id', 'ilike', 'reply_to')
                             ], limit=1, context=context)
             if mail_message_ids:
-                mail_message = self.pool.get('mail.message').browse(cr, uid, mail_message_ids[0], context=context)
+                mail_message = mail_msg_obj.browse(cr, uid, mail_message_ids[0], context=context)
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
                                 email_from, email_to, message_id, mail_message.id, custom_values, uid)
                 route = self.message_route_verify(cr, uid, message, message_dict,
@@ -1089,7 +1119,7 @@ class mail_thread(osv.AbstractModel):
                 encoding = part.get_content_charset()  # None if attachment
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
+                    attachments.append((decode(filename) or 'attachment', part.get_payload(decode=True)))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
@@ -1314,6 +1344,40 @@ class mail_thread(osv.AbstractModel):
                     mail_message_obj.write(cr, SUPERUSER_ID, message_ids, {'author_id': partner_info['partner_id']}, context=context)
         return result
 
+    def _message_preprocess_attachments(self, cr, uid, attachments, attachment_ids, attach_model, attach_res_id, context=None):
+        """ Preprocess attachments for mail_thread.message_post() or mail_mail.create().
+
+        :param list attachments: list of attachment tuples in the form ``(name,content)``,
+                                 where content is NOT base64 encoded
+        :param list attachment_ids: a list of attachment ids, not in tomany command form
+        :param str attach_model: the model of the attachments parent record
+        :param integer attach_res_id: the id of the attachments parent record
+        """
+        Attachment = self.pool['ir.attachment']
+        m2m_attachment_ids = []
+        if attachment_ids:
+            filtered_attachment_ids = Attachment.search(cr, SUPERUSER_ID, [
+                ('res_model', '=', 'mail.compose.message'),
+                ('create_uid', '=', uid),
+                ('id', 'in', attachment_ids)], context=context)
+            if filtered_attachment_ids:
+                Attachment.write(cr, SUPERUSER_ID, filtered_attachment_ids, {'res_model': attach_model, 'res_id': attach_res_id}, context=context)
+            m2m_attachment_ids += [(4, id) for id in attachment_ids]
+        # Handle attachments parameter, that is a dictionary of attachments
+        for name, content in attachments:
+            if isinstance(content, unicode):
+                content = content.encode('utf-8')
+            data_attach = {
+                'name': name,
+                'datas': base64.b64encode(str(content)),
+                'datas_fname': name,
+                'description': name,
+                'res_model': attach_model,
+                'res_id': attach_res_id,
+            }
+            m2m_attachment_ids.append((0, 0, data_attach))
+        return m2m_attachment_ids
+
     def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
                      subtype=None, parent_id=False, attachments=None, context=None,
                      content_subtype='html', **kwargs):
@@ -1392,28 +1456,7 @@ class mail_thread(osv.AbstractModel):
 
         # 3. Attachments
         #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
-        attachment_ids = kwargs.pop('attachment_ids', []) or []  # because we could receive None (some old code sends None)
-        if attachment_ids:
-            filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
-                ('res_model', '=', 'mail.compose.message'),
-                ('create_uid', '=', uid),
-                ('id', 'in', attachment_ids)], context=context)
-            if filtered_attachment_ids:
-                ir_attachment.write(cr, SUPERUSER_ID, filtered_attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
-        attachment_ids = [(4, id) for id in attachment_ids]
-        # Handle attachments parameter, that is a dictionary of attachments
-        for name, content in attachments:
-            if isinstance(content, unicode):
-                content = content.encode('utf-8')
-            data_attach = {
-                'name': name,
-                'datas': base64.b64encode(str(content)),
-                'datas_fname': name,
-                'description': name,
-                'res_model': model,
-                'res_id': thread_id,
-            }
-            attachment_ids.append((0, 0, data_attach))
+        attachment_ids = self._message_preprocess_attachments(cr, uid, attachments, kwargs.pop('attachment_ids', []), model, thread_id, context)
 
         # 4: mail.message.subtype
         subtype_id = False
@@ -1501,35 +1544,33 @@ class mail_thread(osv.AbstractModel):
         else:
             self.check_access_rights(cr, uid, 'write')
 
-        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            existing_pids = set([f.id for f in record.message_follower_ids
-                                            if f.id in partner_ids])
+        existing_pids_dict = {}
+        fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        for fol in mail_followers_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context):
+            existing_pids_dict.setdefault(fol.res_id, set()).add(fol.partner_id.id)
+
+        # subtype_ids specified: update already subscribed partners
+        if subtype_ids and fol_ids:
+            mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+        # subtype_ids not specified: do not update already subscribed partner, fetch default subtypes for new partners
+        if subtype_ids is None:
+            subtype_ids = subtype_obj.search(
+                cr, uid, [
+                    ('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+
+        for id in ids:
+            existing_pids = existing_pids_dict.get(id, set())
             new_pids = set(partner_ids) - existing_pids
 
-            # subtype_ids specified: update already subscribed partners
-            if subtype_ids and existing_pids:
-                fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [
-                                                        ('res_model', '=', self._name),
-                                                        ('res_id', '=', record.id),
-                                                        ('partner_id', 'in', list(existing_pids)),
-                                                    ], context=context)
-                mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
-            # subtype_ids not specified: do not update already subscribed partner, fetch default subtypes for new partners
-            elif subtype_ids is None:
-                subtype_ids = subtype_obj.search(cr, uid, [
-                                                        ('default', '=', True),
-                                                        '|',
-                                                        ('res_model', '=', self._name),
-                                                        ('res_model', '=', False)
-                                                    ], context=context)
             # subscribe new followers
             for new_pid in new_pids:
-                mail_followers_obj.create(cr, SUPERUSER_ID, {
-                                                'res_model': self._name,
-                                                'res_id': record.id,
-                                                'partner_id': new_pid,
-                                                'subtype_ids': [(6, 0, subtype_ids)],
-                                            }, context=context)
+                mail_followers_obj.create(
+                    cr, SUPERUSER_ID, {
+                        'res_model': self._name,
+                        'res_id': id,
+                        'partner_id': new_pid,
+                        'subtype_ids': [(6, 0, subtype_ids)],
+                    }, context=context)
 
         return True
 
@@ -1548,7 +1589,14 @@ class mail_thread(osv.AbstractModel):
             self.check_access_rights(cr, uid, 'read')
         else:
             self.check_access_rights(cr, uid, 'write')
-        return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
+        fol_obj = self.pool['mail.followers']
+        fol_ids = fol_obj.search(
+            cr, SUPERUSER_ID, [
+                ('res_model', '=', self._name),
+                ('res_id', 'in', ids),
+                ('partner_id', 'in', partner_ids)
+            ], context=context)
+        return fol_obj.unlink(cr, SUPERUSER_ID, fol_ids, context=context)
 
     def _message_get_auto_subscribe_fields(self, cr, uid, updated_fields, auto_follow_fields=['user_id'], context=None):
         """ Returns the list of relational fields linking to res.users that should

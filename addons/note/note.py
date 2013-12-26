@@ -84,9 +84,10 @@ class note_note(osv.osv):
         return ids and ids[0] or False
 
     def _set_stage_per_user(self, cr, uid, id, name, value, args=None, context=None):
-        note = self.browse(cr, uid, id, context=context)
-        if not value: return False
-        stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid ]
+        if not value:
+            return False
+        note = self.browse(cr, SUPERUSER_ID, id, context=context)  # do it as SUPERUSER because when creating, followers are not necessariliry set (another function field)
+        stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid]
         return self.write(cr, uid, [id], {'stage_ids': [(6, 0, set(stage_ids))]}, context=context)
 
     def _get_stage_per_user(self, cr, uid, ids, name, args, context=None):
@@ -147,6 +148,7 @@ class note_note(osv.osv):
                     if result and result[0]['stage_id'][0] == current_stage_ids[0]:
                         dom_in = result[0]['__domain'].pop()
                         result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
+                        result[0]['stage_id_count'] += nb_notes_ws
                     else:
                         # add the first stage column
                         result = [{
