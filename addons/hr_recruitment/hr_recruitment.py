@@ -330,19 +330,12 @@ class hr_applicant(osv.Model):
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
-    def action_get_attachment_tree_view(self, cr, uid, ids, context):
-        domain = ['&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', ids)]
-        return {
-            'name': _('Attachments'),
-            'domain': domain,
-            'res_model': 'ir.attachment',
-            'type': 'ir.actions.act_window',
-            'view_id': False,
-            'view_mode': 'tree,form',
-            'view_type': 'form',
-            'limit': 80,
-            'context': "{'default_res_model': '%s'}" % (self._name)
-        }
+    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base','action_attachment')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name,'default_res_id': ids[0]}
+        action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', ids)])
+        return action
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(hr_applicant, self).message_get_suggested_recipients(cr, uid, ids, context=context)
