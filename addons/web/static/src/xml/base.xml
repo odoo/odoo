@@ -1036,7 +1036,7 @@
 <t t-name="Legend.kanban_state_legend">
     <span class="btn-group">
     <t t-foreach="widget.get('value')" t-as="rec">
-            <a  class="dropdown-toggle oe_legend" data-toggle="dropdown" href="#" t-if="legend_value === rec.name"  t-att-title="rec.description" >
+            <a  class="dropdown-toggle oe_legend" data-toggle="dropdown" href="#" t-if="legend_value === rec.name"  t-att-title="rec.description or rec.legend_name" >
                 <t t-raw="rec.body" /> 
             </a>
     </t>
@@ -1053,12 +1053,12 @@
     <ul style="list-style: none; padding-left: 5px;">
     <t t-foreach="widget.get('value')" t-as="test" >
         <t t-if="legend_value gte test.name and !test_first">
-            <li t-att-data-value="test.name - 1"  class="oe_left oe_legend"><a href="#"><t t-raw="test.body"/></a></li>
+            <li t-att-data-value="test.name - 1"  class="oe_left oe_legend"><a href="#" t-att-title="test.description or test.legend_name"><t t-raw="test.body"/></a></li>
         </t>
     </t>
     <t t-foreach="widget.get('value')" t-as="test" >
         <t t-if="legend_value lt test.name">
-            <li t-att-data-value="test.name" class="oe_left oe_legend"><a  href="#"><t t-raw="widget.get('value')[0].body"/></a></li>
+            <li t-att-data-value="test.name" class="oe_left oe_legend"><a  href="#" t-att-title="widget.get('value')[0].description or widget.get('value')[0].legend_name"><t t-raw="widget.get('value')[0].body"/></a></li>
         </t>
     </t>
     </ul>
