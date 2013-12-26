@@ -11,6 +11,7 @@ import math
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
 import usb.core
+from openerp.tools.translate import _
 from .. import escpos
 from ..escpos import printer
 #import escpos 
@@ -147,15 +148,15 @@ class EscposDriver(hw_proxy.Proxy):
         taxincluded = True
         if money(receipt['subtotal']) != money(receipt['total_with_tax']):
             eprint.text(printline('','-------'));
-            eprint.text(printline('Subtotal',money(receipt['subtotal']),width=40, ratio=0.6))
-            eprint.text(printline('Taxes',money(receipt['total_tax']),width=40, ratio=0.6))
+            eprint.text(printline(_('Subtotal'),money(receipt['subtotal']),width=40, ratio=0.6))
+            eprint.text(printline(_('Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
             taxincluded = False
 
 
         # Total
         eprint.text(printline('','-------'));
         eprint.set(align='center',height=2)
-        eprint.text(printline('         TOTAL',money(receipt['total_with_tax']),width=40, ratio=0.6))
+        eprint.text(printline(_('         TOTAL'),money(receipt['total_with_tax']),width=40, ratio=0.6))
         eprint.text('\n\n');
         
         # Paymentlines
@@ -165,15 +166,15 @@ class EscposDriver(hw_proxy.Proxy):
 
         eprint.text('\n');
         eprint.set(align='center',height=2)
-        eprint.text(printline('        CHANGE',money(receipt['change']),width=40, ratio=0.6))
+        eprint.text(printline(_('        CHANGE'),money(receipt['change']),width=40, ratio=0.6))
         eprint.set(align='center')
         eprint.text('\n');
 
         # Extra Payment info
         if receipt['total_discount'] != 0:
-            eprint.text(printline('Discounts',money(receipt['total_discount']),width=40, ratio=0.6))
+            eprint.text(printline(_('Discounts'),money(receipt['total_discount']),width=40, ratio=0.6))
         if taxincluded:
-            eprint.text(printline('Taxes',money(receipt['total_tax']),width=40, ratio=0.6))
+            eprint.text(printline(_('Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
 
         # Footer
         eprint.text(receipt['name']+'\n')
