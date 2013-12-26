@@ -561,7 +561,7 @@ class hr_job(osv.osv):
         action['context'] = str({'search_default_job_id': [job.id], 'default_job_id': job.id, 'default_user_id': job.user_id.id})
         return action
 
-    def open_attachments(self, cr, uid, ids, context):
+    def open_attachments(self, cr, uid, ids, context=None):
         #open attachments of job and related applicantions.
         model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base','action_attachment')
         action = self.pool.get(model).read(cr, uid, action_id, context=context)
