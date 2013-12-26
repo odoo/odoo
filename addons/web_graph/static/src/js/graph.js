@@ -18,7 +18,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     view_type: 'graph',
 
     init: function(parent, dataset, view_id, options) {
-        this._super(parent);
+        this._super(parent, dataset, view_id, options);
         this.dataset = dataset;
         this.model = new instance.web.Model(dataset.model, {group_by_no_leaf: true});
         this.search_view = parent.searchview;
