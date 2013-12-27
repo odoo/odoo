@@ -578,9 +578,15 @@ instance.web_graph.Graph = instance.web.Widget.extend({
           var chart = nv.models.multiBarChart()
                 .width(self.width)
                 .height(self.height)
+                .reduceXTicks(false)
                 .stacked(self.bar_ui === 'stack')
                 .staggerLabels(true);
 
+            if (self.width / data[0].values.length < 100) {
+                chart.rotateLabels(-15);
+                chart.reduceXTicks(true);
+                chart.margin({bottom:40});
+            }
             if (dim_x === 1 && dim_y === 0) { chart.showControls(false); }
 
             d3.select(self.svg)
