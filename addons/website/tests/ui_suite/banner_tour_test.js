@@ -33,6 +33,6 @@ testRunner.run(function testBannerTour (page) {
         }, function () {
             console.log('{ "event": "success" }');
             phantom.exit();
-        });
-    });
+        }, 15000);
+    }, 5000);
 });
