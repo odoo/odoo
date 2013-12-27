@@ -77,7 +77,11 @@ class WebsiteUiSuite(unittest.TestSuite):
         last_check_time = time.time()
 
         self._options['timeout'] = self._timeout
-        self._options['port'] = tools.config['xmlrpc_port']
+        self._options['port'] = tools.config.get('xmlrpc_port', 80)
+        self._options['db'] = tools.config.get('db_name', '')
+        # TODO Use correct key
+        self._options['user'] = 'admin'
+        self._options['password'] = tools.config.get('admin_passwd', 'admin')
 
         phantom = subprocess.Popen([
                 'phantomjs',
@@ -139,5 +143,5 @@ class WebsiteUiSuite(unittest.TestSuite):
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite('dummy_test.js', {}))
-    base.addTest(WebsiteUiSuite('banner_tour_test.js', { 'path': '/web#action=website.action_website_homepage&login=admin&password=admin' }))
+    base.addTest(WebsiteUiSuite('banner_tour_test.js', { 'action': 'website.action_website_homepage' }))
     return base
