@@ -42,6 +42,8 @@ function run (test) {
             console.log('{ "event": "error", "message": "'+url+' failed to load"}');
             phantom.exit(1);
         } else {
+            // TODO Remove
+            console.log('{ "event": "error", "message": "Testing '+url+'"}');
             test(page);
         }
     });
