@@ -24,7 +24,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import netsvc
+from openerp import workflow
 import openerp.addons.decimal_precision as dp
 
 # Procurement
@@ -181,10 +181,6 @@ class procurement_order(osv.osv):
         """
         return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids, context=context))
 
-    #This Function is create to avoid  a server side Error Like 'ERROR:tests.mrp:name 'check_move' is not defined'
-    def check_move(self, cr, uid, ids, context=None):
-        pass
-
     def check_move_done(self, cr, uid, ids, context=None):
         """ Checks if move is done or not.
         @return: True or False.
@@ -294,6 +290,12 @@ class procurement_order(osv.osv):
     def check_buy(self, cr, uid, ids):
         """ Depicts the capacity of the procurement workflow to manage the supply_method == 'buy'.
             By default, it's False. Overwritten by purchase module.
+        """
+        return False
+
+    def check_move(self, cr, uid, ids, context=None):
+        """ Check whether the given procurement can be satisfied by an internal move,
+            typically a pulled flow. By default, it's False. Overwritten by the `stock_location` module.
         """
         return False
 
@@ -439,9 +441,8 @@ class procurement_order(osv.osv):
         if len(to_assign):
             move_obj.write(cr, uid, to_assign, {'state': 'assigned'})
         self.write(cr, uid, ids, {'state': 'cancel'})
-        wf_service = netsvc.LocalService("workflow")
         for id in ids:
-            wf_service.trg_trigger(uid, 'procurement.order', id, cr)
+            workflow.trg_trigger(uid, 'procurement.order', id, cr)
         return True
 
     def action_check_finished(self, cr, uid, ids):
@@ -475,9 +476,8 @@ class procurement_order(osv.osv):
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
-        wf_service = netsvc.LocalService("workflow")
         for id in ids:
-            wf_service.trg_trigger(uid, 'procurement.order', id, cr)
+            workflow.trg_trigger(uid, 'procurement.order', id, cr)
         return res
 
 class StockPicking(osv.osv):

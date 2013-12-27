@@ -93,14 +93,19 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Stage" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="probability"/>
-                        <field name="type"/>
-                        <field name="on_change"/>
-                        <field name="sequence"/>
-                        <field name="case_default" groups="base.group_multi_salesteams"/>
-                        <field name="fold"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="type"/>
+                            <field name="probability"/>
+                        </group>
+                        <group>
+                            <field name="fold"/>
+                            <field name="on_change"/>
+                            <field name="case_default" groups="base.group_multi_salesteams"/>
+                        </group>
+
                     </group>
                     <separator string="Requirements"/>
                     <field name="requirements" nolabel="1"/>
