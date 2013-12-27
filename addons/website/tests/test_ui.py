@@ -104,9 +104,7 @@ class WebsiteUiSuite(unittest.TestSuite):
                         # EOF
                         readable.remove(stream)
                     else:
-                        self.process(lines[0], result)
-                        # the runner expects only one output line
-                        # any subsequent line is ignored
+                        self.process(lines, result)
                         readable.remove(stream)
             if last_check_time >= (start_time + self._timeout):
                 result.addError(self._test, "Timeout after %s s" % (last_check_time - start_time ))
@@ -116,32 +114,31 @@ class WebsiteUiSuite(unittest.TestSuite):
                 phantom.terminate()
             result.stopTest(self._test)
 
-    def process(self, line, result):
+    def process(self, lines, result):
         # Test protocol
         # -------------
         # use console.log in phantomjs to output test results using the following format:
         # - for a success: { "event": "success" }
-        # - for a failure: { "event": "failure", "message": "Failure description" }
-        # - for an error:  { "event": "error",   "message": "Error description" }
-        # any other message is treated as an error
+        # - for an error:  { "event": "error",   "message": "Short error description" }
+        # the first line is treated as a JSON message (JSON should be formatted on one line)
+        # subsequent lines are displayed only if the first line indicated an error
+        # or if the first line was not a JSON message (still an error)
         result.startTest(self._test)
         try:
-            args = json.loads(line)
+            args = json.loads(lines[0])
             event = args.get('event', None)
             if event == 'success':
                 result.addSuccess(self._test)
-            elif event == 'failure':
-                message = args.get('message', "")
-                result.addFailure(self._test, message)
             elif event == 'error':
                 message = args.get('message', "")
-                result.addError(self._test, message)
+                result.addError(self._test, message+"\n"+"\n".join(lines[1::]))
             else:
-                result.addError(self._test, 'Unexpected JSON: "%s"' % line)
+                result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
         except ValueError:
-             result.addError(self._test, 'Unexpected message: "%s"' % line)
+             result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite('dummy_test.js', {}))
+    base.addTest(WebsiteUiSuite('simple_dom_test.js', { 'action': 'website.action_website_homepage' }))
     base.addTest(WebsiteUiSuite('banner_tour_test.js', { 'action': 'website.action_website_homepage' }))
     return base

@@ -1,14 +1,15 @@
 function waitFor(ready, callback, timeout) {
-    var timeoutMillis = timeout ? Math.round(timeout*1000) : 30000;
+    timeout = timeout || 10000;
     var start = new Date().getTime();
     var condition = ready();
     var interval = setInterval(function() {
-        if ((new Date().getTime() - start < timeoutMillis) && !condition ) {
+        if ((new Date().getTime() - start < timeout) && !condition ) {
             condition = ready();
         } else {
             if(!condition) {
-                var message = "Timeout after "+timeoutMillis+" ms";
+                var message = "Timeout after "+timeout+" ms";
                 console.log('{ "event": "error", "message": "'+message+'" }');
+                console.log("Waiting for...\n"+ready);
                 phantom.exit(1);
             } else {
                 clearInterval(interval);
@@ -38,9 +39,11 @@ function run (test) {
     };
     page.open(url, function (status) {
         if (status !== 'success') {
-            console.log('{ "event": "failure", "message": "'+url+' failed to load"}');
+            console.log('{ "event": "error", "message": "'+url+' failed to load"}');
             phantom.exit(1);
         } else {
+            // TODO Remove
+            console.log('{ "event": "error", "message": "Testing '+url+'"}');
             test(page);
         }
     });
