@@ -7,7 +7,8 @@ function waitFor(ready, callback, timeout) {
             condition = ready();
         } else {
             if(!condition) {
-                console.log('{ "event": "error", "message": "Timeout after '+timeoutMillis+' ms" }');
+                var message = "Timeout after "+timeoutMillis+" ms\nWaiting for\n"+ready;
+                console.log('{ "event": "error", "message": "'+message+'" }');
                 phantom.exit(1);
             } else {
                 clearInterval(interval);
