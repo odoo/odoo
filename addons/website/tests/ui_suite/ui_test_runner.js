@@ -1,5 +1,5 @@
 function waitFor(ready, callback, timeout) {
-    var timeoutMillis = timeout ? Math.round(timeout*1000) : 30000;
+    var timeoutMillis = timeout ? Math.round(timeout*1000) : 10000;
     var start = new Date().getTime();
     var condition = ready();
     var interval = setInterval(function() {

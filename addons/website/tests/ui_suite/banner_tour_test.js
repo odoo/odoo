@@ -11,17 +11,25 @@ testRunner.run(function testBannerTour (page) {
                 && window.openerp.website.TestConsole.test('banner');
         });
     }, function () {
-        page.evaluate(function () {
+        var before = page.evaluate(function () {
+            var result = {
+                carousel: $('#wrap [data-snippet-id=carousel]').length,
+                columns: $('#wrap [data-snippet-id=three-columns]').length,
+            };
             window.openerp.website.TestConsole.test('banner').run(true);
+            return result;
         });
         waitFor(function () {
-            return page.evaluate(function () {
-                var $edit = $('button[data-action=edit]');
-                var $carousel = $('#wrap [data-snippet-id=carousel]');
-                var $columns = $('#wrap [data-snippet-id=three-columns]');
-                return $carousel.length === 1 && $columns.length === 1
-                    && $('button[data-action=edit]').is(":visible");
+            var after = page.evaluate(function () {
+                if ($('button[data-action=edit]').is(":visible")) {
+                    console.error("why?");
+                    return {
+                        carousel: $('#wrap [data-snippet-id=carousel]').length,
+                        columns: $('#wrap [data-snippet-id=three-columns]').length,
+                    };
+                }
             });
+            return after && after.carousel === before.carousel + 1 && after.columns === before.columns + 1;
         }, function () {
             console.log('{ "event": "success" }');
             phantom.exit();
