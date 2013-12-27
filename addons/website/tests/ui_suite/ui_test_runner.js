@@ -9,7 +9,7 @@ function waitFor(ready, callback, timeout) {
             if(!condition) {
                 var message = "Timeout after "+timeout+" ms";
                 console.log('{ "event": "error", "message": "'+message+'" }');
-                console.log("Waiting for..."+ready);
+                console.log("Waiting for...\n"+ready);
                 phantom.exit(1);
             } else {
                 clearInterval(interval);
