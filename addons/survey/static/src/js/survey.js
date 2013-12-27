@@ -21,6 +21,16 @@ $(document).ready(function () {
 
     console.debug("[survey] Custom JS for survey is loading...");
 
+    var the_form = $('.js_surveyform');
+    var prefill_controller = the_form.attr("data-prefill");
+    var validate_controller = the_form.attr("data-validate");
+    var submit_controller = the_form.attr("data-submit");
+
+    // Printing mode: will disable all the controls in the form
+    if (_.isUndefined(submit_controller)) {
+        $('.js_surveyform :input').prop('disabled', true);
+    }
+
     // Custom code for right behavior of radio buttons with comments box
     $('.js_comments>input[type="text"]').focusin(function(){
         $(this).prev().find('>input').attr("checked","checked");
@@ -53,12 +63,6 @@ $(document).ready(function () {
             $(this).closest('.js_ck_comments').find('input[type="text"]').val("");
         }
     });
-
-
-    var the_form = $('.js_surveyform');
-    var prefill_controller = the_form.attr("data-prefill");
-    var validate_controller = the_form.attr("data-validate");
-    var submit_controller = the_form.attr("data-submit");
 
     // Pre-filling of the form with previous answers
     function prefill(){
