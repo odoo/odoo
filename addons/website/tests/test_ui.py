@@ -119,9 +119,8 @@ class WebsiteUiSuite(unittest.TestSuite):
         # -------------
         # use console.log in phantomjs to output test results using the following format:
         # - for a success: { "event": "success" }
-        # - for a failure: { "event": "failure", "message": "Failure description" }
-        # - for an error:  { "event": "error",   "message": "Error description" }
-        # the first line is treated as a JSON messgae
+        # - for an error:  { "event": "error",   "message": "Short error description" }
+        # the first line is treated as a JSON message (JSON should be formatted on one line)
         # subsequent lines are displayed only if the first line indicated an error
         # or if the first line was not a JSON message (still an error)
         result.startTest(self._test)
@@ -130,9 +129,6 @@ class WebsiteUiSuite(unittest.TestSuite):
             event = args.get('event', None)
             if event == 'success':
                 result.addSuccess(self._test)
-            elif event == 'failure':
-                message = args.get('message', "")
-                result.addFailure(self._test, message)
             elif event == 'error':
                 message = args.get('message', "")
                 result.addError(self._test, message+"\n"+"\n".join(lines[1::]))

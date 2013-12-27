@@ -22,7 +22,6 @@ testRunner.run(function testBannerTour (page) {
         waitFor(function () {
             var after = page.evaluate(function () {
                 if ($('button[data-action=edit]').is(":visible")) {
-                    console.error("why?");
                     return {
                         carousel: $('#wrap [data-snippet-id=carousel]').length,
                         columns: $('#wrap [data-snippet-id=three-columns]').length,

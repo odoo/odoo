@@ -39,7 +39,7 @@ function run (test) {
     };
     page.open(url, function (status) {
         if (status !== 'success') {
-            console.log('{ "event": "failure", "message": "'+url+' failed to load"}');
+            console.log('{ "event": "error", "message": "'+url+' failed to load"}');
             phantom.exit(1);
         } else {
             test(page);
