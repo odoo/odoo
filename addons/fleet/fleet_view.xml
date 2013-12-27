@@ -915,8 +915,9 @@
            <field name="name">fleet.vehicle.cost.graph</field>
            <field name="model">fleet.vehicle.cost</field>
            <field name="arch" type="xml">
-                <graph string="Costs Per Month">
-                    <field name="vehicle_id" type="row"/>
+                <graph string="Costs Per Month" stacked="True">
+                    <field name="date" type="row"/>
+                    <field name="vehicle_id" type="col"/>
                     <field name="amount" type="measure"/>
                 </graph>
             </field>
