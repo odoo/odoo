@@ -399,8 +399,8 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
     make_border_cell: function (colspan, rowspan) {
         return $('<td></td>').addClass('graph_border')
-                             .attr('colspan', colspan)
-                             .attr('rowspan', rowspan);
+                             .attr('colspan', (colspan) ? colspan : 1)
+                             .attr('rowspan', (rowspan) ? rowspan : 1);
     },
 
     make_header_title: function (header) {
