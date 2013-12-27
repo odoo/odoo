@@ -317,6 +317,18 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     option_selection: function (event) {
         event.preventDefault();
         switch (event.target.attributes['data-choice'].nodeValue) {
+            case 'bar_grouped':
+                this.bar_ui = 'group';
+                if (this.mode === 'bar_chart') {
+                    this.display_data();
+                }
+                break;
+            case 'bar_stacked':
+                this.bar_ui = 'stack';
+                if (this.mode === 'bar_chart') {
+                    this.display_data();
+                }
+                break;
             case 'swap_axis':
                 this.pivot.swap_axis();
                 break;
@@ -582,6 +594,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 .height(self.height)
                 .reduceXTicks(false)
                 .stacked(self.bar_ui === 'stack')
+                .showControls(false)
                 .staggerLabels(true);
 
             if (self.width / data[0].values.length < 100) {
@@ -589,7 +602,6 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 chart.reduceXTicks(true);
                 chart.margin({bottom:40});
             }
-            if (dim_x === 1 && dim_y === 0) { chart.showControls(false); }
 
             d3.select(self.svg)
                 .datum(data)
