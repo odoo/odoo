@@ -43,7 +43,7 @@ class WebsiteUiTest(unittest.TestCase):
 
 class WebsiteUiSuite(unittest.TestSuite):
     # timeout in seconds
-    def __init__(self, testfile, options, timeout=10.0):
+    def __init__(self, testfile, options, timeout=20.0):
         self._testfile = testfile
         self._timeout = timeout
         self._options = options
