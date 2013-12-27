@@ -594,10 +594,9 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 .height(self.height)
                 .reduceXTicks(false)
                 .stacked(self.bar_ui === 'stack')
-                .showControls(false)
-                .staggerLabels(true);
+                .showControls(false);
 
-            if (self.width / data[0].values.length < 100) {
+            if (self.width / data[0].values.length < 80) {
                 chart.rotateLabels(-15);
                 chart.reduceXTicks(true);
                 chart.margin({bottom:40});
