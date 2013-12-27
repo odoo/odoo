@@ -460,7 +460,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 .append(this.make_header_title(row).attr('data-id', row.id))
                 .addClass('graph_border');
 
-        for (var i in _.range(row.path.length)) {
+        for (var i = 0; i < row.path.length; i++) {
             row_header.prepend($('<span/>', {class:'web_graph_indent'}));
         }
 
