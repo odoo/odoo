@@ -446,6 +446,7 @@ class hr_applicant(osv.Model):
                 contact_name = self.pool.get('res.partner').name_get(cr, uid, [applicant.partner_id.id])[0][1]
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
+                create_ctx = dict(context, mail_create_nolog=True)
                 emp_id = hr_employee.create(cr, uid, {'name': applicant.partner_name or contact_name,
                                                      'job_id': applicant.job_id.id,
                                                      'address_home_id': address_id,
@@ -453,9 +454,8 @@ class hr_applicant(osv.Model):
                                                      'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
                                                      'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
                                                      'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False,
-                                                     })
+                                                     }, context=create_ctx)
                 partner_ids = []
-                create_ctx = dict(context, mail_create_nolog=True)
                 employee = hr_employee.browse(cr, uid, emp_id, context=context)
                 if employee.user_id:
                     # send a copy to every user of the company
