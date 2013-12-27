@@ -77,8 +77,9 @@ class WebsiteUiSuite(unittest.TestSuite):
         last_check_time = time.time()
 
         self._options['timeout'] = self._timeout
-        self._options['port'] = tools.config.get('xmlrpc_port', 80)
+        #self._options['port'] = tools.config.get('xmlrpc_port', 80)
         self._options['db'] = tools.config.get('db_name', '')
+        self._options['host'] = tools.config.get('db_name', 'localhost')
         # TODO Use correct key
         self._options['user'] = 'admin'
         self._options['password'] = tools.config.get('admin_passwd', 'admin')
