@@ -233,6 +233,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         // get the fields descriptions and measure list from the model
         var deferred2 = this.model.call('fields_get', []).then(function (fs) {
             self.fields = fs;
+            self.pivot.config({fields:fs});
             var temp = _.map(fs, function (field, name) {
                 return {name:name, type: field.type};
             });

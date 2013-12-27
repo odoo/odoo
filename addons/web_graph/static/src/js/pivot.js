@@ -42,6 +42,10 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 			};
 		options = _.extend(default_options, options);
 
+		if (options.fields) {
+			this.data_loader.fields = options.fields;
+		}
+
 		if (!_.isEqual(options.domain, this.domain)) {
 			this.domain = options.domain;
 			changed = true;
@@ -302,6 +306,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 openerp.web_graph.DataLoader = openerp.web.Class.extend({
 	init: function (model) {
 		this.model = model;
+		this.fields = null;
 	},
 
 	get_groups: function (fields, domain, groupbys, options) {
@@ -325,7 +330,7 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 				var non_empty_results = _.filter(results, function (group) {
 					return group.attributes.length > 0;
 				});
-				_.each(non_empty_results, self.sanitize_value);
+				_.each(non_empty_results, self.sanitize_value.bind(self));
 				if (groupbys.length <= 1) {
 					return non_empty_results;
 				} else {
@@ -345,6 +350,17 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 
 	sanitize_value: function (group) {
 		var value = group.attributes.value;
+
+		if (this.fields &&
+			group.attributes.grouped_on &&
+			this.fields[group.attributes.grouped_on].type === 'selection') {
+			var selection = this.fields[group.attributes.grouped_on].selection;
+			var value_lookup = _.find(selection, function (val) {
+				return val[0] === value;
+			});
+			group.attributes.value = (value_lookup) ? value_lookup[1] : 'undefined';
+			return;
+		}
 		if (value === false) {
 			group.attributes.value = 'undefined';
 		} else if (value instanceof Array) {
