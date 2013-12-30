@@ -32,6 +32,6 @@ testRunner.run(function homepageTest (page) {
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();
-        }, 50000);
-    }, 10000);
+        }, 90000);
+    }, 20000);
 });

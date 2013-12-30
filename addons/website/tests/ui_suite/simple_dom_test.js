@@ -10,5 +10,5 @@ testRunner.run(function simpleDomTest (page) {
     }, function finish () {
         console.log('{ "event": "success" }');
         phantom.exit();
-    }, 60000);
+    }, 90000);
 });
