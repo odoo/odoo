@@ -2,7 +2,7 @@ var testRunner = require('./ui_test_runner.js');
 
 var waitFor = testRunner.waitFor;
 
-testRunner.run(function testBannerTour (page) {
+testRunner.run(function homepageTest (page) {
     page.evaluate(function () { localStorage.clear(); });
     waitFor(function clientReady () {
         return page.evaluate(function () {
@@ -32,6 +32,6 @@ testRunner.run(function testBannerTour (page) {
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();
-        }, 30000);
-    }, 20000);
+        }, 50000);
+    }, 10000);
 });
