@@ -220,9 +220,9 @@ class account_cash_statement(osv.osv):
         return details_ids
 
     def create(self, cr, uid, vals, context=None):
-        journal_id = vals.get('journal_id',False)
-        if journal_id:
-            vals['opening_details_ids'] = vals.get('opening_details_ids',False) or self._get_cash_open_box_lines(cr, uid, journal_id, context)
+        journal_id = vals.get('journal_id')
+        if journal_id and not vals.get('opening_details_ids'):
+            vals['opening_details_ids'] = vals.get('opening_details_ids') or self._get_cash_open_box_lines(cr, uid, journal_id, context)
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
         self._update_balances(cr, uid, [res_id], context)
         return res_id
@@ -241,10 +241,10 @@ class account_cash_statement(osv.osv):
         @return: True on success, False otherwise
         """
 
-        cashbox_pool = self.pool.get('account.cashbox.line')
+        cashbox_line_obj = self.pool.get('account.cashbox.line')
         if vals.get('journal_id', False):
-            cashbox_ids = cashbox_pool.search(cr, uid, [('bank_statement_id', 'in', ids)], context=context)
-            cashbox_pool.unlink(cr, uid, cashbox_ids, context)            
+            cashbox_ids = cashbox_line_obj.search(cr, uid, [('bank_statement_id', 'in', ids)], context=context)
+            cashbox_line_obj.unlink(cr, uid, cashbox_ids, context)
         res = super(account_cash_statement, self).write(cr, uid, ids, vals, context=context)
         self._update_balances(cr, uid, ids, context)
         return res

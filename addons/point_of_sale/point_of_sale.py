@@ -46,16 +46,15 @@ class pos_config(osv.osv):
     ]
 
     def _get_currency(self, cr, uid, ids, fieldnames, args, context=None):
-         result = {}
-         currency_id = False
-         user = self.pool.get('res.users')
-         for pos_config in self.browse(cr, uid, ids, context=context):
-             if pos_config.journal_id:
-                 currency_id = pos_config.journal_id.currency.id or pos_config.journal_id.company_id.currency_id.id
-             else:
-                 currency_id = user.browse(cr, uid, pos_config.id, context=context).company_id.currency_id.id
-             result[pos_config.id] = currency_id
-         return result
+        result = dict.fromkeys(ids, False)
+        user = self.pool.get('res.users')
+        for pos_config in self.browse(cr, uid, ids, context=context):
+            if pos_config.journal_id:
+                currency_id = pos_config.journal_id.currency.id or pos_config.journal_id.company_id.currency_id.id
+            else:
+                currency_id = user.browse(cr, uid, uid, context=context).company_id.currency_id.id
+            result[pos_config.id] = currency_id
+        return result
 
     _columns = {
         'name' : fields.char('Point of Sale Name', size=32, select=1,

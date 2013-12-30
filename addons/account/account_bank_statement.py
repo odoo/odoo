@@ -451,18 +451,18 @@ class account_bank_statement(osv.osv):
     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
         res = False
         journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
-        if journal.with_last_closing_balance:
-            cr.execute('SELECT balance_end_real \
-                    FROM account_bank_statement \
-                    WHERE journal_id = %s AND NOT state = %s \
-                    ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
-            res = cr.fetchone()
+        if journal_id:
+            if journal.with_last_closing_balance:
+                cr.execute('SELECT balance_end_real \
+                      FROM account_bank_statement \
+                      WHERE journal_id = %s AND NOT state = %s \
+                      ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
+                res = cr.fetchone()
         return res and res[0] or 0.0
 
     def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
         if not journal_id:
             return {}
-        res = {}
         balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
         journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
         currency = journal.currency or journal.company_id.currency_id

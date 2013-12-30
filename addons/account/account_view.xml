@@ -2355,7 +2355,6 @@
                             <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('state', '=', 'draft')]}">
                                 <label for="balance_end_real" class="oe_subtotal_footer_separator oe_real_closing_balance" string="Real Closing Balance" style="padding-right: 23px !important; padding-top: 6px !important;"/>
                                 <field name="balance_end_real" attrs="{'readonly' : ['|', ('cash_control', '=', True), ('state', '=', 'confirm')]}" nolabel="1" class="oe_subtotal_footer_separator oe_real_closing_balance" widget="monetary" options="{'currency_field': 'currency'}" help="Total of closing cash control lines."/>
-
                             </group>
                             <group/>
                             <group/>
