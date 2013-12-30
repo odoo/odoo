@@ -1,4 +1,4 @@
-function waitFor(ready, callback, timeout) {
+function waitFor(ready, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
     var start = new Date().getTime();
     var condition = ready();
@@ -7,7 +7,7 @@ function waitFor(ready, callback, timeout) {
             condition = ready();
         } else {
             if(!condition) {
-                var message = "Timeout after "+timeout+" ms";
+                var message = timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms";
                 console.log('{ "event": "error", "message": "'+message+'" }');
                 console.log("Waiting for...\n"+ready);
                 phantom.exit(1);
