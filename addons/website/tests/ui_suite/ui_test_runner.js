@@ -1,4 +1,4 @@
-function waitFor(ready, callback, timeout) {
+function waitFor(ready, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
     var start = new Date().getTime();
     var condition = ready();
@@ -7,7 +7,7 @@ function waitFor(ready, callback, timeout) {
             condition = ready();
         } else {
             if(!condition) {
-                var message = "Timeout after "+timeout+" ms";
+                var message = timeoutMessageCallback ? timeoutMessageCallback() : "Timeout after "+timeout+" ms";
                 console.log('{ "event": "error", "message": "'+message+'" }');
                 console.log("Waiting for...\n"+ready);
                 phantom.exit(1);
@@ -25,12 +25,18 @@ function run (test) {
     var host = options.host ? options.host : 'localhost';
     var port = options.port ? ':'+options.port : '';
     var path = options.path ? options.path : '/web';
-    var params = [];
-    if (options.action) params.push('action='+options.action);
-    if (options.db) params.push('source='+options.db);
-    if (options.user) params.push('login='+options.user);
-    if (options.password) params.push('password='+options.password);
-    var url = scheme+host+port+path+'#'+params.join('&');
+
+    var queryParams = [];
+    if (options.db) queryParams.push('db='+options.db);
+    var query = queryParams.length > 0 ? '?'+queryParams.join('&') : '';
+
+    var hashParams = [];
+    if (options.user) hashParams.push('login='+options.user);
+    if (options.admin_password) hashParams.push('password='+options.admin_password);
+    if (options.action) hashParams.push('action='+options.action);
+    var hash = hashParams.length > 0 ? '#'+hashParams.join('&') : '';
+
+    var url = scheme+host+port+path+query+hash;
     var page = require('webpage').create();
     page.viewportSize = { width: 1920, height: 1080 };
     page.onError = function(message, trace) {
