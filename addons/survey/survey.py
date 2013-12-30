@@ -256,11 +256,9 @@ class survey_survey(osv.osv):
         assert len(ids) == 1, 'This option should only be used for a single \
                                 survey at a time.'
         ir_model_data = self.pool.get('ir.model.data')
-        try:
-            template_id = ir_model_data.get_object_reference(cr, uid,
-                                'survey.survey', 'email_template_survey')[1]
-        except ValueError:
-            template_id = False
+        templates = ir_model_data.get_object_reference(cr, uid,
+                                'survey', 'email_template_survey')
+        template_id = templates[1] if len(templates) > 0 else False
         ctx = dict(context)
 
         ctx.update({

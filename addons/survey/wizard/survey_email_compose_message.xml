@@ -49,16 +49,11 @@
                     </group>
                     <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}" class="oe_survey_email_public">
                         <div>
-                            You can share your survey web public link and/or send private invitations to your audience.<br/>
-                            People can response once per invitation, and whenever they want with the public web link.
-                        </div>
-                        <div class="oe_survey_url_label">Copy, paste and share the web link below to your audience.</div>
-                        <div class="oe_survey_url">
-                            <field name="public_url"/>
-                        </div>
-                        <div class="oe_survey_url_label">Copy and paste the HTML code below to add this web link to any webpage.</div>
-                        <div class="oe_survey_url">
-                            <field name="public_url_html"/>
+                            <p>You can share your survey web public link and/or send private invitations to your audience. People can answer once per invitation, and whenever they want with the public web link.</p>
+                            <p>Copy, paste and share the web link below to your audience.</p>
+                            <code><field name="public_url"/></code>
+                            <p>Copy and paste the HTML code below to add this web link to any webpage:</p>
+                            <code><field name="public_url_html"/></code>
                         </div>
                     </group>
                     <group col="1" attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
