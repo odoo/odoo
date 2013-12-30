@@ -9,6 +9,7 @@ var _t = instance.web._t,
 
 instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
     className: "oe_gauge",
+
     start: function() {
         var self = this;
         var parent = this.getParent();
@@ -41,7 +42,7 @@ instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
             valueFontColor: '#333333',
             labelFontColor: '#000',
             label: label,
-            levelColors: [
+            levelColors: self.options.levelcolors || [
                 "#ff0000",
                 "#f9c802",
                 "#a9d70b"
