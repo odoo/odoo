@@ -15,9 +15,10 @@ testRunner.run(function simpleDomTest (page) {
             return {
                 href: window.location.href,
                 jQueryFound: (typeof window.$ === 'function'),
-                openerpFound: (typeof window.openerp === 'object')
+                openerpFound: (typeof window.openerp === 'object'),
+                websiteFound: (typeof window.openerp.website === 'object'),
             }
         });
-        return status.href+" with jQuery ("+status.jQueryFound+") and openerp (" +status.openerpFound+ ")";
+        return status.href+" - jQuery: "+status.jQueryFound+" - openerp: " +status.openerpFound+ " - website: "+status.websiteFound;
     });
 });
