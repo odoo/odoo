@@ -286,15 +286,18 @@ class survey_survey(osv.osv):
         if new_state == 'draft':
             vals.update({'date_open': None})
             vals.update({'date_close': None})
+            self.message_post(cr, uid, ids, body="""<p>Survey drafted</p>""", context=context)
         elif new_state == 'open':
             if self._has_questions(cr, uid, ids, context=None):
                 vals.update({'date_open': fields.datetime.now(), 'date_close': None})
+                self.message_post(cr, uid, ids, body="""<p>Survey opened</p>""", context=context)
             else:
                 raise osv.except_osv(_('Error!'), _('You can not open a survey that has no questions.'))
         elif new_state == 'close':
             vals.update({'date_close': fields.datetime.now()})
-        else:
-            pass
+            self.message_post(cr, uid, ids, body="""<p>Survey closed</p>""", context=context)
+        elif new_state == 'cancel':
+            self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
         return super(survey_survey, self).write(cr, uid, ids, vals, context=None)
 
 
