@@ -27,7 +27,7 @@ function run (test) {
     var path = options.path ? options.path : '/web';
     var params = [];
     if (options.action) params.push('action='+options.action);
-    if (options.db) params.push('source='+options.db);
+    //if (options.db) params.push('source='+options.db);
     if (options.user) params.push('login='+options.user);
     if (options.password) params.push('password='+options.password);
     var url = scheme+host+port+path+'#'+params.join('&');
