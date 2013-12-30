@@ -25,13 +25,18 @@ function run (test) {
     var host = options.host ? options.host : 'localhost';
     var port = options.port ? ':'+options.port : '';
     var path = options.path ? options.path : '/web';
-    var params = [ 'mod=*' ];
-    if (options.action) params.push('action='+options.action);
-    if (options.db) params.push('source='+options.db);
-    if (options.user) params.push('login='+options.user);
-    if (options.admin_password) params.push('password='+options.admin_password);
-    if (options.db_password) params.push('supadmin='+options.db_password);
-    var url = scheme+host+port+path+'#'+params.join('&');
+
+    var queryParams = [];
+    if (options.db) queryParams.push('db='+options.db);
+    var query = queryParams.length > 0 ? '?'+queryParams.join('&') : '';
+
+    var hashParams = [];
+    if (options.user) hashParams.push('login='+options.user);
+    if (options.admin_password) hashParams.push('password='+options.admin_password);
+    if (options.action) hashParams.push('action='+options.action);
+    var hash = hashParams.length > 0 ? '#'+hashParams.join('&') : '';
+
+    var url = scheme+host+port+path+query+hash;
     var page = require('webpage').create();
     page.viewportSize = { width: 1920, height: 1080 };
     page.onError = function(message, trace) {
