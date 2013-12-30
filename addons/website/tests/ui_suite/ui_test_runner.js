@@ -1,4 +1,4 @@
-function waitFor(ready, callback, timeout, timeoutMessageCallback) {
+function waitFor (ready, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
     var start = new Date().getTime();
     var condition = ready();

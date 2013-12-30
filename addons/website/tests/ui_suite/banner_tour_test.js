@@ -32,6 +32,6 @@ testRunner.run(function testBannerTour (page) {
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();
-        }, 25000);
-    }, 25000);
+        }, 30000);
+    }, 20000);
 });
