@@ -44,7 +44,7 @@
                 <field name="last_stage_id" invisible="1"/>
                 <field name="create_date"/>
                 <field name="date_last_stage_update" invisible="1"/>
-                <field name="name" string="Subject"/>
+                <field name="name"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
                 <field name="partner_phone"/>
@@ -83,6 +83,7 @@
                     <button name="action_print_survey" type="object"
                         string="Print Interview" help="Print interview report"
                         attrs="{'invisible':[('survey','=',False)]}"/>
+                    <button name="action_get_attachment_tree_view" string="Documents" type="object"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -121,6 +122,7 @@
                         <field name="response" invisible="1"/>
                         <field name="job_id" on_change="onchange_job(job_id)"/>
                         <field name="department_id" on_change="onchange_department_id(department_id, stage_id)"/>
+                        <field name="company_id" />
                         <label for="availability"/>
                         <div>
                             <field name="availability" class="oe_inline"/> <label string="Day(s)" class="oe_inline"/>
@@ -181,6 +183,7 @@
                 <separator/>
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
+               
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
@@ -239,6 +242,7 @@
                 <field name="department_id"/>
                 <field name="categ_ids"/>
                 <field name="message_summary"/>
+                <field name="attachment_number"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -256,6 +260,7 @@
                                     <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
+								                              
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div>
@@ -290,7 +295,9 @@
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>
+                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a> 
                                 </div>
+                            
                             </div>
                             <div class="oe_clear"></div>
                         </div>
@@ -362,6 +369,7 @@
                     <group>
                         <field name="sequence"/>
                         <field name="fold"/>
+                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                     </group>
                 </group>
                 <separator string="Requirements"/>

@@ -723,15 +723,16 @@ class pos_order(osv.osv):
             }, context=context)
             self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
             location_id = picking_type.default_location_src_id.id
-            output_id = picking_type.default_location_dest_id.id
-            if not location_id or not output_id:
+            if order.partner_id:
+                destination_id = order.partner_id.property_stock_customer.id
+            else:
+                destination_id = picking_type.default_location_dest_id.id
+            if not location_id or not destination_id:
                 raise osv.except_osv(_('Error!'), _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (picking_type.name,)))
 
             for line in order.lines:
                 if line.product_id and line.product_id.type == 'service':
                     continue
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
 
                 move_obj.create(cr, uid, {
                     'name': line.name,
@@ -742,12 +743,10 @@ class pos_order(osv.osv):
                     'product_uos_qty': abs(line.qty),
                     'product_uom_qty': abs(line.qty),
                     'state': 'draft',
-                    'location_id': location_id,
-                    'location_dest_id': output_id,
+                    'location_id': location_id if line.qty >= 0 else destination_id,
+                    'location_dest_id': destination_id if line.qty >= 0 else location_id,
                 }, context=context)
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
-            picking_obj.action_confirm(cr, uid, [picking_id])
+            picking_obj.action_confirm(cr, uid, [picking_id], context=context)
             picking_obj.force_assign(cr, uid, [picking_id], context=context)
             picking_obj.action_done(cr, uid, [picking_id], context=context)
         return True
