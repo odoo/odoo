@@ -82,7 +82,6 @@ class WebsiteUiSuite(unittest.TestSuite):
         # TODO Use correct key
         self._options['user'] = 'admin'
         self._options['admin_password'] = tools.config.get('admin_passwd', 'admin')
-        self._options['db_password'] = tools.config.get('db_password', 'admin')
 
         phantom = subprocess.Popen([
                 'phantomjs',
