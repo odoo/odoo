@@ -21,12 +21,10 @@ testRunner.run(function homepageTest (page) {
         });
         waitFor(function testExecuted () {
             var after = page.evaluate(function () {
-                if ($('button[data-action=edit]').is(":visible")) {
-                    return {
-                        carousel: $('#wrap [data-snippet-id=carousel]').length,
-                        columns: $('#wrap [data-snippet-id=three-columns]').length,
-                    };
-                }
+                return $('button[data-action=edit]').is(":visible") && {
+                    carousel: $('#wrap [data-snippet-id=carousel]').length,
+                    columns: $('#wrap [data-snippet-id=three-columns]').length,
+                };
             });
             return after && after.carousel === before.carousel + 1 && after.columns === before.columns + 1;
         }, function finish () {
