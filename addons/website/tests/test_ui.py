@@ -6,13 +6,9 @@ import time
 import json
 from openerp import tools
 
-ROOT = os.path.join(os.path.dirname(__file__), 'ui_suite')
-
 __all__ = ['load_tests', 'WebsiteUiSuite']
 
-def _exc_info_to_string(err, test):
-    return err
-
+# TODO according to al this should be one line of Python
 class LineReader:
     def __init__(self, file_descriptor):
         self._file_descriptor = file_descriptor
@@ -53,23 +49,17 @@ class WebsiteUiSuite(unittest.TestSuite):
         return iter([self])
 
     def run(self, result):
-        # is PhantomJS correctly installed?
+        # check for PhantomJS...
         try:
-            subprocess.call([ 'phantomjs', '-v' ],
-                stdout=open(os.devnull, 'w'),
-                stderr=subprocess.STDOUT)
+            subprocess.call([ 'phantomjs', '-v' ], stdout=open(os.devnull, 'w'), stderr=subprocess.STDOUT)
         except OSError:
             test = WebsiteUiTest('UI Tests')
             result.startTest(test)
             result.addSkip(test, "phantomjs command not found")
             result.stopTest(test)
             return
-
-        result._exc_info_to_string = _exc_info_to_string
-        try:
-            self._run(result)
-        finally:
-            del result._exc_info_to_string
+        # ...then run the actual test
+        self._run(result)
 
     def _run(self, result):
         self._test = WebsiteUiTest(self._testfile)
@@ -79,17 +69,15 @@ class WebsiteUiSuite(unittest.TestSuite):
         self._options['timeout'] = self._timeout
         self._options['port'] = tools.config.get('xmlrpc_port', 80)
         self._options['db'] = tools.config.get('db_name', '')
-        # TODO Use correct key
+        # TODO use correct key from tools if exists (I could not find it --ddm)
         self._options['user'] = 'admin'
         self._options['admin_password'] = tools.config.get('admin_passwd', 'admin')
 
         phantom = subprocess.Popen([
-                'phantomjs',
-                os.path.join(ROOT, self._testfile),
-                json.dumps(self._options)
-            ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
+            'phantomjs',
+            os.path.join(os.path.join(os.path.dirname(__file__), 'ui_suite'), self._testfile),
+            json.dumps(self._options)
+        ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         proc_stdout = LineReader(phantom.stdout.fileno())
         readable = [proc_stdout]
         try:
@@ -119,7 +107,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         # -------------
         # use console.log in phantomjs to output test results using the following format:
         # - for a success: { "event": "success" }
-        # - for an error:  { "event": "error",   "message": "Short error description" }
+        # - for an error:  { "event": "error", "message": "Short error description" }
         # the first line is treated as a JSON message (JSON should be formatted on one line)
         # subsequent lines are displayed only if the first line indicated an error
         # or if the first line was not a JSON message (still an error)
