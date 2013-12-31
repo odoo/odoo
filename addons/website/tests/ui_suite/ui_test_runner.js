@@ -1,4 +1,4 @@
-function waitFor(ready, callback, timeout, timeoutMessageCallback) {
+function waitFor (ready, callback, timeout, timeoutMessageCallback) {
     timeout = timeout || 10000;
     var start = new Date().getTime();
     var condition = ready();
@@ -37,12 +37,17 @@ function run (test) {
     var hash = hashParams.length > 0 ? '#'+hashParams.join('&') : '';
 
     var url = scheme+host+port+path+query+hash;
+
     var page = require('webpage').create();
+
     page.viewportSize = { width: 1920, height: 1080 };
+
     page.onError = function(message, trace) {
+
         console.log('{ "event": "error", "message": "'+message+'"}');
         phantom.exit(1);
     };
+
     page.open(url, function (status) {
         if (status !== 'success') {
             console.log('{ "event": "error", "message": "'+url+' failed to load"}');

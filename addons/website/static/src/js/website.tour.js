@@ -311,8 +311,8 @@
                                 setTimeout(function () {
                                     setTimeout(function () {
                                         executeStep(nextStep);
-                                    }, 0);
-                                }, 0);
+                                    }, 10);
+                                }, 10);
                             } else {
                                 window.localStorage.removeItem(testId);
                             }
@@ -352,8 +352,8 @@
                             setTimeout(function () {
                                 setTimeout(function () {
                                    executeStep(currentStep);
-                                }, 0);
-                            }, 0);
+                                }, 10);
+                            }, 10);
                         }
                     }
                 },

@@ -82,7 +82,6 @@ class WebsiteUiSuite(unittest.TestSuite):
         # TODO Use correct key
         self._options['user'] = 'admin'
         self._options['admin_password'] = tools.config.get('admin_passwd', 'admin')
-        self._options['db_password'] = tools.config.get('db_password', 'admin')
 
         phantom = subprocess.Popen([
                 'phantomjs',
@@ -140,6 +139,6 @@ class WebsiteUiSuite(unittest.TestSuite):
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite('dummy_test.js', {}))
-    base.addTest(WebsiteUiSuite('simple_dom_test.js',  { 'action': 'website.action_website_homepage' }))
-    base.addTest(WebsiteUiSuite('banner_tour_test.js', { 'action': 'website.action_website_homepage' }))
+    base.addTest(WebsiteUiSuite('simple_dom_test.js', { 'action': 'website.action_website_homepage' }, 120.0))
+    base.addTest(WebsiteUiSuite('homepage_test.js',   { 'action': 'website.action_website_homepage' }, 120.0))
     return base

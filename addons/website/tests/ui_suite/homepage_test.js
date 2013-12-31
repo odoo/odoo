@@ -2,7 +2,7 @@ var testRunner = require('./ui_test_runner.js');
 
 var waitFor = testRunner.waitFor;
 
-testRunner.run(function testBannerTour (page) {
+testRunner.run(function homepageTest (page) {
     page.evaluate(function () { localStorage.clear(); });
     waitFor(function clientReady () {
         return page.evaluate(function () {
@@ -21,17 +21,15 @@ testRunner.run(function testBannerTour (page) {
         });
         waitFor(function testExecuted () {
             var after = page.evaluate(function () {
-                if ($('button[data-action=edit]').is(":visible")) {
-                    return {
-                        carousel: $('#wrap [data-snippet-id=carousel]').length,
-                        columns: $('#wrap [data-snippet-id=three-columns]').length,
-                    };
-                }
+                return $('button[data-action=edit]').is(":visible") && {
+                    carousel: $('#wrap [data-snippet-id=carousel]').length,
+                    columns: $('#wrap [data-snippet-id=three-columns]').length,
+                };
             });
             return after && after.carousel === before.carousel + 1 && after.columns === before.columns + 1;
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();
-        }, 25000);
-    }, 25000);
+        }, 90000);
+    }, 20000);
 });
