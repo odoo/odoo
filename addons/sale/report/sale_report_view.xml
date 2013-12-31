@@ -2,40 +2,13 @@
 <openerp>
 <data>
 
-    <record id="view_order_product_tree" model="ir.ui.view">
-        <field eval="1" name="priority"/>
-        <field name="name">sale.report.tree</field>
-        <field name="model">sale.report</field>
-        <field name="arch" type="xml">
-            <tree string="Sales Analysis" create="false">
-                <field name="date" invisible="1"/>
-                <field name="user_id" invisible="1"/>
-                <field name="year" invisible="1"/>
-                <field name="day" invisible="1"/>
-                <field name="month" invisible="1"/>
-                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
-                <field name="partner_id" invisible="1"/>
-                <field name="product_id" invisible="1"/>
-                <field name="categ_id" invisible="1"/>
-                <field name="nbr" sum="# of Lines"/>
-                <field name="product_uom_qty" sum="# of Qty"/>
-                <field name="product_uom" invisible="not context.get('set_visible',False)"/>
-                <field name="price_total" sum="Total Price"/>
-                <field name="delay" sum="Commitment Delay"/>
-                <field name="state" invisible="1"/>
-                <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
-            </tree>
-        </field>
-    </record>
-
     <record id="view_order_product_graph" model="ir.ui.view">
          <field name="name">sale.report.graph</field>
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
-             <graph string="Sales Analysis" type="bar" stacked="True">
+             <graph string="Sales Analysis" type="pivot" stacked="True">
                  <field name="product_id" type="row"/>
                  <field name="price_total" type="measure"/>
-                 <field name="state" type="col"/>
              </graph>
          </field>
     </record>
@@ -79,9 +52,9 @@
         <field name="name">Sales Analysis</field>
         <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="search_view_id" ref="view_order_product_search"/>
-        <field name="view_id" ref="view_order_product_tree"/>
+        <field name="view_id" ref="view_order_product_graph"/>
         <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
