@@ -54,9 +54,28 @@ instance.web_graph.GraphView = instance.web.View.extend({
             measure = null,
             stacked = false;
 
-        if (arch.attrs.type === 'bar' || !_.has(arch.attrs, 'type')) {
+        if (!_.has(arch.attrs, 'type')) {
             this.graph_widget.mode = 'bar_chart';
+        } else {
+            switch (arch.attrs.type) {
+                case 'bar':
+                    this.graph_widget.mode = 'bar_chart';
+                    break;
+                case 'pie':
+                    this.graph_widget.mode = 'pie_chart';
+                    break;
+                case 'line':
+                    this.graph_widget.mode = 'line_chart';
+                    break;
+                case 'pivot':
+                case 'heatmap':
+                case 'row_heatmap':
+                case 'col_heatmap':
+                    this.graph_widget.mode = arch.attrs.type;
+                    break;
+            }
         }
+
         if (arch.attrs.stacked === 'True') {
             stacked = true;
         }
@@ -190,7 +209,6 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         this.fields = [];
         this.pivot = new openerp.web_graph.PivotTable(model, []);
         this.mode = 'pivot';
-        if (_.has(options, 'mode')) { this.mode = mode; }
         this.enabled = true;
         if (_.has(options, 'enabled')) { this.enabled = options.enabled; }
         this.visible_ui = true;
@@ -200,6 +218,9 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
     // hide ui/show, stacked/grouped
     config: function (options) {
+        // Possible modes: pivot, heatmap, row_heatmap, col_heatmap,
+        //                 bar_chart, pie_chart, line_chart
+        if (_.has(options, 'mode')) { this.mode = mode; }
         if (_.has(options, 'visible_ui')) {
             this.visible_ui = options.visible_ui;
         }
@@ -509,17 +530,17 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             cell.append(instance.web.format_value(value, {type: measure_type}));
             if (self.mode === 'heatmap') {
                 total = pivot.get_total();
-                color = Math.floor(50 + 205*(total - value)/total);
+                color = Math.floor(90 + 165*(total - value)/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             if (self.mode === 'row_heatmap') {
                 total = pivot.get_total(row);
-                color = Math.floor(50 + 205*(total - value)/total);
+                color = Math.floor(90 + 165*(total - value)/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             if (self.mode === 'col_heatmap') {
                 total = pivot.get_total(col);
-                color = Math.floor(50 + 205*(total - value)/total);
+                color = Math.floor(90 + 165*(total - value)/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             return cell;
