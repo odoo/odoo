@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     $(".oe_website_sale .oe_mycart input.js_quantity").change(function () {
         var $input = $(this);
-        var value = parseInt($input.val());
+        var value = parseInt($input.val(), 10);
         if (isNaN(value)) value = 0;
         openerp.jsonRpc("/shop/set_cart_json/", 'call', {'order_line_id': $input.data('id'), 'set_number': value})
             .then(function (data) {
@@ -39,7 +39,7 @@ $(document).ready(function () {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var href = $link.attr("href");
-        
+
         var add_cart = href.match(/add_cart\/([0-9]+)/);
         var product_id = add_cart && +add_cart[1] || false;
 
