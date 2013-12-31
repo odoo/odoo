@@ -27,7 +27,6 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
-from openerp.report.render.rml2pdf import customfonts
   
 class multi_company_default(osv.osv):
     """
@@ -183,17 +182,20 @@ class res_company(osv.osv):
         
     def onchange_font_name(self, cr, uid, ids, font, rml_header, rml_header2, rml_header3, context=None):
         """ To change default header style of all <para> and drawstring. """
-        
+
         def _change_header(header,font):
             """ Replace default fontname use in header and setfont tag """
             
-            default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
-            return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
+            default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font, header)
+            return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font, default_para)
+        
+        if not font:
+            return True
         fontname = self.pool.get('res.font').browse(cr, uid, font, context=context).name
         return {'value':{
-                        'rml_header': _change_header(rml_header,fontname),
-                        'rml_header2':_change_header(rml_header2,fontname),
-                        'rml_header3':_change_header(rml_header3,fontname)
+                        'rml_header': _change_header(rml_header, fontname),
+                        'rml_header2':_change_header(rml_header2, fontname),
+                        'rml_header3':_change_header(rml_header3, fontname)
                         }}
 
     def on_change_country(self, cr, uid, ids, country_id, context=None):
@@ -294,12 +296,8 @@ class res_company(osv.osv):
 
     def _get_font(self, cr, uid, ids):
         font_obj = self.pool.get('res.font')
-        res = font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)
-        if res:
-            return res[0]
-        
-        font_obj.init_no_scan(cr, uid)
-        return font_obj.search(cr, uid, [('name', '=', 'Helvetica')], limit=1)[0]
+        res = font_obj.search(cr, uid, [('family', '=', 'Helvetica'), ('mode', '=', 'all')], limit=1)
+        return res and res[0] or False       
 
     _header = """
 <header>
@@ -307,20 +305,20 @@ class res_company(osv.osv):
     <frame id="first" x1="28.0" y1="28.0" width="%s" height="%s"/>
     <stylesheet>
        <!-- Set here the default font to use for all <para> tags -->
-       <paraStyle name='Normal' fontName="DejaVu Sans"/>
+       <paraStyle name='Normal' fontName="DejaVuSans"/>
     </stylesheet>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
-        <setFont name="DejaVu Sans" size="8"/>
+        <setFont name="DejaVuSans" size="8"/>
         <drawString x="%s" y="%s"> [[ formatLang(time.strftime("%%Y-%%m-%%d"), date=True) ]]  [[ time.strftime("%%H:%%M") ]]</drawString>
-        <setFont name="DejaVu Sans Bold" size="10"/>
+        <setFont name="DejaVuSans-Bold" size="10"/>
         <drawCentredString x="%s" y="%s">[[ company.partner_id.name ]]</drawCentredString>
         <stroke color="#000000"/>
         <lines>%s</lines>
         <!-- Set here the default font to use for all <drawString> tags -->
         <!-- don't forget to change the 2 other occurence of <setFont> above if needed --> 
-        <setFont name="DejaVu Sans" size="8"/>
+        <setFont name="DejaVuSans" size="8"/>
     </pageGraphics>
 </pageTemplate>
 </header>"""
@@ -345,13 +343,13 @@ class res_company(osv.osv):
         <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
          <stylesheet>
             <!-- Set here the default font to use for all <para> tags -->
-            <paraStyle name='Normal' fontName="DejaVu Sans"/>
+            <paraStyle name='Normal' fontName="DejaVuSans"/>
             <paraStyle name="main_footer" fontSize="8.0" alignment="CENTER"/>
             <paraStyle name="main_header" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
          </stylesheet>
         <pageGraphics>
             <!-- Set here the default font to use for all <drawString> tags -->
-            <setFont name="DejaVu Sans" size="8"/>
+            <setFont name="DejaVuSans" size="8"/>
             <!-- You Logo - Change X,Y,Width and Height -->
             <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
             <fill color="black"/>
@@ -396,7 +394,7 @@ class res_company(osv.osv):
         return {'value': {'rml_header': self._header_a4}}
 
     def act_discover_fonts(self, cr, uid, ids, context=None):
-        return self.pool.get("res.font").discover_fonts(cr, uid, ids, context)
+        return self.pool.get("res.font").font_scan(cr, uid, context=context)
 
     _defaults = {
         'currency_id': _get_euro,
