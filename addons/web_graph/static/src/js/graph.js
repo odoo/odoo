@@ -397,8 +397,9 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         return (this.pivot.measure) ? this.fields[this.pivot.measure].string : 'Quantity';
     },
 
-    make_border_cell: function (colspan, rowspan) {
-        return $('<td></td>').addClass('graph_border')
+    make_border_cell: function (colspan, rowspan, headercell) {
+        var tag = (headercell) ? $('<th></th>') : $('<td></td>');
+        return tag.addClass('graph_border')
                              .attr('colspan', (colspan) ? colspan : 1)
                              .attr('rowspan', (rowspan) ? rowspan : 1);
     },
@@ -413,9 +414,10 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
     draw_top_headers: function () {
         var self = this,
+            thead = $('<thead></thead>'),
             pivot = this.pivot,
             height = _.max(_.map(pivot.cols.headers, function(g) {return g.path.length;})),
-            header_cells = [[this.make_border_cell(1, height)]];
+            header_cells = [[this.make_border_cell(1, height, true)]];
 
         function set_dim (cols) {
             _.each(cols.children, set_dim);
@@ -429,7 +431,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         }
 
         function make_col_header (col) {
-            var cell = self.make_border_cell(col.width, col.height);
+            var cell = self.make_border_cell(col.width, col.height, true);
             return cell.append(self.make_header_title(col).attr('data-id', col.id));
         }
 
@@ -452,12 +454,13 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             make_cells(pivot.cols.headers, 0);
         } else {
             make_cells(pivot.cols.main.children, 1);
-            header_cells[0].push(self.make_border_cell(1, height).append('Total').css('font-weight', 'bold'));
+            header_cells[0].push(self.make_border_cell(1, height, true).append('Total').css('font-weight', 'bold'));
         }
 
         _.each(header_cells, function (cells) {
-            self.table.append($('<tr></tr>').append(cells));
+            thead.append($('<tr></tr>').append(cells));
         });
+        self.table.append(thead);
     },
 
     get_measure_type: function () {
@@ -500,10 +503,6 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             var color,
                 total,
                 cell = $('<td></td>');
-            if ((self.mode === 'pivot') && (row.is_expanded) && (row.path.length <=2)) {
-                color = row.path.length * 5 + 240;
-                cell.css('background-color', $.Color(color, color, color));
-            }
             if (value === undefined) {
                 return cell;
             }
