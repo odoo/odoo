@@ -22,60 +22,59 @@
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 from time import time
-w
 
-class test_survey_answer():
+class test_survey():
 
-    def setUp(self):
-        cr, uid = self.cr, self.uid
-        # Usefull models
-        self.ir_model = self.registry('ir.model')
-        self.ir_model_data = self.registry('ir.model.data')
-        self.obj_survey = self.registry('survey.survey')
-        self.obj_survey_response = self.registry('survey.response')
-        self.obj_survey_question_wiz = self.registry('survey.question.wiz')
-        self.obj_survey_print = self.registry('survey.print')
+    # def setUp(self):
+    #     cr, uid = self.cr, self.uid
+    #     # Usefull models
+    #     self.ir_model = self.registry('ir.model')
+    #     self.ir_model_data = self.registry('ir.model.data')
+    #     self.obj_survey = self.registry('survey.survey')
+    #     self.obj_survey_response = self.registry('survey.response')
+    #     self.obj_survey_question_wiz = self.registry('survey.question.wiz')
+    #     self.obj_survey_print = self.registry('survey.print')
 
-        self.survey_id = self.obj_survey.create(cr, uid, {
-            'title': 'Initial Partner Feedback',
-            'max_response_limit': 20,
-            'type': ref("survey_type2"),
-            'state': 'draft',
-            'authenticate': 0,
-            'date_open': time.strftime('%Y-%m-%d %H:%M:%S')
-          })
+    #     self.survey_id = self.obj_survey.create(cr, uid, {
+    #         'title': 'Initial Partner Feedback',
+    #         'max_response_limit': 20,
+    #         'type': ref("survey_type2"),
+    #         'state': 'draft',
+    #         'authenticate': 0,
+    #         'date_open': time.strftime('%Y-%m-%d %H:%M:%S')
+    #       })
 
-        self.survey_browse = self.obj_survey.browse(cr, uid, self.survey_id, context)
+    #     self.survey_browse = self.obj_survey.browse(cr, uid, self.survey_id, context)
 
     #@mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
-    def test_00_survey_public(self):
-        cr, uid = self.cr, self.uid
-        # In order to check the survey module in OpenERP I use the survey "Initial Partner Feedback".
+    # def test_00_survey_public(self):
+    #     cr, uid = self.cr, self.uid
+    #     # In order to check the survey module in OpenERP I use the survey "Initial Partner Feedback".
 
-        # I set the survey in Open state.
-        self.obj_survey.survey_open(cr, uid, [self.survey_id], context)
+    #     # I set the survey in Open state.
+    #     self.obj_survey.survey_open(cr, uid, [self.survey_id], context)
 
-        # I check state of survey is open or not.
-        self.assertEqual(self.survey_browse.state, 'open', 'Survey should be in open state')
+    #     # I check state of survey is open or not.
+    #     self.assertEqual(self.survey_browse.state, 'open', 'Survey should be in open state')
 
-        # I check that the survey is reopened or not.
-        self.obj_survey.survey_cancel(cr, uid, [self.survey_id], context)
-        self.obj_survey.survey_open(cr, uid, [self.survey_id], context)
-        self.assertEqual(self.survey_browse.state, 'open', 'Survey should be in open state again')
+    #     # I check that the survey is reopened or not.
+    #     self.obj_survey.survey_cancel(cr, uid, [self.survey_id], context)
+    #     self.obj_survey.survey_open(cr, uid, [self.survey_id], context)
+    #     self.assertEqual(self.survey_browse.state, 'open', 'Survey should be in open state again')
 
-        # I set the state of the survey open.
-        self.obj_survey.survey_open(cr, uid, [self.survey_id], context)
+    #     # I set the state of the survey open.
+    #     self.obj_survey.survey_open(cr, uid, [self.survey_id], context)
 
-        # In order to print the survey I click on Print.
-        id = self.obj_survey_print.create(cr, uid, {'survey_ids': [(6, 0, [self.survey_id])]})
-        self.obj_survey_print.action_next(cr, uid, [id], context)
+    #     # In order to print the survey I click on Print.
+    #     id = self.obj_survey_print.create(cr, uid, {'survey_ids': [(6, 0, [self.survey_id])]})
+    #     self.obj_survey_print.action_next(cr, uid, [id], context)
 
-        # In order to answer the survey I click on "Answer a Survey" with a public token.
-        ctx = {}
-        ctx.update({'survey_id': self.survey_id, 'survey_token': self.survey_browse.token})
-        fields_view = self.obj_survey_question_wiz.fields_view_get(self, cr, uid, view_id=None, view_type='form', context=ctx)
-        id = self.obj_survey_question_wiz.create(cr, uid, {}, ctx)
-        self.obj_survey_question_wiz.action_next(cr, uid, [id], ctx)
+    #     # In order to answer the survey I click on "Answer a Survey" with a public token.
+    #     ctx = {}
+    #     ctx.update({'survey_id': self.survey_id, 'survey_token': self.survey_browse.token})
+    #     fields_view = self.obj_survey_question_wiz.fields_view_get(self, cr, uid, view_id=None, view_type='form', context=ctx)
+    #     id = self.obj_survey_question_wiz.create(cr, uid, {}, ctx)
+    #     self.obj_survey_question_wiz.action_next(cr, uid, [id], ctx)
 
         # # I give the answer of the first and second page of the survey.
         # #ctx = {'active_model':'survey.survey', 'active_id': self.survey_id, 'active_ids': [self.survey_id]}

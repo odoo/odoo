@@ -51,8 +51,7 @@ sent mails with user name and password for the invitation of the survey.
     ],
     #'demo': ['survey_demo.xml'],
     #'test': [
-    #    'test/survey_report.yml',
-    #    'test/survey_response.py',
+    #    'test/survey_test.py',
     #],
     'installable': True,
     'auto_install': False,
