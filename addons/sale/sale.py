@@ -318,6 +318,9 @@ class sale_order(osv.osv):
             context = {}
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
+        if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
+            defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context)['value']
+            vals = dict(defaults, **vals)
         context.update({'mail_create_nolog': True})
         new_id = super(sale_order, self).create(cr, uid, vals, context=context)
         self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=context)
@@ -831,6 +834,24 @@ class sale_order_line(osv.osv):
             pass
         return {'value': value}
 
+    def create(self, cr, uid, values, context=None):
+        if values.get('order_id') and values.get('product_id') and  any(f not in values for f in ['name', 'price_unit', 'type', 'product_uom_qty', 'product_uom']):
+            order = self.pool['sale.order'].read(cr, uid, values['order_id'], ['pricelist_id', 'partner_id', 'date_order', 'fiscal_position'], context=context)
+            defaults = self.product_id_change(cr, uid, [], order['pricelist_id'][0], values['product_id'],
+                qty=float(values.get('product_uom_qty', False)),
+                uom=values.get('product_uom', False),
+                qty_uos=float(values.get('product_uos_qty', False)),
+                uos=values.get('product_uos', False),
+                name=values.get('name', False),
+                partner_id=order['partner_id'][0],
+                date_order=order['date_order'],
+                fiscal_position=order['fiscal_position'][0] if order['fiscal_position'] else False,
+                flag=False,  # Force name update
+                context=context
+            )['value']
+            values = dict(defaults, **values)
+        return super(sale_order_line, self).create(cr, uid, values, context=context)
+
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -976,9 +997,9 @@ class mail_compose_message(osv.Model):
 
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
-        if context.get('active_model') == 'sale.order' and context.get('active_ids') and context.get('mark_so_as_sent'):
+        if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
-            self.pool.get('sale.order').signal_quotation_sent(cr, uid, context['active_ids'])
+            self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 

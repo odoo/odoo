@@ -2106,7 +2106,7 @@ class stock_move(osv.osv):
                 })
                 new_moves.append(self.browse(cr, uid, [new_id])[0])
             if pickid:
-                self.signal_button_confirm(cr, uid, [pickid])
+                self.pool.get('stock.picking').signal_button_confirm(cr, uid, [pickid])
         if new_moves:
             new_moves += self.create_chained_picking(cr, uid, new_moves, context)
         return new_moves

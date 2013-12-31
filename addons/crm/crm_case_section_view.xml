@@ -13,7 +13,6 @@
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
                     'search_default_section_id': [active_id],
-                    'search_default_open': 1,
                     'default_section_id': active_id,
                     'default_type': 'lead',
                     'stage_type': 'lead',
@@ -43,7 +42,6 @@
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="context">{
                     'search_default_section_id': [active_id],
-                    'search_default_assigned_to_me': 1,
                     'default_section_id': active_id,
                     'stage_type': 'opportunity',
                     'default_type': 'opportunity',
@@ -62,6 +60,26 @@
                     documents, track all discussions, and much more.
                 </p>
             </field>
+        </record>
+
+       <record id="action_report_crm_lead_salesteam" model="ir.actions.act_window">
+           <field name="name">Leads Analysis</field>
+           <field name="res_model">crm.lead.report</field>
+           <field name="view_type">form</field>
+           <field name="context">{"search_default_month":1}</field>
+           <field name="view_mode">tree,graph</field>
+           <field name="domain">[('type','=', 'lead'),('section_id', '=', active_id)]</field>
+           <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
+       </record>
+
+       <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
+            <field name="name">Opportunities Analysis</field>
+            <field name="res_model">crm.lead.report</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_month":1}</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="domain">[('type','=', 'opportunity'), ('section_id', '=', active_id)]</field>
+            <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
 
         <!-- Case Sections Salesteams kanban view -->
@@ -99,12 +117,24 @@
                                     <div class="oe_items_list">
                                         <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
                                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                                            <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar_link"><field name="monthly_open_leads" widget="sparkline_bar" options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field></a>
+                                            <a name="%(action_report_crm_lead_salesteam)d" type="action" class="oe_sparkline_bar_link">
+                                                <field name="monthly_open_leads" widget="sparkline_bar"
+                                                    options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': 'Leads'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field>
+                                            </a>
                                         </div>
                                         <div class="oe_salesteams_opportunities">
                                             <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                                            <a name="%(action_report_crm_opportunity)d" type="action"><field name="monthly_planned_revenue" widget="sparkline_bar" height="20px" barWidth="4" barSpacing="1">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field></a>
+                                            <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
+                                                <field name="monthly_planned_revenue" widget="sparkline_bar"
+                                                    options="{'height': '20px', 'barWidth': '4', 'barSpacing': '1', 'delayIn': '3000', 'tooltip_suffix': 'Opportunities'}">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field>
+                                            </a>
                                         </div>
+                                    </div>
+                                    <div class="oe_clear"></div>
+                                    <div class="oe_kanban_salesteams_avatars">
+                                        <t t-foreach="record.member_ids.raw_value.slice(0,10)" t-as="member">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
