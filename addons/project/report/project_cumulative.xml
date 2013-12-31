@@ -2,27 +2,11 @@
 <openerp>
     <data>
 
-        <record id="view_task_history_tree" model="ir.ui.view">
-            <field name="name">project.task.history.cumulative.tree</field>
-            <field name="model">project.task.history.cumulative</field>
-            <field name="arch" type="xml">
-                <tree string="Tasks's Cumulative Flow" create="false">
-                    <field name="date"/>
-                    <field name="project_id"/>
-                    <field name="task_id"/>
-                    <field name="type_id"/>
-                    <field name="user_id"/>
-                    <field name="remaining_hours"/>
-                    <field name="kanban_state"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="view_task_history_graph" model="ir.ui.view">
             <field name="name">project.task.history.cumulative.graph</field>
             <field name="model">project.task.history.cumulative</field>
             <field name="arch" type="xml">
-                <graph string="Project Tasks" type="bar" stacked="True">
+                <graph string="Project Tasks" type="pivot" stacked="True">
                     <field name="date" type="row"/>
                     <field name="type_id" type="row"/>
                     <field name="planned_hours" type="measure"/>
@@ -55,7 +39,7 @@
             <field name="name">Cumulative Flow</field>
             <field name="res_model">project.task.history.cumulative</field>
             <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
+            <field name="view_mode">graph</field>
             <field name="view_id" ref="view_task_history_graph"/>
             <field name="filter" eval="False"/>
             <field name="context">{"search_default_open":1, "search_default_this_month": 1}</field>
