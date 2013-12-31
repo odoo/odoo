@@ -26,7 +26,7 @@ testRunner.run(function homepageTest (page) {
                     columns: $('#wrap [data-snippet-id=three-columns]').length,
                 };
             });
-            return after && after.carousel === before.carousel + 1 && after.columns === before.columns + 1;
+            return after && (after.carousel === before.carousel + 1) && (after.columns === before.columns + 1);
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();
