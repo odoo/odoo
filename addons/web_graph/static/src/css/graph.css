@@ -1,13 +1,37 @@
 .graph_main_content td {
-	border: 1px solid black;
-    padding: 0.5rem;
+    font-size: 12px;
+    background: #fff;
+    margin: 45px;
+    border-collapse: collapse;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.graph_main_content th {
+    font-size: 13px;
+    font-weight: normal;
+    color: #039;
+    padding: 10px 8px;
+    border-bottom: 2px solid #6678b1;  
+    vertical-align: top;
+}
+
+.graph_main_content td {
+    border-bottom: 1px solid #ccc;
+    padding: 6px 8px;
     text-align: right;
+    text-color: black;
 }
 
 td.graph_border {
-	background-color: rgb(227, 227, 227);
-	text-align: left;
-  white-space: nowrap;
+  color: #669;
+  text-align: left;
+  border-right: 1px solid #6678b1;
+}
+
+.graph_main_content tbody tr:hover td
+{
+    color: #009;
 }
 
 span.field-selection {
@@ -21,18 +45,6 @@ span.web_graph_indent {
 
 .web_graph_click:hover {
     cursor: pointer;
-}
-
-tr.graph_top td {
-	text-align: center;
-}
-
-tr.graph_top li {
-	text-align: left;
-}
-
-.graph_main_content tr:hover {
-	background-color: rgb(245,245,245);
 }
 
 .graph_widget .dropdown-menu {
