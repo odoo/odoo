@@ -189,7 +189,7 @@
         <template id="product_recommendation">
             <div class="container mt32" t-if="quotation.recommended_products()">
                 <h3>Customers who have bought this product also bought:</h3>
-                <div class='row mt16' style="margin-left: 15px !important;">
+                <div class='row mt16'>
                     <t t-foreach="quotation.recommended_products()" t-as="product">
                         <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
                             <div class='mt16 text-center'>
@@ -211,8 +211,8 @@
                             <div t-field="line.website_description" class="oe_structure"/>
                         </section>
                     </t>
-                    <section id="templateterms" class="tab-pane oe_section jumbotron">
-                        <div class="container panel panel-default tab-pane oe_section">
+                    <section id="templateterms" class="tab-pane">
+                        <div class="container panel panel-default">
                             <div class="row panel-body">
                                 <div class="text-center">
                                     <h2><strong>Terms &amp; Conditions</strong></h2>

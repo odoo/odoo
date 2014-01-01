@@ -39,6 +39,7 @@ class sale_quote(http.Controller):
         # use SUPERUSER_ID allow to access/view order for public user
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         assert token == order.access_token, 'Access denied, wrong token!'
+        # TODO: if not order.template_id: return to the URL of the portal view of SO
         values = {
             'quotation': order,
         }
