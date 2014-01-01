@@ -57,13 +57,13 @@ class sale_quote(http.Controller):
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         assert token == order.access_token, 'Access denied, wrong token!'
         request.registry.get('sale.order').write(request.cr, self._get_partner_user(order_id), [order_id], {'state': 'manual'})
-        return request.redirect("/quote/%s/%s" % (order_id, token)
+        return request.redirect("/quote/%s/%s" % (order_id, token))
 
     def decline(self, order_id):
         return request.registry.get('sale.order').write(request.cr, self._get_partner_user(order_id), [order_id], {'state': 'cancel'})
 
     @website.route(['/quote/<int:order_id>/<token>/post'], type='http', auth="public")
-    def post(self, order_id=None, token, **post):
+    def post(self, order_id, token, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         assert token == order.access_token, 'Access denied, wrong token!'

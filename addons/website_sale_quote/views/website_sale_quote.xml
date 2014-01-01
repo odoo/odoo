@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <template id="pricing" name="Price">
-            <section id="quote">
+            <section id="quote" class="container">
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -34,11 +34,21 @@
                                 </div>
                             </td>
                             <td>
-                                <!-- if discount, display it striked -->
-                                <div t-field="line.price_unit" t-field-options='{"widget": "monetary","display_currency": "website.pricelist_id.currency_id"}'/>
+                                <strong>
+                                    <div t-field="line.price_unit"
+                                        t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'
+                                        t-att-style="line.discount and 'text-decoration: line-through' or ''"
+                                        t-att-class="line.discount and 'text-danger' or ''"/>
+                                    <!-- TODO: apply monetary widget formating -->
+                                    <div t-if="line.discount">
+                                        <t t-esc="'%.2f' % ((1-line.discount) * line.price_unit)"/>
+                                    </div>
+                                </strong>
                             </td>
                             <td>
-                                <div t-field="line.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "website.pricelist_id.currency_id"}'/>
+                                <div
+                                    t-field="line.price_subtotal"
+                                    t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                             </td>
                             <td>
                                 <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True" class="mb8 js_update_line_json pull-right">
@@ -52,17 +62,22 @@
                             <td><h3>Total</h3></td>
                             <td class="text-left" colspan="2">
                                 <h3>
-                                    <strong data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "website.pricelist_id.currency_id"}'/>
+                                    <strong data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/>
                                 </h3>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </section>
+
+            <section id="terms" class="container" t-if="quotation.note">
+                <h2>Terms &amp; Conditions</h2>
+                <p t-field="quotation.note"/>
+            </section>
         </template>
 
         <template id="quote_status">
-            <div class="btn-group btn-group-lg">
+            <div class="btn-group btn-group-lg mt16 mb16">
                 <a class="btn btn-success fa fa-check" type="submit" t-if="quotation.state != 'manual' and quotation.state != 'cancel'" t-href="/quote/#{ quotation.id }/accept">
                     Accept
                 </a>
@@ -112,6 +127,7 @@
                 <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post your Comment</button>
             </form>
         </template>
+
         <template id="so_quotation" name="Product Quotation">
             <t t-call="website.layout">
                 <t t-set="head">
@@ -147,7 +163,6 @@
                         </section>
                     </t>
                     <t t-call="website_sale_quote.pricing"/>
-                    <t t-call="website_sale_quote.terms_and_conditions"/>
                     <t t-call="website_sale_quote.product_recommendation"/>
                     <t t-call="website_sale_quote.chatter"/>
                 </div>
@@ -163,6 +178,7 @@
                 </div>
             </t>
         </template>
+
         <template id="product_recommendation">
             <div class="container mt32" t-if="quotation.recommended_products()">
                 <h3>Customers who have bought this product also bought:</h3>
@@ -178,19 +194,6 @@
                 </div>
             </div>
         </template>
-        <template id="terms_and_conditions" name="Terms &amp; Conditions">
-            <section id="terms" class="tab-pane oe_section jumbotron">
-                <div class="container panel panel-default tab-pane oe_section">
-                    <div class="row panel-body">
-                        <div class="text-center">
-                            <h2><strong>Terms &amp; Conditions</strong></h2>
-                            <p class="lead" t-field="quotation.note"/>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </template>
-
         <template id="so_template" name="SO Template">
             <t t-call="website.layout">
                 <div class="col-xs-12 col-md-8 tab-content">
@@ -223,5 +226,6 @@
                 </div>
             </t>
         </template>
+
     </data>
 </openerp>
