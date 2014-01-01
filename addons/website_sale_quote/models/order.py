@@ -33,10 +33,10 @@ class sale_quote_template(osv.osv):
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
     }
-
     def open_template(self, cr, uid, quote_id, context=None):
         return {
-            'action': 'ir.act.url',
+            'type': 'ir.actions.act_url',
+            'target': 'self',
             'url': '/template/%d' % quote_id
         }
 
@@ -72,7 +72,6 @@ class sale_order_line(osv.osv):
     _columns = {
         'website_description': fields.html('Line Description'),
     }
-
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='', partner_id=False, lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom, qty_uos, uos, name, partner_id, lang, update_tax, date_order, packaging, fiscal_position, flag, context)
         if product:
@@ -84,13 +83,21 @@ class sale_order_line(osv.osv):
 class sale_order(osv.osv):
     _inherit = 'sale.order'
     _columns = {
-        'access_token': fields.char('Quotation Token', size=256, required=True),
+        'access_token': fields.char('Security Token', size=256, required=True),
         'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
         'website_description': fields.html('Description'),
     }
     _defaults = {
-        'access_token': lambda self, cr, uid, ctx={}: len(uuid.uuid4())
+        'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4())
     }
+    def open_quotation(self, cr, uid, quote_id, context=None):
+        quote = self.browse(cr, uid, quote_id[0], context=context)
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/quote/%d/%s' % (quote.id, quote.access_token)
+        }
+
     def _get_sale_order_line(self, cr, uid, template_id, context=None):
         """create order line from selected quote template line."""
 

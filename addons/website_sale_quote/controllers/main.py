@@ -34,13 +34,6 @@ class sale_quote(http.Controller):
             user = user_pool.search(request.cr, SUPERUSER_ID, [('partner_id', '=', partner)])[0]
         return user
 
-    def _get_message(self, order):
-        total = 0
-        for msg in order.message_ids:
-            if msg.subtype_id.name in ['Sales Order Confirmed', 'Discussions']:
-                total += 1
-        return total
-
     @website.route(["/quote/<int:order_id>/<token>"], type='http', auth="public")
     def view(self, order_id, token, **post):
         # use SUPERUSER_ID allow to access/view order for public user
@@ -48,7 +41,6 @@ class sale_quote(http.Controller):
         assert token == order.access_token, 'Access denied, wrong token!'
         values = {
             'quotation': order,
-            'message': self._get_message(order)
         }
         return request.website.render('website_sale_quote.so_quotation', values)
 

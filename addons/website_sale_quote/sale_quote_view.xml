@@ -6,10 +6,9 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//header" position="after">
-                    <div class="oe_form_box_info oe_text_center" attrs="{'invisible': ['|',('quote_url', '=', False),('template_id','=',False)]}">
-                        <field name="quote_url" widget="url"/>
-                    </div>
+                <xpath expr="//header/button[@name='invoice_corrected']" position="after">
+                    <button name="open_quotation" string="View Quotation" type="object"
+                        attrs="{'invisible': [('template_id','=',False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="template_id" on_change="onchange_template_id(template_id)"/>
@@ -29,7 +28,7 @@
                             <button string="Template" type="object" name="open_template"/>
                         </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only">
+                            <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name"/>
                             </h1>

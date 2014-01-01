@@ -77,17 +77,20 @@
         </template>
 
         <template id="quote_status">
-            <div class="btn-group btn-group-lg mt16 mb16">
-                <a class="btn btn-success fa fa-check" type="submit" t-if="quotation.state != 'manual' and quotation.state != 'cancel'" t-href="/quote/#{ quotation.id }/accept">
+            <div class="btn-group btn-group-lg mt16 mb16" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
+                <a class="btn btn-success fa fa-check" type="submit" t-href="/quote/#{ quotation.id }/accept">
                     Accept
                 </a>
-                <a class="btn btn-info fa fa-comment" type="submit" t-if="quotation.state != 'manual' and quotation.state != 'cancel'" href="#chat">
+                <a class="btn btn-info fa fa-comment" type="submit" href="#chat">
                     Send us a Feedback
-                    <sup class="label label-info"><t t-esc="message"/></sup>
                 </a>
                 <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modeldecline">
                     Refuse
                 </a>
+            </div>
+            <div class="alert alert-warning alert-dismissable" t-if="quotation.state == 'cancel'">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                <strong>This quotation has been canceled.</strong> Contact <t t-field="quotation.user_id"/> to ask a new one.
             </div>
         </template>
 
@@ -134,7 +137,21 @@
                     <script type="text/javascript" src="/website_sale_quote/static/src/js/sale_quote.js"></script>
                     <t t-raw="head or ''"/>
                 </t>
-                <div class="col-xs-12 col-md-8 tab-content">
+                <div class="col-md-4">
+                    <ul class="nav nav-pills nav-stacked" data-spy="affix">
+                        <li class="active">
+                            <a href="#introduction11" data-toggle="tab">Introduction</a>
+                        </li>
+                        <li t-foreach="quotation.order_line" t-as="line">
+                            <a t-att-href="'#%s'% line.id" data-toggle="tab">
+                                <t t-raw="line.product_id.name_template"/>
+                            </a>
+                        </li>
+                        <li><a href="#quote" data-toggle="tab">Pricing</a></li>
+                        <li><a href="#terms" data-toggle="tab">Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-8">
                     <t t-call="website_sale_quote.quote_status"/>
                     <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
                       <div class="modal-dialog">
@@ -165,16 +182,6 @@
                     <t t-call="website_sale_quote.pricing"/>
                     <t t-call="website_sale_quote.product_recommendation"/>
                     <t t-call="website_sale_quote.chatter"/>
-                </div>
-                <div class="col-xs-6 col-md-4 sidebar" id="sidebar">
-                    <ul class="nav nav-pills nav-stacked" data-spy="affix">
-                        <li class="active"><a href="#introduction11" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
-                        <t t-foreach="quotation.order_line" t-as="line">
-                            <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><i class="icon-chevron-right"></i><t t-raw="line.product_id.name_template"/> </a></li>
-                        </t>
-                        <li><a href="#quote" data-toggle="tab"><i class="icon-chevron-right"></i> Pricing</a></li>
-                        <li><a href="#terms" data-toggle="tab"><i class="icon-chevron-right"></i> Terms &amp; Conditions</a></li>
-                    </ul>
                 </div>
             </t>
         </template>
