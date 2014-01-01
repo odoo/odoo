@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="pricing" name="Price">
+            <section id="quote">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Products</th>
+                            <th>Tax</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="quotation.order_line" t-as="line">
+                            <td>
+                                <div t-field="line.name"/>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True" class="mb8 js_update_line_json">
+                                            <span class="fa fa-minus"/>
+                                        </a>
+                                    </span>
+                                    <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
+                                    <span class="input-group-addon">
+                                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }" class="mb8 js_update_line_json">
+                                            <span class="fa fa-plus"/>
+                                        </a>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <!-- if discount, display it striked -->
+                                <div t-field="line.price_unit" t-field-options='{"widget": "monetary","display_currency": "website.pricelist_id.currency_id"}'/>
+                            </td>
+                            <td>
+                                <div t-field="line.price_subtotal" t-field-options='{"widget": "monetary", "display_currency": "website.pricelist_id.currency_id"}'/>
+                            </td>
+                            <td>
+                                <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True" class="mb8 js_update_line_json pull-right">
+                                    <span class="fa fa-trash-o"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><h3>Total</h3></td>
+                            <td class="text-left" colspan="2">
+                                <h3>
+                                    <strong data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "website.pricelist_id.currency_id"}'/>
+                                </h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </template>
+
+        <template id="quote_status">
+            <div class="btn-group btn-group-lg">
+                <a class="btn btn-success fa fa-check" type="submit" t-if="quotation.state != 'manual' and quotation.state != 'cancel'" t-href="/quote/#{ quotation.id }/accept">
+                    Accept
+                </a>
+                <a class="btn btn-info fa fa-comment" type="submit" t-if="quotation.state != 'manual' and quotation.state != 'cancel'" href="#chat">
+                    Send us a Feedback
+                    <sup class="label label-info"><t t-esc="message"/></sup>
+                </a>
+                <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modeldecline">
+                    Refuse
+                </a>
+            </div>
+        </template>
+
+        <template id="chatter">
+            <div id="chat" class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <i class="fa fa-comment fa-flip-horizontal"></i> Recent Comments
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <t t-foreach="quotation.message_ids" t-as="message">
+                            <t t-if="message.subtype_id.name == 'Sales Order Confirmed' or message.subtype_id.name == 'Discussions'" >
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1" t-if="message.author_id.image_small">
+                                        <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
+                                    <div class="col-xs-10 col-md-11">
+                                        <div>
+                                            <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html"/>
+                                                <t t-raw="message.body"/>
+                                            <div class="mic-info">
+                                                By: <a href="#"><t t-esc="message.author_id.name"/></a> on <t t-esc="message.date"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            </t>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+            <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% quotation.id">
+                <textarea rows="3" id="new_message" name="new_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
+                <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post your Comment</button>
+            </form>
+        </template>
+        <template id="so_quotation" name="Product Quotation">
+            <t t-call="website.layout">
+                <t t-set="head">
+                    <script type="text/javascript" src="/website_sale_quote/static/src/js/sale_quote.js"></script>
+                    <t t-raw="head or ''"/>
+                </t>
+                <div class="col-xs-12 col-md-8 tab-content">
+                    <t t-call="website_sale_quote.quote_status"/>
+                    <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title">Reason</h4>
+                          </div>
+                          <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% (quotation.id)">
+                              <div class="modal-body">
+                                <textarea rows="3" id="decline_message" name="decline_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
+                            </div>
+                          <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post</button>
+                          </div>
+                        </form>
+                        </div>
+                      </div>
+                    </div>
+                    <section id="introduction11" class="tab-pane active" t-field="quotation.website_description">
+                    </section>
+                    <t t-foreach="quotation.order_line" t-as="line">
+                        <section class="tab-pane" t-att-id="line.id">
+                            <div t-field="line.website_description" class="oe_structure"/>
+                        </section>
+                    </t>
+                    <t t-call="website_sale_quote.pricing"/>
+                    <t t-call="website_sale_quote.terms_and_conditions"/>
+                    <t t-call="website_sale_quote.product_recommendation"/>
+                    <t t-call="website_sale_quote.chatter"/>
+                </div>
+                <div class="col-xs-6 col-md-4 sidebar" id="sidebar">
+                    <ul class="nav nav-pills nav-stacked" data-spy="affix">
+                        <li class="active"><a href="#introduction11" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
+                        <t t-foreach="quotation.order_line" t-as="line">
+                            <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><i class="icon-chevron-right"></i><t t-raw="line.product_id.name_template"/> </a></li>
+                        </t>
+                        <li><a href="#quote" data-toggle="tab"><i class="icon-chevron-right"></i> Pricing</a></li>
+                        <li><a href="#terms" data-toggle="tab"><i class="icon-chevron-right"></i> Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+            </t>
+        </template>
+        <template id="product_recommendation">
+            <div class="container mt32" t-if="quotation.recommended_products()">
+                <h3>Customers who have bought this product also bought:</h3>
+                <div class='row mt16' style="margin-left: 15px !important;">
+                    <t t-foreach="quotation.recommended_products()" t-as="product">
+                        <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
+                            <div class='mt16 text-center'>
+                                <a href="#" t-field="product.name"/>
+                                <span t-field="product.image_small" t-field-options='{"widget": "image", "class": "img-rounded"}'/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </template>
+        <template id="terms_and_conditions" name="Terms &amp; Conditions">
+            <section id="terms" class="tab-pane oe_section jumbotron">
+                <div class="container panel panel-default tab-pane oe_section">
+                    <div class="row panel-body">
+                        <div class="text-center">
+                            <h2><strong>Terms &amp; Conditions</strong></h2>
+                            <p class="lead" t-field="quotation.note"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <template id="so_template" name="SO Template">
+            <t t-call="website.layout">
+                <div class="col-xs-12 col-md-8 tab-content">
+                    <section id="template_introduction" class="tab-pane active" t-field="template.website_description">
+                    </section>
+                    <t t-foreach="template.quote_line" t-as="line">
+                        <section class="tab-pane" t-att-id="line.id">
+                            <div t-field="line.website_description" class="oe_structure"/>
+                        </section>
+                    </t>
+                    <section id="templateterms" class="tab-pane oe_section jumbotron">
+                        <div class="container panel panel-default tab-pane oe_section">
+                            <div class="row panel-body">
+                                <div class="text-center">
+                                    <h2><strong>Terms &amp; Conditions</strong></h2>
+                                    <p class="lead" t-field="template.note"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-xs-6 col-md-4 sidebar" id="sidebar">
+                    <ul class="nav nav-pills nav-stacked" data-spy="affix">
+                        <li class="active"><a href="#template_introduction" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
+                        <t t-foreach="template.quote_line" t-as="line">
+                            <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><i class="icon-chevron-right"></i><t t-raw="line.product_id.name_template"/> </a></li>
+                        </t>
+                        <li><a href="#templateterms" data-toggle="tab"><i class="icon-chevron-right"></i> Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+            </t>
+        </template>
+    </data>
+</openerp>
