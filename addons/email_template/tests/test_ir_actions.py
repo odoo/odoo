@@ -33,7 +33,7 @@ class TestServerActionsEmail(TestServerActionsBase):
             'name': 'TestTemplate',
             'email_from': 'myself@example.com',
             'email_to': 'brigitte@example.com',
-            'partner_to': '[%s]' % self.test_partner_id,
+            'partner_to': '%s' % self.test_partner_id,
             'model_id': self.res_partner_model_id,
             'subject': 'About ${object.name}',
             'body_html': '<p>Dear ${object.name}, your parent is ${object.parent_id and object.parent_id.name or "False"}</p>',
