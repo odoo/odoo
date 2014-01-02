@@ -30,6 +30,7 @@
                     placement: 'bottom',
                     title:     "Edit this page",
                     content:   "Every page of your website can be modified through the <i>Edit</i> button.",
+                    template:   self.popover({ fixed: true }),
                     trigger: {
                         id:      'rte:ready',
                         type:    'openerp',
@@ -42,6 +43,7 @@
                     placement: 'bottom',
                     title:     "Insert building blocks",
                     content:   "To add content in a page, you can insert building blocks.",
+                    template:   self.popover({ fixed: true }),
                     trigger:   'click',
                 },
                 {
@@ -50,6 +52,7 @@
                     placement: 'bottom',
                     title:     "Drag & Drop a Banner",
                     content:   "Drag the Banner block and drop it in your page.",
+                    template:   self.popover({ fixed: true }),
                     trigger:   'drag',
                 },
                 {
@@ -74,6 +77,7 @@
                     placement: 'bottom',
                     title:     "Add Another Block",
                     content:   "Let's add another building block to your page.",
+                    template:   self.popover({ fixed: true }),
                     trigger:   'click',
                 },
                 {
@@ -82,6 +86,7 @@
                     placement: 'bottom',
                     title:     "Drag & Drop a Block",
                     content:   "Drag the <em>'3 Columns'</em> block and drop it below the banner.",
+                    template:   self.popover({ fixed: true }),
                     trigger:   'drag',
                 },
                 {
@@ -90,6 +95,7 @@
                     placement: 'right',
                     title:     "Save your modifications",
                     content:   "Publish your page by clicking on the <em>'Save'</em> button.",
+                    template:   self.popover({ fixed: true }),
                     trigger:   'click',
                 },
                 {
@@ -104,6 +110,7 @@
                     placement: 'bottom',
                     title:     "Test Your Mobile Version",
                     content:   "Let's check how your homepage looks like on mobile devices.",
+                    template:   self.popover({ fixed: true }),
                     trigger: {
                         id:      'shown.bs.modal',
                         emitter: $(document),
@@ -123,7 +130,7 @@
                     placement: 'left',
                     title:     "More Tutorials",
                     content:   "Get more tutorials through this <em>'Help'</em> menu or click on the left <em>'Edit'</em> button to continue modifying this page.",
-                    template:  self.popover({ end: "Close Tutorial" }),
+                    template:  self.popover({ fixed: true, end: "Close Tutorial" }),
                     trigger:   'click',
                 }
             ];

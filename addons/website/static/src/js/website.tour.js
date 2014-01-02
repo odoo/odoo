@@ -5,9 +5,8 @@
     website.add_template_file('/website/static/src/xml/website.tour.xml');
 
     website.Tour = openerp.Class.extend({
-        tour: undefined,
-        steps: [],
-        tourStorage: window.localStorage,
+        steps: [], // Override
+        tourStorage: window.localStorage, // FIXME: will break on iPad in private mode
         init: function () {
             this.tour = new Tour({
                 name: this.id,
@@ -273,12 +272,11 @@
                 e.stopImmediatePropagation();
                 e.preventDefault();
             });
-            var url = new website.UrlParser(window.location.href);
             var menu = $('#help-menu');
             _.each(this.tours, function (tour) {
                 var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
                 $menuItem.click(function () {
-                    tour.redirect(url);
+                    tour.redirect(new website.UrlParser(window.location.href));
                     tour.reset();
                     tour.start();
                 });
