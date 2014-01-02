@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+    <record id="view_account_entries_report_tree" model="ir.ui.view">
+        <field name="name">account.entries.report.tree</field>
+        <field name="model">account.entries.report</field>
+        <field name="arch" type="xml">
+            <tree colors="blue:move_state == 'draft';black:move_state == 'posted'" create="false" string="Entries Analysis">
+                <field name="date" invisible="1"/>
+                <field name="date_created" invisible="1"/>
+                <field name="date_maturity" invisible="1"/>
+                <field name="ref" invisible="1"/>
+                <field name="nbr" sum="# of Entries "/>
+                <field name="quantity" sum="# of Products Qty " invisible="not context.get('quantity_visible', False)"/>
+                <field name="amount_currency" invisible="not context.get('amount_currency_visible', False)"/>
+                <field name="currency_id" invisible="not context.get('currency_id_visible', False)"/>
+                <field name="debit"/>
+                <field name="credit"/>
+                <field name="balance"/>
+                <field name="move_state" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="year"  invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="product_uom_id" invisible="1"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                <field name="journal_id" invisible="1"/>
+                <field name="account_id" invisible="1"/>
+                <field name="fiscalyear_id" invisible="1"/>
+                <field name="period_id" invisible="1"/>
+                <field name="user_type" invisible="1"/>
+                <field name="type" invisible="1"/>
+           </tree>
+        </field>
+    </record>
     <record id="view_account_entries_report_graph" model="ir.ui.view">
          <field name="name">account.entries.report.graph</field>
          <field name="model">account.entries.report</field>
