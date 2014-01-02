@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-11-13 10:25+0000\n"
-"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
+"PO-Revision-Date: 2013-12-30 09:49+0000\n"
+"Last-Translator: Davin Baragiotta <davin@baragiotta.org>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:18+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2013-12-31 05:26+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -379,6 +379,9 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
+"Champ utilisé pour associer le modèle relié au sous-modèle lors de "
+"l'abonnement automatique à un document relié. Le champ est utilisé pour "
+"calculer getattr(related_document.relation_field)."
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -505,6 +508,9 @@ msgid ""
 "incoming email that does not reply to an existing record will cause the "
 "creation of a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Le modèle (OpenERP Document Kind) auquel correspond cet alias. Tout courriel "
+"entrant qui ne répond pas à un enregistrement existant entraînera la "
+"création d'un nouvel enregistrement de ce modèle (ex.: une tâche de projet)."
 
 #. module: mail
 #: view:base.config.settings:0
@@ -667,7 +673,7 @@ msgstr "Un abonné"
 #: field:mail.message,model:0
 #: field:mail.wizard.invite,res_model:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "Modèle de document relié"
 
 #. module: mail
 #: field:mail.compose.message,type:0
@@ -1102,6 +1108,7 @@ msgstr "Groupe"
 #: help:mail.message,starred:0
 msgid "Current user has a starred notification linked to this message"
 msgstr ""
+"L'utilisateur actuel a une notification \"favori\" associée à ce message"
 
 #. module: mail
 #: field:mail.group,public:0
@@ -1135,7 +1142,7 @@ msgstr "Abonnés des éléments sélectionnés et"
 #. module: mail
 #: field:mail.alias,alias_force_thread_id:0
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ID de l'enregistrement du fil"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
@@ -1202,7 +1209,7 @@ msgstr "Vous avez un nouveau message"
 #: help:mail.compose.message,record_name:0
 #: help:mail.message,record_name:0
 msgid "Name get of the related document."
-msgstr ""
+msgstr "Nom obtenu pour le document relié."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_notifications
@@ -1227,6 +1234,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"ID optionnel d'un fil (enregistrement) auquel tout message entrant sera "
+"rattaché, même si il ne s'agissait pas d'une réponse à ce fil. Si renseigné, "
+"la création de nouveaux enregistrements sera complètement désactivée."
 
 #. module: mail
 #. openerp-web
@@ -1377,7 +1387,7 @@ msgstr "Formulaire de groupe"
 #: field:mail.message,starred:0
 #: field:mail.notification,starred:0
 msgid "Starred"
-msgstr ""
+msgstr "Favori"
 
 #. module: mail
 #: field:mail.group,menu_id:0
@@ -1708,7 +1718,7 @@ msgstr "Remettre dans 'À faire'"
 #: code:addons/mail/static/src/xml/mail.xml:154
 #, python-format
 msgid "Attach a note that will not be sent to the followers"
-msgstr ""
+msgstr "Joindre une note qui ne sera pas envoyée aux abonnés"
 
 #. module: mail
 #. openerp-web
@@ -1738,6 +1748,8 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the OpenERP server, "
 "enter the domain name here."
 msgstr ""
+"Si vous avez configuré un domaine de courriel attrape-tout (catch-all) qui "
+"redirige vers le serveur OpenERP, saisir le nom de domaine ici."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
@@ -1913,12 +1925,12 @@ msgstr "Contacts additionnels"
 #: help:mail.compose.message,parent_id:0
 #: help:mail.message,parent_id:0
 msgid "Initial thread message."
-msgstr ""
+msgstr "Message initial du fil."
 
 #. module: mail
 #: model:mail.group,name:mail.group_hr_policies
 msgid "HR Policies"
-msgstr ""
+msgstr "Politiques RH"
 
 #. module: mail
 #. openerp-web

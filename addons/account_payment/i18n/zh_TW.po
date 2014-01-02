@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-12-30 07:58+0000\n"
+"Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:59+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2013-12-31 05:26+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -29,6 +29,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊以建立付款單。\n"
+"              </p><p>\n"
+"                付款單是付款請求，由您的公司給付某張供應商發票或客戶退款。\n"
+"              </p>\n"
+"            "
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -100,7 +106,7 @@ msgstr "到期日"
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
-msgstr ""
+msgstr "新增至付款單"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
@@ -121,7 +127,7 @@ msgstr ""
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "錯誤！"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -142,7 +148,7 @@ msgstr "取消"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
 msgid "New Payment Order"
-msgstr ""
+msgstr "新增付款單"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -159,12 +165,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr ""
+msgstr "付款單"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
-msgstr ""
+msgstr "直接"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -211,7 +217,7 @@ msgstr ""
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import Payment Lines"
-msgstr ""
+msgstr "匯入付款細項"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -250,17 +256,17 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
-msgstr ""
+msgstr "建立日期"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "付款模式的銀行或現金日記帳簿"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
-msgstr ""
+msgstr "固定日期"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
@@ -276,12 +282,12 @@ msgstr "目的帳號"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "搜尋付款單"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
-msgstr ""
+msgstr "已建立"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -388,7 +394,7 @@ msgstr "草稿"
 #: view:payment.order:0
 #: field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "狀態"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -418,7 +424,7 @@ msgstr "付款明細"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "日記簿項目"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -435,7 +441,7 @@ msgstr "搜尋"
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "負責人"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -450,7 +456,7 @@ msgstr "總計:"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "執行日期"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -495,7 +501,7 @@ msgstr "您的參考"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Payment order"
-msgstr ""
+msgstr "付款單"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -529,7 +535,7 @@ msgstr "取消"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "目的銀行帳戶"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -542,7 +548,7 @@ msgstr "資訊"
 #: model:ir.model,name:account_payment.model_payment_order
 #: view:payment.order:0
 msgid "Payment Order"
-msgstr ""
+msgstr "付款單"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -567,7 +573,7 @@ msgstr "通訊 2"
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "預定日期"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -578,7 +584,7 @@ msgstr "是否進行付款?"
 #: view:payment.mode:0
 #: field:payment.mode,journal:0
 msgid "Journal"
-msgstr ""
+msgstr "帳簿"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -606,12 +612,12 @@ msgstr "付款"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "付款單 / 付款"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr ""
+msgstr "分錄細項"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -634,7 +640,7 @@ msgstr "銀行帳戶"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Entry Information"
-msgstr ""
+msgstr "分錄資訊"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
@@ -683,7 +689,7 @@ msgstr ""
 #: view:account.payment.populate.statement:0
 #: view:payment.order.create:0
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0

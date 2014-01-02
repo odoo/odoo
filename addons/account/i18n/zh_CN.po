@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-12-25 15:20+0000\n"
-"Last-Translator: Yuchuan99 <yuchuan99@qq.com>\n"
+"PO-Revision-Date: 2013-12-26 07:20+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-26 06:24+0000\n"
+"X-Launchpad-Export-Date: 2013-12-27 05:39+0000\n"
 "X-Generator: Launchpad (build 16877)\n"
 
 #. module: account
@@ -55,7 +55,7 @@ msgstr "科目统计"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma/Open/Paid Invoices"
-msgstr "形式/未结/已支付 传票"
+msgstr "形式/未结/已支付发票"
 
 #. module: account
 #: field:report.invoice.created,residual:0
@@ -76,7 +76,7 @@ msgstr "今日到期的应收账款"
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr "从传票或付款导入"
+msgstr "从发票或支付款导入"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1058
@@ -196,7 +196,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr "过去15天开的传票"
+msgstr "过去15天开的发票"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -214,7 +214,7 @@ msgid ""
 "Gives the type of the analytic journal. When it needs for a document (eg: an "
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
-msgstr "定义辅助核算账簿的类型。当为同一类单据(如：传票) 创建辅助核算，OpenERP将看成一个相同类型。"
+msgstr "定义辅助核算账簿的类型。当为同一类单据(如：发票) 创建辅助核算，OpenERP将看成一个相同类型。"
 
 #. module: account
 #: help:account.tax,account_analytic_collected_id:0
@@ -222,7 +222,7 @@ msgid ""
 "Set the analytic account that will be used by default on the invoice tax "
 "lines for invoices. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
-msgstr "设置辅助核算项，用于退款时传票上默认项目。如果默认不要在传票的税上 使用辅助核算项，留空。"
+msgstr "设置辅助核算项，用于退款时发票上默认项目。如果默认不要在发票的税上 使用辅助核算项，留空。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -407,7 +407,7 @@ msgstr "建立日期"
 #. module: account
 #: view:account.invoice:0
 msgid "Cancel Invoice"
-msgstr "取消传票"
+msgstr "取消发票"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -473,7 +473,7 @@ msgstr "科目模板一览表"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr "修改：创建退款，对账并创建一个新的传票草稿"
+msgstr "修改：创建退款，核销并创建一个新的发票草稿"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -547,7 +547,7 @@ msgstr "凭证簿"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
 msgid "Confirm the selected invoices"
-msgstr "确认选定的传票"
+msgstr "确认选定的发票"
 
 #. module: account
 #: field:account.addtmpl.wizard,cparent_id:0
@@ -557,7 +557,7 @@ msgstr "上级目标"
 #. module: account
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr "显示传票的时候给出明细编号。"
+msgstr "显示发票的时候给出明细编号。"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -585,7 +585,7 @@ msgstr "选择科目一览表"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
 msgid "Invoice Refund"
-msgstr "退返传票"
+msgstr "红字发票"
 
 #. module: account
 #: report:account.overdue:0
@@ -774,7 +774,7 @@ msgid ""
 "Set the analytic account that will be used by default on the invoice tax "
 "lines for refunds. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
-msgstr "设置辅助核算项，用于退款时传票上默认税科目。如果默认不要在传票的税上 使用辅助核算项，留空。"
+msgstr "设置辅助核算项，用于退款时发票上默认税科目。如果默认不要在发票的税上 使用辅助核算项，留空。"
 
 #. module: account
 #: view:account.account:0
@@ -825,12 +825,12 @@ msgstr "你确定创建分录?"
 #: code:addons/account/account_invoice.py:1361
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr "传票已经支付：%s%s ，总额： %s%s (剩余：%s%s )。"
+msgstr "发票已经支付：%s%s ，总额： %s%s (剩余：%s%s )。"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Print Invoice"
-msgstr "打印传票"
+msgstr "打印发票"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:111
@@ -838,7 +838,7 @@ msgstr "打印传票"
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr "不能 %s 已经对账的传票, 传票必须被首先反对账.。只能退还这张传票。"
+msgstr "不能 %s 已经核销的发票, 发票必须被首先反核销.。只能退还这张发票。"
 
 #. module: account
 #: view:account.account:0
@@ -911,12 +911,12 @@ msgstr "科目的周期性分录明细"
 #. module: account
 #: help:account.invoice,reference:0
 msgid "The partner reference of this invoice."
-msgstr "该传票对应的业务伙伴单号"
+msgstr "该发票对应的业务伙伴单号"
 
 #. module: account
 #: view:account.invoice.report:0
 msgid "Supplier Invoices And Refunds"
-msgstr "供应商传票和退款"
+msgstr "供应商发票和退款"
 
 #. module: account
 #: code:addons/account/account_move_line.py:851
@@ -1051,7 +1051,7 @@ msgstr "采购凭证簿"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr "传票已付清"
+msgstr "发票已付清"
 
 #. module: account
 #: view:validate.account.move:0
@@ -1069,7 +1069,7 @@ msgstr "总金额"
 #. module: account
 #: help:account.invoice,supplier_invoice_number:0
 msgid "The reference of this invoice as provided by the supplier."
-msgstr "这个传票的编号由供应商提供。"
+msgstr "这个发票的编号由供应商提供。"
 
 #. module: account
 #: selection:account.account,type:0
@@ -1089,7 +1089,7 @@ msgstr "负债"
 #: code:addons/account/account_invoice.py:899
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr "请为这张传票对应的账簿选择编号规则"
+msgstr "请为这张发票对应的凭证簿选择编号规则"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1213,7 +1213,7 @@ msgstr "用上个期末余额作期初"
 msgid ""
 "Check this box if you don't want any tax related to this tax code to appear "
 "on invoices"
-msgstr "如果你不想该税款编码相关的税务信息显示在传票中, 请选中此项"
+msgstr "如果你不想该税款编码相关的税务信息显示在发票中, 请选中此项"
 
 #. module: account
 #: field:report.account.receivable,name:0
@@ -1337,7 +1337,7 @@ msgstr "税编码模板"
 #. module: account
 #: view:account.invoice.cancel:0
 msgid "Cancel Invoices"
-msgstr "作废传票"
+msgstr "作废发票"
 
 #. module: account
 #: help:account.journal,code:0
@@ -1396,7 +1396,7 @@ msgstr "分录标签"
 #: help:account.invoice,origin:0
 #: help:account.invoice.line,origin:0
 msgid "Reference of the document that produced this invoice."
-msgstr "传票上产品的关联单据"
+msgstr "发票上产品的关联单据"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1459,7 +1459,7 @@ msgstr "级别"
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr "您只能修改传票草稿的货币。"
+msgstr "您只能修改发票草稿的货币。"
 
 #. module: account
 #: report:account.invoice:0
@@ -1535,7 +1535,7 @@ msgstr "财政年度结束"
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
 msgid "Invoice sequence"
-msgstr "传票序列"
+msgstr "发票序列"
 
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
@@ -1560,7 +1560,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr "传票状态"
+msgstr "发票状态"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
@@ -1642,8 +1642,8 @@ msgid ""
 "There is nothing to reconcile. All invoices and payments\n"
 "                    have been reconciled, your partner balance is clean."
 msgstr ""
-"没有需要对账的。\n"
-"所有传票和付款已经被对账，合作伙伴余额已经结清。"
+"没有需要核销的。\n"
+"所有发票和付款已经被核销，合作伙伴余额已经结清。"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
@@ -1708,7 +1708,7 @@ msgstr "供应商红字传票"
 #: field:account.invoice,date_invoice:0
 #: field:report.invoice.created,date_invoice:0
 msgid "Invoice Date"
-msgstr "传票日期"
+msgstr "发票日期"
 
 #. module: account
 #: field:account.tax.code,code:0
@@ -1845,7 +1845,7 @@ msgstr ""
 #: model:res.request.link,name:account.req_link_invoice
 #, python-format
 msgid "Invoice"
-msgstr "开传票"
+msgstr "开发票"
 
 #. module: account
 #: field:account.move,balance:0
@@ -1856,7 +1856,7 @@ msgstr "余额"
 #: model:process.node,note:account.process_node_analytic0
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to invoice"
-msgstr "成本开传票"
+msgstr "开票成本分析"
 
 #. module: account
 #: view:ir.sequence:0
@@ -1931,7 +1931,7 @@ msgstr "年合计"
 #. module: account
 #: view:account.change.currency:0
 msgid "This wizard will change the currency of the invoice"
-msgstr "该向导将改变传票的币种"
+msgstr "该向导将改变发票的币种"
 
 #. module: account
 #: view:account.installer:0
@@ -2029,7 +2029,7 @@ msgstr "银行单据草稿"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "传票已核准"
+msgstr "发票已核准"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
@@ -2057,8 +2057,8 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
-"这个菜单基于传票或者支付打印一个纳税申报。选择财务年度的一个或几个会计期间。\r\n"
-"纳税申报需要的信息由Openerp自动从传票（或者在有些国家是付款单）生成。数据是实时更新的。\r\n"
+"这个菜单基于发票或者支付打印一个纳税申报。选择财务年度的一个或几个会计期间。\r\n"
+"纳税申报需要的信息由Openerp自动从发票（或者在有些国家是付款单）生成。数据是实时更新的。\r\n"
 "这非常有用，他使你任何时间可预览 在月份（或季度）的开始和结束欠了多少税。"
 
 #. module: account
@@ -2131,9 +2131,9 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                单击以便一张新的供应商传票。\n"
+"                单击以便一张新的供应商发票。\n"
 "              </p><p>\n"
-"               你可以根据从供应商处所采购或收到的货物来管理传票。OpenERP也可以根据采购订单或者收货自动生成一张草稿状态的传票。\n"
+"               你可以根据从供应商处所采购或收到的货物来管理发票。OpenERP也可以根据采购订单或者收货自动生成一张草稿状态的发票。\n"
 "              </p>\n"
 "            "
 
@@ -2147,7 +2147,7 @@ msgstr "错误的出纳会计分录"
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoices Analysis"
-msgstr "传票分析"
+msgstr "发票分析"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
@@ -2431,7 +2431,7 @@ msgstr "从电子文件中导入"
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
 msgid "Import from invoice"
-msgstr "从传票传票"
+msgstr "导入发票"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -2467,7 +2467,7 @@ msgstr "你没有权限打开 %s 账簿。"
 #. module: account
 #: model:res.groups,name:account.group_supplier_inv_check_total
 msgid "Check Total on supplier invoices"
-msgstr "检查供应商传票合计"
+msgstr "检查供应商发票合计"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -2705,7 +2705,7 @@ msgstr "筛选"
 #: model:process.node,note:account.process_node_draftinvoices0
 #: model:process.node,note:account.process_node_supplierdraftinvoices0
 msgid "Draft state of an invoice"
-msgstr "草稿状态的传票"
+msgstr "草稿状态的发票"
 
 #. module: account
 #: view:product.category:0
@@ -2753,7 +2753,7 @@ msgstr "税基编码"
 #. module: account
 #: help:account.invoice.tax,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice tax."
-msgstr "指定传票税列表的序列。"
+msgstr "指定发票税列表的序列。"
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -2772,7 +2772,7 @@ msgstr "借方汇总"
 #: view:account.invoice.confirm:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
 msgid "Confirm Draft Invoices"
-msgstr "确认传票草稿"
+msgstr "确认发票草稿"
 
 #. module: account
 #: field:account.entries.report,day:0
@@ -2828,7 +2828,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
 msgid "Next supplier invoice number"
-msgstr "下个供应商传票编号"
+msgstr "下个供应商发票编号"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -3099,7 +3099,7 @@ msgstr "未读消息"
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr "选择的传票不能被确认，因为它们不是“草稿”或者“形式传票”状态"
+msgstr "选择的发票不能被确认，因为它们不是“草稿”或者“形式发票”状态"
 
 #. module: account
 #: code:addons/account/account.py:1071
@@ -3125,7 +3125,7 @@ msgstr "你不能删除已经登帐的账簿分录\"%s\"."
 msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "invoices. Leave empty to use the expense account."
-msgstr "设置科目，用于退款时传票上默认税科目。留空使用费用科目。"
+msgstr "设置科目，用于退款时发票上默认税科目。留空使用费用科目。"
 
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
@@ -3242,7 +3242,7 @@ msgstr "摘要"
 #. module: account
 #: help:account.invoice,period_id:0
 msgid "Keep empty to use the period of the validation(invoice) date."
-msgstr "留空使用复核(传票)日期的会计期间"
+msgstr "留空使用复核(发票)日期的会计期间"
 
 #. module: account
 #: help:account.bank.statement,account_id:0
@@ -3338,7 +3338,7 @@ msgstr "不能适应初始余额（负数）"
 #: model:process.process,name:account.process_process_invoiceprocess0
 #: selection:report.invoice.created,type:0
 msgid "Customer Invoice"
-msgstr "客户传票"
+msgstr "客户发票"
 
 #. module: account
 #: model:ir.model,name:account.model_account_open_closed_fiscalyear
@@ -3359,7 +3359,7 @@ msgstr "搜寻会计周期"
 #. module: account
 #: view:account.change.currency:0
 msgid "Invoice Currency"
-msgstr "传票币别"
+msgstr "发票币别"
 
 #. module: account
 #: field:accounting.report,account_report_id:0
@@ -3471,7 +3471,7 @@ msgstr "辅助核算明细"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma Invoices"
-msgstr "形式传票"
+msgstr "形式发票"
 
 #. module: account
 #: model:process.node,name:account.process_node_electronicfile0
@@ -3725,7 +3725,7 @@ msgid ""
 "You cannot create an invoice on a centralized journal. Uncheck the "
 "centralized counterpart box in the related journal from the configuration "
 "menu."
-msgstr "你不能在汇总账簿上面创建传票。在配置菜单中 相关的 分类账簿表单里不要选中“合并对方科目”。"
+msgstr "你不能在汇总账簿上面创建发票。在配置菜单中 相关的 分类账簿表单里不要选中“合并对方科目”。"
 
 #. module: account
 #: field:account.bank.statement,balance_start:0
@@ -3812,7 +3812,7 @@ msgstr "反对账分录"
 #: field:account.tax.code,notprintable:0
 #: field:account.tax.code.template,notprintable:0
 msgid "Not Printable in Invoice"
-msgstr "不打印在传票上"
+msgstr "不打印在发票上"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -3927,7 +3927,7 @@ msgstr "税名称"
 #: view:account.invoice:0
 #: model:process.node,name:account.process_node_draftinvoices0
 msgid "Draft Invoice"
-msgstr "传票草稿"
+msgstr "发票草稿"
 
 #. module: account
 #: view:account.config.settings:0
@@ -4144,7 +4144,7 @@ msgstr "无筛选"
 #: view:account.invoice.report:0
 #: model:res.groups,name:account.group_proforma_invoices
 msgid "Pro-forma Invoices"
-msgstr "形式传票"
+msgstr "形式发票"
 
 #. module: account
 #: view:res.partner:0
@@ -4157,7 +4157,7 @@ msgstr "日志"
 msgid ""
 "If not applicable (computed through a Python code), the tax won't appear on "
 "the invoice."
-msgstr "如果没适用的 (计算通过python代码)， 税将不显示在传票上。"
+msgstr "如果没适用的 (计算通过python代码)， 税将不显示在发票上。"
 
 #. module: account
 #: field:account.config.settings,group_check_supplier_invoice_total:0
@@ -4237,7 +4237,7 @@ msgstr "# 项"
 #. module: account
 #: view:account.state.open:0
 msgid "Open Invoice"
-msgstr "未结传票"
+msgstr "未结发票"
 
 #. module: account
 #: field:account.invoice.tax,factor_tax:0
@@ -4437,7 +4437,7 @@ msgstr "会计 & 财务"
 #. module: account
 #: view:account.invoice.confirm:0
 msgid "Confirm Invoices"
-msgstr "确认传票"
+msgstr "确认发票"
 
 #. module: account
 #: selection:account.account,currency_mode:0
@@ -4454,12 +4454,12 @@ msgstr "显示科目列表"
 #. module: account
 #: view:account.state.open:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(如果你想打开它传票要反对账)"
+msgstr "(如果你想打开它发票要反核销)"
 
 #. module: account
 #: field:account.tax,account_analytic_collected_id:0
 msgid "Invoice Tax Analytic Account"
-msgstr ""
+msgstr "发票税的辅助核算科目"
 
 #. module: account
 #: field:account.chart,period_from:0
@@ -4581,7 +4581,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
 msgid "Cancel the Selected Invoices"
-msgstr "取消选定的传票"
+msgstr "取消选定的发票"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:424
@@ -4594,7 +4594,7 @@ msgstr "必须分配一个辅助核算账簿给\"%s\"账簿"
 msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft supplier invoices."
-msgstr "（时间表，一些采购产品，... ...）分析成本来辅助核算项。用来产生供应商传票草稿。"
+msgstr "（时间表，一些采购产品，... ...）分析成本来辅助核算项。用来产生供应商发票草稿。"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4764,7 +4764,7 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_importinvoice0
 msgid "Statement from invoice or payment"
-msgstr "传票或付款清单"
+msgstr "发票或付款清单"
 
 #. module: account
 #: code:addons/account/installer.py:115
@@ -4814,7 +4814,7 @@ msgstr "给新条目名称"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "传票统计"
+msgstr "发票统计"
 
 #. module: account
 #: field:account.account,exchange_rate:0
@@ -5041,7 +5041,7 @@ msgstr "已确认"
 #. module: account
 #: report:account.invoice:0
 msgid "Cancelled Invoice"
-msgstr "已取消的传票"
+msgstr "已取消的发票"
 
 #. module: account
 #: view:account.invoice:0
@@ -5072,7 +5072,7 @@ msgstr "退税编码"
 #. module: account
 #: view:account.invoice:0
 msgid "Invoice "
-msgstr "传票 "
+msgstr "发票 "
 
 #. module: account
 #: field:account.chart.template,property_account_income:0
@@ -5114,7 +5114,7 @@ msgstr "新的会计年度"
 #: view:report.invoice.created:0
 #: field:res.partner,invoice_ids:0
 msgid "Invoices"
-msgstr "传票列表"
+msgstr "发票列表"
 
 #. module: account
 #: help:account.config.settings,expects_chart_of_accounts:0
@@ -5170,7 +5170,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.report:0
 msgid "Invoiced"
-msgstr "已开票"
+msgstr "已开发票"
 
 #. module: account
 #: view:account.move:0
@@ -5188,7 +5188,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Supplier Refund, otherwise a "
 "Partner bank account number."
-msgstr "传票的收款银行帐号。如果是客户传票或供应商红字传票，这里是本公司的银行账号，否则这里是业务伙伴的银行账号。"
+msgstr "发票的收款银行帐号。如果是客户发票或供应商红字发票，这里是本公司的银行账号，否则这里是业务伙伴的银行账号。"
 
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
@@ -5225,7 +5225,7 @@ msgstr "这银行对账单用于对账"
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliercustomerinvoice0
 msgid "Draft invoices are validated. "
-msgstr "传票草稿已生效。 "
+msgstr "发票草稿已生效。 "
 
 #. module: account
 #: code:addons/account/account.py:890
@@ -5295,12 +5295,12 @@ msgstr "结束会计期间"
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaymentorder0
 msgid "Payment of invoices"
-msgstr "传票付款"
+msgstr "发票付款"
 
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr "传票号必须在公司范围内唯一"
+msgstr "发票号必须在公司范围内唯一"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -5332,7 +5332,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,group_invoice_lines:0
 msgid "Group Invoice Lines"
-msgstr "传票明细"
+msgstr "发票明细"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -5398,7 +5398,7 @@ msgstr "子税科目"
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
-msgstr "勾选, 如果您使用的产品和传票价格含税."
+msgstr "勾选, 如果您使用的产品和发票价格含税."
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -5819,7 +5819,7 @@ msgstr "税编码符号(1为正数)"
 #. module: account
 #: model:ir.model,name:account.model_report_invoice_created
 msgid "Report of Invoices Created within Last 15 days"
-msgstr "最近15天创建传票的报告"
+msgstr "最近15天创建发票的报表"
 
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
@@ -5903,7 +5903,7 @@ msgstr "辅助核算项"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Customer Invoices And Refunds"
-msgstr "客户传票和退款"
+msgstr "客户发票和退款"
 
 #. module: account
 #: field:account.analytic.line,amount_currency:0
@@ -6199,7 +6199,7 @@ msgstr "最大数量:"
 #: view:account.invoice:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
-msgstr "红字传票"
+msgstr "红字发票"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_entries_report_all
@@ -6297,7 +6297,7 @@ msgstr ""
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
-msgstr "传票税科目"
+msgstr "发票税科目"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_journal
@@ -6442,7 +6442,7 @@ msgstr "account.analytic.line.extended"
 msgid ""
 "As soon as the reconciliation is done, the invoice's state turns to “done” "
 "(i.e. paid) in the system."
-msgstr "对账一旦完成，这传票的状态就马上改为“完成”。在系统里也就是已支付。"
+msgstr "核销一旦完成，这发票的状态就马上改为“完成”。在系统里也就是已支付。"
 
 #. module: account
 #: view:account.chart.template:0
@@ -6538,7 +6538,7 @@ msgstr "公司"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Open and Paid Invoices"
-msgstr "打开并支付传票"
+msgstr "打开并支付发票"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -6722,7 +6722,7 @@ msgstr "辅助核算明细视图"
 #: field:account.invoice,internal_number:0
 #: field:report.invoice.created,number:0
 msgid "Invoice Number"
-msgstr "传票号"
+msgstr "发票编号"
 
 #. module: account
 #: field:account.bank.statement,difference:0
@@ -6921,7 +6921,7 @@ msgstr "计量单位"
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "如果勾选此项, 系统将试图对生成的传票分组"
+msgstr "如果勾选此项, 系统将试图对生成的发票分组"
 
 #. module: account
 #: field:account.installer,has_default_company:0
@@ -7084,7 +7084,7 @@ msgstr "当前期间凭证列表"
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr "勾选这里，则此账簿下的会计凭证或传票可以被作废。"
+msgstr "勾选这里，则此凭证簿下的会计凭证或发票可以被作废。"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -7178,7 +7178,7 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
-"对传票涉及的如付款，这传票的条目必须有要对账对应的一方。通常付款有自动对账的功能。系统能搜索在每个业务伙伴的科目里找到一有相等金额的科目去对账。"
+"对发票涉及的如付款，这发票的条目必须有要核销对应的一方。通常付款有自动核销的功能。系统能搜索在每个业务伙伴的科目里找到一有相等金额的科目去核销。"
 
 #. module: account
 #: view:account.move:0
@@ -7376,7 +7376,7 @@ msgstr "管理客户付款"
 #. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
-msgstr "相关单据生成此传票报告"
+msgstr "相关单据生成此发票报表"
 
 #. module: account
 #: field:account.tax.code,child_ids:0
@@ -7405,7 +7405,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr "客户传票"
+msgstr "客户发票"
 
 #. module: account
 #: view:account.tax:0
@@ -7533,7 +7533,7 @@ msgstr "你确定要显示这个账簿的会计凭证么？"
 #. module: account
 #: view:account.state.open:0
 msgid "Are you sure you want to open this invoice ?"
-msgstr "你确定要打开这传票?"
+msgstr "你确定要打开这发票?"
 
 #. module: account
 #: field:account.chart.template,property_account_expense_opening:0
@@ -7592,7 +7592,7 @@ msgstr "会计期间"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by year of Invoice Date"
-msgstr "按传票年度分组"
+msgstr "按发票年度分组"
 
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
@@ -7679,7 +7679,7 @@ msgstr "这字段只用于，如果您开发自己的模块允许开发者在自
 #: field:account.invoice,reference:0
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
-msgstr "传票"
+msgstr "发票"
 
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
@@ -7734,7 +7734,7 @@ msgstr ""
 #: model:process.node,name:account.process_node_paidinvoice0
 #: model:process.node,name:account.process_node_supplierpaidinvoice0
 msgid "Paid invoice"
-msgstr "支付传票"
+msgstr "支付发票"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -7783,7 +7783,7 @@ msgstr ""
 #: field:account.invoice.tax,invoice_id:0
 #: model:ir.model,name:account.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "传票明细"
+msgstr "发票明细"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -7897,7 +7897,7 @@ msgstr "销售账簿"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
 msgid "Invoice Tax"
-msgstr "传票税"
+msgstr "发票税"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1185
@@ -7980,7 +7980,7 @@ msgstr "关闭会计年度"
 #: view:account.invoice.cancel:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_cancel
 msgid "Cancel Selected Invoices"
-msgstr "取消选择的传票"
+msgstr "取消选择的发票"
 
 #. module: account
 #: help:account.account.type,report_type:0
@@ -8001,7 +8001,7 @@ msgstr "5"
 #: code:addons/account/account_invoice.py:820
 #, python-format
 msgid "Global taxes defined, but they are not in invoice lines !"
-msgstr "定义了全局税，但传票行中没有！"
+msgstr "定义了全局税，但发票行中没有！"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -8292,13 +8292,13 @@ msgstr "业务伙伴"
 #. module: account
 #: help:account.change.currency,currency_id:0
 msgid "Select a currency to apply on the invoice"
-msgstr "在传票上选择合适的币别"
+msgstr "在发票上选择合适的币别"
 
 #. module: account
 #: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "No Invoice Lines !"
-msgstr "没有传票明细"
+msgstr "没有发票明细"
 
 #. module: account
 #: view:account.financial.report:0
@@ -8397,7 +8397,7 @@ msgstr ""
 #: model:process.node,note:account.process_node_invoiceinvoice0
 #: model:process.node,note:account.process_node_supplierinvoiceinvoice0
 msgid "Invoice's state is Open"
-msgstr "传票的状态是待处理"
+msgstr "发票的状态是待处理"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -8475,7 +8475,7 @@ msgstr "当前科目"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by Invoice Date"
-msgstr "按传票日期分组"
+msgstr "按发票日期分组"
 
 #. module: account
 #: help:account.journal,user_id:0
@@ -8735,8 +8735,8 @@ msgid ""
 "You should press this button to re-open it and let it continue its normal "
 "process after having resolved the eventual exceptions it may have created."
 msgstr ""
-"这个按钮只在传票的状态是‘已付款’的时候才显示（意味着传票已经全部对账了），只读字段‘已对账’却是没有勾选的（实际上不应该这样）。换句话说，这张传票被反核"
-"销了，不应该在‘已付款’状态。你应该单击这个按钮来更改传票状态到‘未付款’。这样解决了异常问题后就可以按正常流程继续处理这张传票了。"
+"这个按钮只在发票的状态是‘已付款’的时候才显示（意味着发票已经全部核销了），只读字段‘已核销’却是没有勾选的（实际上不应该这样）。换句话说，这张发票被反核"
+"销了，不应该在‘已付款’状态。你应该单击这个按钮来更改发票状态到‘未付款’。这样解决了异常问题后就可以按正常流程继续处理这张发票了。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -8794,7 +8794,7 @@ msgstr "公司的辅助核算"
 #. module: account
 #: help:account.invoice,account_id:0
 msgid "The partner account used for this invoice."
-msgstr "这传票用这业务伙伴科目"
+msgstr "这发票用这业务伙伴科目"
 
 #. module: account
 #: code:addons/account/account.py:3391
@@ -8906,7 +8906,7 @@ msgstr ""
 #: view:account.invoice:0
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
 msgid "Unpaid Invoices"
-msgstr "未支付的传票"
+msgstr "未支付的发票"
 
 #. module: account
 #: field:account.move.line.reconcile,debit:0
@@ -9016,7 +9016,7 @@ msgstr "传票与付款"
 msgid ""
 "Unique number of the invoice, computed automatically when the invoice is "
 "created."
-msgstr "传票创建时自动计算出唯一的传票编号"
+msgstr "发票创建时自动计算出唯一的发票编号"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expense
@@ -9089,7 +9089,7 @@ msgstr "提供显示银行对账单的序列"
 #. module: account
 #: model:process.transition,note:account.process_transition_validentries0
 msgid "Accountant validates the accounting entries coming from the invoice."
-msgstr "会计使该传票的分录生效"
+msgstr "会计使该发票的分录生效"
 
 #. module: account
 #: view:account.entries.report:0
@@ -9164,7 +9164,7 @@ msgstr "账簿的开账分录"
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
 msgid "Draft invoices are checked, validated and printed."
-msgstr "传票草稿待检查，生效和打印。"
+msgstr "发票草稿待检查，生效和打印。"
 
 #. module: account
 #: field:account.bank.statement,message_is_follower:0
@@ -9304,7 +9304,7 @@ msgstr "辅助核算"
 #: model:process.node,name:account.process_node_invoiceinvoice0
 #: model:process.node,name:account.process_node_supplierinvoiceinvoice0
 msgid "Create Invoice"
-msgstr "创建传票"
+msgstr "创建发票"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
@@ -9320,7 +9320,7 @@ msgstr "进项税(%)"
 #: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "Please create some invoice lines."
-msgstr "请创建传票明细。"
+msgstr "请创建发票明细。"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -9346,7 +9346,7 @@ msgstr "SCNJ"
 msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft invoices."
-msgstr "从这些传票草稿产生的成本辅助核算项(计工单或原材料投入)。"
+msgstr "从这些发票草稿产生的成本辅助核算项(计工单或原材料投入)。"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9444,7 +9444,7 @@ msgstr "贷方合计"
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
 msgid "Accountant validates the accounting entries coming from the invoice. "
-msgstr "经会计师生效的传票分录 "
+msgstr "经会计师生效的发票分录 "
 
 #. module: account
 #: field:account.subscription,period_total:0
@@ -9470,7 +9470,7 @@ msgstr ""
 #: code:addons/account/wizard/account_state_open.py:37
 #, python-format
 msgid "Invoice is already reconciled."
-msgstr "传票已经被对账"
+msgstr "发票已经被核销"
 
 #. module: account
 #: help:account.config.settings,module_account_payment:0
@@ -9642,7 +9642,7 @@ msgstr ""
 msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "refunds. Leave empty to use the expense account."
-msgstr "设置科目，用于退款时传票上默认税科目。留空使用费用科目。"
+msgstr "设置科目，用于退款时发票上默认税科目。留空使用费用科目。"
 
 #. module: account
 #: help:account.addtmpl.wizard,cparent_id:0
@@ -9710,7 +9710,7 @@ msgstr "周期性处理"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Customer And Supplier Invoices"
-msgstr "客户和供应商的传票"
+msgstr "客户和供应商的发票"
 
 #. module: account
 #: model:process.node,note:account.process_node_paymententries0
@@ -9802,8 +9802,8 @@ msgid ""
 "journals. Select 'Opening/Closing Situation' for entries generated for new "
 "fiscal years."
 msgstr ""
-"‘销售’用于客户传票的账簿；‘采购’用于供应商传票的账簿；‘现金’或‘银行’用于客户或供应商付款的账簿。‘普通’用于其他各种业务。‘初始化’用于生成新会计"
-"年度的年初余额。"
+"‘销售’用于客户发票的凭证簿；‘采购’用于供应商发票的凭证簿；‘现金’或‘银行’用于客户或供应商付款的凭证簿。‘普通’用于其他各种业务。‘初始化’用于生成"
+"新会计年度的年初余额。"
 
 #. module: account
 #: view:account.subscription:0
@@ -9856,7 +9856,7 @@ msgstr "开始日期"
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
-msgstr "此字段表示传票已付款，也就是说这张传票对应的会计凭证与一张或几张付款对应的会计凭证已对账。"
+msgstr "此字段表示发票已付款，也就是说这张发票对应的会计凭证与一张或几张付款对应的会计凭证已核销。"
 
 #. module: account
 #: code:addons/account/account_move_line.py:780
@@ -9869,7 +9869,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
 msgid "Draft Invoices"
-msgstr "传票草稿"
+msgstr "发票草稿"
 
 #. module: account
 #. openerp-web
@@ -10174,7 +10174,7 @@ msgstr "标题2（加粗）"
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
 msgid "Supplier Invoices"
-msgstr "供应商传票"
+msgstr "供应商发票"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -10489,7 +10489,7 @@ msgstr "所选的账簿和期间必须属于相同公司。"
 #. module: account
 #: view:account.invoice:0
 msgid "Invoice lines"
-msgstr "传票明细"
+msgstr "发票明细"
 
 #. module: account
 #: field:account.chart,period_to:0
@@ -10523,7 +10523,7 @@ msgstr "补差额凭证"
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
 msgid "Invoice's state is Done"
-msgstr "传票的状态已完成"
+msgstr "发票的状态已完成"
 
 #. module: account
 #: field:account.config.settings,module_account_followup:0
@@ -10550,7 +10550,7 @@ msgstr "替换规则"
 #: selection:report.invoice.created,type:0
 #, python-format
 msgid "Supplier Invoice"
-msgstr "供应商传票"
+msgstr "供应商发票"
 
 #. module: account
 #: field:account.account,debit:0
@@ -10585,7 +10585,7 @@ msgstr "标题3（加粗，略小）"
 #: view:account.invoice:0
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
-msgstr "传票明细"
+msgstr "发票明细"
 
 #. module: account
 #: help:account.model.line,quantity:0
@@ -10665,7 +10665,7 @@ msgstr "12月"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by month of Invoice Date"
-msgstr "按传票月份分组"
+msgstr "按发票月份分组"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:99
@@ -10693,7 +10693,7 @@ msgstr "如果是一个多货币凭证可选其它货币"
 #: model:process.transition,note:account.process_transition_invoiceimport0
 msgid ""
 "Import of the statement in the system from a supplier or customer invoice"
-msgstr "为表单导入供应商或客户传票"
+msgstr "为表单导入供应商或客户发票"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
@@ -10802,7 +10802,7 @@ msgstr "普通账簿"
 #. module: account
 #: view:account.invoice:0
 msgid "Search Invoice"
-msgstr "搜索传票"
+msgstr "搜索发票"
 
 #. module: account
 #: report:account.invoice:0
@@ -10861,7 +10861,7 @@ msgstr "已开票"
 #. module: account
 #: model:process.transition,note:account.process_transition_reconcilepaid0
 msgid "As soon as the reconciliation is done, the invoice can be paid."
-msgstr "一旦对账完成，这传票可能已被支付。"
+msgstr "一旦核销完成，这发票可能已被支付。"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:59
@@ -10877,7 +10877,7 @@ msgstr "搜索科目模板"
 #. module: account
 #: view:account.invoice.tax:0
 msgid "Manual Invoice Taxes"
-msgstr "手动的传票税(非主营业务纳税)"
+msgstr "手动的发票税(非主营业务纳税)"
 
 #. module: account
 #: code:addons/account/account_invoice.py:573
