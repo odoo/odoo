@@ -140,7 +140,7 @@
                     <group nolabel="1" col="4">
                         <field name="visible_to_user" />
                         <field name="auth_required" />
-                        <field name="public_url" widget="url" />
+                        <field name="public_url" widget="url" attrs="{'invisible': [('visible_to_user', '=', False)]}"/>
                     </group>
                     <field name="description" attrs="{'readonly': True}"/>
                     <notebook>
