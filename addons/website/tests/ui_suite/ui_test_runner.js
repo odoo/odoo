@@ -43,8 +43,15 @@ function run (test) {
     page.viewportSize = { width: 1920, height: 1080 };
 
     page.onError = function(message, trace) {
-
         console.log('{ "event": "error", "message": "'+message+'"}');
+        phantom.exit(1);
+    };
+    page.onAlert = function(message) {
+        console.log(message);
+        phantom.exit(1);
+    };
+    page.onConsoleMessage = function(message) {
+        console.log(message);
         phantom.exit(1);
     };
 
@@ -53,7 +60,9 @@ function run (test) {
             console.log('{ "event": "error", "message": "'+url+' failed to load"}');
             phantom.exit(1);
         } else {
-            test(page);
+            page.onLoadFinished = function(status) {
+              test(page);
+            };
         }
     });
 }
