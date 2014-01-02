@@ -5,7 +5,7 @@
          <field name="name">account.invoice.report.graph</field>
          <field name="model">account.invoice.report</field>
          <field name="arch" type="xml">
-             <graph string="Invoices Analysis" type="bar">
+             <graph string="Invoices Analysis" type="pivot">
                  <field name="product_id" type="row"/>
                  <field name="price_total" type="measure"/>
              </graph>
