@@ -6,7 +6,9 @@ import time
 import json
 from openerp import tools
 
-__all__ = ['load_tests', 'WebsiteUiSuite']
+# avoid "ValueError: too many values to unpack"
+def _exc_info_to_string(err, test):
+    return err
 
 # TODO according to al this should be one line of Python
 class LineReader:
@@ -59,7 +61,11 @@ class WebsiteUiSuite(unittest.TestSuite):
             result.stopTest(test)
             return
         # ...then run the actual test
-        self._run(result)
+        result._exc_info_to_string = _exc_info_to_string
+        try:
+            self._run(result)
+        finally:
+            del result._exc_info_to_string
 
     def _run(self, result):
         self._test = WebsiteUiTest(self._testfile)
@@ -78,8 +84,9 @@ class WebsiteUiSuite(unittest.TestSuite):
             os.path.join(os.path.join(os.path.dirname(__file__), 'ui_suite'), self._testfile),
             json.dumps(self._options)
         ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        proc_stdout = LineReader(phantom.stdout.fileno())
-        readable = [proc_stdout]
+
+        readable = [LineReader(phantom.stdout.fileno())]
+
         try:
             while phantom.poll() is None and readable and last_check_time < start_time + self._timeout:
                 ready, _, _ = select.select(readable, [], [], 0.1)
