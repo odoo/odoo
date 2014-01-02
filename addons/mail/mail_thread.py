@@ -1064,11 +1064,23 @@ class mail_thread(osv.AbstractModel):
                     alternative = True
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
-                filename = part.get_filename()  # None if normal part
+                # part.get_filename returns decoded value if able to decode, coded otherwise.
+                # original get_filename is not able to decode iso-8859-1 (for instance).
+                # therefore, iso encoded attachements are not able to be decoded properly with get_filename
+                # code here partially copy the original get_filename method, but handle more encoding
+                filename=part.get_param('filename', None, 'content-disposition')
+                if not filename:
+                    filename=part.get_param('name', None)
+                if filename:
+                    if isinstance(filename, tuple):
+                        # RFC2231
+                        filename=email.utils.collapse_rfc2231_value(filename).strip()
+                    else:
+                        filename=decode(filename)
                 encoding = part.get_content_charset()  # None if attachment
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append((decode(filename) or 'attachment', part.get_payload(decode=True)))
+                    attachments.append((filename or 'attachment', part.get_payload(decode=True)))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
