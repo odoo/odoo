@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- Grant survey permissions to demo user -->
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('base.group_survey_manager'))]" name="groups_id"/>
+        </record>
+        <!-- Appraisal Form -->
+        <record model="survey.survey" id="appraisal_form">
+            <field name="title">Self Appraisal Form</field>
+            <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="state">open</field>
+            <field name="visible_to_user" eval="False"/>
+            <field name="users_can_go_back" eval="True" />
+            <field name="description"> </field>
+            <field name="thank_you_message"> </field>
+        </record>
+        <record model="survey.page" id="appraisal_1">
+            <field name="title">Page1</field>
+            <field name="survey_id" ref="appraisal_form" />
+            <field name="sequence">1</field>
+            <field name="description"></field>
+        </record>
+        <!-- Recruitment Form -->
+        <record model="survey.survey" id="recruitment_form">
+            <field name="title">Recruitment Form</field>
+            <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="state">open</field>
+            <field name="visible_to_user" eval="False"/>
+            <field name="users_can_go_back" eval="False" />
+            <field name="description"> </field>
+            <field name="thank_you_message"> </field>
+        </record>
+        <!-- User Feedback Form -->
+        <record model="survey.survey" id="feedback_form">
+            <field name="title">User Feedback Form</field>
+            <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="state">open</field>
+            <field name="visible_to_user" eval="True"/>
+            <field name="users_can_go_back" eval="True" />
+            <field name="description"> </field>
+            <field name="thank_you_message"></field>
+        </record>
+    </data>
+</openerp>

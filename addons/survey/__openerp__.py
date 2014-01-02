@@ -39,6 +39,7 @@ sent mails with user name and password for the invitation of the survey.
     'depends': ['email_template', 'mail', 'website'],
     'data': [
         'survey_cron.xml',
+        'data/survey_data.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
         'views/survey_views.xml',
