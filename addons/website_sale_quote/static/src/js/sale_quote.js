@@ -20,5 +20,23 @@ $(document).ready(function () {
                 });
         return false;
     });
+
+    $('a.js_add_line_json').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        var href = $link.attr("href");
+        var order = $link.attr("href").match(/order=([0-9]+)/);
+        var option = href.match(/add_line\/([0-9]+)/);
+        var product = $link.attr("href").match(/product=([0-9]+)/);
+        openerp.jsonRpc("/quote/add_line/", 'call', {
+                'option': option[1],
+                'order': order[1],
+                'product': product[1],
+                })
+                .then(function (data) {
+                    location.reload();
+                });
+        return false;
+    });
 });
 //vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

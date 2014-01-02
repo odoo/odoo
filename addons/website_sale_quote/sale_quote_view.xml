@@ -10,6 +10,17 @@
                     <button name="open_quotation" string="View Quotation" type="object"
                         attrs="{'invisible': [('template_id','=',False)]}"/>
                 </xpath>
+                <xpath expr="//field[@name='order_line']" position="after">
+                    <label string="Optional Products &amp; Services" for="options"/>
+                    <field name="options">
+                        <tree string="Sales Quote Template Lines" editable="bottom">
+                                <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                <field name="name"/>
+                                <field name="price_unit"/>
+                                <field name="website_description" invisible="1"/>
+                        </tree>
+                    </field>
+                </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="template_id" on_change="onchange_template_id(template_id)"/>
                     <field name="website_description" invisible="1"/>

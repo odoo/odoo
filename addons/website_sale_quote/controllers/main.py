@@ -97,3 +97,19 @@ class sale_quote(http.Controller):
             'template': quote,
         }
         return request.website.render('website_sale_quote.so_template', values)
+        
+    @website.route(['/quote/add_line'], type='json', auth="public")
+    def add(self, option=None, order=None, product=None, **post):
+        vals = {}
+        product_obj = request.registry.get('product.product').browse(request.cr, SUPERUSER_ID, int(product), context=request.context)
+        vals.update({
+            'price_unit': product_obj.list_price,
+            'website_description': product_obj.website_description,
+            'name': product_obj.name,
+            'order_id': int(order),
+            'product_id' : product_obj.id,
+        })
+        new = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
+        request.registry.get('sale.option.line').write(request.cr, SUPERUSER_ID, [int(option)], {'add_to_line': True}, context=request.context)
+        return [new]
+

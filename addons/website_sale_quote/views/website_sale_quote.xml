@@ -2,7 +2,34 @@
 <openerp>
     <data>
         <template id="pricing" name="Price">
+          <ul class="wizard pull-right">
+              <li></li>
+          </ul>
+
             <section id="quote" class="container">
+                 <div class="col-xs-6 col-sm-6 col-md-6 text-muted">
+                    <h4>Bill To:</h4>
+                    <div t-field="quotation.partner_invoice_id" t-field-options='{
+                        "widget": "contact",
+                        "fields": ["address", "name", "phone", "email"]
+                        }'/>
+                    <h4 class="mt32">Ship To:</h4>
+                    <t t-if="quotation.partner_shipping_id and quotation.partner_shipping_id.id != quotation.partner_invoice_id.id">
+                      <div t-field="quotation.partner_shipping_id" t-field-options='{
+                        "widget": "contact",
+                        "fields": ["address", "name", "phone"]
+                        }'/>
+                    </t>
+                    <address t-if="quotation.partner_shipping_id.id == quotation.partner_invoice_id.id">Ship to the same address</address>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 text-right text-muted">
+                    <p>
+                        <em>Date: <t t-esc="quotation.date_order"/></em>
+                    </p>
+                    <p>
+                        <em>Quotation #: <t t-esc="quotation.name"/></em>
+                    </p>
+                </div>
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -19,18 +46,8 @@
                                 <div t-field="line.name"/>
                             </td>
                             <td>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True" class="mb8 js_update_line_json">
-                                            <span class="fa fa-minus"/>
-                                        </a>
-                                    </span>
-                                    <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
-                                    <span class="input-group-addon">
-                                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }" class="mb8 js_update_line_json">
-                                            <span class="fa fa-plus"/>
-                                        </a>
-                                    </span>
+                                <div id="quote_qty">
+                                    <t t-esc="line.product_uom_qty"/>
                                 </div>
                             </td>
                             <td>
@@ -74,6 +91,24 @@
                 <h2>Terms &amp; Conditions</h2>
                 <p t-field="quotation.note"/>
             </section>
+        </template>
+
+        <template id="change_quantity" inherit_option_id="website_sale_quote.pricing" name="Change Quantity">
+            <xpath expr="//div[@id='quote_qty']" position="replace">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True" class="mb8 js_update_line_json">
+                            <span class="fa fa-minus"/>
+                        </a>
+                    </span>
+                    <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
+                    <span class="input-group-addon">
+                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }" class="mb8 js_update_line_json">
+                            <span class="fa fa-plus"/>
+                        </a>
+                    </span>
+                </div>
+            </xpath>
         </template>
 
         <template id="quote_status">
@@ -137,66 +172,72 @@
                     <script type="text/javascript" src="/website_sale_quote/static/src/js/sale_quote.js"></script>
                     <t t-raw="head or ''"/>
                 </t>
-                <div class="col-md-4">
-                    <ul class="nav nav-pills nav-stacked" data-spy="affix">
-                        <li class="active">
-                            <a href="#introduction11" data-toggle="tab">Introduction</a>
-                        </li>
-                        <li t-foreach="quotation.order_line" t-as="line">
-                            <a t-att-href="'#%s'% line.id" data-toggle="tab">
-                                <t t-raw="line.product_id.name_template"/>
-                            </a>
-                        </li>
-                        <li><a href="#quote" data-toggle="tab">Pricing</a></li>
-                        <li><a href="#terms" data-toggle="tab">Terms &amp; Conditions</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-8">
-                    <t t-call="website_sale_quote.quote_status"/>
-                    <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                            <h4 class="modal-title">Reason</h4>
-                          </div>
-                          <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% (quotation.id)">
-                              <div class="modal-body">
-                                <textarea rows="3" id="decline_message" name="decline_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
-                            </div>
-                          <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post</button>
-                          </div>
-                        </form>
-                        </div>
-                      </div>
+                <body data-spy="scroll" data-target=".navbar">
+                    <div class="col-md-4 navbar">
+                        <ul class="nav nav-pills nav-stacked" data-spy="affix">
+                            <li class="active">
+                                <a href="#introduction11" data-toggle="tab">Introduction</a>
+                            </li>
+                            <li t-foreach="quotation.order_line" t-as="line">
+                                <a t-att-href="'#%s'% line.id" data-toggle="tab">
+                                    <t t-raw="line.product_id.name"/>
+                                </a>
+                            </li>
+                            <li><a href="#quote" data-toggle="tab">Pricing</a></li>
+                            <li><a href="#terms" data-toggle="tab">Terms &amp; Conditions</a></li>
+                        </ul>
                     </div>
-                    <section id="introduction11" class="tab-pane active" t-field="quotation.website_description">
-                    </section>
-                    <t t-foreach="quotation.order_line" t-as="line">
-                        <section class="tab-pane" t-att-id="line.id">
-                            <div t-field="line.website_description" class="oe_structure"/>
+                    <div class="col-md-8">
+                        <t t-call="website_sale_quote.quote_status"/>
+                        <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <h4 class="modal-title">Reason</h4>
+                              </div>
+                              <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% (quotation.id)">
+                                  <div class="modal-body">
+                                    <textarea rows="3" id="decline_message" name="decline_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
+                                </div>
+                              <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post</button>
+                              </div>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+                        <section id="introduction11" class="tab-pane active" t-field="quotation.website_description">
                         </section>
-                    </t>
-                    <t t-call="website_sale_quote.pricing"/>
-                    <t t-call="website_sale_quote.product_recommendation"/>
-                    <t t-call="website_sale_quote.chatter"/>
-                </div>
+                        <t t-foreach="quotation.order_line" t-as="line">
+                            <section class="tab-pane" t-att-id="line.id">
+                                <div t-field="line.website_description" class="oe_structure"/>
+                            </section>
+                        </t>
+                        <t t-call="website_sale_quote.pricing"/>
+                        <t t-call="website_sale_quote.optional_products"/>
+                        <t t-call="website_sale_quote.chatter"/>
+                    </div>
+                </body>
             </t>
         </template>
 
-        <template id="product_recommendation">
-            <div class="container mt32" t-if="quotation.recommended_products()">
-                <h3>Customers who have bought this product also bought:</h3>
+        <template id="optional_products">
+            <div class="container mt32" t-if="quotation.options">
+                <h3>Optional Products &amp; Services:</h3>
                 <div class='row mt16'>
-                    <t t-foreach="quotation.recommended_products()" t-as="product">
-                        <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
-                            <div class='mt16 text-center'>
-                                <a href="#" t-field="product.name"/>
-                                <span t-field="product.image_small" t-field-options='{"widget": "image", "class": "img-rounded"}'/>
+                    <t t-foreach="quotation.options" t-as="option">
+                        <t t-if="not option.add_to_line">
+                            <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
+                                <div class='mt16 text-center'>
+                                    <a href="#" t-field="option.product_id.name"/>
+                                    <span t-field="option.product_id.image_small" t-field-options='{"widget": "image", "class": "img-rounded"}'/>
+                                </div>
+                                <a type="submit" t-href="./add_line/#{ option.id }/?order=#{ quotation.id }&amp;product=#{option.product_id.id}" class="btn btn-primary btn-xs js_add_line_json">Add To Quotation
+                                </a>
                             </div>
-                        </div>
+                        </t>
                     </t>
                 </div>
             </div>

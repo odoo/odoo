@@ -33,11 +33,12 @@ class sale_quote_template(osv.osv):
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
     }
+
     def open_template(self, cr, uid, quote_id, context=None):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/template/%d' % quote_id
+            'url': '/template/%d' % quote_id[0]
         }
 
 
@@ -86,6 +87,7 @@ class sale_order(osv.osv):
         'access_token': fields.char('Security Token', size=256, required=True),
         'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
         'website_description': fields.html('Description'),
+        'options' : fields.one2many('sale.option.line', 'option_id', 'Optional Products Lines'),
     }
     _defaults = {
         'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4())
@@ -95,7 +97,7 @@ class sale_order(osv.osv):
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',
-            'url': '/quote/%d/%s' % (quote.id, quote.access_token)
+            'url': '/quote/%s/%s' % (quote.id, quote.access_token)
         }
 
     def _get_sale_order_line(self, cr, uid, template_id, context=None):
@@ -124,3 +126,31 @@ class sale_order(osv.osv):
         for line in order_line:
             products += line.product_id.product_tmpl_id.recommended_products(context=context)
         return products
+        
+class sale_option_line(osv.osv):
+    _name = "sale.option.line"
+    _description = "Sale Options"
+    _columns = {
+        'option_id': fields.many2one('sale.order', 'Sale Order Reference', required=True, ondelete='cascade', select=True),
+        'name': fields.text('Description', required=True),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
+        'website_description': fields.html('Line Description'),
+        'price_unit': fields.float('Unit Price', required=True),
+        'add_to_line': fields.boolean('Add to Line'),
+    }
+
+    def on_change_product_id(self, cr, uid, ids, product, context=None):
+        vals = {}
+        product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        vals.update({
+            'price_unit': product_obj.list_price,
+            'website_description': product_obj.website_description,
+            'name': product_obj.name,
+        })
+        return {'value': vals}
+
+class product_template(osv.Model):
+    _inherit = "product.template"
+    _columns = {
+        'website_description': fields.html('Description for the website'),
+    }
