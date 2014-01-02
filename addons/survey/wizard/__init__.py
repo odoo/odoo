@@ -20,9 +20,5 @@
 ##############################################################################
 
 import survey_email_compose_message
-import survey_print_statistics
-import survey_print_answer
-import survey_answer
-import survey_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

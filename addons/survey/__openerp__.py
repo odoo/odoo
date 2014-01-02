@@ -57,7 +57,7 @@ sent mails with user name and password for the invitation of the survey.
     'auto_install': False,
     'application': True,
     'sequence': 10,
-    #'images': [''],
+    'images': [],
     'css': ['static/src/css/survey.css'],
     'js': ['static/src/js/survey.js'],
 }
