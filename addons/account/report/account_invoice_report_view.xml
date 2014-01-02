@@ -1,40 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <record id="view_account_invoice_report_tree" model="ir.ui.view">
-        <field name="name">account.invoice.report.tree</field>
-        <field name="model">account.invoice.report</field>
-        <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';gray:state in ('cancel','paid');black:state in ('proforma','proforma2')" create="false" string="Invoices Analysis">
-                <field name="date" invisible="1"/>
-                <field name="user_id" invisible="1"/>
-                <field name="year" invisible="1"/>
-                <field name="day" invisible="1"/>
-                <field name="month" invisible="1"/>
-                <field name="type" invisible="1"/>
-                <field name="company_id" invisible="1"/>
-                <field name="partner_id" invisible="1"/>
-                <field name="commercial_partner_id" invisible="1"/>
-                <field name="country_id" invisible="1"/>
-                <field name="product_id" invisible="1"/>
-                <field name="uom_name" invisible="not context.get('set_visible',False)"/>
-                <field name="categ_id" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="period_id" invisible="1"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="journal_id" invisible="1"/>
-                <field name="partner_bank_id" invisible="1"/>
-                <field name="date_due" invisible="1"/>
-                <field name="account_id" invisible="1"/>
-                <field name="account_line_id" invisible="1"/>
-                <field name="nbr" sum="# of Lines"/>
-                <field name="product_qty" sum="Qty"/>
-                <!-- <field name="reconciled"  sum="# Reconciled"/> -->
-                <field name="price_total" sum="Total Without Tax"/>
-            </tree>
-        </field>
-    </record>
-
     <record id="view_account_invoice_report_graph" model="ir.ui.view">
          <field name="name">account.invoice.report.graph</field>
          <field name="model">account.invoice.report</field>
@@ -92,7 +58,7 @@
         <field name="name">Invoices Analysis</field>
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="context">{'search_default_period':1,'search_default_current':1, 'search_default_year': 1, 'search_default_category_product':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
         <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
