@@ -319,7 +319,7 @@ class survey_page(osv.osv):
         'title': fields.char('Page Title', size=128, required=1,
             translate=True),
         'survey_id': fields.many2one('survey.survey', 'Survey',
-            ondelete='cascade'),
+            ondelete='cascade', required=True),
         'question_ids': fields.one2many('survey.question', 'page_id',
             'Questions'),
         'sequence': fields.integer('Page number'),
