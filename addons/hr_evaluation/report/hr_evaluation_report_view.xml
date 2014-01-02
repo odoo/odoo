@@ -2,37 +2,14 @@
 <openerp>
     <data>
 
-    <record id="view_evaluation_report_tree" model="ir.ui.view">
-        <field name="name">hr.evaluation.report.tree</field>
-        <field name="model">hr.evaluation.report</field>
-        <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')" create="false"
-             string="Appraisal Analysis">
-                <field name="create_date" invisible="1"/>
-                <field name="employee_id" invisible="1"/>
-                <field name="deadline" invisible="1"/>
-                <field name="closed" invisible="1"/>
-                <field name="day" invisible="1"/>
-                <field name="plan_id" invisible="1"/>
-                <field name="year" invisible="1"/>
-                <field name="month" invisible="1"/>
-                <field name="rating" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="nbr" sum="# of Requests"/>
-                <field name="delay_date"/>
-                <field name="overpass_delay"/>
-            </tree>
-        </field>
-    </record>
-
     <record id="view_evaluation_report_graph" model="ir.ui.view">
             <field name="name">hr.evaluation.report.graph</field>
             <field name="model">hr.evaluation.report</field>
             <field name="arch" type="xml">
-            <graph string="Appraisal Analysis" type="bar" stacked="True">
+            <graph string="Appraisal Analysis" type="pivot" stacked="True">
                  <field name="employee_id" type="row"/>
-                 <field name="nbr" type="measure"/>
                  <field name="state" type="col"/>
+                 <field name="nbr" type="measure"/>
              </graph>
          </field>
     </record>
@@ -70,7 +47,7 @@
         <field name="name">Appraisal Analysis</field>
         <field name="res_model">hr.evaluation.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_evaluation_report_search"/>
     </record>
