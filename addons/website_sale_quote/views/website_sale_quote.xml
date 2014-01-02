@@ -7,29 +7,7 @@
           </ul>
 
             <section id="quote" class="container">
-                 <div class="col-xs-6 col-sm-6 col-md-6 text-muted">
-                    <h4>Bill To:</h4>
-                    <div t-field="quotation.partner_invoice_id" t-field-options='{
-                        "widget": "contact",
-                        "fields": ["address", "name", "phone", "email"]
-                        }'/>
-                    <h4 class="mt32">Ship To:</h4>
-                    <t t-if="quotation.partner_shipping_id and quotation.partner_shipping_id.id != quotation.partner_invoice_id.id">
-                      <div t-field="quotation.partner_shipping_id" t-field-options='{
-                        "widget": "contact",
-                        "fields": ["address", "name", "phone"]
-                        }'/>
-                    </t>
-                    <address t-if="quotation.partner_shipping_id.id == quotation.partner_invoice_id.id">Ship to the same address</address>
-                </div>
-                <div class="col-xs-6 col-sm-6 col-md-6 text-right text-muted">
-                    <p>
-                        <em>Date: <t t-esc="quotation.date_order"/></em>
-                    </p>
-                    <p>
-                        <em>Quotation #: <t t-esc="quotation.name"/></em>
-                    </p>
-                </div>
+
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -111,24 +89,6 @@
             </xpath>
         </template>
 
-        <template id="quote_status">
-            <div class="btn-group btn-group-lg mt16 mb16" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-                <a class="btn btn-success fa fa-check" type="submit" t-href="/quote/#{ quotation.id }/accept">
-                    Accept
-                </a>
-                <a class="btn btn-info fa fa-comment" type="submit" href="#chat">
-                    Send us a Feedback
-                </a>
-                <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modeldecline">
-                    Refuse
-                </a>
-            </div>
-            <div class="alert alert-warning alert-dismissable" t-if="quotation.state == 'cancel'">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                <strong>This quotation has been canceled.</strong> Contact <t t-field="quotation.user_id"/> to ask a new one.
-            </div>
-        </template>
-
         <template id="chatter">
             <div id="chat" class="panel panel-default">
                 <div class="panel-heading">
@@ -168,15 +128,16 @@
 
         <template id="so_quotation" name="Product Quotation">
             <t t-call="website.layout">
-                <t t-set="head">
-                    <script type="text/javascript" src="/website_sale_quote/static/src/js/sale_quote.js"></script>
-                    <t t-raw="head or ''"/>
-                </t>
-                <body data-spy="scroll" data-target=".navbar">
-                    <div class="col-md-4 navbar">
-                        <ul class="nav nav-pills nav-stacked" data-spy="affix">
+              <t t-set="head">
+                  <script type="text/javascript" src="/website_sale_quote/static/src/js/sale_quote.js"></script>
+                  <t t-raw="head or ''"/>
+              </t>
+              <div class="container">
+                <div class="row mt16">
+                    <div class="col-md-3 navbar">
+                        <ul class="nav nav-pills nav-stacked mt32">
                             <li class="active">
-                                <a href="#introduction11" data-toggle="tab">Introduction</a>
+                                <a href="#introduction" data-toggle="tab">Introduction</a>
                             </li>
                             <li t-foreach="quotation.order_line" t-as="line">
                                 <a t-att-href="'#%s'% line.id" data-toggle="tab">
@@ -187,8 +148,34 @@
                             <li><a href="#terms" data-toggle="tab">Terms &amp; Conditions</a></li>
                         </ul>
                     </div>
-                    <div class="col-md-8">
-                        <t t-call="website_sale_quote.quote_status"/>
+                    <div class="col-md-9">
+
+                        <div class="text-center">
+                            <div class="btn-group btn-group-lg" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
+                                <a class="btn btn-success fa fa-check" type="submit" t-href="/quote/#{ quotation.id }/accept">
+                                    Accept
+                                </a>
+                                <a class="btn btn-info fa fa-comment" type="submit" href="#chat">
+                                    Feedback
+                                </a>
+                                <a class="btn btn-danger fa fa-times" data-toggle="modal" data-target="#modeldecline">
+                                    Refuse
+                                </a>
+                            </div>
+                        </div>
+
+                        <h1 class="page-header">
+                            <span t-if="quotation.state in ('draft','sent','cancel')">Your Quotation</span>
+                            <span t-if="quotation.state not in ('draft','sent','cancel')">Your Order</span>
+                            <em t-esc="quotation.name"/>
+                            <small t-field="quotation.state"/>
+                        </h1>
+
+                        <div class="alert alert-warning alert-dismissable" t-if="quotation.state == 'cancel'">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                            <strong>This quotation has been canceled.</strong> Contact <t t-field="quotation.user_id"/> to ask a new one.
+                        </div>
+
                         <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
                           <div class="modal-dialog">
                             <div class="modal-content">
@@ -208,18 +195,74 @@
                             </div>
                           </div>
                         </div>
-                        <section id="introduction11" class="tab-pane active" t-field="quotation.website_description">
-                        </section>
+
+                        <a id="introduction"/>
+                        <div class="row mt32">
+                            <div class="col-md-6">
+                                <div>
+                                    <label class="col-sm-3 text-right">Bill To:</label>
+                                    <div class="col-sm-9">
+                                        <div t-field="quotation.partner_invoice_id" t-field-options='{
+                                            "widget": "contact",
+                                            "fields": ["address", "name", "phone", "email"]
+                                            }'/>
+                                    </div>
+                                </div>
+                                <div t-if="quotation.partner_shipping_id.id != quotation.partner_invoice_id.id">
+                                    <label class="col-sm-3 text-right">Ship To:</label>
+                                    <div class="col-sm-9">
+                                        <div t-field="quotation.partner_shipping_id" t-field-options='{
+                                          "widget": "contact",
+                                          "fields": ["address", "name", "phone"]
+                                          }'/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="col-sm-5 text-right">Your Contact:</label>
+                                    <div class="col-sm-7">
+                                        <div t-field="quotation.user_id" t-field-options='{
+                                            "widget": "contact",
+                                            "fields": ["name", "phone", "email"]
+                                            }'/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-5 text-right">Quote Date:</label>
+                                    <div class="col-sm-7">
+                                        <span t-field="quotation.date_order"/>
+                                    </div>
+                                    <div class="clearfix"/>
+                                    <div t-if="quotation.client_order_ref">
+                                        <label class="col-sm-5 text-right">Your Reference:</label>
+                                        <div class="col-sm-7">
+                                            <span t-field="quotation.client_order_ref"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a id="offer"/>
+                        <div t-field="quotation.website_description"/>
+
                         <t t-foreach="quotation.order_line" t-as="line">
-                            <section class="tab-pane" t-att-id="line.id">
-                                <div t-field="line.website_description" class="oe_structure"/>
-                            </section>
+                            <a t-att-id="line.id"/>
+                            <div t-field="line.website_description"/>
                         </t>
+
+                        <a id="pricing"/>
                         <t t-call="website_sale_quote.pricing"/>
+
+                        <a id="options"/>
                         <t t-call="website_sale_quote.optional_products"/>
+
+                        <a id="discussion"/>
                         <t t-call="website_sale_quote.chatter"/>
                     </div>
-                </body>
+                </div>
+              </div>
             </t>
         </template>
 
@@ -242,35 +285,41 @@
                 </div>
             </div>
         </template>
+
         <template id="so_template" name="SO Template">
             <t t-call="website.layout">
-                <div class="col-xs-12 col-md-8 tab-content">
-                    <section id="template_introduction" class="tab-pane active" t-field="template.website_description">
-                    </section>
-                    <t t-foreach="template.quote_line" t-as="line">
-                        <section class="tab-pane" t-att-id="line.id">
-                            <div t-field="line.website_description" class="oe_structure"/>
-                        </section>
-                    </t>
-                    <section id="templateterms" class="tab-pane">
-                        <div class="container panel panel-default">
-                            <div class="row panel-body">
-                                <div class="text-center">
-                                    <h2><strong>Terms &amp; Conditions</strong></h2>
-                                    <p class="lead" t-field="template.note"/>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <div class="col-xs-6 col-md-4 sidebar" id="sidebar">
-                    <ul class="nav nav-pills nav-stacked" data-spy="affix">
-                        <li class="active"><a href="#template_introduction" data-toggle="tab"><i class="icon-chevron-right"></i> Introduction</a></li>
-                        <t t-foreach="template.quote_line" t-as="line">
-                            <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><i class="icon-chevron-right"></i><t t-raw="line.product_id.name_template"/> </a></li>
-                        </t>
-                        <li><a href="#templateterms" data-toggle="tab"><i class="icon-chevron-right"></i> Terms &amp; Conditions</a></li>
-                    </ul>
+                <div class="container">
+                    <div class="row">
+                      <div class="col-md-4" id="sidebar">
+                          <ul class="nav nav-pills nav-stacked">
+                              <li class="active"><a href="#template_introduction" data-toggle="tab">Contact Data</a></li>
+                              <li><a href="#template_introduction" data-toggle="tab">Our Offer</a></li>
+                              <t t-foreach="template.quote_line" t-as="line">
+                                  <li><a t-att-href="'#%s'% line.id" data-toggle="tab"><t t-raw="line.product_id.name_template"/> </a></li>
+                              </t>
+                              <li><a href="#templateterms" data-toggle="tab">Terms &amp; Conditions</a></li>
+                          </ul>
+                      </div>
+                      <div class="col-md-8 tab-content">
+                          <div id="template_introduction" t-field="template.website_description"/>
+
+                          <t t-foreach="template.quote_line" t-as="line">
+                              <section class="tab-pane" t-att-id="line.id">
+                                  <div t-field="line.website_description" class="oe_structure"/>
+                              </section>
+                          </t>
+                          <section id="templateterms" class="tab-pane">
+                              <div class="container panel panel-default">
+                                  <div class="row panel-body">
+                                      <div class="text-center">
+                                          <h2><strong>Terms &amp; Conditions</strong></h2>
+                                          <p class="lead" t-field="template.note"/>
+                                      </div>
+                                  </div>
+                              </div>
+                          </section>
+                      </div>
+                    </div>
                 </div>
             </t>
         </template>
