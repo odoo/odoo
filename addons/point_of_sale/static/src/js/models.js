@@ -138,6 +138,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
                          'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
                          'iface_print_via_proxy','iface_cashdrawer','iface_invoicing','iface_big_scrollbars',
+                         'receipt_header','receipt_footer',
                          'state','sequence_id','session_ids'],
                         [['id','=', self.pos_session.config_id[0]]]
                     );
@@ -869,6 +870,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 client: client ? client.name : null ,
                 invoice_id: null,   //TODO
                 cashier: cashier ? cashier.name : null,
+                header: this.pos.config.receipt_header || '',
+                footer: this.pos.config.receipt_footer || '',
                 precision: {
                     price: 2,
                     money: 2,

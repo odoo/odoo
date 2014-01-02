@@ -123,7 +123,8 @@ class EscposDriver(hw_proxy.Proxy):
             eprint.text(receipt['company']['email'] + '\n')
         if check(receipt['company']['website']):
             eprint.text(receipt['company']['website'] + '\n')
-
+        if check(receipt['header']):
+            eprint.text(receipt['header']+'\n')
         if check(receipt['cashier']):
             eprint.text('-'*32+'\n')
             eprint.text('Served by '+receipt['cashier']+'\n')
@@ -177,6 +178,8 @@ class EscposDriver(hw_proxy.Proxy):
             eprint.text(printline(_('Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
 
         # Footer
+        if check(receipt['footer']):
+            eprint.text('\n'+receipt['footer']+'\n\n')
         eprint.text(receipt['name']+'\n')
         eprint.text(      str(receipt['date']['date']).zfill(2)
                     +'/'+ str(receipt['date']['month']+1).zfill(2)
