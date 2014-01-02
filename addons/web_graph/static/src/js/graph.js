@@ -246,7 +246,11 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                         if (g.attrs.context) {
                             var field_id = py.eval(g.attrs.context).group_by;
                             if (field_id) {
-                                self.important_fields.push(field_id);
+                                if (field_id instanceof Array) {
+                                    self.important_fields.concat(field_id);
+                                } else {
+                                    self.important_fields.push(field_id);
+                                }
                             }
                         }
                     });
