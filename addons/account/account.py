@@ -1023,7 +1023,10 @@ class account_period(osv.osv):
         if not result:
             result = self.search(cr, uid, args, context=context)
         if not result:
-            raise osv.except_osv(_('Error!'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_fiscalyear')
+            msg = _('There is no period defined for this date: %s.\nPlease, go to Configuration/Periods and configure a fiscal year.') % dt
+            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+
         return result
 
     def action_draft(self, cr, uid, ids, *args):
