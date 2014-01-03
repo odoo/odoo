@@ -1,26 +1,28 @@
 .graph_main_content td {
     font-size: 12px;
-    background: #fff;
+    /*background: #fff;*/
     margin: 45px;
     border-collapse: collapse;
     text-align: left;
     vertical-align: middle;
 }
 
+
 .graph_main_content th {
     font-size: 13px;
     font-weight: normal;
     color: #039;
     padding: 10px 8px;
-    border-bottom: 2px solid #6678b1;  
     vertical-align: top;
 }
 
 .graph_main_content thead {
   border: 1px solid #6678b1;
+    border-bottom: 2px solid #6678b1;  
+    /*color: #039;*/
 }
 
-.graph_main_content tbody {
+.graph_main_content tbody td{
   border: 1px solid #ccc;
 }
 
@@ -28,7 +30,6 @@
     border-bottom: 1px solid #ccc;
     padding: 6px 8px;
     text-align: right;
-    text-color: black;
 }
 
 td.graph_border {
@@ -76,4 +77,12 @@ span.web_graph_indent {
 .graph_widget .dropdown-menu li a, .graph_widget .dropdown-menu li a:hover, .graph_widget .dropdown-menu li a:focus {
   color: black;
   text-decoration: none;
+}
+
+th.measure_row {
+  color: black;
+  font-size: 12px;
+  /*border: 0 !important;*/
+  padding:0px 5px 0px 5px ;
+  margin:0;
 }

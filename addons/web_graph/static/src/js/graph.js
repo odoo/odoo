@@ -51,7 +51,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
     view_loading: function (fields_view_get) {
         var self = this,
             arch = fields_view_get.arch,
-            measure = null,
+            measures = [],
+            title = arch.attrs.string,
             stacked = false;
 
         if (!_.has(arch.attrs, 'type')) {
@@ -90,20 +91,24 @@ instance.web_graph.GraphView = instance.web.View.extend({
                         self.default_col_groupby.push(field.attrs.name);
                         break;
                     case 'measure':
-                        measure = field.attrs.name;
+                        measures.push(field.attrs.name);
                         break;
                 }
             } else {  // old style, kept for backward compatibility
                 if ('operator' in field.attrs) {
-                    measure = (measure) ? measure : field.attrs.name;
+                    measures.push(field.attrs.name);
                 } else {
                     self.default_row_groupby.push(field.attrs.name);
                 }
             }
         });
+        if (measures.length === 0) {
+            measures.push('__count');
+        }
         this.graph_widget.config({
-            measure:measure,
+            measures:measures,
             update:false,
+            title: title,
             bar_ui: (stacked) ? 'stack' : 'group'
         });
     },
@@ -214,6 +219,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         this.visible_ui = true;
         this.bar_ui = 'group'; // group or stack
         this.config(options || {});
+        this.title = 'Graph';
     },
 
     // hide ui/show, stacked/grouped
@@ -226,6 +232,9 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         }
         if (_.has(options, 'bar_ui')) {
             this.bar_ui = options.bar_ui;
+        }
+        if (_.has(options, 'title')) {
+            this.title = options.title;
         }
         this.pivot.config(options);
     },
@@ -335,8 +344,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     measure_selection: function (event) {
         event.preventDefault();
         var measure = event.target.attributes['data-choice'].nodeValue;
-        var actual_measure = (measure === '__count') ? null : measure;
-        this.pivot.config({measure:actual_measure});
+        this.pivot.config({measures:[measure]});
     },
 
     option_selection: function (event) {
@@ -413,13 +421,13 @@ instance.web_graph.Graph = instance.web.Widget.extend({
  ******************************************************************************/
     draw_table: function () {
         this.pivot.rows.main.title = 'Total';
-        this.pivot.cols.main.title = this.measure_label();
+        this.pivot.cols.main.title = this.title;
         this.draw_top_headers();
         _.each(this.pivot.rows.headers, this.proxy('draw_row'));
     },
 
-    measure_label: function () {
-        return (this.pivot.measure) ? this.fields[this.pivot.measure].string : 'Quantity';
+    measure_label: function (measure) {
+        return (measure !== '__count') ? this.fields[measure].string : 'Quantity';
     },
 
     make_border_cell: function (colspan, rowspan, headercell) {
@@ -456,7 +464,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         }
 
         function make_col_header (col) {
-            var cell = self.make_border_cell(col.width, col.height, true);
+            var cell = self.make_border_cell(col.width*pivot.measures.length, col.height, true);
             return cell.append(self.make_header_title(col).attr('data-id', col.id));
         }
 
@@ -479,24 +487,62 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             make_cells(pivot.cols.headers, 0);
         } else {
             make_cells(pivot.cols.main.children, 1);
-            header_cells[0].push(self.make_border_cell(1, height, true).append('Total').css('font-weight', 'bold'));
+            if (pivot.get_cols_leaves().length > 1) {
+                header_cells[0].push(self.make_border_cell(pivot.measures.length, height, true).append('Total').css('font-weight', 'bold'));
+            }
         }
 
         _.each(header_cells, function (cells) {
             thead.append($('<tr></tr>').append(cells));
         });
+        
+        if (pivot.measures.length >= 2) {
+            thead.append(self.make_measure_row());
+        }
+
         self.table.append(thead);
     },
 
-    get_measure_type: function () {
-        var measure = this.pivot.measure;
-        return (measure) ? this.fields[measure].type : 'integer';
+    make_measure_row: function() {
+        var self = this,
+            measures = this.pivot.measures,
+            cols = this.pivot.cols.headers,
+            measure_cells,
+            measure_row = $('<tr></tr>');
+
+        measure_row.append($('<th></th>'));
+
+        _.each(cols, function (col) {
+            if (!col.children.length) {
+                for (var i = 0; i < measures.length; i++) {
+                    measure_cells = $('<th></th>').addClass('measure_row');
+                    measure_cells.append(self.measure_label(measures[i]));
+                    measure_row.append(measure_cells);
+                }
+            }
+        });
+
+        if (this.pivot.get_cols_leaves().length > 1) {
+            for (var i = 0; i < measures.length; i++) {
+                measure_cells = $('<th></th>').addClass('measure_row');
+                measure_cells.append(self.measure_label(measures[i]));
+                measure_row.append(measure_cells);
+            }
+        }
+        return measure_row;
+    },
+
+    get_measure_types: function () {
+        var self = this;
+        return _.map(this.pivot.measures, function (measure) {
+            return (measure !== '__count') ? self.fields[measure].type : 'integer';
+        });
     },
 
     draw_row: function (row) {
         var self = this,
             pivot = this.pivot,
-            measure_type = this.get_measure_type(),
+            measure_types = this.get_measure_types(),
             html_row = $('<tr></tr>'),
             row_header = this.make_border_cell(1,1)
                 .append(this.make_header_title(row).attr('data-id', row.id))
@@ -510,21 +556,24 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
         _.each(pivot.cols.headers, function (col) {
             if (col.children.length === 0) {
-                var value = pivot.get_value(row.id, col.id),
-                    cell = make_cell(value, col);
-                html_row.append(cell);
+                var values = pivot.get_value(row.id, col.id, new Array(measure_types.length));
+                for (var i = 0; i < values.length; i++) {
+                    html_row.append(make_cell(values[i], measure_types[i], col));
+                }
             }
         });
 
-        if (pivot.cols.main.children.length > 0) {
-            var cell = make_cell(pivot.get_total(row), pivot.cols.main)
-                            .css('font-weight', 'bold');
-            html_row.append(cell);
+        if (pivot.get_cols_leaves().length > 1) {
+            var total_vals = pivot.get_total(row);
+            for (var j = 0; j < total_vals.length; j++) {
+                var cell = make_cell(total_vals[j], measure_types[j], pivot.cols.main).css('font-weight', 'bold');
+                html_row.append(cell);
+            }
         }
 
         this.table.append(html_row);
 
-        function make_cell (value, col) {
+        function make_cell (value, measure_type, col) {
             var color,
                 total,
                 cell = $('<td></td>');
@@ -564,31 +613,31 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         if ((dim_x === 0) && (dim_y === 0)) {
             data = [{key: 'Total', values:[{
                 x: 'Total',
-                y: this.pivot.get_value(this.pivot.rows.main.id, this.pivot.cols.main.id),
+                y: this.pivot.get_value(this.pivot.rows.main.id, this.pivot.cols.main.id)[0],
             }]}];
         // Only column groupbys ****************************************************
         } else if ((dim_x === 0) && (dim_y >= 1)){
             data =  _.map(this.pivot.get_columns_depth(1), function (header) {
                 return {
                     key: header.title,
-                    values: [{x:header.root.main.title, y: self.pivot.get_total(header)}]
+                    values: [{x:header.root.main.title, y: self.pivot.get_total(header)[0]}]
                 };
             });
         // Just 1 row groupby ******************************************************
         } else if ((dim_x === 1) && (dim_y === 0))  {
             data = _.map(this.pivot.rows.main.children, function (pt) {
-                var value = self.pivot.get_value(pt.id, self.pivot.cols.main.id),
+                var value = self.pivot.get_value(pt.id, self.pivot.cols.main.id)[0],
                     title = (pt.title !== undefined) ? pt.title : 'Undefined';
                 return {x: title, y: value};
             });
-            data = [{key: this.measure_label(), values:data}];
+            data = [{key: self.measure_label(self.pivot.measures[0]), values:data}];
         // 1 row groupby and some col groupbys**************************************
         } else if ((dim_x === 1) && (dim_y >= 1))  {
             data = _.map(this.pivot.get_columns_depth(1), function (colhdr) {
                 var values = _.map(self.pivot.get_rows_depth(1), function (header) {
                     return {
                         x: header.title || 'Undefined',
-                        y: self.pivot.get_value(header.id, colhdr.id, 0)
+                        y: self.pivot.get_value(header.id, colhdr.id, 0)[0]
                     };
                 });
                 return {key: colhdr.title || 'Undefined', values: values};
@@ -605,7 +654,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                     });
                     return {
                         x: hdr.title || 'Undefined',
-                        y: (subhdr) ? self.pivot.get_total(subhdr) : 0
+                        y: (subhdr) ? self.pivot.get_total(subhdr)[0] : 0
                     };
                 });
                 return {key:key, values: values};
@@ -651,7 +700,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 return p || 'Undefined';
             }).join('/');
             if (dim_y === 0) {
-                title = self.measure_label();
+                title = self.measure_label(self.pivot.measures[0]);
             }
             return {values: values, key: title};
         });

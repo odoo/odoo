@@ -14,7 +14,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		this.cols = { groupby: [], main: null, headers: null };
 		this.cells = [];
 		this.domain = domain;
-		this.measure = null;
+		this.measures = ['__count'];
 
 		this.data_loader = new openerp.web_graph.DataLoader(model);
 
@@ -22,11 +22,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	},
 
 	visible_fields: function () {
-		var result = this.rows.groupby.concat(this.cols.groupby);
-		if (this.measure) {
-			result = result.concat(this.measure);
-		}
-		return result;
+		var result = this.rows.groupby.concat(this.cols.groupby, this.measures);
+		return _.without(result, '__count');
 	},
 
 	config: function (options) {
@@ -37,7 +34,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 				domain:this.domain,
 				col_groupby: this.cols.groupby,
 				row_groupby: this.rows.groupby,
-				measure: this.measure,
+				measures: this.measures,
 				silent:false
 			};
 		options = _.extend(default_options, options);
@@ -50,8 +47,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 			this.domain = options.domain;
 			changed = true;
 		}
-		if (options.measure !== this.measure) {
-			this.measure = options.measure;
+		if (!_.isEqual(options.measures, this.measures)) {
+			this.measures = options.measures;
 			changed = true;
 		}
 		if (!_.isEqual(options.col_groupby, this.cols.groupby)) {
@@ -71,26 +68,26 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		if (options.update && changed) { this.update_data(); }
 	},
 
-	set_value: function (id1, id2, value) {
+	set_value: function (id1, id2, values) {
 		var x = Math.min(id1, id2),
 			y = Math.max(id1, id2),
 			cell = _.find(this.cells, function (c) {
 			return ((c.x == x) && (c.y == y));
 		});
 		if (cell) {
-			cell.value = value;
+			cell.values = values;
 		} else {
-			this.cells.push({x: x, y: y, value: value});
+			this.cells.push({x: x, y: y, values: values});
 		}
 	},
 
-	get_value: function (id1, id2, default_value) {
+	get_value: function (id1, id2, default_values) {
 		var x = Math.min(id1, id2),
 			y = Math.max(id1, id2),
 			cell = _.find(this.cells, function (c) {
 			return ((c.x == x) && (c.y == y));
 		});
-		return (cell === undefined) ? default_value : cell.value;
+		return (cell === undefined) ? default_values : cell.values;
 	},
 
 	is_row: function (id) {
@@ -187,11 +184,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
                             }
                         });
                         if (other) {
-                            if (self.measure) {
-                                self.set_value(new_header_id, other.id, data.attributes.aggregates[self.measure]);
-                            } else {
-                                self.set_value(new_header_id, other.id, data.attributes.length);
-                            }
+							self.set_value(new_header_id, other.id, _.map(self.measures, function (measure) {
+								return (measure === '__count') ? data.attributes.length : data.attributes.aggregates[measure];
+							}));
                         }
                     });
                 });
@@ -239,7 +234,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 			options = {
 				col_groupby: this.cols.groupby,
 				row_groupby: this.rows.groupby,
-				measure: this.measure,
+				measures: this.measures,
 				domain: this.domain,
 			};
 
@@ -391,9 +386,9 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 		var self = this,
 			cols = options.col_groupby,
 			rows = options.row_groupby,
-			visible_fields = rows.concat(cols);
+			visible_fields = _.without(rows.concat(cols, options.measures), '__count');
 
-		if (options.measure) { visible_fields = visible_fields.concat(options.measure); }
+		// if (options.measure) { visible_fields = visible_fields.concat(options.measure); }
 
 		var groupbys = _.map(_.range(cols.length + 1), function (i) {
 			return cols.slice(0, i).concat(rows);
@@ -416,9 +411,13 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 		});
 	},
 
-	get_value: function (data, measure) {
+	get_value: function (data, measures) {
 		var attr = data.attributes;
-		return (measure) ? attr.aggregates[measure] : attr.length;
+		var result = _.map(measures, function (measure) {
+			return (measure === '__count') ? attr.length : attr.aggregates[measure];
+		});
+		return result;
+		// return (measure) ? attr.aggregates[measure] : attr.length;
 	},
 
 	format_data: function (total, col_data, row_data, cell_data, options) {
@@ -451,7 +450,7 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 				children: [],
 				title: (parent) ? data.attributes.value : '',
 				domain: (parent) ? data.model._domain : options.domain,
-				total: this.get_value(options.total, options.measure),
+				total: this.get_value(options.total, options.measures),
 			};
 
 		if (main.path.length < depth) {
@@ -468,7 +467,9 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 			var attr = group.attributes,
 				group_val = (attr.value instanceof Array) ? attr.value[1] : attr.value,
 				path = current_path,
-				value = (options.measure) ? attr.aggregates[options.measure] : attr.length;
+				values = _.map(options.measures, function (measure) {
+					return (measure === '__count') ? attr.length : attr.aggregates[measure];
+				});
 
 			group_val = (group_val === false) ? undefined : group_val;
 
@@ -483,7 +484,7 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 			});
 			current_cells.push({x: Math.min(row.id, col.id),
 						y: Math.max(row.id, col.id),
-						value: value});
+						values: values});
 
 			if (attr.has_children) {
 				self.make_cells (group.subgroups_data, index, path, current_cells, rows, cols, options);
