@@ -968,6 +968,9 @@ class crm_lead(format_address, osv.osv):
     def get_empty_list_help(self, cr, uid, help, context=None):
         context['empty_list_help_model'] = 'crm.case.section'
         context['empty_list_help_id'] = context.get('default_section_id', None)
+        context['empty_list_help_document_name'] = _("opportunity")
+        if context.get('default_type') == 'lead':
+            context['empty_list_help_document_name'] = _("lead")
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
     # ----------------------------------------
