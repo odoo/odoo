@@ -85,40 +85,37 @@
         </template>
 
         <template id="chatter">
-            <div id="chat" class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        <i class="fa fa-comment fa-flip-horizontal"></i> Recent Comments
-                    </h3>
-                </div>
-                <div class="panel-body">
-                    <ul class="list-group">
-                        <t t-foreach="quotation.message_ids" t-as="message">
-                            <t t-if="message.subtype_id.name == 'Sales Order Confirmed' or message.subtype_id.name == 'Discussions'" >
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-2 col-md-1" t-if="message.author_id.image_small">
-                                        <img t-att-src="'data:image/png;base64,' + message.author_id.image_small" class="img-circle img-responsive" alt="" /></div>
-                                    <div class="col-xs-10 col-md-11">
-                                        <div>
-                                            <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html"/>
-                                                <t t-raw="message.body"/>
-                                            <div class="mic-info">
-                                                By: <a href="#"><t t-esc="message.author_id.name"/></a> on <t t-esc="message.date"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            </t>
-                        </t>
-                    </ul>
-                </div>
-            </div>
-            <form id="post" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post">
-                <textarea rows="3" id="new_message" name="new_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
-                <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post your Comment</button>
-            </form>
+            <ul class="media-list" id="comments-list">
+                <li t-foreach="quotation.message_ids" t-as="message" class="media">
+                    <div class="media-body">
+                        <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                        <div class="media-body">
+                            <h5 class="media-heading">
+                                <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
+                            </h5>
+                            <div t-field="message.body"/>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </template>
+
+        <!-- Options: Quotation Chatter: user can reply -->
+        <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments"
+                inherit_option_id="website_sale_quote.chatter" inherit_id="website_sale_quote.chatter">
+            <xpath expr="//ul[@id='comments-list']" position="after">
+                <section class="mb32 css_editable_mode_hidden">
+                    <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post"
+                            method="POST">
+                        <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
+                        <div class="pull-left mb32" style="width: 75%%">
+                            <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
+                            <button type="submit" class="btn btn-primary mt8">Post</button>
+                        </div>
+                    </form>
+                </section>
+                <div class="clearfix"/>
+            </xpath>
         </template>
 
         <template id="so_quotation" name="Product Quotation">

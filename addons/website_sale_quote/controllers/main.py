@@ -58,7 +58,7 @@ class sale_quote(http.Controller):
     def post(self, order_id, token, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
-        message = post.get('new_message')
+        message = post.get('comment')
         assert token == order.access_token, 'Access denied, wrong token!'
         if message:
             self.message_post(message, order_id)
