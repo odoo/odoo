@@ -605,6 +605,12 @@
             User: <t t-esc="widget.pos.user.name"/><br />
             Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
+            <t t-if="widget.pos.config.receipt_header">
+                <pre>
+                    <t t-esc="widget.pos.config.receipt_header" />
+                </pre>
+                <br />
+            </t>
             <table>
                 <colgroup>
                     <col width='50%' />
@@ -660,6 +666,12 @@
                     <t t-esc="widget.format_currency(order.getPaidTotal() - order.getTotalTaxIncluded())"/>
                     </td></tr>
             </table>
+            <t t-if="widget.pos.config.receipt_footer">
+                <br />
+                <pre>
+                    <t t-esc="widget.pos.config.receipt_footer" />
+                </pre>
+            </t>
         </div>
     </t>
 
