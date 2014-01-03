@@ -291,6 +291,7 @@
             var self = this;
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
+            var stepDelay = 100; //ms
             var test = {
                 id: tour.id,
                 run: function (force) {
@@ -309,8 +310,8 @@
                                 setTimeout(function () {
                                     setTimeout(function () {
                                         executeStep(nextStep);
-                                    }, 10);
-                                }, 10);
+                                    }, stepDelay);
+                                }, 0);
                             } else {
                                 window.localStorage.removeItem(testId);
                             }
@@ -319,13 +320,7 @@
                         if (step.snippet && step.trigger === 'drag') {
                             website.TestConsole.dragAndDropSnippet(step.snippet);
                         } else if (step.trigger.id === 'change') {
-                            var currentValue = $element.val();
-                            var options = $element[0].options;
-                            // FIXME: It may be necessary to set a particular value
-                            var newValue = _.find(options, function (option) {
-                                return option.value !== currentValue;
-                            }).value;
-                            $element.val(newValue).trigger($.Event("change"));
+                            $element.trigger($.Event("change", { srcElement: $element }));
                         } else {
                             $element.trigger($.Event("click", { srcElement: $element }));
                         }
@@ -350,8 +345,8 @@
                             setTimeout(function () {
                                 setTimeout(function () {
                                    executeStep(currentStep);
-                                }, 10);
-                            }, 10);
+                                }, stepDelay);
+                            }, 0);
                         }
                     }
                 },

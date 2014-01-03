@@ -1,4 +1,4 @@
-var testRunner = require('./ui_test_runner.js');
+var testRunner = require('../../../website/tests/ui_suite/ui_test_runner.js');
 
 var waitFor = testRunner.waitFor;
 
@@ -8,28 +8,27 @@ testRunner.run(function homepageTest (page) {
         return page.evaluate(function () {
             return window.openerp && window.openerp.website
                 && window.openerp.website.TestConsole
-                && window.openerp.website.TestConsole.test('banner');
+                && window.openerp.website.TestConsole.test('blog');
         });
     }, function executeTest () {
         page.onResourceError = function(error) {
             console.log('{ "event": "error", "message": "'+error.url+' failed to load ('+error.errorString+') "}');
         };
-        var before = page.evaluate(function () {
-            var result = {
-                carousel: $('#wrap [data-snippet-id=carousel]').length,
-                columns: $('#wrap [data-snippet-id=three-columns]').length,
-            };
-            window.openerp.website.TestConsole.test('banner').run(true);
-            return result;
+        page.evaluate(function () {
+            window.openerp.website.TestConsole.test('blog').run(true);
         });
         waitFor(function testExecuted () {
             var after = page.evaluate(function () {
                 return $('button[data-action=edit]').is(":visible") && {
-                    carousel: $('#wrap [data-snippet-id=carousel]').length,
-                    columns: $('#wrap [data-snippet-id=three-columns]').length,
+                    image: $('#wrap [data-snippet-id=image-text]').length,
+                    text: $('#wrap [data-snippet-id=text-block]').length,
                 };
             });
-            return after && (after.carousel === before.carousel + 1) && (after.columns === before.columns + 1);
+            var result = after && (after.image === 1) && (after.text === 1);
+            if (!result && window.location.href.indexOf('/blogpost/') > 0) {
+                window.location.reload();
+            }
+            return result;
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();
