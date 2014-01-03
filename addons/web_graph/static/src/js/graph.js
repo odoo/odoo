@@ -558,7 +558,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             if (col.children.length === 0) {
                 var values = pivot.get_value(row.id, col.id, new Array(measure_types.length));
                 for (var i = 0; i < values.length; i++) {
-                    html_row.append(make_cell(values[i], measure_types[i], col));
+                    html_row.append(make_cell(values[i], measure_types[i], i, col));
                 }
             }
         });
@@ -566,14 +566,14 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         if (pivot.get_cols_leaves().length > 1) {
             var total_vals = pivot.get_total(row);
             for (var j = 0; j < total_vals.length; j++) {
-                var cell = make_cell(total_vals[j], measure_types[j], pivot.cols.main).css('font-weight', 'bold');
+                var cell = make_cell(total_vals[j], measure_types[j], i, pivot.cols.main).css('font-weight', 'bold');
                 html_row.append(cell);
             }
         }
 
         this.table.append(html_row);
 
-        function make_cell (value, measure_type, col) {
+        function make_cell (value, measure_type, index, col) {
             var color,
                 total,
                 cell = $('<td></td>');
@@ -582,18 +582,18 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             }
             cell.append(instance.web.format_value(value, {type: measure_type}));
             if (self.mode === 'heatmap') {
-                total = pivot.get_total();
-                color = Math.floor(90 + 165*(total - value)/total);
+                total = pivot.get_total()[i];
+                color = Math.floor(90 + 165*(total - Math.abs(value))/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             if (self.mode === 'row_heatmap') {
-                total = pivot.get_total(row);
-                color = Math.floor(90 + 165*(total - value)/total);
+                total = pivot.get_total(row)[i];
+                color = Math.floor(90 + 165*(total - Math.abs(value))/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             if (self.mode === 'col_heatmap') {
-                total = pivot.get_total(col);
-                color = Math.floor(90 + 165*(total - value)/total);
+                total = pivot.get_total(col)[i];
+                color = Math.floor(90 + 165*(total - Math.abs(value))/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
             return cell;
