@@ -94,7 +94,6 @@ class sale_quote(http.Controller):
 
     @website.route(["/template/<model('sale.quote.template'):quote>"], type='http', auth="public")
     def template_view(self, quote=None, **post):
-        quote = request.registry.get('sale.quote.template').browse(request.cr, request.uid, quote.id)
         values = {
             'template': quote,
         }
