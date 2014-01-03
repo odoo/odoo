@@ -455,15 +455,13 @@ class hr_applicant(osv.Model):
                                                      'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
                                                      'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False,
                                                      }, context=create_ctx)
-                partner_ids = []
                 employee = hr_employee.browse(cr, uid, emp_id, context=context)
-                if employee.user_id:
-                    # send a copy to every user of the company
-                    # TODO: post to the `Whole Company` mail.group when we'll be able to link to the employee record  
-                    _model, group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')
-                    user_ids = res_users.search(cr, uid, [('company_id', '=', employee.user_id.company_id.id),
-                                                  ('groups_id', 'in', group_id)], context=context)
-                    partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, uid, user_ids, context=context)))
+                # send a copy to every user of the company
+                # TODO: post to the `Whole Company` mail.group when we'll be able to link to the employee record  
+                _model, group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')
+                user_ids = res_users.search(cr, uid, [('company_id', '=', employee.company_id.id),
+                                              ('groups_id', 'in', group_id)], context=context)
+                partner_ids = list(set(u.partner_id.id for u in res_users.browse(cr, uid, user_ids, context=context)))
                 hr_employee.message_post(cr, uid, [emp_id],
                     body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
                     partner_ids=partner_ids,
