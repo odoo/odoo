@@ -78,11 +78,13 @@ class sale_quote(http.Controller):
         return True
 
     @website.route(['/quote/update_line'], type='json', auth="public")
-    def update(self, line_id=None, remove=False, unlink=False, order_id=None, **post):
+    def update(self, line_id=None, remove=False, unlink=False, order_id=None, token=None, **post):
+        order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, int(order_id))
+        assert token == order.access_token, 'Access denied, wrong token!'
         if unlink:
-            return request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID, [int(line_id)], context=request.context)
+            request.registry.get('sale.order.line').unlink(request.cr, SUPERUSER_ID, [int(line_id)], context=request.context)
+            return False
         val = self._update_order_line(line_id=int(line_id), number=(remove and -1 or 1))
-        order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         return [str(val), str(order.amount_total)]
 
     def _update_order_line(self, line_id, number):
@@ -93,24 +95,31 @@ class sale_quote(http.Controller):
         return quantity
 
     @website.route(["/template/<model('sale.quote.template'):quote>"], type='http', auth="public")
-    def template_view(self, quote=None, **post):
+    def template_view(self, quote, **post):
         values = {
             'template': quote,
         }
         return request.website.render('website_sale_quote.so_template', values)
         
-    @website.route(['/quote/add_line'], type='json', auth="public")
-    def add(self, option=None, order=None, product=None, **post):
+    @website.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public")
+    def add(self, option_id, order_id, token, **post):
         vals = {}
-        product_obj = request.registry.get('product.product').browse(request.cr, SUPERUSER_ID, int(product), context=request.context)
+        order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
+        assert token == order.access_token, 'Access denied, wrong token!'
+        option_obj = request.registry.get('sale.option.line')
+        option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
         vals.update({
-            'price_unit': product_obj.list_price,
-            'website_description': product_obj.website_description,
-            'name': product_obj.name,
-            'order_id': int(order),
-            'product_id' : product_obj.id,
+            'price_unit': option.product_id.list_price,
+            'website_description': option.product_id.website_description,
+            'name': option.product_id.name,
+            'order_id': order.id,
+            'product_id' : option.product_id.id,
+            'product_uom_qty': option.quantity,
+            'product_uom_id': option.uom_id.id,
+            'discount': option.discount,
         })
-        new = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
-        request.registry.get('sale.option.line').write(request.cr, SUPERUSER_ID, [int(option)], {'add_to_line': True}, context=request.context)
-        return [new]
+        line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
+        option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
+        return werkzeug.utils.redirect("/quote/%s/%s" % (order.id, token))
+
 

@@ -19,6 +19,9 @@
                                 <div t-field="line.name"/>
                             </td>
                             <td>
+                                <div t-field="line.tax_id"/>
+                            </td>
+                            <td>
                                 <div id="quote_qty">
                                     <t t-esc="line.product_uom_qty"/>
                                 </div>
@@ -41,7 +44,7 @@
                                     t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                             </td>
                             <td>
-                                <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True" class="mb8 js_update_line_json pull-right">
+                                <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right">
                                     <span class="fa fa-trash-o"></span>
                                 </a>
                             </td>
@@ -70,13 +73,13 @@
             <xpath expr="//div[@id='quote_qty']" position="replace">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True" class="mb8 js_update_line_json">
+                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
                             <span class="fa fa-minus"/>
                         </a>
                     </span>
                     <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
                     <span class="input-group-addon">
-                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }" class="mb8 js_update_line_json">
+                        <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
                             <span class="fa fa-plus"/>
                         </a>
                     </span>
@@ -291,13 +294,13 @@
                 <h3>Optional Products &amp; Services:</h3>
                 <div class='row mt16'>
                     <t t-foreach="quotation.options" t-as="option">
-                        <t t-if="not option.add_to_line">
+                        <t t-if="not option.line_id">
                             <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
                                 <div class='mt16 text-center'>
                                     <a href="#" t-field="option.product_id.name"/>
                                     <span t-field="option.product_id.image_small" t-field-options='{"widget": "image", "class": "img-rounded"}'/>
                                 </div>
-                                <a type="submit" t-href="./add_line/#{ option.id }/?order=#{ quotation.id }&amp;product=#{option.product_id.id}" class="btn btn-primary btn-xs js_add_line_json">Add To Quotation
+                                <a t-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="btn btn-primary btn-xs">Add To Quotation
                                 </a>
                             </div>
                         </t>

@@ -132,11 +132,18 @@ class sale_option_line(osv.osv):
     _description = "Sale Options"
     _columns = {
         'option_id': fields.many2one('sale.order', 'Sale Order Reference', required=True, ondelete='cascade', select=True),
+        'line_id': fields.many2one('sale.order.line', on_delete="set null"),
         'name': fields.text('Description', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'website_description': fields.html('Line Description'),
         'price_unit': fields.float('Unit Price', required=True),
-        'add_to_line': fields.boolean('Add to Line'),
+        'discount': fields.float('Discount (%)'),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure ', required=True),
+        'quantity': fields.float('Quantity', required=True),
+    }
+    
+    _defaults = {
+        'quantity': 1,
     }
 
     def on_change_product_id(self, cr, uid, ids, product, context=None):
@@ -146,6 +153,7 @@ class sale_option_line(osv.osv):
             'price_unit': product_obj.list_price,
             'website_description': product_obj.website_description,
             'name': product_obj.name,
+            'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
         return {'value': vals}
 
