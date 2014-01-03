@@ -135,7 +135,8 @@ for a particular financial year and for preparation of vouchers there is a modul
     ],
     'css':[
         'static/src/css/account_move_reconciliation.css',
-        'static/src/css/account_move_line_quickadd.css'
+        'static/src/css/account_move_line_quickadd.css',
+        'static/src/css/account_bank_and_cash.css',
     ],
     'demo': [
         'demo/account_demo.xml',
