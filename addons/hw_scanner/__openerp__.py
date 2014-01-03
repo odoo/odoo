@@ -36,7 +36,7 @@ point of sale module.
 
 """,
     'author': 'OpenERP SA',
-    'depends': [],
+    'depends': ['hw_proxy'],
     'test': [
     ],
     'installable': True,

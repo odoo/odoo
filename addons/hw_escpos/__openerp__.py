@@ -36,7 +36,7 @@ that would need such functionality.
 
 """,
     'author': 'OpenERP SA',
-    'depends': [],
+    'depends': ['hw_proxy'],
     'test': [
     ],
     'installable': True,
