@@ -86,11 +86,11 @@ class ScannerDriver(hw_proxy.Proxy):
         else:
             return None
 
-    @http.route('/hw_proxy/is_scanner_connected', type='http', auth='admin')
+    @http.route('/hw_proxy/is_scanner_connected', type='json', auth='admin')
     def is_scanner_connected(self):
         return self.get_device() != None
     
-    @http.route('/hw_proxy/scanner', type='http', auth='admin')
+    @http.route('/hw_proxy/scanner', type='json', auth='admin')
     def scanner(self):
         device = self.get_device()
         barcode = []
@@ -100,14 +100,14 @@ class ScannerDriver(hw_proxy.Proxy):
         else:
             device.grab()
         while True:
-            r,w,x = select([device],[],[],10)
+            r,w,x = select([device],[],[],5)
             if len(r) == 0: # timeout
                 device.ungrab()
                 return ''
             for event in device.read():
                 if event.type == ecodes.EV_KEY:
                     if event.value == 1: # keydown events
-                        print categorize(event)
+                        #print categorize(event)
                         if event.code in self.keymap: 
                             if shift:
                                 barcode.append(self.keymap[event.code][1])
@@ -117,7 +117,8 @@ class ScannerDriver(hw_proxy.Proxy):
                             shift = True
                         elif event.code == 28: # ENTER
                             device.ungrab()
-                            return ''.join(barcode);
+                            barcode = ''.join(barcode)
+                            return barcode
                     elif event.value == 0: #keyup events
                         if event.code == 42 or event.code == 54: # LEFT SHIFT
                             shift = False

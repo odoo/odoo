@@ -21,8 +21,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.session = session;                 
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
 
-            this.barcode_reader = new module.BarcodeReader({'pos': this});  // used to read barcodes
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
+            this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
+            this.barcode_reader.connect_to_proxy();
             this.proxy_queue = new module.JobQueue();           // used to prevent parallels communications to the proxy
             this.db = new module.PosDB();                       // a local database used to search trough products and categories & store pending orders
             this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode 

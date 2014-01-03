@@ -20,7 +20,6 @@ class Proxy(http.Controller):
     def __init__(self):
         self.scale = 'closed'
         self.scale_weight = 0.0
-        pass
 
     def connected_usb_devices(self,devices):
         connected = []
