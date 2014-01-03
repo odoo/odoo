@@ -61,7 +61,7 @@
             </section>
 
             <section id="terms" class="container" t-if="quotation.note">
-                <h2>Terms &amp; Conditions</h2>
+                <h2 class="page-header">Terms &amp; Conditions</h2>
                 <p t-field="quotation.note"/>
             </section>
         </template>
@@ -85,6 +85,7 @@
         </template>
 
         <template id="chatter">
+            <h2 class="page-header">History</h2>
             <ul class="media-list" id="comments-list">
                 <li t-foreach="quotation.message_ids" t-as="message" class="media">
                     <div class="media-body">
@@ -103,7 +104,7 @@
         <!-- Options: Quotation Chatter: user can reply -->
         <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments"
                 inherit_option_id="website_sale_quote.chatter" inherit_id="website_sale_quote.chatter">
-            <xpath expr="//ul[@id='comments-list']" position="after">
+            <xpath expr="//h2" position="after">
                 <section class="mb32 css_editable_mode_hidden">
                     <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post"
                             method="POST">
@@ -331,7 +332,7 @@
                               <div class="container panel panel-default">
                                   <div class="row panel-body">
                                       <div class="text-center">
-                                          <h2><strong>Terms &amp; Conditions</strong></h2>
+                                          <h2 class="page-header">Terms &amp; Conditions</h2>
                                           <p class="lead" t-field="template.note"/>
                                       </div>
                                   </div>
