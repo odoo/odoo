@@ -344,7 +344,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     measure_selection: function (event) {
         event.preventDefault();
         var measure = event.target.attributes['data-choice'].nodeValue;
-        this.pivot.config({measures:[measure]});
+        this.pivot.config({toggle_measure:measure});
     },
 
     option_selection: function (event) {
@@ -421,7 +421,11 @@ instance.web_graph.Graph = instance.web.Widget.extend({
  ******************************************************************************/
     draw_table: function () {
         this.pivot.rows.main.title = 'Total';
-        this.pivot.cols.main.title = this.title;
+        if (this.pivot.measures.length == 1) {
+            this.pivot.cols.main.title = this.measure_label(this.pivot.measures[0]);
+        } else {
+            this.pivot.cols.main.title = this.title;
+        }
         this.draw_top_headers();
         _.each(this.pivot.rows.headers, this.proxy('draw_row'));
     },

@@ -51,6 +51,14 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 			this.measures = options.measures;
 			changed = true;
 		}
+		if (options.toggle_measure) {
+			if (_.contains(this.measures, options.toggle_measure)) {
+				this.measures = _.without(this.measures, options.toggle_measure);
+			} else {
+				this.measures.push(options.toggle_measure);
+			}
+			changed = true;
+		}
 		if (!_.isEqual(options.col_groupby, this.cols.groupby)) {
 			this.cols.groupby = options.col_groupby;
 			changed = true;
