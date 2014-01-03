@@ -23,16 +23,10 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
+import werkzeug
 
 
 class sale_quote(http.Controller):
-    def _get_partner_user(self, order_id):
-        order_pool = request.registry.get('sale.order')
-        user_pool = request.registry.get('res.users')
-        partner = order_pool.browse(request.cr, SUPERUSER_ID, order_id, context=request.context).partner_id.id
-        if partner:
-            user = user_pool.search(request.cr, SUPERUSER_ID, [('partner_id', '=', partner)])[0]
-        return user
 
     @website.route(["/quote/<int:order_id>/<token>"], type='http', auth="public")
     def view(self, order_id, token, **post):
@@ -49,31 +43,39 @@ class sale_quote(http.Controller):
     def accept(self, order_id, token, **post):
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
         assert token == order.access_token, 'Access denied, wrong token!'
-        request.registry.get('sale.order').write(request.cr, self._get_partner_user(order_id), [order_id], {'state': 'manual'})
+        request.registry.get('sale.order').write(request.cr, request.uid, [order_id], {'state': 'manual'})
         return request.redirect("/quote/%s/%s" % (order_id, token))
 
-    def decline(self, order_id):
-        return request.registry.get('sale.order').write(request.cr, self._get_partner_user(order_id), [order_id], {'state': 'cancel'})
+    @website.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public")
+    def decline(self, order_id, token, **post):
+        message = post.get('decline_message')
+        request.registry.get('sale.order').write(request.cr, request.uid, [order_id], {'state': 'cancel'})
+        if message:
+            self.message_post(message, order_id)
+        return werkzeug.utils.redirect("/quote/%s/%s" % (order_id, token))
 
     @website.route(['/quote/<int:order_id>/<token>/post'], type='http', auth="public")
     def post(self, order_id, token, **post):
         # use SUPERUSER_ID allow to access/view order for public user
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
+        message = post.get('new_message')
         assert token == order.access_token, 'Access denied, wrong token!'
+        if message:
+            self.message_post(message, order_id)
+        return werkzeug.utils.redirect("/quote/%s/%s" % (order_id, token))
 
-        if post.get('new_message'):
-            request.session.body = post.get('new_message')
-        if post.get('decline_message'):
-            self.decline(order_id)
-            request.session.body = post.get('decline_message')
+    def message_post(self , message, order_id):
+        request.session.body =  message
+        cr, uid, context = request.cr, request.uid, request.context
         if 'body' in request.session and request.session.body:
-            request.registry.get('sale.order').message_post(request.cr, self._get_partner_user(order_id), order_id,
+            request.registry.get('sale.order').message_post(cr, uid, order_id,
                     body=request.session.body,
                     type='comment',
                     subtype='mt_comment',
+                    context=context,
                 )
             request.session.body = False
-        return request.redirect("/quote/%s/%s#chat" % (order_id, self._get_token(order_id)))
+        return True
 
     @website.route(['/quote/update_line'], type='json', auth="public")
     def update(self, line_id=None, remove=False, unlink=False, order_id=None, **post):

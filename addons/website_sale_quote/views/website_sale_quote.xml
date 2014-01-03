@@ -2,12 +2,7 @@
 <openerp>
     <data>
         <template id="pricing" name="Price">
-          <ul class="wizard pull-right">
-              <li></li>
-          </ul>
-
             <section id="quote" class="container">
-
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -120,7 +115,7 @@
                     </ul>
                 </div>
             </div>
-            <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% quotation.id">
+            <form id="post" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post">
                 <textarea rows="3" id="new_message" name="new_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
                 <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post your Comment</button>
             </form>
@@ -152,7 +147,7 @@
 
                         <div class="text-center">
                             <div class="btn-group btn-group-lg" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-                                <a class="btn btn-success fa fa-check" type="submit" t-href="/quote/#{ quotation.id }/accept">
+                                <a class="btn btn-success fa fa-check" data-toggle="modal" data-target="#modelaccept">
                                     Accept
                                 </a>
                                 <a class="btn btn-info fa fa-comment" type="submit" href="#chat">
@@ -171,21 +166,48 @@
                             <small t-field="quotation.state"/>
                         </h1>
 
+                        <div class="modal fade" id="modelaccept" role="dialog" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                                <h4 class="modal-title">Please confirm you accept this order:</h4>
+                              </div>
+                              <form id="accept" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/accept">
+                                  <div class="modal-body">
+                                    <dl class="dl-horizontal">
+                                      <dt><h4>Your Name : </h4></dt>
+                                      <dd><h4 t-esc="quotation.partner_id.name"></h4></dd>
+                                      <dt><h4>Price : </h4></dt>
+                                      <dd><h4 data-id="total_amount" t-field="quotation.amount_total" t-field-options='{"widget": "monetary","display_currency": "quotation.pricelist_id.currency_id"}'/></dd>
+                                      <dt><h4>Payment Term : </h4></dt>
+                                      <dd><h4 t-esc="quotation.payment_term.name"></h4></dd>
+                                    </dl>
+                                </div>
+                              <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Validate Order</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Discard</button>
+                              </div>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+
                         <div class="alert alert-warning alert-dismissable" t-if="quotation.state == 'cancel'">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                            <strong>This quotation has been canceled.</strong> Contact <t t-field="quotation.user_id"/> to ask a new one.
+                            <strong>This quotation has been canceled.</strong> Contact <p t-field="quotation.user_id"/> to ask a new one.
                         </div>
 
                         <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
                           <div class="modal-dialog">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                                 <h4 class="modal-title">Reason</h4>
                               </div>
-                              <form id="post" accept-charset="UTF-8" method="POST" t-att-action="'/quote/%%s/post#post' %% (quotation.id)">
+                              <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline">
                                   <div class="modal-body">
-                                    <textarea rows="3" id="decline_message" name="decline_message" placeholder="Your Comment....." class="form-control span7"> </textarea>
+                                    <textarea rows="3" name="decline_message" placeholder="Your Comment....." class="form-control"> </textarea>
                                 </div>
                               <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
