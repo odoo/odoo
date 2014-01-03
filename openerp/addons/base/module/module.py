@@ -759,7 +759,7 @@ class module(osv.osv):
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
         modules = [m.name for m in self.browse(cr, uid, ids) if m.state == 'installed']
-        self.pool.get('ir.translation').load(cr, modules, filter_lang, context=context)
+        self.pool.get('ir.translation').load_module_terms(cr, modules, filter_lang, context=context)
 
     def check(self, cr, uid, ids, context=None):
         for mod in self.browse(cr, uid, ids, context=context):
