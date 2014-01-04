@@ -7,7 +7,6 @@
                     <thead>
                         <tr>
                             <th>Products</th>
-                            <th>Tax</th>
                             <th>Quantity</th>
                             <th>Unit Price</th>
                             <th>Price</th>
@@ -17,9 +16,6 @@
                         <tr t-foreach="quotation.order_line" t-as="line">
                             <td>
                                 <div t-field="line.name"/>
-                            </td>
-                            <td>
-                                <div t-field="line.tax_id"/>
                             </td>
                             <td>
                                 <div id="quote_qty">
@@ -69,7 +65,7 @@
             </section>
         </template>
 
-        <template id="change_quantity" inherit_option_id="website_sale_quote.pricing" name="Change Quantity">
+        <template id="change_quantity" inherit_option_id="website_quotation.pricing" name="Change Quantity">
             <xpath expr="//div[@id='quote_qty']" position="replace">
                 <div class="input-group">
                     <span class="input-group-addon">
@@ -104,9 +100,8 @@
             </ul>
         </template>
 
-        <!-- Options: Quotation Chatter: user can reply -->
-        <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments"
-                inherit_option_id="website_sale_quote.chatter" inherit_id="website_sale_quote.chatter">
+        <!-- Options:Quotation Chatter: user can reply -->
+        <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" inherit_option_id="website_quotation.chatter" inherit_id="website_quotation.chatter">
             <xpath expr="//h2" position="after">
                 <section class="mb32 css_editable_mode_hidden">
                     <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post"
@@ -125,7 +120,7 @@
         <template id="so_quotation" name="Product Quotation">
             <t t-call="website.layout">
               <t t-set="head">
-                  <script type="text/javascript" src="/website_sale_quote/static/src/js/sale_quote.js"></script>
+                  <script type="text/javascript" src="/website_quotation/static/src/js/website_quotation.js"></script>
                   <t t-raw="head or ''"/>
               </t>
               <div class="container">
@@ -276,13 +271,13 @@
                         </t>
 
                         <a id="pricing"/>
-                        <t t-call="website_sale_quote.pricing"/>
+                        <t t-call="website_quotation.pricing"/>
 
                         <a id="options"/>
-                        <t t-call="website_sale_quote.optional_products"/>
+                        <t t-call="website_quotation.optional_products"/>
 
                         <a id="discussion"/>
-                        <t t-call="website_sale_quote.chatter"/>
+                        <t t-call="website_quotation.chatter"/>
                     </div>
                 </div>
               </div>

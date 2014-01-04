@@ -37,7 +37,7 @@ class sale_quote(http.Controller):
         values = {
             'quotation': order,
         }
-        return request.website.render('website_sale_quote.so_quotation', values)
+        return request.website.render('website_quotation.so_quotation', values)
 
     @website.route(['/quote/<int:order_id>/<token>/accept'], type='http', auth="public")
     def accept(self, order_id, token, **post):
@@ -99,7 +99,7 @@ class sale_quote(http.Controller):
         values = {
             'template': quote,
         }
-        return request.website.render('website_sale_quote.so_template', values)
+        return request.website.render('website_quotation.so_template', values)
         
     @website.route(["/quote/add_line/<int:option_id>/<int:order_id>/<token>"], type='http', auth="public")
     def add(self, option_id, order_id, token, **post):

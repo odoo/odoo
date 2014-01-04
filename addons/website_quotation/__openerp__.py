@@ -11,13 +11,13 @@ OpenERP Sale Quote Roller
     'author': 'OpenERP SA',
     'depends': ['website','sale', 'portal_sale', 'mail'],
     'data': [
-        'views/website_sale_quote.xml',
-        'sale_quote_view.xml',
-        'sale_quote_data.xml',
+        'views/website_quotation.xml',
+        'views/website_quotation_backend.xml',
+        'data/website_quotation_data.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [
-        'sale_quote_demo.xml'
+        'data/website_quotation_demo.xml'
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
