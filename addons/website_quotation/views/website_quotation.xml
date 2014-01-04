@@ -40,7 +40,7 @@
                                     t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                             </td>
                             <td>
-                                <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right">
+                                <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right hidden-print">
                                     <span class="fa fa-trash-o"></span>
                                 </a>
                             </td>
@@ -68,13 +68,13 @@
         <template id="change_quantity" inherit_option_id="website_quotation.pricing" name="Change Quantity">
             <xpath expr="//div[@id='quote_qty']" position="replace">
                 <div class="input-group">
-                    <span class="input-group-addon">
+                    <span class="input-group-addon hidden-print">
                         <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
                             <span class="fa fa-minus"/>
                         </a>
                     </span>
                     <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
-                    <span class="input-group-addon">
+                    <span class="input-group-addon hidden-print">
                         <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
                             <span class="fa fa-plus"/>
                         </a>
@@ -103,7 +103,7 @@
         <!-- Options:Quotation Chatter: user can reply -->
         <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" inherit_option_id="website_quotation.chatter" inherit_id="website_quotation.chatter">
             <xpath expr="//h2" position="after">
-                <section class="mb32 css_editable_mode_hidden">
+                <section class="mb32 css_editable_mode_hidden hidden-print">
                     <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post"
                             method="POST">
                         <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
@@ -125,7 +125,7 @@
               </t>
               <div class="container">
                 <div class="row mt16">
-                    <div class="col-md-3 navbar">
+                    <div class="col-md-3 navbar hidden-print">
                         <ul class="nav nav-pills nav-stacked mt32">
                             <li class="active">
                                 <a href="#introduction" data-toggle="tab">Introduction</a>
@@ -141,7 +141,7 @@
                     </div>
                     <div class="col-md-9">
 
-                        <div class="text-center">
+                        <div class="text-center hidden-print">
                             <div class="btn-group btn-group-lg" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
                                 <a class="btn btn-success fa fa-check" data-toggle="modal" data-target="#modelaccept">
                                     Accept
@@ -190,7 +190,7 @@
                         </div>
 
                         <div class="alert alert-warning alert-dismissable" t-if="quotation.state == 'cancel'">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                            <button type="button" class="close hidden-print" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                             <strong>This quotation has been canceled.</strong> Contact <p t-field="quotation.user_id"/> to ask a new one.
                         </div>
 
@@ -295,7 +295,7 @@
                                     <a href="#" t-field="option.product_id.name"/>
                                     <span t-field="option.product_id.image_small" t-field-options='{"widget": "image", "class": "img-rounded"}'/>
                                 </div>
-                                <a t-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="btn btn-primary btn-xs">Add To Quotation
+                                <a t-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="btn btn-primary btn-xs hidden-print">Add To Quotation
                                 </a>
                             </div>
                         </t>
