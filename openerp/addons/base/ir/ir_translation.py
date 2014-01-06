@@ -425,7 +425,7 @@ class ir_translation(osv.osv):
         """
         return ir_translation_import_cursor(cr, uid, self, context=context)
 
-    def load(self, cr, modules, langs, context=None):
+    def load_module_terms(self, cr, modules, langs, context=None):
         context = dict(context or {}) # local copy
         for module_name in modules:
             modpath = openerp.modules.get_module_path(module_name)
