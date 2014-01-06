@@ -271,7 +271,9 @@ class im_user(osv.osv):
         if len(found) < limit:
             found += self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", False], ["id", "not in", found]],
                 order="name asc", limit=limit-len(found), context=context)
-        return self.read(cr, uid, found, fields, context=context)
+        users = self.read(cr, uid, found, fields, context=context)
+        users.sort(key=lambda obj: found.index(obj['id']))
+        return users
 
     def im_connect(self, cr, uid, uuid=None, context=None):
         assert_uuid(uuid)
