@@ -44,6 +44,15 @@ class product_template(osv.Model):
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
+        # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
+        'website_message_ids': fields.one2many(
+            'mail.message', 'res_id',
+            domain=lambda self: [
+                '&', ('model', '=', self._name), ('type', '=', 'comment')
+            ],
+            string='Website Messages',
+            help="Website communication history",
+        ),
         'suggested_product_id': fields.many2one('product.template', 'Suggested For Product'),
         'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
         'website_size_x': fields.integer('Size X'),

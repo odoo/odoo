@@ -2,6 +2,7 @@
 import random
 import simplejson
 import urllib
+import werkzeug
 
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
@@ -284,6 +285,18 @@ class Ecommerce(http.Controller):
             }
         }
         return request.website.render("website_sale.product", values)
+
+    @website.route(['/shop/product/<int:product_template_id>/comment'], type='http', auth="public")
+    def product_comment(self, product_template_id, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        if post.get('comment'):
+            request.registry['product.template'].message_post(
+                cr, uid, product_template_id,
+                body=post.get('comment'),
+                type='comment',
+                subtype='mt_comment',
+                context=dict(context, mail_create_nosubcribe=True))
+        return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
     @website.route(['/shop/add_product/', '/shop/category/<int:cat_id>/add_product/'], type='http', auth="user", multilang=True, methods=['POST'])
     def add_product(self, name="New Product", cat_id=0, **post):
