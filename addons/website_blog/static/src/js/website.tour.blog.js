@@ -37,7 +37,7 @@
                     element:   'a[data-action=new_blog_post]',
                     placement: 'left',
                     title:     "New Blog Post",
-                    content:   "Select this entry to create a new blog post.",
+                    content:   "Select this menu item to create a new blog post.",
                     template:  self.popover({ fixed: true }),
                     trigger: {
                         modal: {
@@ -74,7 +74,7 @@
                     stepId:    'post-title',
                     element:   'h1[data-oe-expression="blog_post.name"]',
                     placement: 'top',
-                    title:     "Pick a Title",
+                    title:     "Create a Title",
                     content:   "Click on this area and set a catchy title.",
                     template:  self.popover({ next: "OK" }),
                 },
@@ -129,7 +129,7 @@
                     element:   '.oe_active .oe_snippet_remove',
                     placement: 'top',
                     title:     "Delete the Title",
-                    content:   "From this toolbar you can move, duplicate or delete the selected zone. Click on the cross to delete the title.",
+                    content:   "From this toolbar you can move, duplicate or delete the selected zone. Click on the garbage can image to delete the title.",
                     trigger:   'click',
                 },
                 {

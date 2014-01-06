@@ -65,7 +65,7 @@
                     element:   '.product_price',
                     placement: 'left',
                     title:     "Change the public price",
-                    content:   "Edit the sale price of this product by clicking on the amount. The price is the sale price used in all sale order when selling this product.",
+                    content:   "Edit the sale price of this product by clicking on the amount. The price is the sale price used in all sale orders when selling this product.",
                     template:  self.popover({ next: "OK" }),
                 },
                 {
