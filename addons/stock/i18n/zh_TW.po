@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-12-30 08:54+0000\n"
+"PO-Revision-Date: 2014-01-02 07:37+0000\n"
 "Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-31 05:27+0000\n"
+"X-Launchpad-Export-Date: 2014-01-03 06:24+0000\n"
 "X-Generator: Launchpad (build 16877)\n"
 
 #. module: stock
@@ -33,6 +33,7 @@ msgid ""
 "Shirts, for the same \"Linux T-Shirt\", you may have variants on  sizes or "
 "colors; S, M, L, XL, XXL."
 msgstr ""
+"允許管理產品的不同規格。例如以銷售T-Shirt為例，同樣的「Linux T-Shirt」，可以有尺寸(S, M, L, XL, XXL)和顏色的變化。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -219,7 +220,7 @@ msgstr "內送"
 #: code:addons/stock/wizard/stock_move.py:223
 #, python-format
 msgid "Unable to assign all lots to this move!"
-msgstr ""
+msgstr "無法分派所有批次至此次調動！"
 
 #. module: stock
 #: help:stock.move,partner_id:0
@@ -627,7 +628,7 @@ msgstr "調動統計"
 #: help:stock.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "允許您針對產品選擇與維護不同的度量單位"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
@@ -762,7 +763,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.move:0
 msgid "Year Planned"
-msgstr ""
+msgstr "已計畫年度"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -781,7 +782,7 @@ msgstr ""
 #: report:stock.picking.list:0
 #: field:stock.picking.out,state:0
 msgid "Status"
-msgstr ""
+msgstr "狀態"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -800,12 +801,12 @@ msgstr "八月"
 #: model:ir.ui.menu,name:stock.menu_action_tracking_form
 #: view:stock.tracking:0
 msgid "Packs"
-msgstr ""
+msgstr "包裹"
 
 #. module: stock
 #: selection:stock.location.product,type:0
 msgid "Analyse Current Inventory"
-msgstr ""
+msgstr "分析目前庫存"
 
 #. module: stock
 #: view:stock.move:0
@@ -833,6 +834,8 @@ msgid ""
 "                For instance, you can sell pieces of meat that you invoice "
 "based on their weight."
 msgstr ""
+"允許產品銷售和開立發票的度量單位不同。\n"
+"                例如，您可以以一塊肉為銷售單位，但開立發票則依肉品的重量。"
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -873,7 +876,7 @@ msgstr ""
 msgid ""
 "Please define stock output account for this product or its category: \"%s\" "
 "(id: %d)"
-msgstr ""
+msgstr "請為這個產品或者它的類別設定一個出倉科目：「%s」 (id: %d)"
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -892,7 +895,7 @@ msgstr ""
 #: sql_constraint:stock.picking.in:0
 #: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "編號必須在同一公司內唯一！"
 
 #. module: stock
 #: code:addons/stock/product.py:449
@@ -997,13 +1000,13 @@ msgstr "可用產品批次"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
-msgstr ""
+msgstr "更改產品數量"
 
 #. module: stock
 #: code:addons/stock/product.py:465
 #, python-format
 msgid "Future P&L"
-msgstr ""
+msgstr "未來損益"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
@@ -1011,46 +1014,46 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 #: view:stock.picking.in:0
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "入庫"
 
 #. module: stock
 #: help:stock.picking,date:0
 #: help:stock.picking.in,date:0
 #: help:stock.picking.out,date:0
 msgid "Creation date, usually the time of the order."
-msgstr ""
+msgstr "建立日期，通常是訂貨時間。"
 
 #. module: stock
 #: view:report.stock.inventory:0
 #: view:stock.move:0
 msgid "Scrap"
-msgstr ""
+msgstr "報廢"
 
 #. module: stock
 #: field:product.template,property_stock_inventory:0
 msgid "Inventory Location"
-msgstr ""
+msgstr "存貨倉位"
 
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "您必須為此產品指定一組序號。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2255
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
-msgstr ""
+msgstr "請為這個產品分類設定一個日記賬：「%s」(id: %d)"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Details"
-msgstr ""
+msgstr "詳細資訊"
 
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Ready to Transfer"
-msgstr ""
+msgstr "已準備可運送"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -1062,17 +1065,17 @@ msgstr "單價"
 #. module: stock
 #: field:stock.move,date_expected:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "預定日期"
 
 #. module: stock
 #: view:stock.tracking:0
 msgid "Pack Search"
-msgstr ""
+msgstr "包裹搜尋"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Pickings already processed"
-msgstr ""
+msgstr "提貨單已處理"
 
 #. module: stock
 #: field:stock.partial.move.line,currency:0
@@ -1085,12 +1088,12 @@ msgstr "貨幣"
 #: view:stock.picking.in:0
 #: report:stock.picking.list:0
 msgid "Journal"
-msgstr ""
+msgstr "日記帳簿"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
 msgid "Create Draft Invoices"
-msgstr ""
+msgstr "建立發票草稿"
 
 #. module: stock
 #: help:stock.picking,location_id:0
@@ -1105,7 +1108,7 @@ msgstr "如果您在所需成品地點生產，請留空。如在固定地點生
 #. module: stock
 #: selection:stock.picking.in,state:0
 msgid "Ready to Receive"
-msgstr ""
+msgstr "已準備收貨"
 
 #. module: stock
 #: field:report.stock.move,day_diff:0
@@ -1125,22 +1128,22 @@ msgstr "各地點庫存"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 msgid "Receive/Deliver By Orders"
-msgstr ""
+msgstr "依訂單收貨 / 出貨"
 
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Product Lots"
-msgstr ""
+msgstr "產品批次"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Reverse Transfer"
-msgstr ""
+msgstr "反向運送"
 
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Invoice products in a different unit of measure than the sales order"
-msgstr ""
+msgstr "產品開立發票的單位與銷售訂單上度量單位不同。"
 
 #. module: stock
 #: help:stock.location,active:0
@@ -1188,17 +1191,17 @@ msgstr ""
 #. module: stock
 #: field:product.category,property_stock_valuation_account_id:0
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "庫存估價科目"
 
 #. module: stock
 #: view:stock.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "套用"
 
 #. module: stock
 #: field:product.template,loc_row:0
 msgid "Row"
-msgstr ""
+msgstr "行"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -1209,12 +1212,12 @@ msgstr "生產地點"
 #: code:addons/stock/product.py:121
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)."
-msgstr ""
+msgstr "請為產品分類：「%s」 (id: %d) 設定日記帳。"
 
 #. module: stock
 #: field:report.stock.lines.date,date:0
 msgid "Latest Inventory Date"
-msgstr ""
+msgstr "最後盤點日期"
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -1253,7 +1256,7 @@ msgstr ""
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
 msgid "Author"
-msgstr ""
+msgstr "作者"
 
 #. module: stock
 #: code:addons/stock/stock.py:1822
@@ -1265,12 +1268,12 @@ msgstr ""
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Internal Shipment :"
-msgstr ""
+msgstr "內部運送"
 
 #. module: stock
 #: view:stock.inventory.line:0
 msgid "Split Inventory Line"
-msgstr ""
+msgstr "分拆庫存細項"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1281,7 +1284,7 @@ msgstr "手動操作"
 #: view:report.stock.move:0
 #: field:report.stock.move,picking_id:0
 msgid "Shipment"
-msgstr ""
+msgstr "運送"
 
 #. module: stock
 #: view:stock.location:0
@@ -1296,13 +1299,13 @@ msgstr "供應商"
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
 "entries."
-msgstr ""
+msgstr "為了取消這次盤點，您必須先取消相關的日記帳分錄。"
 
 #. module: stock
 #: code:addons/stock/product.py:113
 #, python-format
 msgid "Please specify company in Location."
-msgstr ""
+msgstr "請在倉位中指定公司"
 
 #. module: stock
 #: view:stock.move:0
@@ -1328,18 +1331,18 @@ msgstr "三月"
 #: view:stock.inventory:0
 #: view:stock.inventory.line:0
 msgid "Split inventory lines"
-msgstr ""
+msgstr "分拆盤點細項"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Physical Inventory"
-msgstr ""
+msgstr "實地盤點"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:214
 #, python-format
 msgid "Processing Error!"
-msgstr ""
+msgstr "處理錯誤！"
 
 #. module: stock
 #: help:stock.location,chained_company_id:0
@@ -1369,7 +1372,7 @@ msgstr "伙伴地點"
 #. module: stock
 #: selection:stock.picking.in,state:0
 msgid "Received"
-msgstr ""
+msgstr "已收貨"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1382,7 +1385,7 @@ msgstr "總數"
 #: field:stock.picking.in,min_date:0
 #: field:stock.picking.out,min_date:0
 msgid "Scheduled Time"
-msgstr ""
+msgstr "預定時間"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_consume
@@ -1393,7 +1396,7 @@ msgstr ""
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "出貨單："
 
 #. module: stock
 #: help:stock.location,chained_delay:0
