@@ -743,10 +743,11 @@ class survey_label(osv.osv):
             ondelete='cascade'),
         'sequence': fields.integer('Label Sequence order'),
         'value': fields.char("Suggested value", translate=True,
-            required=True)
+            required=True),
+        'quizz_marks': fields.float('Score for this answer'),
     }
     defaults = {
-        'sequence': 100
+        'sequence': 100,
     }
 
 
@@ -786,6 +787,8 @@ class survey_user_input(osv.osv):
         # The answers !
         'user_input_line_ids': fields.one2many('survey.user_input_line',
                                                'user_input_id', 'Answers'),
+
+        #'quizz_score': fields.function()
     }
     _defaults = {
         'date_create': fields.datetime.now,
@@ -937,6 +940,7 @@ class survey_user_input_line(osv.osv):
         'value_free_text': fields.text("Free Text answer"),
         'value_suggested': fields.many2one('survey.label', "Suggested answer"),
         'value_suggested_row': fields.many2one('survey.label', "Row answer"),
+        'quizz_mark': fields.float("Mark given for this answer")
     }
     _defaults = {
         'skipped': False,
@@ -963,7 +967,7 @@ class survey_user_input_line(osv.osv):
             'question_id': question.id,
             'page_id': question.page_id.id,
             'survey_id': question.survey_id.id,
-            'skipped': False
+            'skipped': False,
         }
         if answer_tag in post and post[answer_tag].strip() != '':
             vals.update({'answer_type': 'free_text', 'value_free_text': post[answer_tag]})
