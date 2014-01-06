@@ -56,8 +56,11 @@ def select_fontname(fontname, default_fontname):
         try:
             pdfmetrics.getFont(fontname)
         except Exception:
-            _logger.warning('Could not locate font %s, substituting default: %s',
-                fontname, default_fontname)
+            addition = ""
+            if " " in fontname:
+                addition = ". Your font contains spaces which is not valid in RML."
+            _logger.warning('Could not locate font %s, substituting default: %s%s',
+                fontname, default_fontname, addition)
             fontname = default_fontname
     return fontname
 
@@ -307,7 +310,7 @@ class _rml_doc(object):
             addMapping(face, 0, 1, fontname)    #italic
             addMapping(face, 1, 0, fontname)    #bold
             addMapping(face, 1, 1, fontname)    #italic and bold
-        elif (mode== 'normal') or (mode == 'regular'):
+        elif (mode== 'normal') or (mode == 'regular') or (mode == 'book'):
             addMapping(face, 0, 0, fontname)    #normal
         elif mode == 'italic':
             addMapping(face, 0, 1, fontname)    #italic

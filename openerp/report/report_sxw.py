@@ -34,6 +34,7 @@ import zipfile
 import common
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.osv.scope import proxy as scope
 from openerp.tools.translate import _
@@ -345,10 +346,13 @@ class report_sxw(report_rml, preprocess.report):
             context = {}
         if self.internal_header:
             context.update(internal_header=self.internal_header)
+
         # skip osv.fields.sanitize_binary_value() because we want the raw bytes in all cases
         context.update(bin_raw=True)
         registry = openerp.registry(cr.dbname)
         ir_obj = registry['ir.actions.report.xml']
+        registry['res.font'].font_scan(cr, SUPERUSER_ID, lazy=True, context=context)
+
         report_xml_ids = ir_obj.search(cr, uid,
                 [('report_name', '=', self.name[7:])], context=context)
         if report_xml_ids:

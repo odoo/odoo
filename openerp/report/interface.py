@@ -25,13 +25,14 @@ import re
 from lxml import etree
 
 import openerp
-
-import openerp
 import openerp.tools as tools
 import openerp.modules
 import print_xml
 import render
 import urllib
+
+from openerp import SUPERUSER_ID
+from openerp.report.render.rml2pdf import customfonts
 
 #
 # coerce any type to a unicode string (to preserve non-ascii characters)
@@ -91,13 +92,16 @@ class report_rml(report_int):
         }
 
     def create(self, cr, uid, ids, datas, context):
+        registry = openerp.registry(cr.dbname)
         xml = self.create_xml(cr, uid, ids, datas, context)
         xml = tools.ustr(xml).encode('utf8')
         report_type = datas.get('report_type', 'pdf')
         if report_type == 'raw':
             return xml, report_type
+
+        registry['res.font'].font_scan(cr, SUPERUSER_ID, lazy=True, context=context)
+
         rml = self.create_rml(cr, xml, uid, context)
-        registry = openerp.registry(cr.dbname)
         ir_actions_report_xml_obj = registry['ir.actions.report.xml']
         report_xml_ids = ir_actions_report_xml_obj.search(cr, uid, [('report_name', '=', self.name[7:])], context=context)
         self.title = report_xml_ids and ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name or 'OpenERP Report'

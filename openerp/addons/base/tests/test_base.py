@@ -311,7 +311,7 @@ class test_translation(common.TransactionCase):
         self.res_category = self.registry('res.partner.category')
         self.ir_translation = self.registry('ir.translation')
         cr, uid = self.cr, self.uid
-        self.registry('ir.translation').load(cr, ['base'], ['fr_FR'])
+        self.registry('ir.translation').load_module_terms(cr, ['base'], ['fr_FR'])
         self.cat_id = self.res_category.create(cr, uid, {'name': 'Customers'})
         self.ir_translation.create(cr, uid, {'name': 'res.partner.category,name', 'module':'base', 
             'value': 'Clients', 'res_id': self.cat_id, 'lang':'fr_FR', 'state':'translated', 'type': 'model'})
