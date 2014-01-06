@@ -1703,9 +1703,7 @@ class stock_move(osv.osv):
         """ Changes the state to assigned.
         @return: True
         """
-        self.action_assign(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'state': 'assigned'})
-        return True
+        return self.write(cr, uid, ids, {'state': 'assigned'})
 
     def cancel_assign(self, cr, uid, ids, context=None):
         """ Changes the state to confirmed.
