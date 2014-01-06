@@ -37,7 +37,7 @@ class expression(object):
 
     def _is_leaf(self, element, internal=False):
         OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
-        INTERNAL_OPS = OPS + ('inselect',)
+        INTERNAL_OPS = OPS + ('inselect', 'not inselect')
         return (isinstance(element, tuple) or isinstance(element, list)) \
            and len(element) == 3 \
            and (((not internal) and element[1] in OPS) \
@@ -358,6 +358,11 @@ class expression(object):
 
                     operator = operator == '=like' and 'like' or operator
 
+                    new_op = 'inselect'
+                    if operator in ['not like', 'not ilike', 'not in', '<>', '!=']:
+                        new_op = 'not inselect'
+                        operator = {'not like': 'like', 'not ilike': 'ilike', 'not in': 'in', '<>': '=', '!=': '='}[operator]
+
                     query1 = '( SELECT res_id'          \
                              '    FROM ir_translation'  \
                              '   WHERE name = %s'       \
@@ -365,7 +370,7 @@ class expression(object):
                              '     AND type = %s'
                     instr = ' %s'
                     #Covering in,not in operators with operands (%s,%s) ,etc.
-                    if operator in ['in','not in']:
+                    if operator == 'in':
                         instr = ','.join(['%s'] * len(right))
                         query1 += '     AND value ' + operator +  ' ' +" (" + instr + ")"   \
                              ') UNION ('                \
@@ -386,7 +391,7 @@ class expression(object):
                               right,
                              ]
 
-                    self.__exp[i] = ('id', 'inselect', (query1, query2))
+                    self.__exp[i] = ('id', new_op, (query1, query2))
 
         return self
 
@@ -397,6 +402,9 @@ class expression(object):
 
         if operator == 'inselect':
             query = '(%s.%s in (%s))' % (table._table, left, right[0])
+            params = right[1]
+        elif operator == 'not inselect':
+            query = '(%s.%s not in (%s))' % (table._table, left, right[0])
             params = right[1]
         elif operator in ['in', 'not in']:
             params = right and right[:] or []
