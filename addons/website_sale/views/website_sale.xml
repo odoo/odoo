@@ -382,9 +382,16 @@
 <template id="product_option_openchatter" inherit_option_id="website_sale.product" name="Discussion">
     <xpath expr="//div[@t-field='product.website_description']" position="after">
         <hr class="mb32"/>
-        <section class="container">
+        <section class="container" t-if="product.website_message_ids">
             <div class="row col-md-10 col-md-offset-1">
-                <a id="comments"/>
+                <div class="text-muted">
+                    <h3 class="fa fa-comment-o">
+                        <a t-attf-href="#comments">
+                            <t t-if="len(product.website_message_ids) &lt;= 1" ><t t-esc="len(product.website_message_ids)"/> comment</t>
+                            <t t-if="len(product.website_message_ids) > 1"><t t-esc="len(product.website_message_ids)"/> comments</t>
+                        </a>
+                    </h3>
+                </div>
                 <ul class="media-list" id="comments-list">
                     <li t-foreach="product.website_message_ids" t-as="message" class="media">
                         <div class="media-body oe_msg">
