@@ -262,11 +262,15 @@ class im_user(osv.osv):
 
     def search_users(self, cr, uid, text_search, fields, limit, context=None):
         my_id = self.get_my_id(cr, uid, None, context)
-        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", True]],
+        group_employee = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_user')[1]
+        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", True], ["user_id.groups_id", "in", [group_employee]]],
             order="name asc", limit=limit, context=context)
         if len(found) < limit:
-            found.extend(self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", False]],
-            order="name asc", limit=limit-len(found), context=context))
+            found += self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", True], ["id", "not in", found]],
+                order="name asc", limit=limit, context=context)
+        if len(found) < limit:
+            found += self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", False], ["id", "not in", found]],
+                order="name asc", limit=limit-len(found), context=context)
         return self.read(cr, uid, found, fields, context=context)
 
     def im_connect(self, cr, uid, uuid=None, context=None):
