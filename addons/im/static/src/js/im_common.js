@@ -259,7 +259,7 @@ function declare($, _, openerp) {
             _.each(messages, function(message) {
                 if (! message.technical) {
                     defs.push(self.activate_session(message.session_id[0]).then(function(conv) {
-                        received = self.my_id[0] !== message.from_id[0];
+                        received = self.my_id !== message.from_id[0];
                         return conv.received_message(message);
                     }));
                 } else {
