@@ -149,7 +149,7 @@
     <t t-name="CategoryButton">
         <span class='category-button js-category-switch' t-att-data-category-id="category.id" >
             <div class="category-img">
-                <img src="" />
+                <img t-att-src="image_url" />
             </div>
             <div class="category-name">
                 <t t-esc="category.name"/>
@@ -424,7 +424,7 @@
     <t t-name="Product">
         <span class='product' t-att-data-product-id="product.id">
             <div class="product-img">
-                <img src='' /> <!-- the product thumbnail -->
+                <img t-att-src='image_url' /> 
                 <t t-if="!product.to_weight">
                     <span class="price-tag">
                         <t t-esc="widget.format_currency(product.price)"/>

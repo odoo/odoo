@@ -2,54 +2,46 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
     var QWeb = instance.web.qweb,
 	_t = instance.web._t;
 
-    // The ImageCache is used to hide the latency of the application cache on-disk access in chrome 
-    // that causes annoying flickering on product pictures. Why the hell a simple access to
-    // the application cache involves such latency is beyond me, hopefully one day this can be
-    // removed.
-    module.ImageCache   = instance.web.Class.extend({
+    module.DomCache = instance.web.Class.extend({
         init: function(options){
             options = options || {};
-            this.max_size = options.max_size || 500;
+            this.max_size = options.max_size || 2000;
 
             this.cache = {};
             this.access_time = {};
             this.size = 0;
         },
-        get_image_uncached: function(url){
-            var img =  new Image();
-            img.src = url;
-            return img;
-        },
-        // returns a DOM Image object from an url, and cache the last 500 (by default) results
-        get_image: function(url){
-            var cached = this.cache[url];
-            if(cached){
-                this.access_time[url] = (new Date()).getTime();
-                return cached;
-            }else{
-                var img = new Image();
-                img.src = url;
+        cache_node: function(key,node){
+            var cached = this.cache[key];
+            this.cache[key] = node;
+            this.access_time[key] = new Date().getTime();
+            if(!cached){
+                this.size++;
                 while(this.size >= this.max_size){
-                    var oldestUrl = null;
-                    var oldestTime = (new Date()).getTime();
-                    for(var url in this.cache){
-                        var time = this.access_time[url];
-                        if(time <= oldestTime){
-                            oldestTime = time;
-                            oldestUrl  = url;
+                    var oldest_key = null;
+                    var oldest_time = new Date().getTime();
+                    for(var key in this.cache){
+                        var time = this.access_time[key];
+                        if(time <= oldest_time){
+                            oldest_time = time;
+                            oldest_key  = key;
                         }
                     }
-                    if(oldestUrl){
-                        delete this.cache[oldestUrl];
-                        delete this.access_time[oldestUrl];
+                    if(oldestKey){
+                        delete this.cache[oldest_key];
+                        delete this.access_time[oldest_key];
                     }
                     this.size--;
                 }
-                this.cache[url] = img;
-                this.access_time[url] = (new Date()).getTime();
-                this.size++;
-                return img;
             }
+            return node;
+        },
+        get_node: function(key){
+            var cached = this.cache[key];
+            if(cached){
+                this.access_time[key] = new Date().getTime();
+            }
+            return cached;
         },
     });
 
@@ -400,7 +392,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.breadcrumb = [];
             this.subcategories = [];
             this.product_list_widget = options.product_list_widget || null;
-            this.category_cache = {};
+            this.category_cache = new module.DomCache();
             this.set_category();
             
             this.switch_category_handler = function(event){
@@ -448,20 +440,19 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
 
         render_category: function( category, with_image ){
-            if(!this.category_cache[category.id]){
-
+            var cached = this.category_cache.get_node(category.id);
+            if(!cached){
                 if(with_image){
                     var image_url = this.get_image_url(category);
                     var category_html = QWeb.render('CategoryButton',{ 
                             widget:  this, 
                             category: category, 
+                            image_url: this.get_image_url(category),
                         });
                         category_html = _.str.trim(category_html);
                     var category_node = document.createElement('div');
                         category_node.innerHTML = category_html;
                         category_node = category_node.childNodes[0];
-                    var img = category_node.querySelector('img');
-                        img.parentNode.replaceChild(this.pos_widget.image_cache.get_image(image_url),img);
                 }else{
                     var category_html = QWeb.render('CategorySimpleButton',{ 
                             widget:  this, 
@@ -472,9 +463,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                         category_node.innerHTML = category_html;
                         category_node = category_node.childNodes[0];
                 }
-                this.category_cache[category.id] = category_node;
+                this.category_cache.cache_node(category.id,category_node);
+                return category_node;
             }
-            return this.category_cache[category.id];
+            return cached; 
         },
 
         replace: function($target){
@@ -575,7 +567,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             };
 
             this.product_list = options.product_list || [];
-            this.product_cache = {};
+            this.product_cache = new module.DomCache();
         },
         set_product_list: function(product_list){
             this.product_list = product_list;
@@ -591,20 +583,23 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
 
         render_product: function(product){
-            if(!this.product_cache[product.id]){
+            var cached = this.product_cache.get_node(product.id);
+            if(!cached){
+                console.log('Not Cached:',product.id);
                 var image_url = this.get_product_image_url(product);
                 var product_html = QWeb.render('Product',{ 
                         widget:  this, 
                         product: product, 
+                        image_url: this.get_product_image_url(product),
                     });
                 var product_node = document.createElement('div');
                 product_node.innerHTML = product_html;
                 product_node = product_node.childNodes[1];
-                var img = product_node.querySelector('img');
-                img.parentNode.replaceChild(this.pos_widget.image_cache.get_image(image_url),img);
-                this.product_cache[product.id] = product_node;
+                this.product_cache.cache_node(product.id,product_node);
+                return product_node;
             }
-            return this.product_cache[product.id];
+            console.log('Cached:',product.id);
+            return cached;
         },
 
         renderElement: function() {
@@ -881,7 +876,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.leftpane_visible = true;
             this.leftpane_width   = '440px';
             this.cashier_controls_visible = true;
-            this.image_cache = new module.ImageCache(); // for faster products image display
 
             FastClick.attach(document.body);
 
