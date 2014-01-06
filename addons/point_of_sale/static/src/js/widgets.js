@@ -585,7 +585,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         render_product: function(product){
             var cached = this.product_cache.get_node(product.id);
             if(!cached){
-                console.log('Not Cached:',product.id);
                 var image_url = this.get_product_image_url(product);
                 var product_html = QWeb.render('Product',{ 
                         widget:  this, 
@@ -598,7 +597,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.product_cache.cache_node(product.id,product_node);
                 return product_node;
             }
-            console.log('Cached:',product.id);
             return cached;
         },
 
