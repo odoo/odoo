@@ -78,7 +78,7 @@
     picking_type_id: stock.picking_type_out
     origin: 'outgoing shipment'
     partner_id: base.res_partner_6
-    date: !eval "'%s-%s-15' %(datetime.now().year,datetime.now().month-2)"
+    date: !eval "'%s-%s-15' %((datetime.now()-timedelta(days=60)).year, (datetime.now()-timedelta(days=60)).month)"
     move_lines:
       - product_id: product.product_product_6
         product_uom: product.product_uom_unit
@@ -95,7 +95,7 @@
     picking_type_id: stock.picking_type_out
     origin: 'outgoing shipment your_company warehouse'
     partner_id: base.res_partner_6
-    date: !eval "'%s-%s-15' %(datetime.now().year,datetime.now().month-1)"
+    date: !eval "'%s-%s-15' % ((datetime.now()-timedelta(days=30)).month,(datetime.now()-timedelta(days=30)).month)"
     move_lines:
       - product_id: product.product_product_31
         product_uom: product.product_uom_unit
@@ -226,7 +226,7 @@
     picking_type_id: chi_picking_type_in
     origin: 'chicago_warehouse'
     partner_id: base.res_partner_6
-    date: !eval "'%s-%s-2' %(datetime.now().year,datetime.now().month-1)"
+    date: !eval "'%s-%s-2' % ((datetime.now()-timedelta(days=30)).month,(datetime.now()-timedelta(days=30)).month)"
     move_lines:
       - product_id: product.product_product_22
         product_uom: product.product_uom_unit
