@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-12-27 02:43+0000\n"
+"PO-Revision-Date: 2014-01-05 03:10+0000\n"
 "Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-28 05:37+0000\n"
+"X-Launchpad-Export-Date: 2014-01-05 05:47+0000\n"
 "X-Generator: Launchpad (build 16877)\n"
 
 #. module: account
@@ -447,6 +447,11 @@ msgid ""
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
+"企業や個人が所有する資産を管理します。\n"
+"                資産で発生した減価償却費を追跡して、It keeps track of the depreciation "
+"occurred on those assets, and creates account move for those depreciation "
+"lines. This installs the module account_asset.\n"
+"                このボックスをチェックしない場合も請求と支払いはできますが、仕入項目や勘定科目には影響しません。"
 
 #. module: account
 #: help:account.bank.statement.line,name:0
@@ -485,6 +490,10 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"'Round per "
+"line'を選択すると最初に購入/販売注文書や請求書の各行に対して税額の計算と丸めを行い、次にこれらを加算して合計金額とします。'Round "
+"globally'を選択すると購入/販売注文書や請求書の各行に対して税額の計算を行い、最終的にこれらの合計金額を丸めます。\r\n"
+"税込みで販売する場合は、税込み行を加算した金額と合計が一致するように'Round per line'を選択します。"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -630,7 +639,7 @@ msgstr "全て"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "仕訳の小数点精度"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -1709,7 +1718,7 @@ msgstr "事例コード"
 #. module: account
 #: field:account.config.settings,company_footer:0
 msgid "Bank accounts footer preview"
-msgstr ""
+msgstr "銀行口座のフッタをプレビュー"
 
 #. module: account
 #: selection:account.account,type:0
@@ -1856,7 +1865,7 @@ msgstr "会計年度の順序"
 #. module: account
 #: field:account.config.settings,group_analytic_accounting:0
 msgid "Analytic accounting"
-msgstr ""
+msgstr "分析会計"
 
 #. module: account
 #: report:account.overdue:0
@@ -1963,7 +1972,7 @@ msgstr "売掛金と買掛金"
 #. module: account
 #: field:account.config.settings,module_account_payment:0
 msgid "Manage payment orders"
-msgstr ""
+msgstr "支払指図を管理"
 
 #. module: account
 #: view:account.period:0
@@ -2026,7 +2035,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
 msgid "Pay your suppliers by check"
-msgstr ""
+msgstr "仕入先に小切手で支払う"
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
@@ -2181,7 +2190,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,currency_id:0
 msgid "Default company currency"
-msgstr ""
+msgstr "デフォルトの企業通貨"
 
 #. module: account
 #: field:account.invoice,move_id:0
@@ -2306,7 +2315,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,module_account_asset:0
 msgid "Assets management"
-msgstr ""
+msgstr "資産管理"
 
 #. module: account
 #: view:account.account:0
@@ -2399,7 +2408,7 @@ msgstr "エントリーを開く"
 #. module: account
 #: field:account.config.settings,purchase_refund_sequence_next:0
 msgid "Next supplier credit note number"
-msgstr ""
+msgstr "次の仕入先クレジットノート番号"
 
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
@@ -2861,7 +2870,7 @@ msgstr "分析勘定"
 #: field:account.config.settings,default_purchase_tax:0
 #: field:account.config.settings,purchase_tax:0
 msgid "Default purchase tax"
-msgstr ""
+msgstr "デフォルト消費税（購入）"
 
 #. module: account
 #: view:account.account:0
@@ -4147,7 +4156,7 @@ msgstr "適用可能（Pythonコードによって計算）でない場合は、
 #. module: account
 #: field:account.config.settings,group_check_supplier_invoice_total:0
 msgid "Check the total of supplier invoices"
-msgstr ""
+msgstr "仕入先請求書の合計を確認"
 
 #. module: account
 #: view:account.tax:0
@@ -4524,7 +4533,7 @@ msgid ""
 "As an example, a decimal precision of 2 will allow journal entries  like: "
 "9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: "
 "0.0231 EUR."
-msgstr ""
+msgstr "例として、小数点以下2桁が9.99 EURとなるのに対し、小数点以下4桁は0.0231 EURのようになります。"
 
 #. module: account
 #: field:account.account,shortcut:0
@@ -5355,7 +5364,7 @@ msgstr ""
 msgid ""
 "If you do not check this box, you will be able to do invoicing & payments, "
 "but not accounting (Journal Items, Chart of  Accounts, ...)"
-msgstr ""
+msgstr "このボックスをチェックしない場合も請求と支払いは行いますが、仕訳項目や勘定科目には影響しません。"
 
 #. module: account
 #: view:account.period:0
@@ -6392,7 +6401,7 @@ msgstr "この仕訳帳と関係する会社"
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
 msgid "Allows you multi currency environment"
-msgstr ""
+msgstr "多通貨を許可します。"
 
 #. module: account
 #: view:account.subscription:0
@@ -7685,7 +7694,7 @@ msgstr "期初仕訳収益勘定"
 #. module: account
 #: field:account.config.settings,group_proforma_invoices:0
 msgid "Allow pro-forma invoices"
-msgstr ""
+msgstr "見積送り状を許可"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7724,7 +7733,7 @@ msgstr ""
 #. module: account
 #: help:account.config.settings,currency_id:0
 msgid "Main currency of the company."
-msgstr ""
+msgstr "会社の主な通貨"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reports
@@ -7753,7 +7762,7 @@ msgstr "アカウント仕訳帳"
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "税計算の丸め方法"
 
 #. module: account
 #: model:process.node,name:account.process_node_paidinvoice0
@@ -8115,7 +8124,7 @@ msgstr "順序"
 #. module: account
 #: field:account.config.settings,paypal_account:0
 msgid "Paypal account"
-msgstr ""
+msgstr "PayPalアカウント"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -8270,7 +8279,7 @@ msgstr ""
 #. module: account
 #: field:res.company,tax_calculation_rounding_method:0
 msgid "Tax Calculation Rounding Method"
-msgstr ""
+msgstr "税計算の丸め方法"
 
 #. module: account
 #: field:account.entries.report,move_line_state:0
@@ -8565,7 +8574,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_sequence_next:0
 msgid "Next invoice number"
-msgstr ""
+msgstr "次の請求書番号"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_generic_reporting
@@ -9723,7 +9732,7 @@ msgstr "一般的なレポート"
 #: field:account.config.settings,default_sale_tax:0
 #: field:account.config.settings,sale_tax:0
 msgid "Default sale tax"
-msgstr ""
+msgstr "デフォルト消費税（販売）"
 
 #. module: account
 #: report:account.overdue:0
@@ -10565,7 +10574,7 @@ msgstr "請求書は完了状態です。"
 #. module: account
 #: field:account.config.settings,module_account_followup:0
 msgid "Manage customer payment follow-ups"
-msgstr ""
+msgstr "顧客支払を管理"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
