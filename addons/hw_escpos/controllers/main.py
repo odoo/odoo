@@ -85,6 +85,11 @@ class EscposDriver(hw_proxy.Proxy):
                 right = ' ' * (rwidth - len(right)) + right
 
             return ' ' * indent + left + right + '\n'
+        
+        def print_taxes():
+            taxes = receipt['tax_details']
+            for tax in taxes:
+                eprint.text(printline(tax['tax']['name'],price(tax['amount']), width=40,ratio=0.6))
 
         logo = None
 
@@ -150,7 +155,8 @@ class EscposDriver(hw_proxy.Proxy):
         if money(receipt['subtotal']) != money(receipt['total_with_tax']):
             eprint.text(printline('','-------'));
             eprint.text(printline(_('Subtotal'),money(receipt['subtotal']),width=40, ratio=0.6))
-            eprint.text(printline(_('Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
+            print_taxes()
+            #eprint.text(printline(_('Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
             taxincluded = False
 
 
@@ -175,7 +181,8 @@ class EscposDriver(hw_proxy.Proxy):
         if receipt['total_discount'] != 0:
             eprint.text(printline(_('Discounts'),money(receipt['total_discount']),width=40, ratio=0.6))
         if taxincluded:
-            eprint.text(printline(_('Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
+            print_taxes()
+            #eprint.text(printline(_('Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
 
         # Footer
         if check(receipt['footer']):
