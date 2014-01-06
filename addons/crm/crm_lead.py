@@ -1065,7 +1065,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         else:
             prefix = 'Scheduled'
         suffix = ' %s' % phonecall.description
-        message = _("%s a call for %s.%s") % (prefix, phonecall.date, suffix)
+        phonecall_date = datetime.strptime(phonecall.date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        phonecall_usertime = fields.datetime.context_timestamp(cr, uid, phonecall_date, context=context).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        message = _("%s a call for %s.%s") % (prefix, phonecall_usertime, suffix)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def log_meeting(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
