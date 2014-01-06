@@ -259,7 +259,7 @@ function declare($, _, openerp) {
             _.each(messages, function(message) {
                 if (! message.technical) {
                     defs.push(self.activate_session(message.session_id[0]).then(function(conv) {
-                        received = true;
+                        received = self.my_id[0] !== message.from_id[0];
                         return conv.received_message(message);
                     }));
                 } else {
@@ -268,12 +268,13 @@ function declare($, _, openerp) {
                     defs.push($.when(im_common.technical_messages_handlers[json.type](self, message)));
                 }
             });
-            if (! this.get("window_focus") && received) {
-                this.set("waiting_messages", this.get("waiting_messages") + messages.length);
-                this.ting.play();
-                this.create_ting();
-            }
-            return $.when.apply($, defs);
+            return $.when.apply($, defs).then(function(){
+                if (! self.get("window_focus") && received) {
+                    self.set("waiting_messages", self.get("waiting_messages") + messages.length);
+                    self.ting.play();
+                    self.create_ting();
+                }
+            });
         },
         calc_positions: function() {
             var current = this.get("right_offset");
