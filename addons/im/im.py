@@ -26,7 +26,7 @@ import openerp.addons.web.http as http
 from openerp.addons.web.http import request
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import datetime
-from openerp.osv import osv, fields
+from openerp.osv import osv, fields, expression
 import time
 import logging
 import json
@@ -249,10 +249,24 @@ class im_user(osv.osv):
             res[obj["id"]] = obj["im_last_status"] and (last_update + delta) > current
         return res
 
+    def _status_search(self, cr, uid, obj, name, domain, context=None):
+        current = datetime.datetime.now()
+        delta = datetime.timedelta(0, DISCONNECTION_TIMER)
+        field, operator, value = domain[0]
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            value = not value
+        if value:
+            return ['&', ('im_last_status', '=', True), ('im_last_status_update', '>', (current - delta).strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+        else:
+            return ['|', ('im_last_status', '=', False), ('im_last_status_update', '<=', (current - delta).strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+
     def search_users(self, cr, uid, text_search, fields, limit, context=None):
         my_id = self.get_my_id(cr, uid, None, context)
-        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False]],
+        found = self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", True]],
             order="name asc", limit=limit, context=context)
+        if len(found) < limit:
+            found.extend(self.search(cr, uid, [["name", "ilike", text_search], ["id", "<>", my_id], ["uuid", "=", False], ["im_status", "=", False]],
+            order="name asc", limit=limit-len(found), context=context))
         return self.read(cr, uid, found, fields, context=context)
 
     def im_connect(self, cr, uid, uuid=None, context=None):
@@ -303,12 +317,12 @@ class im_user(osv.osv):
         'name': fields.function(_get_name, type='char', size=200, string="Name", store=True, readonly=True),
         'assigned_name': fields.char(string="Assigned Name", size=200, required=False),
         'image': fields.related('user_id', 'image_small', type='binary', string="Image", readonly=True),
-        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade'),
+        'user_id': fields.many2one("res.users", string="User", select=True, ondelete='cascade', oldname='user'),
         'uuid': fields.char(string="UUID", size=50, select=True),
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
         'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),
         'im_last_status_update': fields.datetime(string="Instant Messaging Last Status Update"),
-        'im_status': fields.function(_im_status, string="Instant Messaging Status", type='boolean'),
+        'im_status': fields.function(_im_status, string="Instant Messaging Status", type='boolean', fnct_search=_status_search),
     }
 
     _defaults = {
