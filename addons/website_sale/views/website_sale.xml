@@ -256,6 +256,7 @@
       <t t-set="head">
           <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
           <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+          <link rel='stylesheet' href='/website_sale/static/src/css/website_mail.css'/>
       </t>
       <t t-set="additional_title" t-value="product.name"/>
       <div id="wrap">
@@ -386,9 +387,9 @@
                 <a id="comments"/>
                 <ul class="media-list" id="comments-list">
                     <li t-foreach="product.website_message_ids" t-as="message" class="media">
-                        <div class="media-body">
-                            <img class="media-object pull-left" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
-                            <div class="media-body">
+                        <div class="media-body oe_msg">
+                            <img class="media-object pull-left oe_msg_avatar" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(message.author_id.id)" style="width: 50px; margin-right: 10px;"/>
+                            <div class="media-body oe_msg_content">
                                 <t t-call="website.publish_short">
                                     <t t-set="object" t-value="message"/>
                                 </t>
@@ -397,15 +398,17 @@
                                 </h5>
                                 <div t-field="message.body"/>
                                 <div>
-                                    <div class="col-md-2" t-foreach='message.attachment_ids' t-as='attachment'>
+                                    <div class="oe_msg_attachment" t-foreach='message.attachment_ids' t-as='attachment'>
                                         <a t-att-href="'/mail/download_attachment?model=mail.message&amp;id='+str(message.id)+'&amp;method=download_attachment&amp;attachment_id='+str(attachment.id)" target="_blank">
                                             <t t-if="attachment.file_type == 'webimage'">
-                                                <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"></img>
+                                                <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"
+                                                    class='oe_attachment_embedded'></img>
                                             </t>
                                             <t t-if="attachment.file_type != 'webimage'">
-                                                <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"></img>
+                                                <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
+                                                    class='oe_attachment_webimage'></img>
                                             </t>
-                                            <div class='oe_name'><t t-raw='attachment.name' /></div>
+                                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
                                         </a>
                                     </div>
                                 </div>
