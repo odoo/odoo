@@ -132,7 +132,8 @@ class survey_survey(osv.osv):
         'state': 'draft',
         'visible_to_user': True,
         'auth_required': True,
-        'users_can_go_back': False
+        'users_can_go_back': False,
+        'color': 0
     }
 
     _sql_constraints = {
