@@ -31,7 +31,8 @@ class stock_move_consume(osv.osv_memory):
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True)
+        'location_id': fields.many2one('stock.location', 'Location', required=True),
+        'restrict_lot_id': fields.many2one('stock.production.lot', 'Lot'),
     }
 
     #TOFIX: product_uom should not have differemt category of default UOM of product. Qty should be convert into UOM of original move line before going in consume and scrap
@@ -74,7 +75,7 @@ class stock_move_consume(osv.osv_memory):
         move_ids = context['active_ids']
         for data in self.browse(cr, uid, ids, context=context):
             move_obj.action_consume(cr, uid, move_ids,
-                             data.product_qty, data.location_id.id,
+                             data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -132,7 +133,7 @@ class stock_move_scrap(osv.osv_memory):
         move_ids = context['active_ids']
         for data in self.browse(cr, uid, ids):
             move_obj.action_scrap(cr, uid, move_ids,
-                             data.product_qty, data.location_id.id,
+                             data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 

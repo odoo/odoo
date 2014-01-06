@@ -1715,16 +1715,15 @@ class stock_move(osv.osv):
 
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
-        @return: No. of moves done
         """
         context = context or {}
         quant_obj = self.pool.get("stock.quant")
-        done = []
+        to_assign_moves = []
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
             if move.product_id.type == 'consu':
-                done.append(move.id)
+                to_assign_moves.append(move.id)
                 continue
             else:
                 #build the prefered domain based on quants that moved in previous linked done move
@@ -1750,6 +1749,10 @@ class stock_move(osv.osv):
                     quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                     quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
+        #force assignation of consumable products
+        if to_assign_moves:
+            self.force_assign(cr, uid, to_assign_moves, context=context)
+        #check if a putaway rule is likely to be processed and store result on the move
         self._putaway_check(cr, uid, ids, context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -1802,7 +1805,7 @@ class stock_move(osv.osv):
             #first, process the move per linked operation first because it may imply some specific domains to consider
             for record in move.linked_move_operation_ids:
                 dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, fallback_domain=fallback_domain, context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 package_id = False
                 if not record.operation_id.package_id:
                     #if a package and a result_package is given, we don't enter here because it will be processed by process_packaging() later
@@ -1814,7 +1817,7 @@ class stock_move(osv.osv):
                 qty -= record.qty
             #then if the total quantity processed this way isn't enough, process the remaining quantity without any specific domain
             if qty > 0:
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, context=context)
             #unreserve the quants and make them available for other operations/moves
             quant_obj.quants_unreserve(cr, uid, move, context=context)
@@ -1846,7 +1849,7 @@ class stock_move(osv.osv):
                 raise osv.except_osv(_('User Error!'), _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(cr, uid, ids, context=context)
 
-    def action_scrap(self, cr, uid, ids, quantity, location_id, context=None):
+    def action_scrap(self, cr, uid, ids, quantity, location_id, restrict_lot_id=False, context=None):
         """ Move the scrap/damaged product into scrap location
         @param cr: the database cursor
         @param uid: the user id
@@ -1877,8 +1880,7 @@ class stock_move(osv.osv):
                 'state': move.state,
                 'scrapped': True,
                 'location_dest_id': location_id,
-                #TODO lot_id is now on quant and not on move, need to do something for this
-                #'lot_id': move.lot_id.id,
+                'restrict_lot_id': restrict_lot_id,
             }
             new_move = self.copy(cr, uid, move.id, default_val)
 
@@ -1893,7 +1895,7 @@ class stock_move(osv.osv):
         self.action_done(cr, uid, res, context=context)
         return res
 
-    def action_consume(self, cr, uid, ids, quantity, location_id=False, context=None):
+    def action_consume(self, cr, uid, ids, quantity, location_id=False, restrict_lot_id=False, context=None):
         """ Consumed product with specific quantity from specific source location. This correspond to a split of the move (or write if the quantity to consume is >= than the quantity of the move) followed by an action_done
         @param ids: ids of stock move object to be consumed
         @param quantity : specify consume quantity (given in move UoM)
@@ -1916,16 +1918,16 @@ class stock_move(osv.osv):
                 ctx = context.copy()
                 if location_id:
                     ctx['source_location_id'] = location_id
-                res.append(self.split(cr, uid, move, move_qty - quantity_rest, ctx))
+                res.append(self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, context=ctx))
             else:
                 res.append(move.id)
                 if location_id:
-                    self.write(cr, uid, [move.id], {'location_id': location_id}, context=context)
+                    self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id}, context=context)
 
         self.action_done(cr, uid, res, context=context)
         return res
 
-    def split(self, cr, uid, move, qty, context=None):
+    def split(self, cr, uid, move, qty, restrict_lot_id=False, context=None):
         """ Splits qty from move move into a new move
         :param move: browse record
         :param qty: float. quantity to split (given in product UoM)
@@ -1949,7 +1951,8 @@ class stock_move(osv.osv):
             'state': move.state,
             'procure_method': 'make_to_stock',
             'move_dest_id': False,
-            'reserved_quant_ids': []
+            'reserved_quant_ids': [],
+            'restrict_lot_id': restrict_lot_id,
         }
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']
