@@ -636,18 +636,32 @@
             </table>
             <br />
             <table>
-                <tr><td>Subtotal:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.getSubtotal())"/>
-                    </td></tr>
-                <tr><td>Tax:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.getTax())"/>
-                    </td></tr>
-                <tr><td>Discount:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
-                    </td></tr>
-                <tr class="emph"><td>Total:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
-                    </td></tr>
+                <tr>
+                    <td>Subtotal:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.getSubtotal())"/>
+                    </td>
+                </tr>
+                <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
+                    <tr>
+                        <td><t t-esc="taxdetail.tax.name" /></td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(taxdetail.amount)" />
+                        </td>
+                    </tr>
+                </t>
+                <tr>
+                    <td>Discount:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
+                    </td>
+                </tr>
+                <tr class="emph">
+                    <td>Total:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                    </td>
+                </tr>
             </table>
             <br />
             <table>
@@ -663,7 +677,7 @@
             <br />
             <table>
                 <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(order.getPaidTotal() - order.getTotalTaxIncluded())"/>
+                    <t t-esc="widget.format_currency(order.getChange())"/>
                     </td></tr>
             </table>
             <t t-if="widget.pos.config.receipt_footer">

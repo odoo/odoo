@@ -47,6 +47,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.units = [];
             this.units_by_id = {};
             this.pricelist = null;
+            window.posmodel = this;
 
             // these dynamic attributes can be watched for change by other models or widgets
             this.set({
@@ -121,7 +122,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(partners){
                     self.partners = partners;
 
-                    return self.fetch('account.tax', ['amount', 'price_include', 'type']);
+                    return self.fetch('account.tax', ['name','amount', 'price_include', 'type']);
                 }).then(function(taxes){
                     self.taxes = taxes;
 
@@ -598,6 +599,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_tax: function(){
             return this.get_all_prices().tax;
         },
+        get_tax_details: function(){
+            return this.get_all_prices().taxDetails;
+        },
         get_all_prices: function(){
             var self = this;
             var currency_rounding = this.pos.currency.rounding;
@@ -609,6 +613,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var taxes_ids = product.taxes_id;
             var taxes =  self.pos.taxes;
             var taxtotal = 0;
+            var taxdetail = {};
             _.each(taxes_ids, function(el) {
                 var tax = _.detect(taxes, function(t) {return t.id === el;});
                 if (tax.price_include) {
@@ -623,6 +628,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     tmp = round_pr(tmp,currency_rounding);
                     taxtotal += tmp;
                     totalNoTax -= tmp;
+                    taxdetail[tax.id] = tmp;
                 } else {
                     var tmp;
                     if (tax.type === "percent") {
@@ -635,12 +641,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     tmp = round_pr(tmp,currency_rounding);
                     taxtotal += tmp;
                     totalTax += tmp;
+                    taxdetail[tax.id] = tmp;
                 }
             });
             return {
                 "priceWithTax": totalTax,
                 "priceWithoutTax": totalNoTax,
                 "tax": taxtotal,
+                "taxDetails": taxdetail,
             };
         },
     });
@@ -795,6 +803,32 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return sum + orderLine.get_tax();
             }), 0);
         },
+        getTaxDetails: function(){
+            var details = {};
+            var fulldetails = [];
+            var taxes_by_id = {};
+            
+            for(var i = 0; i < this.pos.taxes.length; i++){
+                taxes_by_id[this.pos.taxes[i].id] = this.pos.taxes[i];
+            }
+
+            this.get('orderLines').each(function(line){
+                var ldetails = line.get_tax_details();
+                for(var id in ldetails){
+                    if(ldetails.hasOwnProperty(id)){
+                        details[id] = (details[id] || 0) + ldetails[id];
+                    }
+                }
+            });
+            
+            for(var id in details){
+                if(details.hasOwnProperty(id)){
+                    fulldetails.push({amount: details[id], tax: taxes_by_id[id]});
+                }
+            }
+
+            return fulldetails;
+        },
         getPaidTotal: function() {
             return (this.get('paymentLines')).reduce((function(sum, paymentLine) {
                 return sum + paymentLine.get_amount();
@@ -866,6 +900,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 total_tax: this.getTax(),
                 total_paid: this.getPaidTotal(),
                 total_discount: this.getDiscountTotal(),
+                tax_details: this.getTaxDetails(),
                 change: this.getChange(),
                 name : this.getName(),
                 client: client ? client.name : null ,
