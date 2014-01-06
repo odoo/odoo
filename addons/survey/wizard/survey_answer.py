@@ -554,7 +554,7 @@ class survey_question_wiz(osv.osv_memory):
                 return value
             if context.has_key('active') and context.get('active',False):
                 return value
-            sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False), context=context)[0]
+            sur_name_read = surv_name_wiz.read(cr, uid, [context.get('sur_name_id',False)], context=context)[0]
             ans_list = []
 
             for key,val in safe_eval(sur_name_read.get('store_ans',"{}")).items():
