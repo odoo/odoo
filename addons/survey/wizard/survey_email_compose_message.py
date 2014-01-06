@@ -37,7 +37,6 @@ class survey_mail_compose_message(osv.TransientModel):
     _log_access = True
 
     def _get_public_url(self, cr, uid, ids, name, arg, context=None):
-        """ Compute if the message is unread by the current user. """
         res = dict((id, 0) for id in ids)
         survey_obj = self.pool.get('survey.survey')
         for wizard in self.browse(cr, uid, ids, context=context):
@@ -45,7 +44,7 @@ class survey_mail_compose_message(osv.TransientModel):
         return res
 
     def _get_public_url_html(self, cr, uid, ids, name, arg, context=None):
-        """ Compute if the message is unread by the current user. """
+        """ Compute if the message is unread by the current user """
         urls = self._get_public_url(cr, uid, ids, name, arg, context=context)
         for key, url in urls.items():
             urls[key] = '<a href="%s">%s</a>' % (url, _("Click here to start survey"))
@@ -53,9 +52,9 @@ class survey_mail_compose_message(osv.TransientModel):
 
     _columns = {
         'survey_id': fields.many2one('survey.survey', 'Survey', required=True),
-        'public': fields.selection([('public_link', 'Share the public web link to your audience.'), \
-                ('email_public_link', 'Send by email the public web link to your audience.'),\
-                ('email_private', 'Send private invitation to your audience (only one response per recipient and per invitation).')],
+        'public': fields.selection([('public_link', 'Share the public web link to your audience.'),
+                                    ('email_public_link', 'Send by email the public web link to your audience.'),
+                                    ('email_private', 'Send private invitation to your audience (only one response per recipient and per invitation).')],
             string='Share options', required=True),
         'public_url': fields.function(_get_public_url, string="Public url", type="char"),
         'public_url_html': fields.function(_get_public_url_html, string="Public HTML web link", type="char"),
@@ -71,7 +70,7 @@ class survey_mail_compose_message(osv.TransientModel):
 
     _defaults = {
         'public': 'email_private',
-        'survey_id': lambda self,cr,uid,ctx={}: ctx.get('model') == 'survey.survey' and ctx.get('res_id') or None,
+        'survey_id': lambda self, cr, uid, ctx={}: ctx.get('model') == 'survey.survey' and ctx.get('res_id') or None
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -122,7 +121,7 @@ class survey_mail_compose_message(osv.TransientModel):
 
     def send_mail(self, cr, uid, ids, context=None):
         """ Process the wizard content and proceed with sending the related
-            email(s), rendering any template patterns on the fly if needed. """
+            email(s), rendering any template patterns on the fly if needed """
         if context is None:
             context = {}
 
@@ -168,15 +167,14 @@ class survey_mail_compose_message(osv.TransientModel):
                 token = uuid.uuid4().__str__()
                 # create response with token
                 survey_response_obj.create(cr, uid, {
-                        'survey_id': wizard.survey_id.id,
-                        'deadline': wizard.date_deadline,
-                        'date_create': datetime.now(),
-                        'type': 'link',
-                        'state': 'new',
-                        'token': token,
-                        'partner_id': partner_id,
-                        'email': email,
-                    })
+                    'survey_id': wizard.survey_id.id,
+                    'deadline': wizard.date_deadline,
+                    'date_create': datetime.now(),
+                    'type': 'link',
+                    'state': 'new',
+                    'token': token,
+                    'partner_id': partner_id,
+                    'email': email})
                 return token
 
         for wizard in self.browse(cr, uid, ids, context=context):
@@ -220,3 +218,5 @@ class survey_mail_compose_message(osv.TransientModel):
                 create_response_and_send_mail(wizard, token, partner['id'], partner['email'])
 
         return {'type': 'ir.actions.act_window_close'}
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
