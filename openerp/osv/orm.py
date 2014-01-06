@@ -3531,6 +3531,8 @@ class BaseModel(object):
             failed_values = dict.fromkeys(field_names, FailedValue(e))
             return self._update_cache(failed_values)
 
+        cr, user, context = scope_proxy.args
+
         # Construct a clause for the security rules.
         # 'tables' holds the list of tables necessary for the SELECT, including
         # the ir.rule clauses, and contains at least self._table.
@@ -3539,32 +3541,29 @@ class BaseModel(object):
         # determine the fields that are stored as columns in self._table
         fields_pre = [f for f in field_names if self._columns[f]._classic_write]
 
-        # read them from the database
-        cr, user, context = scope_proxy.args
+        # we need fully-qualified column names in case len(tables) > 1
+        def qualify(f):
+            if isinstance(self._columns.get(f), fields.binary) and context.get('bin_size'):
+                return 'length(%s."%s") as "%s"' % (self._table, f, f)
+            else:
+                return '%s."%s"' % (self._table, f)
+        qual_names = map(qualify, set(fields_pre + ['id']))
+
+        query = """ SELECT %(qual_names)s FROM %(tables)s
+                    WHERE %(table)s.id IN %%s AND (%(extra)s)
+                    ORDER BY %(order)s
+                """ % {
+                    'qual_names': ",".join(qual_names),
+                    'tables': ",".join(tables),
+                    'table': self._table,
+                    'extra': " OR ".join(rule_clause) if rule_clause else "TRUE",
+                    'order': self._parent_order or self._order,
+                }
 
         result = []
-        if fields_pre or rule_clause:
-            def qualify(f):
-                # we need fully-qualified column names in case len(tables) > 1
-                qualified = '%s."%s"' % (self._table, f)
-                if isinstance(self._columns[f], fields.binary) and context.get('bin_size'):
-                    return 'length(%s) as "%s"' % (qualified, f)
-                return qualified
-
-            qual_names = map(qualify, fields_pre) + ['%s.id' % self._table]
-            query = "SELECT %s FROM %s WHERE %s.id IN %%s %s ORDER BY %s" % (
-                ",".join(qual_names),
-                ",".join(tables),
-                self._table,
-                "AND (%s)" % (" OR ".join(rule_clause)) if rule_clause else "",
-                self._parent_order or self._order,
-            )
-            for sub_ids in cr.split_for_in_conditions(self.unbrowse()):
-                cr.execute(query, [tuple(sub_ids)] + rule_params)
-                result.extend(cr.dictfetchall())
-        else:
-            # at least filter out non-existing records
-            result = [{'id': id} for id in self.exists().unbrowse()]
+        for sub_ids in cr.split_for_in_conditions(self.unbrowse()):
+            cr.execute(query, [tuple(sub_ids)] + rule_params)
+            result.extend(cr.dictfetchall())
 
         ids = [vals['id'] for vals in result]
 
