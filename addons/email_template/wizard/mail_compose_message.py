@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import tools
+from openerp import tools, SUPERUSER_ID
 from openerp.osv import osv, fields
 
 
@@ -143,9 +143,9 @@ class mail_compose_message(osv.TransientModel):
             partner_ids.append(partner_id)
         partner_to = rendered_values.pop('partner_to', '')
         if partner_to:
-            for partner_id in partner_to.split(','):
-                if partner_id:  # placeholders could generate '', 3, 2 due to some empty field values
-                    partner_ids.append(int(partner_id))
+            # placeholders could generate '', 3, 2 due to some empty field values
+            tpl_partner_ids = [pid for pid in partner_to.split(',') if pid]
+            partner_ids += self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)
         return partner_ids
 
     def generate_email_for_composer_batch(self, cr, uid, template_id, res_ids, context=None):
