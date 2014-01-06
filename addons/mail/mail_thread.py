@@ -286,7 +286,7 @@ class mail_thread(osv.AbstractModel):
         'message_is_follower': fields.function(_get_followers, type='boolean',
             fnct_search=_search_is_follower, string='Is a Follower', multi='_get_followers,'),
         'message_follower_ids': fields.function(_get_followers, fnct_inv=_set_followers,
-            fnct_search=_search_followers, type='many2many',
+            fnct_search=_search_followers, type='many2many', priority=-10,
             obj='res.partner', string='Followers', multi='_get_followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name)],
@@ -317,15 +317,18 @@ class mail_thread(osv.AbstractModel):
         if context is None:
             context = {}
 
+        # subscribe uid unless asked not to
+        if not context.get('mail_create_nosubscribe'):
+            pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id.id
+            message_follower_ids = values.get('message_follower_ids') or []  # webclient can send None or False
+            message_follower_ids.append([4, pid])
+            values['message_follower_ids'] = message_follower_ids
+
         thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
             self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
-
-        # subscribe uid unless asked not to
-        if not context.get('mail_create_nosubscribe'):
-            self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
