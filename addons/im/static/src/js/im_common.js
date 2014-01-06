@@ -521,7 +521,7 @@ function declare($, _, openerp) {
             txt += _.escape(str.slice(last, result.index));
             last = url_regex.lastIndex;
             var url = _.escape(result[0]);
-            txt += '<a href="' + url + '">' + url + '</a>';
+            txt += '<a href="' + url + '" target="_blank">' + url + '</a>';
         }
         txt += _.escape(str.slice(last, str.length));
         return txt;
