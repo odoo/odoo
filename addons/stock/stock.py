@@ -774,6 +774,7 @@ class stock_picking(osv.osv):
         if not default.get('backorder_id'):
             default['backorder_id'] = False
         default['pack_operation_ids'] = []
+        default['date_done'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def do_print_delivery(self, cr, uid, ids, context=None):
@@ -907,7 +908,7 @@ class stock_picking(osv.osv):
             move_obj = self.pool.get("stock.move")
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
-            self.pool.get("stock.picking").action_confirm(cr, uid, [picking.id], context=context)
+            self.write(cr, uid, [picking.id], {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
             self.action_confirm(cr, uid, [backorder_id], context=context)
             return backorder_id
         return False
@@ -1655,7 +1656,6 @@ class stock_move(osv.osv):
                 'company_id': move.company_id and move.company_id.id or False,
                 'move_type': move.group_id and move.group_id.move_type or 'one',
                 'partner_id': move.group_id and move.group_id.partner_id and move.group_id.partner_id.id or False,
-                'date_done': move.date_expected,
                 'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
             }
             pick = pick_obj.create(cr, uid, values, context=context)
@@ -1783,6 +1783,7 @@ class stock_move(osv.osv):
         @return:
         """
         context = context or {}
+        picking_obj = self.pool.get("stock.picking")
         quant_obj = self.pool.get("stock.quant")
         pack_op_obj = self.pool.get("stock.pack.operation")
         todo = [move.id for move in self.browse(cr, uid, ids, context=context) if move.state == "draft"]
@@ -1829,6 +1830,13 @@ class stock_move(osv.osv):
                 procurement_ids.append(move.procurement_id.id)
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
+        #check picking state to set the date_done is needed
+        done_picking = []
+        for picking in picking_obj.browse(cr, uid, list(pickings), context=context):
+            if picking.state == 'done' and not picking.date_done:
+                done_picking.append(picking.id)
+        if done_picking:
+            picking_obj.write(cr, uid, done_picking, {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -3496,7 +3504,26 @@ class stock_picking_type(osv.osv):
                     section_result[-month_delta.months + 2]['value'] = groupby.get(value_field, 0)
         return section_result
 
-    def _get_picking_data(self, cr, uid, ids, field_name, arg, context=None):
+    def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):
+        picking_obj = self.pool.get('stock.picking')
+        res = dict.fromkeys(ids, [])
+        for picking_type_id in ids:
+            #get last 10 pickings of this type
+            picking_ids = picking_obj.search(cr, uid, [('picking_type_id', '=', picking_type_id), ('state', '=', 'done')], order='date_done desc', limit=10, context=context)
+            tristates = []
+            for picking in picking_obj.browse(cr, uid, picking_ids, context=context):
+                if picking.date_done > picking.date:
+                    tristates.insert(0, {'tooltip': picking.name + _(': Late'), 'value': -1})
+                elif picking.backorder_id:
+                    tristates.insert(0, {'tooltip': picking.name + _(': Backorder exists'), 'value': 0})
+                else:
+                    tristates.insert(0, {'tooltip': picking.name + _(': OK'), 'value': 1})
+            res[picking_type_id] = tristates
+        return res
+
+
+
+    def _get_monthly_pickings(self, cr, uid, ids, field_name, arg, context=None):
         obj = self.pool.get('stock.picking')
         res = dict.fromkeys(ids, False)
         month_begin = date.today().replace(day=1)
@@ -3505,7 +3532,7 @@ class stock_picking_type(osv.osv):
         for id in ids:
             created_domain = [
                 ('picking_type_id', '=', id),
-                ('state', '=', 'assigned'),
+                ('state', '=', 'done'),
                 ('date', '>=', groupby_begin),
                 ('date', '<', groupby_end),
             ]
@@ -3516,7 +3543,7 @@ class stock_picking_type(osv.osv):
         obj = self.pool.get('stock.picking')
         domains = {
             'count_picking_draft': [('state', '=', 'draft')],
-            'count_picking_waiting': [('state','in', ('confirmed', 'waiting'))],
+            'count_picking_waiting': [('state','=', 'confirmed')],
             'count_picking_ready': [('state','=','assigned')],
             'count_picking': [('state','in',('assigned','waiting','confirmed'))],
             'count_picking_late': [('min_date','<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state','in',('assigned','waiting','confirmed'))],
@@ -3621,9 +3648,12 @@ class stock_picking_type(osv.osv):
         'active': fields.boolean('Active'),
 
         # Statistics for the kanban view
-        'weekly_picking': fields.function(_get_picking_data,
+        'monthly_picking': fields.function(_get_monthly_pickings,
             type='string',
-            string='Scheduled pickings per week'),
+            string='Done Pickings per Month'),
+        'last_done_picking': fields.function(_get_tristate_values,
+            type='string',
+            string='Last 10 Done Pickings'),
 
         'count_picking_draft': fields.function(_get_picking_count,
             type='integer', multi='_get_picking_count'),

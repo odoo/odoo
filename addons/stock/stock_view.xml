@@ -842,7 +842,7 @@
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
                     <filter icon="terp-check" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
                     <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Moves"/>
-                    <filter icon="terp-check" name="waiting" string="Waiting" domain="[('state','in', ('waiting', 'confirmed'))]" help="Waiting Moves"/>
+                    <filter icon="terp-check" name="waiting" string="Waiting Availability" domain="[('state','=', 'confirmed')]" help="Waiting Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','in', ('confirmed', 'waiting', 'assigned'))]" help="Confirmed Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <separator/>
@@ -878,8 +878,8 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
 
-        <record id="action_picking_tree_draft" model="ir.actions.act_window">
-            <field name="name">Draft Transfers</field>
+        <record id="action_picking_tree_done" model="ir.actions.act_window">
+            <field name="name">Done Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -889,7 +889,7 @@
                     'search_default_picking_type_id': [active_id],
                     'default_picking_type_id': active_id,
                     'contact_display': 'partner_address',
-                    'search_default_draft': 1,
+                    'search_default_done': 1,
             }
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -912,8 +912,8 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
 
-        <record id="action_picking_tree_ready_grouped" model="ir.actions.act_window">
-            <field name="name">Ready Transfers</field>
+        <record id="action_picking_tree_done_grouped" model="ir.actions.act_window">
+            <field name="name">Done Transfers by Date</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -923,7 +923,7 @@
                     'search_default_picking_type_id': [active_id],
                     'default_picking_type_id': active_id,
                     'contact_display': 'partner_address',
-                    'search_default_available': 1,
+                    'search_default_done': 1,
                     'group_by': ['date'],
             }
             </field>
@@ -931,7 +931,7 @@
         </record>
 
         <record id="action_picking_tree_waiting" model="ir.actions.act_window">
-            <field name="name">Waiting Transfers</field>
+            <field name="name">Waiting Availability Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1436,7 +1436,7 @@
             <field name="name">stock.picking.type.kanban</field>
             <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey" create="1">
+                <kanban version="7.0" class="oe_background_grey" create="0">
                     <field name="complete_name"/>
                     <field name="color"/>
                     <field name="count_picking_ready"/>
@@ -1469,26 +1469,27 @@
                                     </div>
                                     <div class="oe_items_list oe_kanban_ellipsis">
                                         <div>
-                                            <a name="%(action_picking_tree)d" type="action">All Operations</a>
-                                        </div>
-                                        <div>
                                             <a name="%(action_picking_tree_ready)d" type="action">
                                                 <field name="count_picking_ready"/> Ready
                                             </a>
-                                            <t t-if="record.count_picking_ready.raw_value &gt; 0">
-                                            <a name="%(action_picking_tree_ready_grouped)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="weekly_picking" widget="sparkline_bar">Monthly Ready Operations</field>
+                                            <a name="%(action_picking_tree_done)d" type="action" class="oe_sparkline_bar_link">
+                                                <field name="last_done_picking" widget="sparkline_bar" options="{'type': 'tristate', 'colorMap': {'0': 'orange', '-1': 'red', '1': 'green'}}">Last 10 Done Operations</field>
                                             </a>
-                                            </t>
                                         </div>
                                         <div t-if="record.count_picking_waiting.raw_value &gt; 0">
                                             <a name="%(action_picking_tree_waiting)d" type="action">
-                                                <field name="count_picking_waiting"/> Waiting
+                                                <field name="count_picking_waiting"/> Waiting Availability
                                             </a>
+                                        </div>
+                                        <div>
+                                            <a name="%(action_picking_tree)d" type="action">All Operations</a>
+                                            <!--<a name="%(action_picking_tree_done_grouped)d" type="action" class="oe_sparkline_bar_link">
+                                                <field name="monthly_picking" widget="sparkline_bar">Monthly Done Operations</field>
+                                            </a>-->
                                         </div>
                                     </div>
                                     <div class="oe_picking_type_gauge">
-                                        <field name="rate_picking_late" widget="gauge" style="width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000']}">Late (%%)</field>
+                                        <field name="rate_picking_late" widget="gauge" style="width:150px; height: 110px;" options="{'levelcolors': ['#a9d70b', '#f9c802', '#ff0000'], 'action_jump': '%(action_picking_tree_late)d'}">Late (%%)</field>
                                         <field name="rate_picking_backorders" widget="gauge" style="width:150px; height: 110px;">Backorders (%%)</field>
                                         <div class="oe_gauge_labels">
                                             <div class="oe_gauge_label_column">
@@ -1517,7 +1518,7 @@
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban</field>
+            <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new picking type. 
