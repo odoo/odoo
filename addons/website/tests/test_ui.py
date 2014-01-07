@@ -21,8 +21,7 @@ class LineReader:
 
     def readlines(self):
         data = os.read(self._file_descriptor, 4096)
-        if not data:
-            # EOF
+        if not data: # EOF
             return None
         self._buffer += data
         if '\n' not in data:
@@ -57,7 +56,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         except OSError:
             test = WebsiteUiTest('UI Tests')
             result.startTest(test)
-            result.addSkip(test, "phantomjs command not found")
+            result.addSkip(test, "phantomjs command not found (cf. http://phantomjs.org/)")
             result.stopTest(test)
             return
         # ...then run the actual test
@@ -97,7 +96,7 @@ class WebsiteUiSuite(unittest.TestSuite):
                 for stream in ready:
                     lines = stream.readlines()
                     if lines is None: # EOF
-                        # Fixes an issue with PhantomJS 1.9.2 on OS X Mavericks
+                        # Fixes an issue with PhantomJS 1.9.2 on OS X 10.9 (Mavericks)
                         # cf. https://github.com/ariya/phantomjs/issues/11418
                         filtered_lines = [line for line in output if "CoreText performance note" not in line]
                         if (filtered_lines):
@@ -129,14 +128,11 @@ class WebsiteUiSuite(unittest.TestSuite):
             if event == 'success':
                 result.addSuccess(self._test)
             elif event == 'error':
-                message = args.get('message', "")
-                result.addError(self._test, message+"\n"+"\n".join(lines[1::]))
+                result.addError(self._test, args.get('message', "")+"\n"+"\n".join(lines[1::]))
             else:
-                message = "\n".join(lines)
-                result.addError(self._test, 'Unexpected message: "%s"' % message)
+                result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
         except ValueError:
-            message = "\n".join(lines)
-            result.addError(self._test, 'Unexpected message: "%s"' % message)
+            result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
 
 def full_path(filename):
     return os.path.join(os.path.join(os.path.dirname(__file__), 'ui_suite'), filename)
