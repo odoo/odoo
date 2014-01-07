@@ -3,6 +3,7 @@
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
+from openerp import SUPERUSER_ID
 
 from urllib import quote_plus
 
@@ -15,7 +16,7 @@ class contactus(http.Controller):
         )
         return url
 
-    @website.route(['/crm/contactus'], type='http', auth="admin", multilang=True)
+    @website.route(['/crm/contactus'], type='http', auth="public", multilang=True)
     def contactus(self, *arg, **post):
         required_fields = ['contact_name', 'email_from', 'description']
         post['user_id'] = False
@@ -34,8 +35,7 @@ class contactus(http.Controller):
         if not post.get('name'):
             post['name'] = post.get('contact_name')
 
-        request.registry['crm.lead'].create(request.cr, request.uid,
-                                            post, request.context)
+        request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, post, request.context)
         company = request.website.company_id
         values = {
             'google_map_url': self.generate_google_map_url(company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or '')
