@@ -22,5 +22,32 @@ $(document).ready(function () {
                 });
         return false;
     });
-});
+
+    // automatically generate a menu from h1 and h1 tag in content
+    var ul = null;
+    var sub_li = null;
+    var sub_ul = null;
+
+    $("section h1, section h2").each(function() {
+        switch (this.tagName.toLowerCase()) {
+            case "h1":
+                if (!ul) {
+                    ul = $('[data-id="quote_sidebar"]');
+                }
+                sub_li = $("<li>").html('<label class="nav-header">'+$(this).text()+'</label>').appendTo(ul);
+                sub_ul = null;
+                break;
+            case "h2":
+                id = _.uniqueId('quote_')
+                if (sub_li) {
+                    if (!sub_ul) {
+                        sub_ul = $("<ul class='nav nav-pills nav-stacked nav-hierarchy'>").appendTo(sub_li);
+                    }
+                    $(this).attr('id',id)
+                    $("<li>").html('<a href="#'+id+'">'+$(this).text()+'</a>').appendTo(sub_ul);
+                    }   
+                break;
+            }
+    });
 //vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
+});
