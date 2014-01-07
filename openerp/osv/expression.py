@@ -153,8 +153,8 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # for consistency. This list doesn't contain '<>' as it is simpified to '!='
 # by the normalize_operator() function (so later part of the code deals with
 # only one representation).
-# An internal (i.e. not available to the user) 'inselect' operator is also
-# used. In this case its right operand has the form (subselect, params).
+# Internals (i.e. not available to the user) 'inselect' and 'not inselect'
+# operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
                   'child_of')
@@ -396,7 +396,7 @@ def is_leaf(element, internal=False):
     """
     INTERNAL_OPS = TERM_OPERATORS + ('<>',)
     if internal:
-        INTERNAL_OPS += ('inselect',)
+        INTERNAL_OPS += ('inselect', 'not inselect')
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
@@ -1025,6 +1025,12 @@ class expression(object):
                     if need_wildcard:
                         right = '%%%s%%' % right
 
+                    inselect_operator = 'inselect'
+                    if operator in NEGATIVE_TERM_OPERATORS:
+                        # negate operator (fix lp:1071710)
+                        operator = operator[4:] if operator[:3] == 'not' else '='
+                        inselect_operator = 'not inselect'
+
                     subselect = '( SELECT res_id'          \
                              '    FROM ir_translation'  \
                              '   WHERE name = %s'       \
@@ -1032,7 +1038,7 @@ class expression(object):
                              '     AND type = %s'
                     instr = ' %s'
                     #Covering in,not in operators with operands (%s,%s) ,etc.
-                    if sql_operator in ['in', 'not in']:
+                    if sql_operator == 'in':
                         instr = ','.join(['%s'] * len(right))
                         subselect += '     AND value ' + sql_operator + ' ' + " (" + instr + ")"   \
                              ') UNION ('                \
@@ -1052,7 +1058,7 @@ class expression(object):
                               right,
                               right,
                              ]
-                    push(create_substitution_leaf(leaf, ('id', 'inselect', (subselect, params)), working_model))
+                    push(create_substitution_leaf(leaf, ('id', inselect_operator, (subselect, params)), working_model))
 
                 else:
                     push_result(leaf)
@@ -1073,7 +1079,7 @@ class expression(object):
         left, operator, right = leaf
 
         # final sanity checks - should never fail
-        assert operator in (TERM_OPERATORS + ('inselect',)), \
+        assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
         assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._all_columns \
             or left in MAGIC_COLUMNS, "Invalid field %r in domain term %r" % (left, leaf)
@@ -1090,6 +1096,10 @@ class expression(object):
 
         elif operator == 'inselect':
             query = '(%s."%s" in (%s))' % (table_alias, left, right[0])
+            params = right[1]
+
+        elif operator == 'not inselect':
+            query = '(%s."%s" not in (%s))' % (table_alias, left, right[0])
             params = right[1]
 
         elif operator in ['in', 'not in']:
