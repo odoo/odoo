@@ -13,7 +13,7 @@ class Website(orm.Model):
         pricelist_id = self.ecommerce_get_pricelist_id(cr, uid, ids, context=context)
         return dict.fromkeys(
             ids, self.pool['product.pricelist'].browse(
-                cr, uid, pricelist_id, context=context))
+                cr, SUPERUSER_ID, pricelist_id, context=context))
 
     _columns = {
         'pricelist_id': fields.function(
@@ -99,8 +99,8 @@ class Website(orm.Model):
             request.httprequest.session['ecommerce_order_id'] = False
             return False
         try:
-            #SaleOrder.check_access_rule(cr, uid, order_id, context=context)
-            order = SaleOrder.browse(cr, uid, order_id, context=context)
+            order = SaleOrder.browse(cr, SUPERUSER_ID, order_id, context=context)
+            assert order.website_session_id == request.httprequest.session['website_session_id']
             return order
         except:
             request.httprequest.session['ecommerce_order_id'] = False
