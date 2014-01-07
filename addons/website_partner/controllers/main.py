@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
@@ -33,9 +34,10 @@ def get_partner_template_value(partner):
     return values
 
 class WebsitePartner(http.Controller):
-    @website.route(['/partners/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
-    def partner(self, partner, **post):
+    @website.route(['/partners/<int:partner_id>/', '/partners/<partner_name>-<int:partner_id>/'], type='http', auth="public", multilang=True)
+    def partner(self, partner_id, **post):
         """ Route for displaying a single partner / customer. """
+        partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
         website.preload_records(partner)
         values = get_partner_template_value(partner)
         if not values:

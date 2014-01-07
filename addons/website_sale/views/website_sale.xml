@@ -507,14 +507,14 @@
                               <td>
                                   <div class="input-group">
                                       <span class="input-group-addon">
-                                          <a t-href="./change_cart/#{ line.id }/?remove=True" class="mb8 js_add_cart_json">
+                                          <a t-href="../change_cart/#{ line.id }/?remove=True" class="mb8 js_add_cart_json">
                                               <i class="fa fa-minus-square"></i>
                                           </a>
                                       </span>
                                       <input type="text" class="js_quantity form-control"
                                           t-att-data-id="line.id" t-att-value="int(line.product_uom_qty)"/>
                                       <span class="input-group-addon">
-                                          <a t-href="./change_cart/#{ line.id }/" class="mb8 float_left js_add_cart_json">
+                                          <a t-href="../change_cart/#{ line.id }/" class="mb8 float_left js_add_cart_json">
                                               <i class="fa fa-plus-square"></i>
                                           </a>
                                       </span>

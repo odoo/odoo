@@ -86,7 +86,7 @@ class website_event(http.Controller):
         values = { 'event': event }
         return request.website.render("website_event_track.event_track_proposal", values)
 
-    @website.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", multilang=True)
+    @website.route(['/event/<model("event.event"):event>/track_proposal/post'], type='http', auth="public", methods=['POST'], multilang=True)
     def event_track_proposal_post(self, event, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
