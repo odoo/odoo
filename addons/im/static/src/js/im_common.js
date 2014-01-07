@@ -88,7 +88,6 @@ function declare($, _, openerp) {
             this.users_cache = {};
             this.last = null;
             this.unload_event_handler = _.bind(this.unload, this);
-            this.on("new_conversation", this, this.load_history);
         },
         start_polling: function() {
             var self = this;
@@ -253,20 +252,11 @@ function declare($, _, openerp) {
             }
             return def.then(function() {return conv});
         },
-        load_history: function(conv){
-            var self = this;
-            im_common.connection.model("im.message").call("search", [[["session_id", "=", conv.session_id]], 0, 10]).then(function(message_ids){
-                im_common.connection.model("im.message").call("read", [message_ids]).then(function(messages){
-                    messages.reverse();
-                    self.received_messages(messages);
-                });
-            });
-        },
         received_messages: function(messages) {
             var self = this;
             var defs = [];
             var received = false;
-            function post_message(message) {
+            _.each(messages, function(message) {
                 if (! message.technical) {
                     defs.push(self.activate_session(message.session_id[0]).then(function(conv) {
                         received = self.my_id !== message.from_id[0];
@@ -276,15 +266,6 @@ function declare($, _, openerp) {
                     var json = JSON.parse(message.message);
                     message.json = json;
                     defs.push($.when(im_common.technical_messages_handlers[json.type](self, message)));
-                }
-            }
-            _.each(messages, function(message){
-                if (defs.length > 0){
-                    debugger;
-                    defs[defs.length - 1].then(post_message(message));
-                }
-                else{
-                    post_message(message);
                 }
             });
             return $.when.apply($, defs).then(function(){
@@ -419,7 +400,7 @@ function declare($, _, openerp) {
             } else {
                 this.set("pending", this.get("pending") + 1);
             }
-            return this.c_manager.ensure_users([message.from_id[0]]).then(_.bind(function(users) {
+            this.c_manager.ensure_users([message.from_id[0]]).then(_.bind(function(users) {
                 var user = users[0];
                 if (! _.contains(this.get("users"), user) && ! _.contains(this.others, user)) {
                     this.others.push(user);
@@ -466,7 +447,6 @@ function declare($, _, openerp) {
                 return new Array(size - str.length + 1).join('0') + str;
             };
             date = "" + zpad(date.getHours(), 2) + ":" + zpad(date.getMinutes(), 2);
-            debugger;
             var to_show = _.map(items, im_common.escape_keep_url);
             this.last_bubble = $(openerp.qweb.render("im_common.conversation_bubble", {"items": to_show, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
