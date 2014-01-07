@@ -2,7 +2,7 @@ var testRunner = require('./ui_test_runner.js');
 
 var waitFor = testRunner.waitFor;
 
-testRunner.run(function simpleDomTest (page) {
+testRunner.run(function simpleDomTest (page, timeout) {
     waitFor(function clientReady () {
         return page.evaluate(function () {
             return window.openerp && window.openerp.website;
@@ -10,5 +10,5 @@ testRunner.run(function simpleDomTest (page) {
     }, function finish () {
         console.log('{ "event": "success" }');
         phantom.exit();
-    }, 90000);
+    }, timeout);
 });

@@ -21,6 +21,9 @@ function waitFor (ready, callback, timeout, timeoutMessageCallback) {
 
 function run (test) {
     var options = JSON.parse(phantom.args);
+
+    var timeout = options.timeout ? Math.round(parseFloat(options.timeout)*1000) : 60000;
+
     var scheme = options.scheme ? options.scheme+'://' : 'http://';
     var host = options.host ? options.host : 'localhost';
     var port = options.port ? ':'+options.port : '';
@@ -32,7 +35,7 @@ function run (test) {
 
     var hashParams = [];
     if (options.user) hashParams.push('login='+options.user);
-    if (options.admin_password) hashParams.push('password='+options.admin_password);
+    if (options.password) hashParams.push('password='+options.password);
     if (options.action) hashParams.push('action='+options.action);
     var hash = hashParams.length > 0 ? '#'+hashParams.join('&') : '';
 
@@ -51,14 +54,14 @@ function run (test) {
         phantom.exit(1);
     };
     page.onConsoleMessage = function(message) {
-        // Disabled because of the 'web_hello' addon
+        /* Disabled because of the 'web_hello' addon */
         //console.log(message);
         //phantom.exit(1);
     };
 
     page.onCallback = function(data) {
         if (data.event && data.event === 'start') {
-            test(page);
+            test(page, timeout);
         }
     };
      

@@ -77,7 +77,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         self._options['db'] = tools.config.get('db_name', '')
         # TODO use correct key from tools if exists (I could not find it --ddm)
         self._options['user'] = 'admin'
-        self._options['admin_password'] = tools.config.get('admin_passwd', 'admin')
+        self._options['password'] = tools.config.get('admin_passwd', 'admin')
 
         phantom = subprocess.Popen([
             'phantomjs',
@@ -88,6 +88,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         readable = [LineReader(phantom.stdout.fileno())]
 
         try:
+            output = []
             while phantom.poll() is None and readable and last_check_time < start_time + self._timeout:
                 ready, _, _ = select.select(readable, [], [], 0.1)
                 if not ready:
@@ -95,12 +96,15 @@ class WebsiteUiSuite(unittest.TestSuite):
                     continue
                 for stream in ready:
                     lines = stream.readlines()
-                    if lines is None:
-                        # EOF
+                    if lines is None: # EOF
+                        # Fixes an issue with PhantomJS 1.9.2 on OS X Mavericks
+                        # cf. https://github.com/ariya/phantomjs/issues/11418
+                        filtered_lines = [line for line in output if "CoreText performance note" not in line]
+                        if (filtered_lines):
+                            self.process(filtered_lines, result)
                         readable.remove(stream)
                     else:
-                        self.process(lines, result)
-                        readable.remove(stream)
+                        output += lines
             if last_check_time >= (start_time + self._timeout):
                 result.addError(self._test, "Timeout after %s s" % (last_check_time - start_time ))
         finally:
@@ -128,15 +132,17 @@ class WebsiteUiSuite(unittest.TestSuite):
                 message = args.get('message', "")
                 result.addError(self._test, message+"\n"+"\n".join(lines[1::]))
             else:
-                result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
+                message = "\n".join(lines)
+                result.addError(self._test, 'Unexpected message: "%s"' % message)
         except ValueError:
-             result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
+            message = "\n".join(lines)
+            result.addError(self._test, 'Unexpected message: "%s"' % message)
 
 def full_path(filename):
     return os.path.join(os.path.join(os.path.dirname(__file__), 'ui_suite'), filename)
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite(full_path('dummy_test.js'), {}))
-    base.addTest(WebsiteUiSuite(full_path('simple_dom_test.js'), { 'action': 'website.action_website_homepage' }, 120.0))
-    base.addTest(WebsiteUiSuite(full_path('homepage_test.js'),   { 'action': 'website.action_website_homepage' }, 120.0))
+    base.addTest(WebsiteUiSuite(full_path('simple_dom_test.js'), { 'action': 'website.action_website_homepage' }, 60.0))
+    base.addTest(WebsiteUiSuite(full_path('homepage_test.js'),   { 'action': 'website.action_website_homepage' }, 60.0))
     return base
