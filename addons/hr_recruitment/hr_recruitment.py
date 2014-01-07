@@ -479,7 +479,7 @@ class hr_job(osv.osv):
         if context is None:
             context = {}
         alias_context = dict(context, alias_model_name='hr.applicant')
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job, self)._auto_init,
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job, self)._auto_init,
             self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=alias_context)
 
     def create(self, cr, uid, vals, context=None):
