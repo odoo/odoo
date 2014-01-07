@@ -2133,7 +2133,6 @@ class stock_inventory(osv.osv):
         return True
 
     def action_cancel_inventory(self, cr, uid, ids, context=None):
-        #TODO test
         self.action_cancel_draft(cr, uid, ids, context=context)
 
     def prepare_inventory(self, cr, uid, ids, context=None):
