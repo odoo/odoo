@@ -160,7 +160,7 @@ class procurement_order(osv.osv):
         return rule_id
 
     def _run_move_create(self, cr, uid, procurement, context=None):
-        ''' Returns a dictionary of values that will be sued to create a stock move from a procurement.
+        ''' Returns a dictionary of values that will be used to create a stock move from a procurement.
         This function assumes that the given procurement has a rule (action == 'move') set on it.
 
         :param procurement: browse record
@@ -427,9 +427,8 @@ class procurement_order(osv.osv):
                                                          context=context)
                         self.check(cr, uid, [proc_id])
                         self.run(cr, uid, [proc_id])
-                        #TODO: check if we can remove this field because it doesn't seem used at all
-                        #orderpoint_obj.write(cr, uid, [op.id],
-                        #        {'procurement_id': proc_id}, context=context)
+                        orderpoint_obj.write(cr, uid, [op.id],
+                                {'procurement_id': proc_id}, context=context)
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()
