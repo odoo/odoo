@@ -33,17 +33,6 @@ class stock_change_product_qty(osv.osv_memory):
         'lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
-    
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None: context = {}
-        fvg = super(stock_change_product_qty, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-        product_id = context and context.get('active_id', False) or False
-
-        if view_type == 'form' and (context.get('active_model') == 'product.product') and product_id:
-            prod_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            fvg['fields']['lot_id']['required'] =  prod_obj.track_production
-
-        return fvg
 
     def default_get(self, cr, uid, fields, context):
         """ To get default values for the object.
