@@ -24,6 +24,7 @@ import stock_inventory_merge
 import stock_inventory_line_split
 import stock_location_product
 import stock_return_picking
+import stock_change_product_qty
 import make_procurement_product
 import mrp_procurement
 import orderpoint_procurement

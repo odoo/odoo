@@ -73,6 +73,7 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_data.xml',
         'stock_data.yml',
         'wizard/stock_move_view.xml',
+        'wizard/stock_change_product_qty_view.xml',
         'wizard/stock_inventory_merge_view.xml',
         'wizard/stock_location_product_view.xml',
         'wizard/stock_inventory_line_split_view.xml',
