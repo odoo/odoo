@@ -190,40 +190,6 @@ class survey_survey(osv.osv):
             else:
                 return (pages[current_page_index + 1][1], current_page_index + 1, False)
 
-    def action_print_survey_questions(self, cr, uid, ids, context=None):
-        ''' Generates a printable view of an empty survey '''
-        pass
-
-    def action_print_survey_user_inputs(self, cr, uid, ids, context=None):
-        ''' Generates printable views of answered surveys '''
-        pass
-
-    def action_print_survey_statistics(self, cr, uid, ids, context=None):
-        ''' Generates a printable view of the survey results '''
-        pass
-
-    def action_fill_survey(self, cr, uid, ids, context=None):
-        ''' Open a survey in filling view '''
-        id = ids[0]
-        survey = self.browse(cr, uid, id, context=context)
-        context.update({'edit': False, 'survey_id': id,
-            'survey_token': survey.token,
-            'ir_actions_act_window_target': 'inline'})
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'inline',
-            'name': survey.title,
-            'context': context
-        }
-
-    def action_test_survey(self, cr, uid, ids, context=None):
-        ''' Open a survey in filling view '''
-        context.update({'survey_test': True})
-        return self.action_fill_survey(cr, uid, ids, context=context)
-
     def action_edit_survey(self, cr, uid, ids, context=None):
         ''' Open a survey in edition view '''
         id = ids[0]
@@ -474,94 +440,6 @@ class survey_question(osv.osv):
         ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!'),
         ('constr_number', 'CHECK (constr_minimum_req_ans <= constr_maximum_req_ans)', 'Max number of answers cannot be smaller than min number!')
     ]
-
-    # def write(self, cr, uid, ids, vals, context=None):
-    #     questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type',
-    #         'required_type', 'req_ans', 'minimum_req_ans', 'maximum_req_ans',
-    #         'column_heading_ids', 'page_id', 'question'])
-    #     for question in questions:
-    #         col_len = len(question['column_heading_ids'])
-    #         for col in vals.get('column_heading_ids', []):
-    #             if type(col[2]) == type({}):
-    #                 col_len += 1
-    #             else:
-    #                 col_len -= 1
-
-    #         que_type = vals.get('type', question['type'])
-
-    #         if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
-    #             if not col_len:
-    #                 raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
-    #         ans_len = len(question['answer_choice_ids'])
-
-    #         for ans in vals.get('answer_choice_ids', []):
-    #             if type(ans[2]) == type({}):
-    #                 ans_len += 1
-    #             else:
-    #                 ans_len -= 1
-
-    #         if que_type not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
-    #             if not ans_len:
-    #                 raise osv.except_osv(_('Warning!'), _('You must enter one or more Answers for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
-
-    #         req_type = vals.get('required_type', question['required_type'])
-
-    #         if que_type in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
-    #                     'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', \
-    #                     'numerical_textboxes', 'date', 'date_and_time']:
-    #             if req_type in ['at least', 'at most', 'exactly']:
-    #                 if 'req_ans' in vals:
-    #                     if not vals['req_ans'] or vals['req_ans'] > ans_len:
-    #                         raise osv.except_osv(_('Warning!'), _("#Required Answer you entered \
-    #                                 is greater than the number of answer. \
-    #                                 Please use a number that is smaller than %d.") % (ans_len + 1))
-    #                 else:
-    #                     if not question['req_ans'] or question['req_ans'] > ans_len:
-    #                         raise osv.except_osv(_('Warning!'), _("#Required Answer you entered is \
-    #                                 greater than the number of answer.\
-    #                                 Please use a number that is smaller than %d.") % (ans_len + 1))
-
-    #             if req_type == 'a range':
-    #                 minimum_ans = 0
-    #                 maximum_ans = 0
-    #                 minimum_ans = 'minimum_req_ans' in vals and vals['minimum_req_ans'] or question['minimum_req_ans']
-    #                 maximum_ans = 'maximum_req_ans' in vals and vals['maximum_req_ans'] or question['maximum_req_ans']
-
-    #                 if not minimum_ans or minimum_ans > ans_len or not maximum_ans or maximum_ans > ans_len:
-    #                     raise osv.except_osv(_('Warning!'), _("Minimum Required Answer you\
-    #                              entered is greater than the number of answer. \
-    #                              Please use a number that is smaller than %d.") % (ans_len + 1))
-    #                 if maximum_ans <= minimum_ans:
-    #                     raise osv.except_osv(_('Warning!'), _("Maximum Required Answer is greater \
-    #                                 than Minimum Required Answer"))
-
-    #     return super(survey_question, self).write(cr, uid, ids, vals, context=context)
-
-    # def create(self, cr, uid, vals, context=None):
-    #     page = self.pool.get('survey.page').browse(cr, uid, 'page_id' in vals and vals['page_id'] or context['page_id'], context=context)
-    #     if 'answer_choice_ids' in vals and not len(vals.get('answer_choice_ids', [])) and \
-    #         vals.get('type') not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
-    #         raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page.title))
-
-    #     if 'column_heading_ids' in vals and not len(vals.get('column_heading_ids', [])) and \
-    #         vals.get('type') in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale']:
-    #         raise osv.except_osv(_('Warning!'), _('You must enter one or more column headings for question "%s" of page %s.') % (vals['question'], page.title))
-
-    #     if 'is_require_answer' in vals and vals.get('type') in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', \
-    #         'matrix_of_choices_only_multi_ans', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time']:
-    #         if vals.get('required_type') in ['at least', 'at most', 'exactly']:
-    #             if 'answer_choice_ids' in vals and 'answer_choice_ids' in vals and vals.get('req_ans') > len(vals.get('answer_choice_ids', [])):
-    #                 raise osv.except_osv(_('Warning!'), _("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
-    #         if vals.get('required_type') == 'a range':
-    #             if 'answer_choice_ids' in vals:
-    #                 if not vals.get('minimum_req_ans') or vals['minimum_req_ans'] > len(vals['answer_choice_ids']):
-    #                     raise osv.except_osv(_('Warning!'), _("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
-    #                 if not vals.get('maximum_req_ans') or vals['maximum_req_ans'] > len(vals['answer_choice_ids']):
-    #                     raise osv.except_osv(_('Warning!'), _("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
-    #             if vals.get('maximum_req_ans', 0) <= vals.get('minimum_req_ans', 0):
-    #                 raise osv.except_osv(_('Warning!'), _("Maximum Required Answer is greater than Minimum Required Answer."))
-
-    #     return super(survey_question, self).create(cr, uid, vals, context)
 
     def survey_save(self, cr, uid, ids, context=None):
         if context is None:
@@ -864,49 +742,6 @@ class survey_user_input(osv.osv):
         })
         return self.pool.get('survey.survey').action_survey_sent(cr, uid,
             [record.survey_id.id], context=context)
-
-    def action_print_response(self, cr, uid, ids, context=None):
-        """
-        Print Survey Answer in pdf format.
-        @return : Dictionary value for created survey answer report
-        """
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'survey.browse.response',
-            'datas': {
-                'model': 'survey.print.statistics',
-                'form': {
-                    'response_ids': ids,
-                    'orientation': 'vertical',
-                    'paper_size': 'letter',
-                    'page_number': 0,
-                    'without_pagebreak': 0
-                    }
-                },
-            }
-
-    def action_preview(self, cr, uid, ids, context=None):
-        """
-        Get preview response
-        """
-        context = context or {}
-        self.pool.get('survey.survey').check_access_rights(cr, uid, 'write')
-
-        record = self.browse(cr, uid, ids[0], context=context)
-        context.update({
-            'ir_actions_act_window_target': 'new',
-            'survey_id': record.survey_id.id,
-            'response_id': ids[0],
-            'readonly': True,
-        })
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': context
-        }
 
     def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
