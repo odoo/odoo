@@ -1503,10 +1503,12 @@ class mail_thread(osv.AbstractModel):
         if set(partner_ids) == set([user_pid]):
             try:
                 self.check_access_rights(cr, uid, 'read')
+                self.check_access_rule(cr, uid, ids, 'read')
             except (osv.except_osv, orm.except_orm):
-                return
+                return False
         else:
             self.check_access_rights(cr, uid, 'write')
+            self.check_access_rule(cr, uid, ids, 'write')
 
         existing_pids_dict = {}
         fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
@@ -1551,8 +1553,10 @@ class mail_thread(osv.AbstractModel):
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         if set(partner_ids) == set([user_pid]):
             self.check_access_rights(cr, uid, 'read')
+            self.check_access_rule(cr, uid, ids, 'read')
         else:
             self.check_access_rights(cr, uid, 'write')
+            self.check_access_rule(cr, uid, ids, 'write')
         fol_obj = self.pool['mail.followers']
         fol_ids = fol_obj.search(
             cr, SUPERUSER_ID, [
