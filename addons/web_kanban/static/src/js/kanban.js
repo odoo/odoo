@@ -1242,12 +1242,9 @@ instance.web_kanban.Legend = instance.web_kanban.AbstractField.extend({
     },
     renderElement: function() {
         var self = this;
-        var legend_field = this.options.legend_field;
-        var legend_field_value = this.parent.record[legend_field].raw_value
-        self.legend.render_value(this.parent.id, {
+        self.legend.render_value(self.parent.id, {
             'widget': self, 
-            'legend_value':  legend_field_value,
-            });
+        });
     },
 });
 
