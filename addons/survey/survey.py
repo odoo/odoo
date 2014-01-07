@@ -680,44 +680,6 @@ class survey_user_input(osv.osv):
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!')
     ]
 
-    def create(self, cr, uid, vals, context=None):
-        #if not vals['test_entry']:
-        # if survey_obj.exists(cr, uid, survey.id, context=context) == []:
-        #     return werkzeug.utils.redirect("/survey/")
-
-        # # In case of auth required, block public user
-        # if survey.auth_required and uid == request.registry['website'].get_public_user(request.cr, SUPERUSER_ID, request.context):
-        #     return request.website.render("website.401")
-
-        # # In case of non open surveys
-        # if survey.state != 'open':
-        #     return request.website.render("survey.notopen")
-
-        # # If enough surveys completed
-        # if survey.user_input_limit > 0:
-        #     completed = user_input_obj.search(cr, uid, [('state', '=', 'done')], count=True)
-        #     if completed >= survey.user_input_limit:
-        #         return request.website.render("survey.notopen")
-
-        # # Manual surveying
-        # if not token:
-        #     if survey.visible_to_user:
-        #         user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id})
-        #         user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
-        #     else:  # An user cannot open hidden surveys without token
-        #         return request.website.render("website.403")
-        # else:
-        #     try:
-        #         user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
-        #     except IndexError:  # Invalid token
-        #         return request.website.render("website.403")
-        #     else:
-        #         user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
-
-        return super(survey_user_input, self).create(cr, uid, vals, context)
-
-    #         raise osv.except_osv(_('Warning!'), _('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page.title))
-
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
         ''' Remove empty user inputs that have been created manually
 
