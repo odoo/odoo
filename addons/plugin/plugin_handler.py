@@ -4,6 +4,7 @@ Created on 18 oct. 2011
 @author: openerp
 '''
 
+from openerp import tools
 from openerp.osv import osv
 from openerp.tools.translate import _
 
@@ -94,7 +95,7 @@ class plugin_handler(osv.osv_memory):
         mail_message = self.pool.get('mail.message')
         model_obj = self.pool.get(model)
         msg = self.pool.get('mail.thread').message_parse(cr, uid, email)
-        message_id = msg.get('message-id')
+        message_id = msg.get('message_id')
         mail_ids = mail_message.search(cr, uid, [('message_id', '=', message_id), ('res_id', '=', res_id), ('model', '=', model)])
         if message_id and mail_ids:
             mail_record = mail_message.browse(cr, uid, mail_ids)[0]
@@ -107,12 +108,17 @@ class plugin_handler(osv.osv_memory):
                 res_id = model_obj.message_process(cr, uid, model, email)
                 notify = _("Mail successfully pushed, a new %s has been created.") % model
         else:
+            email_from = msg.get('email_from') and tools.email_split(msg.get('email_from')) or False
+            author_ids = email_from and self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email_from[0])], limit=1) or False
             model_obj.message_post(cr, uid, [res_id],
                             body=msg.get('body'),
                             subject=msg.get('subject'),
                             type='comment' if model == 'res.partner' else 'email',
                             parent_id=msg.get('parent_id'),
-                            attachments=msg.get('attachments'))
+                            attachments=msg.get('attachments'),
+                            message_id=message_id,
+                            email_from=msg.get('email_from'),
+                            author_id=author_ids and author_ids[0])
             notify = _("Mail successfully pushed")
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url, notify)
@@ -151,7 +157,7 @@ class plugin_handler(osv.osv_memory):
         ir_attachment_obj = self.pool.get('ir.attachment')
         attach_ids = []
         msg = self.pool.get('mail.thread').message_parse(cr, uid, headers)
-        message_id = msg.get('message-id')
+        message_id = msg.get('message_id')
         push_mail = self.push_message(cr, uid, model, headers, res_id)
         res_id = push_mail[1]
         model = push_mail[0]
@@ -165,6 +171,6 @@ class plugin_handler(osv.osv_memory):
                 attach_ids.append(ir_attachment_obj.create(cr, uid, vals))
         mail_ids = mail_message.search(cr, uid, [('message_id', '=', message_id), ('res_id', '=', res_id), ('model', '=', model)])
         if mail_ids:
-            mail_message.write(cr, uid, mail_ids[0], {'attachment_ids': [(6, 0, attach_ids)], 'body': body, 'body_html': body_html})
+            mail_message.write(cr, uid, mail_ids[0], {'attachment_ids': [(6, 0, attach_ids)], 'body': tools.plaintext2html(body), 'body_html': body_html})
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url, notify)
