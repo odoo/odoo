@@ -598,16 +598,8 @@ class Home(http.Controller):
             request.session.logout()
         request.session.db = db
 
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db, debug=debug))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=db, debug=debug))
-
-        r = html_template % {
-            'js': js,
-            'css': css,
-            'modules': simplejson.dumps(module_boot(db=db)),
-            'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
-        }
-        return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
+        html = webclient_bootstrap(db=db, debug=debug)
+        return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key):
