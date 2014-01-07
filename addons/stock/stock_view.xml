@@ -1944,9 +1944,9 @@
                         <field name="virtual_available" class="oe_inline"/>
                     </group>
                     <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
-                        <field name="track_production" groups="stock.group_production_lot"/>
-                        <field name="track_incoming" groups="stock.group_tracking_lot"/>
-                        <field name="track_outgoing" groups="stock.group_tracking_lot"/>
+                        <field name="track_all" groups="stock.group_tracking_lot"/>
+                        <field name="track_incoming" groups="stock.group_tracking_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                        <field name="track_outgoing" groups="stock.group_tracking_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
                     </group>
                 </group>
             </field>

@@ -32,6 +32,10 @@ class StockMove(osv.osv):
         'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
     }
 
+    def check_tracking(self, cr, uid, move, lot_id, context=None):
+        super(StockMove, self).check_tracking(cr, uid, move, lot_id, context=context)
+        if move.product_id.track_production and (move.location_id.usage == 'production' or move.location_dest_id.usage == 'production') and not lot_id:
+            raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
     
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.

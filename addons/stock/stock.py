@@ -572,27 +572,8 @@ class stock_quant(osv.osv):
                 raise osv.except_osv(_('Error'), _('You cannot move product %s to a location of type view %s.') % (record.product_id.name, record.location_id.name))
         return True
 
-    # FP Note: rehab this, with the auto creation algo
-    # def _check_tracking(self, cr, uid, ids, context=None):
-    #     """ Checks if serial number is assigned to stock move or not.
-    #     @return: True or False
-    #     """
-    #     for move in self.browse(cr, uid, ids, context=context):
-    #         if not move.lot_id and \
-    #            (move.state == 'done' and \
-    #            ( \
-    #                (move.product_id.track_production and move.location_id.usage == 'production') or \
-    #                (move.product_id.track_production and move.location_dest_id.usage == 'production') or \
-    #                (move.product_id.track_incoming and move.location_id.usage == 'supplier') or \
-    #                (move.product_id.track_outgoing and move.location_dest_id.usage == 'customer') or \
-    #                (move.product_id.track_incoming and move.location_id.usage == 'inventory') \
-    #            )):
-    #             return False
-    #     return True
-
     _constraints = [
         (_check_location, 'You cannot move products to a location of the type view.', ['location_id'])
-        #(_check_tracking, 'You must assign a serial number for this product.', ['prodlot_id']),
     ]
 
 
@@ -1711,6 +1692,19 @@ class stock_move(osv.osv):
         """
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
+    def check_tracking(self, cr, uid, move, lot_id, context=None):
+        """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
+        """
+        check = False
+        if move.product_id.track_all:
+            check = True
+        elif move.product_id.track_incoming and move.location_id.usage in ('supplier', 'transit', 'inventory') and move.location_dest_id.usage == 'internal':
+            check = True
+        elif move.product_id.track_outgoing and move.location_dest_id.usage in ('customer', 'transit', 'inventory') and move.location_id.usage == 'internal':
+            check = True
+        if check and not lot_id:
+            raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
+
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
         """
@@ -1802,6 +1796,7 @@ class stock_move(osv.osv):
             fallback_domain = [('reservation_id', '=', False)]
             #first, process the move per linked operation first because it may imply some specific domains to consider
             for record in move.linked_move_operation_ids:
+                self.check_tracking(cr, uid, move, record.operation_id.lot_id.id, context=context)
                 dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 package_id = False
@@ -1815,6 +1810,7 @@ class stock_move(osv.osv):
                 qty -= record.qty
             #then if the total quantity processed this way isn't enough, process the remaining quantity without any specific domain
             if qty > 0:
+                self.check_tracking(cr, uid, move, move.restrict_lot_id.id, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, context=context)
             #unreserve the quants and make them available for other operations/moves
