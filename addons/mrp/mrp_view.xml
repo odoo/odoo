@@ -551,6 +551,14 @@
                         </div>                        
                     </group>                
                 </xpath>
+            </field>
+        </record>
+
+        <record id="view_mrp_product_form_inherited" model="ir.ui.view">
+            <field name="name">product.form.mrp.inherited</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
+            <field name="arch" type="xml">
                  <xpath expr="//group[@name='lot']" position="inside">
                     <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
                 </xpath>
