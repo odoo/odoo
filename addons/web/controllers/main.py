@@ -532,7 +532,7 @@ def content_disposition(filename):
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
-# TODO: obsoleted by webclient_bootstrap() but need to change edi and pos addons
+# TODO: obsoleted by webclient_bootstrap() but need to change edi and pos addons before removing this
 html_template = """<!DOCTYPE html>
 <html style="height: 100%%">
     <head>
