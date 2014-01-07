@@ -289,6 +289,11 @@ class QWeb(orm.AbstractModel):
             t_att = {}
             for (an, av) in e.attributes.items():
                 an = str(an)
+                if an == "groups":
+                    can_see = self.user_has_groups(v['request'].cr, v['uid'], groups=av)
+                    if not can_see:
+                        return ''
+                    continue
                 if isinstance(av, unicode):
                     av = av.encode("utf8")
                 else:
