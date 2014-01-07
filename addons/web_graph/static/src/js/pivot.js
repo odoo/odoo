@@ -15,10 +15,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		this.cells = [];
 		this.domain = domain;
 		this.measures = ['__count'];
-
-		this.data_loader = new openerp.web_graph.DataLoader(model);
-
 		this.no_data = true;
+		this.model = model;
+		this.fields = null;
 	},
 
 	visible_fields: function () {
@@ -40,7 +39,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		options = _.extend(default_options, options);
 
 		if (options.fields) {
-			this.data_loader.fields = options.fields;
+			this.fields = options.fields;
 		}
 
 		if (!_.isEqual(options.domain, this.domain)) {
@@ -179,7 +178,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         }
 
         var otherDim = (header.root === this.cols) ? this.rows : this.cols;
-        return this.data_loader.get_groups(this.visible_fields(), header.domain, otherDim.groupby, {first_groupby:field_id, add_path:true})
+        return this.get_groups(this.visible_fields(), header.domain, otherDim.groupby, {first_groupby:field_id, add_path:true})
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
                     var new_header_id = self.make_header(group, header);
@@ -246,7 +245,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 				domain: this.domain,
 			};
 
-		return this.data_loader.load_data(options).then (function (result) {
+		return this.load_data(options).then (function (result) {
 			if (result) {
 				self.no_data = false;
 				if (self.cols.headers) {
@@ -304,14 +303,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		root.main = root.headers[0];
 	},
 
-});
-
-openerp.web_graph.DataLoader = openerp.web.Class.extend({
-	init: function (model) {
-		this.model = model;
-		this.fields = null;
-	},
-
+	//***************************************************************
+	// Data loading code from db...
+	//***************************************************************
 	get_groups: function (fields, domain, groupbys, options) {
 		var self = this,
 			groupings = ((options || {}).first_groupby) ? [(options || {}).first_groupby].concat(groupbys) : groupbys;
@@ -419,13 +413,12 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 		});
 	},
 
-	get_value: function (data, measures) {
+	get_value_from_data: function (data, measures) {
 		var attr = data.attributes;
 		var result = _.map(measures, function (measure) {
 			return (measure === '__count') ? attr.length : attr.aggregates[measure];
 		});
 		return result;
-		// return (measure) ? attr.aggregates[measure] : attr.length;
 	},
 
 	format_data: function (total, col_data, row_data, cell_data, options) {
@@ -458,7 +451,7 @@ openerp.web_graph.DataLoader = openerp.web.Class.extend({
 				children: [],
 				title: (parent) ? data.attributes.value : '',
 				domain: (parent) ? data.model._domain : options.domain,
-				total: this.get_value(options.total, options.measures),
+				total: this.get_value_from_data(options.total, options.measures),
 			};
 
 		if (main.path.length < depth) {
