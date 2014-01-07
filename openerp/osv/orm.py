@@ -3462,10 +3462,12 @@ class BaseModel(object):
             :raise AccessError: if user has no read rights on some of the given
                     records
         """
+        # check access rights (necessary for computed and related fields)
+        self.check_access_rights('read')
+        fields = self.check_field_access_rights('read', fields)
+
         self_fields = self._fields
-        if not fields:
-            names = self_fields.keys()
-        elif all(name in self_fields for name in fields):
+        if all(name in self_fields for name in fields):
             names = set(fields)
         else:
             # there are unknown fields, log them, and do not read them!
