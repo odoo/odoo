@@ -560,7 +560,7 @@
             <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
             <field name="arch" type="xml">
                  <xpath expr="//group[@name='lot']" position="inside">
-                    <field name="track_production" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                    <field name="track_production" groups="stock.group_tracking_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
                 </xpath>
             </field>
         </record>
@@ -737,7 +737,7 @@
                                                    string="Split in Serial Numbers"
                                                    type="action" icon="gtk-justify-fill"
                                                    states="draft,waiting,confirmed,assigned" 
-                                                   groups="stock.group_production_lot"/>
+                                                   groups="stock.group_tracking_lot"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
                                                 icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
@@ -751,7 +751,7 @@
                                            <field name="product_id" readonly="1"/>
                                            <field name="product_qty" readonly="1"/>
                                            <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
-                                           <!--<field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>-->
+                                           <!--<field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_tracking_lot"/>-->
                                            <field name="state" invisible="1"/>
                                            <field name="scrapped" invisible="1"/>
                                        </tree>
@@ -779,7 +779,7 @@
                                             <field name="product_qty" readonly="1"/>
                                             <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
-                                            <!--<field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>-->
+                                            <!--<field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_tracking_lot"/>-->
                                             <field name="scrapped" invisible="1"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.track_line)d"

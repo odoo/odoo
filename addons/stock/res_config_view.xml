@@ -27,16 +27,12 @@
                         <label for="id" string="Traceability"/>
                         <div>
                             <div>
-                                <field name="group_stock_production_lot" class="oe_inline"/>
-                                <label for="group_stock_production_lot"/>
-                            </div>
-                            <div attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
-                                <field name="module_product_expiry" class="oe_inline"/>
-                                <label for="module_product_expiry"/>
-                            </div>
-                            <div>
                                 <field name="group_stock_tracking_lot" class="oe_inline"/>
                                 <label for="group_stock_tracking_lot"/>
+                            </div>
+                            <div attrs="{'invisible': [('group_stock_tracking_lot','=',False)]}">
+                                <field name="module_product_expiry" class="oe_inline"/>
+                                <label for="module_product_expiry"/>
                             </div>
                             <div>
                                 <field name="group_stock_tracking_owner" class="oe_inline"/>
