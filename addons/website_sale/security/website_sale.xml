@@ -11,38 +11,6 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
-
-    <record id="sale_order_personal_rule_public" model="ir.rule">
-        <field name="name">Public Personal Orders</field>
-        <field ref="model_sale_order" name="model_id"/>
-        <field name="domain_force">[('state','=','draft'), ('website_session_id','!=',False), ('website_session_id','=',session.get('website_session_id'))]</field>
-        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-    </record>
-    <record id="sale_order_lines_personal_rule_public" model="ir.rule">
-        <field name="name">Public Personal Order lines</field>
-        <field ref="model_sale_order_line" name="model_id"/>
-        <field name="domain_force">[('state','=','draft'), ('order_id.website_session_id','!=',False), ('order_id.website_session_id','=',session.get('website_session_id'))]</field>
-        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-    </record>
-
-    <record id="product_pricelist_public" model="ir.rule">
-        <field name="name">Public product pricelist</field>
-        <field name="model_id" ref="product.model_product_pricelist"/>
-        <field name="domain_force">[('id','=',session.get('ecommerce_pricelist'))]</field>
-        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-    </record>
     
     <record id="product_supplierinfo_public" model="ir.rule">
         <field name="name">Public product supplierinfo</field>
