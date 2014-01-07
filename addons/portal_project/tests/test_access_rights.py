@@ -52,9 +52,9 @@ class TestPortalProjectBase(TestProjectBase):
             'groups_id': [(6, 0, [self.group_anonymous_id])]
         })
         self.user_manager_id = self.res_users.create(cr, uid, {
-            'name': 'Ernest Manager',
-            'login': 'ernest',
-            'alias_name': 'ernest',
+            'name': 'Eustache Manager',
+            'login': 'eustache',
+            'alias_name': 'eustache',
             'groups_id': [(6, 0, [self.group_project_manager_id])]
         })
 
