@@ -536,4 +536,17 @@
     !python {model: res.partner }: |
         res_ids = self.search(cr, uid, [('address.country_id','=','Belgium'),('active','=',False)])
         assert len(res_ids) != 0, "Record not Found with country Belgium and active False."
+-
+    Check that we can exclude translated fields (bug lp:1071710)
+-
+    !python {model: res.country}: |
+        # first install french language
+        BLI = self.pool.get('base.language.install')
+        BLI.lang_install(cr, uid, [BLI.create(cr, uid, {'lang': 'fr_FR'})])
 
+        be_id = self.search(cr, uid, [('name', '=', 'Belgium')])[0]
+
+        ctx = {'lang': 'fr_FR'}
+        not_be = self.search(cr, uid, [('name', '!=', 'Belgique')], context=ctx)
+
+        assert be_id not in not_be, "Search match failed"
