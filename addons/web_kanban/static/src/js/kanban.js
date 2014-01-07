@@ -1258,7 +1258,27 @@ instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanb
     },
 });
 
+instance.web_kanban.Legend = instance.web_kanban.AbstractField.extend({
+    init: function(parent, field, $node) {
+        this._super.apply(this, arguments);
+        this.name = $node.attr('name')
+        this.parent = parent;
+        this.legend = new instance.web.Legend(this, parent.view.dataset, this.options);
+    },
+    reload_record: function(){
+        this.parent.do_reload();
+    },
+    renderElement: function() {
+        var self = this;
+        self.legend.render_value(self.parent.id, {
+            'widget': self, 
+        });
+    },
+});
+
+
 instance.web_kanban.fields_registry = new instance.web.Registry({});
+instance.web_kanban.fields_registry.add('legend','instance.web_kanban.Legend');
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

@@ -2331,6 +2331,83 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     }
 });
 
+instance.web.Legend = instance.web.Widget.extend({
+    init: function (parent, dataset, options) {
+        this._super(parent);
+        this.parent = parent;
+        this.dataset = dataset;
+        this.options = options; 
+    },
+    prepare_data: function() {
+    	var self =this;
+        var def = $.Deferred();
+        if (this.parent.name == 'kanban_state'){
+            var datas = [{ 'name': 'normal', 'legend_name': ' Normal', 'legend': '<img src="/web/static/src/img/icons/gtk-normal.png"/>' },
+                         { 'name': 'blocked', 'legend_name': ' Blocked', 'legend': '<img src="/web/static/src/img/icons/gtk-no.png"/>' },
+                         { 'name': 'done', 'legend_name': ' Done', 'legend': '<img src="/web/static/src/img/icons/gtk-yes.png"/>' }]
+            return  def.resolve(datas);
+        }
+        if (this.parent.name == 'priority'){
+            var data = [];
+            var selection = this.parent.field.selection || [];
+            for (var index in selection) {
+                value = {
+                    'name': selection[index][0],
+                    'legend_name': selection[index][1]
+                }
+                if (selection[index][0] == '0'){
+                    value['legend']= '<img src="/web/static/src/img/icons/star-off.png"/>';
+                    value['legend_name'] = 'Set the Priority';
+                }else{
+                    value['legend']= '<img src="/web/static/src/img/icons/star-on.png"/>';
+                }
+                data.push(value)
+            }
+            return  def.resolve(data);
+        }
+    },
+    render_value: function(record_id, data) {
+        var self = this;
+        var content;
+        self.record_id = record_id;
+        this.prepare_data().then(function (res){
+            data['res'] = res;
+            content = QWeb.render("Legend."+ self.parent.name, data);
+        });
+        if (data.view_mode === 'form')
+            this.parent.$el.html(content);
+        else
+            this.parent.$el = $(content);
+        if (!this.parent.get("effective_readonly")){
+            this.parent.$el.find('.oe_legend').click(self.do_action.bind(self));
+        }
+    },
+    do_action: function(e){
+        var self = this;
+        var li = $(e.target).closest( "li" );
+        if (li.length){
+            var value = li.data('value');
+            return self.dataset.call_button(self.options.action, [self.record_id, value, self.dataset.get_context()]).done(self.parent.reload_record.bind(self.parent));
+        }
+    }
+});
+
+instance.web.form.Legend = instance.web.form.FieldChar.extend({
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
+        this.legend = new instance.web.Legend(this, this.view.dataset, py.eval(node.attrs.options));
+    },
+    reload_record: function(){
+        this.view.reload();
+    },
+    render_value: function() {
+        var self = this;
+        self.legend.render_value(this.view.datarecord.id, {
+            'widget': self, 
+            'view_mode':'form'
+        });
+    },
+});
 instance.web.form.FieldID = instance.web.form.FieldChar.extend({
     process_modifiers: function () {
         this._super();
@@ -5853,6 +5930,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
+    'legend':'instance.web.form.Legend'
 });
 
 /**
