@@ -819,7 +819,7 @@ instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
  */
 instance.web.Home = function(parent, action) {
     var url = '/' + (window.location.search || '');
-    instance.web.redirect(url, action.params && action.params.wait);
+    instance.web.redirect(url, action && action.params && action.params.wait);
 };
 instance.web.client_actions.add("home", "instance.web.Home");
 
