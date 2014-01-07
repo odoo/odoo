@@ -45,6 +45,16 @@ class pos_config(osv.osv):
         ('deprecated', 'Deprecated')
     ]
 
+    def _get_currency(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for pos_config in self.browse(cr, uid, ids, context=context):
+            if pos_config.journal_id:
+                currency_id = pos_config.journal_id.currency.id or pos_config.journal_id.company_id.currency_id.id
+            else:
+                currency_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
+            result[pos_config.id] = currency_id
+        return result
+
     _columns = {
         'name' : fields.char('Point of Sale Name', size=32, select=1,
              required=True, help="An internal identification of the point of sale"),
@@ -56,6 +66,7 @@ class pos_config(osv.osv):
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
              domain=[('type', '=', 'sale')],
              help="Accounting journal used to post sales entries."),
+        'currency_id' : fields.function(_get_currency, type="many2one", string="Currency", relation="res.currency"),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
         'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
@@ -202,6 +213,7 @@ class pos_session(osv.osv):
                                     readonly=True,
                                     states={'opening_control' : [('readonly', False)]}
                                    ),
+        'currency_id' : fields.related('config_id', 'currency_id', type="many2one", relation='res.currency', string="Currnecy"),
         'start_at' : fields.datetime('Opening Date', readonly=True), 
         'stop_at' : fields.datetime('Closing Date', readonly=True),
 
@@ -232,27 +244,28 @@ class pos_session(osv.osv):
                 type='float',
                 digits_compute=dp.get_precision('Account'),
                 string="Ending Balance",
-                help="Computed using the cash control lines",
+                help="Total of closing cash control lines.",
                 readonly=True),
         'cash_register_balance_start' : fields.related('cash_register_id', 'balance_start',
                 type='float',
                 digits_compute=dp.get_precision('Account'),
                 string="Starting Balance",
-                help="Computed using the cash control at the opening.",
+                help="Total of opening cash control lines.",
                 readonly=True),
         'cash_register_total_entry_encoding' : fields.related('cash_register_id', 'total_entry_encoding',
                 string='Total Cash Transaction',
-                readonly=True),
+                readonly=True,
+                help="Total of all paid sale orders"),
         'cash_register_balance_end' : fields.related('cash_register_id', 'balance_end',
                 type='float',
                 digits_compute=dp.get_precision('Account'),
-                string="Computed Balance",
-                help="Computed with the initial cash control and the sum of all payments.",
+                string="Theoretical Closing Balance",
+                help="Sum of opening balance and transactions.",
                 readonly=True),
         'cash_register_difference' : fields.related('cash_register_id', 'difference',
                 type='float',
                 string='Difference',
-                help="Difference between the counted cash control at the closing and the computed balance.",
+                help="Difference between the theoretical closing balance and the real closing balance.",
                 readonly=True),
 
         'journal_ids' : fields.related('config_id', 'journal_ids',
@@ -714,13 +727,14 @@ class pos_order(osv.osv):
             }, context=context)
             self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
             location_id = order.warehouse_id.lot_stock_id.id
-            output_id = order.warehouse_id.lot_output_id.id
+            if order.partner_id:
+                destination_id = order.partner_id.property_stock_customer.id
+            else:
+                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
 
             for line in order.lines:
                 if line.product_id and line.product_id.type == 'service':
                     continue
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
 
                 move_obj.create(cr, uid, {
                     'name': line.name,
@@ -732,11 +746,9 @@ class pos_order(osv.osv):
                     'product_qty': abs(line.qty),
                     'tracking_id': False,
                     'state': 'draft',
-                    'location_id': location_id,
-                    'location_dest_id': output_id,
+                    'location_id': location_id if line.qty >= 0 else destination_id,
+                    'location_dest_id': destination_id if line.qty >= 0 else location_id,
                 }, context=context)
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
             
             picking_obj.signal_button_confirm(cr, uid, [picking_id])
             picking_obj.force_assign(cr, uid, [picking_id], context)

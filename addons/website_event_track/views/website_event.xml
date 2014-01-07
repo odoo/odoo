@@ -16,7 +16,7 @@
             </section>
             <div class="row">
                 <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
-                    <a t-href="#{sponsor.partner_id and ('partners/%s/' % sponsor.partner_id.id) or '#'}" style="position: relative; display: inline-block;">
+                    <a t-href="#{sponsor.partner_id and ('/partners/%s/' % sponsor.partner_id.id) or '#'}" style="position: relative; display: inline-block;">
                         <span t-field="sponsor.partner_id.image"
                             t-field-options='{"widget": "image", "class": "shadow"}'/>
                         <div class="ribbon-wrapper">
@@ -253,9 +253,8 @@
                 <div t-if="event.twitter_hashtag" class="mt16">
                     <p><strong>Participate on Twitter</strong></p>
                     <p class="text-muted">
-                        Find out what others are seeing and
-                        saying about this event, and join the
-                        conversation.
+                        Find out what people see and say about this event, 
+                        and join the conversation.
                     </p>
                     <p><strong>Use this tag:
                         <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>

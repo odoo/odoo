@@ -25,6 +25,7 @@ from openerp.addons import decimal_precision
 from openerp.addons.sale.sale import sale_order as OriginalSaleOrder
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 
 class sale_order_line(osv.osv):
@@ -111,7 +112,7 @@ class sale_order(osv.Model):
             if not order.state in ('draft'):
                 raise osv.except_osv(_('Order not in Draft State!'), _('The order state have to be draft to add delivery lines.'))
 
-            grid = grid_obj.browse(cr, uid, grid_id, context=context)
+            grid = grid_obj.browse(cr, SUPERUSER_ID, grid_id, context=context)
 
             taxes = grid.carrier_id.product_id.taxes_id
             fpos = order.fiscal_position or False

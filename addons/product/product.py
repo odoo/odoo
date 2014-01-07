@@ -361,6 +361,7 @@ class product_public_category(osv.osv):
 #----------------------------------------------------------
 class product_template(osv.osv):
     _name = "product.template"
+    _inherit = ['mail.thread']
     _description = "Product Template"
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
@@ -649,7 +650,6 @@ class product_product(osv.osv):
     _description = "Product"
     _table = "product_product"
     _inherits = {'product.template': 'product_tmpl_id'}
-    _inherit = ['mail.thread']
     _inherit = ['mail.thread']
     _order = 'default_code,name_template'
     _columns = {

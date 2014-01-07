@@ -51,19 +51,33 @@ function run (test) {
         phantom.exit(1);
     };
     page.onConsoleMessage = function(message) {
-        console.log(message);
-        phantom.exit(1);
+        // Disabled because of the 'web_hello' addon
+        //console.log(message);
+        //phantom.exit(1);
     };
 
-    page.open(url, function (status) {
-        if (status !== 'success') {
-            console.log('{ "event": "error", "message": "'+url+' failed to load"}');
-            phantom.exit(1);
-        } else {
-            page.onLoadFinished = function(status) {
-              test(page);
-            };
+    page.onCallback = function(data) {
+        if (data.event && data.event === 'start') {
+            test(page);
         }
+    };
+     
+    var tries = 0; 
+    page.open(url, function openPage (status) {
+        if (status !== 'success') {
+            tries++;
+            if (tries < 5) {
+                page.open(url, openPage);
+            } else {
+                console.log('{ "event": "error", "message": "'+url+' failed to load '+tries+' times ('+status+')"}');
+                phantom.exit(1);
+            }
+        } else {
+            page.evaluate(function () {
+                window.callPhantom({ event: 'start' });
+            });
+        }
+
     });
 }
 

@@ -99,6 +99,7 @@ class Website(orm.Model):
             request.httprequest.session['ecommerce_order_id'] = False
             return False
         try:
+            #SaleOrder.check_access_rule(cr, uid, order_id, context=context)
             order = SaleOrder.browse(cr, uid, order_id, context=context)
             return order
         except:

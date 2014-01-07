@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- challenges -->
+        <record model="gamification.challenge" id="challenge_crm_sale">
+            <field name="user_ids" eval="[(4,ref('base.user_demo'))]" />
+            <field name="state">inprogress</field>
+        </record>
+
+        <!-- goals -->
+        <record model="gamification.goal" id="goal_crm_sale1">
+            <field name="definition_id" eval="ref('definition_crm_tot_invoices')" />
+            <field name="user_id" eval="ref('base.user_demo')" />
+            <field name="line_id" eval="ref('line_crm_sale1')" />
+            <field name="start_date" eval="time.strftime('%Y-%m-01')" />
+            <field name="end_date" eval="time.strftime('%Y-%m-31')" />
+            <field name="target_goal">2000</field>
+            <field name="state">inprogress</field>
+        </record>
+        
+    </data>
+</openerp>

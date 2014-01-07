@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-08-24 12:49+0000\n"
-"Last-Translator: Eric Huang <eh@cenoq.com>\n"
+"PO-Revision-Date: 2013-12-24 10:29+0000\n"
+"Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-09-12 05:21+0000\n"
-"X-Generator: Launchpad (build 16761)\n"
+"X-Launchpad-Export-Date: 2013-12-25 06:02+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -22,12 +22,12 @@ msgstr ""
 #: model:email.template,subject:account_followup.email_template_account_followup_level1
 #: model:email.template,subject:account_followup.email_template_account_followup_level2
 msgid "${user.company_id.name} Payment Reminder"
-msgstr ""
+msgstr "${user.company_id.name} 提醒付款"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
 msgid "The maximum follow-up level"
-msgstr ""
+msgstr "最大後續追蹤層級"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -48,13 +48,13 @@ msgstr ""
 #. module: account_followup
 #: field:res.partner,payment_next_action_date:0
 msgid "Next Action Date"
-msgstr ""
+msgstr "下個動作日期"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,manual_action:0
 msgid "Manual Action"
-msgstr ""
+msgstr "手動動作"
 
 #. module: account_followup
 #: field:account_followup.sending.results,needprinting:0
@@ -64,7 +64,7 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0
 msgid "⇾ Mark as Done"
-msgstr ""
+msgstr "⇾ 標為已完成"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
@@ -104,17 +104,17 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "後續追蹤步驟"
 
 #. module: account_followup
 #: field:account_followup.print,email_body:0
 msgid "Email Body"
-msgstr ""
+msgstr "Email內文"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
 msgid "Send Follow-Ups"
-msgstr ""
+msgstr "送出後續追蹤"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -133,7 +133,7 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0
 msgid "No Responsible"
-msgstr ""
+msgstr "沒有負責人"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -209,17 +209,17 @@ msgstr "借方合計"
 #. module: account_followup
 #: field:res.partner,payment_next_action:0
 msgid "Next Action"
-msgstr ""
+msgstr "下個動作"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": Partner Name"
-msgstr ""
+msgstr "業務夥伴名稱"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_responsible_id:0
 msgid "Assign a Responsible"
-msgstr ""
+msgstr "指定一負責人"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -269,7 +269,7 @@ msgstr "合夥人"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "一間公司僅允許一項後續追蹤"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
@@ -300,7 +300,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
 msgid "Manual Follow-Ups"
-msgstr ""
+msgstr "手動後續追蹤"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -356,12 +356,12 @@ msgstr "借方"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr ""
+msgstr "後續追蹤統計分析"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Send Overdue Email"
-msgstr ""
+msgstr "送出帳務逾期通知信"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line

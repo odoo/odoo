@@ -6,14 +6,12 @@ testRunner.run(function homepageTest (page) {
     page.evaluate(function () { localStorage.clear(); });
     waitFor(function clientReady () {
         return page.evaluate(function () {
-            return window.openerp && window.openerp.website
+            return window.$ && window.openerp && window.openerp.website
                 && window.openerp.website.TestConsole
+                && window.openerp.website.TestConsole.test
                 && window.openerp.website.TestConsole.test('banner');
         });
     }, function executeTest () {
-        page.onResourceError = function(error) {
-            console.log('{ "event": "error", "message": "'+error.url+' failed to load ('+error.errorString+') "}');
-        };
         var before = page.evaluate(function () {
             var result = {
                 carousel: $('#wrap [data-snippet-id=carousel]').length,
@@ -24,7 +22,7 @@ testRunner.run(function homepageTest (page) {
         });
         waitFor(function testExecuted () {
             var after = page.evaluate(function () {
-                return $('button[data-action=edit]').is(":visible") && {
+                return window.$ && $('button[data-action=edit]').is(":visible") && {
                     carousel: $('#wrap [data-snippet-id=carousel]').length,
                     columns: $('#wrap [data-snippet-id=three-columns]').length,
                 };

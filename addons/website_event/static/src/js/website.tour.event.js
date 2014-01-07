@@ -19,7 +19,7 @@
                 {
                     stepId:    'welcome-event',
                     title:     "Create an Event",
-                    content:   "Let's go through the firsts step to publish a new event.",
+                    content:   "Let's go through the first steps to publish a new event.",
                     template:  self.popover({ next: "Start Tutorial", end: "Skip It" }),
                     backdrop:  true,
                 },
@@ -28,7 +28,7 @@
                     element:   '#content-menu-button',
                     placement: 'left',
                     title:     "Add Content",
-                    content:   "The <em>Content</em> menu allows to create new pages, events, menus, etc.",
+                    content:   "The <em>Content</em> menu allows you to create new pages, events, menus, etc.",
                     template:  self.popover({ fixed: true }),
                     trigger:   'click',
                 },
@@ -50,8 +50,8 @@
                     stepId:    'choose-name',
                     element:   '.modal input',
                     placement: 'right',
-                    title:     "Choose an Event Name",
-                    content:   "Choose a name for your new event and click <em>'Continue'</em>. e.g: Technical Training",
+                    title:     "Create an Event Name",
+                    content:   "Create a name for your new event and click <em>'Continue'</em>. e.g: Technical Training",
                 },
                 {
                     stepId:    'event-page',

@@ -2265,7 +2265,6 @@
                         <group>
                             <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" domain="[('type', '=', 'cash')]" />
                             <field name="user_id" readonly="1" string="Responsible"/>
-                            <field name="total_entry_encoding"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group>
                         <group>
@@ -2273,6 +2272,7 @@
                             <field name="closing_date" readonly="1"/>
                             <field name="period_id" class="oe_inline"/>
                             <field name="currency" invisible="1"/>
+                            <field name="cash_control" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -2306,41 +2306,64 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Cash Control">
+                        <page string="Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
                             <group col="2" expand="1">
-                                <field name="opening_details_ids" nolabel="1" colspan="4" attrs="{'invisible' : [('state', '!=', 'draft')]}">
-                                    <tree string="Opening Cashbox Lines" editable="bottom">
-                                        <field name="pieces"/>
-                                        <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening, parent.balance_end)"/>
-                                        <field name="subtotal_opening" string="Opening Subtotal"/>
-                                    </tree>
-                                </field>
-                                <field name="closing_details_ids" nolabel="1" colspan="4" attrs="{'invisible' : [('state', '=', 'draft')]}">
-                                    <tree string="Closing Cashbox Lines" editable="bottom">
-                                        <field name="pieces" readonly="1" />
-                                        <field name="number_opening" string="Opening Unit Numbers" readonly="1" />
-                                        <field name="subtotal_opening" string="Opening Subtotal" readonly="1" />
-
-                                        <field name="number_closing" string="Closing Unit Numbers" on_change="on_change_sub_closing(pieces, number_closing, parent.balance_end)"/>
-                                        <field name="subtotal_closing" string="Closing Subtotal"/>
-                                    </tree>
-                                </field>
+                                <group string="Opening Cash Control" attrs="{'invisible' : [('state', '!=', 'draft')]}">
+                                    <field name="opening_details_ids" colspan="2" nolabel="1">
+                                        <tree string="Opening Cashbox Lines" editable="bottom">
+                                            <field name="pieces"/>
+                                            <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)" />
+                                            <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group>
+                                    <group string="Opening Cash Control" attrs="{'invisible' : [('state', '=', 'draft')]}">
+                                        <field name="details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '!=', 'draft')]}">
+                                            <tree string="Opening Cashbox Lines" editable="bottom">
+                                                <field name="pieces"/>
+                                                <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)"/>
+                                                <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                    <group string="Closing Cash Control" attrs="{'invisible' : [('state', '=', 'draft')]}">
+                                        <field name="closing_details_ids" colspan="2" nolabel="1" attrs="{'readonly' : [('state', '=', 'confirm')]}">
+                                            <tree string="Closing Cashbox Lines" editable="bottom">
+                                                <field name="pieces" readonly="1" />
+                                                <field name="number_closing" on_change="on_change_sub_closing(pieces, number_closing)"/>
+                                                <field name="subtotal_closing" string="Closing Subtotal" sum="Total"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Entries" attrs="{'invisible': [('state','!=','confirm')]}">
                             <field name="move_line_ids" string="Journal Entries"/>
                         </page>
                     </notebook>
-                    <group col="6" colspan="4">
-                        <group col="2" colspan="2">
-                            <separator string="Opening Balance" colspan="4"/>
-                            <field name="balance_start" readonly="1" string="Opening Cash Control" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="last_closing_balance" readonly="1" string="Last Closing Balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <label for="balance_start" class="oe_subtotal_footer_separator oe_open_balance" string="Opening Balance" style="padding-right: 23px !important; padding-top: 6px !important;"/>
+                            <field name="balance_start" attrs="{'readonly' : ['|', ('cash_control', '=', True), ('state', '=', 'confirm')]}" nolabel="1" widget="monetary" class="oe_subtotal_footer_separator oe_open_balance" options="{'currency_field': 'currency'}" help="Total of opening cash control lines"/>
+                            <label for="total_entry_encoding" string="+ Transactions" class="oe_force_bold oe_mini_subtotal_footer_separator" style="padding-right: 20px !important;"/>
+                            <field name="total_entry_encoding" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
+                            <label for="balance_end" string="= Theoretical Closing Balance" class="oe_force_bold oe_mini_subtotal_footer_separator" style="padding-right: 20px !important;" help="Sum of opening balance and transactions."/>
+                            <field name="balance_end" nolabel="1" class="oe_bold oe_account_total" widget="monetary" options="{'currency_field': 'currency'}"/>
                         </group>
-                        <group string="Closing Balance">
-                            <field name="balance_end" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                        </group>
+                        <div>
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('state', '=', 'draft')]}">
+                                <label for="balance_end_real" class="oe_subtotal_footer_separator oe_real_closing_balance" string="Real Closing Balance" style="padding-right: 23px !important; padding-top: 6px !important;"/>
+                                <field name="balance_end_real" attrs="{'readonly' : ['|', ('cash_control', '=', True), ('state', '=', 'confirm')]}" nolabel="1" class="oe_subtotal_footer_separator oe_real_closing_balance" widget="monetary" options="{'currency_field': 'currency'}" help="Total of closing cash control lines."/>
+                            </group>
+                            <group/>
+                            <group/>
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('state', '=', 'draft')]}">
+                                <label for="difference" string="Difference" class="oe_subtotal_footer_separator oe_difference" style="padding-right: 20px !important;"/>
+                                <field name="difference" nolabel="1" class="oe_subtotal_footer_separator oe_difference" widget="monetary" options="{'currency_field': 'currency'}"/>
+                            </group>
+                        </div>
                     </group>
                 </sheet>
                 </form>
