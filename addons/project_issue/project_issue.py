@@ -250,7 +250,7 @@ class project_issue(osv.Model):
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this issue\n"
                                               " * Ready for next stage indicates the issue is ready to be pulled to the next stage",
-                                         readonly=True, required=False),
+                                         required=False),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
@@ -308,17 +308,10 @@ class project_issue(osv.Model):
     def set_priority(self, cr, uid, ids, priority, *args):
         """Set lead priority
         """
-        return self.write(cr, uid, ids, {'priority' : priority})
+        return self.write(cr, uid, ids, {'priority' : str(priority)})
 
-    def set_high_priority(self, cr, uid, ids, *args):
-        """Set lead priority to high
-        """
-        return self.set_priority(cr, uid, ids, '1')
-
-    def set_normal_priority(self, cr, uid, ids, *args):
-        """Set lead priority to normal
-        """
-        return self.set_priority(cr, uid, ids, '3')
+    def set_kanban_state(self, cr, uid, ids, state, context=None):
+        self.write(cr, uid, ids, {'kanban_state': state }, context=context);
 
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)

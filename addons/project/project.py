@@ -764,7 +764,7 @@ class task(osv.osv):
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this task\n"
                                               " * Ready for next stage indicates the task is ready to be pulled to the next stage",
-                                         readonly=True, required=False),
+                                         required=False),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
         'date_start': fields.datetime('Starting Date',select=True),
@@ -823,6 +823,8 @@ class task(osv.osv):
     _order = "priority, sequence, date_start, name, id"
     
     def set_kanban_state(self, cr, uid, ids, state, context=None):
+        print 'state>>>>>>>>>>',ids
+        print 'state>>>>>>>>>>',state
         self.write(cr, uid, ids, {'kanban_state': state }, context=context);
         
     def set_priority(self, cr, uid, ids, priority, context=None):

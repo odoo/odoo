@@ -27,12 +27,11 @@ from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
 AVAILABLE_PRIORITIES = [
-    ('', ''),
-    ('5', 'Not Good'),
-    ('4', 'On Average'),
-    ('3', 'Good'),
-    ('2', 'Very Good'),
-    ('1', 'Excellent')
+    ('0', 'Not Good'),
+    ('1', 'On Average'),
+    ('2', 'Good'),
+    ('3', 'Very Good'),
+    ('4', 'Excellent')
 ]
 
 class hr_recruitment_source(osv.osv):
@@ -467,7 +466,7 @@ class hr_applicant(osv.Model):
     def set_priority(self, cr, uid, ids, priority, *args):
         """Set applicant priority
         """
-        return self.write(cr, uid, ids, {'priority': priority})
+        return self.write(cr, uid, ids, {'priority': str(priority)})
 
     def set_high_priority(self, cr, uid, ids, *args):
         """Set applicant priority to high

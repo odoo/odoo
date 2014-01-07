@@ -375,8 +375,8 @@
                     <h1>
                         <field name="name" placeholder="Task summary..." class="oe_inline"/>
                         <div class="oe_right"> 
-                            <field name="kanban_state" class="oe_inline" widget="legend" options="{'legend_field':'kanban_state','action':'set_kanban_state'}" />
-                            <field name="priority" class="oe_inline" widget="legend" options="{'legend_field':'priority','action':'set_priority'}"/>
+                            <field name="kanban_state" class="oe_inline" widget="legend" options="{'action':'set_kanban_state'}" />
+                            <field name="priority" class="oe_inline" widget="legend" options="{'action':'set_priority'}"/>
                         </div>
                     </h1>
                     <group>
@@ -513,10 +513,10 @@
                                     <table>
                                         <tr>
                                             <td groups="base.group_user">
-                                                <field name="kanban_state" class="oe_inline" widget="legend" options="{'legend_field':'kanban_state','action':'set_kanban_state'}" />
+                                                <field name="kanban_state" class="oe_inline" widget="legend" options="{'action':'set_kanban_state'}" />
                                             </td>
                                             <td groups="base.group_user">
-                                                <field name="priority" class="oe_inline" widget="legend" options="{'legend_field':'priority','action':'set_priority'}"/>
+                                                <field name="priority" class="oe_inline" widget="legend" options="{'action':'set_priority'}"/>
                                             </td>
                                             <td>
                                                 <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>

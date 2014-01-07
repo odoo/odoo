@@ -85,6 +85,7 @@
                         attrs="{'invisible':[('survey','=',False)]}"/>
                     <button name="action_get_attachment_tree_view" string="Documents" type="object"/>
                 </div>
+                <field name="priority" class="oe_inline" widget="legend" options="{'action':'set_priority'}"/>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
@@ -113,7 +114,6 @@
                             <field name="date_action"/>
                             <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
                         </div>
-                        <field name="priority"/>
                         <field name="source_id"/>
                         <field name="reference"/>
                     </group>
@@ -277,21 +277,16 @@
                                 </div>
                                 <div style="width:240px"><field name="categ_ids"/></div>
                                 <div class="oe_kanban_right">
-                                    <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                                    <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
-                                        <img src="/web/static/src/img/icons/star-off.png" width="16" height="16" title="Good"/>
-                                    </a>
-                                    <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
-                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16" title="Good"/>
-                                    </a>
-                                    <a type="object" name="set_priority" args="['2']">
-                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16" title="Very Good"/>
-                                    </a>
-                                    <a type="object" name="set_priority" args="['1']">
-                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16" title="Excellent"/>
-                                    </a>
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
-
+                                     <table>
+                                        <tr>
+                                            <td groups="base.group_user">
+                                                <field name="priority" class="oe_inline" widget="legend" options="{'action':'set_priority'}"/>
+                                            </td>
+                                            <td>
+                                                <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>

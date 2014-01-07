@@ -55,10 +55,10 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1>
                         <field name="name" class="oe_inline"/>
-                        <field name="kanban_state" invisible='1'/>
-                        <button name="set_kanban_state_done" help="In Progress" attrs="{'invisible': [('kanban_state', 'in', ['done','blocked'])]}" type="object" icon="gtk-normal" class="oe_link oe_right"/>
-                        <button name="set_kanban_state_blocked" help="Ready for Next Stage" attrs="{'invisible': [('kanban_state', 'in', ['normal','blocked'])]}" type="object" icon="gtk-yes" class="oe_link oe_right"/>
-                        <button name="set_kanban_state_normal" help="Blocked" attrs="{'invisible': [('kanban_state', 'in', ['done','normal'])]}" type="object" icon="gtk-no" class="oe_link oe_right"/>
+                         <div class="oe_right"> 
+                            <field name="kanban_state" class="oe_inline" widget="legend" options="{'action':'set_kanban_state'}" />
+                            <field name="priority" class="oe_inline" widget="legend" options="{'action':'set_priority'}"/>
+                        </div>
                     </h1>
                     <label for="categ_ids" class="oe_edit_only"/>
                     <field name="categ_ids" widget="many2many_tags"/>
@@ -78,7 +78,6 @@
                         <group>
                             <field name="id"/>
                             <field name="version_id" groups="base.group_user"/>
-                            <field name="priority" groups="base.group_user"/>
                             <label for="task_id" groups="base.group_user"/>
                             <div groups="base.group_user">
                                 <field name="task_id" on_change="onchange_task_id(task_id)" class="oe_inline" context="{'default_project_id':project_id}"/>
@@ -219,28 +218,19 @@
                                     <div class="oe_kanban_footer_left">
                                         <field name="categ_ids"/>
                                         <div class="oe_right">
-                                            <span class="oe_kanban_highlight" groups="base.group_user">
-                                                <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="In Progress" name="set_kanban_state_done" class="oe_kanban_status"> </a>
-                                                <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready for next stage" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
-                                                <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
-                                                <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                                                <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
-                                                   <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
-                                                </a>
-                                                <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
-                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                                </a>
-                                                <a type="object" name="set_priority" args="['2']" title="High Priority">
-                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                                </a>
-                                                <a type="object" name="set_priority" args="['1']" title="Highest Priority">
-                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                                </a>
-                                            </span>
-                                            <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
-                                                <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
-                                            </t>
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            <table>
+                                                <tr>
+                                                    <td groups="base.group_user">
+                                                        <field name="kanban_state" class="oe_inline" widget="legend" options="{'action':'set_kanban_state'}" />
+                                                    </td>
+                                                    <td groups="base.group_user">
+                                                        <field name="priority" class="oe_inline" widget="legend" options="{'action':'set_priority'}"/>
+                                                    </td>
+                                                    <td>
+                                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </div>
                                     </div>
                                     <div class="oe_kanban_footer_left">
