@@ -1696,11 +1696,11 @@ class stock_move(osv.osv):
         """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
         """
         check = False
-        if move.product_id.track_all:
+        if move.product_id.track_all and not move.location_dest_id.usage == 'inventory':
             check = True
         elif move.product_id.track_incoming and move.location_id.usage in ('supplier', 'transit', 'inventory') and move.location_dest_id.usage == 'internal':
             check = True
-        elif move.product_id.track_outgoing and move.location_dest_id.usage in ('customer', 'transit', 'inventory') and move.location_id.usage == 'internal':
+        elif move.product_id.track_outgoing and move.location_dest_id.usage in ('customer', 'transit') and move.location_id.usage == 'internal':
             check = True
         if check and not lot_id:
             raise osv.except_osv(_('Warning!'), _('You must assign a serial number for the product %s') % (move.product_id.name))
