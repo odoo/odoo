@@ -2684,7 +2684,7 @@ class BaseModel(object):
                         'display_format': display_format,
                         'interval': interval,
                     }
-                    qualified_groupby_field = "to_char(%s,%%s)" % qualified_groupby_field
+                    qualified_groupby_field = "date_trunc('%s',%s)" % (interval, qualified_groupby_field)
                     flist = "%s as %s " % (qualified_groupby_field, groupby)
                 elif groupby_type == 'boolean':
                     qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
@@ -2711,8 +2711,6 @@ class BaseModel(object):
         gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
         from_clause, where_clause, where_clause_params = query.get_sql()
-        if group_by_params and group_by_params.get('groupby_format'):
-            where_clause_params = [group_by_params['groupby_format']] + where_clause_params + [group_by_params['groupby_format']]
         where_clause = where_clause and ' WHERE ' + where_clause
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
@@ -2749,8 +2747,10 @@ class BaseModel(object):
                         d['__context'] = {'group_by': groupby_list[1:]}
             if groupby and groupby in fget:
                 if d[groupby] and fget[groupby]['type'] in ('date', 'datetime'):
-                    _default = datetime.datetime(1970, 1, 1)    # force starts of month
-                    groupby_datetime = dateutil.parser.parse(alldata[d['id']][groupby], default=_default)
+                    groupby_datetime = alldata[d['id']][groupby]
+                    if isinstance(groupby_datetime, basestring):
+                        _default = datetime.datetime(1970, 1, 1)    # force starts of month
+                        groupby_datetime = dateutil.parser.parse(groupby_datetime, default=_default)
                     d[groupby] = babel.dates.format_date(
                         groupby_datetime, format=group_by_params.get('display_format', 'MMMM yyyy'), locale=context.get('lang', 'en_US'))
                     if group_by_params.get('interval') == 'month':
