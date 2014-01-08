@@ -291,7 +291,7 @@
             var self = this;
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
-            var stepDelay = 100; //ms
+            var stepDelay = 500; //ms
             var test = {
                 id: tour.id,
                 run: function (force) {

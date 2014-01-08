@@ -2,7 +2,7 @@ var testRunner = require('./ui_test_runner.js');
 
 var waitFor = testRunner.waitFor;
 
-testRunner.run(function homepageTest (page) {
+testRunner.run(function homepageTest (page, timeout) {
     page.evaluate(function () { localStorage.clear(); });
     waitFor(function clientReady () {
         return page.evaluate(function () {
@@ -31,6 +31,6 @@ testRunner.run(function homepageTest (page) {
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();
-        }, 90000);
-    }, 20000);
+        }, 4*timeout/5);
+    }, timeout/5);
 });

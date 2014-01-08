@@ -173,4 +173,10 @@ class event_sponsors_type(osv.osv):
         'sequence': fields.related('sponsor_type_id', 'sequence', string='Sequence', store=True),
     }
 
+    def has_access_to_partner(self, cr, uid, ids, context=None):
+        try:
+            self.browse(cr, uid, ids[0], context=context).partner_id.name
+            return True
+        except:
+            return False
 

@@ -2,24 +2,21 @@ var testRunner = require('../../../website/tests/ui_suite/ui_test_runner.js');
 
 var waitFor = testRunner.waitFor;
 
-testRunner.run(function homepageTest (page) {
+testRunner.run(function homepageTest (page, timeout) {
     page.evaluate(function () { localStorage.clear(); });
     waitFor(function clientReady () {
         return page.evaluate(function () {
-            return window.openerp && window.openerp.website
+            return window.$ && window.openerp && window.openerp.website
                 && window.openerp.website.TestConsole
                 && window.openerp.website.TestConsole.test('blog');
         });
     }, function executeTest () {
-        page.onResourceError = function(error) {
-            console.log('{ "event": "error", "message": "'+error.url+' failed to load ('+error.errorString+') "}');
-        };
         page.evaluate(function () {
             window.openerp.website.TestConsole.test('blog').run(true);
         });
         waitFor(function testExecuted () {
             var after = page.evaluate(function () {
-                return $('button[data-action=edit]').is(":visible") && {
+                return window.$ && $('button[data-action=edit]').is(":visible") && {
                     image: $('#wrap [data-snippet-id=image-text]').length,
                     text: $('#wrap [data-snippet-id=text-block]').length,
                 };
@@ -32,6 +29,6 @@ testRunner.run(function homepageTest (page) {
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();
-        }, 90000);
-    }, 20000);
+        }, 4*timeout/5);
+    }, timeout/5);
 });

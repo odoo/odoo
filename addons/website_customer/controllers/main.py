@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
@@ -15,11 +16,12 @@ class WebsiteCustomer(http.Controller):
     @website.route([
         '/customers/',
         '/customers/page/<int:page>/',
-        '/customers/country/<model("res.country"):country>',
-        '/customers/country/<model("res.country"):country>/page/<int:page>/'
+        '/customers/country/<int:country_id>',
+        '/customers/country/<country_name>-<int:country_id>',
+        '/customers/country/<int:country_id>/page/<int:page>/',
+        '/customers/country/<country_name>-<int:country_id>/page/<int:page>/',
     ], type='http', auth="public", multilang=True)
-    def customers(self, country=None, page=0, **post):
-        website.preload_records(country)
+    def customers(self, country_id=0, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         partner_obj = request.registry['res.partner']
         partner_name = post.get('search', '')
@@ -33,9 +35,8 @@ class WebsiteCustomer(http.Controller):
                 ('website_description', 'ilike', "%%%s%%" % post.get("search"))
             ]
         country_id = None
-        if country:
-            domain += [('country_id', '=', country.id)]
-            country_id = country.id
+        if country_id:
+            domain += [('country_id', '=', country_id)]
 
         # group by country, based on all customers (base domain)
         countries = partner_obj.read_group(
@@ -75,8 +76,9 @@ class WebsiteCustomer(http.Controller):
         }
         return request.website.render("website_customer.index", values)
 
-    @website.route(['/customers/<model("res.partner"):partner>/'], type='http', auth="public", multilang=True)
-    def customer(self, partner, **post):
+    @website.route(['/customers/<int:partner_id>/', '/customers/<partner_name>-<int:partner_id>/'], type='http', auth="public", multilang=True)
+    def customer(self, partner_id, **post):
+        partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
         website.preload_records(partner)
         values = website_partner.get_partner_template_value(partner)
         if not values:

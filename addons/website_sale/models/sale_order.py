@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
+from openerp.addons.web.http import request
 
 
 class SaleOrder(osv.Model):
@@ -34,7 +35,11 @@ class SaleOrderLine(osv.Model):
         if context is None:
             context = {}
         user_obj = self.pool.get('res.users')
-        product_id = product_id or ids and self.browse(cr, uid, ids[0], context=context).product_id.id
+
+        if ids and not product_id:
+            order_line = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
+            assert order_line.order_id.website_session_id == request.httprequest.session['website_session_id']
+            product_id = product_id or order_line.product_id.id
 
         return self.product_id_change(
             cr, SUPERUSER_ID, ids,

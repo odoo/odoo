@@ -3,9 +3,11 @@
 <data>
 
 <template id="partner_detail" name="Partner Details (Complex Template for Access Right)">
-    <t t-if="partner" t-call="website.publish_management">
-        <t t-set="object" t-value="partner"/>
-        <t t-set="publish_edit" t-value="True"/>
+    <t t-if="partner" >
+        <t t-call="website.publish_management">
+            <t t-set="object" t-value="partner"/>
+            <t t-set="publish_edit" t-value="True"/>
+        </t>
     </t>
     <t t-if="partner"><h1 class="col-md-12 text-center" t-field="partner.name"/></t>
     <t t-if="not partner"><h1 class="col-md-12 text-center" t-esc="partner_data.get('name_get')[1]"/></t>
