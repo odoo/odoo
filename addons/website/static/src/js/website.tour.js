@@ -320,6 +320,8 @@
                         var $element = $(step.element);
                         if (step.snippet && step.trigger === 'drag') {
                             website.TestConsole.dragAndDropSnippet(step.snippet);
+                        } else if (step.trigger && step.trigger.id === 'change') {
+                            $element.trigger($.Event("change", { srcElement: $element }));
                         } else if (step.sampleText) {
                             $element.val(step.sampleText);
                             $element.trigger($.Event("change", { srcElement: $element }));
