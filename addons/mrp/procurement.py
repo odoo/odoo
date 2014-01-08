@@ -33,11 +33,6 @@ class procurement_order(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
-        result = super(procurement_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context)
-        result['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
-        return result
-
     def check_produce_product(self, cr, uid, procurement, context=None):
         ''' Depict the capacity of the procurement workflow to produce products (not services)'''
         return True
@@ -128,4 +123,10 @@ class procurement_order(osv.osv):
             self.message_post(cr, uid, [procurement.id], body=body, context=context)
     
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class sale_order(osv.Model):
+    _inherit ='sale.order'
+
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
+        result = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context)
+        result['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
+        return result

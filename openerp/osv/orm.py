@@ -77,6 +77,9 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
+# TODO for trunk, raise the value to 1000
+AUTOINIT_RECALCULATE_STORED_FIELDS = 40
+
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
     state_exceptions = {}
@@ -2838,8 +2841,8 @@ class BaseModel(object):
         cr.execute('select id from '+self._table)
         ids_lst = map(lambda x: x[0], cr.fetchall())
         while ids_lst:
-            iids = ids_lst[:40]
-            ids_lst = ids_lst[40:]
+            iids = ids_lst[:AUTOINIT_RECALCULATE_STORED_FIELDS]
+            ids_lst = ids_lst[AUTOINIT_RECALCULATE_STORED_FIELDS:]
             res = f.get(cr, self, iids, k, SUPERUSER_ID, {})
             for key, val in res.items():
                 if f._multi:
@@ -4560,7 +4563,9 @@ class BaseModel(object):
         self._validate(cr, user, [id_new], context)
 
         if not context.get('no_store_function', False):
-            result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
+            result += self._store_get_values(cr, user, [id_new],
+                list(set(vals.keys() + self._inherits.values())),
+                context)
             result.sort()
             done = []
             for order, model_name, ids, fields2 in result:
@@ -4785,6 +4790,9 @@ class BaseModel(object):
 
            :param query: the current query object
         """
+        if uid == SUPERUSER_ID:
+            return
+
         def apply_rule(added_clause, added_params, added_tables, parent_model=None, child_object=None):
             """ :param string parent_model: string of the parent model
                 :param model child_object: model object, base of the rule application

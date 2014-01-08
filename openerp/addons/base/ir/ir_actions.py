@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2013 OpenERP S.A. <http://www.openerp.com>
+#    Copyright (C) 2004-2014 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -478,7 +478,7 @@ class actions_server(osv.osv):
 
     def _select_objects(self, cr, uid, context=None):
         model_pool = self.pool.get('ir.model')
-        ids = model_pool.search(cr, uid, [('name', 'not ilike', '.')])
+        ids = model_pool.search(cr, uid, [], limit=None)
         res = model_pool.read(cr, uid, ids, ['model', 'name'])
         return [(r['model'], r['name']) for r in res] + [('', '')]
 
