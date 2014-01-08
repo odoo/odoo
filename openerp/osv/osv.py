@@ -38,6 +38,7 @@ import openerp.exceptions
 
 import time
 import random
+import sys
 
 _logger = logging.getLogger(__name__)
 
@@ -141,7 +142,8 @@ class object_proxy(object):
                     _logger.info("%s, retry %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
                     time.sleep(wait_time)
                 except orm.except_orm, inst:
-                    raise except_osv(inst.name, inst.value)
+                    _, _, tb = sys.exc_info()
+                    raise except_osv(inst.name, inst.value), None, tb
                 except except_osv:
                     raise
                 except IntegrityError, inst:
