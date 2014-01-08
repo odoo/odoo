@@ -49,9 +49,18 @@
                 {
                     stepId:    'choose-name',
                     element:   '.modal input',
+                    sampleText: 'Advanced Technical Training',
                     placement: 'right',
                     title:     "Create an Event Name",
                     content:   "Create a name for your new event and click <em>'Continue'</em>. e.g: Technical Training",
+                },
+                {
+                    stepId:    'continue-name',
+                    element:   '.modal button.btn-primary',
+                    placement: 'right',
+                    title:     "Create Event",
+                    content:   "Click <em>Continue</em> to create the event.",
+                    trigger:   'click',
                 },
                 {
                     stepId:    'event-page',

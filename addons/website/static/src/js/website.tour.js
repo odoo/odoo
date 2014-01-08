@@ -299,11 +299,11 @@
                         this.reset();
                     }
                     var actionSteps = _.filter(tour.steps, function (step) {
-                       return step.trigger;
+                       return step.trigger || step.sampleText;
                     });
                     function executeStep (step) {
                         window.localStorage.setItem(testId, step.stepId);
-                        step.triggers(function () {
+                        function next () {
                             var nextStep = actionSteps.shift();
                             if (nextStep) {
                                 // Ensure the previous step has been fully propagated
@@ -315,15 +315,18 @@
                             } else {
                                 window.localStorage.removeItem(testId);
                             }
-                        });
+                        }
+                        if (step.triggers) step.triggers(next);
                         var $element = $(step.element);
                         if (step.snippet && step.trigger === 'drag') {
                             website.TestConsole.dragAndDropSnippet(step.snippet);
-                        } else if (step.trigger.id === 'change') {
+                        } else if (step.sampleText) {
+                            $element.val(step.sampleText);
                             $element.trigger($.Event("change", { srcElement: $element }));
                         } else {
                             $element.trigger($.Event("click", { srcElement: $element }));
                         }
+                        if (!step.triggers) next();
                     }
                     var url = new website.UrlParser(window.location.href);
                     if (tour.path && url.pathname !== tour.path) {

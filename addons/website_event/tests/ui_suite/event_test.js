@@ -2,27 +2,28 @@ var testRunner = require('../../../website/tests/ui_suite/ui_test_runner.js');
 
 var waitFor = testRunner.waitFor;
 
-testRunner.run(function blogTest (page, timeout) {
+testRunner.run(function eventTest (page, timeout) {
     page.evaluate(function () { localStorage.clear(); });
     waitFor(function clientReady () {
         return page.evaluate(function () {
             return window.$ && window.openerp && window.openerp.website
                 && window.openerp.website.TestConsole
-                && window.openerp.website.TestConsole.test('blog');
+                && window.openerp.website.TestConsole.test('event');
         });
     }, function executeTest () {
         page.evaluate(function () {
-            window.openerp.website.TestConsole.test('blog').run(true);
+            window.openerp.website.TestConsole.test('event').run(true);
         });
         waitFor(function testExecuted () {
             var after = page.evaluate(function () {
                 return window.$ && $('button[data-action=edit]').is(":visible") && {
-                    image: $('#wrap [data-snippet-id=image-text]').length,
+                    banner: $('#wrap [data-snippet-id=carousel]').length,
                     text: $('#wrap [data-snippet-id=text-block]').length,
+                    image: $('#wrap [data-snippet-id=three-columns]').length,
                 };
             });
-            var result = after && (after.image === 1) && (after.text === 1);
-            if (!result && window.location.href.indexOf('/blogpost/') > 0) {
+            var result = after && (after.banner === 1) && (after.text === 1) && (after.image === 1);
+            if (!result && window.location.href.indexOf('/event/') > 0) {
                 window.location.reload();
             }
             return result;
