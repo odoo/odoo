@@ -441,8 +441,9 @@ class QWeb(orm.AbstractModel):
                 index += 1
             return "".join(ru)
         else:
-            e = NameError("QWeb: foreach enumerator %r is not defined while rendering template %r" % (expr, v.get('__template__')))
-            setattr(e, 'qweb_template', v.get('__template__'))
+            template = v.get('__template__')
+            e = NameError("QWeb: foreach enumerator %r is not defined while rendering template %r" % (expr, template))
+            e.qweb_template = template
             raise e
 
     def render_tag_if(self, e, t_att, g_att, v):
