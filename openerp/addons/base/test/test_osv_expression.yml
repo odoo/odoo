@@ -535,12 +535,29 @@
 -
     !python {model: res.country}: |
         # first install french language
-        BLI = self.pool.get('base.language.install')
-        BLI.lang_install(cr, uid, [BLI.create(cr, uid, {'lang': 'fr_FR'})])
+        Modules = self.pool.get('ir.module.module')
+        base = Modules.browse(cr, uid, Modules.search(cr, uid, [('name', '=', 'base')])[0])
+        
+        # hack: mark module as installed to allow install of the translation
+        base_state = base.state
+        base.write({'state': 'installed'})
+        base.update_translations('fr_FR')
+        base.write({'state': base_state})
 
+        # tests
         be_id = self.search(cr, uid, [('name', '=', 'Belgium')])[0]
 
         ctx = {'lang': 'fr_FR'}
         not_be = self.search(cr, uid, [('name', '!=', 'Belgique')], context=ctx)
 
         assert be_id not in not_be, "Search match failed"
+
+        # indirect search via m2o
+        Partners = self.pool.get('res.partner')
+        agrolait = Partners.search(cr, uid, [('name', '=', 'Agrolait')])[0]
+
+        not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgium')])
+        assert agrolait not in not_be, "Search match failed (m2o)"
+
+        not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgique')], context=ctx)
+        assert agrolait not in not_be, "Search match failed (m2o)"
