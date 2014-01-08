@@ -370,15 +370,6 @@ class project_issue(osv.Model):
     # Stage management
     # -------------------------------------------------------
 
-    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
-
-    def set_kanban_state_normal(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
-
-    def set_kanban_state_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
-
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the issue:

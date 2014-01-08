@@ -823,17 +823,10 @@ class task(osv.osv):
     _order = "priority, sequence, date_start, name, id"
     
     def set_kanban_state(self, cr, uid, ids, state, context=None):
-        print 'state>>>>>>>>>>',ids
-        print 'state>>>>>>>>>>',state
         self.write(cr, uid, ids, {'kanban_state': state }, context=context);
         
     def set_priority(self, cr, uid, ids, priority, context=None):
         return self.write(cr, uid, ids, {'priority' : str(priority)}, context=context)
-
-    def set_normal_priority(self, cr, uid, ids, *args):
-        """Set task priority to normal
-        """
-        return self.write(cr, uid, ids, {'priority' : '2'})
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
@@ -1018,16 +1011,6 @@ class task(osv.osv):
 
     def set_remaining_time_10(self, cr, uid, ids, context=None):
         return self.set_remaining_time(cr, uid, ids, 10.0, context)
-
-    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
-
-    def set_kanban_state_normal(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
-
-    def set_kanban_state_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
-        return False
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
