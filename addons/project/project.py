@@ -753,7 +753,7 @@ class task(osv.osv):
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True, select=True),
         'description': fields.text('Description'),
-        'priority': fields.selection([('0','Very Low'), ('1','Low'), ('2','Medium'), ('3','Important'), ('4','Very important')], 'Priority', select=True),
+        'priority': fields.selection([('0','Medium'), ('1','Important'), ('2','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange',
                         domain="[('project_ids', '=', project_id)]"),

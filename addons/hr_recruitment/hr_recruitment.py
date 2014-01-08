@@ -27,11 +27,10 @@ from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Not Good'),
-    ('1', 'On Average'),
-    ('2', 'Good'),
-    ('3', 'Very Good'),
-    ('4', 'Excellent')
+    ('0', 'On Average'),
+    ('1', 'Good'),
+    ('2', 'Very Good'),
+    ('3', 'Excellent')
 ]
 
 class hr_recruitment_source(osv.osv):
