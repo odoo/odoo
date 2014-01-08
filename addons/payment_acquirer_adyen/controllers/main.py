@@ -20,8 +20,9 @@ class AdyenController(http.Controller):
     @website.route([
         '/payment/adyen/return/',
     ], type='http', auth='public')
-    def adyen_return(self, **post):
-        """ Paypal IPN. """
+    def adyen_return(self, pspReference, **post):
+        """ Paypal IPN."""
+        post["pspReference"] = pspReference
         _logger.info('Beginning Adyen form_feedback with post data %s', pprint.pformat(post))  # debug
         request.registry['payment.transaction'].form_feedback(request.cr, request.uid, post, 'adyen', context=request.context)
         return_url = post.pop('return_url', '')

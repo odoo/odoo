@@ -1294,11 +1294,6 @@
             this.$target.css("background-image", "");
             this.$target.removeClass(this._class);
         },
-        getSize: function () {
-            this._super();
-            //this.grid.size = null;
-            return this.grid;
-        },
         load_style_options : function () {
             this._super();
             $(".snippet-style-size li[data-class='']").remove();
