@@ -126,6 +126,9 @@
                 self.make_active(false);
                 self.$el.toggleClass("hidden");
             });
+            $("#wrapwrap").click(function () {
+                self.$el.addClass("hidden");
+            });
 
             this.fetch_snippet_templates();
 
