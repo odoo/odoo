@@ -9,13 +9,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
         </record>
-
-        <!-- Top menu item -->
-        <menuitem name="Events"
-            id="event_main_menu"
-            groups="base.group_user"
-            sequence="115"/>
-        <menuitem name="Events Organization" id="base.menu_event_main" parent="event_main_menu"/>
+        <menuitem name="Events" parent="base.marketing_menu" id="event_main_menu"/>
 
         <!-- EVENTS  -->
 
@@ -52,8 +46,9 @@
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="event_main_menu" sequence="30"/>
-        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_no_one"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30"/>
+        <menuitem name="Events" id="event_configuration" parent="base.menu_marketing_config_root"/>
+        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="event.event_configuration" groups="base.group_no_one"/>
 
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -76,18 +71,19 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
-                            <field name="visibility"/>
                         </div>
-                        <group>
+                        <group name="main_field_group">
                             <group>
                                 <field name="address_id" on_change="on_change_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True}'/>
+                                <field name="organizer_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
                                 <field name="user_id"/>
                                 <field name="type" on_change="onchange_event_type(type,context)" />
                                 <field name="date_begin" on_change="onchange_start_date(date_begin,date_end)"/>
                                 <field name="date_end"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="visibility"/>
                             </group>
                         </group>
                         <notebook>
@@ -101,10 +97,6 @@
                                              <field name="register_prospect" class="oe_inline"/> (confirmed: <field name="register_current" class="oe_inline"/>)
                                         </div>
                                         <field name="register_attended"/>
-                                    </group>
-                                    <group>
-                                        <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
-                                        <field name="speaker_confirmed"/>
                                     </group>
                                 </group>
                                 <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
@@ -175,7 +167,6 @@
                     <field name="register_current"/>
                     <field name="register_min"/>
                     <field name="register_max" invisible="1"/>
-                    <field name="main_speaker_id" groups="base.group_no_one"/>
                     <field name="user_id"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
@@ -323,7 +314,7 @@
             context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
             view_type="form"/>
 
-        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
+        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="event.event_main_menu" />
 
         <!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
@@ -460,7 +451,7 @@
         </record>
 
         <menuitem name="Registrations"
-            id="menu_action_registration" parent="base.menu_event_main"
+            id="menu_action_registration" parent="event.event_main_menu"
             action="action_registration" groups="event.group_event_manager,event.group_event_user"/>
 
         <menuitem name="Reporting" id="base.menu_report_association" parent="event_main_menu" sequence="20"/>

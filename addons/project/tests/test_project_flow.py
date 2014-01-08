@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.addons.project.tests.test_project_base import TestProjectBase
-from openerp.osv.orm import except_orm
+from openerp.exceptions import AccessError
 from openerp.tools import mute_logger
 
 
@@ -57,7 +57,7 @@ class TestProjectFlow(TestProjectBase):
         cr, uid, user_projectuser_id, user_projectmanager_id, project_pigs_id = self.cr, self.uid, self.user_projectuser_id, self.user_projectmanager_id, self.project_pigs_id
 
         # ProjectUser: set project as template -> raise
-        self.assertRaises(except_orm, self.project_project.set_template, cr, user_projectuser_id, [project_pigs_id])
+        self.assertRaises(AccessError, self.project_project.set_template, cr, user_projectuser_id, [project_pigs_id])
 
         # Other tests are done using a ProjectManager
         project = self.project_project.browse(cr, user_projectmanager_id, project_pigs_id)

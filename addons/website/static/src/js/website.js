@@ -198,7 +198,7 @@
             init: function() {}
         }, options || {});
 
-        var type = _.intersect(Object.keys(options), ['input', 'textarea', 'select']);
+        var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
         type = type.length ? type[0] : 'text';
         options.field_type = type;
         options.field_name = options.field_name || options[type];
@@ -266,12 +266,11 @@
 
         /* ----- PUBLISHING STUFF ---- */
         $(document).on('click', '.js_publish_management .js_publish_btn', function () {
-            var $data = $(this).parent(".js_publish_management");
-        var self=this;
+            var $data = $(this).parents(".js_publish_management:first");
+            var self=this;
             openerp.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
                 .then(function (result) {
                     $data.toggleClass("css_unpublished css_published");
-                    $(self).toggleClass("btn-success btn-danger");
                     $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
                 }).fail(function (err, data) {
                     website.error(data, '/web#return_label=Website&model='+$data.data('object')+'&id='+$data.data('id'));

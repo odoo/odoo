@@ -3,8 +3,6 @@
 
     var website = openerp.website;
 
-    var render = website.tour.render;
-
     website.EditorBar.include({
         start: function () {
             this.registerTour(new website.EventTour(this));
@@ -13,78 +11,161 @@
     });
 
     website.EventTour = website.Tour.extend({
-        id: 'event-tutorial',
+        id: 'event',
         name: "Create an event",
-        startPath: '/event',
         init: function (editor) {
             var self = this;
             self.steps = [
                 {
-                    stepId: 'welcome-event',
-                    orphan: true,
-                    backdrop: true,
-                    title: "Event",
-                    content: "We will show how to create a new event.",
-                    template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
+                    stepId:    'welcome-event',
+                    title:     "Create an Event",
+                    content:   "Let's go through the first steps to publish a new event.",
+                    template:  self.popover({ next: "Start Tutorial", end: "Skip It" }),
+                    backdrop:  true,
                 },
                 {
-                    stepId: 'content-menu',
-                    element: '#content-menu-button',
+                    stepId:    'content-menu',
+                    element:   '#content-menu-button',
                     placement: 'left',
-                    reflex: true,
-                    title: "Edit the content",
-                    content: "Click here to add content to your site.",
-                    template: render('website.tour_popover'),
+                    title:     "Add Content",
+                    content:   "The <em>Content</em> menu allows you to create new pages, events, menus, etc.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
                 },
                 {
-                    stepId: 'new-post-entry',
-                    element: 'a[data-action=new_event]',
+                    stepId:    'new-post-entry',
+                    element:   'a[data-action=new_event]',
                     placement: 'left',
-                    title: "New event",
-                    content: "Click here to create an event.",
-                    template: render('website.tour_popover'),
-                    onShow: function () {
-                        $(document).one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').click(function () {
-                                self.movetoStep('event-page');
-                            });
-                            self.movetoStep('choose-category');
-                        });
+                    title:     "New Event",
+                    content:   "Click here to create a new event.",
+                    template:  self.popover({ fixed: true }),
+                    trigger: {
+                        modal: {
+                            stopOnClose: true,
+                            afterSubmit: 'event-page',
+                        }
                     },
                 },
                 {
-                    stepId: 'choose-name',
-                    element: '.modal input',
+                    stepId:    'choose-name',
+                    element:   '.modal input',
                     placement: 'right',
-                    title: "Choose the event name",
-                    content: "Choose a name for the new event and click 'Continue'.",
-                    template: render('website.tour_popover'),
+                    title:     "Create an Event Name",
+                    content:   "Create a name for your new event and click <em>'Continue'</em>. e.g: Technical Training",
                 },
                 {
-                    stepId: 'event-page',
-                    orphan: true,
-                    backdrop: true,
-                    title: "New event created",
-                    content: "You just created a new event. We are now going to edit it.",
-                    template: render('website.tour_popover', { next: "OK" }),
+                    stepId:    'event-page',
+                    title:     "New Event Created",
+                    content:   "This is your new event page. We will edit the event presentation page.",
+                    template:  self.popover({ next: "OK" }),
                 },
                 {
-                    stepId: 'add-block',
-                    element: 'button[data-action=snippet]',
+                    stepId:    'event-price',
+                    element:   '[data-oe-field=price]',
+                    placement: 'top',
+                    title:     "Ticket price",
+                    content:   "Edit your ticket price.",
+                    template:  self.popover({ next: "OK" }),
+                },
+                {
+                    stepId:    'add-banner',
+                    element:   'button[data-action=snippet]',
                     placement: 'bottom',
-                    reflex: true,
-                    title: "Layout your event",
-                    content: "Insert blocks like text-image to layout the body of your event.",
-                    template: render('website.tour_popover'),
+                    title:     "Layout your event",
+                    content:   "Insert blocks like 'Banner' to layout the body of your event.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'drag-banner',
+                    snippet:   'carousel',
+                    placement: 'bottom',
+                    title:     "Drag & Drop a block",
+                    content:   "Drag the 'Banner' block and drop it in your page.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'drag',
+                },
+                {
+                    stepId:    'add-text-block',
+                    element:   'button[data-action=snippet]',
+                    placement: 'bottom',
+                    title:     "Layout your event",
+                    content:   "Insert another block to your event.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'drag-text-block',
+                    snippet:   'text-block',
+                    placement: 'bottom',
+                    title:     "Drag & Drop a block",
+                    content:   "Drag the 'Text Block' block below the banner.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'drag',
+                },
+                {
+                    stepId:    'add-three-columns',
+                    element:   'button[data-action=snippet]',
+                    placement: 'bottom',
+                    title:     "Layout your event",
+                    content:   "Insert a last block to your event.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'drag-three-columns',
+                    snippet:   'three-columns',
+                    placement: 'bottom',
+                    title:     "Drag & Drop a block",
+                    content:   "Drag the 'Three Columns' block at the bottom.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'drag',
+                },
+                {
+                    stepId:    'save-changes',
+                    element:   'button[data-action=save]',
+                    placement: 'right',
+                    title:     "Save your modifications",
+                    content:   "Once you click on save, your event is updated.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'publish-event',
+                    element:   'button.btn-danger.js_publish_btn',
+                    placement: 'top',
+                    title:     "Publish your event",
+                    content:   "Click to publish your event.",
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'customize-event',
+                    element:   '.js_publish_management button#dopprod-8',
+                    placement: 'left',
+                    title:     "Customize your event",
+                    content:   "Click here to customize your event further.",
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'edit-event-backend',
+                    element:   '.js_publish_management ul>li>a',
+                    placement: 'left',
+                    title:     "Customize your event",
+                    content:   "Click here to edit your event in the backend.",
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'end-tutorial',
+                    title:     "Thanks!",
+                    content:   "This tutorial is finished. Congratulations on creating your first event.",
+                    template:  self.popover({ end: "Close Tutorial" }),
+                    backdrop:  true,
                 },
             ];
             return this._super();
         },
-        continueTour: function () {
-            return this.isCurrentStep('event-page') && !this.tour.ended();
-        },
-        isTriggerUrl: function () {
-            return (this.continueTour() && this.testUrl(/^\/event\/[0-9]+\/\?enable_editor=1/)) || this._super();
+        trigger: function () {
+            return (this.resume() && this.testUrl(/^\/event\/[0-9]+\/register/)) || this._super();
         },
     });
 

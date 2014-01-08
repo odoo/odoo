@@ -19,7 +19,7 @@
                 </div>
                 <div class="collapse navbar-collapse navbar-edit-collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="icon-mobile-phone"/></a></li>
+                        <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview"><i class="fa fa-mobile"/></span></a></li>
                         <li class="divider-vertical"></li>
                         <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
                         <li class="dropdown js_hide_on_translate">
@@ -36,7 +36,7 @@
                                 <!-- filled in JS -->
                             </ul>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown js_hide_on_translate">
                             <a id="help-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">Help <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu" id="help-menu">
                                 <!-- filled in JS -->
@@ -57,16 +57,7 @@
                         <h3 class="modal-title">Mobile preview</h3>
                     </div>
                     <div class="modal-body">
-                        <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true"></iframe>
-                        <script>
-                            var $o = $('<div style="width:50px; overflow:scroll;"><div style="width:100%;"></div></div>');
-                            $o.appendTo("body");
-                            var scrollSize = 50 - $o.find("div").innerWidth();
-                            $o.remove();
-
-                            $(".modal-body").css({'overflow': 'hidden', 'margin-right': '5px'});
-                            $(".oe_mobile_viewport").css({'width': (320 + scrollSize + 5) + 'px'});
-                        </script>
+                        <iframe id="mobile-viewport" class="oe_mobile_viewport" src="?mobile-preview=true" style="width: 326px"></iframe>
                     </div>
                 </div>
             </div>
@@ -81,16 +72,21 @@
                         <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
                         <div class="h2"><t t-esc="title"/></div>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" t-if="message or backend_url">
                         <section>
                             <t t-esc="message"/>
                         </section>
-                        <section class="mt32">
-                            You have encountered an error. You can edit in the <a t-att-href="backend_url">backend</a> this data.
+                        <section class="mt32" t-if="backend_url">
+                            <p>The web site has encountered an error.</p>
+                            <p>
+                                It might be possible to edit the relevant items
+                                or fix the issue in <a t-href="#{backend_url}">
+                                the classic OpenERP interface</a>.
+                            </p>
                         </section>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" data-dismiss="modal" href="#" class="close btn btn-default">Close</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-primary">Close</button>
                     </div>
                 </div>
             </div>
@@ -120,8 +116,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
                         <button type="button" class="btn btn-primary">Continue</button>
+                        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
                     </div>
                 </div>
             </div>

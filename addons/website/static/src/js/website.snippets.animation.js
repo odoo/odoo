@@ -51,9 +51,10 @@
         },
     });
 
-    website.snippet.animationRegistry.carousel = website.snippet.Animation.extend({
+    website.snippet.animationRegistry.carousel =
+    website.snippet.animationRegistry.slider = website.snippet.Animation.extend({
         start: function () {
-            this.$target.carousel({interval: false});
+            this.$target.carousel({interval: 10000});
         },
     });
 
@@ -82,7 +83,7 @@
             var self = this;
             var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
 
-            if (speed == 1) {
+            if (speed === 1 || this.$target.css("background-image") === "none") {
                 this.$target.css("background-attachment", "fixed").css("background-position", "0px 0px");
                 return;
             } else {
@@ -101,10 +102,11 @@
                 } else {
                     offset = - self.$target.offset().top * speed;
                 }
-                self.$target.attr("data-scroll-background-offset", offset);
+                self.$target.attr("data-scroll-background-offset", offset > 0 ? 0 : offset);
                 $(window).scroll();
             };
             img.src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
+            $(window).scroll();
         }
     });
 

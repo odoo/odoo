@@ -234,6 +234,7 @@ class res_users(osv.Model):
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
+        context = dict(context or {}, no_reset_password=True)
         return self.copy(cr, uid, template_user_id, values, context=context)
 
     def reset_password(self, cr, uid, login, context=None):
@@ -260,10 +261,9 @@ class res_users(osv.Model):
         # send email to users with their signup url
         template = False
         if context.get('create_user'):
-            try:
-                template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'set_password_email')
-            except ValueError:
-                pass
+            template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'set_password_email')
+            if not template.exists():
+                template = False
         if not bool(template):
             template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
         assert template._name == 'email.template'

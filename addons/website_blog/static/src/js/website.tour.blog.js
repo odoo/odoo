@@ -3,8 +3,6 @@
 
     var website = openerp.website;
 
-    var render = website.tour.render;
-
     website.EditorBar.include({
         start: function () {
             this.registerTour(new website.BlogTour(this));
@@ -13,112 +11,156 @@
     });
 
     website.BlogTour = website.Tour.extend({
-        id: 'blog-tutorial',
+        id: 'blog',
         name: "Create a blog post",
-        startPath: '/blog/cat/1/',
         init: function (editor) {
             var self = this;
             self.steps = [
-            {
-                    stepId: 'welcome-blog',
-                    orphan: true,
-                    backdrop: true,
-                    title: "Blog",
-                    content: "We will show how to create a new blog post.",
-                    template: render('website.tour_popover', { next: "Start Tutorial", end: "Skip It" }),
+                {
+                    stepId:    'welcome-blog',
+                    title:     "New Blog Post",
+                    content:   "Let's go through the first steps to write beautiful blog posts.",
+                    template:  self.popover({ next: "Start Tutorial", end: "Skip" }),
+                    backdrop:  true,
                 },
                 {
-                    stepId: 'content-menu',
-                    element: '#content-menu-button',
+                    stepId:    'content-menu',
+                    element:   '#content-menu-button',
                     placement: 'left',
-                    reflex: true,
-                    title: "Edit the content",
-                    content: "Click here to add content to your site.",
-                    template: render('website.tour_popover'),
+                    title:     "Add Content",
+                    content:   "Create new pages, blogs, menu items and products through the <em>'Content'</em> menu.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
                 },
                 {
-                    stepId: 'new-post-entry',
-                    element: 'a[data-action=new_blog_post]',
+                    stepId:    'new-post-entry',
+                    element:   'a[data-action=new_blog_post]',
                     placement: 'left',
-                    title: "New blog post",
-                    content: "Click here to create a blog post.",
-                    template: render('website.tour_popover'),
-                    onShow: function () {
-                        $(document).one('shown.bs.modal', function () {
-                            $('.modal button.btn-primary').click(function () {
-                                self.movetoStep('post-page');
-                            });
-                            self.movetoStep('choose-category');
-                        });
+                    title:     "New Blog Post",
+                    content:   "Select this menu item to create a new blog post.",
+                    template:  self.popover({ fixed: true }),
+                    trigger: {
+                        modal: {
+                            stopOnClose: true,
+                            afterSubmit: 'post-page',
+                        },
                     },
                 },
                 {
-                    stepId: 'choose-category',
-                    element: '.modal select',
+                    stepId:    'choose-category',
+                    element:   '.modal select',
                     placement: 'right',
-                    title: "Choose the post category",
-                    content: "Select the 'News' category and click 'Continue'.",
-                    template: render('website.tour_popover'),
+                    title:     "Which Blog?",
+                    content:   "Blog posts are organized in multiple categories (news, job offers, events, etc). Select <em>News</em> and click <em>Continue</em>.",
+                    trigger: {
+                        id: 'change',
+                    },
                 },
                 {
-                    stepId: 'post-page',
-                    orphan: true,
-                    backdrop: true,
-                    title: "New blog post created",
-                    content: "You just created a new blog post. We are now going to edit it.",
-                    template: render('website.tour_popover', { next: "OK" }),
+                    stepId:    'continue-category',
+                    element:   '.modal button.btn-primary',
+                    placement: 'right',
+                    title:     "Create Blog Post",
+                    content:   "Click <em>Continue</em> to create the blog post.",
+                    trigger:   'click',
                 },
                 {
-                    stepId: 'post-title',
-                    element: 'h1[data-oe-expression="blog_post.name"]',
+                    stepId:    'post-page',
+                    title:     "Blog Post Created",
+                    content:   "This is your new blog post. We will edit your pages inline. What You See Is What You Get. No need for a complex backend.",
+                    template:  self.popover({ next: "Continue" }),
+                },
+                {
+                    stepId:    'post-title',
+                    element:   'h1[data-oe-expression="blog_post.name"]',
                     placement: 'top',
-                    title: "Pick a title",
-                    content: "Choose a catchy title for your blog post.",
-                    template: render('website.tour_popover', { next: "OK" }),
+                    title:     "Create a Title",
+                    content:   "Click on this area and set a catchy title.",
+                    template:  self.popover({ next: "OK" }),
                 },
                 {
-                    stepId: 'add-block',
-                    element: 'button[data-action=snippet]',
+                    stepId:    'add-image-text',
+                    element:   'button[data-action=snippet]',
                     placement: 'bottom',
-                    title: "Layout your blog post",
-                    content: "Insert blocks like text-image to layout the body of your blog post.",
-                    template: render('website.tour_popover'),
-                    onShow: function () {
-                        $('button[data-action=snippet]').click(function () {
-                            self.movetoStep('drag-image-text');
-                        });
+                    title:     "Layout Your Blog Post",
+                    content:   "Use well designed building blocks to structure the content of your blog. Click 'Insert Blocks' to add new content.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'drag-image-text',
+                    snippet:   'image-text',
+                    placement: 'bottom',
+                    title:     "Drag & Drop a Block",
+                    content:   "Drag the <em>'Image-Text'</em> block and drop it in your page.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'drag',
+                },
+                {
+                    stepId:    'add-text-block',
+                    element:   'button[data-action=snippet]',
+                    placement: 'bottom',
+                    title:     "Add Another Block",
+                    content:   "Let's add another block to your post.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'drag-text-block',
+                    snippet:   'text-block',
+                    placement: 'bottom',
+                    title:     "Drag & Drop a block",
+                    content:   "Drag the <em>'Text Block'</em> block and drop it below the image block.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'drag',
+                },
+                {
+                    stepId:    'activate-text-block-title',
+                    element:   '#wrap [data-snippet-id=text-block] .text-center[data-snippet-id=colmd]',
+                    placement: 'top',
+                    title:     "Edit an Area",
+                    content:   "Select any area of the page to modify it. Click on this subtitle.",
+                    trigger: {
+                        id: 'snippet-activated',
                     }
                 },
                 {
-                    stepId: 'drag-image-text',
-                    element: '#website-top-navbar [data-snippet-id=image-text].ui-draggable',
-                    placement: 'bottom',
-                    title: "Drag & Drop a block",
-                    content: "Drag the 'Image Text' block and drop it in your page.",
-                    template: render('website.tour_popover'),
-                    onShow: function () {
-                        var $body = $(document.body);
-                        function beginDrag () {
-                            $('.popover.tour').remove();
-                            function goToNextStep () {
-                                $('#snippets').toggle();
-                                self.stop();
-                                $body.off('mouseup', goToNextStep);
-                            }
-                            $body.off('mousedown', beginDrag);
-                            $body.on('mouseup', goToNextStep);
-                        }
-                        $body.on('mousedown', beginDrag);
-                    },
+                    stepId:    'remove-text-block-title',
+                    element:   '.oe_active .oe_snippet_remove',
+                    placement: 'top',
+                    title:     "Delete the Title",
+                    content:   "From this toolbar you can move, duplicate or delete the selected zone. Click on the garbage can image to delete the title.",
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'save-changes',
+                    element:   'button[data-action=save]',
+                    placement: 'right',
+                    title:     "Save Your Blog",
+                    content:   "Click the <em>Save</em> button to record changes on the page.",
+                    template:  self.popover({ fixed: true }),
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'publish-post',
+                    element:   'button.btn-danger.js_publish_btn',
+                    placement: 'top',
+                    title:     "Publish Your Post",
+                    content:   "Your blog post is not yet published. You can update this draft version and publish it once you are ready.",
+                    trigger:   'click',
+                },
+                {
+                    stepId:    'end-tutorial',
+                    title:     "Thanks!",
+                    content:   "This tutorial is finished. To discover more features, improve the content of this page and try the <em>Promote</em> button in the top right menu.",
+                    template:  self.popover({ end: "Close Tutorial" }),
+                    backdrop:  true,
                 },
             ];
             return this._super();
         },
-        continueTour: function () {
-            return this.isCurrentStep('post-page') && !this.tour.ended();
-        },
-        isTriggerUrl: function () {
-            return (this.continueTour() && this.testUrl(/^\/blog\/[0-9]+\/\?enable_editor=1/)) || this._super();
+        trigger: function () {
+            return (this.resume() && this.testUrl(/^\/blogpost\/[0-9]+\//)) || this._super();
         },
     });
 

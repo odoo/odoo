@@ -47,7 +47,10 @@ invoice and send propositions for membership renewal.
         'report/report_membership_view.xml',
         'process/membership_process.xml',
     ],
-    'demo': ['membership_demo.xml'],
+    'demo': [
+        'membership_demo.xml',
+        'membership_demo.yml'
+    ],
     'test': ['test/test_membership.yml'],
     'installable': True,
     'auto_install': False,

@@ -80,13 +80,13 @@ class CrawlSuite(unittest2.TestSuite):
             assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
     def _wrapped_run(self, result, debug=False):
-        paths = collections.deque(['/'])
+        paths = [URL('/'), URL('/sitemap')]
         seen = set(paths)
 
         while paths:
-            url = paths.popleft()
-            r = self._request(url)
-            cases.URLCase(self.user, url, r).run(result)
+            url = paths.pop(0)
+            r = self._request(url.url)
+            url.to_case(self.user, r).run(result)
 
             if r.info().gettype() != 'text/html':
                 continue
@@ -110,7 +110,15 @@ class CrawlSuite(unittest2.TestSuite):
                     (parts.scheme and parts.scheme not in ('http', 'https')):
                     continue
 
-                paths.append(href)
+                paths.append(URL(href, url.url))
+
+class URL(object):
+    def __init__(self, url, source=None):
+        self.url = url
+        self.source = source
+
+    def to_case(self, user, result):
+        return cases.URLCase(user, self.url, self.source, result)
 
 def load_tests(loader, base, _):
     base.addTest(CrawlSuite())

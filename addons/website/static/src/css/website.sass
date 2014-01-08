@@ -127,7 +127,7 @@ html,body, #wrapwrap
     display: table
     width: 100%
 
-header, #wrap, footer
+header, main, footer
     display: table-row
 
 footer
@@ -144,6 +144,9 @@ footer
 .col-md-12
     float: left
     width: 100%
+
+.row
+    min-height: 32px
 
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 
@@ -202,10 +205,12 @@ ul.nav-stacked > li > a
     text-transform: uppercase
 
 /* ---- PUBLISH ---- */
-.css_unpublish, .css_publish
-    display: none
-.css_published .css_unpublish, .css_unpublished .css_publish
-    display: block
+.css_published
+    .btn-danger, .css_publish
+        display: none
+.css_unpublished
+    .btn-success, .css_unpublish
+        display: none
 
 [data-publish='off']
     +opacity(0.5)
@@ -250,27 +255,23 @@ ul.nav-stacked > li > a
     &.oe_big .carousel-inner
         height: 450px
     .carousel-caption
+        left: auto
+        right: auto
+        bottom: 10%
+        text-align: left
+        padding: 20px
+        background: rgba(0, 0, 0, 0.4)
         h1, h2, h3
             margin-top: 10px
             margin-bottom: 10px
     .carousel-image
-        right: 10%
+        right: 50%
         left: 50%
         top: 5%
         bottom: 5%
         position: absolute
-        text-align: center
-        img
-            height: 100%
-            margin: 0 auto
-    .item.text_image
-        .carousel-caption
-            left: auto
-            right: auto
-            bottom: 10%
-            text-align: left
-            padding: 20px
-            background: rgba(0, 0, 0, 0.4)
+        max-height: 90%
+        margin: 0 auto
     .item.text_only
         .carousel-image
             display: none !important
@@ -278,17 +279,13 @@ ul.nav-stacked > li > a
             left: 10%
             right: 10%
             top: 10%
+            bottom: auto
             text-align: center
+            background: transparent
     .item.image_text
         .carousel-caption
-            left: auto
-            text-align: left
             right: 10%
-            bottom: 10%
-            padding: 20px
-            background: rgba(0, 0, 0, 0.4)
         .carousel-image
-            right: 50%
             left: 10%
     .carousel-control
         cursor: pointer
@@ -304,9 +301,7 @@ ul.nav-stacked > li > a
 
 /* Parallax Theme */
 
-.parallax_quote
-    background: url('/website/static/src/img/parallax/quote.png') center center no-repeat fixed
-    background-size: contain
+div.carousel[data-snippet-id="slider"]
     .carousel-indicators
         li
             border: 1px solid grey
@@ -316,29 +311,101 @@ ul.nav-stacked > li > a
 .parallax
     position: relative
     background-size: 100%
+    display: table
+    width: 100%
+    min-height: 100px
     &.oe_small
-        height: 200px
+        min-height: 200px
     &.oe_medium
-        height: 300px
+        min-height: 300px
     &.oe_big
-        height: 450px
+        min-height: 450px
+    > div
+        display: table-cell
+        vertical-align: middle
+        padding: 32px 0
 
 /* Background */
  
 .oe_dark
     background: #eff8f8
     background: rgba(100, 200, 200, 0.14)
-    background-image: none !important
     +box-shadow(0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset)
 .oe_black
     background-color: rgba(0, 0, 0, 0.9)
-    background-image: none !important
 .oe_green
     background-color: rgba(0, 128, 0, 0.8)
-    background-image: none !important
 .oe_red
     background-color: rgba(255, 0, 0, 0.8)
-    background-image: none !important
-.oe_custom_bg
-    height: 100%
+.oe_img_bg
     background-size: 100%
+
+.texttop
+    vertical-align: top
+
+table.well tr
+    th
+        text-align: right
+        padding-right: 10px
+    td
+        padding-right: 5px
+
+.logo-img
+    width: 220px
+
+.oe_demo
+    position: relative
+    img
+        width: 100%
+    div
+        position: absolute
+        left: 0
+        background-color: rgba(0,0,0,0.4)
+        opacity: 0.85
+        bottom: 0px
+        width: 100%
+        padding: 7px
+        color: white
+        font-weight: bold
+        a
+            color: white
+
+address
+    .fa.fa-mobile-phone
+        margin: 0 3px 0 2px
+    .fa.fa-file-text-o
+        margin-right: 1px
+
+span[data-oe-type="monetary"]
+    white-space: nowrap
+
+.oe_template_fallback
+    @include column-count(3)
+
+// ---- Callouts from bootstrap doc ---- {{{
+.bs-callout
+    margin: 20px 0
+    padding: 20px
+    border-left: 3px solid #eee
+.bs-callout h4
+    margin-top: 0
+    margin-bottom: 5px
+.bs-callout p:last-child
+    margin-bottom: 0
+
+.bs-callout-danger
+    background-color: #fdf7f7
+    border-color: #eed3d7
+.bs-callout-danger h4
+    color: #b94a48
+.bs-callout-warning
+    background-color: #faf8f0
+    border-color: #faebcc
+.bs-callout-warning h4
+    color: #8a6d3b
+.bs-callout-info
+    background-color: #f4f8fa
+    border-color: #bce8f1
+.bs-callout-info h4
+    color: #34789a
+// }}}

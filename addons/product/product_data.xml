@@ -149,6 +149,7 @@ parameter) will see those record just disappear.
         <record id="item0" model="product.pricelist.item">
             <field name="price_version_id" ref="ver0"/>
             <field name="base" ref="list_price"/>
+            <field name="sequence">1000</field>
             <field name="name">Default Public Pricelist Line</field>
         </record>
 
@@ -184,7 +185,7 @@ parameter) will see those record just disappear.
         <record forcecreate="True" id="decimal_product_uos" model="decimal.precision">
             <field name="name">Product UoS</field>
             <field name="digits" eval="3"/>
-        </record>        
+        </record>
 
         <!--
         Product

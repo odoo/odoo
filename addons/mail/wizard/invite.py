@@ -60,6 +60,10 @@ class invite_wizard(osv.osv_memory):
             help="If checked, the partners will receive an email warning they have been "
                     "added in the document's followers."),
     }
+    
+    _defaults = {
+        'send_mail' : True,
+    }
 
     def add_followers(self, cr, uid, ids, context=None):
         for wizard in self.browse(cr, uid, ids, context=context):

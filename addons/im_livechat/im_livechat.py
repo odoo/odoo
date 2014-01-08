@@ -211,5 +211,5 @@ class im_session(osv.osv):
     _inherit = 'im.session'
 
     _columns = {
-        'channel_id': fields.many2one("im.user", "Channel"),
+        'channel_id': fields.many2one("im_livechat.channel", "Channel"),
     }

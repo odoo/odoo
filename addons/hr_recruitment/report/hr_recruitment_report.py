@@ -90,7 +90,7 @@ class hr_recruitment_report(osv.Model):
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
                      (sum(salary_expected)/count(*)) as salary_exp_avg,
-                     extract('epoch' from (s.date_closed-s.create_date))/(3600*24) as delay_close,
+                     extract('epoch' from (s.write_date-s.create_date))/(3600*24) as delay_close,
                      count(*) as nbr
                  from hr_applicant s
                  group by
@@ -101,6 +101,7 @@ class hr_recruitment_report(osv.Model):
                      date_trunc('day',s.date_closed),
                      s.date_open,
                      s.create_date,
+                     s.write_date,
                      s.date_closed,
                      s.date_last_stage_update,
                      s.partner_id,

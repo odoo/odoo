@@ -23,7 +23,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.addons.hr_holidays.tests.common import TestHrHolidaysBase
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning, AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
@@ -46,7 +46,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                              'hr_holidays: wrong type days computation')
 
         # HrUser creates some holiday statuses -> crash because only HrManagers should do this
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.holidays_status_dummy = self.hr_holidays_status.create(cr, self.user_hruser_id, {
                 'name': 'UserCheats',
                 'limit': True,

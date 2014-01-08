@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="website.tour_popover">
-        <div class="popover tour">
+        <div t-attf-class="#{ fixed ? 'popover tour fixed' : 'popover tour' }">
             <div class="arrow"></div>
             <h3 class="popover-title"></h3>
             <div class="popover-content"></div>
