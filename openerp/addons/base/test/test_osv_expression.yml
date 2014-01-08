@@ -550,3 +550,13 @@
         not_be = self.search(cr, uid, [('name', '!=', 'Belgique')], context=ctx)
 
         assert be_id not in not_be, "Search match failed"
+
+        # indirect search via m2o
+        Partners = self.pool.get('res.partner')
+        agrolait = Partners.search(cr, uid, [('name', '=', 'Agrolait')])[0]
+
+        not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgium')])
+        assert agrolait not in not_be, "Search match failed (m2o)"
+
+        not_be = Partners.search(cr, uid, [('country_id', '!=', 'Belgique')], context=ctx)
+        assert agrolait not in not_be, "Search match failed (m2o)"

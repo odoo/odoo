@@ -624,9 +624,9 @@ class expression(object):
                         right = '%%%s%%' % right
 
                     inselect_operator = 'inselect'
-                    if operator in NEGATIVE_TERM_OPERATORS:
+                    if sql_operator in NEGATIVE_TERM_OPERATORS:
                         # negate operator (fix lp:1071710)
-                        operator = operator[4:] if operator[:3] == 'not' else '='
+                        sql_operator = sql_operator[4:] if sql_operator[:3] == 'not' else '='
                         inselect_operator = 'not inselect'
 
                     subselect = '( SELECT res_id'          \
