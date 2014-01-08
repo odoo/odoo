@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-01-02 07:37+0000\n"
+"PO-Revision-Date: 2014-01-08 05:30+0000\n"
 "Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-03 06:24+0000\n"
+"X-Launchpad-Export-Date: 2014-01-08 05:40+0000\n"
 "X-Generator: Launchpad (build 16877)\n"
 
 #. module: stock
@@ -38,7 +38,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
 msgid "Stock move Split lines"
-msgstr ""
+msgstr "庫存調動拆分細項"
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -145,7 +145,7 @@ msgstr "內部參考編號，當不同於製造商序號時"
 #: code:addons/stock/wizard/stock_fill_inventory.py:59
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
-msgstr ""
+msgstr "您不能在一個以上的庫存盤點執行這操作。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:91
@@ -227,7 +227,7 @@ msgstr "無法分派所有批次至此次調動！"
 msgid ""
 "Optional address where goods are to be delivered, specifically used for "
 "allotment"
-msgstr ""
+msgstr "選擇性使用的送貨地址，專門用於配發"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
@@ -327,7 +327,7 @@ msgstr "新增包裹"
 msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
-msgstr ""
+msgstr "如果勾選此項，則所有產品數量將設為零以確實輔助實地盤點的完成"
 
 #. module: stock
 #: view:product.product:0
@@ -337,7 +337,7 @@ msgstr "預測："
 #. module: stock
 #: view:stock.partial.move:0
 msgid "_Validate"
-msgstr ""
+msgstr "驗證"
 
 #. module: stock
 #: help:stock.picking,message_summary:0
@@ -433,12 +433,12 @@ msgstr "貿易條件"
 #. module: stock
 #: field:stock.tracking,move_ids:0
 msgid "Moves for this pack"
-msgstr ""
+msgstr "該包裹的調動"
 
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Incoming Shipments Available"
-msgstr ""
+msgstr "可用的進貨貨物"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -545,7 +545,7 @@ msgstr "庫存和預期變動"
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
+msgstr "在對產品啟用即時庫存估價時，本科目記錄產品的當前價值。"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_lot:0
@@ -583,7 +583,7 @@ msgstr "實際盤點草稿"
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
 "stock moves that have already been processed (except by the Administrator)."
-msgstr ""
+msgstr "已經處理的調動，其數量、度量單位、產品和庫位不能修改（除管理員外）。"
 
 #. module: stock
 #: help:report.stock.move,type:0
@@ -607,6 +607,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊建立內部調動請求。 \n"
+"              </p><p>\n"
+"                大部分的作業將由OpeERP根據您預先設定好的物流規則自動準備，\n"
+"                但是您仍然可以手動記錄庫存調動。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
@@ -617,7 +624,7 @@ msgstr "項目標籤"
 #: code:addons/stock/stock.py:1356
 #, python-format
 msgid "Back order <em>%s</em> has been <b>created</b>."
-msgstr ""
+msgstr "延期交貨清單<em>%s</em><b>已建立</b>。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
@@ -640,7 +647,7 @@ msgstr "依物流序號的庫存報表"
 msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "going to a Customer Location"
-msgstr ""
+msgstr "強制給所有將入客戶倉位的這個產品的調動指定一個序號"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -692,7 +699,7 @@ msgstr "序號數量 %d (%s) 多於可用數量 (%d)！"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Order(Origin)"
-msgstr ""
+msgstr "單據(源頭)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
@@ -758,7 +765,7 @@ msgstr "已記錄盤點"
 #. module: stock
 #: field:stock.move.split.lines,wizard_exist_id:0
 msgid "Parent Wizard (for existing lines)"
-msgstr ""
+msgstr "上層精靈(針對現有細項)"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -824,7 +831,7 @@ msgstr "六月"
 msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "coming from a Supplier Location"
-msgstr ""
+msgstr "強制指定一個序號給所有來自供應商倉位的調動的該產品"
 
 #. module: stock
 #: help:stock.config.settings,group_uos:0
@@ -868,7 +875,7 @@ msgstr "盤點明細"
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
+msgstr "在執行即時庫存估價時，此會計日記帳簿將自動登記處理庫存調動的會計分錄。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2252
@@ -1113,12 +1120,12 @@ msgstr "已準備收貨"
 #. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
-msgstr ""
+msgstr "執行準備時間(天)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
 msgid "Partial Move Processing Wizard"
-msgstr ""
+msgstr "部分調動處理精靈"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
@@ -1149,14 +1156,14 @@ msgstr "產品開立發票的單位與銷售訂單上度量單位不同。"
 #: help:stock.location,active:0
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
-msgstr ""
+msgstr "取消勾選「啟用」方框，您可以隱藏倉位而不必刪除倉位。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:44
 #, python-format
 msgid ""
 "Please select multiple physical inventories to merge in the list view."
-msgstr ""
+msgstr "請在列表中選擇多個實地盤點結果進行合併"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:109
@@ -1164,13 +1171,13 @@ msgstr ""
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)!"
-msgstr ""
+msgstr "沒有產品可進行退貨（只有完成狀態和未完全退貨的項目能退貨）！"
 
 #. module: stock
 #: view:stock.picking:0
 #: view:stock.picking.in:0
 msgid "Back Orders"
-msgstr ""
+msgstr "延期交貨單"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -1251,7 +1258,7 @@ msgstr ""
 #: field:stock.partial.move.line,update_cost:0
 #: field:stock.partial.picking.line,update_cost:0
 msgid "Need cost update"
-msgstr ""
+msgstr "需要更新成本"
 
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
@@ -1263,7 +1270,7 @@ msgstr "作者"
 #, python-format
 msgid ""
 "You are moving %.2f %s but only %.2f %s available for this serial number."
-msgstr ""
+msgstr "你正在移動 %.2f單位%s，但此序號只有%.2f單位%s可用。"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1310,14 +1317,14 @@ msgstr "請在倉位中指定公司"
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that are Available (Ready to process)"
-msgstr ""
+msgstr "可用的庫存調動(已可處理)"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_packaging:0
 msgid ""
 "Allows you to create and manage your packaging dimensions and types you want "
 "to be maintained in your system."
-msgstr ""
+msgstr "允許您建立和管理您要在系統內使用的包裝尺寸和類型。"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0

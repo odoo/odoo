@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-01-07 16:56+0000\n"
 "PO-Revision-Date: 2013-11-24 21:03+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: OpenERP Turkish Translation <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-25 06:00+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-01-08 05:39+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 "Language: tr\n"
 
 #. module: crm
@@ -33,7 +33,7 @@ msgstr ""
 "oluşturmanızı sağlar."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:898
+#: code:addons/crm/crm_lead.py:897
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -160,7 +160,7 @@ msgid "Rule Name"
 msgstr "Kural Adı"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_phonecall.py:282
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr "Her seferinde yalnızca bir telefon çağrısı dönüştürülebilir."
@@ -197,9 +197,10 @@ msgstr ""
 "görünümlerine eklenmek üzere doğrudan html formatındadır."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:640
-#: code:addons/crm/crm_lead.py:761
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_lead.py:637
+#: code:addons/crm/crm_lead.py:758
+#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -226,7 +227,7 @@ msgid "Schedule Other Call"
 msgstr "Başka bir Çağrı Planla"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:209
+#: code:addons/crm/crm_phonecall.py:211
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -261,11 +262,6 @@ msgstr "Ölçüt"
 #: view:crm.lead:0
 msgid "Assigned to My Team(s)"
 msgstr "Takım(lar)ıma Atanmış"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Excluded Answers :"
-msgstr "İçerilmeyen Yanıtlar:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -309,7 +305,7 @@ msgid "Prospect Partner"
 msgstr "Olası İş Ortağı"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1018
 #, python-format
 msgid "No Subject"
 msgstr "Konu Yok"
@@ -437,7 +433,6 @@ msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
 
 #. module: crm
-#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -459,12 +454,6 @@ msgstr "Güncelleme Tarihi"
 #: field:crm.case.section,user_id:0
 msgid "Team Leader"
 msgstr "Takım Lideri"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:1052
-#, python-format
-msgid "%s a call for %s.%s"
-msgstr "%s.%s için yapılan %s çağrısı"
 
 #. module: crm
 #: help:crm.case.stage,probability:0
@@ -491,7 +480,7 @@ msgid "#Opportunities"
 msgstr "Fırsat Sayısı"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:637
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -582,7 +571,7 @@ msgid "Planned Revenue"
 msgstr "Planlanan Gelir"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:988
+#: code:addons/crm/crm_lead.py:1004
 #, python-format
 msgid "Customer Email"
 msgstr "Müşteri Epostası"
@@ -600,9 +589,9 @@ msgid "October"
 msgstr "Ekim"
 
 #. module: crm
-#: view:crm.segmentation:0
-msgid "Included Answers :"
-msgstr "İçerilen Yanıtlar :"
+#: view:crm.phonecall:0
+msgid "Reset to Todo"
+msgstr "Yapılacakları Sıfırla"
 
 #. module: crm
 #: help:crm.phonecall,state:0
@@ -651,7 +640,7 @@ msgstr ""
 "+object.partner_id.name or '']]"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:762
+#: code:addons/crm/crm_lead.py:759
 #, python-format
 msgid ""
 "No customer name defined. Please fill one of the following fields: Company "
@@ -659,11 +648,6 @@ msgid ""
 msgstr ""
 "Hiç müşteri adı tanımlanmamış. Lütfen aşağıdaki alanlardan birini doldurun: "
 "Şirket Adı, Kişi Adı veya Eposta (\"Adı <eposta@adres>\")"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Profiling Options"
-msgstr "Profilleme Opsiyonları"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -751,6 +735,12 @@ msgid "Partner Segmentation"
 msgstr "İş Ortağı Bölümlendirme"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1064
+#, python-format
+msgid "Logged a call for %(date)s. %(description)s"
+msgstr ""
+
+#. module: crm
 #: field:crm.lead,company_currency:0
 msgid "Currency"
 msgstr "Para Birimi"
@@ -791,7 +781,7 @@ msgid "Statistics Dashboard"
 msgstr "İstatistik Kontrol Paneli"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:878
+#: code:addons/crm/crm_lead.py:877
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -856,7 +846,7 @@ msgid "Exclusive"
 msgstr "Ayrıcalıklı"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:600
+#: code:addons/crm/crm_lead.py:597
 #, python-format
 msgid "From %s : %s"
 msgstr "%s den: %s"
@@ -987,12 +977,6 @@ msgid "Send Email"
 msgstr "Eposta Gönder"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
-#, python-format
-msgid "Warning !"
-msgstr "Uyarı !"
-
-#. module: crm
 #: help:crm.case.section,message_unread:0
 #: help:crm.lead,message_unread:0
 #: help:crm.phonecall,message_unread:0
@@ -1041,7 +1025,7 @@ msgid "Next Action"
 msgstr "Sonraki Eylem"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:780
+#: code:addons/crm/crm_lead.py:777
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr "<b>İş Ortağını</b> buna ayarla <em>%s</em>."
@@ -1140,7 +1124,7 @@ msgstr ""
 "kullanıcıların toplu postalama uygularken adayları süzmelerini sağlar."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:715
+#: code:addons/crm/crm_lead.py:712
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr "Aday <b>Fırsata Dönüştü</b>"
@@ -1367,7 +1351,7 @@ msgid "Days to Close"
 msgstr "Kapanış Günleri"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1057
+#: code:addons/crm/crm_lead.py:1075
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1428,7 +1412,7 @@ msgid "Sales Marketing Department"
 msgstr "Satış Pazarlama Bölümü"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:585
+#: code:addons/crm/crm_lead.py:582
 #, python-format
 msgid "Merged lead"
 msgstr "Birleştirilen aday"
@@ -1450,12 +1434,7 @@ msgstr ""
 "Atanmış Telefon Çağrıları"
 
 #. module: crm
-#: view:crm.segmentation:0
-msgid "Segmentation Description"
-msgstr "Bölümleme Açıklaması"
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:581
+#: code:addons/crm/crm_lead.py:578
 #, python-format
 msgid "Merged opportunities"
 msgstr "Birleştirilmiş fırsatlar"
@@ -1750,7 +1729,7 @@ msgid "Describe the lead..."
 msgstr "Vaka açıklaması..."
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:290
+#: code:addons/crm/crm_phonecall.py:292
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "İş Ortağı <b>oluşturuldu</b>."
@@ -1973,7 +1952,7 @@ msgid "Support Department"
 msgstr "Destek Bölümü"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1060
+#: code:addons/crm/crm_lead.py:1078
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Toplantı planlama saati '%s'<br> Konu: %s <br> Süre: %s saat"
@@ -2032,7 +2011,7 @@ msgid "Leads"
 msgstr "Adaylar"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:579
+#: code:addons/crm/crm_lead.py:576
 #, python-format
 msgid "Merged leads"
 msgstr "Birleştirilen adaylar"
@@ -2990,7 +2969,7 @@ msgid "Stage of case"
 msgstr "Vaka aşaması"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:585
+#: code:addons/crm/crm_lead.py:582
 #, python-format
 msgid "Merged opportunity"
 msgstr "Birleştirilen fırsat"
@@ -3054,6 +3033,7 @@ msgstr "Pozisyonu"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
+#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Açıklama"
@@ -3141,9 +3121,10 @@ msgid "Referred By"
 msgstr "Öneren"
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "Reset to Todo"
-msgstr "Yapılacakları Sıfırla"
+#: code:addons/crm/crm_lead.py:1066
+#, python-format
+msgid "Scheduled a call for %(date)s. %(description)s"
+msgstr ""
 
 #. module: crm
 #: field:crm.case.section,working_hours:0
@@ -3151,7 +3132,7 @@ msgid "Working Hours"
 msgstr "Çalışma Saatleri"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:986
+#: code:addons/crm/crm_lead.py:1002
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3179,7 +3160,7 @@ msgid "Lost"
 msgstr "Kayıp"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
 msgstr "Kapalı/İptal edilen adaylar fırsatlara dönüştürülemez."
@@ -3216,11 +3197,6 @@ msgstr "Nisan"
 #: field:crm.case.resource.type,name:0
 msgid "Campaign Name"
 msgstr "Kampanya Adı"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Profiling"
-msgstr "Profilleme"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
@@ -3297,6 +3273,13 @@ msgstr ""
 "              </p>\n"
 "            "
 
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Uyarı !"
+
+#~ msgid "Included Answers :"
+#~ msgstr "İçerilen Yanıtlar :"
+
 #~ msgid "New Leads"
 #~ msgstr "Yeni Adaylar"
 
@@ -3322,12 +3305,21 @@ msgstr ""
 #~ "Eğer çekildi işaretlendiyse, bu kişi eposta almayı reddediyor ya da kampanya "
 #~ "üyeliğini iptal etmiş."
 
+#~ msgid "Excluded Answers :"
+#~ msgstr "İçerilmeyen Yanıtlar:"
+
 #, python-format
 #~ msgid "<b>%s a call</b> for the <em>%s</em>."
 #~ msgstr "<b>%s bir çağrı</b> bunun için <em>%s</em>."
 
 #~ msgid "Leads that are assigned to one of the sale teams I manage, or to me"
 #~ msgstr "Yönettiğim satış takımlarından birine ya da bana atanmış adaylar"
+
+#~ msgid "Profiling Options"
+#~ msgstr "Profilleme Opsiyonları"
+
+#~ msgid "Segmentation Description"
+#~ msgstr "Bölümleme Açıklaması"
 
 #~ msgid "Send Mail"
 #~ msgstr "Eposta Gönder"
@@ -3337,6 +3329,9 @@ msgstr ""
 
 #~ msgid "Create date"
 #~ msgstr "Tarihi oluştur"
+
+#~ msgid "Profiling"
+#~ msgstr "Profilleme"
 
 #~ msgid ""
 #~ "Opportunities that are assigned to either me or one of the sale teams I "
