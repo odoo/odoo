@@ -2338,42 +2338,44 @@ instance.web.Legend = instance.web.Widget.extend({
         this.dataset = dataset;
         this.options = options; 
     },
+    prepare_kanban_state_legend: function(){
+    	return [{ 'name': 'normal', 'legend_name': ' Normal', 'legend': '<img src="/web/static/src/img/icons/gtk-normal.png"/>' },
+                { 'name': 'blocked', 'legend_name': ' Blocked', 'legend': '<img src="/web/static/src/img/icons/gtk-no.png"/>' },
+                { 'name': 'done', 'legend_name': ' Done', 'legend': '<img src="/web/static/src/img/icons/gtk-yes.png"/>' }]
+    },
+    prepare_priority_legend: function(){
+        var data = [];
+        var selection = this.parent.field.selection || [];
+        _.map(selection, function(res){  
+            value = {
+                'name': res[0],
+                'legend_name': res[1]
+            }
+            if (res[0] == '0'){
+                value['legend']= '<img src="/web/static/src/img/icons/star-off.png"/>';
+                value['legend_name'] = 'Set the Priority';
+            }else{
+                value['legend']= '<img src="/web/static/src/img/icons/star-on.png"/>';
+            }
+            data.push(value)
+        });
+        return data;
+    },
     prepare_data: function() {
     	var self =this;
-        var def = $.Deferred();
         if (this.parent.name == 'kanban_state'){
-            var datas = [{ 'name': 'normal', 'legend_name': ' Normal', 'legend': '<img src="/web/static/src/img/icons/gtk-normal.png"/>' },
-                         { 'name': 'blocked', 'legend_name': ' Blocked', 'legend': '<img src="/web/static/src/img/icons/gtk-no.png"/>' },
-                         { 'name': 'done', 'legend_name': ' Done', 'legend': '<img src="/web/static/src/img/icons/gtk-yes.png"/>' }]
-            return  def.resolve(datas);
+            return self.prepare_kanban_state_legend();
         }
         if (this.parent.name == 'priority'){
-            var data = [];
-            var selection = this.parent.field.selection || [];
-            for (var index in selection) {
-                value = {
-                    'name': selection[index][0],
-                    'legend_name': selection[index][1]
-                }
-                if (selection[index][0] == '0'){
-                    value['legend']= '<img src="/web/static/src/img/icons/star-off.png"/>';
-                    value['legend_name'] = 'Set the Priority';
-                }else{
-                    value['legend']= '<img src="/web/static/src/img/icons/star-on.png"/>';
-                }
-                data.push(value)
-            }
-            return  def.resolve(data);
+            return self.prepare_priority_legend();
         }
     },
     render_value: function(record_id, data) {
         var self = this;
-        var content;
         self.record_id = record_id;
-        this.prepare_data().then(function (res){
-            data['res'] = res;
-            content = QWeb.render("Legend."+ self.parent.name, data);
-        });
+        var legend = this.prepare_data();
+        data['legends'] = legend;
+        var content = QWeb.render("Legend."+ self.parent.name, data);
         if (data.view_mode === 'form')
             this.parent.$el.html(content);
         else
