@@ -10,14 +10,14 @@ from openerp import tools
 def _exc_info_to_string(err, test):
     return err
 
-class LineReader:
+class Stream:
     def __init__(self, file_descriptor):
         self._file_descriptor = file_descriptor
         self._buffer = ''
 
     def fileno(self):
         return self._file_descriptor
-
+    # TODO Rewrite & fix
     def readlines(self):
         data = os.read(self._file_descriptor, 4096)
         if not data: # EOF
@@ -82,7 +82,7 @@ class WebsiteUiSuite(unittest.TestSuite):
             json.dumps(self._options)
         ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        readable = [LineReader(phantom.stdout.fileno())]
+        readable = [Stream(phantom.stdout.fileno())]
 
         try:
             output = []
