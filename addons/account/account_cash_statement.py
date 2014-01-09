@@ -159,6 +159,10 @@ class account_cash_statement(osv.osv):
                 context=context
         )
 
+        opening_details_ids = self._get_cash_open_box_lines(cr, uid, journal_id, context)
+        if opening_details_ids:
+            result['value']['opening_details_ids'] = opening_details_ids
+
         if not statement_ids:
             return result
 
@@ -172,13 +176,14 @@ class account_cash_statement(osv.osv):
             store = {
                 'account.bank.statement': (lambda self, cr, uid, ids, context=None: ids, ['line_ids','move_line_ids'], 10),
                 'account.bank.statement.line': (_get_statement_from_line, ['amount'], 10),
-            }),
+            },
+            help="Total of cash transaction lines."),
         'closing_date': fields.datetime("Closed On"),
         'details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='CashBox Lines'),
         'opening_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Opening Cashbox Lines'),
         'closing_details_ids' : fields.one2many('account.cashbox.line', 'bank_statement_id', string='Closing Cashbox Lines'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
-        'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float"),
+        'difference' : fields.function(_compute_difference, method=True, string="Difference", type="float", help="Difference between the theoretical closing balance and the real closing balance."),
         'last_closing_balance' : fields.function(_compute_last_closing_balance, method=True, string='Last Closing Balance', type='float'),
     }
     _defaults = {
@@ -187,13 +192,12 @@ class account_cash_statement(osv.osv):
         'user_id': lambda self, cr, uid, context=None: uid,
     }
 
-    def create(self, cr, uid, vals, context=None):
-        journal = False
-        if vals.get('journal_id'):
-            journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context)
-        if journal and (journal.type == 'cash') and not vals.get('details_ids'):
-            vals['details_ids'] = []
-
+    def _get_cash_open_box_lines(self, cr, uid, journal_id, context):
+        details_ids = []
+        if not journal_id:
+            return details_ids
+        journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+        if journal and (journal.type == 'cash'):
             last_pieces = None
 
             if journal.with_last_closing_balance == True:
@@ -206,16 +210,19 @@ class account_cash_statement(osv.osv):
                     last_pieces = dict(
                         (line.pieces, line.number_closing) for line in last_bank_statement.details_ids
                     )
-
             for value in journal.cashbox_line_ids:
                 nested_values = {
                     'number_closing' : 0,
                     'number_opening' : last_pieces.get(value.pieces, 0) if isinstance(last_pieces, dict) else 0,
                     'pieces' : value.pieces
                 }
+                details_ids.append([0, False, nested_values])
+        return details_ids
 
-                vals['details_ids'].append([0, False, nested_values])
-
+    def create(self, cr, uid, vals, context=None):
+        journal_id = vals.get('journal_id')
+        if journal_id and not vals.get('opening_details_ids'):
+            vals['opening_details_ids'] = vals.get('opening_details_ids') or self._get_cash_open_box_lines(cr, uid, journal_id, context)
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
         self._update_balances(cr, uid, [res_id], context)
         return res_id
@@ -233,7 +240,10 @@ class account_cash_statement(osv.osv):
 
         @return: True on success, False otherwise
         """
-
+        if vals.get('journal_id', False):
+            cashbox_line_obj = self.pool.get('account.cashbox.line')
+            cashbox_ids = cashbox_line_obj.search(cr, uid, [('bank_statement_id', 'in', ids)], context=context)
+            cashbox_line_obj.unlink(cr, uid, cashbox_ids, context)
         res = super(account_cash_statement, self).write(cr, uid, ids, vals, context=context)
         self._update_balances(cr, uid, ids, context)
         return res
