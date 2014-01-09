@@ -67,7 +67,7 @@
                             </div>
                             <h1>
                                 <field name="name" class="oe_inline"/>
-                                <div name="tmpl"><field name="product_tmpl_id" groups="product.group_product_variant" class="oe_inline"/></div>
+                                <field name="product_tmpl_id" groups="product.group_product_variant" class="oe_inline"/>
                                 <span attrs="{'invisible':[('variants','=',False)]}" groups="product.group_product_variant"> - </span>
                                 <field name="variants" placeholder="Variant Name" groups="product.group_product_variant" class="oe_inline" readonly="0"/>
                             </h1>
@@ -88,7 +88,6 @@
                                     <group>
                                         <field name="type"/>
                                         <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
-                                        <field name="list_price" string="Base Sale Price"/>
                                         <field name="lst_price" string="Public Sale Price"/>
                                     </group>
                                     <group>
@@ -229,7 +228,7 @@
             </field>
         </record>
         <record id="product_normal_action_sell" model="ir.actions.act_window">
-            <field name="name">Products</field>
+            <field name="name">All Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -298,8 +297,8 @@
         </record>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
-        <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="0"/>
-        <menuitem action="product.product_action_template" id="product.menu_products_bytemplate" parent="base.menu_product" groups="product.group_product_variant" sequence="2"/>
+        <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>
+        <menuitem action="product.product_action_template" id="product.menu_products_bytemplate" parent="base.menu_product" groups="product.group_product_variant" sequence="3"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -396,7 +395,7 @@
             action="product_category_action"
             id="product.menu_products_category"
             parent="base.menu_product"
-            sequence="1" groups="base.group_no_one"/>
+            sequence="2" groups="base.group_no_one"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Product Categories</field>
             <field name="type">ir.actions.act_window</field>
@@ -752,7 +751,7 @@
         <record id="product_variant_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="domain">[('variants','&lt;&gt;', False)]</field>
+            <field name="domain">[('variants','!=', '')]</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
@@ -852,7 +851,7 @@
                                 <group colspan="4" string="Product Variants">
                                     <field colspan="4" name="product_variant_ids" nolabel="1">
                                         <tree string="Product Variants" editable="bottom">
-                                            <field name="variants"/>
+                                            <field name="variants" required="1"/>
                                             <field name="price_margin" string="Variant Price Margin(%%)"/>
                                             <field name="price_extra"/>
                                             <field name="lst_price" string="Sale Price"/>
@@ -963,7 +962,7 @@
         <menuitem action="product_template_action"
             groups="product.group_product_variant"
             id="menu_product_template_action"
-            parent="prod_config_main" sequence="3"/>
+            parent="base.menu_product" sequence="0"/>
 
     </data>
 </openerp>

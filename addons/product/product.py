@@ -438,7 +438,7 @@ class product_template(osv.osv):
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Product Variants', required=True),
+        'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Product Variants', domain = [('variants','!=','')], required=True),
     }
 
     def _get_uom_id(self, cr, uid, *args):
@@ -584,9 +584,10 @@ class product_product(osv.osv):
 
     def _save_product_lst_price(self, cr, uid, product_id, field_name, field_value, arg, context=None):
         field_value = field_value or 0.0
-        product = self.browse(cr, uid, product_id, context=context)
-        list_price = (field_value - product.price_extra) / (product.price_margin or 1.0)
-        return self.write(cr, uid, [product_id], {'list_price': list_price}, context=context)
+        if field_value > 0.0:
+            product = self.browse(cr, uid, product_id, context=context)
+            price_extra = (field_value - product.list_price)
+            return self.write(cr, uid, [product_id], {'price_extra': price_extra}, context=context)
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
@@ -733,6 +734,10 @@ class product_product(osv.osv):
                 template = self.pool.get('product.template').browse(cr, uid, data['product_tmpl_id'], context=context)
                 if template.image and not 'image' in data:
                     data['image'] = template.image
+                ''' while product name change into template - at that time name
+                field are hidden. so need to remove name from data '''
+                if 'name' in data:
+                    del data['name']
         return super(product_product, self).create(cr, uid, data, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
