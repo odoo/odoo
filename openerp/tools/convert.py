@@ -152,11 +152,22 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
                     'Could not eval(%s) for %s in %s', a_eval, node.get('name'), context)
                 raise
         def _process(s, idref):
-            m = re.findall('[^%]%\((.*?)\)[ds]', s)
-            for id in m:
+            matches = re.finditer('[^%]%\((.*?)\)[ds]', s)
+            done = []
+            for m in matches:
+                found = m.group()[1:]
+                if found in done:
+                    continue
+                done.append(found)
+                id = m.groups()[0]
                 if not id in idref:
-                    idref[id]=self.id_get(cr, id)
-            return s % idref
+                    idref[id] = self.id_get(cr, id)
+                s = s.replace(found, str(idref[id]))
+
+            s = s.replace('%%', '%') # Quite wierd but it's for (somewhat) backward compatibility sake
+
+            return s
+
         if t == 'xml':
             _fix_multiple_roots(node)
             return '<?xml version="1.0"?>\n'\
@@ -165,20 +176,38 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
         if t == 'html':
             return _process("".join([etree.tostring(n, encoding='utf-8')
                                    for n in node]), idref)
-        if t in ('char', 'int', 'float'):
-            d = node.text
-            if t == 'int':
-                d = d.strip()
-                if d == 'None':
-                    return None
-                else:
-                    return int(d.strip())
-            elif t == 'float':
-                return float(d.strip())
-            return d
-        elif t in ('list','tuple'):
+
+        data = node.text
+        if node.get('file'):
+            with openerp.tools.file_open(node.get('file'), 'rb') as f:
+                data = f.read()
+
+        if t == 'file':
+            from ..modules import module
+            path = data.strip()
+            if not module.get_module_resource(self.module, path):
+                raise IOError("No such file or directory: '%s' in %s" % (
+                    path, self.module))
+            return '%s,%s' % (self.module, path)
+
+        if t == 'char':
+            return data
+
+        if t == 'base64':
+            return data.encode('base64')
+
+        if t == 'int':
+            d = data.strip()
+            if d == 'None':
+                return None
+            return int(d)
+
+        if t == 'float':
+            return float(data.strip())
+
+        if t in ('list','tuple'):
             res=[]
-            for n in node.findall('./value'):
+            for n in node.iterchildren(tag='value'):
                 res.append(_eval_xml(self,n,pool,cr,uid,idref))
             if t=='tuple':
                 return tuple(res)
@@ -609,9 +638,8 @@ form: module.record_id""" % (xml_id,)
                     "Verify that this is a window action or add a type argument." % (a_action,)
                 action_type,action_mode,action_name,view_id,target = rrres
                 if view_id:
-                    cr.execute('SELECT arch FROM ir_ui_view WHERE id=%s', (int(view_id),))
-                    arch, = cr.fetchone()
-                    action_mode = etree.fromstring(arch.encode('utf8')).tag
+                    view_arch = self.pool['ir.ui.view'].read(cr, 1, [view_id], ['arch'])
+                    action_mode = etree.fromstring(view_arch[0]['arch'].encode('utf8')).tag
                 cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%s ORDER BY sequence LIMIT 1', (int(a_id),))
                 if cr.rowcount:
                     action_mode, = cr.fetchone()
@@ -745,6 +773,9 @@ form: module.record_id""" % (xml_id,)
         if rec_context:
             rec_context = unsafe_eval(rec_context)
         self._test_xml_id(rec_id)
+        # in update mode, the record won't be updated if the data node explicitely
+        # opt-out using @noupdate="1". A second check will be performed in
+        # ir.model.data#_update() using the record's ir.model.data `noupdate` field.
         if self.isnoupdate(data_node) and self.mode != 'init':
             # check if the xml record has an id string
             if rec_id:
