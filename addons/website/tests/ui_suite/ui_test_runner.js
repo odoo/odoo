@@ -64,15 +64,17 @@ function run (test) {
             test(page, timeout);
         }
     };
-     
+    
+    var maxRetries = 10;
+    var retryDelay = 1000; // ms
     var tries = 0; 
     page.open(url, function openPage (status) {
         if (status !== 'success') {
             tries++;
-            if (tries < 5) {
+            if (tries < maxRetries) {
             	setTimeout(function () {
             		page.open(url, openPage);
-            	}, 100);
+            	}, retryDelay);
             } else {
                 console.log('{ "event": "error", "message": "'+url+' failed to load '+tries+' times ('+status+')"}');
                 phantom.exit(1);
