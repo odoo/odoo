@@ -3450,7 +3450,8 @@ class BaseModel(object):
 
         return fields
 
-    @api.multi
+    # new-style implementation of read(); old-style is defined below
+    @api.new()
     def read(self, fields=None, load='_classic_read'):
         """ Read the given fields for the records in `self`.
 
@@ -3487,6 +3488,14 @@ class BaseModel(object):
                 pass
 
         return result
+
+    # make a method wrapper from both new-style and old-style implementations
+    @api.old(read)
+    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        records = self.browse(cr, user, ids, context)
+        with records._scope:
+            result = BaseModel.read(records, fields, load=load)
+        return result if isinstance(ids, list) else (bool(result) and result[0])
 
     @api.multi
     def _prefetch_field(self, field_name):

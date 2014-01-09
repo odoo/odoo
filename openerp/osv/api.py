@@ -380,19 +380,8 @@ def multi(method):
         if _has_cursor(args, kwargs):
             cr, uid, ids, context, args, kwargs = split_args(args, kwargs)
             with Scope(cr, uid, context):
-                # There is this feature for the backward-compatiblity with the
-                # previous version of OpenERP, and we give the capability to use
-                # one identifier for the read method
-                if method.func_name == 'read' and isinstance(ids, (long, int)):
-                    _logger.warning(
-                        "Call to %s with an integer instead of a list of integers is deprecated.",
-                        method.func_name
-                    )
-                    values = method(self.browse([ids]), *args, **kwargs)
-                    return new_to_old(self, values)[0]
-                else:
-                    value = method(self.browse(ids), *args, **kwargs)
-                    return new_to_old(self, value)
+                value = method(self.browse(ids), *args, **kwargs)
+                return new_to_old(self, value)
         else:
             return method(self, *args, **kwargs)
 
@@ -636,6 +625,44 @@ def cr_uid_ids_context(method):
             return old_to_new(self, value)
 
     return cr_uid_ids_context_wrapper
+
+
+def old(new_method=None):
+    """ Decorate an old-style method to wrap it together with the (new-style)
+        `new_method`. No wrapping is done if no value is given for `new_method`.
+    """
+    if not new_method:
+        return lambda old_method: old_method
+
+    def decorate(old_method):
+        @wraps(new_method)
+        def wrapper(self, *args, **kwargs):
+            if _has_cursor(args, kwargs):
+                return old_method(self, *args, **kwargs)
+            else:
+                return new_method(self, *args, **kwargs)
+        return wrapper
+
+    return decorate
+
+
+def new(old_method=None):
+    """ Decorate an new-style method to wrap it together with the (old-style)
+        `old_method`. No wrapping is done if no value is given for `old_method`.
+    """
+    if not old_method:
+        return lambda new_method: new_method
+
+    def decorate(new_method):
+        @wraps(old_method)
+        def wrapper(self, *args, **kwargs):
+            if _has_cursor(args, kwargs):
+                return old_method(self, *args, **kwargs)
+            else:
+                return new_method(self, *args, **kwargs)
+        return wrapper
+
+    return decorate
 
 
 def noguess(method):
