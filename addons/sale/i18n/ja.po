@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-01-03 12:09+0000\n"
+"PO-Revision-Date: 2014-01-08 11:48+0000\n"
 "Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-04 06:19+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-01-09 05:38+0000\n"
+"X-Generator: Launchpad (build 16884)\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -70,7 +70,7 @@ msgstr ""
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr ""
+msgstr "受注明細ごとにいくつかの値引きを適用できます。"
 
 #. module: sale
 #: help:sale.order,message_unread:0
@@ -137,6 +137,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"顧客のカテゴリ別のルールに基づいて異なる価格を管理できます。\n"
+"例：小売業者に対して10%や5 EURの奨励など。"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -239,7 +241,7 @@ msgstr "見積と受注"
 #: help:sale.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "製品に異なる単位の選択と維持ができます。"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -655,6 +657,8 @@ msgid ""
 "                and perform batch operations on journals.\n"
 "                This installs the module sale_journal."
 msgstr ""
+"異なる仕訳の間で販売と配送(ピッキングリスト)を分類して、バッチ処理を実行できます。\n"
+"                sale_journalモジュールがインストールされます。"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -878,6 +882,8 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"特定の製品や特定の顧客に販売したい場合、製品に関する通知を設定してトリガすることができます。\n"
+"例として、製品：この製品は廃止されましたので5つ以上の購入はご遠慮ください。仕入先：速達便でお願いします。"
 
 #. module: sale
 #: code:addons/sale/sale.py:955
@@ -956,6 +962,8 @@ msgid ""
 "Manage Related Stock.\n"
 "                    This installs the module sale_stock."
 msgstr ""
+"異なる発注方針を使って見積書や受注の作成と関連する在庫の管理ができます。\n"
+"                    sale_stockがインストールされます。"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -1351,6 +1359,9 @@ msgid ""
 "between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
 msgstr ""
+"受注にマージンを追加します。\n"
+"                単価と原価の差額を計算することで収益性を示します。\n"
+"                sale_marginモジュールがインストールされます。"
 
 #. module: sale
 #: report:sale.order:0
