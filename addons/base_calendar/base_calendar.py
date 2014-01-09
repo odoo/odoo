@@ -1202,16 +1202,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         fields = list(set(fields + order_fields))
 
         for data in super(calendar_event, self).read(cr, uid, select, fields, context=context):
-            result_data.append(data)
             if not data['recurrency'] or not data['rrule']:
+                result_data.append(data)
                 result.append(data['id'])
                 continue
             event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 
             # TOCHECK: the start date should be replaced by event date; the event date will be changed by that of calendar code
-
-            if not data['rrule']:
-                continue
 
             exdate = data['exdate'] and data['exdate'].split(',') or []
             rrule_str = data['rrule']
@@ -1411,8 +1408,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
             new_args.append(new_arg)
-        #offset, limit, order and count must be treated separately as we may need to deal with virtual ids
         if context.get('virtual_id', True):
+            #offset, limit, order and count must be treated separately as we may need to deal with virtual ids
             res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=None, context=context, count=False)
             res = self._get_recurrent_ids(cr, uid, res, args, limit, order=order, context=context)
         else:
