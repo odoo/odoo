@@ -325,8 +325,8 @@
                         } else if (step.sampleText) {
                             $element.val(step.sampleText);
                             $element.trigger($.Event("change", { srcElement: $element }));
-                        } else {
-                            $element.trigger($.Event("click", { srcElement: $element }));
+                        } else { // Click by default
+                        	if ($element.is(":visible")) $element.trigger($.Event("click", { srcElement: $element }));
                         }
                         if (!step.triggers) next();
                     }
