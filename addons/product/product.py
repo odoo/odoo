@@ -23,7 +23,8 @@ import math
 import re
 
 from _common import rounding
-
+from lxml import etree
+from openerp.osv.orm import setup_modifiers
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -686,7 +687,7 @@ class product_product(osv.osv):
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', size=64, select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
-        'variants': fields.char('Variants', size=64),
+        'variants': fields.char('Variants', size=64, translate=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
@@ -728,9 +729,10 @@ class product_product(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         if 'product_tmpl_id' in data:
-            template = self.pool.get('product.template').browse(cr, uid, data['product_tmpl_id'], context=context)
-            if template.image and not 'image' in data:
-                data['image'] = template.image
+            if data['product_tmpl_id']:
+                template = self.pool.get('product.template').browse(cr, uid, data['product_tmpl_id'], context=context)
+                if template.image and not 'image' in data:
+                    data['image'] = template.image
         return super(product_product, self).create(cr, uid, data, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -748,6 +750,36 @@ class product_product(osv.osv):
         # products due to ondelete='cascade'
         #Deprecated code : As per new scenario no need to delete the 'product-template' while delete the product.
         #self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
+        return res
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        #override of fields_view_get in order to replace the name field to product template
+        if context is None:
+            context={}
+        res = super(product_product, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        #check the current user in group_product_variant
+        group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'product', 'group_product_variant')[1]
+        obj = self.pool.get('res.groups').browse(cr, uid, group_id, context=context)
+
+        doc = etree.XML(res['arch'])
+        if view_type == 'form':
+            if obj and uid in [x.id for x in obj.users]:
+                for node in doc.xpath("//field[@name='name']"):
+                    node.set('invisible', '1')
+                    node.set('required', '0')
+                    setup_modifiers(node, res['fields']['name'])
+                for node in doc.xpath("//label[@string='Product Name']"):
+                    node.set('string','Product Template')
+            else:
+                for node in doc.xpath("//field[@name='product_tmpl_id']"):
+                    node.set('required','0')
+                    setup_modifiers(node, res['fields']['product_tmpl_id'])
+                for node in doc.xpath("//field[@name='name']"):
+                    node.set('invisible', '0')
+                    setup_modifiers(node, res['fields']['name'])
+                for node in doc.xpath("//label[@string='Product Template']"):
+                    node.set('string','Product Name')
+        res['arch'] = etree.tostring(doc)
         return res
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):

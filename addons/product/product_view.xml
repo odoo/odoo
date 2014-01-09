@@ -67,8 +67,9 @@
                             </div>
                             <h1>
                                 <field name="name" class="oe_inline"/>
-                                <span attrs="{'invisible':[('variants','=',False)]}"> - </span>
-                                <field name="variants" class="oe_inline" readonly="1"/>
+                                <div name="tmpl"><field name="product_tmpl_id" groups="product.group_product_variant" class="oe_inline"/></div>
+                                <span attrs="{'invisible':[('variants','=',False)]}" groups="product.group_product_variant"> - </span>
+                                <field name="variants" placeholder="Variant Name" groups="product.group_product_variant" class="oe_inline" readonly="0"/>
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>
