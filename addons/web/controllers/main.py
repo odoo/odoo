@@ -532,7 +532,8 @@ def content_disposition(filename):
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
-# TODO: obsoleted by webclient_bootstrap() but need to change edi and pos addons before removing this
+# TODO: to remove once the database manager has been migrated server side
+#       and `edi` + `pos` addons has been adapted to use render_bootstrap_template()
 html_template = """<!DOCTYPE html>
 <html style="height: 100%%">
     <head>
@@ -559,38 +560,45 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
-def webclient_bootstrap(**options):
-    # `options` can contain `client_options` dict. See chrome.js for more information about client_options.
+def render_bootstrap_template(db, template, values=None, **kw):
+    if values is None:
+        values = {}
+    values.update(kw)
+
     for res in ['js', 'css']:
-        if res not in options:
-            options[res] = manifest_list(res, db=options.get('db'), debug=options.get('debug', request.debug))
+        if res not in values:
+            values[res] = manifest_list(res, db=db, debug=values.get('debug', request.debug))
 
-    if 'modules' not in options:
-        options['modules'] = module_boot(db=options.get('db'))
+    if 'modules' not in values:
+        values['modules'] = module_boot(db=db)
+    values['modules'] = simplejson.dumps(values['modules'])
 
-    return env.get_template("webclient_bootstrap.html").render(options)
+    registry = openerp.modules.registry.RegistryManager.get(db)
+    with registry.cursor() as cr:
+        view_obj = registry["ir.ui.view"]
+        return view_obj.render(cr, openerp.SUPERUSER_ID, template, values)
 
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, debug=False, **kw):
-        return redirect_with_hash('web', keep_query=True)
+        return redirect_with_hash('/web', keep_query=True)
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, db=None, debug=False, **kw):
         debug = debug is not False # we just check presence of `debug` query param
 
         # if db not provided, use the session one
-        if db is None:
+        if not db:
             db = request.session.db
 
         # if no database provided and no database in session, use monodb
-        if db is None:
+        if not db:
             db = http.db_monodb(request.httprequest)
 
         # if no db can be found til here, send to the database selector
         # the database selector will redirect to database manager if needed
-        if db is None:
+        if not db:
             return redirect_with_hash('/web/database/selector', keep_query=['debug'])
 
         # always switch the session to the computed db
@@ -598,8 +606,22 @@ class Home(http.Controller):
             request.session.logout()
         request.session.db = db
 
-        html = webclient_bootstrap(db=db, debug=debug)
-        return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
+        if request.session.uid:
+            html = render_bootstrap_template(db, "web.webclient_bootstrap")
+            return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
+        else:
+            return redirect_with_hash('/web/login', keep_query=True)
+
+    @http.route('/web/login', type='http', auth="none")
+    def web_login(self, **kw):
+        assert request.session.db is not None
+        values = request.params.copy()
+        if request.httprequest.method == 'POST':
+            uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
+            if uid is not False:
+                return set_cookie_and_redirect('/web')
+            values['authentication_failed'] = True
+        return render_bootstrap_template(request.session.db, 'web.login', values)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key):
@@ -787,10 +809,19 @@ class Database(http.Controller):
     @http.route('/web/database/manager', type='http', auth="none")
     def manager(self, debug=False):
         debug = debug is not False # we just check presence of `debug` query param
-        options = {
-            'action': 'database_manager'
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', debug=debug))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', debug=debug))
+
+        r = html_template % {
+            'js': js,
+            'css': css,
+            'modules': simplejson.dumps(module_boot()),
+            'init': """
+                var wc = new s.web.WebClient(null, { action: 'database_manager' });
+                wc.appendTo($(document.body));
+            """
         }
-        return webclient_bootstrap(client_options=options)
+        return r
 
     @http.route('/web/database/get_list', type='json', auth="none")
     def get_list(self):

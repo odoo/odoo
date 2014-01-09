@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+
+        <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
+            <html style="height: 100%">
+                <head>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+                    <title>OpenERP</title>
+                    <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+                    <link rel="stylesheet" href="/web/static/src/css/full.css" />
+                    <t t-foreach="css" t-as="css_file">
+                        <link rel="stylesheet" t-att-href="css_file"/>
+                    </t>
+                    <t t-foreach="js" t-as="js_file">
+                        <script type="text/javascript" t-att-src="js_file"></script>
+                    </t>
+                    <t t-raw="head or ''"/>
+                </head>
+                <body>
+                    <t t-raw="0"/>
+                </body>
+            </html>
+        </template>
+
+        <template id="web.webclient_bootstrap" name="Webclient Bootstrap">
+            <t t-call="web.layout">
+                <t t-set="head">
+                    <script type="text/javascript">
+                        $(function() {
+                            var s = new openerp.init(<t t-raw="modules"/>);
+                            <t t-if="init">
+                                <t t-raw="init"/>
+                            </t>
+                            <t t-if="not init">
+                                var wc = new s.web.WebClient();
+                                wc.appendTo($(document.body));
+                            </t>
+                        });
+                    </script>
+                </t>
+            </t>
+        </template>
+
+        <template id="web.login" name="Login">
+            <t t-call="web.layout">
+                <div class="row">
+                    <div class="col-md-4"> </div>
+                    <div class="col-md-4">
+                        <img src="/web/static/src/img/logo2.png"/>
+                        <form role="form" action="/web/login" method="post">
+                            <div class="form-group">
+                                <label for="login">Login</label>
+                                <input type="text" name="login" t-att-value="login" id="login" class="form-control" placeholder="Enter login" required="required" autofocus="autofocus"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="required"/>
+                            </div>
+                            <button type="submit" class="btn btn-default">Log in</button>
+                            <p class="alert alert-danger" t-if="authentication_failed">
+                                Wrong login/password
+                            </p>
+                        </form>
+                    </div>
+                    <div class="col-md-4"> </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</openerp>
