@@ -1790,7 +1790,7 @@ openerp.mail = function (session) {
                 this.node.params.readonly = this.node.attrs.readonly;
             }
 
-            this.domain = this.node.params && this.node.params.domain || [];
+            this.domain = (this.node.params && this.node.params.domain) || (this.field && this.field.domain) || [];
 
             if (!this.ParentViewManager.is_action_enabled('edit')) {
                 this.node.params.show_link = false;
