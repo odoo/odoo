@@ -81,7 +81,7 @@ class res_font(osv.Model):
                 font = ttfonts.TTFontFile(font_path)
                 _logger.debug("Found font %s at %s", font.name, font_path)
                 found_fonts.append((font.familyName, font.name, font_path, font.styleName))
-            except ttfonts.TTFError:
+            except Exception:
                 _logger.warning("Could not register Font %s", font_path)
 
         for family, name, path, mode in found_fonts:
