@@ -22,9 +22,6 @@ testRunner.run(function blogTest (page, timeout) {
                 };
             });
             var result = after && (after.image === 1) && (after.text === 1);
-            if (!result && window.location.href.indexOf('/blogpost/') > 0) {
-                window.location.reload();
-            }
             return result;
         }, function finish () {
             console.log('{ "event": "success" }');

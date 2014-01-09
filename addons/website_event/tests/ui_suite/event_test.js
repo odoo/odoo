@@ -23,9 +23,6 @@ testRunner.run(function eventTest (page, timeout) {
                 };
             });
             var result = after && (after.banner === 1) && (after.text === 1) && (after.image === 1);
-            if (!result && window.location.href.indexOf('/event/') > 0) {
-                window.location.reload();
-            }
             return result;
         }, function finish () {
             console.log('{ "event": "success" }');
