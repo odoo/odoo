@@ -4,7 +4,7 @@ import os
 import select
 import time
 import json
-from openerp import tools
+from openerp import sql_db, tools
 
 # avoid "ValueError: too many values to unpack"
 def _exc_info_to_string(err, test):
@@ -49,6 +49,9 @@ class WebsiteUiSuite(unittest.TestSuite):
         return iter([self])
 
     def run(self, result):
+    	# clean slate
+    	if sql_db._Pool is not None:
+            sql_db._Pool.close_all(sql_db.dsn(tools.config['db_name']))
         # check for PhantomJS...
         try:
             subprocess.call([ 'phantomjs', '-v' ], stdout=open(os.devnull, 'w'), stderr=subprocess.STDOUT)
