@@ -70,7 +70,9 @@ function run (test) {
         if (status !== 'success') {
             tries++;
             if (tries < 5) {
-                page.open(url, openPage);
+            	setTimeout(function () {
+            		page.open(url, openPage);
+            	}, 100);
             } else {
                 console.log('{ "event": "error", "message": "'+url+' failed to load '+tries+' times ('+status+')"}');
                 phantom.exit(1);
