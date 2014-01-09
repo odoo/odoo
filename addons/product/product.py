@@ -23,6 +23,7 @@ import math
 import re
 
 from _common import rounding
+from openerp import SUPERUSER_ID
 
 from openerp import tools
 from openerp.osv import osv, fields
@@ -735,8 +736,13 @@ class product_product(osv.osv):
 
         partner_id = context.get('partner_id', False)
 
+        # all user don't have access to seller and partner
+        # check access and use superuser
+        self.check_access_rights(cr, user, "read")
+        self.check_access_rule(cr, user, ids, "read", context=context)
+
         result = []
-        for product in self.browse(cr, user, ids, context=context):
+        for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
             sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
             if sellers:
                 for s in sellers:
