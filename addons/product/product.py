@@ -944,17 +944,6 @@ class product_product(osv.osv):
             return super(product_product, self).copy(cr, uid, id, default=default,
                     context=context)
 
-    def copy_translations(self, cr, uid, old_id, new_id, context=None):
-        """ When we do not copy the template along the variant,
-          copy_translations sometimes receives 2 identical IDs.
-          That's because the ORM follows the o2m to copy the translations,
-          so in that case, it follows 'variant_ids' and for each variant,
-          it copy the translations. One of the variant is the 'new_id'.
-          Just skip the identical IDs.
-          """
-        if old_id == new_id:
-            return super(product_product, self).copy_translations(cr, uid, old_id, new_id, context=context)
-
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context and context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
