@@ -40,55 +40,5 @@ class test_countingstream(unittest2.TestCase):
         self.assertIsNone(next(s, None))
         self.assertEqual(s.index, 0)
 
-class TestPosixToBabel(unittest2.TestCase):
-    """
-    Attempts to compare the output of formatting a specific date using various
-    patterns under strftime and babel. As a result, they need to use the same
-    locale.
-    """
-    def setUp(self):
-        super(TestPosixToBabel, self).setUp()
-        # use a somewhat non-standard locale
-        self.test_locale = 'tr_TR'
-        locale.setlocale(locale.LC_ALL, self.test_locale)
-        locale.setlocale(locale.LC_TIME, self.test_locale)
-        self.d = datetime.datetime(2007, 9, 7, 4, 5, 1)
-
-    def tearDown(self):
-        super(TestPosixToBabel, self).tearDown()
-        (code, encoding) = locale.getdefaultlocale()
-        locale.setlocale(locale.LC_TIME, code)
-        locale.setlocale(locale.LC_ALL, code)
-
-    def assert_eq(self, fmt, d=None):
-        if d is None: d = self.d
-
-        locale = babel.Locale(self.test_locale)
-        ldml_format = misc.posix_to_ldml(fmt, locale=locale)
-        self.assertEqual(
-            d.strftime(fmt),
-            babel.dates.format_datetime(d, format=ldml_format, locale=locale),
-            "%r resulted in a different result than %r for %s" % (
-                ldml_format, fmt, d))
-
-    def test_empty(self):
-        self.assert_eq("")
-
-    def test_literal(self):
-        self.assert_eq("Raw test string")
-
-    def test_mixed(self):
-        self.assert_eq("m:%m d:%d y:%y")
-        self.assert_eq("m:%m d:%d y:%y H:%H M:%M S:%S")
-
-    def test_escape(self):
-        self.assert_eq("%%m:%m %%d:%d %%y:%y")
-
-    def test_various_examples(self):
-        self.assert_eq('%Y-%m-%dT%H:%M:%S')
-        self.assert_eq("%Y-%j")
-        self.assert_eq("%a, %d %b %Y %H:%M:%S")
-        self.assert_eq("%a, %b %d %I:%M.%S")
-
 if __name__ == '__main__':
     unittest2.main()
