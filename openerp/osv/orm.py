@@ -4180,7 +4180,8 @@ class BaseModel(object):
                         if not src_trans:
                             src_trans = vals[f]
                             # Inserting value to DB
-                            self.write(cr, user, ids, {f: vals[f]})
+                            context_wo_lang = dict(context, lang=None)
+                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
 
