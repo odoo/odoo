@@ -1172,6 +1172,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         (_check_closing_date, 'Error ! End date cannot be set before start date.', ['date_deadline']),
     ]
 
+    def _get_recurrent_ids(self, cr, uid, select, domain, limit=100, order=False, context=None):
+        """Wrapper for get_recurrent_ids to add 'order' parameter
+        @param order: The fields (comma separated, format "FIELD {DESC|ASC}") on which the events should be sorted"""
+        ctx = dict(context or {}, order=order)
+        return self.get_recurrent_ids(cr, uid, select, domain, limit=limit, context=ctx)
+
+    # TODO for trunk: remove _get_recurrent_ids and add 'order' as standart parameter instead of adding it in context
     def get_recurrent_ids(self, cr, uid, select, domain, limit=100, order=None, context=None):
         """Gives virtual event ids for recurring events based on value of Recurrence Rule
         This method gives ids of dates that comes between start date and end date of calendar views
@@ -1182,6 +1189,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         @param order: The fields (comma separated, format "FIELD {DESC|ASC}") on which the events should be sorted"""
         if not context:
             context = {}
+        order = context.get('order', False)
 
         result = []
         result_data = []
