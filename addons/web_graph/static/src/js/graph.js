@@ -33,52 +33,39 @@ instance.web_graph.GraphView = instance.web.View.extend({
         };
     },
 
-    get_context: function (facet) {
-        var col_group_by = _.map(facet.values.models, function (model) {
-            return model.attributes.value.attrs.context.col_group_by;
-        });
-        return {col_group_by : col_group_by};
-    },
-
-    start: function () {
-        var options = {enabled:false};
-        this.graph_widget = new openerp.web_graph.Graph(this, this.model, options);
-        this.graph_widget.appendTo(this.$el);
-        this.graph_widget.pivot.on('groupby_changed', this, this.proxy('register_groupby'));
-        return this.load_view();
-    },
-
     view_loading: function (fields_view_get) {
         var self = this,
             arch = fields_view_get.arch,
             measures = [],
-            title = arch.attrs.string,
             stacked = false;
 
+        this.widget_config = { title: arch.attrs.string };
+
+        debugger;
         if (!_.has(arch.attrs, 'type')) {
-            this.graph_widget.mode = 'bar_chart';
+            this.widget_config.mode = 'bar_chart';
         } else {
             switch (arch.attrs.type) {
                 case 'bar':
-                    this.graph_widget.mode = 'bar_chart';
+                    this.widget_config.mode = 'bar_chart';
                     break;
                 case 'pie':
-                    this.graph_widget.mode = 'pie_chart';
+                    this.widget_config.mode = 'pie_chart';
                     break;
                 case 'line':
-                    this.graph_widget.mode = 'line_chart';
+                    this.widget_config.mode = 'line_chart';
                     break;
                 case 'pivot':
                 case 'heatmap':
                 case 'row_heatmap':
                 case 'col_heatmap':
-                    this.graph_widget.mode = arch.attrs.type;
+                    this.widget_config.mode = arch.attrs.type;
                     break;
             }
         }
 
         if (arch.attrs.stacked === 'True') {
-            stacked = true;
+            this.widget_config.stacked = true;
         }
 
         _.each(arch.children, function (field) {
@@ -105,18 +92,32 @@ instance.web_graph.GraphView = instance.web.View.extend({
         if (measures.length === 0) {
             measures.push('__count');
         }
-        this.graph_widget.config({
-            measures:measures,
-            update:false,
-            title: title,
-            bar_ui: (stacked) ? 'stack' : 'group'
+        this.widget_config.row_groupby = self.default_row_groupby;
+        this.widget_config.col_groupby = self.default_col_groupby;
+        this.widget_config.measures = measures;
+        //     measures:measures,
+        //     update:false,
+        //     title: title,
+        //     bar_ui: (stacked) ? 'stack' : 'group'
+        // });
+    },
+
+    get_context: function (facet) {
+        var col_group_by = _.map(facet.values.models, function (model) {
+            return model.attributes.value.attrs.context.col_group_by;
         });
+        return {col_group_by : col_group_by};
     },
 
     do_search: function (domain, context, group_by) {
         var col_groupby = context.col_group_by || [],
             options = {domain:domain};
 
+        if (!this.graph_widget) {
+            this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
+            this.graph_widget.appendTo(this.$el);
+            this.graph_widget.on('groupby_changed', this, this.proxy('register_groupby'));
+        }
         this.search_view_groupby = group_by;
 
         if (group_by.length && this.groupby_mode !== 'manual') {
@@ -139,7 +140,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
             options.row_groupby = _.toArray(this.default_row_groupby);
             options.col_groupby = _.toArray(this.default_col_groupby);
         }
-        this.graph_widget.pivot.config(options);
+        this.graph_widget.set_domain(domain);
+        this.graph_widget.set_col_groupby(options.col_groupby);
+        this.graph_widget.set_row_groupby(options.row_groupby);
+
+        // this.graph_widget.pivot.config(options);
 
         if (!this.graph_widget.enabled) {
             this.graph_widget.activate_display();
@@ -153,49 +158,50 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     register_groupby: function() {
-        var self = this,
-            query = this.search_view.query;
+        // var self = this,
+        //     query = this.search_view.query;
 
-        this.groupby_mode = 'manual';
-        if (_.isEqual(this.search_view_groupby, this.graph_widget.pivot.rows.groupby) ||
-            (!_.has(this.search_view, '_s_groupby'))) {
-            return;
-        }
-        var rows = _.map(this.graph_widget.pivot.rows.groupby, function (group) {
-            return make_facet('GroupBy', group);
-        });
-        var cols = _.map(this.graph_widget.pivot.cols.groupby, function (group) {
-            return make_facet('ColGroupBy', group);
-        });
+        // this.groupby_mode = 'manual';
+        // if (_.isEqual(this.search_view_groupby, this.graph_widget.pivot.rows.groupby) ||
+        //     (!_.has(this.search_view, '_s_groupby'))) {
+        //     return;
+        // }
+        // var rows = _.map(this.graph_widget.pivot.rows.groupby, function (group) {
+        //     return make_facet('GroupBy', group);
+        // });
+        // var cols = _.map(this.graph_widget.pivot.cols.groupby, function (group) {
+        //     return make_facet('ColGroupBy', group);
+        // });
 
-        query.reset(rows.concat(cols));
+        // query.reset(rows.concat(cols));
 
-        function make_facet (category, fields) {
-            var values,
-                icon,
-                backbone_field,
-                cat_name;
-            if (!(fields instanceof Array)) { fields = [fields]; }
-            if (category === 'GroupBy') {
-                cat_name = 'group_by';
-                icon = 'w';
-                backbone_field = self.search_view._s_groupby;
-            } else {
-                cat_name = 'col_group_by';
-                icon = 'f';
-                backbone_field = self.search_field;
-            }
-            values =  _.map(fields, function (field) {
-                var context = {};
-                context[cat_name] = field;
-                return {label: self.graph_widget.fields[field].string, value: {attrs:{domain: [], context: context}}};
-            });
-            return {category:category, values: values, icon:icon, field: backbone_field};
-        }
+        // function make_facet (category, fields) {
+        //     var values,
+        //         icon,
+        //         backbone_field,
+        //         cat_name;
+        //     if (!(fields instanceof Array)) { fields = [fields]; }
+        //     if (category === 'GroupBy') {
+        //         cat_name = 'group_by';
+        //         icon = 'w';
+        //         backbone_field = self.search_view._s_groupby;
+        //     } else {
+        //         cat_name = 'col_group_by';
+        //         icon = 'f';
+        //         backbone_field = self.search_field;
+        //     }
+        //     values =  _.map(fields, function (field) {
+        //         var context = {};
+        //         context[cat_name] = field;
+        //         return {label: self.graph_widget.fields[field].string, value: {attrs:{domain: [], context: context}}};
+        //     });
+        //     return {category:category, values: values, icon:icon, field: backbone_field};
+        // }
     },
 });
 
-instance.web_graph.Graph = instance.web.Widget.extend({
+// important_fields = [field], field = {field: _,type: _, string: _}
+instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMixin, {
     template: 'GraphWidget',
 
     events: {
@@ -206,106 +212,179 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         'click a.field-selection' : 'field_selection',
     },
 
-    init: function(parent, model, options) {
+    init: function(parent, model,  domain, options) {
+        var self = this;
+
         this._super(parent);
         this.model = model;
-        this.important_fields = [];
-        this.measure_list = [];
-        this.fields = [];
-        this.pivot = new openerp.web_graph.PivotTable(model, []);
-        this.mode = 'pivot';
-        this.enabled = true;
-        if (_.has(options, 'enabled')) { this.enabled = options.enabled; }
-        this.visible_ui = true;
-        this.bar_ui = 'group'; // group or stack
-        this.config(options || {});
-        this.title = 'Graph';
-    },
-
-    // hide ui/show, stacked/grouped
-    config: function (options) {
-        // Possible modes: pivot, heatmap, row_heatmap, col_heatmap,
-        //                 bar_chart, pie_chart, line_chart
-        if (_.has(options, 'mode')) { this.mode = mode; }
-        if (_.has(options, 'visible_ui')) {
-            this.visible_ui = options.visible_ui;
-        }
-        if (_.has(options, 'bar_ui')) {
-            this.bar_ui = options.bar_ui;
-        }
-        if (_.has(options, 'title')) {
-            this.title = options.title;
-        }
-        this.pivot.config(options);
+        this.domain = domain;
+        this.mode = options.mode || 'pivot';
+        this.title = options.title || 'Graph';
+        this.visible_ui = options.visible_ui || true;
+        this.pivot_options = options;
     },
 
     start: function() {
         var self = this;
         this.table = $('<table></table>');
         this.$('.graph_main_content').append(this.table);
-        // get the most important fields (of the model) by looking at the
-        // groupby filters defined in the search view
-        var options = {model:this.model, view_type: 'search'},
-            deferred1 = instance.web.fields_view_get(options).then(function (search_view) {
-                var groups = _.select(search_view.arch.children, function (c) {
-                    return (c.tag == 'group') && (c.attrs.string != 'Display');
-                });
-                _.each(groups, function(g) {
-                    _.each(g.children, function (g) {
-                        if (g.attrs.context) {
-                            var field_id = py.eval(g.attrs.context).group_by;
-                            if (field_id) {
-                                if (field_id instanceof Array) {
-                                    self.important_fields.concat(field_id);
-                                } else {
-                                    self.important_fields.push(field_id);
-                                }
-                            }
-                        }
-                    });
-                });
-            });
-
-        // get the fields descriptions and measure list from the model
-        var deferred2 = this.model.call('fields_get', []).then(function (fs) {
-            self.fields = fs;
-            self.pivot.config({fields:fs});
-            var temp = _.map(fs, function (field, name) {
-                return {name:name, type: field.type};
-            });
-            temp = _.filter(temp, function (field) {
-                return (((field.type === 'integer') || (field.type === 'float')) && (field.name !== 'id'));
-            });
-            self.measure_list = _.map(temp, function (field) {
-                return field.name;
-            });
-
-            var measure_selection = self.$('.graph_measure_selection');
-            _.each(self.measure_list, function (measure) {
-                var choice = $('<a></a>').attr('data-choice', measure)
-                                         .attr('href', '#')
-                                         .append(self.fields[measure].string);
-                measure_selection.append($('<li></li>').append(choice));
-            });
+        var def1 = this.get_search_fields().then(function (f) {
+            self.important_fields = f;
         });
 
-        return $.when(deferred1, deferred2).then(function () {
-            if (this.enabled) {
-                this.activate_display();
-            }
+        var def2 = this.get_model_fields().then(function (f) {
+            self.fields = f;
+            self.measure_list = self.get_measures();
+            self.add_measures_to_options();
+        });
+
+        $.when(def1, def2).then(function () {
+            self.pivot = new openerp.web_graph.PivotTable(self.model, self.domain, self.fields, self.pivot_options);
+            self.pivot.on('redraw_required', self, self.proxy('display_data'));
+            self.pivot.on('groupby_changed', self, function () { self.trigger('groupby_changed'); });
+            instance.web.bus.on('click', self, function () {
+                if (self.dropdown) {
+                    self.dropdown.remove();
+                    self.dropdown = null;
+                }
+            });
+            self.pivot.activate();
         });
     },
 
-    activate_display: function () {
-        this.pivot.on('redraw_required', this, this.proxy('display_data'));
-        this.pivot.update_data();
-        this.enabled = true;
-        instance.web.bus.on('click', this, function () {
-            if (this.dropdown) {
-                this.dropdown.remove();
-                this.dropdown = null;
+    get_search_fields: function () {
+        var self = this,
+            options = {model:this.model, view_type: 'search'},
+            result = [];
+
+        return instance.web.fields_view_get(options).then(function (search_view) {
+            var groups = _.select(search_view.arch.children, function (c) {
+                return (c.tag === 'group') && (c.attrs.string != 'Display');
+            });
+            _.each(groups, function(g) {
+                _.each(g.children, function (g) {
+                    if (g.attrs.context) {
+                        var field_id = py.eval(g.attrs.context).group_by;
+                        if (field_id) {
+                            if (field_id instanceof Array) {
+                                result.concat(field_id);
+                            } else {
+                                result.push(field_id);
+                            }
+                        }
+                    }
+                });
+            });
+            return result;
+        });
+    },
+
+    get_model_fields: function () {
+        return this.model.call('fields_get', []).then(function (fs) {
+            return fs;
+        });
+    },
+
+    get_measures: function(fields) {
+        var measures = [];
+        _.each(this.fields, function (f, id) {
+            if (((f.type === 'integer') || (f.type === 'float')) && (id !== 'id')) {
+                measures.push({field:id, type: f.type, string: f.string});
             }
         });
+        return measures;
+    },
+
+    set_domain: function (domain) {
+        if (this.pivot) {
+            this.pivot.set_domain(domain);
+        } else {
+            this.pivot_options.domain = domain;
+        }
+    },
+
+    set_row_groupby: function (groupby) {
+        if (this.pivot) {
+            this.pivot.set_row_groupby(groupby);
+        } else {
+            this.pivot_options.row_groupby = groupby;
+        }
+    },
+
+    set_col_groupby: function (groupby) {
+        if (this.pivot) {
+            this.pivot.set_col_groupby(groupby);
+        } else {
+            this.pivot_options.col_groupby = groupby;
+        }
+    },
+
+    add_measures_to_options: function() {
+        var measure_selection = this.$('.graph_measure_selection');
+        _.each(this.measure_list, function (measure) {
+            var choice = $('<a></a>').attr('data-choice', measure.field)
+                                     .attr('href', '#')
+                                     .append(measure.string);
+            measure_selection.append($('<li></li>').append(choice));
+        });
+    },
+
+    //         self.fields = fs;
+    //         var temp = _.map(fs, function (field, name) {
+    //             return {name:name, type: field.type};
+    //         });
+    //         temp = _.filter(temp, function (field) {
+    //             return (((field.type === 'integer') || (field.type === 'float')) && (field.name !== 'id'));
+    //         });
+    //         self.measure_list = _.map(temp, function (field) {
+    //             return field.name;
+    //         });
+
+    //         var measure_selection = self.$('.graph_measure_selection');
+    //         _.each(self.measure_list, function (measure) {
+    //             var choice = $('<a></a>').attr('data-choice', measure)
+    //                                      .attr('href', '#')
+    //                                      .append(self.fields[measure].string);
+    //             measure_selection.append($('<li></li>').append(choice));
+    //         });
+    //     });
+    // },
+
+    // hide ui/show, stacked/grouped
+    // config: function (options) {
+        // Possible modes: pivot, heatmap, row_heatmap, col_heatmap,
+        //                 bar_chart, pie_chart, line_chart
+        // if (_.has(options, 'mode')) { this.mode = mode; }
+        // if (_.has(options, 'visible_ui')) {
+        //     this.visible_ui = options.visible_ui;
+        // }
+        // if (_.has(options, 'bar_ui')) {
+        //     this.bar_ui = options.bar_ui;
+        // }
+        // if (_.has(options, 'title')) {
+        //     this.title = options.title;
+        // }
+        // debugger;
+        // this.pivot.config(options);
+    // },
+
+
+        // get the most important fields (of the model) by looking at the
+        // groupby filters defined in the search view
+
+        // get the fields descriptions and measure list from the model
+
+    //     return $.when(deferred1, deferred2).then(function () {
+    //         self.pivot = new openerp.web_graph.PivotTable(self.model, self.fields);
+    //         self.activate_display();
+    //     });
+    // },
+
+    set_mode: function (mode) {
+
+    },
+
+    activate_display: function () {
     },
 
     display_data: function () {
@@ -344,7 +423,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     measure_selection: function (event) {
         event.preventDefault();
         var measure = event.target.attributes['data-choice'].nodeValue;
-        this.pivot.config({toggle_measure:measure});
+        this.pivot.toggle_measure(measure);
     },
 
     option_selection: function (event) {
@@ -386,12 +465,11 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             header = this.pivot.get_header(id),
             self = this;
 
-        if (header.is_expanded) {
+        if (header.expanded) {
             this.pivot.fold(header);
         } else {
             if (header.path.length < header.root.groupby.length) {
-                var field = header.root.groupby[header.path.length];
-                this.pivot.expand(id, field);
+                this.pivot.expand(id);
             } else {
                 if (!this.important_fields.length) {
                     return;
@@ -420,18 +498,14 @@ instance.web_graph.Graph = instance.web.Widget.extend({
  * Drawing pivot table methods...
  ******************************************************************************/
     draw_table: function () {
-        this.pivot.rows.main.title = 'Total';
+        this.pivot.main_row().title = 'Total';
         if (this.pivot.measures.length == 1) {
-            this.pivot.cols.main.title = this.measure_label(this.pivot.measures[0]);
+            this.pivot.main_col().title = this.pivot.measures[0].string;
         } else {
-            this.pivot.cols.main.title = this.title;
+            this.pivot.main_col().title = this.title;
         }
         this.draw_top_headers();
         _.each(this.pivot.rows.headers, this.proxy('draw_row'));
-    },
-
-    measure_label: function (measure) {
-        return (measure !== '__count') ? this.fields[measure].string : 'Quantity';
     },
 
     make_border_cell: function (colspan, rowspan, headercell) {
@@ -445,7 +519,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         return $('<span> </span>')
             .addClass('web_graph_click')
             .attr('href', '#')
-            .addClass((header.is_expanded) ? 'fa fa-minus-square' : 'fa fa-plus-square')
+            .addClass((header.expanded) ? 'fa fa-minus-square' : 'fa fa-plus-square')
             .append((header.title !== undefined) ? header.title : 'Undefined');
     },
 
@@ -486,11 +560,11 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             }
         }
 
-        set_dim(pivot.cols.main);  // add width and height info to columns headers
-        if (pivot.cols.main.children.length === 0) {
+        set_dim(pivot.main_col());  // add width and height info to columns headers
+        if (pivot.main_col().children.length === 0) {
             make_cells(pivot.cols.headers, 0);
         } else {
-            make_cells(pivot.cols.main.children, 1);
+            make_cells(pivot.main_col().children, 1);
             if (pivot.get_cols_leaves().length > 1) {
                 header_cells[0].push(self.make_border_cell(pivot.measures.length, height, true).append('Total').css('font-weight', 'bold'));
             }
@@ -520,7 +594,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             if (!col.children.length) {
                 for (var i = 0; i < measures.length; i++) {
                     measure_cells = $('<th></th>').addClass('measure_row');
-                    measure_cells.append(self.measure_label(measures[i]));
+                    measure_cells.append(measures[i].string);
                     measure_row.append(measure_cells);
                 }
             }
@@ -529,24 +603,17 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         if (this.pivot.get_cols_leaves().length > 1) {
             for (var i = 0; i < measures.length; i++) {
                 measure_cells = $('<th></th>').addClass('measure_row');
-                measure_cells.append(self.measure_label(measures[i]));
+                measure_cells.append(measures[i].string);
                 measure_row.append(measure_cells);
             }
         }
         return measure_row;
     },
 
-    get_measure_types: function () {
-        var self = this;
-        return _.map(this.pivot.measures, function (measure) {
-            return (measure !== '__count') ? self.fields[measure].type : 'integer';
-        });
-    },
-
     draw_row: function (row) {
         var self = this,
             pivot = this.pivot,
-            measure_types = this.get_measure_types(),
+            measure_types = _.pluck(this.pivot.measures, 'type'),
             html_row = $('<tr></tr>'),
             row_header = this.make_border_cell(1,1)
                 .append(this.make_header_title(row).attr('data-id', row.id))
@@ -560,7 +627,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
 
         _.each(pivot.cols.headers, function (col) {
             if (col.children.length === 0) {
-                var values = pivot.get_value(row.id, col.id, new Array(measure_types.length));
+                var values = pivot.get_values(row.id, col.id);
                 for (var i = 0; i < values.length; i++) {
                     html_row.append(make_cell(values[i], measure_types[i], i, col));
                 }
@@ -570,7 +637,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         if (pivot.get_cols_leaves().length > 1) {
             var total_vals = pivot.get_total(row);
             for (var j = 0; j < total_vals.length; j++) {
-                var cell = make_cell(total_vals[j], measure_types[j], j, pivot.cols.main).css('font-weight', 'bold');
+                var cell = make_cell(total_vals[j], measure_types[j], j, pivot.cols[0]).css('font-weight', 'bold');
                 html_row.append(cell);
             }
         }
@@ -596,6 +663,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
                 cell.css('background-color', $.Color(255, color, color));
             }
             if (self.mode === 'col_heatmap') {
+                debugger;
                 total = pivot.get_total(col)[index];
                 color = Math.floor(90 + 165*(total - Math.abs(value))/total);
                 cell.css('background-color', $.Color(255, color, color));
@@ -617,42 +685,42 @@ instance.web_graph.Graph = instance.web.Widget.extend({
         if ((dim_x === 0) && (dim_y === 0)) {
             data = [{key: 'Total', values:[{
                 x: 'Total',
-                y: this.pivot.get_value(this.pivot.rows.main.id, this.pivot.cols.main.id)[0],
+                y: this.pivot.get_total(),
             }]}];
         // Only column groupbys ****************************************************
         } else if ((dim_x === 0) && (dim_y >= 1)){
-            data =  _.map(this.pivot.get_columns_depth(1), function (header) {
+            data =  _.map(this.pivot.get_columns_with_depth(1), function (header) {
                 return {
                     key: header.title,
-                    values: [{x:header.root.main.title, y: self.pivot.get_total(header)[0]}]
+                    values: [{x:header.root[0].title, y: self.pivot.get_total(header)[0]}]
                 };
             });
         // Just 1 row groupby ******************************************************
         } else if ((dim_x === 1) && (dim_y === 0))  {
-            data = _.map(this.pivot.rows.main.children, function (pt) {
-                var value = self.pivot.get_value(pt.id, self.pivot.cols.main.id)[0],
+            data = _.map(this.pivot.main_row().children, function (pt) {
+                var value = self.pivot.get_total(pt),
                     title = (pt.title !== undefined) ? pt.title : 'Undefined';
                 return {x: title, y: value};
             });
-            data = [{key: self.measure_label(self.pivot.measures[0]), values:data}];
+            data = [{key: self.pivot.measures[0].string, values:data}];
         // 1 row groupby and some col groupbys**************************************
         } else if ((dim_x === 1) && (dim_y >= 1))  {
-            data = _.map(this.pivot.get_columns_depth(1), function (colhdr) {
-                var values = _.map(self.pivot.get_rows_depth(1), function (header) {
+            data = _.map(this.pivot.get_cols_with_depth(1), function (colhdr) {
+                var values = _.map(self.pivot.get_rows_with_depth(1), function (header) {
                     return {
                         x: header.title || 'Undefined',
-                        y: self.pivot.get_value(header.id, colhdr.id, 0)[0]
+                        y: self.pivot.get_values(header.id, colhdr.id, 0)[0]
                     };
                 });
                 return {key: colhdr.title || 'Undefined', values: values};
             });
         // At least two row groupby*************************************************
         } else {
-            var keys = _.uniq(_.map(this.pivot.get_rows_depth(2), function (hdr) {
+            var keys = _.uniq(_.map(this.pivot.get_rows_with_depth(2), function (hdr) {
                 return hdr.title || 'Undefined';
             }));
             data = _.map(keys, function (key) {
-                var values = _.map(self.pivot.get_rows_depth(1), function (hdr) {
+                var values = _.map(self.pivot.get_rows_with_depth(1), function (hdr) {
                     var subhdr = _.find(hdr.children, function (child) {
                         return ((child.title === key) || ((child.title === undefined) && (key === 'Undefined')));
                     });
@@ -697,14 +765,14 @@ instance.web_graph.Graph = instance.web.Widget.extend({
             dim_y = this.pivot.cols.groupby.length;
 
         var data = _.map(this.pivot.get_cols_leaves(), function (col) {
-            var values = _.map(self.pivot.get_rows_depth(dim_x), function (row) {
-                return {x: row.title, y: self.pivot.get_value(row.id,col.id, 0)};
+            var values = _.map(self.pivot.get_rows_with_depth(dim_x), function (row) {
+                return {x: row.title, y: self.pivot.get_values(row.id,col.id, 0)};
             });
             var title = _.map(col.path, function (p) {
                 return p || 'Undefined';
             }).join('/');
             if (dim_y === 0) {
-                title = self.measure_label(self.pivot.measures[0]);
+                title = self.pivot.measures[0].string;
             }
             return {values: values, key: title};
         });
@@ -729,7 +797,7 @@ instance.web_graph.Graph = instance.web.Widget.extend({
     pie_chart: function () {
         var self = this,
             dim_x = this.pivot.rows.groupby.length;
-
+        debugger;
         var data = _.map(this.pivot.get_rows_leaves(), function (row) {
             var title = _.map(row.path, function (p) {
                 return p || 'Undefined';

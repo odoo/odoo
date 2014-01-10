@@ -4,163 +4,245 @@
 (function () {
 'use strict';
 
+// Pivot Table
+//
+//  Here is a short description of the way the data is organized:
+//  Main fields:
+//      cells = [cell]
+//               cell = {x: _, y: _, values: [value]}
+//               value = {type: _, value: _}
+//      measures = [measure]
+// 				  measure = {field: _, string: _, type: _}
+//      rows, cols = {groupby: [groupby], headers: [header]}
+//				groupby = {field: _, string: _, type: _, interval: _} (interval only if type = date/datetime)
+// 				header = {
+//					id: _,
+//					path: _,
+//					title: _,
+//					expanded: _,
+//					parent: _,
+//					children: _,
+//					domain: _,
+//					root: _,
+//				}
+//
+//  Pivot Table emits the events 'groupby_changed' and 'redraw_required' when necessary.
+// PivotTable require a 'update_data' after init to be ready
+// to do: add an option to enable/disable update_data at the end of init
 openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherMixin, {
 
-	// PivotTable require a 'update_data' after init to be ready
-	// to do: add an option to enable/disable update_data at the end of init
-	init: function (model, domain) {
+	init: function (model, domain, fields, options) {
         openerp.EventDispatcherMixin.init.call(this);
-		this.rows = { groupby: [], main: null, headers: null };
-		this.cols = { groupby: [], main: null, headers: null };
+		this.rows = { groupby: [], headers: null };
+		this.cols = { groupby: [], headers: null };
 		this.cells = [];
 		this.domain = domain;
-		this.measures = ['__count'];
 		this.no_data = true;
 		this.model = model;
-		this.fields = null;
+		this.fields = fields;
+        this.fields.__count = {type: 'integer', string:'Quantity'};
+        this.measures = [{field:'__count', type: this.fields.type, string:this.fields.string}];
+		this.active = false;
+		if (options.measures) { this.set_measures(options.measures); }
+		if (options.col_groupby) { this.set_col_groupby(options.col_groupby); }
+		if (options.row_groupby) { this.set_row_groupby(options.row_groupby); }
 	},
 
-	visible_fields: function () {
-		var result = this.rows.groupby.concat(this.cols.groupby, this.measures);
-		return _.without(result, '__count');
+	// ----------------------------------------------------------------------
+	// Configuration methods
+	// ----------------------------------------------------------------------
+	activate: function() {
+		this.active = true;
+		this.update_data();
 	},
 
-	config: function (options) {
-		var changed = false;
-		var groupby_changed = false;
-		var default_options = {
-				update:true,
-				domain:this.domain,
-				col_groupby: this.cols.groupby,
-				row_groupby: this.rows.groupby,
-				measures: this.measures,
-				silent:false
-			};
-		options = _.extend(default_options, options);
-
-		if (options.fields) {
-			this.fields = options.fields;
-		}
-
-		if (!_.isEqual(options.domain, this.domain)) {
-			this.domain = options.domain;
-			changed = true;
-		}
-		if (!_.isEqual(options.measures, this.measures)) {
-			this.measures = options.measures;
-			changed = true;
-		}
-		if (options.toggle_measure) {
-			if (_.contains(this.measures, options.toggle_measure)) {
-				this.measures = _.without(this.measures, options.toggle_measure);
-			} else {
-				this.measures.push(options.toggle_measure);
-			}
-			changed = true;
-		}
-		if (!_.isEqual(options.col_groupby, this.cols.groupby)) {
-			this.cols.groupby = options.col_groupby;
-			changed = true;
-			this.cols.headers = null;
-			groupby_changed = true;
-		}
-		if (!_.isEqual(options.row_groupby, this.rows.groupby)) {
-			this.rows.groupby = options.row_groupby;
-			this.rows.headers = null;
-			changed = true;
-			groupby_changed = true;
-		}
-
-		if (!options.silent && groupby_changed) { this.trigger('groupby_changed'); }
-		if (options.update && changed) { this.update_data(); }
+	set_domain: function (domain) {
+		this.domain = domain;
+		if (this.active) { this.update_data(); }
 	},
 
-	set_value: function (id1, id2, values) {
-		var x = Math.min(id1, id2),
-			y = Math.max(id1, id2),
-			cell = _.find(this.cells, function (c) {
-			return ((c.x == x) && (c.y == y));
-		});
-		if (cell) {
-			cell.values = values;
+	set_measures: function (measures) {
+        var self = this;
+		if (!_.isEqual(measures, this.measures)) {
+			this.measures = [];
+            _.each(measures, function (m) { self._add_measure(m); });
+			if (this.active) { this.update_data(); }
+		}
+	},
+
+	_add_measure: function (measure) {
+		if (measure.field && measure.string && measure.type) {
+			this.measures.push(measure);
 		} else {
-			this.cells.push({x: x, y: y, values: values});
+			this.measures.push({
+				field: measure,
+				string: this.fields[measure].string,
+				type: this.fields[measure].type,
+			});
 		}
 	},
 
-	get_value: function (id1, id2, default_values) {
+	toggle_measure: function (field_id) {
+        var current_measure = _.findWhere(this.measures, {field:field_id});
+        if (current_measure) {
+            this.measures = _.without(this.measures, current_measure);
+        } else {
+            this.measures.push({
+                field: field_id,
+                type: this.fields[field_id].type,
+                string: this.fields[field_id].string
+            });
+        }
+        if (this.active) { this.update_data(); }
+	},
+
+	set_col_groupby: function (groupbys) {
+		var self = this;
+		if (!_.isEqual(groupbys, this.cols.groupby)) {
+			this.cols.groupby = [];
+			_.each(groupbys, function (g) { self._add_groupby(self.cols.groupby, g); });
+			this.cols.headers = null;
+			if (this.active) { 
+                this.trigger('groupby_changed');
+				this.update_data();
+			}
+		}
+	},
+
+	set_row_groupby: function (groupbys) {
+		var self = this;
+		if (!_.isEqual(groupbys, this.rows.groupby)) {
+			this.rows.groupby = [];
+			_.each(groupbys, function (g) { self._add_groupby(self.rows.groupby, g); });
+			this.rows.headers = null;
+			if (this.active) { 
+                this.trigger('groupby_changed');
+				this.update_data();
+			}
+		}
+	},
+
+	_add_groupby: function(groupby_list, groupby) {
+		if (groupby.field && groupby.string && groupby.type) {
+			groupby_list.push(groupby);
+		} else {
+			groupby_list.push({
+				field:groupby,
+				string: this.fields[groupby].string,
+				type: this.fields[groupby].type
+			});
+		}
+	},
+
+	// ----------------------------------------------------------------------
+	// Cells manipulation methods
+	// ----------------------------------------------------------------------
+	add_cell : function (id1, id2, values) {
+		var x = Math.min(id1, id2),
+			y = Math.max(id1, id2);
+		this.cells.push({x: x, y: y, values: values});
+	},
+
+	get_values: function (id1, id2, default_values) {
 		var x = Math.min(id1, id2),
 			y = Math.max(id1, id2),
 			cell = _.find(this.cells, function (c) {
-			return ((c.x == x) && (c.y == y));
-		});
-		return (cell === undefined) ? default_values : cell.values;
+					return ((c.x == x) && (c.y == y));
+				});
+		return (cell !== undefined) ? cell.values : (default_values || new Array(this.measures.length));
 	},
 
+	// ----------------------------------------------------------------------
+	// Headers/Rows/Cols manipulation methods
+	// ----------------------------------------------------------------------
 	is_row: function (id) {
 		return !!_.find(this.rows.headers, function (header) {
-			return header.id == id;
+			return header.id === id;
 		});
 	},
 
 	is_col: function (id) {
 		return !!_.find(this.cols.headers, function (header) {
-			return header.id == id;
+			return header.id === id;
 		});
 	},
 
 	get_header: function (id) {
 		return _.find(this.rows.headers.concat(this.cols.headers), function (header) {
-			return header.id == id;
+			return header.id === id;
 		});
 	},
 
 	// return all columns with a path length of 'depth'
-	get_columns_depth: function (depth) {
-		return _.filter(this.cols.headers, function (hdr) {
-			return hdr.path.length === depth;
+	get_cols_with_depth: function (depth) {
+		return _.filter(this.cols.headers, function (header) {
+			return header.path.length === depth;
 		});
 	},
 
 	// return all rows with a path length of 'depth'
-	get_rows_depth: function (depth) {
-		return _.filter(this.rows.headers, function (hdr) {
-			return hdr.path.length === depth;
+	get_rows_with_depth: function (depth) {
+		return _.filter(this.rows.headers, function (header) {
+			return header.path.length === depth;
 		});
 	},
 
 	// return all non expanded rows
 	get_rows_leaves: function () {
-		return _.filter(this.rows.headers, function (hdr) {
-			return !hdr.is_expanded;
+		return _.filter(this.rows.headers, function (header) {
+			return !header.expanded;
 		});
 	},
 	
 	// return all non expanded cols
 	get_cols_leaves: function () {
-		return _.filter(this.cols.headers, function (hdr) {
-			return !hdr.is_expanded;
+		return _.filter(this.cols.headers, function (header) {
+			return !header.expanded;
 		});
 	},
 	
-	fold: function (header) {
-		var list = [];
-		function tree_traversal(tree) {
-			list.push(tree);
-			_.each(tree.children, tree_traversal);
+    get_ancestors: function (header) {
+        var self = this;
+        if (!header.children) return [];
+        return  [].concat.apply([], _.map(header.children, function (c) {return self.get_ancestors_and_self(c); }));
+    },
+
+    get_ancestors_and_self: function (header) {
+        var self = this;
+        return [].concat.apply([header], _.map(header.children, function (c) { return self.get_ancestors_and_self(c); }));
+    },
+
+	get_total: function (header) {
+		if (header) {
+			return this.get_values(header.id, this.get_other_root(header).headers[0].id);
 		}
-		tree_traversal(header);
-		var ids_to_remove = _.map(_.rest(list), function (h) { return h.id;});
+		return this.get_values(this.rows.headers[0].id, this.cols.headers[0].id);
+	},
 
-		header.root.headers = _.difference(header.root.headers, _.rest(list));
-		header.is_expanded = false;
-        var fold_lvls = _.map(header.root.headers, function(g) {return g.path.length;});
-        var new_groupby_length = _.max(fold_lvls);
+	get_other_root: function (header) {
+		return (header.root === this.rows) ? this.cols : this.rows;
+	},
 
+    main_row: function () { return this.rows.headers[0]; },
+    
+    main_col: function () { return this.cols.headers[0]; },
+
+	// ----------------------------------------------------------------------
+	// Table manipulation methods
+	// ----------------------------------------------------------------------
+	fold: function (header) {
+		var ancestors = this.get_ancestors(header),
+            removed_ids = _.pluck(ancestors, 'id');
+
+		header.root.headers = _.difference(header.root.headers, ancestors);
         header.children = [];
+		header.expanded = false;
+
         this.cells = _.reject(this.cells, function (cell) {
-            return (_.contains(ids_to_remove, cell.x) || _.contains(ids_to_remove, cell.y));
+            return (_.contains(removed_ids, cell.x) || _.contains(removed_ids, cell.y));
         });
+
+        var new_groupby_length = _.max(_.map(header.root.headers, function(g) {return g.path.length;}));
         if (new_groupby_length < header.root.groupby.length) {
 			header.root.groupby.splice(new_groupby_length);
 			this.trigger('groupby_changed');
@@ -168,50 +250,54 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         this.trigger('redraw_required');
 	},
 
-	expand: function (header_id, field_id) {
+	expand: function (header_id, groupby) {
         var self = this,
-            header = this.get_header(header_id);
+            header = this.get_header(header_id),
+			otherRoot = this.get_other_root(header),
+			fields = otherRoot.groupby.concat(this.measures);
 
-        if (header.path.length == header.root.groupby.length) {
-            header.root.groupby.push(field_id);
+        if (header.path.length === header.root.groupby.length) {
+            self._add_groupby(header.root.groupby, groupby);
             this.trigger('groupby_changed');
         }
+        groupby = [header.root.groupby[header.path.length]].concat(otherRoot.groupby);
 
-        var otherDim = (header.root === this.cols) ? this.rows : this.cols;
-        return this.get_groups(this.visible_fields(), header.domain, otherDim.groupby, {first_groupby:field_id, add_path:true})
+        return this.get_groups(groupby, fields, header.domain)
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
-                    var new_header_id = self.make_header(group, header);
-                    _.each(group, function (data) {
-						var other = _.find(otherDim.headers, function (h) {
-							if (header.root === self.cols) {
-								return _.isEqual(data.path.slice(1), h.path);
+                    var child_id = self.make_header(group, header);
+                    // make cells
+                    _.each(self.get_ancestors_and_self(group), function (data) {
+                        var values = _.map(self.measures, function (m) {
+                            return data.attributes.aggregates[m.field];
+                        });
+
+                        var other = _.find(otherRoot.headers, function (h) {
+                            if (header.root === self.cols) {
+                                return _.isEqual(data.path.slice(1), h.path);
                             } else {
                                 return _.isEqual(_.rest(data.path), h.path);
-                            }
-                        });
+                                }
+                            });
                         if (other) {
-							self.set_value(new_header_id, other.id, _.map(self.measures, function (measure) {
-								return (measure === '__count') ? data.attributes.length : data.attributes.aggregates[measure];
-							}));
+                            self.add_cell(child_id, other.id, values);
                         }
                     });
                 });
-                header.is_expanded = true;
+                header.expanded = true;
                 self.trigger('redraw_required');
             });
 	},
 
-	make_header: function (groups, parent) {
-		var name = groups[0].attributes.value,
+	make_header: function (group, parent) {
+		var title = group.attributes.value,
             new_header = {
 				id: _.uniqueId(),
-				path: parent.path.concat(name),
-				title: name,
-				is_expanded: false,
-				parent: parent.id,
+				path: parent.path.concat(title),
+				title: title,
+				expanded: false,
 				children: [],
-				domain: groups[0].model._domain,
+				domain: group.model._domain,
 				root: parent.root,
 			};
 		parent.children.splice(0,0, new_header);
@@ -227,38 +313,17 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		this.trigger('redraw_required');
 	},
 
-	get_total: function (header) {
-		if (header) {
-			var main = (header.root === this.rows) ? this.cols.main : this.rows.main;
-			return this.get_value(header.id, main.id);
-		} else {
-			return this.rows.main.total;
-		}
-	},
-
+	// ----------------------------------------------------------------------
+	// Data loading methods
+	// ----------------------------------------------------------------------
 	update_data: function () {
-		var self = this,
-			options = {
-				col_groupby: this.cols.groupby,
-				row_groupby: this.rows.groupby,
-				measures: this.measures,
-				domain: this.domain,
-			};
+		var self = this;
 
-		return this.load_data(options).then (function (result) {
+		return this.load_data().then (function (result) {
 			if (result) {
 				self.no_data = false;
-				if (self.cols.headers) {
-					self.update_headers(self.cols, result.col_headers);
-				} else {
-					self.expand_headers(self.cols, result.col_headers);
-				}
-				if (self.rows.headers) {
-					self.update_headers(self.rows, result.row_headers);
-				} else {
-					self.expand_headers(self.rows, result.row_headers);
-				}
-				self.cells = result.cells;
+				self[self.cols.headers ? 'update_headers' : 'expand_headers'](self.cols, result.col_headers);
+				self[self.rows.headers ? 'update_headers' : 'expand_headers'](self.rows, result.row_headers);
 			} else {
 				self.no_data = true;
 			}
@@ -268,10 +333,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 
 	expand_headers: function (root, new_headers) {
 		root.headers = new_headers;
-		root.main = new_headers[0];
 		_.each(root.headers, function (header) {
 			header.root = root;
-			header.is_expanded = (header.children.length > 0);
+			header.expanded = (header.children.length > 0);
 		});
 	},
 
@@ -280,102 +344,84 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 			var corresponding_header = _.find(new_headers, function (h) {
 				return _.isEqual(h.path, header.path);
 			});
-			if (corresponding_header && (header.is_expanded)) {
-				corresponding_header.is_expanded = true;
+			if (corresponding_header && header.expanded) {
+				corresponding_header.expanded = true;
 				_.each(corresponding_header.children, function (c) {
-					c.is_expanded = false;
+					c.expanded = false;
 				});
 			}
-			if (corresponding_header && (!header.is_expanded)) {
-				corresponding_header.is_expanded = false;
+			if (corresponding_header && (!header.expanded)) {
+				corresponding_header.expanded = false;
 			}
 		});
 		var updated_headers = _.filter(new_headers, function (header) {
-			return (header.is_expanded !== undefined);
+			return (header.expanded !== undefined);
 		});
-		_.each(updated_headers, function (hdr) {
-			if (!hdr.is_expanded) {
-				hdr.children = [];
+		_.each(updated_headers, function (header) {
+			if (!header.expanded) {
+				header.children = [];
 			}
-			hdr.root = root;
+			header.root = root;
 		});
 		root.headers = updated_headers;
-		root.main = root.headers[0];
 	},
 
-	//***************************************************************
-	// Data loading code from db...
-	//***************************************************************
-	get_groups: function (fields, domain, groupbys, options) {
+	// options: fields: _, path_prefix: []
+	get_groups: function (groupbys, fields, domain, path) {
+        path = path || [];
 		var self = this,
-			groupings = ((options || {}).first_groupby) ? [(options || {}).first_groupby].concat(groupbys) : groupbys;
+            groupby = (groupbys.length) ? groupbys[0] : [];
 
-		return this.query_db(fields, domain, groupings).then(function (groups) {
-			return _.map(groups, function (group) {
-				return ((options || {}).add_path) ? self.add_path(group, []) : group;
-			});
+		return this._query_db(groupby, fields, domain, path).then(function (groups) {
+            if (groupbys.length > 1) {
+                var get_subgroups = $.when.apply(null, _.map(groups, function (group) {
+                    return self.get_groups(_.rest(groupbys), fields, group.model._domain, path.concat(group.attributes.value)).then(function (subgroups) {
+                        group.children = subgroups;
+                    });
+                }));
+                 return get_subgroups.then(function () {
+                     return groups;
+                 });
+            } else {
+                return groups;
+            }
 		});
 
 	},
 
-	query_db: function (fields, domain, groupbys) {
-		var self = this;
-		return this.model.query(fields)
+	_query_db: function (groupby, fields, domain, path) {
+		var self = this,
+            field_ids = _.without(_.pluck(fields, 'field'), '__count');
+        // To do : add code to check if groupby is date/datetime 
+        //     and in that case, add the correct code to the context 
+		return this.model.query(field_ids)
 			.filter(domain)
-			.group_by(groupbys)
+			.group_by(groupby.field)
 			.then(function (results) {
-				var non_empty_results = _.filter(results, function (group) {
+				var groups = _.filter(results, function (group) {
 					return group.attributes.length > 0;
 				});
-				_.each(non_empty_results, self.sanitize_value.bind(self));
-				if (groupbys.length <= 1) {
-					return non_empty_results;
-				} else {
-					var get_subgroups = $.when.apply(null, _.map(non_empty_results, function (result) {
-						var new_domain = result.model._domain;
-						var new_groupings = groupbys.slice(1);
-						return self.query_db(fields,new_domain, new_groupings).then(function (subgroups) {
-							result.subgroups_data = subgroups;
-						});
-					}));
-					return get_subgroups.then(function () {
-						return non_empty_results;
-					});
-				}
+				return _.map(groups, function (g) { return self.format_group(g, path); });
 			});
 	},
 
-	sanitize_value: function (group) {
-		var value = group.attributes.value;
+	format_group: function (group, current_path) {
+         var value = group.attributes.value;
 
-		if (this.fields &&
-			group.attributes.grouped_on &&
-			this.fields[group.attributes.grouped_on].type === 'selection') {
-			var selection = this.fields[group.attributes.grouped_on].selection;
-			var value_lookup = _.find(selection, function (val) {
-				return val[0] === value;
-			});
-			group.attributes.value = (value_lookup) ? value_lookup[1] : 'undefined';
-			return;
-		}
-		if (value === false) {
-			group.attributes.value = 'undefined';
-		} else if (value instanceof Array) {
-			group.attributes.value = value[1];
-		} else {
-			group.attributes.value = value;
-		}
-	},
+         if (group.attributes.grouped_on && this.fields[group.attributes.grouped_on].type === 'selection') {
+             var selection = this.fields[group.attributes.grouped_on].selection,
+                 value_lookup = _.find(selection, function (val) { return val[0] === value; });
+             group.attributes.value = value_lookup ? value_lookup[1] : 'undefined';
+         } else if (value === false) {
+             group.attributes.value = 'undefined';
+         } else if (value instanceof Array) {
+             group.attributes.value = value[1];
+         } 
 
-	add_path: function (group, current_path) {
-		var self = this;
+        group.path = value ? (current_path || []).concat(group.attributes.value) : [];
+        group.attributes.aggregates.__count = group.attributes.length;
 
-		group.path = current_path.concat(group.attributes.value);
-		var result = [group];
-		_.each(group.subgroups_data, function (subgroup) {
-			result = result.concat(self.add_path(subgroup, group.path));
-		});
-		return result;
+		return group;
 	},
 
 	// To obtain all the values required to draw the full table, we have to do 
@@ -384,13 +430,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	// 2 + row.groupby.length calls. For example, if row.groupby = [r1, r2, r3] 
 	// and col.groupby = [c1, c2], then we will make the call with the following 
 	// groupbys: [r1,r2,r3], [c1,r1,r2,r3], [c1,c2,r1,r2,r3], [].
-	load_data: function (options) {
+	load_data: function () {
 		var self = this,
-			cols = options.col_groupby,
-			rows = options.row_groupby,
-			visible_fields = _.without(rows.concat(cols, options.measures), '__count');
-
-		// if (options.measure) { visible_fields = visible_fields.concat(options.measure); }
+			cols = this.cols.groupby,
+			rows = this.rows.groupby,
+			visible_fields = rows.concat(cols, self.measures);
 
 		var groupbys = _.map(_.range(cols.length + 1), function (i) {
 			return cols.slice(0, i).concat(rows);
@@ -398,7 +442,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		groupbys.push([]);
 
 		var def_array = _.map(groupbys, function (groupby) {
-			return self.get_groups(visible_fields, options.domain, groupby);
+			return self.get_groups(groupby, visible_fields, self.domain);
 		});
 
 		return $.when.apply(null, def_array).then(function () {
@@ -407,88 +451,61 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 				col_data = (cols.length !== 0) ? data[data.length - 2] : [],
 				total = data[data.length - 1][0];
 
-			options.total = total;
 			return (total === undefined) ? undefined
-                    : self.format_data(total, col_data, row_data, data, options);
+                    : self.format_data(total, col_data, row_data, data);
 		});
 	},
 
-	get_value_from_data: function (data, measures) {
-		var attr = data.attributes;
-		var result = _.map(measures, function (measure) {
-			return (measure === '__count') ? attr.length : attr.aggregates[measure];
-		});
-		return result;
-	},
-
-	format_data: function (total, col_data, row_data, cell_data, options) {
+	format_data: function (total, col_data, row_data, cell_data) {
 		var self = this,
-			dim_row = options.row_groupby.length,
-			dim_col = options.col_groupby.length,
-			col_headers = make_list(this.make_headers(col_data, dim_col, options)),
-			row_headers = make_list(this.make_headers(row_data, dim_row, options)),
+			dim_row = this.rows.groupby.length,
+			dim_col = this.cols.groupby.length,
+            col_headers = this.get_ancestors_and_self(this.make_headers(col_data, dim_col)),
+            row_headers = this.get_ancestors_and_self(this.make_headers(row_data, dim_row)),
 			cells = [];
 
+        this.cells = [];
 		_.each(cell_data, function (data, index) {
-			self.make_cells(data, index, [], cells, row_headers, col_headers, options);
+			self.make_cells(data, index, [], row_headers, col_headers);
 		}); // make it more functional?
 
 		return {col_headers: col_headers,
-                row_headers: row_headers,
-                cells: cells};
-
-        function make_list (tree) {
-			return [].concat.apply([tree], _.map(tree.children, make_list));
-        }
+                row_headers: row_headers};
 	},
 
-	make_headers: function (data, depth, options, parent) {
+	make_headers: function (data, depth, parent) {
 		var self = this,
 			main = {
 				id: _.uniqueId(),
-				path: (parent) ? parent.path.concat(data.attributes.value) : [],
-				parent: parent,
+				path: parent ? parent.path.concat(data.attributes.value) : [],
 				children: [],
-				title: (parent) ? data.attributes.value : '',
-				domain: (parent) ? data.model._domain : options.domain,
-				total: this.get_value_from_data(options.total, options.measures),
+				title: parent ? data.attributes.value : '',
+				domain: parent ? data.model._domain : this.domain,
 			};
 
 		if (main.path.length < depth) {
-			main.children = _.map(data.subgroups_data || data, function (data_pt) {
-				return self.make_headers (data_pt, depth, options, main);
+			main.children = _.map(data.children || data, function (data_pt) {
+				return self.make_headers (data_pt, depth, main);
 			});
 		}
 		return main;
 	},
 
-	make_cells: function (data, index, current_path, current_cells, rows, cols, options) {
+	make_cells: function (data, index, current_path, rows, cols) {
 		var self = this;
 		_.each(data, function (group) {
 			var attr = group.attributes,
-				group_val = (attr.value instanceof Array) ? attr.value[1] : attr.value,
-				path = current_path,
-				values = _.map(options.measures, function (measure) {
-					return (measure === '__count') ? attr.length : attr.aggregates[measure];
+				path = attr.grouped_on ? current_path.concat(attr.value) : current_path,
+				values = _.map(self.measures, function (measure) {
+					return (measure.field === '__count') ? attr.length : attr.aggregates[measure.field];
 				});
 
-			group_val = (group_val === false) ? undefined : group_val;
+			var row = _.find(rows, function (header) { return _.isEqual(header.path, path.slice(index)); });
+			var col = _.find(cols, function (header) { return _.isEqual(header.path, path.slice(0, index)); });
+			self.add_cell(row.id, col.id, values);
 
-			if (attr.grouped_on !== undefined) {
-				path = path.concat((attr.value === false) ? 'undefined' : group_val);
-			}
-			var row = _.find(rows, function (header) {
-				return _.isEqual(header.path, path.slice(index));
-			});
-			var col = _.find(cols, function (header) {
-				return _.isEqual(header.path, path.slice(0, index));
-			});
-			current_cells.push({x: Math.min(row.id, col.id),
-						y: Math.max(row.id, col.id),
-						values: values});
-
-			if (attr.has_children) {
-				self.make_cells (group.subgroups_data, index, path, current_cells, rows, cols, options);
+			if (group.children) {
+				self.make_cells (group.children, index, path, rows, cols);
 			}
 		});
 	},
@@ -496,3 +513,5 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 });
 
 })();
+
+
