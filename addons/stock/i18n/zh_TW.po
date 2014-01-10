@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-01-08 05:30+0000\n"
+"PO-Revision-Date: 2014-01-09 07:59+0000\n"
 "Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-09 05:38+0000\n"
+"X-Launchpad-Export-Date: 2014-01-10 05:32+0000\n"
 "X-Generator: Launchpad (build 16884)\n"
 
 #. module: stock
@@ -49,6 +49,7 @@ msgid ""
 "value for all products in this category. It can also directly be set on each "
 "product"
 msgstr ""
+"除非來源倉位指定一個估價科目，否則進行即時庫存估價時，所有入庫調動對應的日記帳項目將記入這個科目。這是此產品類別的預設值，也可以直接設定在每個產品上。"
 
 #. module: stock
 #: view:stock.picking.out:0
@@ -992,7 +993,7 @@ msgstr "公司間轉移的中途倉位"
 msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
 "cancel the picking lines."
-msgstr ""
+msgstr "您不能直接取消已有項目調動完成的提貨單。您應取消該提貨單內的細項。"
 
 #. module: stock
 #: field:stock.config.settings,decimal_precision:0
@@ -1253,6 +1254,20 @@ msgid ""
 "location consumes the raw material and produces finished products\n"
 "                      "
 msgstr ""
+"* 供應商倉位：為虛擬倉位，代表來自供應商的貨物的來源倉位。\n"
+"                       \n"
+"* 檢視：為虛擬倉位，用於為倉庫建立階層式的結構。不能直接存放貨品，只用於彙總它的子(下層)倉位。\n"
+"                       \n"
+"* 內部倉位：在您倉庫中的實際倉位。\n"
+"                       \n"
+"* 客戶倉位：為虛擬倉位，代表送至客戶的產品的目標倉位。\n"
+"                       \n"
+"*盤點：為虛擬倉位，充當盤點時的對應方，以修正庫存量水平(實際庫存) \n"
+"                       \n"
+"* 採購：為虛擬倉位，充當來源尚為未知(供應商或自製)的採購作業的暫時性對應方。當採購排程已完成，此倉位應為零。\n"
+"                       \n"
+"* 生產：提供生產作業的虛擬對應倉位，此倉位消化原物料並且產出成品。\n"
+"                      "
 
 #. module: stock
 #: field:stock.partial.move.line,update_cost:0
@@ -1440,12 +1455,12 @@ msgstr ""
 #. module: stock
 #: view:stock.split.into:0
 msgid "Quantity to Leave in the Current Pack"
-msgstr ""
+msgstr "在現有包裹要留下的數量"
 
 #. module: stock
 #: view:stock.tracking:0
 msgid "Pack Identification"
-msgstr ""
+msgstr "包裹標識"
 
 #. module: stock
 #: field:product.product,track_production:0
@@ -1455,26 +1470,26 @@ msgstr "追蹤生產批次"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr ""
+msgstr "等待其他調動"
 
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
-msgstr ""
+msgstr "此數量以該產品預設單位表示。"
 
 #. module: stock
 #: help:stock.move,price_unit:0
 msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when average price costing method is used)"
-msgstr ""
+msgstr "當使用者在提貨確認時，此程式用欄位用於記錄產品成本（使用平均成本法時）。"
 
 #. module: stock
 #: code:addons/stock/stock.py:1890
 #, python-format
 msgid "Warning: No Back Order"
-msgstr ""
+msgstr "警告：沒有延期交貨單"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -1485,12 +1500,12 @@ msgstr "庫存調動"
 #. module: stock
 #: view:stock.inventory.merge:0
 msgid "Merge Inventories"
-msgstr ""
+msgstr "合併實地盤點"
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "To be refunded/invoiced"
-msgstr ""
+msgstr "待退款/開立發票"
 
 #. module: stock
 #: code:addons/stock/stock.py:2448
@@ -1502,12 +1517,12 @@ msgstr "只能刪除調動草案。"
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
-msgstr ""
+msgstr "您不能存入產品%s至檢視類別的倉位%s。"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Split in serial numbers"
-msgstr ""
+msgstr "分拆序號"
 
 #. module: stock
 #: view:stock.move:0

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-12-06 23:47+0000\n"
-"Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
+"PO-Revision-Date: 2014-01-10 03:13+0000\n"
+"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-07 06:32+0000\n"
-"X-Generator: Launchpad (build 16869)\n"
+"X-Launchpad-Export-Date: 2014-01-10 05:32+0000\n"
+"X-Generator: Launchpad (build 16884)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -398,7 +398,7 @@ msgstr "取引先"
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
 msgid "Allow claim on deliveries"
-msgstr ""
+msgstr "配送時の請求を許可"
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -551,7 +551,7 @@ msgstr "製品がリアルタイム在庫評価が有効である時、このア
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_lot:0
 msgid "Track serial number on logistic units (pallets)"
-msgstr ""
+msgstr "物流単位(パレット)のシリアル番号を追跡"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -629,7 +629,7 @@ msgstr "移動統計値"
 #: help:stock.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
+msgstr "製品に異なる単位の選択と維持ができます。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
@@ -989,7 +989,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,decimal_precision:0
 msgid "Decimal precision on weight"
-msgstr ""
+msgstr "重量の小数点精度"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -1334,7 +1334,7 @@ msgstr "利用可能な在庫移動（処理準備完了）"
 msgid ""
 "Allows you to create and manage your packaging dimensions and types you want "
 "to be maintained in your system."
-msgstr ""
+msgstr "システムで維持したいパッケージの寸法とタイプを作成、管理できます。"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -1753,7 +1753,7 @@ msgstr "連鎖的なリードタイム"
 #. module: stock
 #: field:stock.config.settings,group_uom:0
 msgid "Manage different units of measure for products"
-msgstr ""
+msgstr "異なる製品の単位を管理"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
@@ -2204,7 +2204,7 @@ msgstr "価格"
 #. module: stock
 #: field:stock.config.settings,module_stock_invoice_directly:0
 msgid "Create and open the invoice when the user finish a delivery order"
-msgstr ""
+msgstr "配送完了で請求を開始"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_memory
@@ -2214,7 +2214,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Generate accounting entries per stock movement"
-msgstr ""
+msgstr "在庫移動ごとに会計項目を生成"
 
 #. module: stock
 #: code:addons/stock/product.py:451
@@ -2444,12 +2444,12 @@ msgstr "単位"
 #. module: stock
 #: field:stock.config.settings,group_stock_multiple_locations:0
 msgid "Manage multiple locations and warehouses"
-msgstr ""
+msgstr "複数の場所と倉庫を管理"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_production_lot:0
 msgid "Track serial number on products"
-msgstr ""
+msgstr "製品のシリアル番号を追跡"
 
 #. module: stock
 #: field:stock.picking,message_unread:0
@@ -3049,7 +3049,7 @@ msgstr "連絡先住所："
 msgid ""
 "When you select a serial number on product moves, you can get the upstream "
 "or downstream traceability of that product."
-msgstr ""
+msgstr "移動している製品のシリアル番号を選択すると、その製品の上流あるいは下流のトレーサビリティが得られます。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:95
@@ -3136,7 +3136,7 @@ msgstr "これをチェックした場合、選択された場所の子の場所
 #: help:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr ""
+msgstr "製品と製品カテゴリに在庫評価を設定できます。"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_location:0
@@ -3148,6 +3148,10 @@ msgid ""
 "needs, etc.\n"
 "                This installs the module stock_location."
 msgstr ""
+"プッシュ型とプル型の在庫フローを提供します。この機能の代表的な用途は次の通りです。\n"
+"                製品の製造チェーンと製品ごとのデフォルトの場所を管理\n"
+"                業務上の必要に応じた倉庫内の経路の定義\n"
+"                stock_locationモジュールがインストールされます。"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3445,7 +3449,7 @@ msgstr "通路（X）"
 #. module: stock
 #: field:stock.config.settings,group_stock_packaging:0
 msgid "Allow to define several packaging methods on products"
-msgstr ""
+msgstr "複数の梱包方法を製品に定義できます。"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_7
@@ -4038,7 +4042,7 @@ msgstr "設定"
 #. module: stock
 #: model:res.groups,name:stock.group_locations
 msgid "Manage Multiple Locations and Warehouses"
-msgstr ""
+msgstr "複数の場所と倉庫を管理"
 
 #. module: stock
 #: help:stock.change.standard.price,new_price:0
@@ -4065,7 +4069,7 @@ msgid ""
 "This allows to automatically launch the invoicing wizard if the delivery is\n"
 "                to be invoiced when you send or deliver goods.\n"
 "                This installs the module stock_invoice_directly."
-msgstr ""
+msgstr "商品を発送または配送する際に請求する場合、自動的に請求ウィザードを起動できます。"
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -4353,6 +4357,8 @@ msgid ""
 "Adds a Claim link to the delivery order.\n"
 "                This installs the module claim_from_delivery."
 msgstr ""
+"配送に関連づけた請求を追加します。\n"
+"                claim_from_deliveryモジュールがインストールされます。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:208
@@ -4373,7 +4379,7 @@ msgstr "ユーザ"
 #. module: stock
 #: field:stock.config.settings,module_stock_location:0
 msgid "Create push/pull logistic rules"
-msgstr ""
+msgstr "プッシュ型/プル型の物流ルールを作成"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
@@ -4421,6 +4427,7 @@ msgid ""
 "a serial number on product moves, you can get the upstream or downstream "
 "traceability of that product."
 msgstr ""
+"シリアル番号を使って製品を管理できます。移動している製品のシリアル番号を選択すると、その製品の上流あるいは下流のトレーサビリティが得られます。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:124
@@ -4718,7 +4725,7 @@ msgstr ""
 msgid ""
 "This allows to configure and use multiple stock locations and warehouses,\n"
 "                instead of having a single default one."
-msgstr ""
+msgstr "単一の在庫場所と倉庫の代わりに複数を設定して使用できます。"
 
 #. module: stock
 #: view:stock.picking:0
