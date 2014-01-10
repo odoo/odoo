@@ -780,12 +780,16 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.confirmation", {'order': order})
 
     @website.route(['/shop/change_sequence/'], type='json', auth="public")
-    def change_sequence(self, id, top):
+    def change_sequence(self, id, sequence):
         product_obj = request.registry.get('product.template')
-        if top:
+        if sequence == "top":
             product_obj.set_sequence_top(request.cr, request.uid, [id], context=request.context)
-        else:
+        elif sequence == "bottom":
             product_obj.set_sequence_bottom(request.cr, request.uid, [id], context=request.context)
+        elif sequence == "up":
+            product_obj.set_sequence_up(request.cr, request.uid, [id], context=request.context)
+        elif sequence == "down":
+            product_obj.set_sequence_down(request.cr, request.uid, [id], context=request.context)
 
     @website.route(['/shop/change_styles/'], type='json', auth="public")
     def change_styles(self, id, style_id):

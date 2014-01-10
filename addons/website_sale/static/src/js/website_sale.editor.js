@@ -25,10 +25,17 @@
         location.href = location.href.replace(/(\?|#|$).*/, search + location.hash);
     }
 
-    $(document).on('click', '.js_options .js_go_to_top,.js_options .js_go_to_bottom', function (event) {
+    $(document).on('click', '.js_options .js_go_to_top,.js_options .js_go_to_bottom,.js_options .js_go_up,.js_options .js_go_down', function (event) {
         var $a = $(event.currentTarget);
         var $data = $a.parents(".js_options:first");
-        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'top': $a.hasClass('js_go_to_top')})
+        var sequence = "top";
+        if ($a.hasClass('js_go_to_bottom'))
+            sequence = "bottom";
+        else if ($a.hasClass('js_go_up'))
+            sequence = "up";
+        else if ($a.hasClass('js_go_down'))
+            sequence = "down";
+        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'sequence': sequence})
             .then(reload_enable_editor);
     });
 
