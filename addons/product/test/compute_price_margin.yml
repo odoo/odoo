@@ -21,11 +21,11 @@
       product = self.pool.get('product.product').browse(cr,uid,variant_id.id,context=context)
       assert product.lst_price == (20 + ((20 * 10) / 100)) + 30, "Sell price is not correspond."
 -
-  In order to check the Price Extra after setting 'public sale price(lst_price)' of a product.
+  In order to check the Price Extra after setting 'public sale price(lst_price)' of a product. price extra is equal to 32 - (20 + ((20 * 10) / 100)).
 -
   !python {model: product.template}: |
     template = self.browse(cr, uid, ref("product_template_test1"))
     for variant_id in template.product_variant_ids:
-      self.pool.get('product.product').write(cr,uid,variant_id.id,{'lst_price':30},context=context)
+      self.pool.get('product.product').write(cr,uid,variant_id.id,{'lst_price':32},context=context)
       product = product = self.pool.get('product.product').browse(cr,uid,variant_id.id,context=context)
       assert product.price_extra == 10, "Price Extra should be 10."

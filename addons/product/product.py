@@ -587,6 +587,9 @@ class product_product(osv.osv):
         if field_value > 0.0:
             product = self.browse(cr, uid, product_id, context=context)
             price_extra = (field_value - product.list_price)
+            if product.price_margin:
+                price = (product.list_price + (product.list_price * (product.price_margin / 100)))
+                price_extra = (field_value - price)
             return self.write(cr, uid, [product_id], {'price_extra': price_extra}, context=context)
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
