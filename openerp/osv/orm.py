@@ -4412,7 +4412,9 @@ class BaseModel(object):
                 tocreate[v] = {}
             else:
                 tocreate[v] = {'id': vals[self._inherits[v]]}
-        (upd0, upd1, upd2) = ('', '', [])
+
+        query_fields, query_formats, query_values = [], [], []
+
         upd_todo = []
         unknown_fields = []
         for v in vals.keys():
@@ -4429,15 +4431,12 @@ class BaseModel(object):
                 'No such field(s) in model %s: %s.',
                 self._name, ', '.join(unknown_fields))
 
-        # Try-except added to filter the creation of those records whose filds are readonly.
-        # Example : any dashboard which has all the fields readonly.(due to Views(database views))
-        try:
-            cr.execute("SELECT nextval('"+self._sequence+"')")
-        except:
-            raise except_orm(_('UserError'),
-                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
+        if not self._sequence:
+            raise except_orm(
+                _('UserError'),
+                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.')
+            )
 
-        id_new = cr.fetchone()[0]
         for table in tocreate:
             if self._inherits[table] in vals:
                 del vals[self._inherits[table]]
@@ -4454,9 +4453,9 @@ class BaseModel(object):
             else:
                 self.pool[table].write(cr, user, [record_id], tocreate[table], context=parent_context)
 
-            upd0 += ',' + self._inherits[table]
-            upd1 += ',%s'
-            upd2.append(record_id)
+            query_fields.append(self._inherits[table])
+            query_formats.append('%s')
+            query_values.append(record_id)
 
         #Start : Set bool fields to be False if they are not touched(to make search more powerful)
         bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
@@ -4494,9 +4493,10 @@ class BaseModel(object):
                     vals.pop(field)
         for field in vals:
             if self._columns[field]._classic_write:
-                upd0 = upd0 + ',"' + field + '"'
-                upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
-                upd2.append(self._columns[field]._symbol_set[1](vals[field]))
+                query_fields.append('"%s"' % field)
+                query_formats.append(self._columns[field]._symbol_set[0])
+                query_values.append(self._columns[field]._symbol_set[1](vals[field]))
+
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
                 if (hasattr(self._columns[field], '_fnct_inv')) and not isinstance(self._columns[field], fields.related):
@@ -4518,10 +4518,20 @@ class BaseModel(object):
                     and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
-            upd0 += ',create_uid,create_date,write_uid,write_date'
-            upd1 += ",%s,(now() at time zone 'UTC'),%s,(now() at time zone 'UTC')"
-            upd2.extend((user, user))
-        cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
+            query_fields.extend(['create_uid', 'create_date', 'write_uid', 'write_date'])
+            query_formats.extend(['%s', "(now() at time zone 'UTC')", '%s', "(now() at time zone 'UTC')"])
+            query_values.extend((user, user))
+
+        cr.execute(
+            """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
+                self._table, 
+                ','.join(query_fields), 
+                ','.join(query_formats)
+            ),
+            tuple(query_values)
+        )
+
+        id_new, = cr.fetchone()
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
