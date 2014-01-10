@@ -247,10 +247,9 @@ class mail_thread(osv.AbstractModel):
                 new = set(command[2])
 
         # remove partners that are no longer followers
-        self.message_unsubscribe(cr, uid, [id], list(old-new))
-
+        self.message_unsubscribe(cr, uid, [id], list(old-new), context=context)
         # add new followers
-        self.message_subscribe(cr, uid, [id], list(new-old))
+        self.message_subscribe(cr, uid, [id], list(new-old), context=context)
 
     def _search_followers(self, cr, uid, obj, name, args, context):
         """Search function for message_follower_ids
@@ -323,8 +322,11 @@ class mail_thread(osv.AbstractModel):
             message_follower_ids = values.get('message_follower_ids') or []  # webclient can send None or False
             message_follower_ids.append([4, pid])
             values['message_follower_ids'] = message_follower_ids
-
-        thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
+            # add operation to ignore access rule checking for subscription
+            context_operation = dict(context, operation='create')
+        else:
+            context_operation = context
+        thread_id = super(mail_thread, self).create(cr, uid, values, context=context_operation)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not context.get('mail_create_nolog'):
@@ -1496,16 +1498,20 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
+        if context is None:
+            context = {}
+
         mail_followers_obj = self.pool.get('mail.followers')
         subtype_obj = self.pool.get('mail.message.subtype')
 
         user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         if set(partner_ids) == set([user_pid]):
-            try:
-                self.check_access_rights(cr, uid, 'read')
-                self.check_access_rule(cr, uid, ids, 'read')
-            except (osv.except_osv, orm.except_orm):
-                return False
+            if context.get('operation', '') != 'create':
+                try:
+                    self.check_access_rights(cr, uid, 'read')
+                    self.check_access_rule(cr, uid, ids, 'read')
+                except (osv.except_osv, orm.except_orm):
+                    return False
         else:
             self.check_access_rights(cr, uid, 'write')
             self.check_access_rule(cr, uid, ids, 'write')
