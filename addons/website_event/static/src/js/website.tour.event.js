@@ -146,6 +146,7 @@
                     title:     "Publish your event",
                     content:   "Click to publish your event.",
                     trigger:   'click',
+                    delay:     5000,
                 },
                 {
                     stepId:    'customize-event',
