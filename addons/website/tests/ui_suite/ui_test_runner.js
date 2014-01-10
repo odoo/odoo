@@ -43,7 +43,7 @@ function run (test) {
 
     var page = require('webpage').create();
 
-    page.viewportSize = { width: 1920, height: 1080 };
+    page.viewportSize = { width: 1440, height: 900 };
 
     page.onError = function(message, trace) {
         console.log('{ "event": "error", "message": "'+message+'"}');
