@@ -451,8 +451,14 @@ openerp.testing.section('search.completions', {
                     {item: completion});
                 equal(view.query.length, 1, "should still have only one facet");
                 var facet = view.query.at(0);
+                var values = facet.get('values');
+                equal(values.length, 2, 'should have two values');
+                equal(values[0].label, 'previous');
+                equal(values[0].value, 41);
+                equal(values[1].label, 'dummy');
+                equal(values[1].value, 42);
                 deepEqual(
-                    facet.get('values'),
+                    values,
                     [{label: 'previous', value: 41}, {label: 'dummy', value: 42}],
                     "should have added selected value to old one");
             });
