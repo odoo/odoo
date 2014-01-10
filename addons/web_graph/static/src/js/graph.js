@@ -41,7 +41,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         this.widget_config = { title: arch.attrs.string };
 
-        debugger;
         if (!_.has(arch.attrs, 'type')) {
             this.widget_config.mode = 'bar_chart';
         } else {
@@ -238,7 +237,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
             self.add_measures_to_options();
         });
 
-        $.when(def1, def2).then(function () {
+        return $.when(def1, def2).then(function () {
             self.pivot = new openerp.web_graph.PivotTable(self.model, self.domain, self.fields, self.pivot_options);
             self.pivot.on('redraw_required', self, self.proxy('display_data'));
             self.pivot.on('groupby_changed', self, function () { self.trigger('groupby_changed'); });
@@ -328,57 +327,6 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
             measure_selection.append($('<li></li>').append(choice));
         });
     },
-
-    //         self.fields = fs;
-    //         var temp = _.map(fs, function (field, name) {
-    //             return {name:name, type: field.type};
-    //         });
-    //         temp = _.filter(temp, function (field) {
-    //             return (((field.type === 'integer') || (field.type === 'float')) && (field.name !== 'id'));
-    //         });
-    //         self.measure_list = _.map(temp, function (field) {
-    //             return field.name;
-    //         });
-
-    //         var measure_selection = self.$('.graph_measure_selection');
-    //         _.each(self.measure_list, function (measure) {
-    //             var choice = $('<a></a>').attr('data-choice', measure)
-    //                                      .attr('href', '#')
-    //                                      .append(self.fields[measure].string);
-    //             measure_selection.append($('<li></li>').append(choice));
-    //         });
-    //     });
-    // },
-
-    // hide ui/show, stacked/grouped
-    // config: function (options) {
-        // Possible modes: pivot, heatmap, row_heatmap, col_heatmap,
-        //                 bar_chart, pie_chart, line_chart
-        // if (_.has(options, 'mode')) { this.mode = mode; }
-        // if (_.has(options, 'visible_ui')) {
-        //     this.visible_ui = options.visible_ui;
-        // }
-        // if (_.has(options, 'bar_ui')) {
-        //     this.bar_ui = options.bar_ui;
-        // }
-        // if (_.has(options, 'title')) {
-        //     this.title = options.title;
-        // }
-        // debugger;
-        // this.pivot.config(options);
-    // },
-
-
-        // get the most important fields (of the model) by looking at the
-        // groupby filters defined in the search view
-
-        // get the fields descriptions and measure list from the model
-
-    //     return $.when(deferred1, deferred2).then(function () {
-    //         self.pivot = new openerp.web_graph.PivotTable(self.model, self.fields);
-    //         self.activate_display();
-    //     });
-    // },
 
     set_mode: function (mode) {
 
@@ -797,7 +745,6 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
     pie_chart: function () {
         var self = this,
             dim_x = this.pivot.rows.groupby.length;
-        debugger;
         var data = _.map(this.pivot.get_rows_leaves(), function (row) {
             var title = _.map(row.path, function (p) {
                 return p || 'Undefined';

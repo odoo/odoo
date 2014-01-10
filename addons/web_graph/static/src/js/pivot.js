@@ -9,8 +9,7 @@
 //  Here is a short description of the way the data is organized:
 //  Main fields:
 //      cells = [cell]
-//               cell = {x: _, y: _, values: [value]}
-//               value = {type: _, value: _}
+//               cell = {x: _, y: _, values: [_]}
 //      measures = [measure]
 // 				  measure = {field: _, string: _, type: _}
 //      rows, cols = {groupby: [groupby], headers: [header]}
@@ -20,7 +19,6 @@
 //					path: _,
 //					title: _,
 //					expanded: _,
-//					parent: _,
 //					children: _,
 //					domain: _,
 //					root: _,
@@ -28,7 +26,6 @@
 //
 //  Pivot Table emits the events 'groupby_changed' and 'redraw_required' when necessary.
 // PivotTable require a 'update_data' after init to be ready
-// to do: add an option to enable/disable update_data at the end of init
 openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherMixin, {
 
 	init: function (model, domain, fields, options) {
