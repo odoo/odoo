@@ -35,37 +35,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     view_loading: function (fields_view_get) {
         var self = this,
-            arch = fields_view_get.arch,
-            measures = [],
-            stacked = false;
+            arch = fields_view_get.arch;
 
-        this.widget_config = { title: arch.attrs.string };
-
-        if (!_.has(arch.attrs, 'type')) {
-            this.widget_config.mode = 'bar_chart';
-        } else {
-            switch (arch.attrs.type) {
-                case 'bar':
-                    this.widget_config.mode = 'bar_chart';
-                    break;
-                case 'pie':
-                    this.widget_config.mode = 'pie_chart';
-                    break;
-                case 'line':
-                    this.widget_config.mode = 'line_chart';
-                    break;
-                case 'pivot':
-                case 'heatmap':
-                case 'row_heatmap':
-                case 'col_heatmap':
-                    this.widget_config.mode = arch.attrs.type;
-                    break;
-            }
-        }
-
-        if (arch.attrs.stacked === 'True') {
-            this.widget_config.stacked = true;
-        }
+        this.widget_config = { 
+            title: arch.attrs.string,
+            stacked : (arch.attrs.stacked === 'True'),
+            mode: (arch.attrs.type) ? arch.attrs.type : 'bar',
+            measures: [],
+        };
 
         _.each(arch.children, function (field) {
             if (_.has(field.attrs, 'type')) {
@@ -77,28 +54,22 @@ instance.web_graph.GraphView = instance.web.View.extend({
                         self.default_col_groupby.push(field.attrs.name);
                         break;
                     case 'measure':
-                        measures.push(field.attrs.name);
+                        self.widget_config.measures.push(field.attrs.name);
                         break;
                 }
             } else {  // old style, kept for backward compatibility
                 if ('operator' in field.attrs) {
-                    measures.push(field.attrs.name);
+                    self.widget_config.measures.push(field.attrs.name);
                 } else {
                     self.default_row_groupby.push(field.attrs.name);
                 }
             }
         });
-        if (measures.length === 0) {
-            measures.push('__count');
+        if (self.widget_config.measures.length === 0) {
+            self.widget_config.measures.push('__count');
         }
         this.widget_config.row_groupby = self.default_row_groupby;
         this.widget_config.col_groupby = self.default_col_groupby;
-        this.widget_config.measures = measures;
-        //     measures:measures,
-        //     update:false,
-        //     title: title,
-        //     bar_ui: (stacked) ? 'stack' : 'group'
-        // });
     },
 
     get_context: function (facet) {
@@ -109,46 +80,42 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
-        var col_groupby = context.col_group_by || [],
-            options = {domain:domain};
+        // var col_groupby = context.col_group_by || [],
+        //     options = {domain:domain};
 
         if (!this.graph_widget) {
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
             this.graph_widget.appendTo(this.$el);
             this.graph_widget.on('groupby_changed', this, this.proxy('register_groupby'));
+            this.ViewManager.on('switch_mode', this, function (e) { if (e === 'graph') this.graph_widget.reload(); });
         }
-        this.search_view_groupby = group_by;
+        // this.search_view_groupby = group_by;
 
-        if (group_by.length && this.groupby_mode !== 'manual') {
-            if (_.isEqual(col_groupby, [])) {
-                col_groupby = this.default_col_groupby;
-            }
-        }
-        if (group_by.length || col_groupby.length) {
-            this.groupby_mode = 'manual';
-        }
-        if (!this.graph_widget.enabled) {
-            options.update = false;
-            options.silent = true;
-        }
+        // if (group_by.length && this.groupby_mode !== 'manual') {
+        //     if (_.isEqual(col_groupby, [])) {
+        //         col_groupby = this.default_col_groupby;
+        //     }
+        // }
+        // if (group_by.length || col_groupby.length) {
+        //     this.groupby_mode = 'manual';
+        // }
+        // if (!this.graph_widget.enabled) {
+        //     options.update = false;
+        //     options.silent = true;
+        // }
 
-        if (this.groupby_mode === 'manual') {
-            options.row_groupby = group_by;
-            options.col_groupby = col_groupby;
-        } else {
-            options.row_groupby = _.toArray(this.default_row_groupby);
-            options.col_groupby = _.toArray(this.default_col_groupby);
-        }
-        this.graph_widget.set_domain(domain);
-        this.graph_widget.set_col_groupby(options.col_groupby);
-        this.graph_widget.set_row_groupby(options.row_groupby);
+        // if (this.groupby_mode === 'manual') {
+        //     options.row_groupby = group_by;
+        //     options.col_groupby = col_groupby;
+        // } else {
+        //     options.row_groupby = _.toArray(this.default_row_groupby);
+        //     options.col_groupby = _.toArray(this.default_col_groupby);
+        // }
+        // this.graph_widget.set(domain, options.row_groupby, options.col_groupby);
+        // this.graph_widget.set_domain(domain);
+        // this.graph_widget.set_col_groupby(options.col_groupby);
+        // this.graph_widget.set_row_groupby(options.row_groupby);
 
-        // this.graph_widget.pivot.config(options);
-
-        if (!this.graph_widget.enabled) {
-            this.graph_widget.activate_display();
-            this.ViewManager.on('switch_mode', this, function () {this.graph_widget.pivot.update_data(); });
-        }
     },
 
     do_show: function () {
@@ -199,7 +166,6 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 });
 
-// important_fields = [field], field = {field: _,type: _, string: _}
 instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMixin, {
     template: 'GraphWidget',
 
@@ -212,8 +178,6 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
     },
 
     init: function(parent, model,  domain, options) {
-        var self = this;
-
         this._super(parent);
         this.model = model;
         this.domain = domain;
@@ -231,7 +195,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
             self.important_fields = f;
         });
 
-        var def2 = this.get_model_fields().then(function (f) {
+        var def2 = this.model.call('fields_get', []).then(function (f) {
             self.fields = f;
             self.measure_list = self.get_measures();
             self.add_measures_to_options();
@@ -278,12 +242,6 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
         });
     },
 
-    get_model_fields: function () {
-        return this.model.call('fields_get', []).then(function (fs) {
-            return fs;
-        });
-    },
-
     get_measures: function(fields) {
         var measures = [];
         _.each(this.fields, function (f, id) {
@@ -294,27 +252,14 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
         return measures;
     },
 
-    set_domain: function (domain) {
+
+    set: function (domain, row_groupby, col_groupby) {
         if (this.pivot) {
-            this.pivot.set_domain(domain);
+            this.pivot.set(domain, row_groupby, col_groupby);
         } else {
             this.pivot_options.domain = domain;
-        }
-    },
-
-    set_row_groupby: function (groupby) {
-        if (this.pivot) {
-            this.pivot.set_row_groupby(groupby);
-        } else {
-            this.pivot_options.row_groupby = groupby;
-        }
-    },
-
-    set_col_groupby: function (groupby) {
-        if (this.pivot) {
-            this.pivot.set_col_groupby(groupby);
-        } else {
-            this.pivot_options.col_groupby = groupby;
+            this.pivot_options.row_groupby = row_groupby;
+            this.pivot_options.col_groupby = col_groupby;
         }
     },
 
@@ -329,10 +274,12 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
     },
 
     set_mode: function (mode) {
-
+        this.mode = mode;
+        this.display_data();
     },
 
-    activate_display: function () {
+    reload: function () {
+        this.pivot.update_data();
     },
 
     display_data: function () {
@@ -364,8 +311,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
     mode_selection: function (event) {
         event.preventDefault();
         var mode = event.target.attributes['data-mode'].nodeValue;
-        this.mode = mode;
-        this.display_data();
+        this.set_mode(mode);
     },
 
     measure_selection: function (event) {
@@ -623,7 +569,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
 /******************************************************************************
  * Drawing charts methods...
  ******************************************************************************/
-    bar_chart: function () {
+    bar: function () {
         var self = this,
             dim_x = this.pivot.rows.groupby.length,
             dim_y = this.pivot.cols.groupby.length,
@@ -707,7 +653,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
 
     },
 
-    line_chart: function () {
+    line: function () {
         var self = this,
             dim_x = this.pivot.rows.groupby.length,
             dim_y = this.pivot.cols.groupby.length;
@@ -742,7 +688,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
           });
     },
 
-    pie_chart: function () {
+    pie: function () {
         var self = this,
             dim_x = this.pivot.rows.groupby.length;
         var data = _.map(this.pivot.get_rows_leaves(), function (row) {
