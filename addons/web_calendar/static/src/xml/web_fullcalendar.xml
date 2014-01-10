@@ -1,10 +1,10 @@
 <template>
-  <t t-name="FullCalendarView"> 
+  <t t-name="CalendarView"> 
     <table cellspacing="0" cellpadding="0" border="0" width="100%" class="oe_calendar_table">
         <tr>
             <td width="100%">
                 <div class="oe_calendar_view">        
-                  <div class="oe_fullcalendar_widget" />
+                  <div class="oe_calendar_widget" />
                   <div class="oe_calendar_buttons"/>
                   <div class="oe_calendar_qc_placeholder"/>                    
                 </div>                
@@ -53,6 +53,13 @@
       </t>
     </t>
   </div>
+  
+  <div t-name="CalendarView.sidebar.button_add_contact" class="oe_calendar_buttons_add_contact">
+        <button class='oe_button oe_form_button oe_link add_contacts_link_btn' style='margin-top:10px'>
+            <span class='add_contacts_link'>See Employee's Meeting</span>
+        </button>
+  </div>
+
 
   <div t-name="CalendarView.quick_create" class="oe_calendar_quick_create openerp">
     
