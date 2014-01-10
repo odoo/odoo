@@ -104,16 +104,33 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.notifications = {};
             this.bypass_proxy = false;
 
-            this.connection = new instance.web.Session(undefined,url);
-            this.connection.session_id = _.uniqueId('posproxy');
+            this.connection = null; 
             this.connected = new $.Deferred();
             this.status    = 'disconnected';
-            this.test_connection();
+
             window.proxy = this;
         },
         close: function(){
-            this.connection.destroy();
-            this.status = 'disconnected';
+            if(this.status !== 'disconnected'){
+                this.connection.destroy();
+                this.status = 'disconnected';
+            }
+        },
+        connect : function(url){
+            var self = this;
+            this.connection = new instance.web.Session(undefined,url);
+            this.connection.session_id = _.uniqueId('posproxy');
+            this.status = 'connecting';
+
+            return this.message('handshake').then(function(){
+                    self.status = 'connected';
+                    localStorage['hw_proxy_url'] = url;
+                    self.connected.resolve();
+                },function(){
+                    self.status = 'disconnected';
+                    self.connected.reject();
+                    console.error('Could not connect to the Proxy');
+                });
         },
         message : function(name,params){
             var callbacks = this.notifications[name] || [];
@@ -126,17 +143,99 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 return (new $.Deferred()).reject();
             }
         },
-        test_connection: function(){
-            var self = this;
-            this.status = 'connecting';
-            return this.message('test_connection').then(function(){
-                    self.status = 'connected';
-                    self.connected.resolve();
-                },function(){
-                    self.status = 'disconnected';
-                    self.connected.reject();
-                    console.error('Could not connect to the Proxy');
-                });
+
+        test_connection: function(host,timeout){
+            return $.ajax({
+                url: host + '/hw_proxy/hello',
+                method: 'GET',
+                timeout: timeout || 10000,
+            });
+        },
+
+        find_proxy: function(options){
+            options = options || {};
+            var self  = this;
+            var port  = ':8069';
+            var urls  = [];
+            var found = false;
+            var proxies = [];
+            var done  = new $.Deferred();
+            var parallel = 8;
+            var threads  = [];
+            var progress = 0;
+
+            if(options.force_ip){
+                urls.push(options.force_ip);
+            }else{
+                if(localStorage['hw_proxy_url']){
+                    urls.push(localStorage['hw_proxy_url']);
+                }
+
+                urls.push('http://localhost'+port);
+
+                for(var i = 0; i < 256; i++){
+                    urls.push('http://192.168.0.'+i+port);
+                    urls.push('http://192.168.1.'+i+port);
+                    urls.push('http://192.168.2.'+i+port);
+                    urls.push('http://10.0.0.'+i+port);
+                }
+            }
+
+            var prog_inc = 1/urls.length; 
+
+            function update_progress(){
+                progress = found ? 1 : progress + prog_inc;
+                if(options.progress){
+                    options.progress(progress);
+                }
+            }
+
+            function thread(url,done){
+                if(!url){ 
+                    done.resolve();
+                }
+                var c = self.test_connection(url, 100) 
+                    .done(function(){
+                        found = true;
+                        update_progress();
+                        proxies.push(url);
+                        done.resolve(url);
+                    })
+                    .fail(function(){
+                        update_progress();
+                        var next_url = urls.shift();
+                        if(found ||! self.searching_for_proxy || !next_url){
+                            done.resolve();
+                        }else{
+                            thread(next_url,done);
+                        }
+                    });
+                return done;
+            }
+
+            this.searching_for_proxy = true;
+
+            for(var i = 0; i < Math.min(parallel,urls.length); i++){
+                threads.push(thread(urls.shift(),new $.Deferred()));
+            }
+            
+            var done = new $.Deferred();
+            
+            $.when.apply($,threads).then(function(){
+                var urls = [];
+                for(var i = 0; i < arguments.length; i++){
+                    if(arguments[i]){
+                        urls.push(arguments[i]);
+                    }
+                }
+                done.resolve(urls);
+            });
+
+            return done;
+        },
+
+        stop_searching: function(){
+            this.searching_for_proxy = false;
         },
 
         // this allows the client to be notified when a proxy call is made. The notification 

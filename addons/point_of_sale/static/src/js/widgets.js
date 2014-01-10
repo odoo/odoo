@@ -1,6 +1,6 @@
 function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
-    var QWeb = instance.web.qweb,
-	_t = instance.web._t;
+    var QWeb = instance.web.qweb;
+	var _t = instance.web._t;
 
     module.DomCache = instance.web.Class.extend({
         init: function(options){
@@ -863,10 +863,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         init: function() { 
             this._super(arguments[0],{});
 
-            instance.web.blockUI(); 
-
-            this.pos = new module.PosModel(this.session);
-            this.pos.pos_widget = this;
+            this.pos = new module.PosModel(this.session,{pos_widget:this});
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
             this.numpad_visible = true;
@@ -892,7 +889,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 event.preventDefault();
             });
         },
-      
+
         start: function() {
             var self = this;
             return self.pos.ready.done(function() {
@@ -949,13 +946,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
                 }
             
-                instance.web.unblockUI();
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').addClass('oe_hidden');});
 
                 self.pos.flush();
 
             }).fail(function(){   // error when loading models data from the backend
-                instance.web.unblockUI();
                 return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_session_opening']], ['res_id'])
                     .pipe( _.bind(function(res){
                         return instance.session.rpc('/web/action/load', {'action_id': res[0]['res_id']})
@@ -966,7 +961,27 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     }, self));
             });
         },
-        
+        loading_progress: function(fac){
+            this.$('.loader .loader-feedback').removeClass('oe_hidden');
+            this.$('.loader .progress').css({'width': ''+Math.floor(fac*100)+'%'});
+        },
+        loading_message: function(msg,progress){
+            this.$('.loader .loader-feedback').removeClass('oe_hidden');
+            this.$('.loader .message').text(msg);
+            if(typeof progress !== 'undefined'){
+                this.loading_progress(progress);
+            }
+        },
+        loading_skip: function(callback){
+            if(callback){
+                this.$('.loader .loader-feedback').removeClass('oe_hidden');
+                this.$('.loader .button.skip').removeClass('oe_hidden');
+                this.$('.loader .button.skip').off('click');
+                this.$('.loader .button.skip').click(callback);
+            }else{
+                this.$('.loader .button.skip').addClass('oe_hidden');
+            }
+        },
         // This method instantiates all the screens, widgets, etc. If you want to add new screens change the
         // startup screen, etc, override this method.
         build_widgets: function() {

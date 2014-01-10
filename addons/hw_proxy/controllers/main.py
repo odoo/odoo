@@ -2,6 +2,7 @@
 import logging
 import simplejson
 import os
+import os.path
 import openerp
 import time
 import random
@@ -9,6 +10,8 @@ import subprocess
 import usb.core
 import escpos 
 import escpos.printer
+import werkzeug
+import werkzeug.wrappers
 
 from openerp import http
 from openerp.http import request
@@ -28,9 +31,18 @@ class Proxy(http.Controller):
                 connected.append(device)
         return connected
 
-    @http.route('/hw_proxy/test_connection', type='json', auth='admin')
-    def test_connection(self):
-        _logger.info('Received Connection Test from the Point of Sale');
+    @http.route('/hw_proxy/hello', type='http', auth='admin')
+    def helloajx(self):
+        return request.make_response('ping', {
+            'Cache-Control': 'no-cache', 
+            'Content-Type': 'text/html; charset=utf-8',
+            'Access-Control-Allow-Origin':  '*',
+            'Access-Control-Allow-Methods': 'GET',
+            })
+
+    @http.route('/hw_proxy/handshake', type='json', auth='admin')
+    def handshake(self):
+        return True
 
     @http.route('/hw_proxy/scan_item_success', type='json', auth='admin')
     def scan_item_success(self, ean):

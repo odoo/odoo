@@ -104,8 +104,45 @@ td {
     z-index: 999;
     text-align: center;
     font-family: Lato;
+    color: #555555;
 }
 
+.pos .loader-feedback{
+    width: 400px;
+    height: 160px;
+    margin: -60px -200px;
+    position: absolute;
+    left: 50%; top: 50%;
+    text-align: center;
+}
+.pos .loader-feedback h1{
+    font-weight: 300;
+}
+.pos .loader-feedback .progressbar{
+    background: rgb(73,73,73);
+    height: 1px;
+}
+.pos .loader-feedback .progressbar > .progress{
+    height: 100%;
+    background: white;
+    width: 0%;
+    box-shadow: 0px 0px 5px rgba(255,255,255,0.35);
+}
+.pos .loader-feedback .button{
+    display: inline-block;
+    margin: 25px auto;
+    line-height: 42px;
+    padding: 0px 16px;
+    font-size: 20px;
+    font-weight: 300;
+    border: solid 1px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pos .loader-feedback .button:active{
+    color: #222;
+    background: #555555;
+}
 /*  ********* Generic Layout Constructs  ********* */
 
 .pos .window{

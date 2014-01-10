@@ -1,5 +1,6 @@
 function openerp_pos_models(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
+	var _t = instance.web._t;
 
     var round_di = instance.web.round_decimals;
     var round_pr = instance.web.round_precision
@@ -20,6 +21,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var  self = this;
             this.session = session;                 
             this.flush_mutex = new $.Mutex();                   // used to make sure the orders are sent to the server once at time
+            this.pos_widget = attributes.pos_widget;
 
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
             this.barcode_reader = new module.BarcodeReader({'pos': this, proxy:this.proxy});  // used to read barcodes
@@ -63,7 +65,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            this.ready = this.load_server_data();
+            this.ready = this.load_server_data()
+                .then(function(){
+                    return self.connect_to_posbox();
+                });
+            
         },
 
         // releases ressources holds by the model at the end of life of the posmodel
@@ -74,8 +80,30 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.barcode_reader.disconnect();
         },
 
+        connect_to_posbox: function(){
+            var self = this;
+            this.pos_widget.loading_message(_t('Connecting to the PosBox'),0);
+            
+            this.pos_widget.loading_skip(function(){
+                    self.proxy.stop_searching();
+                });
+
+            return this.proxy.find_proxy({
+                    force_ip: self.config.proxy_ip || undefined,
+                    progress: function(prog){ 
+                        self.pos_widget.loading_progress(prog);
+                    },
+                }).then(function(proxies){
+                    if(proxies.length > 0){
+                        self.proxy.connect(proxies[0]);
+                    }
+                });
+        },
+
         // helper function to load data from the server
         fetch: function(model, fields, domain, ctx){
+            this._load_progress = (this._load_progress || 0) + 0.05; 
+            this.pos_widget.loading_message(_t('Loading')+' '+model,this._load_progress);
             return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
         },
         // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded. 
@@ -140,7 +168,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
                          'iface_payment_terminal', 'iface_electronic_scale', 'iface_barscan', 'iface_vkeyboard',
                          'iface_print_via_proxy','iface_cashdrawer','iface_invoicing','iface_big_scrollbars',
-                         'receipt_header','receipt_footer',
+                         'receipt_header','receipt_footer','proxy_ip',
                          'state','sequence_id','session_ids'],
                         [['id','=', self.pos_session.config_id[0]]]
                     );
