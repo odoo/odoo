@@ -250,7 +250,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         return this.get_groups(groupby, fields, header.domain)
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
-                    var child_id = self.make_header(group, header);
+                    var child = self.make_header(group, header);
+                    child.expanded = false;
+                    header.children.splice(0,0, child);
+                    header.root.headers.splice(header.root.headers.indexOf(header) + 1, 0, child);
+                    // return new_header.id;
                     // make cells
                     _.each(self.get_ancestors_and_self(group), function (data) {
                         var values = _.map(self.measures, function (m) {
@@ -265,7 +269,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
                                 }
                             });
                         if (other) {
-                            self.add_cell(child_id, other.id, values);
+                            self.add_cell(child.id, other.id, values);
                         }
                     });
                 });
@@ -275,19 +279,15 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	},
 
 	make_header: function (group, parent) {
-		var title = group.attributes.value,
-            new_header = {
-				id: _.uniqueId(),
-				path: parent.path.concat(title),
-				title: title,
-				expanded: false,
-				children: [],
-				domain: group.model._domain,
-				root: parent.root,
-			};
-		parent.children.splice(0,0, new_header);
-		parent.root.headers.splice(parent.root.headers.indexOf(parent) + 1, 0, new_header);
-		return new_header.id;
+		var title = parent ? group.attributes.value : '';
+        return {
+			id: _.uniqueId(),
+			path: parent ? parent.path.concat(title) : [],
+			title: title,
+			children: [],
+			domain: parent ? group.model._domain : this.domain,
+			root: parent ? parent.root : undefined,
+		};
 	},
 
 	swap_axis: function () {
@@ -460,13 +460,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 
 	make_headers: function (data, depth, parent) {
 		var self = this,
-			main = {
-				id: _.uniqueId(),
-				path: parent ? parent.path.concat(data.attributes.value) : [],
-				children: [],
-				title: parent ? data.attributes.value : '',
-				domain: parent ? data.model._domain : this.domain,
-			};
+            main = this.make_header(data, parent);
 
 		if (main.path.length < depth) {
 			main.children = _.map(data.children || data, function (data_pt) {
