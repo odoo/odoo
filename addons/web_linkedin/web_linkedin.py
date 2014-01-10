@@ -24,6 +24,7 @@ import urllib2
 from urlparse import urlparse, urlunparse
 
 import openerp
+import openerp.addons.web
 from openerp.osv import fields, osv
 
 class Binary(openerp.http.Controller):

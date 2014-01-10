@@ -450,6 +450,7 @@ class account_analytic_account(osv.osv):
         'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
                                                 store={
                                                     'account.analytic.line' : (_get_analytic_account, None, 20),
+                                                    'account.analytic.account': (lambda self, cr, uid, ids, c=None: ids, ['quantity_max'], 10),
                                                 }),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
