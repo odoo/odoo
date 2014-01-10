@@ -28,7 +28,7 @@ from openerp.tools.translate import _
 import pytz
 import re
 import time
-
+from operator import itemgetter
 from openerp import tools, SUPERUSER_ID
 import openerp.service.report
 
@@ -1169,27 +1169,43 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         (_check_closing_date, 'Error ! End date cannot be set before start date.', ['date_deadline']),
     ]
 
+    # TODO for trunk: remove get_recurrent_ids
     def get_recurrent_ids(self, cr, uid, select, domain, limit=100, context=None):
+        """Wrapper for _get_recurrent_ids to get the 'order' parameter from the context"""
+        if not context:
+            context = {}
+        order = context.get('order', self._order)
+        return self._get_recurrent_ids(cr, uid, select, domain, limit=limit, order=order, context=context)
+
+    def _get_recurrent_ids(self, cr, uid, select, domain, limit=100, order=None, context=None):
         """Gives virtual event ids for recurring events based on value of Recurrence Rule
         This method gives ids of dates that comes between start date and end date of calendar views
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user's ID for security checks,
-        @param limit: The Number of Results to Return """
+        @param limit: The Number of Results to Return
+        @param order: The fields (comma separated, format "FIELD {DESC|ASC}") on which the events should be sorted"""
         if not context:
             context = {}
 
         result = []
-        for data in super(calendar_event, self).read(cr, uid, select, ['rrule', 'recurrency', 'exdate', 'exrule', 'date'], context=context):
+        result_data = []
+        fields = ['rrule', 'recurrency', 'exdate', 'exrule', 'date']
+        if order:
+            order_fields = [field.split()[0] for field in order.split(',')]
+        else:
+            # fallback on self._order defined on the model
+            order_fields = [field.split()[0] for field in self._order.split(',')]
+        fields = list(set(fields + order_fields))
+
+        for data in super(calendar_event, self).read(cr, uid, select, fields, context=context):
             if not data['recurrency'] or not data['rrule']:
+                result_data.append(data)
                 result.append(data['id'])
                 continue
             event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 
             # TOCHECK: the start date should be replaced by event date; the event date will be changed by that of calendar code
-
-            if not data['rrule']:
-                continue
 
             exdate = data['exdate'] and data['exdate'].split(',') or []
             rrule_str = data['rrule']
@@ -1248,12 +1264,24 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 if [True for item in new_pile if not item]:
                     continue
                 idval = real_id2base_calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
+                r_data = dict(data, id=idval, date=r_date.strftime("%Y-%m-%d %H:%M:%S"))
                 result.append(idval)
+                result_data.append(r_data)
+        ids = list(set(result))
 
-        if isinstance(select, (str, int, long)):
-            return ids and ids[0] or False
-        else:
-            ids = list(set(result))
+        if order_fields:
+
+            def comparer(left, right):
+                for fn, mult in comparers:
+                    result = cmp(fn(left), fn(right))
+                    if result:
+                        return mult * result
+                return 0
+
+            sort_params = [key.split()[0] if key[-4:].lower() != 'desc' else '-%s' % key.split()[0] for key in (order or self._order).split(',')]
+            comparers = [ ((itemgetter(col[1:]), -1) if col[0] == '-' else (itemgetter(col), 1)) for col in sort_params]    
+            ids = [r['id'] for r in sorted(result_data, cmp=comparer)]
+            
         return ids
 
     def compute_rule_string(self, data):
@@ -1377,10 +1405,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
             new_args.append(new_arg)
-        #offset, limit and count must be treated separately as we may need to deal with virtual ids
-        res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
         if context.get('virtual_id', True):
-            res = self.get_recurrent_ids(cr, uid, res, args, limit, context=context)
+            #offset, limit, order and count must be treated separately as we may need to deal with virtual ids
+            res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=None, context=context, count=False)
+            res = self._get_recurrent_ids(cr, uid, res, args, limit, order=order, context=context)
+        else:
+            res = super(calendar_event, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, context=context, count=count)
+
         if count:
             return len(res)
         elif limit:

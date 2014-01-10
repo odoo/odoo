@@ -1438,7 +1438,7 @@ openerp.mail = function (session) {
         message_fetch: function (replace_domain, replace_context, ids, callback) {
             return this.ds_message.call('message_read', [
                     // ids force to read
-                    ids == false ? undefined : ids, 
+                    ids === false ? undefined : ids, 
                     // domain + additional
                     (replace_domain ? replace_domain : this.domain), 
                     // ids allready loaded
@@ -1812,7 +1812,7 @@ openerp.mail = function (session) {
                 this.node.params.readonly = this.node.attrs.readonly;
             }
 
-            this.domain = this.node.params && this.node.params.domain || [];
+            this.domain = (this.node.params && this.node.params.domain) || (this.field && this.field.domain) || [];
 
             if (!this.ParentViewManager.is_action_enabled('edit')) {
                 this.node.params.show_link = false;
