@@ -7,10 +7,10 @@
 
     <!--For Meetings -->
         <record id="res_partner_another" model="res.partner">
-            <field name="name">Another Partner</field>
+            <field name="name">Arshaw</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="customer" eval="False"/>
-            <field name="email">another_partner@example.com</field>
+            <field name="email">fullcalendar@example.com</field>
         </record>
         <record id="res_user_another" model="res.users">
             <field name="name" >Second Demo User</field>
@@ -19,12 +19,12 @@
             <field name="company_id" ref="base.main_company" />
         </record>    
 
-        <record id="cal_contact_1" model="web_calendar.contacts">
+        <record id="cal_contact_1" model="calendar.contacts">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.res_partner_1"/>            
         </record>
-        <record id="cal_contact_2" model="web_calendar.contacts">
+        <record id="cal_contact_2" model="calendar.contacts">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_id" ref="base.partner_demo"/>            
@@ -107,7 +107,7 @@
             <field eval="1" name="active"/>
             <field name="user_id" ref="res_user_another"/>            
             <field name="partner_ids" eval="[(6,0,[ref('res_partner_another'),ref('base.res_partner_8')])]"/>
-            <field name="name">Meeting between 2 others users than me</field>
+            <field name="name">Presentation of the new Calendar</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
             <field eval="time.strftime('%Y-%m-16 6:00:00')" name="date"/>
             <field eval="time.strftime('%Y-%m-16 18:30:00')" name="date_deadline"/>
@@ -119,7 +119,7 @@
             <field eval="1" name="active"/>
             <field name="user_id" ref="res_user_another"/>            
             <field name="partner_ids" eval="[(6,0,[ref('res_partner_another'),ref('base.partner_root')])]"/>
-            <field name="name">Meeting between 2 others users than me</field>
+            <field name="name">Discuss about the module : Calendar </field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
             <field eval="time.strftime('%Y-%m-16 6:00:00')" name="date"/>
             <field eval="time.strftime('%Y-%m-16 18:30:00')" name="date_deadline"/>

@@ -5,14 +5,12 @@ openerp.calendar = function(instance) {
     
 
     instance.web.WebClient = instance.web.WebClient.extend({
-        getMyNotifBox: function(me) {
+        get_notif_box: function(me) {
             return $(me).closest(".ui-notify-message-style");
         },
         get_next_event: function() {
             var self= this;
-            this.rpc("/calendar/NextNotify", { 
-                type: "GET" 
-            })
+            this.rpc("/calendar/notify")
             .then( 
                 function(result) { 
                     console.log(result);
@@ -20,35 +18,29 @@ openerp.calendar = function(instance) {
                         setTimeout(function() {
                             //If notification not already displayed, we add button and action on it
                             if (!($.find(".eid_"+res.event_id)).length) {
-                                res.title = "<span class='link2event eid_" + res.event_id + "'>" + res.title + "</span>";
-                                res.message += "<br/><br/><button class='link2showed oe_highlight oe_form oe_button'><span>OK</span></button> \
-                                                <button class='link2event'>Details</button>                                                   \
-                                                <button class='link2recall ' >Snooze</button> ";
+                                res.title = QWeb.render('notify_title', {'title': res.title, 'id' : res.event_id});
+                                res.message += QWeb.render("notify_footer");
                                 a = self.do_notify(res.title,res.message,true);
                                 
-                                 $(".link2event").on('click', function() { 
+                                $(".link2event").on('click', function() { 
                                     self.rpc("/web/action/load", {
                                         action_id: "calendar.action_crm_meeting_notify",
                                     }).then( function(r) { 
                                         r.res_id = res.event_id;
                                         return self.action_manager.do_action(r);                                         
-                                    });
-                                    
+                                    });                                    
                                 });
                                 a.element.find(".link2recall").on('click',function() { 
-                                    self.getMyNotifBox(this).find('.ui-notify-close').trigger("click");
-                                });
-                                
+                                    self.get_notif_box(this).find('.ui-notify-close').trigger("click");
+                                });                                
                                 a.element.find(".link2showed").on('click',function() { 
-                                    self.getMyNotifBox(this).find('.ui-notify-close').trigger("click");
-                                    self.rpc("/calendar/NextNotify", { 
-                                        type: "UPDATE" 
-                                    });
+                                    self.get_notif_box(this).find('.ui-notify-close').trigger("click");
+                                    self.rpc("/calendar/notify_ack");
                                 });
                             }
                             //If notification already displayed in the past, we remove the css attribute which hide this notification
-                            else if (self.getMyNotifBox($.find(".eid_"+res.event_id)).attr("style") !== ""){
-                                self.getMyNotifBox($.find(".eid_"+res.event_id)).attr("style","");                                
+                            else if (self.get_notif_box($.find(".eid_"+res.event_id)).attr("style") !== ""){
+                                self.get_notif_box($.find(".eid_"+res.event_id)).attr("style","");                                
                             }
                         },res.timer * 1000);
                     });
@@ -74,7 +66,7 @@ openerp.calendar = function(instance) {
     instance.calendar.invitation = instance.web.Widget.extend({
 
         init: function(parent, db, action, id, view, attendee_data) {
-            this._super();
+            this._super(parent); // ? parent ?
             this.db =  db;
             this.action =  action;
             this.id = id;
@@ -112,7 +104,7 @@ openerp.calendar = function(instance) {
         initialize_texttext: function() {
             return _.extend(this._super(),{
                 html : {
-                    tag: '<div class="text-tag"><div class="text-button"><a class="oe_invitation custom-edit"/><span class="text-label"/><a class="text-remove"/></div></div>'
+                        tag: QWeb.render('m2mattendee_tag')
                 }
             });
         },

@@ -19,5 +19,6 @@
 #
 ##############################################################################
 
-import calendar
+import models
 import controllers
+import contacts

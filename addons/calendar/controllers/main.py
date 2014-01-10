@@ -17,14 +17,13 @@ class meeting_invitation(http.Controller):
         with registry.cursor() as cr:
             attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token','=',token)])
             if not attendee_id:
-                # if token is not match
                 error_message = """Invalid Invitation Token."""
-#             elif request.session.uid and request.session.login != 'anonymous':
-#                 # if valid session but user is not match
-#                 attendee = attendee_pool.browse(cr, openerp.SUPERUSER_ID, attendee_id[0])
-#                 user = registry.get('res.users').browse(cr, openerp.SUPERUSER_ID, request.session.uid)
-#                 if attendee.partner_id.user_id.id != user.id:
-#                     error_message  = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
+            elif request.session.uid and request.session.login != 'anonymous':
+                 # if valid session but user is not match
+                attendee = attendee_pool.browse(cr, openerp.SUPERUSER_ID, attendee_id[0])
+                user = registry.get('res.users').browse(cr, openerp.SUPERUSER_ID, request.session.uid)
+                if attendee.partner_id.user_id.id != user.id:
+                    error_message  = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
 
         if error_message:
             raise BadRequest(error_message)
@@ -75,16 +74,21 @@ class meeting_invitation(http.Controller):
         }
     
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
-    @http.route('/calendar/NextNotify', type='json', auth="none")
-    def NextNotify(self, type=''):
+    @http.route('/calendar/notify', type='json', auth="none")
+    def notify(self):
         registry = openerp.modules.registry.RegistryManager.get(request.session.db)
         uid = request.session.uid
         context = request.session.context
         with registry.cursor() as cr:
-            if type=='GET':            
-                res = registry.get("calendar.alarm_manager").get_next_event(cr,uid,context=context)
-                return res
-            elif type=="UPDATE":
-                res = registry.get("res.partner").update_cal_last_event(cr,uid,context=context)
-                return res
+            res = registry.get("calendar.alarm_manager").do_run_next_event(cr,uid,context=context)
+            return res
+                
+    @http.route('/calendar/notify_ack', type='json', auth="none")
+    def notify_ack(self, type=''):
+        registry = openerp.modules.registry.RegistryManager.get(request.session.db)
+        uid = request.session.uid
+        context = request.session.context
+        with registry.cursor() as cr:
+            res = registry.get("res.partner").update_cal_last_event(cr,uid,context=context)
+            return res
 

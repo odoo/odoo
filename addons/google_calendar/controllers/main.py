@@ -40,7 +40,7 @@ class google_calendar_controller(http.Controller):
                         
             # Checking that user have already  accepted OpenERP to access his calendar !
             if gc_obj.need_authorize(request.cr, request.uid,context=kw.get('LocalContext')):
-                url =  gc_obj.authorize_google_uri(request.cr, request.uid, from_url=kw.get('fromurl'),context=kw.get('LocalContext'))
+                url =  gc_obj.authorize_google_uri(request.cr, request.uid, from_url=kw.get('fromurl'), context=kw.get('LocalContext'))
                 return {
                         "status" :  "NeedAuth",
                         "url" : url 
@@ -49,5 +49,5 @@ class google_calendar_controller(http.Controller):
             # If App authorized, and user access accepted, We launch the synchronization
             return gc_obj.synchronize_events(request.cr, request.uid, [], kw.get('LocalContext'))
                       
-        return { "status" : "SUCCESS" }
+        return { "status" : "Success" }
     
