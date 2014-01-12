@@ -291,7 +291,7 @@
             var self = this;
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
-            var stepDelay = 500; //ms
+            var defaultDelay = 500; //ms
             var test = {
                 id: tour.id,
                 run: function (force) {
@@ -299,31 +299,33 @@
                         this.reset();
                     }
                     var actionSteps = _.filter(tour.steps, function (step) {
-                       return step.trigger;
+                       return step.trigger || step.sampleText;
                     });
                     function executeStep (step) {
                         window.localStorage.setItem(testId, step.stepId);
-                        step.triggers(function () {
+                        function next () {
                             var nextStep = actionSteps.shift();
                             if (nextStep) {
-                                // Ensure the previous step has been fully propagated
-                                setTimeout(function () {
-                                    setTimeout(function () {
-                                        executeStep(nextStep);
-                                    }, stepDelay);
-                                }, 0);
+                                executeStep(nextStep);
                             } else {
                                 window.localStorage.removeItem(testId);
                             }
-                        });
-                        var $element = $(step.element);
-                        if (step.snippet && step.trigger === 'drag') {
-                            website.TestConsole.dragAndDropSnippet(step.snippet);
-                        } else if (step.trigger.id === 'change') {
-                            $element.trigger($.Event("change", { srcElement: $element }));
-                        } else {
-                            $element.trigger($.Event("click", { srcElement: $element }));
                         }
+                        setTimeout(function () {
+	                        if (step.triggers) step.triggers(next);
+	                        var $element = $(step.element);
+	                        if (step.snippet && step.trigger === 'drag') {
+	                            website.TestConsole.dragAndDropSnippet(step.snippet);
+	                        } else if (step.trigger && step.trigger.id === 'change') {
+	                            $element.trigger($.Event("change", { srcElement: $element }));
+	                        } else if (step.sampleText) {
+	                            $element.val(step.sampleText);
+	                            $element.trigger($.Event("change", { srcElement: $element }));
+	                        } else if ($element.is(":visible")) { // Click by default
+	                        	 $element.trigger($.Event("click", { srcElement: $element }));
+	                        }
+	                        if (!step.triggers) next();
+	                    }, step.delay || defaultDelay);
                     }
                     var url = new website.UrlParser(window.location.href);
                     if (tour.path && url.pathname !== tour.path) {
@@ -342,11 +344,7 @@
                                 executeStep(currentStep);
                             });
                         } else {
-                            setTimeout(function () {
-                                setTimeout(function () {
-                                   executeStep(currentStep);
-                                }, stepDelay);
-                            }, 0);
+                            executeStep(currentStep);
                         }
                     }
                 },

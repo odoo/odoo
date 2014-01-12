@@ -25,7 +25,7 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_banner.png"/>
             <span class="oe_snippet_thumbnail_title">Banner</span>         
         </div>
-        <div id="myCarousel" class="oe_snippet_body carousel slide oe_medium mb32">
+        <div id="myCarousel" class="oe_snippet_body carousel slide mb32" style="height: 320px;">
             <!-- Indicators -->
             <ol class="carousel-indicators hidden">
                 <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -68,8 +68,8 @@
                             and give it to them.
                         </p>
                     </div>
-                    <div class="col-md-6 mt16 mb16">
-                        <img class="img img-responsive shadow" src="/website/static/src/img/text_image.png"/>
+                    <div class="col-md-6 mt16">
+                        <img class="img img-responsive shadow mb16" src="/website/static/src/img/text_image.png"/>
                     </div>
                 </div>
             </div>
@@ -85,8 +85,8 @@
         <section class="oe_snippet_body">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 mt16 mb16">
-                        <img class="img img-responsive shadow" src="/website/static/src/img/image_text.jpg"/>
+                    <div class="col-md-6 mt16">
+                        <img class="img img-responsive shadow mb16" src="/website/static/src/img/image_text.jpg"/>
                     </div>
                     <div class="col-md-6 mt16">
                         <h3>A Section Subtitle</h3>
@@ -277,7 +277,7 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
             <span class="oe_snippet_thumbnail_title">Quotes Slider</span>         
         </div>
-        <div id="myQuoteCarousel" class="oe_snippet_body carousel slide oe_small mb0">
+        <div id="myQuoteCarousel" class="oe_snippet_body carousel slide mb0" style="height: 240px;">
             <!-- Indicators -->
             <ol class="carousel-indicators mb0">
                 <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
@@ -696,8 +696,8 @@
                 <li data-value="1.7"><a>Very Fast</a></li>
             </ul>
         </li>
-        <section class="oe_snippet_body parallax oe_medium"
-                style="background-image: url('/website/static/src/img/banner/mountains.jpg')"
+        <section class="oe_snippet_body parallax"
+                style="height: 320px; background-image: url('/website/static/src/img/banner/mountains.jpg')"
                 data-scroll-background-ratio="0.3">
                 <div><div class="oe_structure"/></div>
         </section>
@@ -708,12 +708,12 @@
             <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_quotes_slider.png"/>
             <span class="oe_snippet_thumbnail_title">Parallax Slider</span>        
         </div>
-        <section class="oe_snippet_body parallax oe_medium" data-snippet-id="parallax"
-                style="background-image: url('/website/static/src/img/parallax/quote.png')"
+        <section class="oe_snippet_body parallax" data-snippet-id="parallax"
+                 style="height: 320px; background-image: url('/website/static/src/img/parallax/quote.png')"
                 data-scroll-background-ratio="0.3">
             <div>
                 <div class="oe_structure">
-                    <div id="myQuoteCarousel" class="carousel slide oe_small mb0" data-snippet-id="slider">
+                    <div id="myQuoteCarousel" class="carousel slide mb0" style="height: 240px;" data-snippet-id="slider">
                         <!-- Indicators -->
                         <ol class="carousel-indicators mb0">
                             <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
@@ -782,18 +782,6 @@
                 <li data-class="text_only"><a>Text Only</a></li>
                 <li data-class="image_text"><a>Image - Text</a></li>
                 <li data-class="text_image"><a>Text - Image</a></li>
-            </ul>
-        </li>
-    </div>
-
-    <div data-snippet-style-id='size' data-selector="section[data-snippet-id='parallax'], div[data-snippet-id='carousel'], div[data-snippet-id='slider']">
-        <li class="dropdown-submenu" data-required="true">
-            <a tabindex="-1" href="#">Size</a>
-            <ul class="dropdown-menu">
-                <li data-class='oe_small'><a>Small</a></li>
-                <li data-class='oe_medium'><a>Medium</a></li>
-                <li data-class='oe_big'><a>Big</a></li>
-                <li data-class=''><a>Auto</a></li>
             </ul>
         </li>
     </div>

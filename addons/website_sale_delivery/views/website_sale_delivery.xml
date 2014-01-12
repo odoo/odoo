@@ -25,7 +25,7 @@
             <tr class="text-muted" id="order_delivery">
                 <td><abbr title="Delivery will be updated after choosing a new delivery method">Delivery:</abbr></td>
                 <td class="text-right">
-                    <span t-field="website_sale_order.amount_delivery" t-field-options='{
+                    <span t-field="order.amount_delivery" t-field-options='{
                         "widget": "monetary",
                         "display_currency": "website.pricelist_id.currency_id"
                     }'/>
@@ -41,7 +41,7 @@
                         <li t-foreach="deliveries" t-as="delivery">
                             <label>
                                 <input t-att-value="delivery.id" type="radio" name="delivery_type"
-                                    t-att-checked="website_sale_order.carrier_id and website_sale_order.carrier_id.id == delivery.id and 'checked' or False"/>
+                                    t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
                                 <span t-field="delivery.name"/>
                                 <span class="badge" t-field="delivery.price"
                                     t-field-options='{

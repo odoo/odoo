@@ -23,6 +23,7 @@ import math
 import re
 
 from _common import rounding
+from openerp import SUPERUSER_ID
 
 from openerp import tools
 from openerp.osv import osv, fields
@@ -419,7 +420,7 @@ class product_template(osv.osv):
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
             store={
-                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the product. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved, "\
@@ -427,7 +428,7 @@ class product_template(osv.osv):
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized image", type="binary", multi="_get_image",
             store={
-                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
@@ -735,8 +736,13 @@ class product_product(osv.osv):
 
         partner_id = context.get('partner_id', False)
 
+        # all user don't have access to seller and partner
+        # check access and use superuser
+        self.check_access_rights(cr, user, "read")
+        self.check_access_rule(cr, user, ids, "read", context=context)
+
         result = []
-        for product in self.browse(cr, user, ids, context=context):
+        for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
             sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
             if sellers:
                 for s in sellers:

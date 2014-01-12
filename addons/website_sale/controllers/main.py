@@ -612,12 +612,12 @@ class Ecommerce(http.Controller):
 
         # if no sale order at this stage: back to checkout beginning
         order = self.get_order()
-        if not order or not order.state == 'draft' or not order.order_line:
+        if not order or order.state != 'draft' or not order.order_line:
             request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect("/shop/")
         # alread a transaction: forward to confirmation
         tx = context.get('website_sale_transaction')
-        if tx and not tx.state == 'draft':
+        if tx and tx.state != 'draft':
             return request.redirect('/shop/confirmation/%s' % order.id)
 
         shipping_partner_id = False
@@ -780,12 +780,16 @@ class Ecommerce(http.Controller):
         return request.website.render("website_sale.confirmation", {'order': order})
 
     @website.route(['/shop/change_sequence/'], type='json', auth="public")
-    def change_sequence(self, id, top):
+    def change_sequence(self, id, sequence):
         product_obj = request.registry.get('product.template')
-        if top:
+        if sequence == "top":
             product_obj.set_sequence_top(request.cr, request.uid, [id], context=request.context)
-        else:
+        elif sequence == "bottom":
             product_obj.set_sequence_bottom(request.cr, request.uid, [id], context=request.context)
+        elif sequence == "up":
+            product_obj.set_sequence_up(request.cr, request.uid, [id], context=request.context)
+        elif sequence == "down":
+            product_obj.set_sequence_down(request.cr, request.uid, [id], context=request.context)
 
     @website.route(['/shop/change_styles/'], type='json', auth="public")
     def change_styles(self, id, style_id):

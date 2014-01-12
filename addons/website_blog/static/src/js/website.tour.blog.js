@@ -148,6 +148,7 @@
                     title:     "Publish Your Post",
                     content:   "Your blog post is not yet published. You can update this draft version and publish it once you are ready.",
                     trigger:   'click',
+                    delay:     5000,
                 },
                 {
                     stepId:    'end-tutorial',
