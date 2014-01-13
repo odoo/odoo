@@ -425,7 +425,7 @@ openerp.testing.section('search.completions', {
                     "should have the right facet in the query");
             });
     });
-    test('facet selection: new value existing facet', {asserts: 3}, function (instance, $s) {
+    test('facet selection: new value existing facet', {asserts: 8}, function (instance, $s) {
         var field = {
             get_domain: openerp.testing.noop,
             get_context: openerp.testing.noop,
