@@ -716,6 +716,11 @@ def guess(method):
     return noguess(method)
 
 
+def expected(decorator, func):
+    """ Decorate `func` with `decorator` if `func` is not wrapped yet. """
+    return decorator(func) if not hasattr(func, '_orig') else func
+
+
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
 from openerp.osv.scope import Scope, proxy as scope

@@ -93,6 +93,9 @@ class _column(object):
         """
         if domain is None:
             domain = []
+        elif callable(domain):
+            from openerp import api
+            domain = api.expected(api.cr_uid_context, domain)
         if context is None:
             context = {}
         self.states = states or {}
@@ -210,6 +213,9 @@ class reference(_column):
     _classic_read = False # post-process to handle missing target
 
     def __init__(self, string, selection, size=None, **args):
+        if callable(selection):
+            from openerp import api
+            selection = api.expected(api.cr_uid_context, selection)
         _column.__init__(self, string=string, size=size, selection=selection, **args)
 
     def to_field_args(self):
@@ -486,6 +492,9 @@ class selection(_column):
     _type = 'selection'
 
     def __init__(self, selection, string='unknown', **args):
+        if callable(selection):
+            from openerp import api
+            selection = api.expected(api.cr_uid_context, selection)
         _column.__init__(self, string=string, **args)
         self.selection = selection
 

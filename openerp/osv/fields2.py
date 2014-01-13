@@ -93,14 +93,6 @@ def search_related(field, operator, value):
     return [('.'.join(field.related), operator, value)]
 
 
-def _invoke_model(func, model):
-    """ hack for invoking a callable with a model in both API styles """
-    try:
-        return func(model)
-    except TypeError:
-        return func(model, *scope.args)
-
-
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
@@ -665,6 +657,9 @@ class Selection(Field):
                 It is given as either a list of pairs (`value`, `string`), or a
                 model method, or a method name.
         """
+        if callable(selection):
+            from openerp import api
+            selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
     @staticmethod
@@ -686,7 +681,7 @@ class Selection(Field):
         if isinstance(value, basestring):
             value = getattr(self.model, value)()
         elif callable(value):
-            value = _invoke_model(value, self.model)
+            value = value(self.model)
         return value
 
     def get_values(self):
@@ -763,6 +758,12 @@ class _Relational(Field):
     _description_domain = staticmethod(lambda self: \
         self.domain(self.model) if callable(self.domain) else self.domain)
     _description_context = attrgetter('context')
+
+    def __init__(self, **kwargs):
+        super(_Relational, self).__init__(**kwargs)
+        if callable(self.domain):
+            from openerp import api
+            self.domain = api.expected(api.model, self.domain)
 
     @lazy_property
     def comodel(self):
