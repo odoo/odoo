@@ -4,35 +4,87 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="PosWidget">
-        <div class="point-of-sale">
-            <div id="topheader">
-                <div id="branding">
-                    <img src="/point_of_sale/static/src/img/logo.png" />
+        <div class="pos">
+            <div class="pos-topheader">
+                <div class="pos-branding">
+                    <img class="pos-logo" src="/point_of_sale/static/src/img/logo.png" />
                     <span class="placeholder-UsernameWidget"></span>
                 </div>
-                <div id="rightheader">
-                    <div id="order-selector">
-                        <button class="neworder-button square"><img src='/point_of_sale/static/src/img/plus.png' /></button>
-                        <button class="deleteorder-button square"><img src='/point_of_sale/static/src/img/minus.png' /></button>
-                        <ol id="orders"></ol>
+                <div class="pos-rightheader">
+                    <div class="order-selector">
+                        <button class="order-button square neworder-button"><img src='/point_of_sale/static/src/img/plus.png' /></button>
+                        <button class="order-button square deleteorder-button"><img src='/point_of_sale/static/src/img/minus.png' /></button>
+                        <span class="orders"></span>
                     </div>
                     <!-- here goes header buttons -->
                 </div>
             </div>
-            <div id="content">
 
-                <div id="leftpane">
-                    <div id="placeholder-OrderWidget"></div>
-                    <footer>
-                        <div id="placeholder-PaypadWidget"></div>
-                        <div id="placeholder-NumpadWidget"></div>
-                    </footer>
+            <div class="pos-content">
+
+                <div class="pos-leftpane">
+                    <div class='window'>
+                        <div class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix'>
+                                    <div class="placeholder-OrderWidget"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='subwindow collapsed'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix pads'>
+                                    <div class="placeholder-PaypadWidget"></div>
+                                    <div class="placeholder-NumpadWidget"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='subwindow collapsed'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix'>
+                                    <div class='placeholder-LeftActionBar'></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="rightpane">
+
+                <div class="rightpane">
+                    <div class='window'>
+                        <div class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix screens'>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='subwindow collapsed'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix'>
+                                    <div class='placeholder-RightActionBar'></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="placeholder-OnscreenKeyboardWidget"></div>
             </div>
+
             <div class="loader">
+                <div class='loader-feedback oe_hidden'>
+                    <h1 class='message'>Loading</h1>
+                    <div class='progressbar'>
+                        <div class='progress' width='50%'></div>
+                    </div>
+                    <div class='oe_hidden button skip'>
+                        Skip
+                    </div>
+                </div>
             </div>
+
             &lt;!--[if IE]&gt;
             <div class='not-supported-browser'>
                 <div class='message'>
@@ -73,12 +125,12 @@
     </t>
 
     <t t-name="PaypadWidget">
-        <div id="paypad">
+        <div class="paypad touch-scrollable">
         </div>
     </t>
 
     <t t-name="NumpadWidget">
-        <div id="numpad">
+        <div class="numpad">
             <button class="input-button number-char">1</button>
             <button class="input-button number-char">2</button>
             <button class="input-button number-char">3</button>
@@ -105,67 +157,66 @@
     </t>
 
     <t t-name="CategoryButton">
-        <li class='category-button'>
+        <span class='category-button js-category-switch' t-att-data-category-id="category.id" >
             <div class="category-img">
-                <img src="" />
+                <img t-att-src="image_url" />
             </div>
             <div class="category-name">
                 <t t-esc="category.name"/>
             </div>
-        </li>
+        </span>
     </t>
 
     <t t-name="CategorySimpleButton">
-        <li class='category-simple-button'>
+        <span class='category-simple-button js-category-switch' t-att-data-category-id="category.id" >
             <t t-esc="category.name"/>
-        </li>
+        </span>
     </t>
 
     <t t-name="ProductCategoriesWidget">
-        <header>
-            <ol class="breadcrumb">
-                <li class="oe-pos-categories-list">
-                    <a href="javascript:void(0)">
-                        <img src="/point_of_sale/static/src/img/home.png" class="homeimg" />
-                    </a>
-                </li>
+        <div>
+        <header class='rightpane-header'>
+            <div class="breadcrumbs">
+                <span class="breadcrumb">
+                    <span class=" breadcrumb-button js-category-switch">
+                        <img src="/point_of_sale/static/src/img/home.png" class="breadcrumb-homeimg" />
+                    </span>
+                </span>
                 <t t-foreach="widget.breadcrumb" t-as="category">
-                    <li class="oe-pos-categories-list">
-                        <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow" />
-                        <a href="javascript:void(0)" t-att-data-category-id="category.id">
+                    <span class="breadcrumb">
+                        <img src="/point_of_sale/static/src/img/bc-arrow-big.png" class="breadcrumb-arrow" />
+                        <span class="breadcrumb-button js-category-switch" t-att-data-category-id="category.id">
                             <t t-esc="category.name"/>
-                        </a>
-                    </li>
+                        </span>
+                    </span>
                 </t>
-            </ol>
+            </div>
             <div class="searchbox">
                 <input placeholder="Search Products" />
-                <img class="search-clear" src="/point_of_sale/static/src/img/search_reset.gif" />
+                <span class="search-clear"></span>
             </div>
         </header>
         <t t-if="widget.subcategories.length > 0">
-            <div id="categories">
-                <div class="white-gradient"></div>
-                <ol class="category-list">
-                </ol>
-                <div class="shadow-top"></div>
+            <div class="categories">
+                <div class="category-list">
+                </div>
             </div>
         </t>
+        </div>
     </t>
 
     <t t-name="ProductListWidget">
         <div class='product-list-container'>
-            <div class="product-list-scroller">
-                <ol id="products-screen-ol" class="product-list">
-                </ol>
+            <div class="product-list-scroller touch-scrollable">
+                <div class="product-list">
+                </div>
             </div>
-            <div class="shadow-top"></div>
             <span class="placeholder-ScrollbarWidget" />
         </div>
     </t>
 
     <t t-name="ProductScreenWidget">
-        <div id="products-screen" class="screen">
+        <div class="product-screen screen">
             <table class="layout-table">
 
                 <tr class="header-row">
@@ -188,7 +239,6 @@
 
     <t t-name="ScaleScreenWidget">
         <div class="scale-screen screen">
-            <header><h2>Product Weighting</h2></header>
             <div class="display">
                 <span class="weight">
                     <p>
@@ -205,7 +255,7 @@
                         <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
                     </span> 
                     <t t-if="widget.get_product()">
-                        <img t-att-src="widget.get_product().get_image_url()" />
+                        <img t-att-src="widget.get_product_image_url()" />
                     </t>
                 </div>
             </div>
@@ -213,47 +263,36 @@
     </t>
 
     <t t-name="PaymentScreenWidget">
-        <div id="payment-screen" class="screen">
-            <header><h2>Payment</h2></header>
-            <div class="pos-step-container">
-                <div class="pos-payment-container">
-                    <br />
-                    <div class="header">
-                        <span class="left-block">
-                            Total:
+        <div class="payment-screen screen touch-scrollable">
+            <div class="pos-payment-container">
+                <div class='payment-due-total'></div>
+                <div class='payment-lines'></div>
+                <div class='payment-info'>
+                    <div class="infoline">
+                        <span class='left-block'>
+                            Paid:
                         </span>
-                        <span class='right-block' id="payment-due-total"></span>
+                        <span class="right-block payment-paid-total"></span>
                     </div>
-                    <table id="paymentlines">
-                    </table>
-                    <div class="footer">
-                        <div class="infoline">
-                            <span class='left-block'>
-                                Paid:
-                            </span>
-                            <span class='right-block' id="payment-paid-total"></span>
-                        </div>
-                        <div class="infoline">
-                            <span class='left-block'>
-                                Remaining:
-                            </span>
-                            <span class='right-block' id="payment-remaining"></span>
-                        </div>
-                        <div class="infoline" >
-                            <span class='left-block'>
-                                Change:
-                            </span>
-                            <span class='right-block' id="payment-change"></span>
-                        </div>
+                    <div class="infoline">
+                        <span class='left-block'>
+                            Remaining:
+                        </span>
+                        <span class="right-block payment-remaining"></span>
+                    </div>
+                    <div class="infoline bigger" >
+                        <span class='left-block'>
+                            Change:
+                        </span>
+                        <span class="right-block payment-change"></span>
                     </div>
                 </div>
             </div>
         </div>
-    </t> <!-- pos-payment-screen -->
+    </t>
 
     <t t-name="ReceiptScreenWidget">
-        <div id="receipt-screen" class="screen" >
-            <header><h2>Receipt</h2></header>
+        <div class="receipt-screen screen touch-scrollable" >
             <div class="pos-step-container">
                 <div class="pos-receipt-container">
                 </div>
@@ -263,7 +302,7 @@
 
     <t t-name="WelcomeScreenWidget">
         <div class="welcome-screen screen">
-            <header><h2>Welcome</h2></header>
+            <header class='rightpane-header'><h2>Welcome</h2></header>
             <div class="dialog">
             <img src="/point_of_sale/static/src/img/scan.png" />
             <p> Please scan an item or your member card </p>
@@ -276,15 +315,15 @@
 
 
     <t t-name="ScanProductScreenWidget">
-        <div class="scan-product-screen screen">
-            <header><h2>Please scan an item</h2></header>
+        <div class="scan-product-screen screen touch-scrollable">
+            <header class='rightpane-header'><h2>Please scan an item</h2></header>
             <img src="/point_of_sale/static/src/img/scan.png" />
         </div>
     </t>
 
     <t t-name="ClientPaymentScreenWidget">
         <div class="scan-product-screen screen">
-            <header><h2>Payment</h2></header>
+            <header class='rightpane-header'><h2>Payment</h2></header>
             <div class="dialog">
                 <img src="/point_of_sale/static/src/img/bancontact.png" />
                 <p>Please insert your card in the reader and follow the instructions to complete
@@ -295,15 +334,8 @@
 
     <t t-name="ScaleInviteScreenWidget">
         <div class="scale-invite-screen screen">
-            <header><h2>Please put your product on the scale</h2></header>
+            <header class='rightpane-header'><h2>Please put your product on the scale</h2></header>
             <img src="/point_of_sale/static/src/img/scale.png" />
-        </div>
-    </t>
-
-    <t t-name="ScaleProductSelectionScreenWidget">
-        <div class="scale-product-selection-screen">
-            <span class="placeholder-ProductCategoriesWidget" />
-            <span class="placeholder-ProductListWidget" />
         </div>
     </t>
 
@@ -400,57 +432,39 @@
     </t>
 
     <t t-name="Product">
-        <li class='product'>
-            <a href="#">
-                <div class="product-img">
-                    <img src='' /> <!-- the product thumbnail -->
-                    <t t-if="!product.get('to_weight')">
-                        <span class="price-tag">
-                            <t t-esc="widget.format_currency(product.get('price'))"/>
-                        </span>
-                    </t>
-                    <t t-if="product.get('to_weight')">
-                        <span class="price-tag">
-                            <t t-esc="widget.format_currency(product.get('price'))+'/Kg'"/>
-                        </span>
-                    </t>
-                </div>
-                <div class="product-name">
-                    <t t-esc="product.get('name')"/>
-                </div>
-            </a>
-        </li>
-    </t>
-
-    <t t-name="ScrollbarWidget">
-        <div class='scrollbar'>
-            <div class='up-button button oe_e'>
-                &amp;atilde;
+        <span class='product' t-att-data-product-id="product.id">
+            <div class="product-img">
+                <img t-att-src='image_url' /> 
+                <t t-if="!product.to_weight">
+                    <span class="price-tag">
+                        <t t-esc="widget.format_currency(product.price)"/>
+                    </span>
+                </t>
+                <t t-if="product.to_weight">
+                    <span class="price-tag">
+                        <t t-esc="widget.format_currency(product.price)+'/Kg'"/>
+                    </span>
+                </t>
             </div>
-
-            <div class='scroller'>
+            <div class="product-name">
+                <t t-esc="product.name"/>
             </div>
-
-            <div class='down-button button oe_e'>
-                &amp;auml;
-            </div>
-        </div>
+        </span>
     </t>
 
     <t t-name="OrderWidget">
         <div class="order-container">
-            <div class="order-scroller">
+            <div class="order-scroller touch-scrollable">
                 <div class="order">
                     <ul class="orderlines">
-                        <t t-if="widget.pos.get('selectedOrder').get('orderLines').length === 0">
+                        <t t-if="orderlines.length === 0">
                             <li class="orderline empty">
                                 Your shopping cart is empty
                             </li>
                         </t>
-
                     </ul>
-                    <div class="summary">
-                        <div t-attf-class="line #{widget.pos.get('selectedOrder').get('orderLines').length === 0 ? 'empty' : ''}">
+                    <div class="summary clearfix">
+                        <div t-attf-class="line #{orderlines.length === 0 ? 'empty' : ''}">
                             <div class='entry total'>
                                 <span class="label">Total: </span> <span class="value">0.00 €</span>
                                 <div class='subentry'>Taxes: <span class="value">0.00€</span></div>
@@ -460,8 +474,6 @@
                     </div>
                 </div>
             </div>
-            <div class="shadow-top"></div>
-            <span class="placeholder-ScrollbarWidget"></span>
         </div>
     </t>
 
@@ -518,32 +530,32 @@
         </div>
     </t>
 
-    <t t-name="OrderlineWidget">
-        <li class="orderline">
+    <t t-name="Orderline">
+        <li t-attf-class="orderline #{ line.selected ? 'selected' : '' }">
             <span class="product-name">
-                <t t-esc="widget.model.get_product().get('name')"/>
+                <t t-esc="line.get_product().name"/>
             </span>
             <span class="price">
-                <t t-esc="widget.format_currency(widget.model.get_display_price())"/>
+                <t t-esc="widget.format_currency(line.get_display_price())"/>
             </span>
             <ul class="info-list">
-                <t t-if="widget.model.get_quantity_str() !== '1'">
+                <t t-if="line.get_quantity_str() !== '1' || line.selected ">
                     <li class="info">
                         <em>
-                            <t t-esc="widget.model.get_quantity_str()" />
+                            <t t-esc="line.get_quantity_str()" />
                         </em>
-                        <t t-esc="widget.model.get_unit().name" />
+                        <t t-esc="line.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(widget.model.get_unit_price())" />
+                        <t t-esc="widget.format_currency(line.get_unit_price())" />
                         /
-                        <t t-esc="widget.model.get_unit().name" />
+                        <t t-esc="line.get_unit().name" />
                     </li>
                 </t>
-                <t t-if="widget.model.get_discount_str() !== '0'">
+                <t t-if="line.get_discount_str() !== '0'">
                     <li class="info">
                         With a 
                         <em>
-                            <t t-esc="widget.model.get_discount_str()" />%
+                            <t t-esc="line.get_discount_str()" />%
                         </em>
                         discount
                     </li>
@@ -552,28 +564,38 @@
         </li>
     </t>
 
-    <t t-name="PaymentlineWidget">
-        <tr class="paymentline">
+    <t t-name="Paymentline">
+        <div t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
+            <div class='paymentline-name'>
+                <t t-esc="line.name"/>
+            </div>
+            <input class='paymentline-input' type="number" step="0.01" t-att-value="line.get_amount().toFixed(2)" />
+            <span  class='paymentline-delete'>
+                <img src="/point_of_sale/static/src/img/search_reset.gif" />
+            </span>
+        </div>
+    </t>
+
+    <t t-name="PaymentlineOld">
+        <tr t-attf-class="paymentline #{line.selected ? 'selected' : ''}">
             <td class="paymentline-type">
-                <t t-esc="widget.name"/>
+                <t t-esc="line.name"/>
             </td>
             <td class="paymentline-amount pos-right-align">
-                <input type="text" t-att-value="widget.payment_line.get_amount().toFixed(2)" />
-                <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
+                <input type="number" step="0.01" t-att-value="line.get_amount().toFixed(2)" />
+                <span class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></span>
             </td>
         </tr>
     </t>
 
     <t t-name="PaypadButtonWidget">
-        <button class="paypad-button" t-att-cash-register-id="widget.cashRegister.get('id')">
-            <t t-esc="widget.cashRegister.get('journal').name"/>
+        <button class="paypad-button" t-att-cash-register-id="widget.cashregister.id">
+            <t t-esc="widget.cashregister.journal.name"/>
         </button>
     </t>
 
     <t t-name="OrderButtonWidget">
-        <li class="order-selector-button">
-            <button class="select-order"><t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'') + widget.order.get('creationDate').toString('t')"/></button>
-        </li>
+        <button class="order-button select-order"><t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'') + widget.order.get('creationDate').toString('t')"/></button>
     </t>
 
     <t t-name="UsernameWidget">
@@ -586,22 +608,28 @@
         <div class="pos-sale-ticket">
             
             <div class="pos-center-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
-                Date.CultureInfo.formatPatterns.longTime)"/> <t t-esc="widget.currentOrder.attributes.name"/></div>
+                Date.CultureInfo.formatPatterns.longTime)"/> <t t-esc="order.get('name')"/></div>
             <br />
-            <t t-esc="widget.company.name"/><br />
-            Phone: <t t-esc="widget.company.phone || ''"/><br />
-            User: <t t-esc="widget.user.name"/><br />
-            Shop: <t t-esc="widget.shop_obj.name"/><br />
+            <t t-esc="widget.pos.company.name"/><br />
+            Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
+            User: <t t-esc="widget.pos.user.name"/><br />
+            Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
+            <t t-if="widget.pos.config.receipt_header">
+                <pre>
+                    <t t-esc="widget.pos.config.receipt_header" />
+                </pre>
+                <br />
+            </t>
             <table>
                 <colgroup>
                     <col width='50%' />
                     <col width='25%' />
                     <col width='25%' />
                 </colgroup>
-                <tr t-foreach="widget.currentOrderLines.toArray()" t-as="orderline">
+                <tr t-foreach="orderlines" t-as="orderline">
                     <td>
-                        <t t-esc="orderline.get_product().get('name')"/>
+                        <t t-esc="orderline.get_product().name"/>
                          <t t-if="orderline.get_discount() > 0">
                             <div class="pos-disc-font">
                                 With a <t t-esc="orderline.get_discount()"/>% discount
@@ -618,36 +646,56 @@
             </table>
             <br />
             <table>
-                <tr><td>Subtotal:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getSubtotal())"/>
-                    </td></tr>
-                <tr><td>Tax:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getTax())"/>
-                    </td></tr>
-                <tr><td>Discount:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getDiscountTotal())"/>
-                    </td></tr>
-                <tr class="emph"><td>Total:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getTotalTaxIncluded())"/>
-                    </td></tr>
+                <tr>
+                    <td>Subtotal:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.getSubtotal())"/>
+                    </td>
+                </tr>
+                <t t-foreach="order.getTaxDetails()" t-as="taxdetail">
+                    <tr>
+                        <td><t t-esc="taxdetail.tax.name" /></td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(taxdetail.amount)" />
+                        </td>
+                    </tr>
+                </t>
+                <tr>
+                    <td>Discount:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.getDiscountTotal())"/>
+                    </td>
+                </tr>
+                <tr class="emph">
+                    <td>Total:</td>
+                    <td class="pos-right-align">
+                        <t t-esc="widget.format_currency(order.getTotalTaxIncluded())"/>
+                    </td>
+                </tr>
             </table>
             <br />
             <table>
-                <tr t-foreach="widget.currentPaymentLines.toArray()" t-as="pline">
+                <tr t-foreach="paymentlines" t-as="line">
                     <td>
-                        <t t-esc="pline.get_cashregister().get('journal_id')[1]"/>
+                        <t t-esc="line.name"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(pline.get_amount())"/>
+                        <t t-esc="widget.format_currency(line.get_amount())"/>
                     </td>
                 </tr>
             </table>
             <br />
             <table>
                 <tr><td>Change:</td><td class="pos-right-align">
-                    <t t-esc="widget.format_currency(widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotalTaxIncluded())"/>
+                    <t t-esc="widget.format_currency(order.getChange())"/>
                     </td></tr>
             </table>
+            <t t-if="widget.pos.config.receipt_footer">
+                <br />
+                <pre>
+                    <t t-esc="widget.pos.config.receipt_footer" />
+                </pre>
+            </t>
         </div>
     </t>
 

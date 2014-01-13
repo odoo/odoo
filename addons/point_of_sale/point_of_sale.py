@@ -69,12 +69,16 @@ class pos_config(osv.osv):
         'currency_id' : fields.function(_get_currency, type="many2one", string="Currency", relation="res.currency"),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
-        'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
-        'iface_payment_terminal' : fields.boolean('Payment Terminal Interface'),
-        'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
-        'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
-        'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
+        'iface_cashdrawer' : fields.boolean('Cashdrawer',help="Automatically open the cashdrawer"),
+        'iface_payment_terminal' : fields.boolean('Payment Terminal', help="Enables Payment Terminal integration"),
+        'iface_electronic_scale' : fields.boolean('Electronic Scale', help="Enables Electronic Scale integration"),
+        'iface_vkeyboard' : fields.boolean('Virtual KeyBoard', help="Enables an integrated Virtual Keyboard"),
+        'iface_print_via_proxy' : fields.boolean('Print via Proxy', help="Bypass browser printing and prints via the hardware proxy"),
         'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
+        'iface_big_scrollbars': fields.boolean('Large Scrollbars',help='For imprecise industrial touchscreens'),
+        'receipt_header': fields.text('Receipt Header',help="A short text that will be inserted as a header in the printed receipt"),
+        'receipt_footer': fields.text('Receipt Footer',help="A short text that will be inserted as a footer in the printed receipt"),
+        'proxy_ip':       fields.char('Hardware Proxy IP Address', size=45),
 
         'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
@@ -392,10 +396,9 @@ class pos_session(osv.osv):
         context.update(active_id=this_record.id)
 
         return {
-            'type' : 'ir.actions.client',
-            'name' : _('Start Point Of Sale'),
-            'tag' : 'pos.ui',
-            'context' : context,
+            'type' : 'ir.actions.act_url',
+            'url'  : '/pos/web/',
+            'target': 'self',
         }
 
     def wkf_action_open(self, cr, uid, ids, context=None):
@@ -498,10 +501,9 @@ class pos_session(osv.osv):
                         _("You cannot use the session of another users. This session is owned by %s. Please first close this one to use this point of sale." % session.user_id.name))
         context.update({'active_id': ids[0]})
         return {
-            'type' : 'ir.actions.client',
-            'name' : _('Start Point Of Sale'),
-            'tag' : 'pos.ui',
-            'context' : context,
+            'type' : 'ir.actions.act_url',
+            'target': 'self',
+            'url':   '/pos/web/',
         }
 
 class pos_order(osv.osv):
@@ -634,10 +636,10 @@ class pos_order(osv.osv):
         'warehouse_id': fields.related('session_id', 'config_id', 'warehouse_id', relation='stock.warehouse', type='many2one', string='Warehouse', store=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
-        'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Account'), multi='all'),
         'amount_total': fields.function(_amount_all, string='Total', multi='all'),
-        'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
-        'amount_return': fields.function(_amount_all, 'Returned', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits_compute=dp.get_precision('Account'), multi='all'),
+        'amount_return': fields.function(_amount_all, 'Returned', digits_compute=dp.get_precision('Account'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True),
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
@@ -1240,11 +1242,11 @@ class pos_order_line(osv.osv):
         'name': fields.char('Line No', size=32, required=True),
         'notice': fields.char('Discount Notice', size=128),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
-        'price_unit': fields.float(string='Unit Price', digits=(16, 2)),
-        'qty': fields.float('Quantity', digits=(16, 2)),
+        'price_unit': fields.float(string='Unit Price', digits_compute=dp.get_precision('Account')),
+        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoS')),
         'price_subtotal': fields.function(_amount_line_all, multi='pos_order_line_amount', string='Subtotal w/o Tax', store=True),
         'price_subtotal_incl': fields.function(_amount_line_all, multi='pos_order_line_amount', string='Subtotal', store=True),
-        'discount': fields.float('Discount (%)', digits=(16, 2)),
+        'discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Account')),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
     }

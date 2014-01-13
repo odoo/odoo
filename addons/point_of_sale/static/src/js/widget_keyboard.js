@@ -35,56 +35,68 @@ function openerp_pos_keyboard(instance, module){ //module is instance.point_of_s
             this.numlock  = false;
         },
         
-        connect : function($target){
+        connect : function(target){
             var self = this;
-            this.$target = $target;
-            $target.focus(function(){self.show();});
+            this.$target = $(target);
+            this.$target.focus(function(){self.show();});
+        },
+        generateEvent: function(type,key){
+            var event = document.createEvent("KeyboardEvent");
+            var initMethod =  event.initKeyboardEvent ? 'initKeyboardEvent' : 'initKeyEvent';
+            event[initMethod](  type,
+                                true, //bubbles
+                                true, //cancelable
+                                window, //viewArg
+                                false, //ctrl
+                                false, //alt
+                                false, //shift
+                                false, //meta
+                                ((typeof key.code === 'undefined') ? key.char.charCodeAt(0) : key.code),
+                                ((typeof key.char === 'undefined') ? String.fromCharCode(key.code) : key.char)
+                            );
+            return event;
+
         },
 
         // Write a character to the input zone
         writeCharacter: function(character){
-            var $input = this.$target;
-            if(character === '\n'){
-                $input.trigger($.Event('keydown',{which:13}));
-                $input.trigger($.Event('keyup',{which:13}));
-            }else{
-                $input[0].value += character;
-                $input.keydown();
-                $input.keyup();
+            var input = this.$target[0];
+            input.dispatchEvent(this.generateEvent('keydown',{char: character}));
+            if(character !== '\n'){
+                input.value += character;
             }
-        },
-        
-        // Sends a 'return' character to the input zone. TODO
-        sendReturn: function(){
+            input.dispatchEvent(this.generateEvent('keyup',{char: character}));
         },
         
         // Removes the last character from the input zone.
         deleteCharacter: function(){
-            var $input = this.$target;
-            var input_value = $input[0].value;
-            $input[0].value = input_value.substr(0, input_value.length - 1);
-            $input.keydown();
-            $input.keyup();
+            var input = this.$target[0];
+            input.dispatchEvent(this.generateEvent('keydown',{code: 8}));
+            input.value = input.value.substr(0, input.value.length -1);
+            input.dispatchEvent(this.generateEvent('keyup',{code: 8}));
         },
         
         // Clears the content of the input zone.
         deleteAllCharacters: function(){
-            var $input = this.$target;
-            $input[0].value = "";
-            $input.keydown();
-            $input.keyup();
+            var input = this.$target[0];
+            if(input.value){
+                input.dispatchEvent(this.generateEvent('keydown',{code: 8}));
+                input.value = "";
+                input.dispatchEvent(this.generateEvent('keyup',{code: 8}));
+            }
         },
 
         // Makes the keyboard show and slide from the bottom of the screen.
         show:  function(){
-            $('.keyboard_frame').show().animate({'height':'235px'}, 500, 'swing');
+            $('.keyboard_frame').show().css({'height':'235px'});
         },
         
         // Makes the keyboard hide by sliding to the bottom of the screen.
         hide:  function(){
-            var self = this;
-            var frame = $('.keyboard_frame');
-            frame.animate({'height':'0'}, 500, 'swing', function(){ frame.hide(); self.reset(); });
+            $('.keyboard_frame')
+                .css({'height':'0'})
+                .hide();
+            this.reset();
         },
         
         //What happens when the shift key is pressed : toggle case, remove capslock
