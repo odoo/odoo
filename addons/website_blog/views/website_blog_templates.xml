@@ -133,7 +133,7 @@
 <!-- Options: Blog Post Summary: hide author -->
 <template id="opt_blog_post_short_author" name="Author"
         inherit_option_id="website_blog.blog_post_short">
-    <xpath expr="//span[@class*='oe_date']" position="after">
+    <xpath expr="//span[@class='fa fa-calendar oe_date']" position="after">
         <span class="fa fa-user"> By <span t-field="blog_post.create_uid"/> &amp;nbsp;</span>
     </xpath>
 </template>
