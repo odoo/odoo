@@ -2,6 +2,14 @@
  * OpenERP web_calendar
  *---------------------------------------------------------*/
 
+_.str.toBoolElse = function(str, elseValues, trueValues, falseValues) {
+      var ret = _.str.toBool(str, trueValues, falseValues);
+      if (_.isUndefined(ret)) {
+        return elseValues
+      }
+      return ret
+};
+
 openerp.web_calendar = function(instance) {
 
     var _t = instance.web._t,
@@ -108,15 +116,15 @@ openerp.web_calendar = function(instance) {
             this.attendee_people = attrs.attendee;  
             this.how_display_event = '';
            
-
             if (!isNullOrUndef(attrs.quick_create_instance)) {
                 self.quick_create_instance = 'instance.' + attrs.quick_create_instance;                
             }
                 
             //if quick_add = False, we don't allow quick_add
             //if quick_add = not specified in view, we use the default quick_create_instance
-            //if quick_add = is NOT False and IS specified in view, we this one for quick_create_instance'            
-            this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || attrs.quick_add != "False");
+            //if quick_add = is NOT False and IS specified in view, we this one for quick_create_instance'   
+            
+            this.quick_add_pop = (isNullOrUndef(attrs.quick_add) || _.str.toBoolElse(attrs.quick_add,true) );            
             if (this.quick_add_pop && !isNullOrUndef(attrs.quick_add)) {
                 self.quick_create_instance = 'instance.' + attrs.quick_add;                
             }
@@ -126,7 +134,7 @@ openerp.web_calendar = function(instance) {
             }
             
             // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter
-            if (isNullOrUndef(attrs.event_open_popup) || attrs.event_open_popup == "False") {
+            if (isNullOrUndef(attrs.event_open_popup) || !_.str.toBoolElse(attrs.event_open_popup,true)) {
                 this.open_popup_action = false; 
             }
             else {
@@ -134,11 +142,11 @@ openerp.web_calendar = function(instance) {
             }
             
             // If this field is set to true, we will use de calendar_friends model as filter and not the color field.
-            this.useContacts = (!isNullOrUndef(attrs.use_contacts) && attrs.use_contacts == "True"); 
+            this.useContacts = (!isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts)); 
 
             // If this field is set ot true, we don't add itself as an attendee when we use attendee_people to add each attendee icon on an event
             // The color is the color of the attendee, so don't need to show again that it will be present
-            this.colorIsAttendee = (!(isNullOrUndef(attrs.color_is_attendee) || attrs.color_is_attendee == "False")); 
+            this.colorIsAttendee = (!(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee,true))); 
                 
 /*
             Will be more logic to do it in futur, but see below to stay Retro-compatible
@@ -264,6 +272,7 @@ openerp.web_calendar = function(instance) {
                 weekNumbers: true,
                 snapMinutes: 15,
                 timeFormat : {
+                
                            // for agendaWeek and agendaDay
                             agenda: 'h:mm{ - h:mm}', // 5:00 - 6:30
 
@@ -279,19 +288,19 @@ openerp.web_calendar = function(instance) {
             return function(datum,obj) {
                 var curView = context.$calendar.fullCalendar( 'getView');
                 var curDate = new Date(obj.currentYear , obj.currentMonth, obj.currentDay);
-                
+
                 if (curView.name == "agendaWeek") {
                     if (curDate <= curView.end && curDate >= curView.start) {
                         context.$calendar.fullCalendar('changeView','agendaDay');
                     }
                 }
-                else if (curView.name != "agendaDay" || (curView.name == "agendaDay" && curDate.compareTo(curView.start)==0)) { 
+                else if (curView.name != "agendaDay" || (curView.name == "agendaDay" && curDate.compareTo(curView.start)==0)) {
                         context.$calendar.fullCalendar('changeView','agendaWeek');
-                }                
+                }
                 context.$calendar.fullCalendar('gotoDate', obj.currentYear , obj.currentMonth, obj.currentDay);
             }
-        },              
-        
+        },
+
         init_calendar: function() {
             var self = this;
              
@@ -317,7 +326,7 @@ openerp.web_calendar = function(instance) {
                                 sidebar_items[filter_value] = filter_item ;
                                 filter_item = {
                                         value: -1,
-                                        label: _lt("All..."),
+                                        label: _lt("All calendars"),
                                         color: self.get_color(-1),
                                         avatar_model: self.avatar_model
                                     };
@@ -470,16 +479,6 @@ openerp.web_calendar = function(instance) {
             });
             return def;
         },
-       
-        isInArray: function(array_is, array_in) {
-            for(var z=0; z<array_is.length; z++){
-              if( array_in.indexOf(array_is[z]) !== -1) {
-                  return true;
-              }
-            }
-            return false;
-        },            
-            
         
         /**
          * Transform OpenERP event object to fullcalendar event object
@@ -1367,83 +1366,6 @@ openerp.web_calendar = function(instance) {
         }
     });
 
-    instance.web_calendar.FieldMany2ManyCalendar = instance.web_calendar.FieldCalendar.extend({
-
-        init: function(field_manager, node) {
-            this._super(field_manager, node);
-            this.dataset.on('dataset_changed', this, function() {
-                // Will set dirty state if necessary
-                this.set({'value': this.dataset.ids});
-            });
-        },
-
-        set_value: function(value_) {
-            value_ = value_ || [];
-            if (value_.length >= 1 && value_[0] instanceof Array) {
-                value_ = value_[0][2];
-            }
-            this._super(value_);
-        },
-
-        get_value: function() {
-            // see to use ``commands.replace_with`` provided in
-            // ``instance.web.form`` but not yet shared.
-            return [[6, false, this.get('value')]];
-        },
-        open_popup_add: function() {
-            var pop = (new instance.web.form.SelectCreatePopup(this));
-            var self = this;
-            pop.select_element(
-                this.field.relation,
-                {
-                    title: _t("Add: ") + this.string
-                },
-                new instance.web.CompoundDomain(
-                    this.build_domain(),
-                    ["!", ["id", "in", this.dataset.ids]]),
-                this.build_context()
-            );
-            pop.on("elements_selected", this, function(element_ids) {
-                _.each(element_ids, function(id) {
-                    if (!_.detect(self.dataset.ids, function(x) {return x == id;})) {
-                        self.dataset.set_ids([].concat(self.dataset.ids, [id]));
-                        self.calendar_view.refresh_event(id);
-                    }
-                    self.dataset.trigger("dataset_changed");
-                });
-            });
-        }
-
-    });
-
-
-    instance.web_calendar.FieldOne2ManyCalendar = instance.web_calendar.FieldCalendar.extend({
-
-        init: function(field_manager, node) {
-            this._super(field_manager, node);
-            this.dataset.on('dataset_changed', this, function() {
-                // Force dirty state, as if dataset changed, then 'get_value' result will change 
-                // because it uses directly the dataset to compute its result.
-                this.trigger('changed_value');
-            });
-        },
-
-        set_value: instance.web.form.FieldOne2Many.prototype.set_value,
-        get_value: instance.web.form.FieldOne2Many.prototype.get_value,
-        // XXX needed by set_value for no reason at all, TO REMOVE when
-        // FieldOne2Many.set_value will be cleaned.
-        trigger_on_change: function() {},
-        reload_current_view: function() {},
-
-        open_popup_add: false, // deactivate button "Add"
-
-    });
-
-
-    instance.web.form.widgets.add('many2many_calendar','instance.web_calendar.FieldMany2ManyCalendar');
-    instance.web.form.widgets.add('one2many_calendar','instance.web_calendar.FieldOne2ManyCalendar');
-   
-        
     instance.web_calendar.Sidebar = instance.web.Widget.extend({
         template: 'CalendarView.sidebar',
         
