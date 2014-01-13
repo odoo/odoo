@@ -148,10 +148,13 @@
             });
             self.$el.css('top', this.parent.get('height'));
         },
+        _get_snippet_url: function () {
+            return '/website/snippets';
+        },
         fetch_snippet_templates: function () {
             var self = this;
 
-            openerp.jsonRpc("/website/snippets", 'call', {})
+            openerp.jsonRpc(this._get_snippet_url(), 'call', {})
                 .then(function (html) {
                     var $html = $(html);
 

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<!-- Email Designer main page -->
+<template id="designer_index" name="Email Designer">
+    <t t-call="website.layout">
+        <t t-set="head">
+            <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
+        </t>
+        <div id="wrap">
+            <div class="oe_structure container">
+                <div class="row">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="email_from" class="col-sm-2 control-label">Email From</label>
+                            <div class="col-sm-10">
+                                <input type="char" class="form-control" id="email_from"
+                                    placeholder="my.email@example.com" t-att-value="template.email_from"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email_to" class="col-sm-2 control-label">To (Email)</label>
+                            <div class="col-sm-10">
+                                <input type="char" class="form-control" id="email_to"
+                                    placeholder="my.email@example.com" t-att-value="template.email_to"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="partner_to" class="col-sm-2 control-label">To (Partners)</label>
+                            <div class="col-sm-10">
+                                <input type="char" class="form-control" id="partner_to"
+                                    placeholder="1,2,3" t-att-value="template.partner_to"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reply_to" class="col-sm-2 control-label">Reply-To</label>
+                            <div class="col-sm-10">
+                                <input type="char" class="form-control" id="reply_to"
+                                    placeholder="my.email@example.com" t-att-value="template.reply_to"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject" class="col-sm-2 control-label">Subject</label>
+                            <div class="col-sm-10">
+                                <input type="char" class="form-control" id="subject"
+                                    placeholder="Subject" t-att-value="template.subject"/>
+                            </div>
+                        </div>
+                    </form>
+                    <div t-field="template.body_html"/>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-set="website.footer"></t>
+</template>
+
+</data>
+</openerp>
+
+
+

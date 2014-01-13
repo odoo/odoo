@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="email_designer_snippets">
+
+    <div class="scroll" t-ignore="1">
+        <ul class="nav navbar-nav nav-tabs">
+          <li class="active"><a href="#snippet_structure" data-toggle="tab">Structure</a></li>
+          <li><a href="#snippet_content" data-toggle="tab">Content</a></li>
+          <li><a href="#snippet_feature" data-toggle="tab">Features</a></li>
+          <li><a href="#snippet_effect" data-toggle="tab">Effects</a></li>
+        </ul>
+        <div class="tab-content">
+
+<div id="snippet_structure" class="tab-pane fade in active">
+
+    <div data-snippet-id="text-image" data-selector-children=".oe_structure, [data-oe-type=html]">
+        <div class="oe_snippet_thumbnail">
+            <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_text_image.png"/>
+            <span class="oe_snippet_thumbnail_title">Text-Image</span>
+        </div>
+        <section class="oe_snippet_body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 mt16">
+                        <h3>A Section Subtitle</h3>
+                        <p>
+                            Write one or two paragraphs describing your product or
+                            services. To be successful your content needs to be
+                            useful to your readers.
+                        </p><p>
+                            Start with the customer – find out what they want
+                            and give it to them.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mt16 mb16">
+                        <img class="img img-responsive shadow" src="/website/static/src/img/text_image.png"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+
+<div id="snippet_feature" class="tab-pane fade">
+</div>
+
+<div id="snippet_effect" class="tab-pane fade">
+</div>
+
+<div id="snippet_styles" class="hidden">
+</div>
+
+        </div>
+    </div>
+
+</template>
+</data>
+</openerp>
