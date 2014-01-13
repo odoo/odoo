@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_normal_form_view_template" model="ir.ui.view">
+            <field name="name">product.normal.procurement.locations.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="list_price" position="after">
+                    <field name="email_template_id" domain="[('model','=','product.product')]"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_product_email_template" model="ir.actions.act_window">
+            <field name="name">Product Templates</field>
+            <field name="res_model">email.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('model','=','product.product')]</field>
+        </record>
+
+        <menuitem id="menu_finance_product_template" name="Product Template" parent="account.menu_finance_configuration" action="action_product_email_template"/>
+
+    </data>
+</openerp>
