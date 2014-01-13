@@ -809,6 +809,7 @@ class Database(http.Controller):
 
     @http.route('/web/database/manager', type='http', auth="none")
     def manager(self, debug=False):
+        request.session.logout()
         debug = debug is not False # we just check presence of `debug` query param
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', debug=debug))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', debug=debug))
@@ -838,12 +839,15 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='json', auth="none")
     def create(self, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
-        return request.session.proxy("db").create_database(
+        db_created = request.session.proxy("db").create_database(
             params['super_admin_pwd'],
             params['db_name'],
             bool(params.get('demo_data')),
             params['db_lang'],
             params['create_admin_pwd'])
+        if db_created:
+            request.session.authenticate(params['db_name'], 'admin', params['create_admin_pwd'])
+        return db_created
 
     @http.route('/web/database/duplicate', type='json', auth="none")
     def duplicate(self, fields):
