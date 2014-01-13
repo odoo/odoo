@@ -158,7 +158,7 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
-                                    <h4 class="modal-title">Please confirm you accept this order:</h4>
+                                    <h4 class="modal-title">You are near to validate the sale order. Please check your data and validate the Order.</h4>
                                   </div>
                                   <form id="accept" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/accept">
                                       <div class="modal-body">
@@ -172,7 +172,7 @@
                                         </dl>
                                     </div>
                                   <div class="modal-footer">
-                                        <button type="submit" class="btn btn-success">Validate Order</button>
+                                        <button type="submit" class="btn btn-success">Validate Order</button> or
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Discard</button>
                                   </div>
                                 </form>
@@ -182,7 +182,7 @@
 
                             <div class="alert alert-warning alert-dismissable" t-if="quotation.state == 'cancel'">
                                 <button type="button" class="close hidden-print" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-                                <strong>This quotation has been canceled.</strong> Contact <p t-field="quotation.user_id"/> to ask a new one.
+                                <strong>This quotation has been canceled.</strong> Contact <span t-field="quotation.user_id"/> ( <span t-if="quotation.user_id.email"> <span class="fa fa-envelope" t-field="quotation.user_id.email" /></span> <span t-if="quotation.user_id.phone"> <span class="fa fa-phone" t-field="quotation.user_id.phone"/></span> ) in order to ask a new quote.
                             </div>
 
                             <div class="modal fade" id="modeldecline" role="dialog" aria-hidden="true">
@@ -190,15 +190,15 @@
                                 <div class="modal-content">
                                   <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
-                                    <h4 class="modal-title">Reason</h4>
+                                    <h4 class="modal-title">Please give us your feedback on reason you are refusing this quotation.</h4>
                                   </div>
                                   <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline">
                                       <div class="modal-body">
                                         <textarea rows="3" name="decline_message" placeholder="Your Comment....." class="form-control"> </textarea>
                                     </div>
                                   <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post</button>
+                                        <button type="submit" t-att-id="quotation.id" class="btn btn-info">Post</button> or
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Discard</button>
                                   </div>
                                 </form>
                                 </div>

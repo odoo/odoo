@@ -1,5 +1,5 @@
 {
-    'name': 'Quote Roller',
+    'name': 'Online Quotation',
     'category': 'Website',
     'summary': 'Send Live Quotation',
     'version': '1.0',
