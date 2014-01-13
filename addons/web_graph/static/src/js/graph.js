@@ -369,7 +369,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
                     return;
                 }
                 var fields = _.map(this.important_fields, function (field) {
-                        return {id: field, value: self.fields[field].string};
+                        return {id: field, value: self.fields[field].string, type:self.fields[field].type};
                 });
                 this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
                 $(event.target).after(this.dropdown);
@@ -383,9 +383,15 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
 
     field_selection: function (event) {
         var id = event.target.attributes['data-id'].nodeValue,
-            field_id = event.target.attributes['data-field-id'].nodeValue;
+            field_id = event.target.attributes['data-field-id'].nodeValue,
+            interval;
         event.preventDefault();
-        this.pivot.expand(id, field_id);
+        if (this.fields[field_id].type === 'date' || this.fields[field_id].type === 'datetime') {
+            interval = event.target.attributes['data-interval'].nodeValue;
+            this.pivot.expand(id, {field: field_id, interval: interval});
+        } else {
+            this.pivot.expand(id, field_id);
+        }
     },
 
 /******************************************************************************

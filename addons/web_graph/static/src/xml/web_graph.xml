@@ -47,11 +47,41 @@
 		<span class="btn btn-default field-selection dropdown-toggle" data-toggle="dropdown"></span>
         <ul class="dropdown-menu" role="menu">
 	    	<t t-foreach="fields" t-as="field">
-		        <li>
-                    <a class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" href="#">
-                        <t t-esc="field.value"/>
-                    </a>
-		        </li>
+                <t t-if="(field.type === 'date') || (field.type === 'datetime')">
+                    <li>
+                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'day'" t-att-data-id="header_id" href="#">
+                            <t t-esc="field.value + ' (day)'"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'week'" t-att-data-id="header_id" href="#">
+                            <t t-esc="field.value + ' (week)'"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'month'" t-att-data-id="header_id" href="#">
+                            <t t-esc="field.value + ' (month)'"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'quarter'" t-att-data-id="header_id" href="#">
+                            <t t-esc="field.value + ' (quarter)'"/>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-interval="'year'" t-att-data-id="header_id" href="#">
+                            <t t-esc="field.value + ' (year)'"/>
+                        </a>
+                    </li>
+                </t>
+
+                 <t t-if="(field.type !== 'date') &amp;&amp; (field.type !== 'datetime')">
+                    <li>
+                        <a class="field-selection" t-att-data-field-id="field.id" t-att-data-id="header_id" href="#">
+                            <t t-esc="field.value"/>
+                        </a>
+                    </li>
+                </t>
 	        </t>
         </ul>
     </div>

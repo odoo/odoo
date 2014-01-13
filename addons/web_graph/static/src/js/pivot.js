@@ -107,6 +107,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
     },
 
     create_field_value: function (f) {
+        if (f.field && f.interval) {
+            return {field:f.field, string: this.fields[f.field].string, type:this.fields[f.field].type, interval: f.interval};
+        }
         return (f.field && f.string && f.type) ? f : {field: f, string: this.fields[f].string, type: this.fields[f].type};
     },
 
@@ -376,11 +379,37 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 
 	_query_db: function (groupby, fields, domain, path) {
 		var self = this,
-            field_ids = _.without(_.pluck(fields, 'field'), '__count');
-        // To do : add code to check if groupby is date/datetime 
-        //     and in that case, add the correct code to the context 
+            field_ids = _.without(_.pluck(fields, 'field'), '__count'),
+            context = {};
+
+        if (groupby.interval) {
+            context.datetime_format = {};
+            var display_format;
+            switch (groupby.interval) {
+                case 'day':
+                    display_format = 'dd MMMM YYYY';
+                    break;
+                case 'week':
+                    display_format = 'w YYYY';
+                    break;
+                case 'month':
+                    display_format = 'MMMM YYYY';
+                    break;
+                case 'quarter':
+                    display_format = 'QQQ YYYY';
+                    break;
+                case 'year':
+                    display_format = 'YYYY';
+                    break;
+            }
+            context.datetime_format[groupby.field] = {
+                interval: groupby.interval,
+                display_format: display_format
+            };
+        }
 		return this.model.query(field_ids)
 			.filter(domain)
+            .context(context)
 			.group_by(groupby.field)
 			.then(function (results) {
 				var groups = _.filter(results, function (group) {
