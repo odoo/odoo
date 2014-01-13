@@ -14,8 +14,6 @@ import usb.core
 from openerp.tools.translate import _
 from .. import escpos
 from ..escpos import printer
-#import escpos 
-#import escpos.printer
 from PIL import Image
 
 from openerp import http
@@ -29,6 +27,13 @@ class EscposDriver(hw_proxy.Proxy):
     supported_printers = [
         { 'vendor' : 0x04b8, 'product' : 0x0e03, 'name' : 'Epson TM-T20' }
     ]
+
+    def connected_usb_devices(self,devices):
+        connected = []
+        for device in devices:
+            if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
+                connected.append(device)
+        return connected
     
     def get_escpos_printer(self):
         printers = self.connected_usb_devices(self.supported_printers)
