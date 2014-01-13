@@ -2672,15 +2672,12 @@ class BaseModel(object):
                 if groupby_type in ('date', 'datetime'):
                     if context.get('datetime_format') and isinstance(context['datetime_format'], dict) \
                             and context['datetime_format'].get(groupby) and isinstance(context['datetime_format'][groupby], dict):
-                        groupby_format = context['datetime_format'][groupby].get('groupby_format', 'yyyy-mm')
                         display_format = context['datetime_format'][groupby].get('display_format', 'MMMM yyyy')
                         interval = context['datetime_format'][groupby].get('interval', 'month')
                     else:
-                        groupby_format = 'yyyy-mm'
                         display_format = 'MMMM yyyy'
                         interval = 'month'
                     group_by_params = {
-                        'groupby_format': groupby_format,
                         'display_format': display_format,
                         'interval': interval,
                     }
@@ -2753,17 +2750,18 @@ class BaseModel(object):
                         groupby_datetime = dateutil.parser.parse(groupby_datetime, default=_default)
                     d[groupby] = babel.dates.format_date(
                         groupby_datetime, format=group_by_params.get('display_format', 'MMMM yyyy'), locale=context.get('lang', 'en_US'))
-                    if group_by_params.get('interval') == 'month':
-                        days = calendar.monthrange(groupby_datetime.year, groupby_datetime.month)[1]
-                        domain_dt_begin = groupby_datetime.replace(day=1)
-                        domain_dt_end = groupby_datetime.replace(day=days)
+                    domain_dt_begin = groupby_datetime
+                    if group_by_params.get('interval') == 'quarter':
+                        domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(months=3)
+                    elif group_by_params.get('interval') == 'month':
+                        domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(months=1)
+                    elif group_by_params.get('interval') == 'week':
+                        domain_dt_end = groupby_datetime + datetime.timedelta(days=7)
                     elif group_by_params.get('interval') == 'day':
-                        domain_dt_begin = groupby_datetime.replace(hour=0, minute=0)
-                        domain_dt_end = groupby_datetime.replace(hour=23, minute=59, second=59)
+                        domain_dt_end = groupby_datetime + datetime.timedelta(days=1)
                     else:
-                        domain_dt_begin = groupby_datetime.replace(month=1, day=1)
-                        domain_dt_end = groupby_datetime.replace(month=12, day=31)
-                    d['__domain'] = [(groupby, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (groupby, '<=', domain_dt_end.strftime('%Y-%m-%d'))] + domain
+                        domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(years=1)
+                    d['__domain'] = [(groupby, '>=', domain_dt_begin.strftime('%Y-%m-%d')), (groupby, '<', domain_dt_end.strftime('%Y-%m-%d'))] + domain
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
