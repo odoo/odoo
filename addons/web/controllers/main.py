@@ -613,13 +613,14 @@ class Home(http.Controller):
             return redirect_with_hash('/web/login', keep_query=True)
 
     @http.route('/web/login', type='http', auth="none")
-    def web_login(self, **kw):
+    def web_login(self, redir='/web', **kw):
         assert request.session.db is not None
         values = request.params.copy()
+        values['redir'] = redir
         if request.httprequest.method == 'POST':
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
-                return set_cookie_and_redirect('/web')
+                return set_cookie_and_redirect(redir)
             values['authentication_failed'] = True
         return render_bootstrap_template(request.session.db, 'web.login', values)
 
