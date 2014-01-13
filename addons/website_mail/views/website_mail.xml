@@ -12,18 +12,17 @@
               t-att-value="email or ''"
               placeholder="your email..."/>
         <span class="input-group-btn">
-            <button href="#"
-                t-attf-class="btn btn-#{object.message_is_follower and 'default' or 'primary'} js_follow_btn">
-              <t t-if="object.message_is_follower">Unsubscribe</t>
-              <t t-if="not object.message_is_follower">Subscribe</t>
-            </button>
+            <button href="#" t-attf-class="btn btn-default js_unfollow_btn">Unsubscribe</button>
+            <button href="#" t-attf-class="btn btn-primary js_follow_btn">Subscribe</button>
         </span>
+        <div class="alert alert-success hidden">Thanks for your subscription!</div>
     </div>
 </template>
 
 <template id="head" inherit_id="website.layout" name="Mail customization">
     <xpath expr="//head" position="inside">
         <script type="text/javascript" src="/website_mail/static/src/js/website_mail.js"></script>
+        <link rel='stylesheet' href='/website_mail/static/src/css/website_mail.css'/>
     </xpath>
 </template>
 
