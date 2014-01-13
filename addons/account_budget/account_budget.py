@@ -127,7 +127,21 @@ class crossovered_budget_lines(osv.osv):
             date_to = line.date_to
             date_from = line.date_from
             if line.analytic_account_id.id:
-                cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id=%s AND (date "
+                cr.execute("SELECT SUM(amount) FROM account_analytic_line WHERE account_id in "
+                       """(with recursive account_analytic_account_hierarchy(id)
+                        as 
+                            (
+                                select id from account_analytic_account 
+                                    where id=%s
+                                union all
+                                select account_analytic_account.id from 
+                                    account_analytic_account 
+                                    join account_analytic_account_hierarchy
+                                    on account_analytic_account.parent_id=
+                                        account_analytic_account_hierarchy.id
+                            )"""
+                       "select id from account_analytic_account_hierarchy) "
+                       "AND (date "
                        "between to_date(%s,'yyyy-mm-dd') AND to_date(%s,'yyyy-mm-dd')) AND "
                        "general_account_id=ANY(%s)", (line.analytic_account_id.id, date_from, date_to,acc_ids,))
                 result = cr.fetchone()[0]
