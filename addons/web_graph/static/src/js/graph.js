@@ -184,6 +184,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
         this.mode = options.mode || 'pivot';
         this.title = options.title || 'Graph';
         this.visible_ui = options.visible_ui || true;
+        this.bar_ui = options.bar_ui || 'group';
         this.pivot_options = options;
     },
 
@@ -325,13 +326,13 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
         switch (event.target.attributes['data-choice'].nodeValue) {
             case 'bar_grouped':
                 this.bar_ui = 'group';
-                if (this.mode === 'bar_chart') {
+                if (this.mode === 'bar') {
                     this.display_data();
                 }
                 break;
             case 'bar_stacked':
                 this.bar_ui = 'stack';
-                if (this.mode === 'bar_chart') {
+                if (this.mode === 'bar') {
                     this.display_data();
                 }
                 break;
@@ -609,7 +610,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
                 var values = _.map(self.pivot.get_rows_with_depth(1), function (header) {
                     return {
                         x: header.title || 'Undefined',
-                        y: self.pivot.get_values(header.id, colhdr.id, 0)[0]
+                        y: self.pivot.get_values(header.id, colhdr.id)[0] || 0
                     };
                 });
                 return {key: colhdr.title || 'Undefined', values: values};
