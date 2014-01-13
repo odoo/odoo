@@ -294,7 +294,7 @@ class mail_thread(osv.AbstractModel):
             fnct_search=_search_followers, type='many2many',
             obj='res.partner', string='Followers', multi='_get_followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
-            domain=lambda self: [('model', '=', self._name)],
+            domain=lambda self, cr, uid, context=None: [('model', '=', self._name)],
             auto_join=True,
             string='Messages',
             help="Messages and communication history"),
