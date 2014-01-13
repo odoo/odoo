@@ -4413,7 +4413,13 @@ class BaseModel(object):
             else:
                 tocreate[v] = {'id': vals[self._inherits[v]]}
 
-        query_fields, query_formats, query_values = [], [], []
+        columns = [
+            # columns will contain a list of field defined as a tuple
+            # tuple(field_name, format_string, field_value)
+            # the tuple will be used by the string formatting for the INSERT
+            # statement.
+            ('id', "nextval('%s')" % self._sequence),
+        ]
 
         upd_todo = []
         unknown_fields = []
@@ -4453,9 +4459,7 @@ class BaseModel(object):
             else:
                 self.pool[table].write(cr, user, [record_id], tocreate[table], context=parent_context)
 
-            query_fields.append(self._inherits[table])
-            query_formats.append('%s')
-            query_values.append(record_id)
+            columns.append((self._inherits[table], '%s', record_id))
 
         #Start : Set bool fields to be False if they are not touched(to make search more powerful)
         bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
@@ -4492,14 +4496,13 @@ class BaseModel(object):
                 if not edit:
                     vals.pop(field)
         for field in vals:
-            if self._columns[field]._classic_write:
-                query_fields.append('"%s"' % field)
-                query_formats.append(self._columns[field]._symbol_set[0])
-                query_values.append(self._columns[field]._symbol_set[1](vals[field]))
+            current_field = self._columns[field]
+            if current_field._classic_write:
+                columns.append((field, '%s', current_field._symbol_set[1](vals[field])))
 
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
-                if (hasattr(self._columns[field], '_fnct_inv')) and not isinstance(self._columns[field], fields.related):
+                if (hasattr(current_field, '_fnct_inv')) and not isinstance(current_field, fields.related):
                     #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at
                     #one week of the release candidate. It seems the only good way to handle correctly this is to add an
                     #attribute to make a field `really readonly´ and thus totally ignored by the create()... otherwise
@@ -4511,24 +4514,30 @@ class BaseModel(object):
             else:
                 #TODO: this `if´ statement should be removed because there is no good reason to special case the fields
                 #related. See the above TODO comment for further explanations.
-                if not isinstance(self._columns[field], fields.related):
+                if not isinstance(current_field, fields.related):
                     upd_todo.append(field)
             if field in self._columns \
-                    and hasattr(self._columns[field], 'selection') \
+                    and hasattr(current_field, 'selection') \
                     and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
-            query_fields.extend(['create_uid', 'create_date', 'write_uid', 'write_date'])
-            query_formats.extend(['%s', "(now() at time zone 'UTC')", '%s', "(now() at time zone 'UTC')"])
-            query_values.extend((user, user))
+            columns.append(('create_uid', '%s', user))
+            columns.append(('write_uid', '%s', user))
+            columns.append(('create_date', "(now() at time zone 'UTC')"))
+            columns.append(('write_date', "(now() at time zone 'UTC')"))
 
+        # the list of tuples used in this formatting corresponds to
+        # tuple(field_name, format, value)
+        # In some case, for example (id, create_date, write_date) we does not
+        # need to read the third value of the tuple, because the real value is
+        # encoded in the second value (the format).
         cr.execute(
             """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
-                self._table, 
-                ','.join(query_fields), 
-                ','.join(query_formats)
+                self._table,
+                ', '.join('"%s"' % f[0] for f in columns),
+                ', '.join(f[1] for f in columns)
             ),
-            tuple(query_values)
+            tuple([f[2] for f in columns if len(f) > 2])
         )
 
         id_new, = cr.fetchone()
