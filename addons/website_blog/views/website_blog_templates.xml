@@ -244,7 +244,7 @@
 <!-- Options: Blog Post: show category -->
 <template id="opt_blog_post_complete_category" name="Blog Category"
         inherit_option_id="website_blog.blog_post_complete">
-    <xpath expr="//span[@class*='oe_date']" position="after">
+    <xpath expr="//span[@class='fa fa-calendar oe_date']" position="after">
         <span class="fa fa-folder-open"> In <span t-field="blog_post.category_id"/> &amp;nbsp;</span>
     </xpath>
 </template>
