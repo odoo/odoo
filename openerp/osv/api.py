@@ -289,38 +289,61 @@ def _cr_uid_ids_context_splitter(method):
     return split
 
 
-def _scope_getter(method):
-    """ return a function that gets the scope corresponding to parameters """
-    names = getargspec(method).args[1:]
-    cr_name = names[0]
-    uid_name = len(names) > 1 and names[1] in ('uid', 'user') and names[1]
-    ctx_pos = 'context' in names and names.index('context')
+def _scope_cr_getter(method):
+    """ return a function that makes the scope corresponding to parameters """
+    names = getargspec(method).args
+    cr_name = len(names) > 1 and names[1]
 
-    if uid_name:
-        if ctx_pos:
-            def get(args, kwargs):
-                nargs = len(args)
-                cr = args[0] if nargs else kwargs[cr_name]
-                uid = args[1] if 1 < nargs else kwargs[uid_name]
-                context = args[ctx_pos] if ctx_pos < nargs else kwargs.get('context')
-                return Scope(cr, uid, context)
-        else:
-            def get(args, kwargs):
-                nargs = len(args)
-                cr = args[0] if nargs else kwargs[cr_name]
-                uid = args[1] if 1 < nargs else kwargs[uid_name]
-                return Scope(cr, uid, kwargs.get('context'))
-    else:
-        if ctx_pos:
-            def get(args, kwargs):
-                nargs = len(args)
-                cr = args[0] if nargs else kwargs[cr_name]
-                context = args[ctx_pos] if ctx_pos < nargs else kwargs.get('context')
-                return Scope(cr, SUPERUSER_ID, context)
-        else:
-            def get(args, kwargs):
-                cr = args[0] if args else kwargs[cr_name]
-                return Scope(cr, SUPERUSER_ID, kwargs.get('context'))
+    def get(args, kwargs):
+        cr = args[0] if args else kwargs[cr_name]
+        return Scope(cr, SUPERUSER_ID, None)
+
+    return get
+
+
+def _scope_cr_uid_getter(method):
+    """ return a function that makes the scope corresponding to parameters """
+    names = getargspec(method).args
+    cr_name = len(names) > 1 and names[1]
+    uid_name = len(names) > 2 and names[2]
+
+    def get(args, kwargs):
+        nargs = len(args)
+        cr = args[0] if nargs > 0 else kwargs[cr_name]
+        uid = args[1] if nargs > 1 else kwargs[uid_name]
+        return Scope(cr, uid, None)
+
+    return get
+
+
+def _scope_cr_context_getter(method):
+    """ return a function that makes the scope corresponding to parameters """
+    names = getargspec(method).args
+    cr_name = len(names) > 1 and names[1]
+    ctx_pos = names.index('context') - 1 if 'context' in names else 1024
+
+    def get(args, kwargs):
+        nargs = len(args)
+        cr = args[0] if nargs > 0 else kwargs[cr_name]
+        context = args[ctx_pos] if nargs > ctx_pos else kwargs.get('context')
+        return Scope(cr, SUPERUSER_ID, context)
+
+    return get
+
+
+def _scope_cr_uid_context_getter(method):
+    """ return a function that makes the scope corresponding to parameters """
+    names = getargspec(method).args
+    cr_name = len(names) > 1 and names[1]
+    uid_name = len(names) > 2 and names[2]
+    ctx_pos = names.index('context') - 1 if 'context' in names else 1024
+
+    def get(args, kwargs):
+        nargs = len(args)
+        cr = args[0] if nargs > 0 else kwargs[cr_name]
+        uid = args[1] if nargs > 1 else kwargs[uid_name]
+        context = args[ctx_pos] if nargs > ctx_pos else kwargs.get('context')
+        return Scope(cr, uid, context)
 
     return get
 
@@ -433,7 +456,7 @@ def cr(method):
             obj.method(cr, args)        # traditional style
     """
     method._api = cr
-    get_scope = _scope_getter(method)
+    get_scope = _scope_cr_getter(method)
     old_to_new = _converter_to_new(method)
 
     @wraps(method)
@@ -451,7 +474,7 @@ def cr(method):
 def cr_context(method):
     """ Decorate a traditional-style method that takes `cr`, `context` as parameters. """
     method._api = cr_context
-    get_scope = _scope_getter(method)
+    get_scope = _scope_cr_context_getter(method)
     old_to_new = _converter_to_new(method)
 
     @wraps(method)
@@ -471,7 +494,7 @@ def cr_context(method):
 def cr_uid(method):
     """ Decorate a traditional-style method that takes `cr`, `uid` as parameters. """
     method._api = cr_uid
-    get_scope = _scope_getter(method)
+    get_scope = _scope_cr_uid_getter(method)
     old_to_new = _converter_to_new(method)
 
     @wraps(method)
@@ -496,7 +519,7 @@ def cr_uid_context(method):
             obj.method(cr, uid, args, context=context)
     """
     method._api = cr_uid_context
-    get_scope = _scope_getter(method)
+    get_scope = _scope_cr_uid_context_getter(method)
     old_to_new = _converter_to_new(method)
 
     @wraps(method)
@@ -519,7 +542,7 @@ def cr_uid_id(method):
         styles. In the record style, the method automatically loops on records.
     """
     method._api = cr_uid_id
-    get_scope = _scope_getter(method)
+    get_scope = _scope_cr_uid_getter(method)
     old_to_new = _converter_to_new(method)
 
     @wraps(method)
@@ -552,7 +575,7 @@ def cr_uid_id_context(method):
             model.method(cr, uid, id, args, context=context)
     """
     method._api = cr_uid_id_context
-    get_scope = _scope_getter(method)
+    get_scope = _scope_cr_uid_context_getter(method)
     old_to_new = _converter_to_new(method)
 
     @wraps(method)
@@ -575,7 +598,7 @@ def cr_uid_ids(method):
         styles.
     """
     method._api = cr_uid_ids
-    get_scope = _scope_getter(method)
+    get_scope = _scope_cr_uid_getter(method)
     old_to_new = _converter_to_new(method)
 
     @wraps(method)
@@ -610,7 +633,7 @@ def cr_uid_ids_context(method):
         It is generally not necessary, see :func:`guess`.
     """
     method._api = cr_uid_ids_context
-    get_scope = _scope_getter(method)
+    get_scope = _scope_cr_uid_context_getter(method)
     old_to_new = _converter_to_new(method)
 
     @wraps(method)
