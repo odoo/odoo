@@ -17,18 +17,16 @@ class google_auth(http.Controller):
         state = simplejson.loads(kw['state'])
         dbname = state.get('d')
         service = state.get('s')
-        url_return = state.get('from')
+        url_return = state.get('f')
         
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
             if kw.get('code',False):
                 registry.get('google.%s' % service).set_all_tokens(cr,request.session.uid,kw['code'])
                 return werkzeug.utils.redirect(url_return)
-            
-            #TODO - Display error at customer if url contains ?Error=
             elif kw.get('error'):
-                return werkzeug.utils.redirect("%s%s%s" % (url_return ,"?Error=" , kw.get('error')))
+                return werkzeug.utils.redirect("%s%s%s" % (url_return ,"?error=" , kw.get('error')))
             else:
-                return werkzeug.utils.redirect("%s%s%s" % (url_return ,"?Error=Unknown_error"))
+                return werkzeug.utils.redirect("%s%s%s" % (url_return ,"?error=Unknown_error"))
 
         

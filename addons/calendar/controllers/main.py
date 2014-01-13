@@ -10,28 +10,8 @@ from werkzeug.exceptions import BadRequest
 
 class meeting_invitation(http.Controller):
 
-    def check_security(self, db, token):
-        registry = openerp.modules.registry.RegistryManager.get(db)
-        attendee_pool = registry.get('calendar.attendee')
-        error_message = False
-        with registry.cursor() as cr:
-            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token','=',token)])
-            if not attendee_id:
-                error_message = """Invalid Invitation Token."""
-            elif request.session.uid and request.session.login != 'anonymous':
-                 # if valid session but user is not match
-                attendee = attendee_pool.browse(cr, openerp.SUPERUSER_ID, attendee_id[0])
-                user = registry.get('res.users').browse(cr, openerp.SUPERUSER_ID, request.session.uid)
-                if attendee.partner_id.user_id.id != user.id:
-                    error_message  = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
-
-        if error_message:
-            raise BadRequest(error_message)
-        return True
-
-    @http.route('/calendar/meeting/accept', type='http', auth="none")
-    def accept(self, db, token, action, id):
-        self.check_security(db, token)
+    @http.route('/calendar/meeting/accept', type='http', auth="calendar")
+    def accept(self, db, token, action, id,**kwargs):
         registry = openerp.modules.registry.RegistryManager.get(db)
         attendee_pool = registry.get('calendar.attendee')
         with registry.cursor() as cr:
@@ -40,9 +20,8 @@ class meeting_invitation(http.Controller):
                 attendee_pool.do_accept(cr, openerp.SUPERUSER_ID, attendee_id)
         return self.view(db, token, action, id, view='form')
 
-    @http.route('/calendar/meeting/decline', type='http', auth="none")
+    @http.route('/calendar/meeting/decline', type='http', auth="calendar")
     def declined(self, db, token, action, id):
-        self.check_security(db, token)
         registry = openerp.modules.registry.RegistryManager.get(db)
         attendee_pool = registry.get('calendar.attendee')
         with registry.cursor() as cr:
@@ -51,9 +30,8 @@ class meeting_invitation(http.Controller):
                 attendee_pool.do_decline(cr, openerp.SUPERUSER_ID, attendee_id)
         return self.view(db, token, action, id, view='form')
 
-    @http.route('/calendar/meeting/view', type='http', auth="none")
+    @http.route('/calendar/meeting/view', type='http', auth="calendar")
     def view(self, db, token, action, id, view='calendar'):
-        self.check_security(db, token)
         registry = openerp.modules.registry.RegistryManager.get(db)
         meeting_pool = registry.get('crm.meeting')
         attendee_pool = registry.get('calendar.attendee')
@@ -89,6 +67,6 @@ class meeting_invitation(http.Controller):
         uid = request.session.uid
         context = request.session.context
         with registry.cursor() as cr:
-            res = registry.get("res.partner").update_cal_last_event(cr,uid,context=context)
+            res = registry.get("res.partner").calendar_last_event(cr,uid,context=context)
             return res
 

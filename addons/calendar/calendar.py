@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -33,9 +33,10 @@ from openerp import tools, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
+from openerp import http
+from openerp.http import request
 
 import logging
-
 _logger = logging.getLogger(__name__)
 
 
@@ -295,7 +296,7 @@ class calendar_attendee(osv.Model):
 class res_partner(osv.Model):
     _inherit = 'res.partner'
     _columns = {
-        'cal_last_notif': fields.datetime('Last Notification from base Calendar'),
+        'calendar_last_notif': fields.datetime('Last Notification from base Calendar'),
     }
 
     def get_attendee_detail(self, cr, uid, ids, meeting_id, context=None):
@@ -312,13 +313,13 @@ class res_partner(osv.Model):
             datas.append(data)
         return datas
 
-    def update_cal_last_event(self, cr, uid, context=None):
+    def calendar_last_event(self, cr, uid, context=None):
         partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        self.write(cr, uid, partner.id, {'cal_last_notif': datetime.now()}, context=context)
+        self.write(cr, uid, partner.id, {'calendar_last_notif': datetime.now()}, context=context)
         return
 
 
-class calendar_alarm_manager(osv.Model):
+class calendar_alarm_manager(osv.AbstractModel):
     _name = 'calendar.alarm_manager'
 
     def get_next_potential_limit_alarm(self, cr, uid, seconds, notif=True, mail=True, partner_id=None, context=None):
@@ -424,86 +425,84 @@ class calendar_alarm_manager(osv.Model):
                         res.append(alert)
         return res
 
-    def do_run_scheduler_mail(self, cr, uid, context=None):
-         self.do_run(cr, uid, type='mail', context=None)
 
-    def do_run_next_event(self, cr, uid, context=None):
-        return self.do_run(cr, uid, type='notif', context=None)
-        
-    def do_run(self, cr, uid, type, context=None):  # Type is 'notif' or 'email'
-        all_notif = []
-        if (type == 'notif'):
-            ajax_check_every_seconds = 300
-            partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id            
-            all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner.id, mail=False, context=context)
-        elif (type == 'mail'):
-            cron = self.pool['ir.cron'].search(cr, uid, [('model', 'ilike', self._name)], context=context)
-            if cron and len(cron) == 1:
-                cron = self.pool['ir.cron'].browse(cr, uid, cron[0], context=context)
-            else:
-                _logger.exception("Cron for % can't be found !" % self._name)
-                return
-    
-            if cron.interval_type == "weeks":
-                cron_interval = cron.interval_number * 7 * 24 * 60 * 60
-            elif cron.interval_type == "days":
-                cron_interval = cron.interval_number * 24 * 60 * 60
-            elif cron.interval_type == "hours":
-                cron_interval = cron.interval_number * 60 * 60
-            elif cron.interval_type == "minutes":
-                cron_interval = cron.interval_number * 60
-            elif cron.interval_type == "seconds":
-                cron_interval = cron.interval_number
-    
-            if not cron_interval:
-                _logger.exception("Cron delay for % can not be calculated !" % self._name)
-                return
-    
-            all_events = self.get_next_potential_limit_alarm(cr, uid, cron_interval, notif=False, context=context)
+    def get_next_mail(self,cr,uid,context=None):
+        cron = self.pool.get('ir.cron').search(cr,uid,[('model','ilike',self._name)],context=context)
+        if cron and len(cron) == 1:
+            cron = self.pool.get('ir.cron').browse(cr,uid,cron[0],context=context)
+        else:
+            raise ("Cron for " + self._name + " not identified :( !")
 
-        for event in all_events:  
-            max_delta = all_events[event]['max_duration']
-            curEvent = self.pool['crm.meeting'].browse(cr, uid, event, context=context)
+        if cron.interval_type=="weeks":
+            cron_interval = cron.interval_number * 7 * 24 * 60 * 60
+        elif cron.interval_type=="days":
+            cron_interval = cron.interval_number * 24 * 60 * 60 
+        elif cron.interval_type=="hours":
+            cron_interval = cron.interval_number * 60 * 60
+        elif cron.interval_type=="minutes":
+            cron_interval = cron.interval_number * 60
+        elif cron.interval_type=="seconds":
+            cron_interval = cron.interval_number 
+
+        if not cron_interval:
+            raise ("Cron delay for " + self._name + " can not be calculated :( !")
+
+        all_events = self.get_next_potential_limit_alarm(cr,uid,cron_interval,notif=False,context=context)
+
+        for event in all_events: #.values()
+            max_delta = all_events[event]['max_duration'];
+            curEvent = self.pool.get('crm.meeting').browse(cr,uid,event,context=context) 
             if curEvent.recurrency:
                 bFound = False
                 LastFound = False
-                for one_date in self.pool['crm.meeting'].get_recurrent_date_by_event(cr, uid, curEvent, context=context):
-                    in_date_format = datetime.strptime(one_date, '%Y-%m-%d %H:%M:%S')
-                    
-                    if (type == 'notif'):
-                        LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner.cal_last_notif, mail=False, context=context)
-                    elif (type == 'mail'):
-                         LastFound =  self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, cron_interval, notif=False, context=context)
-                    
+                for one_date in self.pool.get('crm.meeting').get_recurrent_date_by_event(cr,uid,curEvent, context=context) :
+                    in_date_format = datetime.strptime(one_date, '%Y-%m-%d %H:%M:%S');
+                    LastFound = self.do_check_alarm_for_one_date(cr,uid,in_date_format,curEvent,max_delta,cron_interval,notif=False,context=context)
                     if LastFound:
                         for alert in LastFound:
-                            
-                            if (type == 'notif'):
-                                all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
-                            elif (type == 'mail'):
-                                self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, cron_interval, notif=False, context=context)
-                                
+                            self.do_mail_reminder(cr,uid,alert,context=context)
+
                         if not bFound:  # if it's the first alarm for this recurrent event
                             bFound = True
-                    if bFound and not LastFound:  # if the precedent event had alarm but not this one, we can stop the search for this event
+                    if bFound and not LastFound:  # if the precedent event had an alarm but not this one, we can stop the search for this event
                         break
             else:
-                in_date_format = datetime.strptime(curEvent.date, '%Y-%m-%d %H:%M:%S')
-                
-                if (type == 'notif'):
-                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, partner.cal_last_notif, mail=False, context=context)
-                elif (type == 'mail'):
-                    self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, cron_interval, notif=False, context=context)
-                    
+                in_date_format = datetime.strptime(curEvent.date, '%Y-%m-%d %H:%M:%S');
+                LastFound = self.do_check_alarm_for_one_date(cr,uid,in_date_format,curEvent,max_delta,cron_interval,notif=False,context=context)
                 if LastFound:
                     for alert in LastFound:
-                        if (type == 'notif'):
-                            all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
-                        elif (type == 'mail'):
-                            all_notif.append(self.do_mail_reminder(cr, uid, alert, context=context))
-        return all_notif
-    
-    
+                        self.do_mail_reminder(cr,uid,alert,context=context)                    
+
+    def get_next_notif(self,cr,uid,context=None):
+        ajax_check_every_seconds = 300
+        partner = self.pool.get('res.users').browse(cr,uid,uid,context=context).partner_id;
+        all_notif = []
+        all_events = self.get_next_potential_limit_alarm(cr,uid,ajax_check_every_seconds,partner_id=partner.id,mail=False,context=context)
+
+        for event in all_events:  # .values()
+            max_delta = all_events[event]['max_duration'];
+            curEvent = self.pool.get('crm.meeting').browse(cr,uid,event,context=context) 
+            if curEvent.recurrency:
+                bFound = False
+                LastFound = False
+                for one_date in self.pool.get("crm.meeting").get_recurrent_date_by_event(cr,uid,curEvent, context=context) :
+                    in_date_format = datetime.strptime(one_date, '%Y-%m-%d %H:%M:%S');
+                    LastFound = self.do_check_alarm_for_one_date(cr,uid,in_date_format,curEvent,max_delta,ajax_check_every_seconds,after=partner.cal_last_notif,mail=False,context=context)
+                    if LastFound:
+                        for alert in LastFound:
+                            all_notif.append(self.do_notif_reminder(cr,uid,alert,context=context))
+                        if not bFound: #if it's the first alarm for this recurrent event
+                            bFound = True   
+                    if bFound and not LastFound: #if the precedent event had alarm but not this one, we can stop the search fot this event
+                        break
+            else:
+                in_date_format = datetime.strptime(curEvent.date, '%Y-%m-%d %H:%M:%S');
+                LastFound = self.do_check_alarm_for_one_date(cr,uid,in_date_format,curEvent,max_delta,ajax_check_every_seconds,partner.cal_last_notif,mail=False,context=context)
+                if LastFound:
+                    for alert in LastFound:
+                        all_notif.append(self.do_notif_reminder(cr,uid,alert,context=context))
+        return  all_notif
+
     def do_mail_reminder(self, cr, uid, alert, context=None):
         if context is None:
             context = {}
@@ -913,10 +912,8 @@ class crm_meeting(osv.Model):
 
         return {'value': value}
 
-    def new_invitation_token(self, cr, uid, record, partner_id):
-        db_uuid = self.pool['ir.config_parameter'].get_param(cr, uid, 'database.uuid')
-        invitation_token = hashlib.sha256('%s-%s-%s-%s-%s' % (time.time(), db_uuid, record._name, record.id, partner_id)).hexdigest()
-        return invitation_token
+    def new_invitation_token(self, cr, uid, record, partner_id):        
+        return uuid.uuid4().hex
 
     def create_attendees(self, cr, uid, ids, context):
         user_obj = self.pool['res.users']
@@ -1223,15 +1220,15 @@ class crm_meeting(osv.Model):
 
     def get_attendee(self, cr, uid, meeting_id, context=None):
         # Used for view in controller
-        invitation = {'meeting': {}, 'attendee': [], 'logo': ''}
-        company_logo = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.logo
+        invitation = {'meeting': {}, 'attendee': []}
+        
         meeting = self.browse(cr, uid, int(meeting_id), context)
         invitation['meeting'] = {
             'event': meeting.name,
             'where': meeting.location,
             'when': meeting.display_time
         }
-        invitation['logo'] = company_logo.replace('\n', '\\n') if company_logo else ''
+        
         for attendee in meeting.attendee_ids:
             invitation['attendee'].append({'name': attendee.cn, 'status': attendee.state})
         return invitation
@@ -1454,30 +1451,6 @@ class crm_meeting(osv.Model):
             return result and result[0] or False
         return result
 
-    def count_left_instance(self, cr, uid, event_id, context=None):
-        event = self.browse(cr, uid, event_id, context=context)
-        if event.recurrent_id and event.recurrent_id > 0:
-            parent_event_id = event.recurrent_id
-        else:
-            parent_event_id = event.id
-        domain = ['|', ('id', '=', parent_event_id), ('recurrent_id', '=', parent_event_id)]
-
-        count = self.search(cr, uid, domain, context=context)
-        return len(count)
-
-    def get_linked_ids(self, cr, uid, event_id, show_unactive=True, context=None):
-        event = self.browse(cr, uid, event_id, context=context)
-        if event.recurrent_id and event.recurrent_id > 0:
-            parent_event_id = event.recurrent_id
-        else:
-            parent_event_id = event.id
-
-        domain = ['|', ('id', '=', parent_event_id), ('recurrent_id', '=', parent_event_id)]
-        if show_unactive:
-            domain += ['|', ('active', '=', True), ('active', '=', False)]
-
-        return super(crm_meeting, self).search(cr, uid, domain, context=context)
-
     def unlink(self, cr, uid, ids, unlink_level=0, context=None):
         if not isinstance(ids, list):
             ids = [ids]
@@ -1544,8 +1517,33 @@ class ir_attachment(osv.Model):
         if isinstance(vals.get('res_id'), str):
             vals['res_id'] = get_real_ids(vals.get('res_id'))
         return super(ir_attachment, self).write(cr, uid, ids, vals, context=context)
-
-
+    
+    
+class ir_http(osv.AbstractModel):
+    _inherit = 'ir.http'
+    
+    def _auth_method_calendar(self):
+        token = request.params['token']        
+        db =  request.params['db']
+        
+        registry = openerp.modules.registry.RegistryManager.get(db)
+        attendee_pool = registry.get('calendar.attendee')
+        error_message = False
+        with registry.cursor() as cr:
+            attendee_id = attendee_pool.search(cr, openerp.SUPERUSER_ID, [('access_token','=',token)])
+            if not attendee_id:
+                error_message = """Invalid Invitation Token."""
+            elif request.session.uid and request.session.login != 'anonymous':
+                 # if valid session but user is not match
+                attendee = attendee_pool.browse(cr, openerp.SUPERUSER_ID, attendee_id[0])
+                user = registry.get('res.users').browse(cr, openerp.SUPERUSER_ID, request.session.uid)
+                if attendee.partner_id.id  != user.partner_id.id:
+                    error_message  = """Invitation cannot be forwarded via email. This event/meeting belongs to %s and you are logged in as %s. Please ask organizer to add you.""" % (attendee.email, user.email)
+        
+        if error_message:
+            raise BadRequest(error_message)
+        return True
+    
 class invite_wizard(osv.osv_memory):
     _inherit = 'mail.wizard.invite'
 

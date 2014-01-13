@@ -3,11 +3,10 @@ openerp.google_calendar = function(instance) {
        _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
 
-    instance.web_calendar.FullCalendarView.include({
+    instance.web_calendar.CalendarView.include({
         view_loading: function(r) {
             var self = this;
             this.$el.on('click', 'div.oe_cal_sync_button', function() {
-                console.log("Launch synchro");
                 self.sync_calendar(r);
             });
             return this._super(r);
@@ -23,17 +22,15 @@ openerp.google_calendar = function(instance) {
                 fields: res.fields,
                 model:res.model,
                 fromurl: window.location.href,
-                LocalContext:context
+                local_context:context
             }).done(function(o) {
-                console.log(o);
-                
-                if (o.status == "NeedAuth") {
+                if (o.status == "need_auth") {
                     alert(_t("You will be redirected on gmail to authorize your OpenErp to access your calendar !"));
-                    window.location = o.url;
+                    instance.web.redirect(o.url);
                 }
-                else if (o.status == "NeedConfigFromAdmin") {
+                else if (o.status == "need_config_from_admin") {
                     
-                    if (typeof o.action !== 'undefined' && parseInt(o.action)) {
+                    if (!_.IsUndefined(o.action) && parseInt(o.action)) {
                         if (confirm(_t("An admin need to configure Google Synchronization before to use it, do you want to configure it now ? !"))) {
                             self.do_action(o.action);                        
                         }
@@ -41,9 +38,8 @@ openerp.google_calendar = function(instance) {
                     else {
                         alert(_t("An admin need to configure Google Synchronization before to use it !"));
                     }
-                    //window.location = o.url;
                 }
-                else if (o.status == "NeedRefresh"){
+                else if (o.status == "need_refresh"){
                     self.$calendar.fullCalendar('refetchEvents');
                 }
 
@@ -51,13 +47,12 @@ openerp.google_calendar = function(instance) {
         }
     });
     
-    instance.web_calendar.FullCalendarView.include({
+    instance.web_calendar.CalendarView.include({
         extraSideBar: function() {
             this._super();
             if (this.dataset.model == "crm.meeting") {
-                var button = QWeb.render('GoogleCalendar.buttonSynchro');
-                this.$el.find('.oe_calendar_filter').prepend(button);
-           }
+                this.$el.find('.oe_calendar_filter').prepend(QWeb.render('GoogleCalendar.buttonSynchro'));
+            }
         }
     });
 

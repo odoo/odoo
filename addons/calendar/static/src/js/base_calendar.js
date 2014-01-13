@@ -8,12 +8,11 @@ openerp.calendar = function(instance) {
         get_notif_box: function(me) {
             return $(me).closest(".ui-notify-message-style");
         },
-        get_next_event: function() {
+        get_next_notif: function() {
             var self= this;
             this.rpc("/calendar/notify")
             .then( 
                 function(result) { 
-                    console.log(result);
                     _.each(result,  function(res) {
                         setTimeout(function() {
                             //If notification not already displayed, we add button and action on it
@@ -49,9 +48,9 @@ openerp.calendar = function(instance) {
         },
         check_notifications: function() {
             var self= this;
-            self.get_next_event();                        
+            self.get_next_notif();                        
             setInterval(function(){
-                self.get_next_event();
+                self.get_next_notif();
             }, 5 * 60  * 1000 );
         },
         
@@ -78,6 +77,7 @@ openerp.calendar = function(instance) {
             if(instance.session.session_is_valid(self.db) && instance.session.username != "anonymous") {
                 self.redirect_meeting_view(self.db,self.action,self.id,self.view);
             } else {
+                alert('in anonymous or null ');
                 self.open_invitation_form(self.attendee_data);
             }
         },
@@ -87,15 +87,14 @@ openerp.calendar = function(instance) {
         redirect_meeting_view : function(db, action, meeting_id, view){
             var self = this;
             var action_url = '';
-            if(view == "form") {
-                action_url = _.str.sprintf('/?db=%s#id=%s&view_type=%s&model=crm.meeting', db, meeting_id, view, meeting_id);
-            } else {
-                action_url = _.str.sprintf('/?db=%s#view_type=%s&model=crm.meeting&action=%s',self.db,self.view,self.action);
-            }
+
+            action_url = _.str.sprintf('/?db=%s#id=%s&view_type=form&model=crm.meeting', db, meeting_id);
+            
             var reload_page = function(){
                 return location.replace(action_url);
             }
             reload_page();
+
         },
     });
 

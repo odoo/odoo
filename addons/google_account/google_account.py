@@ -28,6 +28,8 @@ import urllib
 import urllib2
 import simplejson
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class google_service(osv.osv_memory):
     _name = 'google.service'
@@ -68,10 +70,7 @@ class google_service(osv.osv_memory):
        
     def _get_authorize_uri(self, cr, uid, from_url, service, scope = False, context=None): 
         """ This method return the url needed to allow this instance of OpenErp to access to the scope of gmail specified as parameters """
-        state_obj = {}
-        state_obj['d'] = cr.dbname
-        state_obj['s'] = service
-        state_obj['from'] = from_url
+        state_obj = dict(d=cr.dbname, s=service, f=from_url)
                 
         base_url = self.get_base_url(cr, uid, context)
         client_id = self.get_client_id(cr, uid, service, context)
@@ -110,10 +109,8 @@ class google_service(osv.osv_memory):
             req = urllib2.Request(self.get_uri_oauth(a='token'), data, headers)
             
             content = urllib2.urlopen(req).read()
-            res = simplejson.loads(content)            
-            
+            res = simplejson.loads(content)                        
         except urllib2.HTTPError,e:
-            print e
             raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during your token generation. Maybe your Authorization Code is invalid"), context=context)            
         return res
                 
@@ -143,19 +140,8 @@ class google_service(osv.osv_memory):
         return res
         
     def _do_request(self,cr,uid,uri,params={},headers={},type='POST', context=None):
+        _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri,type,headers,urllib.urlencode(params) if type =='GET' else params))
         res = False
-        ######################
-        ###    FOR DEBUG   ###
-        ######################
-        #  print "#########################################"
-        #  print "###  URI : %s ###" % (uri)
-        #  print "###  HEADERS : %s ###" % (headers)
-        #  print "###  METHOD : %s ###" % (type)
-        #  if type=='GET':
-        #      print "###  PARAMS : %s ###" % urllib.urlencode(params)
-        #  else:
-        #      print "###  PARAMS : %s ###" % (params)        
-        #  print "#########################################"
         
         try:
             if type.upper() == 'GET' or type.upper() == 'DELETE':
@@ -164,7 +150,7 @@ class google_service(osv.osv_memory):
             elif type.upper() == 'POST'  or type.upper() == 'PATCH' or type.upper() == 'PUT':
                 req = urllib2.Request(self.get_uri_api() + uri, params, headers)                
             else:
-                raise ('Method not supported [%s] not in [GET, POST, PUT or PATCH]!' % (type))
+                raise ('Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!' % (type))
             req.get_method = lambda: type.upper()            
 
             request = urllib2.urlopen(req)
@@ -176,11 +162,9 @@ class google_service(osv.osv_memory):
             else:
                 content=request.read()
                 res = simplejson.loads(content)
-                print "="
         except urllib2.HTTPError,e:
-            print "ERROR CATCHED : ",e.read()
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong with your request to google"), context=context)
-          
+            _logger.exception("Bad google request : %s !" % e.read())
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong with your request to google"), context=context)          
         return res
         
     def get_base_url(self, cr, uid, context=None):

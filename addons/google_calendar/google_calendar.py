@@ -22,7 +22,6 @@ import operator
 import simplejson
 import re
 import urllib
-import urllib2
 import warnings
 
 from openerp import tools
@@ -40,7 +39,7 @@ from openerp.osv import osv
 
 
 
-class google_calendar(osv.osv):
+class google_calendar(osv.AbstractModel):
     STR_SERVICE = 'calendar'
     _name = 'google.%s' % STR_SERVICE
     
@@ -152,7 +151,6 @@ class google_calendar(osv.osv):
         
         if context['curr_attendee']:
             self.pool.get('calendar.attendee').write(cr,uid,[context['curr_attendee']], {'oe_synchro_date':update_date},context)
-
              
     def update_an_event(self, cr, uid,event, context=None):
         gs_pool = self.pool.get('google.service')
@@ -178,7 +176,7 @@ class google_calendar(osv.osv):
         url = "/calendar/v3/calendars/%s/events/%s?access_token=%s" % ('primary', instance_id,self.get_token(cr,uid,context))
         headers = { 'Content-type': 'application/json'}
         
-        data['sequence'] = self.get_sequence(cr, uid, instance_id, context)
+        
         
         data_json = simplejson.dumps(data)
         return gs_pool._do_request(cr, uid, url, data_json, headers, type='PUT', context=context)
@@ -270,8 +268,7 @@ class google_calendar(osv.osv):
             self.pool.get('calendar.attendee').write(cr,uid,[context['curr_attendee']], {'oe_synchro_date':update_date,'google_internal_event_id': single_event_dict.get('id',False)},context)
         
         return res            
-    
-           
+               
     def synchronize_events(self, cr, uid, ids, context=None):
         gc_obj = self.pool.get('google.calendar')
                 
@@ -283,7 +280,7 @@ class google_calendar(osv.osv):
         res = self.update_events(cr, uid, context)
     
         return {
-                "status" :  res and "NeedRefresh" or "NoNewEventFromGoogle",
+                "status" :  res and "need_refresh" or "no_new_event_form_google",
                 "url" : '' 
                 }
      
@@ -307,8 +304,7 @@ class google_calendar(osv.osv):
                 att_obj.write(cr, uid, [att.id], {'google_internal_event_id': response['id'], 'oe_synchro_date':update_date})
                 cr.commit()
         return True
-    
-    
+        
     def get_empty_synchro_summarize(self) :
         return {
                 #OPENERP
@@ -430,8 +426,6 @@ class google_calendar(osv.osv):
                         event['td_source'] = (event['OE_status'] and "OE") or (event['GG_status'] and "GG")
                     #If event is not deleted !     
                     elif event['OE_status'] and event['GG_status']:
-#                         if not event['GG_update']:
-#                             print "### Should never be here 
                         if event['OE_update'].split('.')[0] != event['GG_update'].split('.')[0]:
                             if event['OE_update'] < event['GG_update']:
                                 event['td_source'] = 'GG'
@@ -502,7 +496,6 @@ class google_calendar(osv.osv):
         #      DO ACTION     #
         ###################### 
         for base_event in event_to_synchronize:
-            #print "Base Event : %s " % base_event
             event_to_synchronize[base_event] = sorted(event_to_synchronize[base_event].iteritems(),key=operator.itemgetter(0))
             for current_event in event_to_synchronize[base_event]:
                 cr.commit()
@@ -515,13 +508,13 @@ class google_calendar(osv.osv):
 #                     print "    Found       OE:%5s vs GG: %5s" % (event['OE_found'],event['GG_found'])
 #                     print "    Recurrence  OE:%5s vs GG: %5s" % (event['OE_isRecurrence'],event['GG_isRecurrence'])
 #                     print "    Instance    OE:%5s vs GG: %5s" % (event['OE_isInstance'],event['GG_isInstance'])
-#                     print "    Synchro      OE: %10s " % (event['OE_synchro']) 
+#                     print "    Synchro     OE: %10s " % (event['OE_synchro']) 
 #                     print "    Update      OE: %10s " % (event['OE_update'])  
 #                     print "    Update      GG: %10s " % (event['GG_update'])
 #                     print "    Status      OE:%5s vs GG: %5s" % (event['OE_status'],event['GG_status'])
-#                     print "    Action     %s" % (event['td_action'])
-#                     print "    Source     %s" % (event['td_source'])
-#                     print "    comment    %s" % (event['td_comment'])
+#                     print "    Action      %s" % (event['td_action'])
+#                     print "    Source      %s" % (event['td_source'])
+#                     print "    comment     %s" % (event['td_comment'])
              
          
                 context['curr_attendee'] = event.get('OE_attendee_id',False)
@@ -615,21 +608,7 @@ class google_calendar(osv.osv):
             self.update_to_google(cr, uid, oe_event, google_event, context)
         elif datetime.strptime(oe_event.oe_update_date,"%Y-%m-%d %H:%M:%S.%f") < datetime.strptime(google_event['updated'],"%Y-%m-%dT%H:%M:%S.%fz"):
             self.update_from_google(cr, uid, oe_event, google_event, 'write', context)
-    
-    def get_sequence(self,cr,uid,instance_id,context=None):
-        gs_pool = self.pool.get('google.service')
-        
-        params = {
-                 'fields': 'sequence',
-                 'access_token' : self.get_token(cr,uid,context)
-                }
-        
-        headers = {'Content-type': 'application/json'}
-            
-        url = "/calendar/v3/calendars/%s/events/%s" % ('primary',instance_id) 
-                
-        content = gs_pool._do_request(cr, uid, url, params, headers, type='GET', context=context)
-        return content.get('sequence',0)
+  
     
 #################################        
 ##  MANAGE CONNEXION TO GMAIL  ##
@@ -684,7 +663,7 @@ class google_calendar(osv.osv):
          
          
          
-class res_users(osv.osv): 
+class res_users(osv.Model): 
     _inherit = 'res.users'
     
     _columns = {
@@ -694,7 +673,7 @@ class res_users(osv.osv):
      }
 
 
-class crm_meeting(osv.osv):
+class crm_meeting(osv.Model):
     _inherit = "crm.meeting"
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -722,7 +701,7 @@ class crm_meeting(osv.osv):
     }
     
     
-class calendar_attendee(osv.osv):
+class calendar_attendee(osv.Model):
     _inherit = 'calendar.attendee'
     
     _columns = {

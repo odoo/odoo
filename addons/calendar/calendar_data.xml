@@ -9,12 +9,6 @@
             <field name="description">Warning, a mandatory field has been modified since the creation of this event</field>
             <field name="default" eval="False"/>
         </record>
-        
-        <record model="res.request.link" id="request_link_event">
-            <field name="name">Event</field>
-            <field name="object">calendar.event</field>
-        </record>
-        
         <record model="calendar.alarm" id="alarm_notif_1">
             <field name="name">15 min notif</field>
             <field name="duration" eval="15" />
@@ -89,7 +83,7 @@
             <field name="numbercall">-1</field>
             <field eval="False" name="doall" />
             <field eval="'calendar.alarm_manager'" name="model" />
-            <field eval="'do_run_scheduler_mail'" name="function" />
+            <field eval="'get_next_mail'" name="function" />
             <!--<field eval="'(False,)'" name="args" />-->
         </record>
         
@@ -113,11 +107,6 @@
             <field name="name">Feedback Meeting</field>
         </record>
 
-        <record model="res.request.link" id="request_link_meeting">
-            <field name="name">Meeting</field>
-            <field name="object">crm.meeting</field>
-        </record>
-        
         <record id="calendar_template_meeting_invitation" model="email.template">
             <field name="name">Meeting Invitation</field>
             <field name="email_from">${object.event_id.user_id.email or ''}</field>
@@ -484,6 +473,5 @@
                 ]]>
                 </field>
         </record>
-        
     </data>
 </openerp>
