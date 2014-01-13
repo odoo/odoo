@@ -130,12 +130,15 @@ setuptools.setup(
           'psycopg2 >= 2.2',
           'pydot',
           'pyparsing < 2',
+          'pyserial',
           'python-dateutil < 2',
           'python-ldap', # optional
           'python-openid',
           'pytz',
+          'pyusb >= 1.0.0b1',
           'pywebdav',
           'pyyaml',
+          'qrcode',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
           'simplejson',
           'unittest2',
