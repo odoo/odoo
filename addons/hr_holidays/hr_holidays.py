@@ -26,7 +26,6 @@ import math
 import time
 from operator import attrgetter
 
-from openerp.exceptions import Warning
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -441,8 +440,11 @@ class hr_holidays(osv.osv):
             leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
             if leave_days['remaining_leaves'] < 0 or leave_days['virtual_remaining_leaves'] < 0:
                 # Raising a warning gives a more user-friendly feedback than the default constraint error
-                raise Warning(_('The number of remaining leaves is not sufficient for this leave type.\n'
-                                'Please verify also the leaves waiting for validation.'))
+                raise osv.except_osv(
+                    _('Warning!'),
+                    _('The number of remaining leaves is not sufficient for this leave type.\n'
+                      'Please verify also the leaves waiting for validation.')
+                )
         return True
 
     # -----------------------------
