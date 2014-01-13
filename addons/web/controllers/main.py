@@ -1012,7 +1012,7 @@ class Session(http.Controller):
     def destroy(self):
         request.session.logout()
 
-    @http.route('/web/session/logout', type='http', auth="user")
+    @http.route('/web/session/logout', type='http', auth="none")
     def logout(self, redirect='/web'):
         request.session.logout()
         return werkzeug.utils.redirect(redirect, 303)
