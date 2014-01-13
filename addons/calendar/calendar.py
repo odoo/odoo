@@ -25,6 +25,7 @@ import re
 import time
 import openerp
 import openerp.service.report
+import uuid
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil import rrule
