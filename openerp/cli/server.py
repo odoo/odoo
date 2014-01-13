@@ -85,10 +85,9 @@ def setup_pid_file():
     """
     config = openerp.tools.config
     if config['pidfile']:
-        fd = open(config['pidfile'], 'w')
-        pidtext = "%d" % (os.getpid())
-        fd.write(pidtext)
-        fd.close()
+        with open(config['pidfile'], 'w') as fd:
+            pidtext = "%d" % (os.getpid())
+            fd.write(pidtext)
 
 def preload_registry(dbname):
     """ Preload a registry, and start the cron."""
@@ -174,7 +173,7 @@ def main(args):
     if config['workers']:
         openerp.multi_process = True
 
-    # preload registryies, needed for -u --stop_after_init
+    # preload registries, needed for -u --stop_after_init
     rc = 0
     if config['db_name']:
         for dbname in config['db_name'].split(','):

@@ -10,6 +10,7 @@ import time
 import openerp
 from openerp.tools.translate import translate
 from openerp.osv.orm import except_orm
+from contextlib import contextmanager
 
 import security
 
@@ -159,41 +160,36 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
 def execute_kw(db, uid, obj, method, args, kw=None):
     return execute(db, uid, obj, method, *args, **kw or {})
 
+@contextmanager
+def closing_cr_and_commit(cr):
+    try:
+        yield cr
+        cr.commit()
+    except Exception:
+        cr.rollback()
+        raise
+    finally:
+        cr.close()
+
 @check
 def execute(db, uid, obj, method, *args, **kw):
     threading.currentThread().dbname = db
-    cr = openerp.registry(db).db.cursor()
-    try:
-        try:
-            if method.startswith('_'):
-                raise except_orm('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
-            res = execute_cr(cr, uid, obj, method, *args, **kw)
-            if res is None:
-                _logger.warning('The method %s of the object %s can not return `None` !', method, obj)
-            cr.commit()
-        except Exception:
-            cr.rollback()
-            raise
-    finally:
-        cr.close()
-    return res
+    with closing_cr_and_commit(openerp.registry(db).db.cursor()) as cr:
+        if method.startswith('_'):
+            raise except_orm('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
+        res = execute_cr(cr, uid, obj, method, *args, **kw)
+        if res is None:
+            _logger.warning('The method %s of the object %s can not return `None` !', method, obj)
+        return res
 
 def exec_workflow_cr(cr, uid, obj, signal, *args):
     res_id = args[0]
     return execute_cr(cr, uid, obj, 'signal_workflow', [res_id], signal)[res_id]
 
+
 @check
 def exec_workflow(db, uid, obj, signal, *args):
-    cr = openerp.registry(db).db.cursor()
-    try:
-        try:
-            res = exec_workflow_cr(cr, uid, obj, signal, *args)
-            cr.commit()
-        except Exception:
-            cr.rollback()
-            raise
-    finally:
-        cr.close()
-    return res
+    with closing_cr_and_commit(openerp.registry(db).db.cursor()) as cr:
+        return exec_workflow_cr(cr, uid, obj, signal, *args)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
