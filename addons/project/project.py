@@ -46,9 +46,15 @@ class project_task_type(osv.osv):
                                'there are no records in that stage to display.'),
     }
 
+    def _get_default_project_ids(self, cr, uid, ctx={}):
+        project_id = self.pool['project.task']._get_default_project_id(cr, uid, context=ctx)
+        if project_id:
+            return [project_id]
+        return None
+
     _defaults = {
         'sequence': 1,
-        'project_ids': lambda self, cr, uid, ctx=None: self.pool['project.task']._get_default_project_id(cr, uid, context=ctx),
+        'project_ids': _get_default_project_ids,
     }
     _order = 'sequence'
 
