@@ -35,7 +35,7 @@ class WebsiteMail(http.Controller):
         if email and email != u'false':  # post contains stringified booleans
             partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, [("email", "=", email)], context=request.context)
             if not partner_ids:
-                partner_ids = [partner_obj.name_create(request.cr, SUPERUSER_ID, email, request.context)]
+                partner_ids = [partner_obj.name_create(request.cr, SUPERUSER_ID, email, request.context)[0]]
         else:
             partner_ids = [user_obj.browse(request.cr, request.uid, request.uid, request.context).partner_id.id]
         return partner_ids
@@ -54,5 +54,6 @@ class WebsiteMail(http.Controller):
             _object.check_access_rule(request.cr, request.uid, [_id], 'read', request.context)
             _object.message_subscribe(request.cr, SUPERUSER_ID, [_id], partner_ids, context=request.context)
         obj = _object.browse(request.cr, request.uid, _id)
+        follower_ids = [p.id for p in obj.message_follower_ids]
 
-        return obj.message_is_follower and 1 or 0
+        return partner_ids[0] in follower_ids and 1 or 0
