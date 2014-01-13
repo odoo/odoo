@@ -20,7 +20,7 @@
         
         <record id="period_0" model="account.period">
             <field eval="'00/'+time.strftime('%Y')" name="code"/>
-            <field eval="'Opening Period '+time.strftime('%Y')" name="name"/>
+            <field eval="'X Opening Period '+time.strftime('%Y')" name="name"/>
             <field eval="True" name="special"/>
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-01-01'" name="date_start"/>
