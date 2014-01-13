@@ -37,6 +37,9 @@ that would need such functionality.
 """,
     'author': 'OpenERP SA',
     'depends': ['hw_proxy'],
+    'external_dependencies': {
+        'python' : ['usb.core'],
+    },
     'test': [
     ],
     'installable': True,
