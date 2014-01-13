@@ -45,10 +45,14 @@ tags_to_remove = ['html', 'body', 'font']
 
 # allow new semantic HTML5 tags
 allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split())
-safe_attrs = clean.defs.safe_attrs | frozenset(['style'])
+safe_attrs = clean.defs.safe_attrs | frozenset(
+    ['style',
+     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translate', 'data-oe-nodeid',
+     'data-snippet-id', 'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
+     ])
 
 
-def html_sanitize(src, silent=True):
+def html_sanitize(src, silent=True, strict=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -62,11 +66,18 @@ def html_sanitize(src, silent=True):
     kwargs = {
         'page_structure': True,
         'style': False,             # do not remove style attributes
-        'frames': False,            # de not remove frames (embbed video in CMS blogs)
         'forms': True,              # remove form tags
         'remove_unknown_tags': False,
         'allow_tags': allowed_tags,
     }
+    if strict and etree.LXML_VERSION >= (3, 1, 0):  # lxml < 3.1.0 does not allow to specify safe_attrs; however we always want to keep style
+        kwargs['safe_attrs_only'] = False
+        kwargs['safe_attrs_only'] = True
+        kwargs['safe_attrs'] = safe_attrs
+    else:
+        kwargs['frames'] = False,            # do not remove frames (embbed video in CMS blogs)
+        kwargs['safe_attrs_only'] = False,   # keep oe-data attributes + style
+
     if etree.LXML_VERSION >= (2, 3, 1):
         # kill_tags attribute has been added in version 2.3.1
         kwargs.update({
@@ -75,8 +86,6 @@ def html_sanitize(src, silent=True):
         })
     else:
         kwargs['remove_tags'] = tags_to_kill + tags_to_remove
-
-    kwargs['safe_attrs_only'] = False
 
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
