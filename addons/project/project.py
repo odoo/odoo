@@ -79,12 +79,6 @@ class project(osv.osv):
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
-    def _complete_name(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
-        return res
-
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
         val = {}
@@ -234,7 +228,6 @@ class project(osv.osv):
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
 
     _columns = {
-        'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
