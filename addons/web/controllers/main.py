@@ -560,14 +560,15 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
-def render_bootstrap_template(db, template, values=None, **kw):
+def render_bootstrap_template(db, template, values=None, debug=False, **kw):
     if values is None:
         values = {}
     values.update(kw)
+    values['debug'] = debug
 
     for res in ['js', 'css']:
         if res not in values:
-            values[res] = manifest_list(res, db=db, debug=values.get('debug', request.debug))
+            values[res] = manifest_list(res, db=db, debug=debug)
 
     if 'modules' not in values:
         values['modules'] = module_boot(db=db)
@@ -581,13 +582,11 @@ def render_bootstrap_template(db, template, values=None, **kw):
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
-    def index(self, s_action=None, db=None, debug=False, **kw):
+    def index(self, s_action=None, db=None, **kw):
         return redirect_with_hash('/web', keep_query=True)
 
     @http.route('/web', type='http', auth="none")
-    def web_client(self, s_action=None, db=None, debug=False, **kw):
-        debug = debug is not False # we just check presence of `debug` query param
-
+    def web_client(self, s_action=None, db=None, **kw):
         # if db not provided, use the session one
         if not db:
             db = request.session.db
@@ -607,22 +606,24 @@ class Home(http.Controller):
         request.session.db = db
 
         if request.session.uid:
-            html = render_bootstrap_template(db, "web.webclient_bootstrap")
+            html = render_bootstrap_template(db, "web.webclient_bootstrap", debug=request.debug)
             return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
         else:
             return redirect_with_hash('/web/login', keep_query=True)
 
     @http.route('/web/login', type='http', auth="none")
-    def web_login(self, redir='/web', **kw):
+    def web_login(self, redirect=None, **kw):
         assert request.session.db is not None
         values = request.params.copy()
-        values['redir'] = redir
+        if not redirect:
+            redirect = '/web?' + request.httprequest.query_string
+        values['redirect'] = redirect
         if request.httprequest.method == 'POST':
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
-                return set_cookie_and_redirect(redir)
+                return redirect_with_hash(redirect)
             values['authentication_failed'] = True
-        return render_bootstrap_template(request.session.db, 'web.login', values)
+        return render_bootstrap_template(request.session.db, 'web.login', values, debug=request.debug)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key):
@@ -797,22 +798,20 @@ class Proxy(http.Controller):
 class Database(http.Controller):
 
     @http.route('/web/database/selector', type='http', auth="none")
-    def selector(self, debug=False):
-        debug = debug is not False # we just check presence of `debug` query param
+    def selector(self, **kw):
         dbs = http.db_list(True)
         if not dbs:
             return redirect_with_hash('/web/database/manager', keep_query=['debug'])
         return env.get_template("database_selector.html").render({
             'databases': dbs,
-            'debug': debug,
+            'debug': request.debug,
         })
 
     @http.route('/web/database/manager', type='http', auth="none")
-    def manager(self, debug=False):
+    def manager(self, **kw):
         request.session.logout()
-        debug = debug is not False # we just check presence of `debug` query param
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', debug=debug))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', debug=debug))
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', debug=request.debug))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', debug=request.debug))
 
         r = html_template % {
             'js': js,

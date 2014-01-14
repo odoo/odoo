@@ -1483,6 +1483,24 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
     client.insertAfter(currentScript);
 };
 
+openerp.web.LoginForm = openerp.web.Widget.extend({
+    init: function ($form) {
+        this._super(/* no parent */);
+        this.setElement($form);
+        this.$el.on('submit', this.on_submit);
+        this.start();
+    },
+    start: function () {
+        if (location.hash) {
+            this.$el.attr('action', this.$el.attr('action') + location.hash);
+        }
+        return this._super();
+    },
+    on_submit: function () {
+        return true;
+    },
+});
+
 })();
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

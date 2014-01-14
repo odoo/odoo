@@ -47,12 +47,19 @@
 
         <template id="web.login" name="Login">
             <t t-call="web.layout">
+                <t t-set="head">
+                    <script type="text/javascript">
+                        $(function() {
+                            var login_form = new openerp.web.LoginForm($('.oe_login_form'));
+                        });
+                    </script>
+                </t>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4"> </div>
                         <div class="col-md-4">
-                            <img src="/web/static/src/img/logo2.png"/>
-                            <form role="form" action="/web/login" method="post">
+                            <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post">
+                                <img src="/web/static/src/img/logo2.png"/>
                                 <div class="form-group">
                                     <label for="login">Login</label>
                                     <input type="text" name="login" t-att-value="login" id="login" class="form-control" placeholder="Enter login" required="required" autofocus="autofocus"/>
@@ -61,7 +68,7 @@
                                     <label for="password">Password</label>
                                     <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="required"/>
                                 </div>
-                                <input type="hidden" name="redir" t-att-value="redir"/>
+                                <input type="hidden" name="redirect" t-att-value="redirect"/>
                                 <button type="submit" class="btn btn-default">Log in</button>
                                 <p class="alert alert-danger" t-if="authentication_failed">
                                     Wrong login/password
