@@ -95,13 +95,13 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 
     create_field_value: function (f) {
         if (f.field && f.interval) {
-            return { field:f.field, 
-                     string: this.fields[f.field].string, 
-                     type:this.fields[f.field].type, 
+            return { field:f.field,
+                     string: this.fields[f.field].string,
+                     type:this.fields[f.field].type,
                      interval: f.interval };
         }
-        return (f.field && f.string && f.type) ? f : { field: f, 
-                                                       string: this.fields[f].string, 
+        return (f.field && f.string && f.type) ? f : { field: f,
+                                                       string: this.fields[f].string,
                                                        type: this.fields[f].type };
     },
 
