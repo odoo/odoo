@@ -58,7 +58,7 @@ class meeting_invitation(http.Controller):
         uid = request.session.uid
         context = request.session.context
         with registry.cursor() as cr:
-            res = registry.get("calendar.alarm_manager").do_run_next_event(cr,uid,context=context)
+            res = registry.get("calendar.alarm_manager").get_next_notif(cr,uid,context=context)
             return res
                 
     @http.route('/calendar/notify_ack', type='json', auth="none")
@@ -67,6 +67,6 @@ class meeting_invitation(http.Controller):
         uid = request.session.uid
         context = request.session.context
         with registry.cursor() as cr:
-            res = registry.get("res.partner").calendar_last_event(cr,uid,context=context)
+            res = registry.get("res.partner").calendar_last_notif(cr,uid,context=context)
             return res
 

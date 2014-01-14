@@ -36,6 +36,7 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 from openerp.tools.translate import _
 from openerp import http
 from openerp.http import request
+from operator import itemgetter
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -60,7 +61,6 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
                 return (int(real_id), real_date, end.strftime("%Y-%m-%d %H:%M:%S"))
             return int(real_id)
     return calendar_id and int(calendar_id) or calendar_id
-
 
 def get_real_ids(ids):
     if isinstance(ids, (str, int, long)):
@@ -297,7 +297,7 @@ class calendar_attendee(osv.Model):
 class res_partner(osv.Model):
     _inherit = 'res.partner'
     _columns = {
-        'calendar_last_notif': fields.datetime('Last Notification from base Calendar'),
+        'calendar_last_notif_ack': fields.datetime('Last notification marked as read from base Calendar'),
     }
 
     def get_attendee_detail(self, cr, uid, ids, meeting_id, context=None):
@@ -314,9 +314,9 @@ class res_partner(osv.Model):
             datas.append(data)
         return datas
 
-    def calendar_last_event(self, cr, uid, context=None):
+    def calendar_last_notif_ack(self, cr, uid, context=None):
         partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        self.write(cr, uid, partner.id, {'calendar_last_notif': datetime.now()}, context=context)
+        self.write(cr, uid, partner.id, {'calendar_last_notif_ack': datetime.now()}, context=context)
         return
 
 
@@ -974,23 +974,52 @@ class crm_meeting(osv.Model):
             }
         return res
 
-    def get_recurrent_ids(self, cr, uid, select, domain, limit=100, context=None):
-        """Gives virtual event ids for recurring events based on value of Recurrence Rule
-        This method gives ids of dates that comes between start date and end date of calendar views
+    def get_search_fields(self,browse_event,order_fields,r_date=None): 
+        sort_fields = {}
+        for ord in order_fields:
+            if ord == 'id' and r_date:
+                sort_fields[ord] = '%s-%s' % (browse_event[ord], r_date.strftime("%Y%m%d%H%M%S"))
+            else:
+                sort_fields[ord] = browse_event[ord]
+                'If we sort on FK, we obtain a browse_record, so we need to sort on name_get'
+                if type(browse_event[ord]) is openerp.osv.orm.browse_record:
+                    name_get = browse_event[ord].name_get()
+                    if len(name_get) and len(name_get[0])>=2:
+                        sort_fields[ord] = name_get[0][1]
 
-        @param limit: The Number of Results to Return """
+        return sort_fields
+
+    def get_recurrent_ids(self, cr, uid, event_id, domain, order=None, context=None):
+
+        """Gives virtual event ids for recurring events 
+        This method gives ids of dates that comes between start date and end date of calendar views
+ 
+        @param order: The fields (comma separated, format "FIELD {DESC|ASC}") on which the events should be sorted 
+        """
+        
         if not context:
             context = {}
-
-        if isinstance(select, (str, int, long)):
-            ids_to_browse = [select]  # keep select for return
+        
+        if isinstance(event_id, (str, int, long)):
+            ids_to_browse = [event_id]  # keep select for return
         else:
-            ids_to_browse = select
+            ids_to_browse = event_id
 
+        if order:
+            order_fields = [field.split()[0] for field in order.split(',')]
+        else:
+            # fallback on self._order defined on the model
+            order_fields = [field.split()[0] for field in self._order.split(',')]
+        
+        if 'id' not in order_fields:
+            order_fields.append('id')
+            
+        result_data = []
         result = []
         for ev in self.browse(cr, uid, ids_to_browse, context=context):
             if not ev.recurrency or not ev.rrule:
                 result.append(ev.id)
+                result_data.append(self.get_search_fields(ev,order_fields))
                 continue
 
             rdates = self.get_recurrent_date_by_event(cr, uid, ev, context=context)
@@ -1036,15 +1065,25 @@ class crm_meeting(osv.Model):
 
                 if [True for item in new_pile if not item]:
                     continue
+                result_data.append(self.get_search_fields(ev,order_fields,r_date=r_date))
 
-                idval = '%d-%s' % (ev.id, r_date.strftime("%Y%m%d%H%M%S"))
-                result.append(idval)
+        if order_fields:
+            def comparer(left, right):
+                for fn, mult in comparers:
+                    result = cmp(fn(left), fn(right))
+                    if result:
+                        return mult * result
+                return 0
 
-        if isinstance(select, (str, int, long)):
-            return result and result[0] or False
+            sort_params = [key.split()[0] if key[-4:].lower() != 'desc' else '-%s' % key.split()[0] for key in (order or self._order).split(',')]
+            comparers = [ ((itemgetter(col[1:]), -1) if col[0] == '-' else (itemgetter(col), 1)) for col in sort_params]    
+            ids = [r['id'] for r in sorted(result_data, cmp=comparer)]
+
+        if isinstance(event_id, (str, int, long)):
+            return ids and ids[0] or False
         else:
-            ids = list(set(result))
-        return ids
+            return ids
+
 
     def compute_rule_string(self, data):
         """
@@ -1268,10 +1307,11 @@ class crm_meeting(osv.Model):
             new_args.append(new_arg)
         #offset, limit and count must be treated separately as we may need to deal with virtual ids
 
-        res = super(crm_meeting, self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
-
         if context.get('virtual_id', True):
-            res = self.get_recurrent_ids(cr, uid, res, args, limit, context=context)
+            res = super(crm_meeting, self).search(cr, uid, new_args, offset=0, limit=0, order=None, context=context, count=False)
+            res = self.get_recurrent_ids(cr, uid, res, args, order=order, context=context)
+        else:
+            res = super(crm_meeting, self).search(cr, uid, new_args, offset=0, limit=0, order=order, context=context, count=False)
         if count:
             return len(res)
         elif limit:
@@ -1297,7 +1337,14 @@ class crm_meeting(osv.Model):
             return True
 
         context = context or {}
-        if isinstance(ids, (str, int, long)):
+        
+        if isinstance(ids, (str)):
+            if len(str(ids).split('-')) == 1:
+                ids = [int(ids)]
+            else:
+                ids = [ids]
+                
+        if isinstance(ids, (int, long)):
             ids = [ids]
         res = False
         new_id = False
@@ -1460,7 +1507,7 @@ class crm_meeting(osv.Model):
         ids_to_exclure = []
         ids_to_unlink = []
 
-        # One time moved to google_Calendar, we can specify, an if not in google, and not rec or get_inst = 0, we delete it
+        # One time moved to google_Calendar, we can specify, if not in google, and not rec or get_inst = 0, we delete it
         for event_id in ids:
             if unlink_level == 1 and len(str(event_id).split('-')) == 1:  # if  ID REAL
                 if self.browse(cr, uid, event_id).recurrent_id:
@@ -1494,7 +1541,8 @@ class mail_message(osv.Model):
 
     def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
         if doc_model == 'crm.meeting':
-            for virtual_id in self.pool[doc_model].get_recurrent_ids(cr, uid, doc_dict.keys(), [], context=context):
+            order =  context.get('order', self._order)
+            for virtual_id in self.pool[doc_model].get_recurrent_ids(cr, uid, doc_dict.keys(), [], order=order, context=context):
                 doc_dict.setdefault(virtual_id, doc_dict[get_real_ids(virtual_id)])
         return super(mail_message, self)._find_allowed_model_wise(cr, uid, doc_model, doc_dict, context=context)
 

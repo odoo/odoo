@@ -30,7 +30,7 @@ openerp.google_calendar = function(instance) {
                 }
                 else if (o.status == "need_config_from_admin") {
                     
-                    if (!_.IsUndefined(o.action) && parseInt(o.action)) {
+                    if (!_.isUndefined(o.action) && parseInt(o.action)) {
                         if (confirm(_t("An admin need to configure Google Synchronization before to use it, do you want to configure it now ? !"))) {
                             self.do_action(o.action);                        
                         }
