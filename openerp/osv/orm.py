@@ -1009,7 +1009,7 @@ class BaseModel(object):
                 continue
             sm = f.store
             if sm is True:
-                sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
+                sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, f.priority, None)}
             for object, aa in sm.items():
                 if len(aa) == 4:
                     (fnct, fields2, order, length) = aa
@@ -1785,7 +1785,7 @@ class BaseModel(object):
                     children = False
                     views = {}
                     for f in node:
-                        if f.tag in ('form', 'tree', 'graph', 'kanban'):
+                        if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
@@ -1829,7 +1829,7 @@ class BaseModel(object):
             in_tree_view = node.tag == 'tree'
 
         elif node.tag == 'calendar':
-            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
+            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day','attendee'):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
@@ -2023,7 +2023,7 @@ class BaseModel(object):
             return False
 
         view = etree.Element('calendar', string=self._description)
-        etree.SubElement(view, 'field', self._rec_name_fallback(cr, user, context))
+        etree.SubElement(view, 'field', name=self._rec_name_fallback(cr, user, context))
 
         if self._date_name not in self._columns:
             date_found = False
