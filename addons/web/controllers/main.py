@@ -627,8 +627,8 @@ class Home(http.Controller):
         return render_bootstrap_template(request.session.db, 'web.login', values, debug=request.debug)
 
     @http.route('/login', type='http', auth="none")
-    def login(self, db, login, key):
-        return login_and_redirect(db, login, key)
+    def login(self, db, login, key, redirect="/web", **kw):
+        return login_and_redirect(db, login, key, redirect_url=redirect)
 
 class WebClient(http.Controller):
 
