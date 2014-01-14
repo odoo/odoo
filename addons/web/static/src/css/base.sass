@@ -2491,6 +2491,38 @@ div.ui-widget-overlay
         td
             padding-bottom: 10px !important
 
+// Server side single forms {{{
+@mixin single-form($width: 400px)
+    padding: 10px
+    position: absolute
+    left: 50%
+    top: 50%
+    width: $width
+    /* Set margins to offset 50% of the w/h */
+    margin-top: -($width / 2)
+    margin-left: -($width / 2)
+
+.oe_single_form
+    background: #eee url(/web/static/src/img/form_sheetbg.png)
+    height: 100%
+
+.oe_single_form_logo
+    padding: 10px
+    text-align: center
+    margin-bottom: 10px
+
+.oe_single_form_footer
+    position: absolute
+    bottom: -30px
+
+.oe_login_form
+    @include single-form(400px)
+
+.oe_dbselector_form
+    @include single-form(300px)
+
+// }}}
+
 // Internet Explorer 9+ specifics {{{
 .openerp_ie
     .placeholder

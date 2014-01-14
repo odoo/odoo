@@ -10,40 +10,38 @@
     <link rel="stylesheet" href="/web/static/src/css/base.css">
 <body>
 
-<div class="openerp openerp_webclient_container">
-    <table class="oe_webclient">
-    <tr>
-        <td>
-            <div class="oe_login">
-                <div class="oe_login_bottom"> </div>
-                <div class="oe_login_pane" style="top: 60%">
-                    <div class="oe_login_logo"><img src="/web/static/src/img/logo2.png" alt="OpenERP"></div>
-                    <form action="/web" method="get">
-                    <ul>
-                        <li>Select database</li>
-                        <li>
-                            <select name="db">
-                                <option></option>
-                                {% for db in databases %}
-                                    <option value="{{ db }}">{{ db }}</option>
-                                {% endfor %}
-                            </select>
-                        </li>
-                        <li class="pull-right" style="margin-top: 20px">
-                            <input type="submit" value="Continue"/>
-                        </li>
-                    </ul>
-                    </form>
-                    <div class="oe_login_footer">
-                        <a class="oe_login_manage_db" href="/web/database/manager{% if debug %}?debug{% endif %}">Manage Databases</a> |
-                        <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
-                    </div>
-                </div>
+    <div class="oe_single_form">
+
+        <form class="oe_dbselector_form modal-content" role="form" action="/web" method="get">
+            <div class="oe_single_form_logo">
+                <img src="/web/static/src/img/logo2.png"/>
             </div>
-        </td>
-    </tr>
-    </table>
-</div>
+
+            <hr/>
+
+            <div class="form-group field-db">
+                <label for="db" class="control-label">Select database</label>
+                <select name="db" id="db" class="form-control" required="required" autofocus="autofocus">
+                    <option></option>
+                    {% for db in databases %}
+                        <option value="{{ db }}">{{ db }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <hr/>
+            {% if debug %}
+                <input type="hidden" name="debug" value=""/>
+            {% endif %}
+            <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+
+            <div class="oe_single_form_footer">
+                <a class="oe_login_manage_db" href="/web/database/manager{% if debug %}?debug{% endif %}">Manage Databases</a> |
+                <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
+            </div>
+        </form>
+
+    </div>
 
 </body>
 </html>
