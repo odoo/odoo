@@ -1157,6 +1157,9 @@ class function(_column):
 
         self.digits = args.get('digits', (16,2))
         self.digits_compute = args.get('digits_compute', None)
+        if callable(args.get('selection')):
+            from openerp import api
+            self.selection = api.expected(api.cr_uid_context, args['selection'])
 
         self._fnct_inv_arg = fnct_inv_arg
         if not fnct_inv:
