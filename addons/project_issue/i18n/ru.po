@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-11-12 15:36+0000\n"
-"Last-Translator: Viktor P. <Unknown>\n"
+"PO-Revision-Date: 2014-01-13 23:38+0000\n"
+"Last-Translator: Denis Karataev <dskarataev@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:29+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-01-14 06:49+0000\n"
+"X-Generator: Launchpad (build 16890)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -108,7 +108,7 @@ msgstr "Если отмечено, новые сообщения требуют 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
 msgid "Check this field if this project manages issues"
-msgstr ""
+msgstr "Отметьте это поле, если этот проект управляет вопросами"
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -134,7 +134,7 @@ msgstr "Ошибка! Вы не можете назначить эскалаци
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Highest"
-msgstr "Наивысший"
+msgstr "Высший"
 
 #. module: project_issue
 #: help:project.issue,inactivity_days:0
@@ -196,6 +196,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Нажмите, чтобы добавить вопрос.\n"
+"          </p><p>\n"
+"            Система отслеживания вопросов в OpenERP позволяет вам эффективно "
+"управлять\n"
+"            внутренними запросами, ошибками в программном обеспечении, "
+"жалобами клиентов,\n"
+"            неприятностями проектов, поломками материала и т.д.            \n"
+"          </p>\n"
+"        "
 
 #. module: project_issue
 #: selection:project.issue,state:0
@@ -246,6 +256,8 @@ msgid ""
 "If any issue is escalated from the current Project, it will be listed under "
 "the project selected here."
 msgstr ""
+"Если какой-то вопрос был перенесен на более высокий уровень из конкретного "
+"проекта, он будет показан под проектом, выбранным здесь."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -349,7 +361,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0
 msgid "Unassigned Issues"
-msgstr ""
+msgstr "Неназначенные вопросы"
 
 #. module: project_issue
 #: field:project.issue,create_date:0
@@ -377,7 +389,7 @@ msgstr "project.issue.version"
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr ""
+msgstr "Создавать вопросы из входящей почты "
 
 #. module: project_issue
 #: view:project.issue:0
@@ -732,7 +744,7 @@ msgstr "Открыт"
 #: view:project.issue:0
 #: view:project.project:0
 msgid "Issues"
-msgstr "Проблемы"
+msgstr "Вопросы"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -760,17 +772,17 @@ msgstr "Добавить внутреннюю заметку..."
 #. module: project_issue
 #: view:project.issue:0
 msgid "Cancel Issue"
-msgstr "Отменить проблему"
+msgstr "Отменить вопрос"
 
 #. module: project_issue
 #: help:project.issue,progress:0
 msgid "Computed as: Time Spent / Total Time."
-msgstr "Вычисляется по формуле: Затраченное время / Общее время."
+msgstr "Вычислено как: Затраченное время / Общее время."
 
 #. module: project_issue
 #: field:project.project,issue_count:0
 msgid "Unclosed Issues"
-msgstr "Незакрытые проблемы"
+msgstr "Открытые вопросы"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -801,7 +813,7 @@ msgstr "Месяц"
 #: field:project.issue,name:0
 #: view:project.project:0
 msgid "Issue"
-msgstr "Проблема"
+msgstr "Вопрос"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
@@ -837,7 +849,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project_issue.mt_issue_closed
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_closed
 msgid "Issue Closed"
-msgstr "Проблема закрыта"
+msgstr "Вопрос закрыт"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -849,7 +861,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr "Проблема создана"
+msgstr "Вопрос создан"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:497
@@ -871,7 +883,7 @@ msgstr "Этап изменен"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature description"
-msgstr ""
+msgstr "Описание функционала"
 
 #. module: project_issue
 #: field:project.project,project_escalation_id:0
@@ -916,7 +928,7 @@ msgstr "Апрель"
 #. module: project_issue
 #: view:project.issue:0
 msgid "⇒ Escalate"
-msgstr ""
+msgstr "⇒ Передать на уровень выше"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
@@ -951,7 +963,7 @@ msgstr "Число дней, чтобы закрыть проблему прое
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
 msgid "Avg. Working Hours to Close"
-msgstr ""
+msgstr "Среднее количество часов до закрытия вопроса"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
@@ -972,7 +984,7 @@ msgstr "Крайний срок"
 #. module: project_issue
 #: field:project.issue,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "Последнее действие"
 
 #. module: project_issue
 #: view:project.issue.report:0
