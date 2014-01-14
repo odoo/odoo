@@ -5,14 +5,10 @@ import functools
 import operator
 import itertools
 import time
-import Image
 
 import psycopg2
 import pytz
-import werkzeug.utils
-import openerp.osv.fields
 
-import openerp.tools.func
 from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT,\

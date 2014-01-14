@@ -11,8 +11,8 @@ import xml # FIXME use lxml and etree
 import babel
 import babel.dates
 import dateutil.relativedelta
-import Image
 import werkzeug.utils
+from PIL import Image
 
 import openerp.tools
 from openerp.osv import osv, orm, fields
