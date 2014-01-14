@@ -977,7 +977,8 @@ class stock_picking(osv.osv):
     def do_recompute_remaining_quantities(self, cr, uid, picking_ids, context=None):
         def _create_link_for_product(product_id, qty):
             qty_to_assign = qty
-            for move in picking.move_lines:
+            active_lines = [x for x in picking.move_lines if x.state not in ['done', 'cancel']]
+            for move in active_lines:
                 if move.product_id.id == product_id:
                     qty_on_link = min(move.remaining_qty, qty_to_assign)
                     link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
@@ -1060,12 +1061,12 @@ class stock_picking(osv.osv):
                     if move.remaining_qty == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
-                    elif move.remaining_qty > 0:
+                    elif move.remaining_qty > 0 and move.state not in  ['done', 'cancel']:
                         new_move = stock_move_obj.split(cr, uid, move, move.remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                    else:
+                    elif move.state not in ['done', 'cancel']:
                         #this should never happens
                         raise
                 self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)

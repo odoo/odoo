@@ -49,7 +49,8 @@
                             <field name="product_qty" class="oe_inline"/>
                             <field name="product_uom" class="oe_inline" readonly="1" groups="product.group_uom"/>
                         </div>
-                        <field name="restrict_lot_id" domain="[('product_id','=',product_id)]" groups="stock.group_tracking_lot"/>
+                        <field name="restrict_lot_id" domain="[('product_id','=',product_id)]" groups="stock.group_tracking_lot"
+                            context="{'product_id': product_id}"/>
                         <field name="location_id" string="Scrap Location" widget="selection"
                             domain="[('usage','!=','view'),('scrap_location','=',True)]" groups="stock.group_locations"/>
                     </group>
@@ -66,6 +67,7 @@
             <field name="name">Scrap Move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.move.scrap</field>
+            <field name="view_id" ref="view_stock_move_scrap_wizard"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
