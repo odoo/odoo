@@ -51,57 +51,6 @@
 .mb0
     margin-bottom: 0px !important
 
-.pt128
-    padding-top: 128px !important
-.pt92
-    padding-top: 92px !important
-.pt64
-    padding-top: 64px !important
-.pt48
-    padding-top: 48px !important
-.pt32
-    padding-top: 32px !important
-.pt16
-    padding-top: 16px !important
-.pt8
-    padding-top: 8px !important
-.pt4
-    padding-top: 4px !important
-.pt0
-    padding-top: 0px !important
-
-.pb128
-    padding-bottom: 128px !important
-.pb92
-    padding-bottom: 92px !important
-.pb64
-    padding-bottom: 64px !important
-.pb48
-    padding-bottom: 48px !important
-.pb32
-    padding-bottom: 32px !important
-.pb16
-    padding-bottom: 16px !important
-.pb8
-    padding-bottom: 8px !important
-.pb4
-    padding-bottom: 4px !important
-.pb0
-    padding-bottom: 0px !important
-
-/* Grid of unequally tall elements */
-.grid > [class*="col-md"]
-    display: inline-block
-    float: none
-    vertical-align: top
-    box-sizing: border-box
-    &.grid-align-top > [class*="col-md"]
-        vertical-align: top
-    &.grid-align-middle > [class*="col-md"]
-        vertical-align: middle
-    &.grid-align-bottom > [class*="col-md"]
-        vertical-align: bottom
-
 /* Extra Styles */
 
 img.shadow
@@ -114,8 +63,13 @@ h1.text-muted, h2.text-muted, h3.text-muted
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
 
-.navbar.navbar-default.navbar-static-top
+.navbar.navbar-static-top
     margin-bottom: 0
+    ul.nav
+        li.divider
+            margin-top: 15px
+            padding-top: 20px
+            border-right: 1px solid grey
 
 /* ----- BOOTSTRAP HACK FOR STICKY FOOTER ----- */
 
@@ -386,30 +340,3 @@ span[data-oe-type="monetary"]
 .oe_template_fallback
     @include column-count(3)
 
-// ---- Callouts from bootstrap doc ---- {{{
-.bs-callout
-    margin: 20px 0
-    padding: 20px
-    border-left: 3px solid #eee
-.bs-callout h4
-    margin-top: 0
-    margin-bottom: 5px
-.bs-callout p:last-child
-    margin-bottom: 0
-
-.bs-callout-danger
-    background-color: #fdf7f7
-    border-color: #eed3d7
-.bs-callout-danger h4
-    color: #b94a48
-.bs-callout-warning
-    background-color: #faf8f0
-    border-color: #faebcc
-.bs-callout-warning h4
-    color: #8a6d3b
-.bs-callout-info
-    background-color: #f4f8fa
-    border-color: #bce8f1
-.bs-callout-info h4
-    color: #34789a
-// }}}
