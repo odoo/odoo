@@ -4304,11 +4304,12 @@ class BaseModel(object):
             else:
                 tocreate[v] = {'id': vals[self._inherits[v]]}
 
-        columns = [
-            # columns will contain a list of field defined as a tuple
-            # tuple(field_name, format_string, field_value)
-            # the tuple will be used by the string formatting for the INSERT
-            # statement.
+        updates = [
+            # list of column assignments defined as tuples like:
+            #   (column_name, format_string, column_value)
+            #   (column_name, sql_formula)
+            # Those tuples will be used by the string formatting for the INSERT
+            # statement below.
             ('id', "nextval('%s')" % self._sequence),
         ]
 
@@ -4328,12 +4329,6 @@ class BaseModel(object):
                 'No such field(s) in model %s: %s.',
                 self._name, ', '.join(unknown_fields))
 
-        if not self._sequence:
-            raise except_orm(
-                _('UserError'),
-                _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.')
-            )
-
         for table in tocreate:
             if self._inherits[table] in vals:
                 del vals[self._inherits[table]]
@@ -4350,7 +4345,7 @@ class BaseModel(object):
             else:
                 self.pool[table].write(cr, user, [record_id], tocreate[table], context=parent_context)
 
-            columns.append((self._inherits[table], '%s', record_id))
+            updates.append((self._inherits[table], '%s', record_id))
 
         #Start : Set bool fields to be False if they are not touched(to make search more powerful)
         bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
@@ -4389,7 +4384,7 @@ class BaseModel(object):
         for field in vals:
             current_field = self._columns[field]
             if current_field._classic_write:
-                columns.append((field, '%s', current_field._symbol_set[1](vals[field])))
+                updates.append((field, '%s', current_field._symbol_set[1](vals[field])))
 
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
@@ -4412,10 +4407,10 @@ class BaseModel(object):
                     and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
-            columns.append(('create_uid', '%s', user))
-            columns.append(('write_uid', '%s', user))
-            columns.append(('create_date', "(now() at time zone 'UTC')"))
-            columns.append(('write_date', "(now() at time zone 'UTC')"))
+            updates.append(('create_uid', '%s', user))
+            updates.append(('write_uid', '%s', user))
+            updates.append(('create_date', "(now() at time zone 'UTC')"))
+            updates.append(('write_date', "(now() at time zone 'UTC')"))
 
         # the list of tuples used in this formatting corresponds to
         # tuple(field_name, format, value)
@@ -4425,10 +4420,10 @@ class BaseModel(object):
         cr.execute(
             """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
                 self._table,
-                ', '.join('"%s"' % f[0] for f in columns),
-                ', '.join(f[1] for f in columns)
+                ', '.join('"%s"' % u[0] for u in updates),
+                ', '.join(u[1] for u in updates)
             ),
-            tuple([f[2] for f in columns if len(f) > 2])
+            tuple([u[2] for u in updates if len(u) > 2])
         )
 
         id_new, = cr.fetchone()
