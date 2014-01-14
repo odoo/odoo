@@ -67,6 +67,9 @@
 .oe_editable:focus
     outline: none !important
 
+.css_editable_display
+    display: block !important
+
 .css_non_editable_mode_hidden
     display: none
 
@@ -84,6 +87,12 @@
         vertical-align: middle !important
         position: relative !important
         top: +2px
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+    background-image: url('/website/static/src/img/edit_here.png') !important
+
+.oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
+    content: 'Press The Top-Left Edit Button' !important
 
 // }}}
 
