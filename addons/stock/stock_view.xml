@@ -239,7 +239,7 @@
             <field name="model">stock.production.lot</field>
             <field name="arch" type="xml">
                 <search string="Product Lots Filter">
-                    <field name="name" string="Product Lots" filter_domain="['|','|',('name','ilike',self),('ref','ilike',self)]"/>
+                    <field name="name" string="Product Lots" filter_domain="['|',('name','ilike',self),('ref','ilike',self)]"/>
                     <field name="product_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
