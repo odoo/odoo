@@ -64,7 +64,7 @@ class test_message_compose(TestMailBase):
             'body_html': '${object.description}',
             'user_signature': True,
             'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])],
-            'email_to': 'b@b.b c@c.c',
+            'email_to': 'b@b.b, c@c.c',
             'email_cc': 'd@d.d'
             })
 
@@ -191,7 +191,7 @@ class test_message_compose(TestMailBase):
         email_template.write(cr, uid, [email_template_id], {
             'model_id': user_model_id,
             'body_html': '${object.login}',
-            'email_to': '${object.email} c@c',
+            'email_to': '${object.email}, c@c',
             'email_recipients': '%i,%i' % (p_b_id, p_c_id),
             'email_cc': 'd@d',
             })
