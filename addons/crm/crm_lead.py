@@ -914,7 +914,7 @@ class crm_lead(format_address, osv.osv):
         :return dict: dictionary value for created Meeting view
         """
         opportunity = self.browse(cr, uid, ids[0], context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_crm_meeting', context)
         res['context'] = {
             'default_opportunity_id': opportunity.id,
             'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,

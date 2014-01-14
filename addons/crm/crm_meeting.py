@@ -24,7 +24,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 #
-# crm.meeting is defined in module base_calendar
+# crm.meeting is defined in module calendar
 #
 class crm_meeting(osv.Model):
     """ Model for CRM meetings """

@@ -265,7 +265,7 @@ class crm_phonecall(osv.osv):
         :return dict: dictionary value for created meeting view
         """
         phonecall = self.browse(cr, uid, ids[0], context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_crm_meeting', context)
         res['context'] = {
             'default_phonecall_id': phonecall.id,
             'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,

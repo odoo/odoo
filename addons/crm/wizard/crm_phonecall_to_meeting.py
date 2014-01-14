@@ -48,7 +48,7 @@ class crm_phonecall2meeting(osv.osv_memory):
         phonecall_id = context and context.get('active_id', False) or False
         if phonecall_id:
             phonecall = self.pool.get('crm.phonecall').browse(cr, uid, phonecall_id, context)
-            res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
+            res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_crm_meeting', context)
             res['context'] = {
                 'default_phonecall_id': phonecall.id,
                 'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
