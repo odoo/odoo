@@ -2,6 +2,7 @@ openerp.auth_signup = function(instance) {
     instance.auth_signup = instance.auth_signup || {};
     var _t = instance.web._t;
 
+    /* TODO: make this a server side controller
     instance.web.Login.include({
         start: function() {
             var self = this;
@@ -183,4 +184,5 @@ openerp.auth_signup = function(instance) {
             });
         },
     });
+    */
 };
