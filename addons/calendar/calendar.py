@@ -1013,7 +1013,7 @@ class crm_meeting(osv.Model):
         
         if 'id' not in order_fields:
             order_fields.append('id')
-            
+
         result_data = []
         result = []
         for ev in self.browse(cr, uid, ids_to_browse, context=context):
@@ -1213,6 +1213,26 @@ class crm_meeting(osv.Model):
 
         res.update(self.check_partners_email(cr, uid, value[0][2], context=context))
         return res
+
+    def onchange_rec_day(self,cr,uid,id,date,mo,tu,we,th,fr,sa,su):
+        """ set the start date according to the first occurence of rrule"""
+        rrule_obj = self._get_empty_rrule_data()
+        rrule_obj.update({
+            'byday':True,
+            'rrule_type':'weekly',
+            'mo': mo,
+            'tu': tu,
+            'we': we,
+            'th': th,
+            'fr': fr,
+            'sa': sa,
+            'su': su,
+            'interval':1
+        })
+        str_rrule = self.compute_rule_string(rrule_obj)
+        first_occurence =  list(rrule.rrulestr(str_rrule + ";COUNT=1", dtstart=datetime.strptime(date, "%Y-%m-%d %H:%M:%S"), forceset=True))[0]
+        return {'value': { 'date' : first_occurence.strftime("%Y-%m-%d") + ' 00:00:00' } }
+
 
     def check_partners_email(self, cr, uid, partner_ids, context=None):
         """ Verify that selected partner_ids have an email_address defined.

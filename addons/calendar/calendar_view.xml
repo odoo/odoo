@@ -72,7 +72,7 @@
                                     <field name="alarm_ids" widget="many2many_tags" />
                                     <field name="location"/>
                                 </group>
-    
+
                             </group>
                             <label for="description"/>
                             <field name="description"/>
@@ -96,14 +96,14 @@
                                             <field name="end_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
                                         </div>
                                         <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
-                                        <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
-                                            <field name="mo"/>
-                                            <field name="tu"/>
-                                            <field name="we"/>
-                                            <field name="th"/>
-                                            <field name="fr"/>
-                                            <field name="sa"/>
-                                            <field name="su"/>
+                                        <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}" >
+                                            <field name="mo" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
+                                            <field name="tu" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
+                                            <field name="we" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
+                                            <field name="th" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
+                                            <field name="fr" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
+                                            <field name="sa" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
+                                            <field name="su" on_change="onchange_rec_day(date,mo,tu,we,th,fr,sa,su)"/>
                                         </group>
     
                                         <label string="Day of Month"
