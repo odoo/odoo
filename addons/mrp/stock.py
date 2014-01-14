@@ -100,7 +100,7 @@ class StockMove(osv.osv):
             procurement_obj.signal_button_wait_done(cr, uid, procurement_ids)
         return processed_ids
 
-    def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None):
+    def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id = False, context=None):
         """ Consumed product with specific quatity from specific source location.
         @param product_qty: Consumed product quantity
         @param location_id: Source location
@@ -110,7 +110,7 @@ class StockMove(osv.osv):
         production_obj = self.pool.get('mrp.production')
         for move in self.browse(cr, uid, ids, context=context):
             self.action_confirm(cr, uid, [move.id], context=context)
-            new_moves = super(StockMove, self).action_consume(cr, uid, [move.id], product_qty, location_id, context=context)
+            new_moves = super(StockMove, self).action_consume(cr, uid, [move.id], product_qty, location_id, restrict_lot_id = restrict_lot_id, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod in production_obj.browse(cr, uid, production_ids, context=context):
                 if prod.state == 'confirmed':

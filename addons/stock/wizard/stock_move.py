@@ -75,7 +75,7 @@ class stock_move_consume(osv.osv_memory):
         move_ids = context['active_ids']
         for data in self.browse(cr, uid, ids, context=context):
             move_obj.action_consume(cr, uid, move_ids,
-                             data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
+                             data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id and data.restrict_lot_id.id or False,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 
