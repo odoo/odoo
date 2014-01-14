@@ -4,28 +4,9 @@
 (function () {
 'use strict';
 
-// Pivot Table
-//
-//  Here is a short description of the way the data is organized:
-//  Main fields:
-//      cells = [cell]
-//               cell = {x: _, y: _, values: [_]}
-//      measures = [measure]
-// 				  measure = {field: _, string: _, type: _}
-//      rows, cols = {groupby: [groupby], headers: [header]}
-//				groupby = {field: _, string: _, type: _, interval: _} (interval only if type = date/datetime)
-// 				header = {
-//					id: _,
-//					path: _,
-//					title: _,
-//					expanded: _,
-//					children: _,
-//					domain: _,
-//					root: _,
-//				}
-//
 //  Pivot Table emits the events 'groupby_changed' and 'redraw_required' when necessary.
-// PivotTable require a 'update_data' after init to be ready
+//  PivotTable is initialized by default 'inactive', and require a call to activate() 
+//  after init to load initial data and start triggering events.
 openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherMixin, {
 
 	init: function (model, domain, fields, options) {
@@ -46,6 +27,12 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	// ----------------------------------------------------------------------
 	// Configuration methods
 	// ----------------------------------------------------------------------
+    // this.measures: list of measure [measure], measure = {field: _, string: _, type: _}
+    // this.rows.groupby, this.cols.groupby : list of groupbys used for describing rows (...),
+    //      a groupby is also {field:_, string:_, type:_} but it also has a interval
+    //      attribute if its type is date/datetime.
+    // this.active: If PivotTable is active then it triggers events and updates 
+    //      its values when necessary
 	activate: function() {
 		this.active = true;
 		this.update_data();
@@ -108,9 +95,14 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 
     create_field_value: function (f) {
         if (f.field && f.interval) {
-            return {field:f.field, string: this.fields[f.field].string, type:this.fields[f.field].type, interval: f.interval};
+            return { field:f.field, 
+                     string: this.fields[f.field].string, 
+                     type:this.fields[f.field].type, 
+                     interval: f.interval };
         }
-        return (f.field && f.string && f.type) ? f : {field: f, string: this.fields[f].string, type: this.fields[f].type};
+        return (f.field && f.string && f.type) ? f : { field: f, 
+                                                       string: this.fields[f].string, 
+                                                       type: this.fields[f].type };
     },
 
     create_field_values: function (field_ids) {
@@ -125,17 +117,18 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	// ----------------------------------------------------------------------
 	// Cells manipulation methods
 	// ----------------------------------------------------------------------
+    // cells are objects {x:_, y:_, values:_} where x < y and values is an array
+    //       of values (one for each measure).  The condition x < y might look 
+    //       unnecessary, but it makes the rest of the code simpler: headers
+    //       don't krow if they are rows or cols, they just know their id, so
+    //       it is useful that a call get_values(id1, id2) is the same as get_values(id2, id1)
 	add_cell : function (id1, id2, values) {
-		var x = Math.min(id1, id2),
-			y = Math.max(id1, id2);
-		this.cells.push({x: x, y: y, values: values});
+		this.cells.push({x: Math.min(id1, id2), y: Math.max(id1, id2), values: values});
 	},
 
 	get_values: function (id1, id2, default_values) {
-		var x = Math.min(id1, id2),
-			y = Math.max(id1, id2),
-			cell = _.find(this.cells, function (c) {
-					return ((c.x == x) && (c.y == y));
+		var cell = _.find(this.cells, function (c) {
+					return ((c.x == Math.min(id1, id2)) && (c.y == Math.max(id1, id2)));
 				});
 		return (cell !== undefined) ? cell.values : (default_values || new Array(this.measures.length));
 	},
@@ -143,6 +136,17 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	// ----------------------------------------------------------------------
 	// Headers/Rows/Cols manipulation methods
 	// ----------------------------------------------------------------------
+    // this.rows.headers, this.cols.headers = [header] describe the tree structure 
+    //      of rows/cols.  Headers are objects
+    //      { 
+    //          id:_,               (unique id obviously)
+    //          path: [...],        (array of all parents title, with its own title at the end)
+    //          title:_,            (name of the row/col)
+    //          children:[_],       (subrows or sub cols of this row/col)
+    //          domain:_,           (domain of data in this row/col)
+    //          root:_              (ref to this.rows or this.cols corresponding to the header)
+    //          expanded:_          (boolean, true if it has been expanded)
+    //      }
 	is_row: function (id) {
 		return !!_.find(this.rows.headers, function (header) {
 			return header.id === id;
@@ -216,7 +220,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
     main_col: function () { return this.cols.headers[0]; },
 
 	// ----------------------------------------------------------------------
-	// Table manipulation methods
+	// Table manipulation methods : fold/expand/swap
 	// ----------------------------------------------------------------------
 	fold: function (header) {
 		var ancestors = this.get_ancestors(header),
@@ -253,17 +257,16 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         return this.get_groups(groupby, fields, header.domain)
             .then(function (groups) {
                 _.each(groups.reverse(), function (group) {
+                    // make header
                     var child = self.make_header(group, header);
                     child.expanded = false;
                     header.children.splice(0,0, child);
                     header.root.headers.splice(header.root.headers.indexOf(header) + 1, 0, child);
-                    // return new_header.id;
                     // make cells
                     _.each(self.get_ancestors_and_self(group), function (data) {
                         var values = _.map(self.measures, function (m) {
                             return data.attributes.aggregates[m.field];
                         });
-
                         var other = _.find(otherRoot.headers, function (h) {
                             if (header.root === self.cols) {
                                 return _.isEqual(data.path.slice(1), h.path);
@@ -302,8 +305,12 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 	},
 
 	// ----------------------------------------------------------------------
-	// Data loading methods
+	// Data updating methods
 	// ----------------------------------------------------------------------
+    // Load the data from the db, using the method this.load_data
+    // update_data will try to preserve the expand/not expanded status of each
+    // column/row.  If you want to expand all, then set this.cols.headers/this.rows.headers 
+    // to null before calling update_data.
 	update_data: function () {
 		var self = this;
 
@@ -354,7 +361,48 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		root.headers = updated_headers;
 	},
 
-	// options: fields: _, path_prefix: []
+    expand_all: function () {
+        this.rows.headers = null;
+        this.cols.headers = null;
+        this.update_data();
+    },
+
+    // ----------------------------------------------------------------------
+    // Data loading methods
+    // ----------------------------------------------------------------------
+
+    // To obtain all the values required to draw the full table, we have to do 
+    // at least      2 + min(row.groupby.length, col.groupby.length)
+    // calls to readgroup. To simplify the code, we will always do 
+    // 2 + row.groupby.length calls. For example, if row.groupby = [r1, r2, r3] 
+    // and col.groupby = [c1, c2], then we will make the call with the following 
+    // groupbys: [r1,r2,r3], [c1,r1,r2,r3], [c1,c2,r1,r2,r3], [].
+    load_data: function () {
+        var self = this,
+            cols = this.cols.groupby,
+            rows = this.rows.groupby,
+            visible_fields = rows.concat(cols, self.measures);
+
+        var groupbys = _.map(_.range(cols.length + 1), function (i) {
+            return cols.slice(0, i).concat(rows);
+        });
+        groupbys.push([]);
+
+        var def_array = _.map(groupbys, function (groupby) {
+            return self.get_groups(groupby, visible_fields, self.domain);
+        });
+
+        return $.when.apply(null, def_array).then(function () {
+            var data = Array.prototype.slice.call(arguments),
+                row_data = data[0],
+                col_data = (cols.length !== 0) ? data[data.length - 2] : [],
+                total = data[data.length - 1][0];
+
+            return (total === undefined) ? undefined
+                    : self.format_data(total, col_data, row_data, data);
+        });
+    },
+
 	get_groups: function (groupbys, fields, domain, path) {
         path = path || [];
 		var self = this,
@@ -419,6 +467,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 			});
 	},
 
+    // add the path to the group and sanitize the value...
 	format_group: function (group, current_path) {
          var value = group.attributes.value;
 
@@ -438,53 +487,19 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		return group;
 	},
 
-	// To obtain all the values required to draw the full table, we have to do 
-	// at least      2 + min(row.groupby.length, col.groupby.length)
-	// calls to readgroup. To simplify the code, we will always do 
-	// 2 + row.groupby.length calls. For example, if row.groupby = [r1, r2, r3] 
-	// and col.groupby = [c1, c2], then we will make the call with the following 
-	// groupbys: [r1,r2,r3], [c1,r1,r2,r3], [c1,c2,r1,r2,r3], [].
-	load_data: function () {
-		var self = this,
-			cols = this.cols.groupby,
-			rows = this.rows.groupby,
-			visible_fields = rows.concat(cols, self.measures);
-
-		var groupbys = _.map(_.range(cols.length + 1), function (i) {
-			return cols.slice(0, i).concat(rows);
-		});
-		groupbys.push([]);
-
-		var def_array = _.map(groupbys, function (groupby) {
-			return self.get_groups(groupby, visible_fields, self.domain);
-		});
-
-		return $.when.apply(null, def_array).then(function () {
-			var data = Array.prototype.slice.call(arguments),
-				row_data = data[0],
-				col_data = (cols.length !== 0) ? data[data.length - 2] : [],
-				total = data[data.length - 1][0];
-
-			return (total === undefined) ? undefined
-                    : self.format_data(total, col_data, row_data, data);
-		});
-	},
-
 	format_data: function (total, col_data, row_data, cell_data) {
 		var self = this,
 			dim_row = this.rows.groupby.length,
 			dim_col = this.cols.groupby.length,
             col_headers = this.get_ancestors_and_self(this.make_headers(col_data, dim_col)),
-            row_headers = this.get_ancestors_and_self(this.make_headers(row_data, dim_row)),
-			cells = [];
+            row_headers = this.get_ancestors_and_self(this.make_headers(row_data, dim_row));
 
         this.cells = [];
 		_.each(cell_data, function (data, index) {
 			self.make_cells(data, index, [], row_headers, col_headers);
-		}); // make it more functional?
+		}); // not pretty. make it more functional?
 
-		return {col_headers: col_headers,
-                row_headers: row_headers};
+		return {col_headers: col_headers, row_headers: row_headers};
 	},
 
 	make_headers: function (data, depth, parent) {

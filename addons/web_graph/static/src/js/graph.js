@@ -340,9 +340,7 @@ instance.web_graph.Graph = instance.web.Widget.extend(openerp.EventDispatcherMix
                 this.pivot.swap_axis();
                 break;
             case 'expand_all':
-                this.pivot.rows.headers = null;
-                this.pivot.cols.headers = null;
-                this.pivot.update_data();
+                this.pivot.expand_all();
                 break;
             case 'update_values':
                 this.pivot.update_data();
