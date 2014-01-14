@@ -613,7 +613,8 @@ class Home(http.Controller):
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
-        assert request.session.db is not None
+        if request.session.db is None:
+            return redirect_with_hash('/web/database/selector', keep_query=['debug'])
         values = request.params.copy()
         if not redirect:
             redirect = '/web?' + request.httprequest.query_string
@@ -799,9 +800,12 @@ class Database(http.Controller):
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
-        dbs = http.db_list(True)
-        if not dbs:
-            return redirect_with_hash('/web/database/manager', keep_query=['debug'])
+        try:
+            dbs = http.db_list()
+            if not dbs:
+                return redirect_with_hash('/web/database/manager', keep_query=['debug'])
+        except openerp.exceptions.AccessDenied:
+            dbs = False
         return env.get_template("database_selector.html").render({
             'databases': dbs,
             'debug': request.debug,

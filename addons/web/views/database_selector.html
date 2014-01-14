@@ -21,12 +21,16 @@
 
             <div class="form-group field-db">
                 <label for="db" class="control-label">Select database</label>
-                <select name="db" id="db" class="form-control" required="required" autofocus="autofocus">
-                    <option></option>
-                    {% for db in databases %}
-                        <option value="{{ db }}">{{ db }}</option>
-                    {% endfor %}
-                </select>
+                {% if databases %}
+                    <select name="db" id="db" class="form-control" required="required" autofocus="autofocus">
+                        <option></option>
+                        {% for db in databases %}
+                            <option value="{{ db }}">{{ db }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="text" name="db" id="db" class="form-control" required="required" autofocus="autofocus"/>
+                {% endif %}
             </div>
 
             <hr/>
