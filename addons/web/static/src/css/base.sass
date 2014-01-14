@@ -207,7 +207,7 @@ $sheet-padding: 16px
         font-size: inherit
     // }}}
     // Button style {{{
-    a.button:link, a.button:visited, .oe_button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
+    a.button:link, a.button:visited, button, .oe_button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
         display: inline-block
         border: 1px solid rgba(0,0,0,0.4)
         color: #4c4c4c
@@ -222,22 +222,22 @@ $sheet-padding: 16px
         -webkit-font-smoothing: antialiased
         outline: none
 
-    a.button:hover, .oe_button:hover, input[type='submit']:hover, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover
+    a.button:hover, button:hover,.oe_button:hover, input[type='submit']:hover, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         cursor: pointer
         background-position: 0
 
-    a.button:focus, .oe_button:focus, input[type='submit']:focus, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus
+    a.button:focus, button:focus, .oe_button:focus, input[type='submit']:focus, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus
         border: 1px solid #80bfff
         background-position: 0
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-    a.button:active, a.button.active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active
+    a.button:active, a.button.active, button:active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active
         @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
-    a.button.disabled, .oe_button:disabled, input[type='submit']:disabled
+    a.button.disabled, button:disabled, .oe_button:disabled, input[type='submit']:disabled
         background: #efefef !important
         border: 1px solid #d1d1d1 !important
         @include box-shadow(none !important)
@@ -1115,6 +1115,8 @@ $sheet-padding: 16px
     .oe_application
         width: 100%
         height: 100%
+        a
+            color: $link-color
         > div
             height: 100%
         .oe_breadcrumb_item:not(:last-child)
