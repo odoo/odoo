@@ -2,6 +2,7 @@
 from openerp.addons.website_sale.controllers.main import Ecommerce
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
+from openerp import SUPERUSER_ID
 
 
 class Ecommerce(Ecommerce):
@@ -15,8 +16,8 @@ class Ecommerce(Ecommerce):
         if order and carrier_id:
             # recompute delivery costs
             SaleOrder = request.registry['sale.order']
-            SaleOrder.write(cr, uid, [order.id], {'carrier_id': carrier_id}, context=context)
-            SaleOrder.delivery_set(cr, uid, [order.id], context=context)
+            SaleOrder.write(cr, SUPERUSER_ID, [order.id], {'carrier_id': carrier_id}, context=context)
+            SaleOrder.delivery_set(cr, SUPERUSER_ID, [order.id], context=context)
 
         res = super(Ecommerce, self).payment(**post)
         return res
