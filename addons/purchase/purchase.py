@@ -1269,4 +1269,22 @@ class mail_compose_message(osv.Model):
             wf_service.trg_validate(uid, 'purchase.order', context['default_res_id'], 'send_rfq', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+    
+    def invoice_validate(self, cr, uid, ids, context=None):
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+        purchase_order_obj = self.pool.get('purchase.order')
+        # read access on purchase.order object is not required
+        if not purchase_order_obj.check_access_rights(cr, uid, 'read', raise_exception=False):
+            user_id = SUPERUSER_ID
+        else:
+            user_id = uid
+        po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
+        wf_service = netsvc.LocalService("workflow")
+        for po_id in po_ids:
+            # Signal purchase order workflow that an invoice has been validated.
+            wf_service.trg_write(uid, 'purchase.order', po_id, cr)
+        return res
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
