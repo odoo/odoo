@@ -1022,7 +1022,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     id = parseInt(ref_match[2], 10);
                 new instance.web.DataSet(this.view, model).name_get([id]).done(function(names) {
                     if (!names.length) { return; }
-                    record.set(column.id, names[0][1]);
+                    record.set(column.id + '__display', names[0][1]);
                 });
             }
         } else if (column.type === 'many2one') {
@@ -2095,6 +2095,7 @@ instance.web.list.columns = new instance.web.Registry({
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
     'field.many2onebutton': 'instance.web.list.Many2OneButton',
+    'field.reference': 'instance.web.list.Reference',
     'field.many2many': 'instance.web.list.Many2Many'
 });
 instance.web.list.columns.for_ = function (id, field, node) {
@@ -2303,6 +2304,20 @@ instance.web.list.Many2Many = instance.web.list.Column.extend({
         if (!_.isEmpty(row_data[this.id].value)) {
             // If value, use __display version for printing
             row_data[this.id] = row_data[this.id + '__display'];
+        }
+        return this._super(row_data, options);
+    }
+});
+instance.web.list.Reference = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        if (!_.isEmpty(row_data[this.id].value)) {
+            // If value, use __display version for printing
+            //console.log('_format', row_data[this.id], row_data[this.id + '__display']);
+            if (!!row_data[this.id + '__display']) {
+                row_data[this.id] = row_data[this.id + '__display'];
+            } else {
+                row_data[this.id] = {'value': ''};
+            }
         }
         return this._super(row_data, options);
     }
