@@ -9,8 +9,8 @@
         <record model="survey.survey" id="appraisal_form">
             <field name="title">Self Appraisal Form</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
-            <field name="state">draft</field>
-            <field name="visible_to_user" eval="False"/>
+<!--             <field name="state">open</field>
+ -->            <field name="visible_to_user" eval="False"/>
             <field name="users_can_go_back" eval="True" />
             <field name="color" eval="4" />
             <field name="description"> </field>
@@ -26,7 +26,7 @@
         <record model="survey.survey" id="recruitment_form">
             <field name="title">Recruitment Form</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
-            <field name="state">draft</field>
+<!--             <field name="state">open</field> -->
             <field name="visible_to_user" eval="False"/>
             <field name="users_can_go_back" eval="False" />
             <field name="color" eval="5" />
@@ -37,7 +37,7 @@
         <record model="survey.survey" id="feedback_form">
             <field name="title">User Feedback Form</field>
             <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
-            <field name="state">draft</field>
+<!--             <field name="state">open</field> -->
             <field name="visible_to_user" eval="True"/>
             <field name="users_can_go_back" eval="True" />
             <field name="color" eval="6" />
