@@ -4,6 +4,7 @@
 (function () {
 'use strict';
 var QWeb = openerp.web.qweb;
+nv.dev = false;  // sets nvd3 library in production mode
 
 openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin, {
     template: 'GraphWidget',
