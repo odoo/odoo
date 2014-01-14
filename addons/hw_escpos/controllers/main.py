@@ -10,7 +10,12 @@ import random
 import math
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
-import usb.core
+
+try:
+    import usb.core
+except: ImportError:
+    usb = None
+
 from openerp.tools.translate import _
 from .. import escpos
 from ..escpos import printer

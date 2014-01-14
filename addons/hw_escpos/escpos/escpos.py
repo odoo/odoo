@@ -7,13 +7,18 @@
 '''
 
 import Image
-import qrcode
+
+try: 
+    import qrcode
+except ImportError:
+    qrcode = None
+
 import time
 import copy
 
 try:
     import jcconv
-except:
+except ImportError:
     jcconv = None
     print 'ESC/POS: please install jcconv for improved Japanese receipt printing:'
     print ' # pip install jcconv'
