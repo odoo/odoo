@@ -6,8 +6,6 @@
 @license: GPL
 '''
 
-import Image
-
 try: 
     import qrcode
 except ImportError:
@@ -15,6 +13,8 @@ except ImportError:
 
 import time
 import copy
+
+from PIL import Image
 
 try:
     import jcconv

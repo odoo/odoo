@@ -39,7 +39,7 @@
     'demo': [
         'google_drive_demo.xml'
     ],
-    'depends': ['base_setup', 'google_base_account'],
+    'depends': ['base_setup', 'google_account'],
     'description': """
 Integrate google document to OpenERP record.
 ============================================
