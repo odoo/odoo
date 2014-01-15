@@ -581,6 +581,8 @@ class product_product(osv.osv):
 
     def _save_product_lst_price(self, cr, uid, product_id, field_name, field_value, arg, context=None):
         field_value = field_value or 0.0
+        if not field_value:
+            return True
         product = self.browse(cr, uid, product_id, context=context)
         price = product.list_price
         if product.price_margin:
