@@ -55,7 +55,7 @@ If you need to manage your meetings, you should install the CRM module.
     ],
     'test' : [
               'test/calendar_test.yml',
-              'test/test_crm_recurrent_meeting_case2.yml'
+              'test/test_calendar_recurrent_event_case2.yml'
               ],
     'installable': True,
     'application': True,
