@@ -9,14 +9,9 @@ nv.dev = false;  // sets nvd3 library in production mode
 openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin, {
     template: 'GraphWidget',
 
-    events: {
-        'click .graph_mode_selection li' : 'mode_selection',
-        'click .graph_measure_selection li' : 'measure_selection',
-        'click .graph_options_selection li' : 'option_selection',
-        'click .web_graph_click' : 'header_cell_clicked',
-        'click a.field-selection' : 'field_selection',
-    },
-
+    // ----------------------------------------------------------------------
+    // Init stuff
+    // ----------------------------------------------------------------------
     init: function(parent, model,  domain, options) {
         this._super(parent);
         this.model = model;
@@ -56,6 +51,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         });
     },
 
+    // this method gets the fields that appear in the search view, under the 
+    // 'Groupby' heading
     get_search_fields: function () {
         var self = this,
             options = {model:this.model, view_type: 'search'},
@@ -83,6 +80,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         });
     },
 
+    // Extracts the integer/float fields which are not 'id'
     get_measures: function(fields) {
         var measures = [];
         _.each(this.fields, function (f, id) {
@@ -91,17 +89,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
             }
         });
         return measures;
-    },
-
-
-    set: function (domain, row_groupby, col_groupby) {
-        if (this.pivot) {
-            this.pivot.set(domain, row_groupby, col_groupby);
-        } else {
-            this.pivot_options.domain = domain;
-            this.pivot_options.row_groupby = row_groupby;
-            this.pivot_options.col_groupby = col_groupby;
-        }
     },
 
     add_measures_to_options: function() {
@@ -114,39 +101,47 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         });
     },
 
+    // ----------------------------------------------------------------------
+    // Configuration methods
+    // ----------------------------------------------------------------------
+    set: function (domain, row_groupby, col_groupby) {
+        if (this.pivot) {
+            this.pivot.set(domain, row_groupby, col_groupby);
+        } else {
+            this.pivot_options.domain = domain;
+            this.pivot_options.row_groupby = row_groupby;
+            this.pivot_options.col_groupby = col_groupby;
+        }
+    },
+
     set_mode: function (mode) {
         this.mode = mode;
         this.display_data();
+    },
+
+    // returns the row groupbys as a list of fields (not the representation used
+    // internally by pivot table)
+    get_row_groupby: function () {
+        return _.pluck(this.pivot.rows.groupby, 'field');
+    },
+
+    get_col_groupby: function () {
+        return _.pluck(this.pivot.cols.groupby, 'field');
     },
 
     reload: function () {
         this.pivot.update_data();
     },
 
-    display_data: function () {
-        this.$('.graph_main_content svg').remove();
-        this.$('.graph_main_content div').remove();
-        this.table.empty();
-
-        if (this.visible_ui) {
-            this.$('.graph_header').css('display', 'block');
-        } else {
-            this.$('.graph_header').css('display', 'none');
-        }
-        if (this.pivot.no_data) {
-            this.$('.graph_main_content').append($(QWeb.render('graph_no_data')));
-        } else {
-            var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
-            if (_.contains(table_modes, this.mode)) {
-                this.draw_table();
-            } else {
-                this.$('.graph_main_content').append($('<div><svg></svg></div>'));
-                this.svg = this.$('.graph_main_content svg')[0];
-                this.width = this.$el.width();
-                this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
-                this[this.mode]();
-            }
-        }
+    // ----------------------------------------------------------------------
+    // UI code
+    // ----------------------------------------------------------------------
+    events: {
+        'click .graph_mode_selection li' : 'mode_selection',
+        'click .graph_measure_selection li' : 'measure_selection',
+        'click .graph_options_selection li' : 'option_selection',
+        'click .web_graph_click' : 'header_cell_clicked',
+        'click a.field-selection' : 'field_selection',
     },
 
     mode_selection: function (event) {
@@ -233,9 +228,38 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         }
     },
 
-/******************************************************************************
- * Drawing pivot table methods...
- ******************************************************************************/
+    // ----------------------------------------------------------------------
+    // Main display method
+    // ----------------------------------------------------------------------
+    display_data: function () {
+        this.$('.graph_main_content svg').remove();
+        this.$('.graph_main_content div').remove();
+        this.table.empty();
+
+        if (this.visible_ui) {
+            this.$('.graph_header').css('display', 'block');
+        } else {
+            this.$('.graph_header').css('display', 'none');
+        }
+        if (this.pivot.no_data) {
+            this.$('.graph_main_content').append($(QWeb.render('graph_no_data')));
+        } else {
+            var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
+            if (_.contains(table_modes, this.mode)) {
+                this.draw_table();
+            } else {
+                this.$('.graph_main_content').append($('<div><svg></svg></div>'));
+                this.svg = this.$('.graph_main_content svg')[0];
+                this.width = this.$el.width();
+                this.height = Math.min(Math.max(document.documentElement.clientHeight - 116 - 60, 250), Math.round(0.8*this.$el.width()));
+                this[this.mode]();
+            }
+        }
+    },
+
+    // ----------------------------------------------------------------------
+    // Drawing the table
+    // ----------------------------------------------------------------------
     draw_table: function () {
         this.pivot.main_row().title = 'Total';
         if (this.pivot.measures.length == 1) {
@@ -411,22 +435,22 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         }
     },
 
-/******************************************************************************
- * Drawing charts methods...
- ******************************************************************************/
+    // ----------------------------------------------------------------------
+    // Drawing charts code
+    // ----------------------------------------------------------------------
     bar: function () {
         var self = this,
             dim_x = this.pivot.rows.groupby.length,
             dim_y = this.pivot.cols.groupby.length,
             data;
 
-        // No groupby **************************************************************
+        // No groupby 
         if ((dim_x === 0) && (dim_y === 0)) {
             data = [{key: 'Total', values:[{
                 x: 'Total',
                 y: this.pivot.get_total(),
             }]}];
-        // Only column groupbys ****************************************************
+        // Only column groupbys 
         } else if ((dim_x === 0) && (dim_y >= 1)){
             data =  _.map(this.pivot.get_columns_with_depth(1), function (header) {
                 return {
@@ -434,7 +458,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
                     values: [{x:header.root[0].title, y: self.pivot.get_total(header)[0]}]
                 };
             });
-        // Just 1 row groupby ******************************************************
+        // Just 1 row groupby 
         } else if ((dim_x === 1) && (dim_y === 0))  {
             data = _.map(this.pivot.main_row().children, function (pt) {
                 var value = self.pivot.get_total(pt),
@@ -442,7 +466,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
                 return {x: title, y: value};
             });
             data = [{key: self.pivot.measures[0].string, values:data}];
-        // 1 row groupby and some col groupbys**************************************
+        // 1 row groupby and some col groupbys
         } else if ((dim_x === 1) && (dim_y >= 1))  {
             data = _.map(this.pivot.get_cols_with_depth(1), function (colhdr) {
                 var values = _.map(self.pivot.get_rows_with_depth(1), function (header) {
@@ -453,7 +477,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
                 });
                 return {key: colhdr.title || 'Undefined', values: values};
             });
-        // At least two row groupby*************************************************
+        // At least two row groupby
         } else {
             var keys = _.uniq(_.map(this.pivot.get_rows_with_depth(2), function (hdr) {
                 return hdr.title || 'Undefined';

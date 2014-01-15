@@ -77,18 +77,20 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         var row_gbs = this.create_field_values(row_groupby),
             col_gbs = this.create_field_values(col_groupby),
             dom_changed = !_.isEqual(this.domain, domain),
-            gb_changed = !(_.isEqual(row_gbs, this.rows.groupby) &&
-                           _.isEqual(col_gbs, this.cols.groupby));
+            row_gb_changed = !_.isEqual(row_gbs, this.rows.groupby),
+            col_gb_changed = !_.isEqual(col_gbs, this.cols.groupby);
 
         if (dom_changed) {
             this.domain = domain;
         }
-        if (gb_changed) {
+        if (row_gb_changed || col_gb_changed) {
             this.cols.groupby = col_gbs;
             this.rows.groupby = row_gbs;
+            if (row_gb_changed) {this.rows.headers = null; }
+            if (col_gb_changed) {this.cols.headers = null; }
             if (this.active) { this.trigger('groupby_changed'); }
         }
-        if (this.active && (gb_changed || dom_changed)) {
+        if (this.active && (row_gb_changed || col_gb_changed || dom_changed)) {
             this.update_data();
         }
     },
