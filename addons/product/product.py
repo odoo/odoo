@@ -371,11 +371,6 @@ class product_template(osv.osv):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
-        product = self.pool.get('product.product')
-        product_ids = product.search(cr, uid, [('product_tmpl_id','in',ids)], context=context)
-        for product_obj in product.browse(cr, uid, product_ids, context=context):
-            if not product_obj.image:
-                product.write(cr, uid, product_obj.id, {'image': product_obj.product_tmpl_id.image}, context=context)
         return result
 
     def _set_image(self, cr, uid, id, name, value, args, context=None):
@@ -656,7 +651,8 @@ class product_product(osv.osv):
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
+            img = obj.image or obj.product_tmpl_id.image or False
+            result[obj.id] = tools.image_get_resized_images(img, avoid_resize_medium=True)
         return result
 
     def _set_image(self, cr, uid, id, name, value, args, context=None):
@@ -713,6 +709,7 @@ class product_product(osv.osv):
             string="Medium-sized image", type="binary", multi="_get_image",
             store={
                 'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'product.template': (_get_name_template_ids, ['image'], 10),
             },
             help="Medium-sized image of the product. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved, "\
@@ -721,6 +718,7 @@ class product_product(osv.osv):
             string="Small-sized image", type="binary", multi="_get_image",
             store={
                 'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'product.template': (_get_name_template_ids, ['image'], 10),
             },
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
@@ -744,23 +742,6 @@ class product_product(osv.osv):
                 if 'name' in data:
                     del data['name']
         return super(product_product, self).create(cr, uid, data, context=context)
-
-    def unlink(self, cr, uid, ids, context=None):
-        unlink_ids = []
-        unlink_product_tmpl_ids = []
-        for product in self.browse(cr, uid, ids, context=context):
-            tmpl_id = product.product_tmpl_id.id
-            # Check if the product is last product of this template
-            other_product_ids = self.search(cr, uid, [('product_tmpl_id', '=', tmpl_id), ('id', '!=', product.id)], context=context)
-            if not other_product_ids:
-                unlink_product_tmpl_ids.append(tmpl_id)
-            unlink_ids.append(product.id)
-        res = super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
-        # delete templates after calling super, as deleting template could lead to deleting
-        # products due to ondelete='cascade'
-        #Deprecated code : As per new scenario no need to delete the 'product-template' while delete the product.
-        #self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
-        return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         #override of fields_view_get in order to replace the name field to product template
