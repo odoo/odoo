@@ -78,6 +78,9 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sales orders",
             help='Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n'
                  '-This installs the module sale_stock.'),
+        'group_sale_delivery_address': fields.boolean("Allow a different address for delivery and invoicing ",
+            implied_group='sale.group_delivery_invoice_address',
+            help="Allows you to specify different delivery and invoice addresses on a sales order."),
     }
 
     def default_get(self, cr, uid, fields, context=None):
