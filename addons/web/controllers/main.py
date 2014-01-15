@@ -37,7 +37,7 @@ from openerp.tools.translate import _
 from openerp.tools import config
 from openerp import http
 
-from openerp.http import request, serialize_exception as _serialize_exception
+from openerp.http import request, serialize_exception as _serialize_exception, LazyResponse
 
 _logger = logging.getLogger(__name__)
 
@@ -560,7 +560,7 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
-def render_bootstrap_template(db, template, values=None, debug=False, **kw):
+def render_bootstrap_template(db, template, values=None, debug=False, lazy=False, **kw):
     if values is None:
         values = {}
     values.update(kw)
@@ -574,10 +574,15 @@ def render_bootstrap_template(db, template, values=None, debug=False, **kw):
         values['modules'] = module_boot(db=db)
     values['modules'] = simplejson.dumps(values['modules'])
 
-    registry = openerp.modules.registry.RegistryManager.get(db)
-    with registry.cursor() as cr:
-        view_obj = registry["ir.ui.view"]
-        return view_obj.render(cr, openerp.SUPERUSER_ID, template, values)
+    def callback(template, values):
+        registry = openerp.modules.registry.RegistryManager.get(db)
+        with registry.cursor() as cr:
+            view_obj = registry["ir.ui.view"]
+            return view_obj.render(cr, openerp.SUPERUSER_ID, template, values)
+    if lazy:
+        return LazyResponse(callback, template=template, values=values)
+    else:
+        return callback(template, values)
 
 class Home(http.Controller):
 
@@ -624,7 +629,7 @@ class Home(http.Controller):
             if uid is not False:
                 return redirect_with_hash(redirect)
             values['authentication_failed'] = True
-        return render_bootstrap_template(request.session.db, 'web.login', values, debug=request.debug)
+        return render_bootstrap_template(request.session.db, 'web.login', values, debug=request.debug, lazy=True)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
