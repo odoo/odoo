@@ -1203,7 +1203,7 @@ class mail_thread(osv.AbstractModel):
             self.check_access_rule(cr, uid, ids, 'write')
 
         existing_pids_dict = {}
-        fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)])
         for fol in mail_followers_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context):
             existing_pids_dict.setdefault(fol.res_id, set()).add(fol.partner_id.id)
 
