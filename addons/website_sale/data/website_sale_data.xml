@@ -2,6 +2,11 @@
 <openerp>
     <data noupdate="1">
 
+        <record id="product.group_product_characteristics" model="res.groups">
+            <field name="name">Product Characteristic (not supported)</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
         <record id="menu_shop" model="website.menu">
             <field name="name">Shop</field>
             <field name="url">/shop</field>
