@@ -84,7 +84,10 @@
                         <button type="submit" class="btn btn-primary pull-right">Log in</button>
 
                         <div class="oe_single_form_footer">
-                            <a class="oe_login_manage_db" href="/web/database/manager{% if debug %}?debug{% endif %}">Manage Databases</a> |
+                            <t t-if="not disable_database_manager">
+                                <a class="oe_login_manage_db" t-attf-href="/web/database/manager{{ '?debug' if debug else '' }}">Manage Databases</a>
+                                <span class="oe_footer_seperator"> | </span>
+                            </t>
                             <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
                         </div>
                     </form>
