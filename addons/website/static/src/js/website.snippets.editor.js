@@ -183,11 +183,11 @@
             $el.css({
                 'position': 'absolute',
                 'width': $target.outerWidth(),
-                'height': $target.outerHeight() + mt + mb,
+                'height': $target.outerHeight() + mt + mb+1,
                 'top': pos.top - mt,
                 'left': pos.left
             });
-            $el.find(".oe_handle.size").css("bottom", mb+'px');
+            $el.find(".oe_handle.size").css("bottom", (mb-7)+'px');
         },
         show: function () {
             this.$el.removeClass("hidden");
@@ -973,7 +973,7 @@
 
             this.$overlay.append($box.find(".oe_handles").html());
 
-            this.$overlay.find(".oe_handle").on('mousedown', function (event){
+            this.$overlay.find(".oe_handle:not(:has(.oe_handle_button)), .oe_handle .oe_handle_button").on('mousedown', function (event){
                 event.preventDefault();
 
                 var $handle = $(this);
@@ -1007,7 +1007,6 @@
 
 
                 if (compass === 'size') {
-                    var grid = resize[0];
                     var offset = self.$target.offset().top;
                     if (self.$target.css("background").match(/rgba\(0, 0, 0, 0\)/)) {
                         self.$target.addClass("resize_editor_busy");
@@ -1035,10 +1034,10 @@
                     event.preventDefault();
                     if (compass === 'size') {
                         var dy = event.pageY-offset;
-                        dy = dy - dy%resize[0];
-                        if (dy <= 0) dy = resize[0];
+                        dy = dy - dy%resize;
+                        if (dy <= 0) dy = resize;
                         self.$target.css("height", dy+"px");
-                        self.on_resize(compass, beginClass, current);
+                        self.on_resize(compass, null, dy);
                         self.parent.cover_target(self.$overlay, self.$target);
                         return;
                     }
@@ -1083,7 +1082,8 @@
                 // list of class (Array), grid (Array), default value (INT)
                 n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
                 s: [_.map(grid, function (v) {return 'mb'+v;}), grid],
-                size: [8]
+                // INT if the user can resize the snippet (resizing per INT px)
+                size: null
             };
             return this.grid;
         },
@@ -1295,6 +1295,11 @@
     });
 
     website.snippet.editorRegistry.carousel = website.snippet.editorRegistry.slider.extend({
+        getSize: function () {
+            this.grid = this._super();
+            this.grid.size = 8;
+            return this.grid;
+        },
         clean_for_save: function () {
             this._super();
             this.$target.css("background-image", "");
@@ -1363,6 +1368,14 @@
     });
 
     website.snippet.editorRegistry.parallax = website.snippet.editorRegistry.resize.extend({
+        getSize: function () {
+            this.grid = this._super();
+            this.grid.size = 8;
+            return this.grid;
+        },
+        on_resize: function (compass, beginClass, current) {
+            this.$target.data("snippet-view").set_values();
+        },
         start : function () {
             var self = this;
             this._super();
