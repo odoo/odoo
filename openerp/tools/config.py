@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -29,6 +29,7 @@ import openerp.conf
 import openerp.loglevels as loglevels
 import logging
 import openerp.release as release
+from openerp.vendors import appdirs
 
 class MyOption (optparse.Option, object):
     """ optparse Option with two additional attributes.
@@ -58,6 +59,9 @@ def check_ssl():
         return False
 
 DEFAULT_LOG_HANDLER = [':INFO']
+
+def _get_default_datadir():
+    return appdirs.user_data_dir(appname='OpenERP', appauthor=release.author)
 
 class configmanager(object):
     def __init__(self, fname=None):
@@ -106,6 +110,9 @@ class configmanager(object):
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
+
+        group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
+                         help="Directory where to store OpenERP data")
         parser.add_option_group(group)
 
         # XML-RPC / HTTP
@@ -348,6 +355,7 @@ class configmanager(object):
         # (../etc from the server)
         # if the server is run by an unprivileged user, he has to specify location of a config file where he has the rights to write,
         # else he won't be able to save the configurations, or even to start the server...
+        # TODO use appdirs
         if os.name == 'nt':
             rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'openerp-server.conf')
         else:
@@ -357,7 +365,6 @@ class configmanager(object):
             self.config_file or opt.config \
                 or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
-
 
         # Verify that we want to log or not, if not the output will go to stdout
         if self.options['logfile'] in ('None', 'False'):
@@ -387,7 +394,6 @@ class configmanager(object):
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-
         if isinstance(self.options['log_handler'], basestring):
             self.options['log_handler'] = self.options['log_handler'].split(',')
 
@@ -399,7 +405,8 @@ class configmanager(object):
             'list_db', 'xmlrpcs', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
-            'workers', 'limit_memory_hard', 'limit_memory_soft', 'limit_time_cpu', 'limit_time_real', 'limit_request', 'auto_reload'
+            'workers', 'limit_memory_hard', 'limit_memory_soft', 'limit_time_cpu', 'limit_time_real', 'limit_request',
+            'auto_reload', 'data_dir',
         ]
 
         for arg in keys:
@@ -616,6 +623,14 @@ class configmanager(object):
 
     def __getitem__(self, key):
         return self.options[key]
+
+    @property
+    def addons_data_dir(self):
+        return os.path.join(self['data_dir'], 'addons', release.series)
+
+    @property
+    def session_dir(self):
+        return os.path.join(self['data_dir'], 'sessions')
 
 config = configmanager()
 
