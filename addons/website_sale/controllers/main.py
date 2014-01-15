@@ -491,10 +491,6 @@ class Ecommerce(http.Controller):
                 shipping_partner = orm_partner.browse(cr, SUPERUSER_ID, shipping_ids[0], context)
                 checkout.update(info.from_partner(shipping_partner, address_type='shipping'))
 
-        for field_name in info.mandatory_fields():
-            if not checkout[field_name]:
-                error[field_name] = 'missing'
-
         return request.website.render("website_sale.checkout", values)
 
     @website.route(['/shop/confirm_order/'], type='http', auth="public", multilang=True)

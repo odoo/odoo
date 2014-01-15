@@ -746,7 +746,7 @@
                       <label class="control-label" for="contact_name">Email</label>
                       <input type="email" name="email" class="form-control" t-att-value="checkout.get('email')"/>
                   </div>
-                  <div t-attf-class="form-group #{ error.get('phone') and 'has-error' or ''} col-lg-6">
+                  <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">
                       <label class="control-label" for="phone">Phone</label>
                       <input type="tel" name="phone" class="form-control" t-att-value="checkout.get('phone')"/>
                   </div>
