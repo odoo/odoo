@@ -146,6 +146,6 @@ def full_path(filename):
 
 def load_tests(loader, base, _):
     base.addTest(WebsiteUiSuite(full_path('dummy_test.js'), {}, 5.0))
-    base.addTest(WebsiteUiSuite(full_path('simple_dom_test.js'), { 'action': 'website.action_website_homepage' }, 60.0))
-    base.addTest(WebsiteUiSuite(full_path('homepage_test.js'),   { 'action': 'website.action_website_homepage' }, 60.0))
+    base.addTest(WebsiteUiSuite(full_path('simple_dom_test.js'), {'redirect': '/page/website.homepage'}, 60.0))
+    base.addTest(WebsiteUiSuite(full_path('homepage_test.js'), {'redirect': '/page/website.homepage'}, 60.0))
     return base
