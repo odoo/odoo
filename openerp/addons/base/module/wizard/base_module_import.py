@@ -28,8 +28,6 @@ from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
-ADDONS_PATH = tools.config['addons_path'].split(",")[-1]
-
 class base_module_import(osv.osv_memory):
     """ Import Module """
 

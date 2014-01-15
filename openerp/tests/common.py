@@ -11,7 +11,6 @@ import xmlrpclib
 import openerp
 
 # The openerp library is supposed already configured.
-ADDONS_PATH = openerp.tools.config['addons_path']
 PORT = openerp.tools.config['xmlrpc_port']
 DB = openerp.tools.config['db_name']
 
