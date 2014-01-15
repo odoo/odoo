@@ -1276,7 +1276,12 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
             def comparer(left, right):
                 for fn, mult in comparers:
-                    result = cmp(fn(left), fn(right))
+                    if type(fn(left)) == tuple and type(fn(right)) == tuple:
+                        # comparing many2one values, sorting on name_get result
+                        leftv, rightv = fn(left)[1], fn(right)[1]
+                    else:
+                        leftv, rightv = fn(left), fn(right)
+                    result = cmp(leftv, rightv)
                     if result:
                         return mult * result
                 return 0
