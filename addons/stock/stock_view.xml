@@ -1846,7 +1846,7 @@
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
         <record model="ir.actions.act_window" id="product_open_quants">
-            <field name="context">{'search_default_product_id': active_id}</field>
+            <field name="context">{'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
         </record>
@@ -1889,10 +1889,9 @@
                 </xpath>
                 
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button string="Inventory" name="%(action_product_location_tree)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
+                   <button string="Inventory" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
                    <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
                    <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
-                   <button string="Quants" name="%(product_open_quants)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="base.group_no_one"/>
                 </xpath>
                 
                 <xpath expr="//group[@string='Sale Conditions']" position="inside">
