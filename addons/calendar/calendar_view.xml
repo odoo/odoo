@@ -3,11 +3,11 @@
     <data>
 
 
-    <!-- CRM Meetings Types Form View -->
+    <!-- Calendar Events Types Form View -->
 
-    <record id="view_crm_meeting_type_tree" model="ir.ui.view">
+    <record id="view_calendar_event_type_tree" model="ir.ui.view">
         <field name="name">Meeting Types Tree</field>
-        <field name="model">crm.meeting.type</field>
+        <field name="model">calendar.event.type</field>
         <field name="arch" type="xml">
             <tree string="Meeting Types" editable="bottom">
                 <field name="name"/>
@@ -15,18 +15,18 @@
         </field>
     </record>    
 
-    <record id="action_crm_meeting_type" model="ir.actions.act_window">
+    <record id="action_calendar_event_type" model="ir.actions.act_window">
         <field name="name">Meeting Types</field>
-        <field name="res_model">crm.meeting.type</field>
+        <field name="res_model">calendar.event.type</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_crm_meeting_type_tree"/>
+        <field name="view_id" ref="view_calendar_event_type_tree"/>
     </record>
     
-    <!-- CRM Meetings Form View -->
+    <!-- Calendar Events Form View -->
 
-    <record model="ir.ui.view" id="view_crm_meeting_form">
-        <field name="name">CRM - Meetings Form</field>
-        <field name="model">crm.meeting</field>
+    <record model="ir.ui.view" id="view_calendar_event_form">
+        <field name="name">Calendar - Event Form</field>
+        <field name="model">calendar.event</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
@@ -160,9 +160,9 @@
         </field>
     </record>
     
-    <record model="ir.ui.view" id="view_crm_meeting_form_popup">
+    <record model="ir.ui.view" id="view_calendar_event_form_popup">
         <field name="name">Meetings Popup</field>
-        <field name="model">crm.meeting</field>
+        <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
@@ -190,9 +190,9 @@
 
     <!-- CRM Meeting Tree View  -->
 
-    <record model="ir.ui.view" id="view_crm_meeting_tree">
+    <record model="ir.ui.view" id="view_calendar_event_tree">
         <field name="name">CRM - Meetings Tree</field>
-        <field name="model">crm.meeting</field>
+        <field name="model">calendar.event</field>
         <field name="arch" type="xml">
             <tree string="Meetings" fonts="bold:message_unread==True">
                 <field name="name" string="Subject"/>
@@ -209,14 +209,14 @@
     </record>
 
     <!-- CRM Meeting Calendar -->
-    <record model="ir.ui.view" id="view_crm_meeting_calendar">
+    <record model="ir.ui.view" id="view_calendar_event_calendar">
         <field name="name">Meetings Calendar</field>
-        <field name="model">crm.meeting</field>
+        <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">                          
             <calendar string="Meetings" date_start="date" date_stop="date_deadline" date_delay="duration" all_day="allday" 
                          display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
-                         use_contacts="True" event_open_popup="%(calendar.view_crm_meeting_form_popup)s">
+                         use_contacts="True" event_open_popup="%(calendar.view_calendar_event_form_popup)s">
             
                 <field name="name"/>
                 <field name="user_id"/>
@@ -228,18 +228,18 @@
 
     <!-- CRM Meeting Gantt  -->
 
-    <record id="view_crm_meeting_gantt" model="ir.ui.view">
+    <record id="view_calendar_event_gantt" model="ir.ui.view">
         <field name="name">CRM - Meetings Gantt</field>
-        <field name="model">crm.meeting</field>
+        <field name="model">calendar.event</field>
         <field name="arch" type="xml">
             <gantt date_delay="duration" date_start="date" string="Meetings"/>
         </field>
     </record>
 
     <!-- CRM Meeting Search View  -->
-    <record id="view_crm_meeting_search" model="ir.ui.view">
+    <record id="view_calendar_event_search" model="ir.ui.view">
         <field name="name">CRM - Meetings Search</field>
-        <field name="model">crm.meeting</field>
+        <field name="model">calendar.event</field>
         <field name="arch" type="xml">
             <search string="Search Meetings">
                 <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
@@ -262,12 +262,12 @@
         </field>
     </record>
 
-    <record id="action_crm_meeting" model="ir.actions.act_window">
+    <record id="action_calendar_event" model="ir.actions.act_window">
         <field name="name">Meetings</field>
-        <field name="res_model">crm.meeting</field>
+        <field name="res_model">calendar.event</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
-        <field name="view_id" ref="view_crm_meeting_calendar"/>
-        <field name="search_view_id" ref="view_crm_meeting_search"/>       
+        <field name="view_id" ref="view_calendar_event_calendar"/>
+        <field name="search_view_id" ref="view_calendar_event_search"/>       
         <field name="context">{"search_default_mymeetings": 1}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
@@ -279,41 +279,41 @@
           </p>
         </field>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_crm_meeting_calendar">
-        <field name="act_window_id" ref="action_crm_meeting"/>
+    <record model="ir.actions.act_window.view" id="action_view_calendar_event_calendar">
+        <field name="act_window_id" ref="action_calendar_event"/>
         <field name="sequence" eval="1"/>
         <field name="view_mode">calendar</field>
-        <field name="view_id" ref="view_crm_meeting_calendar"/>
+        <field name="view_id" ref="view_calendar_event_calendar"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_crm_meeting_tree">
-        <field name="act_window_id" ref="action_crm_meeting"/>
+    <record model="ir.actions.act_window.view" id="action_view_calendar_event_tree">
+        <field name="act_window_id" ref="action_calendar_event"/>
         <field name="sequence" eval="2"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_crm_meeting_tree"/>
+        <field name="view_id" ref="view_calendar_event_tree"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_crm_meeting_form">
-        <field name="act_window_id" ref="action_crm_meeting"/>
+    <record model="ir.actions.act_window.view" id="action_view_calendar_event_form">
+        <field name="act_window_id" ref="action_calendar_event"/>
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_crm_meeting_form"/>
+        <field name="view_id" ref="view_calendar_event_form"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_crm_meeting_gantt">
-        <field name="act_window_id" ref="action_crm_meeting"/>
+    <record model="ir.actions.act_window.view" id="action_view_calendar_event_gantt">
+        <field name="act_window_id" ref="action_calendar_event"/>
         <field name="sequence" eval="4"/>
         <field name="view_mode">gantt</field>
-        <field name="view_id" ref="view_crm_meeting_gantt"/>
+        <field name="view_id" ref="view_calendar_event_gantt"/>
     </record>
 
-    <menuitem name="Calendar" id="mail_menu_calendar" parent="mail.mail_my_stuff" sequence="10" action="action_crm_meeting"/>
+    <menuitem name="Calendar" id="mail_menu_calendar" parent="mail.mail_my_stuff" sequence="10" action="action_calendar_event"/>
     <menuitem id="menu_calendar_configuration" name="Calendar" parent="base.menu_custom" groups="base.group_no_one"/>
-    <menuitem id="menu_crm_meeting_type" parent="menu_calendar_configuration" action="action_crm_meeting_type" groups="base.group_no_one"/>
+    <menuitem id="menu_calendar_event_type" parent="menu_calendar_configuration" action="action_calendar_event_type" groups="base.group_no_one"/>
         
     <!-- called in js from '/js/base_calendar.js' -->
-    <record id="action_crm_meeting_notify" model="ir.actions.act_window">
+    <record id="action_calendar_event_notify" model="ir.actions.act_window">
         <field name="name">Meetings</field>
-        <field name="res_model">crm.meeting</field>
+        <field name="res_model">calendar.event</field>
         <field name="view_mode">form,calendar,tree,gantt</field>
-        <field name="view_id" ref="action_view_crm_meeting_form"/>        
+        <field name="view_id" ref="action_view_calendar_event_form"/>        
     </record>
        
     

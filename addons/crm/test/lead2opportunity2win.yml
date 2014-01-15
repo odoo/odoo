@@ -107,9 +107,9 @@
 -
   I confirm review needs meeting.
 -
-  !python {model: crm.meeting}: |
-    context.update({'active_model': 'crm.meeting'})
-    self.write(cr, uid, [ref('calendar.crm_meeting_4')], {'state': 'open'})
+  !python {model: calendar.event}: |
+    context.update({'active_model': 'calendar.event'})
+    self.write(cr, uid, [ref('calendar.calendar_event_4')], {'state': 'open'})
 -
   I invite a user for meeting.
 -

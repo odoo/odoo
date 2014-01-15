@@ -30,7 +30,7 @@
             <field name="partner_id" ref="base.partner_demo"/>            
         </record>
 
-        <record id="crm_meeting_1" model="crm.meeting">
+        <record id="calendar_event_1" model="calendar.event">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_1'),ref('base.res_partner_6')])]"/>
@@ -43,7 +43,7 @@
             <field name="state">open</field>
         </record>
 
-        <record id="crm_meeting_2" model="crm.meeting">
+        <record id="calendar_event_2" model="calendar.event">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_4'),ref('base.res_partner_5')])]"/>
@@ -56,7 +56,7 @@
             <field name="state">draft</field>
         </record>
 
-        <record id="crm_meeting_3" model="crm.meeting">
+        <record id="calendar_event_3" model="calendar.event">
             <field eval="1" name="active"/>
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_root')])]"/>
             <field name="name">Pricing Discussion</field>
@@ -68,7 +68,7 @@
             <field name="state">open</field>
         </record>
 
-        <record id="crm_meeting_4" model="crm.meeting">
+        <record id="calendar_event_4" model="calendar.event">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_demo'),ref('base.res_partner_6')])]"/>
@@ -80,7 +80,7 @@
             <field name="state">open</field>
         </record>
 
-        <record id="crm_meeting_5" model="crm.meeting">
+        <record id="calendar_event_5" model="calendar.event">
             <field eval="1" name="active"/>
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_8')])]"/>
             <field name="name">Changes in Designing</field>
@@ -91,7 +91,7 @@
             <field name="state">open</field>
         </record>
 
-        <record id="crm_meeting_6" model="crm.meeting">
+        <record id="calendar_event_6" model="calendar.event">
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_demo"/>            
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_1'),ref('base.res_partner_4'),ref('base.res_partner_6'),ref('base.res_partner_8')])]"/>
@@ -103,7 +103,7 @@
             <field name="state">draft</field>
         </record>
 
-        <record id="crm_meeting_7" model="crm.meeting">
+        <record id="calendar_event_7" model="calendar.event">
             <field eval="1" name="active"/>
             <field name="user_id" ref="res_user_another"/>            
             <field name="partner_ids" eval="[(6,0,[ref('res_partner_another'),ref('base.res_partner_8')])]"/>
@@ -115,7 +115,7 @@
             <field name="state">draft</field>
         </record>
         
-        <record id="crm_meeting_8" model="crm.meeting">
+        <record id="calendar_event_8" model="calendar.event">
             <field eval="1" name="active"/>
             <field name="user_id" ref="res_user_another"/>            
             <field name="partner_ids" eval="[(6,0,[ref('res_partner_another'),ref('base.partner_root')])]"/>

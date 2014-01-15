@@ -33,7 +33,7 @@ class meeting_invitation(http.Controller):
     @http.route('/calendar/meeting/view', type='http', auth="calendar")
     def view(self, db, token, action, id, view='calendar'):
         registry = openerp.modules.registry.RegistryManager.get(db)
-        meeting_pool = registry.get('crm.meeting')
+        meeting_pool = registry.get('calendar.event')
         attendee_pool = registry.get('calendar.attendee')
         with registry.cursor() as cr:
             attendee_data = meeting_pool.get_attendee(cr, openerp.SUPERUSER_ID, id);

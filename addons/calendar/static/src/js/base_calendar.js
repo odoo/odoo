@@ -23,7 +23,7 @@ openerp.calendar = function(instance) {
                                 
                                 $(".link2event").on('click', function() { 
                                     self.rpc("/web/action/load", {
-                                        action_id: "calendar.action_crm_meeting_notify",
+                                        action_id: "calendar.action_calendar_event_notify",
                                     }).then( function(r) { 
                                         r.res_id = res.event_id;
                                         return self.action_manager.do_action(r);                                         
@@ -88,7 +88,7 @@ openerp.calendar = function(instance) {
             var self = this;
             var action_url = '';
 
-            action_url = _.str.sprintf('/?db=%s#id=%s&view_type=form&model=crm.meeting', db, meeting_id);
+            action_url = _.str.sprintf('/?db=%s#id=%s&view_type=form&model=calendar.event', db, meeting_id);
             
             var reload_page = function(){
                 return location.replace(action_url);
