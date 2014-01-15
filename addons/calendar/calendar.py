@@ -1350,7 +1350,7 @@ class calendar_event(osv.Model):
         def _only_changes_to_apply_on_real_ids(field_names):
             ''' return True if changes are only to be made on the real ids'''
             for field in field_names:
-                if field not in ['name', 'message_follower_ids']:
+                if field not in ['name', 'message_follower_ids','oe_update_date']:
                     return False
             return True
 
