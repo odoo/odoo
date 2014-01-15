@@ -581,13 +581,12 @@ class product_product(osv.osv):
 
     def _save_product_lst_price(self, cr, uid, product_id, field_name, field_value, arg, context=None):
         field_value = field_value or 0.0
-        if field_value > 0.0:
-            product = self.browse(cr, uid, product_id, context=context)
-            price_extra = (field_value - product.list_price)
-            if product.price_margin:
-                price = (product.list_price + (product.list_price * (product.price_margin / 100)))
-                price_extra = (field_value - price)
-            return self.write(cr, uid, [product_id], {'price_extra': price_extra}, context=context)
+        product = self.browse(cr, uid, product_id, context=context)
+        price = product.list_price
+        if product.price_margin:
+            price = (product.list_price + (product.list_price * (product.price_margin / 100)))
+        price_extra = (field_value - price)
+        return product.write({'price_extra': price_extra}, context=context)
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
@@ -746,31 +745,18 @@ class product_product(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         #override of fields_view_get in order to replace the name field to product template
         if context is None:
-            context={}
+            context = {}
         res = super(product_product, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         #check the current user in group_product_variant
-        group_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'product', 'group_product_variant')[1]
-        obj = self.pool.get('res.groups').browse(cr, uid, group_id, context=context)
-
-        doc = etree.XML(res['arch'])
-        if view_type == 'form':
-            if obj and uid in [x.id for x in obj.users]:
-                for node in doc.xpath("//field[@name='name']"):
-                    node.set('invisible', '1')
-                    node.set('required', '0')
-                    setup_modifiers(node, res['fields']['name'])
-                for node in doc.xpath("//label[@string='Product Name']"):
-                    node.set('string','Product Template')
-            else:
-                for node in doc.xpath("//field[@name='product_tmpl_id']"):
-                    node.set('required','0')
-                    setup_modifiers(node, res['fields']['product_tmpl_id'])
-                for node in doc.xpath("//field[@name='name']"):
-                    node.set('invisible', '0')
-                    setup_modifiers(node, res['fields']['name'])
-                for node in doc.xpath("//label[@string='Product Template']"):
-                    node.set('string','Product Name')
-        res['arch'] = etree.tostring(doc)
+        if self.pool['res.users'].has_group(cr, uid, 'product.group_product_variant') and view_type == 'form':
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//field[@name='name']"):
+                node.set('invisible', '1')
+                node.set('required', '0')
+                setup_modifiers(node, res['fields']['name'])
+            for node in doc.xpath("//label[@name='label_name']"):
+                node.set('string','Product Template')
+            res['arch'] = etree.tostring(doc)
         return res
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
