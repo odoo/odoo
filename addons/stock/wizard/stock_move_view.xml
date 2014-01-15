@@ -16,7 +16,7 @@
                             <field name="product_uom" class="oe_inline" readonly="1" groups="product.group_uom"/>
                         </div>
                         <field name="restrict_lot_id" domain="[('product_id','=',product_id)]" groups="stock.group_tracking_lot"
-                            context="{'product_id': product_id}"/>
+                            context="{'default_product_id': product_id}"/>
                         <field name="location_id" groups="stock.group_locations"/>
                     </group>
                     <footer>
@@ -51,7 +51,7 @@
                             <field name="product_uom" class="oe_inline" readonly="1" groups="product.group_uom"/>
                         </div>
                         <field name="restrict_lot_id" domain="[('product_id','=',product_id)]" groups="stock.group_tracking_lot"
-                            context="{'product_id': product_id}"/>
+                            context="{'default_product_id': product_id}"/>
                         <field name="location_id" string="Scrap Location" widget="selection"
                             domain="[('usage','!=','view'),('scrap_location','=',True)]" groups="stock.group_locations"/>
                     </group>
