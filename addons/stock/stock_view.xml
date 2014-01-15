@@ -1074,7 +1074,7 @@
                     <button name="action_confirm" states="draft" string="Process Later" type="object" class="oe_highlight"/>
                     <button name="action_done" states="draft,assigned,confirmed" string="Process Entirely" type="object" class="oe_highlight"/>
                     <button name="force_assign" states="confirmed" string="Set Available" type="object" class="oe_highlight"/>
-                    <button name="action_cancel" states="assigned,confirmed" string="Cancel Move" type="object"/>
+                    <button name="action_cancel" states="draft,assigned,confirmed" string="Cancel Move" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                 </header>
                 <sheet>
