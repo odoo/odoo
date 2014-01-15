@@ -1363,6 +1363,7 @@
                 self.$target.carousel( $(this).data('slide')); });
 
             this.$target.find('.carousel-image, .content').attr('contentEditable', 'true');
+            this.$target.find('.carousel-image').attr('attributeEditable', 'true');
             this._super();
         },
     });
