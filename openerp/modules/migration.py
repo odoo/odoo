@@ -30,6 +30,7 @@ from os.path import join as opj
 import openerp
 import openerp.release as release
 import openerp.tools as tools
+from openerp.tools.parse_version import parse_version
 
 
 _logger = logging.getLogger(__name__)
@@ -93,7 +94,7 @@ class MigrationManager(object):
             return
 
         def convert_version(version):
-            if version.startswith(release.major_version) and version != release.major_version:
+            if version.count('.') >= 2:
                 return version  # the version number already containt the server version
             return "%s.%s" % (release.major_version, version)
 
@@ -134,8 +135,6 @@ class MigrationManager(object):
             a = a.copy()
             a.update(b)
             return a
-
-        from openerp.tools.parse_version import parse_version
 
         parsed_installed_version = parse_version(pkg.installed_version or '')
         current_version = parse_version(convert_version(pkg.data['version']))
