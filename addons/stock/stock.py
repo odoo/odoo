@@ -1843,7 +1843,7 @@ class stock_move(osv.osv):
                 raise osv.except_osv(_('User Error!'), _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(cr, uid, ids, context=context)
 
-    def action_scrap(self, cr, uid, ids, quantity, location_id, restrict_lot_id=False, context=None):
+    def action_scrap(self, cr, uid, ids, quantity, location_id, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """ Move the scrap/damaged product into scrap location
         @param cr: the database cursor
         @param uid: the user id
@@ -1875,6 +1875,7 @@ class stock_move(osv.osv):
                 'scrapped': True,
                 'location_dest_id': location_id,
                 'restrict_lot_id': restrict_lot_id,
+                'restrict_partner_id': restrict_partner_id,
             }
             new_move = self.copy(cr, uid, move.id, default_val)
 
@@ -1889,7 +1890,7 @@ class stock_move(osv.osv):
         self.action_done(cr, uid, res, context=context)
         return res
 
-    def action_consume(self, cr, uid, ids, quantity, location_id=False, restrict_lot_id=False, context=None):
+    def action_consume(self, cr, uid, ids, quantity, location_id=False, restrict_lot_id=False, restrict_partner_id=False, context=None):
         """ Consumed product with specific quantity from specific source location. This correspond to a split of the move (or write if the quantity to consume is >= than the quantity of the move) followed by an action_done
         @param ids: ids of stock move object to be consumed
         @param quantity : specify consume quantity (given in move UoM)
@@ -1912,16 +1913,18 @@ class stock_move(osv.osv):
                 ctx = context.copy()
                 if location_id:
                     ctx['source_location_id'] = location_id
-                res.append(self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, context=ctx))
+                res.append(self.split(cr, uid, move, move_qty - quantity_rest, restrict_lot_id=restrict_lot_id, 
+                                      restrict_partner_id = restrict_partner_id, context=ctx))
             else:
                 res.append(move.id)
                 if location_id:
-                    self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id}, context=context)
+                    self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id, 
+                                                    'restrict_partner_id': restrict_partner_id}, context=context)
 
         self.action_done(cr, uid, res, context=context)
         return res
 
-    def split(self, cr, uid, move, qty, restrict_lot_id=False, context=None):
+    def split(self, cr, uid, move, qty, restrict_lot_id=False, restrict_partner_id = False, context=None):
         """ Splits qty from move move into a new move
         :param move: browse record
         :param qty: float. quantity to split (given in product UoM)
@@ -1947,6 +1950,7 @@ class stock_move(osv.osv):
             'move_dest_id': False,
             'reserved_quant_ids': [],
             'restrict_lot_id': restrict_lot_id,
+            'restrict_partner_id': restrict_partner_id
         }
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']
