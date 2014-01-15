@@ -289,14 +289,11 @@ class sale_order_line(osv.osv):
             res = self.product_id_change(cr, uid, ids, pricelist=pricelist,
                     product=product, qty=qty, uom=uom, partner_id=partner_id,
                     packaging=packaging, flag=False, context=context)
-            warning_msgs = res.get('warning') and res['warning']['message']
+            warning_msgs = res.get('warning') and res['warning'].get('message', False) or ''
 
         products = product_obj.browse(cr, uid, product, context=context)
         if not products.packaging:
             packaging = result['product_packaging'] = False
-        elif not packaging and products.packaging and not flag:
-            packaging = products.packaging[0].id
-            result['product_packaging'] = packaging
 
         if packaging:
             default_uom = products.uom_id and products.uom_id.id
