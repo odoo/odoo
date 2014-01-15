@@ -133,7 +133,7 @@ class google_calendar(osv.AbstractModel):
         return google_events_dict    
 
     def update_to_google(self, cr, uid, oe_event, google_event, context):
-        crm_meeting = self.pool['crm.meeting']
+        calendar_event = self.pool['calendar.event']
         gs_pool = self.pool.get('google.service')
 
         url = "/calendar/v3/calendars/%s/events/%s?fields=%s&access_token=%s" % ('primary', google_event['id'],'id,updated', self.get_token(cr,uid,context))
@@ -145,7 +145,7 @@ class google_calendar(osv.AbstractModel):
         content = gs_pool._do_request(cr, uid, url, data_json, headers, type='PATCH', context=context)
 
         update_date = datetime.strptime(content['updated'],"%Y-%m-%dT%H:%M:%S.%fz")
-        crm_meeting.write(cr, uid, [oe_event.id], {'oe_update_date':update_date})
+        calendar_event.write(cr, uid, [oe_event.id], {'oe_update_date':update_date})
 
         if context['curr_attendee']:
             self.pool.get('calendar.attendee').write(cr,uid,[context['curr_attendee']], {'oe_synchro_date':update_date},context)
@@ -183,7 +183,7 @@ class google_calendar(osv.AbstractModel):
         if context is None:
             context= []
 
-        crm_meeting = self.pool['crm.meeting']
+        calendar_event = self.pool['calendar.event']
         res_partner_obj = self.pool['res.partner']
         calendar_attendee_obj = self.pool['calendar.attendee']
         user_obj = self.pool.get('res.users')
@@ -252,13 +252,13 @@ class google_calendar(osv.AbstractModel):
             result['rrule']=rrule
 
         if type == "write":
-            res = crm_meeting.write(cr, uid, event['id'], result, context=context)
+            res = calendar_event.write(cr, uid, event['id'], result, context=context)
         elif type == "copy":
             result['recurrence'] = True
-            res = crm_meeting.write(cr, uid, [event['id']], result, context=context)
+            res = calendar_event.write(cr, uid, [event['id']], result, context=context)
 
         elif type == "create":
-            res = crm_meeting.create(cr, uid, result, context=context)
+            res = calendar_event.create(cr, uid, result, context=context)
 
         if context['curr_attendee']:
             self.pool.get('calendar.attendee').write(cr,uid,[context['curr_attendee']], {'oe_synchro_date':update_date,'google_internal_event_id': single_event_dict.get('id',False)},context)
@@ -282,7 +282,7 @@ class google_calendar(osv.AbstractModel):
     def create_new_events(self, cr, uid, context):
         gc_pool = self.pool.get('google.calendar')
 
-        crm_meeting = self.pool['crm.meeting']
+        calendar_event = self.pool['calendar.event']
         att_obj = self.pool['calendar.attendee']
         user_obj = self.pool['res.users']
         myPartnerID = user_obj.browse(cr,uid,uid,context=context).partner_id.id
@@ -295,7 +295,7 @@ class google_calendar(osv.AbstractModel):
             if not att.event_id.recurrent_id or att.event_id.recurrent_id == 0:
                 response = self.create_an_event(cr,uid,att.event_id,context=context)
                 update_date = datetime.strptime(response['updated'],"%Y-%m-%dT%H:%M:%S.%fz")
-                crm_meeting.write(cr, uid, att.event_id.id, {'oe_update_date':update_date})
+                calendar_event.write(cr, uid, att.event_id.id, {'oe_update_date':update_date})
                 att_obj.write(cr, uid, [att.id], {'google_internal_event_id': response['id'], 'oe_synchro_date':update_date})
                 cr.commit()
         return True
@@ -345,7 +345,7 @@ class google_calendar(osv.AbstractModel):
         if context is None:
             context = {}
 
-        crm_meeting = self.pool['crm.meeting']
+        calendar_event = self.pool['calendar.event']
         user_obj = self.pool['res.users']
         att_obj = self.pool['calendar.attendee']
         myPartnerID = user_obj.browse(cr,uid,uid,context=context).partner_id.id
@@ -521,7 +521,7 @@ class google_calendar(osv.AbstractModel):
                         if actSrc == 'GG':
                             res = self.update_from_google(cr, uid, False, event['GG_event'], "create", context=context_tmp)
                             event['OE_event_id'] = res
-                            meeting = crm_meeting.browse(cr,uid,res,context=context)
+                            meeting = calendar_event.browse(cr,uid,res,context=context)
                             attendee_record_id = att_obj.search(cr, uid, [('partner_id','=', myPartnerID), ('event_id','=',res)], context=context)
                             self.pool.get('calendar.attendee').write(cr,uid,attendee_record_id, {'oe_synchro_date':meeting.oe_update_date,'google_internal_event_id': event['GG_event']['id']},context=context_tmp)
                         elif  actSrc == 'OE':
@@ -549,17 +549,17 @@ class google_calendar(osv.AbstractModel):
                                     else:
                                         if event_to_synchronize[base_event][0][1].get('OE_event_id'):
                                             parent_oe_id =  event_to_synchronize[base_event][0][1].get('OE_event_id')
-                                            crm_meeting.unlink(cr,uid,"%s-%s" % (parent_oe_id,new_google_event_id),unlink_level=1,context=context)
+                                            calendar_event.unlink(cr,uid,"%s-%s" % (parent_oe_id,new_google_event_id),unlink_level=1,context=context)
 
                     elif actToDo == 'DELETE':
                         if actSrc == 'GG':
                             self.delete_an_event(cr,uid,current_event[0],context=context)
                         elif  actSrc == 'OE':
-                            crm_meeting.unlink(cr,uid,event['OE_event_id'],unlink_level=0,context=context)
+                            calendar_event.unlink(cr,uid,event['OE_event_id'],unlink_level=0,context=context)
         return True
 
     def bind_recurring_events_to_google(self, cr, uid,  context):
-        crm_meeting = self.pool['crm.meeting']
+        calendar_event = self.pool['calendar.event']
         att_obj = self.pool.get('calendar.attendee')
         user_obj = self.pool['res.users']
         myPartnerID = user_obj.browse(cr,uid,uid,context=context).partner_id.id
@@ -572,7 +572,7 @@ class google_calendar(osv.AbstractModel):
         for att in att_obj.browse(cr,uid,my_att_ids,context=context):
             if att.event_id.recurrent_id and att.event_id.recurrent_id > 0:
                 new_google_internal_event_id = False
-                source_event_record = crm_meeting.browse(cr, uid, att.event_id.recurrent_id, context)
+                source_event_record = calendar_event.browse(cr, uid, att.event_id.recurrent_id, context)
                 source_attendee_record_id = att_obj.search(cr, uid, [('partner_id','=', myPartnerID), ('event_id','=',source_event_record.id)], context=context)
                 source_attendee_record = att_obj.browse(cr, uid, source_attendee_record_id, context)
                 if source_attendee_record:
@@ -670,8 +670,8 @@ class res_users(osv.Model):
      }
 
 
-class crm_meeting(osv.Model):
-    _inherit = "crm.meeting"
+class calendar_event(osv.Model):
+    _inherit = "calendar.event"
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
@@ -680,7 +680,7 @@ class crm_meeting(osv.Model):
         if (set(vals.keys()) & sync_fields) and 'oe_update_date' not in vals.keys() and 'NewMeeting' not in context:
             vals['oe_update_date'] = datetime.now()
 
-        return super(crm_meeting, self).write(cr, uid, ids, vals, context=context)
+        return super(calendar_event, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
@@ -691,7 +691,7 @@ class crm_meeting(osv.Model):
             default['oe_update_date'] = datetime.now()
         else:
             default['oe_update_date'] = False
-        return super(crm_meeting, self).copy(cr, uid, id, default, context)
+        return super(calendar_event, self).copy(cr, uid, id, default, context)
 
     _columns = {
         'oe_update_date': fields.datetime('OpenERP Update Date'),
@@ -718,7 +718,7 @@ class calendar_attendee(osv.Model):
             # If attendees are updated, we need to specify that next synchro need an action
             # Except if it come from an update_from_google
             if not context.get('curr_attendee', False) and not context.get('NewMeeting', False):
-                self.pool.get('crm.meeting').write(cr, uid, ref, {'oe_update_date':datetime.now()},context)
+                self.pool.get('calendar.event').write(cr, uid, ref, {'oe_update_date':datetime.now()},context)
 
         return super(calendar_attendee, self).write(cr, uid, ids, vals, context=context)
 

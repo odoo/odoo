@@ -5,7 +5,7 @@
          <!-- Expense-related subtypes for messaging / Chatter -->
         <record id="calendar.subtype_invitation" model="mail.message.subtype">
             <field name="name">Invitation</field>
-            <field name="res_model">crm.meeting</field>
+            <field name="res_model">calendar.event</field>
             <field name="description">Warning, a mandatory field has been modified since the creation of this event</field>
             <field name="default" eval="False"/>
         </record>
@@ -87,23 +87,23 @@
             <!--<field eval="'(False,)'" name="args" />-->
         </record>
         
-        <record model="crm.meeting.type" id="categ_meet1">
+        <record model="calendar.event.type" id="categ_meet1">
             <field name="name">Customer Meeting</field>
         </record>
 
-        <record model="crm.meeting.type" id="categ_meet2">
+        <record model="calendar.event.type" id="categ_meet2">
             <field name="name">Internal Meeting</field>
         </record>
 
-        <record model="crm.meeting.type" id="categ_meet3">
+        <record model="calendar.event.type" id="categ_meet3">
             <field name="name">Off-site Meeting</field>
         </record>
 
-        <record model="crm.meeting.type" id="categ_meet4">
+        <record model="calendar.event.type" id="categ_meet4">
             <field name="name">Open Discussion</field>
         </record>
 
-        <record model="crm.meeting.type" id="categ_meet5">
+        <record model="calendar.event.type" id="categ_meet5">
             <field name="name">Feedback Meeting</field>
         </record>
 
