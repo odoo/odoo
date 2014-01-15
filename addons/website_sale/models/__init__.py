@@ -1,6 +1,7 @@
 import website_styles
 import payment_transaction
 import product
-import product_attributes
+import product_characteristics
+import res_config
 import sale_order
 import website

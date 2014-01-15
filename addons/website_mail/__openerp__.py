@@ -28,7 +28,10 @@
     'author': 'OpenERP SA',
     'depends': ['website', 'mail'],
     'data': [
+        'views/snippets.xml',
         'views/website_mail.xml',
+        'views/website_email_designer.xml',
+        'views/email_template_view.xml',
         'security/website_mail.xml',
     ],
     'css': [

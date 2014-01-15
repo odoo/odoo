@@ -44,6 +44,14 @@ class WebsiteUiSuite(unittest.TestSuite):
         self._timeout = timeout
         self._options = options
         self._test = None
+        self._ignore_filters = [
+            # Ignore phantomjs warnings
+            "*** WARNING:",
+
+            # Fixes an issue with PhantomJS 1.9.2 on OS X 10.9 (Mavericks)
+            # cf. https://github.com/ariya/phantomjs/issues/11418
+            "CoreText performance note",
+        ]
 
     def __iter__(self):
         return iter([self])
@@ -97,9 +105,7 @@ class WebsiteUiSuite(unittest.TestSuite):
                 for stream in ready:
                     lines = stream.readlines()
                     if lines is None: # EOF
-                        # Fixes an issue with PhantomJS 1.9.2 on OS X 10.9 (Mavericks)
-                        # cf. https://github.com/ariya/phantomjs/issues/11418
-                        filtered_lines = [line for line in output if "CoreText performance note" not in line]
+                        filtered_lines = [line for line in output if not any(ignore in line for ignore in self._ignore_filters)]
                         if (filtered_lines):
                             self.process(filtered_lines, result)
                         readable.remove(stream)
