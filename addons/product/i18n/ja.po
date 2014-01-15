@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-11-22 08:08+0000\n"
-"Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
+"PO-Revision-Date: 2014-01-15 03:05+0000\n"
+"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-23 06:26+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-01-15 06:21+0000\n"
+"X-Generator: Launchpad (build 16890)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -93,7 +93,7 @@ msgstr "ルール名"
 #: help:product.template,list_price:0
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog price."
-msgstr ""
+msgstr "顧客価格を計算するための基準価格。カタログ価格と呼ぶこともあります。"
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -237,6 +237,11 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"出庫を予定している製品の数量。\n"
+"ひとつの在庫場所では、この場所または子から出庫する商品を含みます。\n"
+"ひとつの倉庫では、この倉庫の在庫場所または子から出庫する商品を含みます。\n"
+"ひとつの店舗では、この店舗にある倉庫の在庫場所または子から出庫する商品を含みます。\n"
+"そうでなければ、内部タイプとして任意の在庫場所から出庫する商品を含みます。"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_42_product_template
@@ -264,7 +269,7 @@ msgstr "梱包"
 #: help:product.product,active:0
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "チェックを外すと、製品を削除せずに非表示にできます。"
 
 #. module: product
 #: view:product.product:0
@@ -423,6 +428,11 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"予測数量(手元数量 - 出庫予定 + 入庫予定として計算)\n"
+"ひとつの在庫場所では、この場所または子に格納されている商品を含みます。\n"
+"ひとつの倉庫では、この倉庫の在庫場所または子に格納されている商品を含みます。\n"
+"ひとつの店舗では、この店舗にある倉庫の在庫場所または子に格納されている商品を含みます。\n"
+"そうでなければ、内部タイプとして任意の在庫場所に格納されている商品を含みます。"
 
 #. module: product
 #: field:product.packaging,height:0
@@ -520,6 +530,11 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
+"入庫を予定している製品の数量。\n"
+"ひとつの在庫場所では、この場所または子に入庫する商品を含みます。\n"
+"ひとつの倉庫では、この倉庫の在庫場所または子に入庫する商品を含みます。\n"
+"ひとつの店舗では、この店舗にある倉庫の在庫場所または子に入庫する商品を含みます。\n"
+"そうでなければ、内部タイプとして任意の在庫場所に入庫する商品を含みます。"
 
 #. module: product
 #: constraint:product.template:0
@@ -1226,7 +1241,7 @@ msgstr "サービス"
 #. module: product
 #: help:product.product,ean13:0
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "製品識別に使用する国際物品番号。"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_category_action
@@ -1909,7 +1924,7 @@ msgstr "カラーインデックス"
 #. module: product
 #: help:product.template,sale_ok:0
 msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
+msgstr "受注明細で製品を選択できるかどうか指定します。"
 
 #. module: product
 #: view:product.product:0
@@ -2068,6 +2083,11 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"製品の現在数量。\n"
+"ひとつの在庫場所では、この場所または子に格納した商品を含みます。\n"
+"ひとつの倉庫では、この倉庫の在庫場所または子に格納した商品を含みます。\n"
+"ひとつの店舗では、この店舗にある倉庫の在庫場所または子に格納した商品を含みます。\n"
+"そうでなければ、内部タイプとして任意の在庫場所に格納した商品を含みます。"
 
 #. module: product
 #: help:product.template,type:0
@@ -2075,6 +2095,8 @@ msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
 msgstr ""
+"消耗品：この製品は在庫管理をしません。\n"
+"在庫可能製品：この製品は在庫管理をします。"
 
 #. module: product
 #: help:product.pricelist.type,key:0
@@ -2110,7 +2132,7 @@ msgstr "梱包タイプ"
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr ""
+msgstr "ビュータイプのカテゴリは階層構造を作成するために別カテゴリの親として使用できる仮想カテゴリです。"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2201,7 +2223,7 @@ msgstr "最大利鞘"
 msgid ""
 "Cost price of the product used for standard stock valuation in accounting "
 "and used as a base price on purchase orders."
-msgstr ""
+msgstr "製品の原価は、会計の標準在庫評価と発注の基準価格に使用されます。"
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2290,7 +2312,7 @@ msgstr "順序"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "この製品を生産するための平均遅延日数です。マルチレベルBOMの場合、部品の製造リードタイムが加算されます。"
 
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
