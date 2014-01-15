@@ -76,7 +76,7 @@
             <script type="text/javascript" src="/website/static/src/js/website.js"></script>
             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
 
-            <t t-raw="head or ''"/>
+            <t t-raw="head or ''" name='layout_head'/>
         </head>
         <body>
             <div id="wrapwrap">
@@ -197,7 +197,7 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher">
-    <xpath expr="//head" position="inside">
+    <xpath expr='//t[@name="layout_head"]' position="before">
         <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
         <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
         <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
