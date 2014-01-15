@@ -818,11 +818,11 @@ class stock_picking(osv.osv):
         return True
 
     def cancel_assign(self, cr, uid, ids, context=None):
-        """ Cancels picking and moves.
+        """ Cancels picking for the moves that are in the assigned state
         @return: True
         """
         for pick in self.browse(cr, uid, ids, context=context):
-            move_ids = [x.id for x in pick.move_lines]
+            move_ids = [x.id for x in pick.move_lines if x not in ['done', 'cancel']]
             self.pool.get('stock.move').cancel_assign(cr, uid, move_ids, context=context)
         return True
 
@@ -1812,7 +1812,7 @@ class stock_move(osv.osv):
             if qty > 0:
                 self.check_tracking(cr, uid, move, move.restrict_lot_id.id, context=context)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-                quant_obj.quants_move(cr, uid, quants, move, context=context)
+                quant_obj.quants_move(cr, uid, quants, move, lot_id = move.restrict_lot_id.id, owner_id = move.restrict_partner_id.id, context=context)
             #unreserve the quants and make them available for other operations/moves
             quant_obj.quants_unreserve(cr, uid, move, context=context)
 

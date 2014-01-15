@@ -124,7 +124,7 @@ class StockMove(osv.osv):
                 res.append(new_move)
         return res
 
-    def action_scrap(self, cr, uid, ids, product_qty, location_id, context=None):
+    def action_scrap(self, cr, uid, ids, product_qty, location_id, restrict_lot_id = False, context=None):
         """ Move the scrap/damaged product into scrap location
         @param product_qty: Scraped product quantity
         @param location_id: Scrap location
@@ -133,7 +133,8 @@ class StockMove(osv.osv):
         res = []
         production_obj = self.pool.get('mrp.production')
         for move in self.browse(cr, uid, ids, context=context):
-            new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)
+            new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, 
+                                                            restrict_lot_id = restrict_lot_id, context=context)
             #If we are not scrapping our whole move, tracking and lot references must not be removed
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
