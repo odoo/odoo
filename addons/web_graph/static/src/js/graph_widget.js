@@ -122,11 +122,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
     // returns the row groupbys as a list of fields (not the representation used
     // internally by pivot table)
     get_row_groupby: function () {
-        return _.pluck(this.pivot.rows.groupby, 'field');
+        return this.pivot.rows.groupby;
     },
 
     get_col_groupby: function () {
-        return _.pluck(this.pivot.cols.groupby, 'field');
+        return this.pivot.cols.groupby;
     },
 
     reload: function () {

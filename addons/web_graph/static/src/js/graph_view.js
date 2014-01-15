@@ -66,9 +66,14 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
+        var col_group_by = this.get_col_groupbys_from_searchview();
+
         if (!this.graph_widget) {
             if (group_by.length) {
                 this.widget_config.row_groupby = group_by;
+            }
+            if (col_group_by.length) {
+                this.widget_config.col_groupby = group_by;
             }
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
             this.graph_widget.appendTo(this.$el);
@@ -77,7 +82,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
             return;
         }
 
-        this.graph_widget.set(domain, group_by, this.graph_widget.get_col_groupby());
+        this.graph_widget.set(domain, group_by, col_group_by);
+    },
+
+    get_col_groupbys_from_searchview: function () {
+        var facet = this.search_view.query.findWhere({category:'ColGroupBy'}),
+            groupby_list = facet ? facet.attributes.values : [];
+        return _.map(groupby_list, function (g) { return g.value.attrs.context.col_group_by; });
     },
 
     do_show: function () {
@@ -95,38 +106,68 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
         if (!_.has(this.search_view, '_s_groupby')) { return; }
 
-        var row_groupby = this.graph_widget.get_row_groupby();
-        var gb_facet = this.make_groupby_facets(row_groupby);
-        var search_facet = query.findWhere({category:'GroupBy'});
+        // add row groupbys
+        var row_groupby = this.graph_widget.get_row_groupby(),
+            row_facet = this.make_row_groupby_facets(row_groupby),
+            row_search_facet = query.findWhere({category:'GroupBy'});
 
-        if (search_facet) {
-            search_facet.values.reset(gb_facet.values);
+        if (row_search_facet) {
+            row_search_facet.values.reset(row_facet.values);
         } else {
             if (row_groupby.length) {
-                query.add(gb_facet);
+                query.add(row_facet);
+            }
+        }
+         // add col groupbys
+        var col_groupby = this.graph_widget.get_col_groupby(),
+            col_facet = this.make_col_groupby_facets(col_groupby),
+            col_search_facet = query.findWhere({category:'ColGroupBy'});
+
+        if (col_search_facet) {
+            col_search_facet.values.reset(col_facet.values);
+        } else {
+            if (col_groupby.length) {
+                query.add(col_facet);
             }
         }
     },
 
-    make_groupby_facets: function(fields) {
-        var self = this,
-            values =  _.map(fields, function (field) {
-                    return {
-                        label: self.graph_widget.fields[field].string, 
-                        value: {attrs:{domain: [], context: {group_by: field}}}
-                    };
-                });
-        return {category:'GroupBy', values: values, icon:'w', field: self.search_view._s_groupby};
+    make_row_groupby_facets: function(groupbys) {
+        return {
+            category:'GroupBy',
+            values: this.make_groupby_values(groupbys, 'group_by'),
+            icon:'w',
+            field: this.search_view._s_groupby
+        };
+    },
+
+    make_col_groupby_facets: function(groupbys) {
+        return {
+            category:'ColGroupBy',
+            values: this.make_groupby_values(groupbys, 'col_group_by'),
+            icon:'f',
+            field: this.search_field
+        };
+    },
+
+    make_groupby_values: function (groupbys, category) {
+        return _.map(groupbys, function (groupby) {
+            var context = {};
+            context[category] = groupby.field;
+            return {
+                label: groupby.string, 
+                value: {attrs:{domain: [], context: context}}
+            };
+        });
     },
 
     search_field: {
         get_context: function() {},
         get_domain: function () {},
-        get_groupby: function () { },
+        get_groupby: function () {},
     },
 
 });
-
 
 };
 
