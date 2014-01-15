@@ -35,7 +35,7 @@ class TestSanitizer(unittest2.TestCase):
     def test_basic_sanitizer(self):
         cases = [
             ("yop", "<p>yop</p>"),  # simple
-            ("lala<p>yop</p>xxx", "<div><p>lala</p><p>yop</p>xxx</div>"),  # trailing text
+            ("lala<p>yop</p>xxx", "<p>lala</p><p>yop</p>xxx"),  # trailing text
             ("Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci",
                 u"<p>Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci</p>"),  # unicode
         ]

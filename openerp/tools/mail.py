@@ -106,6 +106,11 @@ def html_sanitize(src, silent=True, strict=False):
             raise
         logger.warning('unknown error obtained when sanitizing %r', src, exc_info=True)
         cleaned = '<p>Unknown error when sanitizing</p>'
+
+    # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
+    if cleaned.startswith('<div>') and cleaned.endswith('</div>'):
+        cleaned = cleaned[5:-6]
+
     return cleaned
 
 
