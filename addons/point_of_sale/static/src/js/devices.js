@@ -194,7 +194,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 if(!url){ 
                     done.resolve();
                 }
-                var c = self.test_connection(url, 100) 
+                var c = self.test_connection(url, 300) 
                     .done(function(){
                         found = true;
                         update_progress();
