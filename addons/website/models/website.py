@@ -624,7 +624,7 @@ class res_company(osv.osv):
         partner = self.browse(cr, openerp.SUPERUSER_ID, ids[0], context=context).partner_id
         return partner and partner.google_map_link(zoom, context=context) or None
 
-class base_language_install(osv.osv):
+class base_language_install(osv.osv_memory):
     _inherit = "base.language.install"
     _columns = {
         'website_ids': fields.many2many('website', string='Websites to translate'),

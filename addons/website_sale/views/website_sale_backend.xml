@@ -2,6 +2,19 @@
 <openerp>
 <data>
 
+    <record id="view_sales_config_website_sale" model="ir.ui.view">
+        <field name="name">sale settings</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="sale.view_sales_config"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='Product Features']/div" position="inside">
+                <div>
+                    <field name="group_product_characteristics" class="oe_inline"/>
+                    <label for="group_product_characteristics"/>
+                </div>
+             </xpath>
+        </field>
+    </record>
 
     <record id="product_normal_form_view" model="ir.ui.view">
         <field name="name">product.normal.form.inherit</field>
@@ -48,15 +61,15 @@
                 <group colspan="4" string="Website Options">
                     <field name="suggested_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>
-                    <field colspan="4" name="website_attribute_ids" nolabel="1">
-                        <tree string="Product Attributes" editable="bottom">
-                            <field name="attribute_id" on_change="onchange_attribute_id(attribute_id)"/>
+                    <field colspan="4" name="website_characteristic_ids" nolabel="1" groups="product.group_product_characteristics">
+                        <tree string="Product Characteristics" editable="bottom">
+                            <field name="characteristic_id" on_change="onchange_characteristic_id(characteristic_id)"/>
                             <field name="type" invisible="1"/>
                             <field name="value" attrs="{'required': [('type','=','float')]}"/>
                             <field name="value_id"
                                 attrs="{'required': [('type','=','distinct')]}"
-                                context="{'default_attribute_id': attribute_id}"
-                                domain="[('attribute_id', '=', attribute_id)]"/>
+                                context="{'default_characteristic_id': characteristic_id}"
+                                domain="[('characteristic_id', '=', characteristic_id)]"/>
                         </tree>
                     </field>
                 </group>
@@ -65,11 +78,11 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_product_attribute_form">
-      <field name="name">product.attribute.form</field>
-      <field name="model">product.attribute</field>
+    <record model="ir.ui.view" id="view_product_characteristic_form">
+      <field name="name">product.characteristic.form</field>
+      <field name="model">product.characteristic</field>
       <field name="arch" type="xml">
-        <form string="Product Attributes" version="7.0">
+        <form string="Product Characteristics" version="7.0">
           <group>
             <field name="name"/>
             <field name="type"/>

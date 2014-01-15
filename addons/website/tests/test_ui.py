@@ -4,27 +4,23 @@ import os
 import select
 import time
 import json
-from openerp import tools
+from openerp import sql_db, tools
 
-ROOT = os.path.join(os.path.dirname(__file__), 'ui_suite')
-
-__all__ = ['load_tests', 'WebsiteUiSuite']
-
+# avoid "ValueError: too many values to unpack"
 def _exc_info_to_string(err, test):
     return err
 
-class LineReader:
+class Stream:
     def __init__(self, file_descriptor):
         self._file_descriptor = file_descriptor
         self._buffer = ''
 
     def fileno(self):
         return self._file_descriptor
-
+    # TODO Rewrite & fix
     def readlines(self):
         data = os.read(self._file_descriptor, 4096)
-        if not data:
-            # EOF
+        if not data: # EOF
             return None
         self._buffer += data
         if '\n' not in data:
@@ -53,18 +49,19 @@ class WebsiteUiSuite(unittest.TestSuite):
         return iter([self])
 
     def run(self, result):
-        # is PhantomJS correctly installed?
+    	# clean slate
+    	if sql_db._Pool is not None:
+            sql_db._Pool.close_all(sql_db.dsn(tools.config['db_name']))
+        # check for PhantomJS...
         try:
-            subprocess.call([ 'phantomjs', '-v' ],
-                stdout=open(os.devnull, 'w'),
-                stderr=subprocess.STDOUT)
+            subprocess.call([ 'phantomjs', '-v' ], stdout=open(os.devnull, 'w'), stderr=subprocess.STDOUT)
         except OSError:
             test = WebsiteUiTest('UI Tests')
             result.startTest(test)
-            result.addSkip(test, "phantomjs command not found")
+            result.addSkip(test, "phantomjs command not found (cf. http://phantomjs.org/)")
             result.stopTest(test)
             return
-
+        # ...then run the actual test
         result._exc_info_to_string = _exc_info_to_string
         try:
             self._run(result)
@@ -79,20 +76,19 @@ class WebsiteUiSuite(unittest.TestSuite):
         self._options['timeout'] = self._timeout
         self._options['port'] = tools.config.get('xmlrpc_port', 80)
         self._options['db'] = tools.config.get('db_name', '')
-        # TODO Use correct key
         self._options['user'] = 'admin'
-        self._options['admin_password'] = tools.config.get('admin_passwd', 'admin')
+        self._options['password'] = tools.config.get('admin_passwd', 'admin')
 
         phantom = subprocess.Popen([
-                'phantomjs',
-                os.path.join(ROOT, self._testfile),
-                json.dumps(self._options)
-            ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
-        proc_stdout = LineReader(phantom.stdout.fileno())
-        readable = [proc_stdout]
+            'phantomjs',
+            self._testfile,
+            json.dumps(self._options)
+        ], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        readable = [Stream(phantom.stdout.fileno())]
+
         try:
+            output = []
             while phantom.poll() is None and readable and last_check_time < start_time + self._timeout:
                 ready, _, _ = select.select(readable, [], [], 0.1)
                 if not ready:
@@ -100,12 +96,15 @@ class WebsiteUiSuite(unittest.TestSuite):
                     continue
                 for stream in ready:
                     lines = stream.readlines()
-                    if lines is None:
-                        # EOF
+                    if lines is None: # EOF
+                        # Fixes an issue with PhantomJS 1.9.2 on OS X 10.9 (Mavericks)
+                        # cf. https://github.com/ariya/phantomjs/issues/11418
+                        filtered_lines = [line for line in output if "CoreText performance note" not in line]
+                        if (filtered_lines):
+                            self.process(filtered_lines, result)
                         readable.remove(stream)
                     else:
-                        self.process(lines, result)
-                        readable.remove(stream)
+                        output += lines
             if last_check_time >= (start_time + self._timeout):
                 result.addError(self._test, "Timeout after %s s" % (last_check_time - start_time ))
         finally:
@@ -119,7 +118,7 @@ class WebsiteUiSuite(unittest.TestSuite):
         # -------------
         # use console.log in phantomjs to output test results using the following format:
         # - for a success: { "event": "success" }
-        # - for an error:  { "event": "error",   "message": "Short error description" }
+        # - for an error:  { "event": "error", "message": "Short error description" }
         # the first line is treated as a JSON message (JSON should be formatted on one line)
         # subsequent lines are displayed only if the first line indicated an error
         # or if the first line was not a JSON message (still an error)
@@ -130,15 +129,17 @@ class WebsiteUiSuite(unittest.TestSuite):
             if event == 'success':
                 result.addSuccess(self._test)
             elif event == 'error':
-                message = args.get('message', "")
-                result.addError(self._test, message+"\n"+"\n".join(lines[1::]))
+                result.addError(self._test, args.get('message', "")+"\n"+"\n".join(lines[1::]))
             else:
                 result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
         except ValueError:
-             result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
+            result.addError(self._test, 'Unexpected message: "%s"' % "\n".join(lines))
+
+def full_path(filename):
+    return os.path.join(os.path.join(os.path.dirname(__file__), 'ui_suite'), filename)
 
 def load_tests(loader, base, _):
-    base.addTest(WebsiteUiSuite('dummy_test.js', {}))
-    base.addTest(WebsiteUiSuite('simple_dom_test.js', { 'action': 'website.action_website_homepage' }, 120.0))
-    base.addTest(WebsiteUiSuite('homepage_test.js',   { 'action': 'website.action_website_homepage' }, 120.0))
+    base.addTest(WebsiteUiSuite(full_path('dummy_test.js'), {}, 5.0))
+    base.addTest(WebsiteUiSuite(full_path('simple_dom_test.js'), { 'action': 'website.action_website_homepage' }, 60.0))
+    base.addTest(WebsiteUiSuite(full_path('homepage_test.js'),   { 'action': 'website.action_website_homepage' }, 60.0))
     return base

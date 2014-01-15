@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import orm
+from openerp import SUPERUSER_ID
 
 
 class Website(orm.Model):
@@ -9,7 +10,7 @@ class Website(orm.Model):
         """ Override the quotation values generation to add carrier_id data """
         values = super(Website, self)._ecommerce_get_quotation_values(cr, uid, context=context)
         DeliveryCarrier = self.pool.get('delivery.carrier')
-        carrier_ids = DeliveryCarrier.search(cr, uid, [], context=context, limit=1)
+        carrier_ids = DeliveryCarrier.search(cr, uid, [(1,"=",1)], context=context, limit=1)
         # By default, select the first carrier
         if carrier_ids:
             values['carrier_id'] = carrier_ids[0]
@@ -17,5 +18,5 @@ class Website(orm.Model):
 
     def _ecommerce_create_quotation(self, cr, uid, context=None):
         order_id = super(Website, self)._ecommerce_create_quotation(cr, uid, context=context)
-        self.pool['sale.order'].delivery_set(cr, uid, [order_id], context=context)
+        self.pool['sale.order'].delivery_set(cr, SUPERUSER_ID, [order_id], context=context)
         return order_id

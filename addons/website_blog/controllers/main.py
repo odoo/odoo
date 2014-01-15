@@ -23,6 +23,7 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models import website
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 import werkzeug
 
@@ -218,16 +219,23 @@ class WebsiteBlog(http.Controller):
         }
         return request.website.render("website_blog.blog_post_complete", values)
 
-    @website.route(['/blogpost/<int:blog_post_id>/comment'], type='http', auth="public")
-    def blog_post_comment(self, blog_post_id, **post):
+    @website.route(['/blogpost/comment'], type='http', auth="public", methods=['POST'])
+    def blog_post_comment(self, blog_post_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
-            request.registry['blog.post'].message_post(
-                cr, uid, blog_post_id,
-                body=post.get('comment'),
-                type='comment',
-                subtype='mt_comment',
-                context=dict(context, mail_create_nosubcribe=True))
+            user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
+            group_ids = user.groups_id
+            group_id = request.registry["ir.model.data"].get_object_reference(cr, uid, 'website_mail', 'group_comment')[1]
+            if group_id in [group.id for group in group_ids]:
+                blog_post = request.registry['blog.post']
+                blog_post.check_access_rights(cr, uid, 'read')
+                blog_post.message_post(
+                    cr, SUPERUSER_ID, int(blog_post_id),
+                    body=post.get('comment'),
+                    type='comment',
+                    subtype='mt_comment',
+                    author_id=user.partner_id.id,
+                    context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
     @website.route('/blogpost/new', type='http', auth="public", multilang=True)

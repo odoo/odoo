@@ -1,0 +1,190 @@
+@charset "UTF-8";
+.openerp .oe_kanban_view .oe_kanban_card.oe_kanban_goal {
+  width: 230px;
+  min-height: 200px;
+}
+.openerp .oe_kanban_view .oe_kanban_card.oe_kanban_badge {
+  width: 250px;
+  min-height: 150px;
+}
+.openerp .oe_kanban_badge_avatars {
+  margin-top: 8px;
+}
+.openerp .oe_kanban_badge_avatars img {
+  width: 30px;
+  height: 30px;
+  padding-left: 0;
+  margin-top: 3px;
+  border-radius: 2px;
+  -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.openerp .oe_kanban_goal .oe_goal_state_block {
+  width: 200px;
+  height: 130px;
+  margin: auto;
+  margin-bottom: -20px;
+}
+.openerp .oe_kanban_goal .oe_goal_state_block .oe_goal_state {
+  font-size: 2.5em;
+  font-weight: bold;
+  padding-top: 30px;
+}
+.openerp .oe_kanban_goal .oe_goal_state_block .oe_goal_state.oe_e {
+  font-size: 7em;
+}
+.openerp .oe_kanban_goal .oe_goal_state_block, .openerp .oe_kanban_goal p {
+  text-align: center;
+}
+.openerp .oe_kanban_content .oe_goal_gauge:first-child {
+  margin: auto;
+}
+.openerp .oe_kanban_content .oe_goal_gauge svg {
+  margin-top: -20px;
+}
+.openerp .oe_no_overflow {
+  overflow: hidden;
+}
+.openerp .oe_red {
+  color: red;
+}
+.openerp .oe_green {
+  color: green;
+}
+.openerp .oe_orange {
+  color: orange;
+}
+.openerp .oe_form td .oe_no_padding {
+  margin-left: -6px;
+}
+.openerp .oe_mail_wall .oe_mail_wall_aside {
+  margin-top: 15px;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  width: 280px;
+  border-radius: 2px;
+}
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_gamification_challenge_list {
+  background-color: #ededf6;
+}
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_gamification_suggestion {
+  background-color: #d3def1;
+}
+.openerp .oe_mail_wall .oe_mail_wall_aside .oe_gamification_suggestion ul {
+  padding-left: 15px;
+}
+.openerp .oe_mail_wall .oe_mail_wall_aside h4, .openerp .oe_mail_wall .oe_mail_wall_aside .oe_goals_list .oe_thead {
+  text-align: center;
+  padding-bottom: 15px;
+}
+.openerp .oe_mail_wall .oe_mail_wall_aside > div {
+  border-bottom: solid 5px white;
+  border-radius: 2px;
+}
+.openerp .oe_mail_wall .oe_goal {
+  border-bottom: solid 3px white;
+  padding: 5px 10px;
+}
+.openerp .oe_mail_wall .oe_goal .oe_update_challenge.oe_e, .openerp .oe_mail_wall .oe_goal .oe_goal_action.oe_e {
+  visibility: hidden;
+  font-size: 25px;
+  float: right;
+  position: relative;
+}
+.openerp .oe_mail_wall .oe_goal div:hover > .oe_update_challenge, .openerp .oe_mail_wall .oe_goal div:hover > .oe_goal_action, .openerp .oe_mail_wall .oe_goal th:hover > .oe_goal_action {
+  visibility: visible;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list {
+  padding-left: 0;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_no_progress div {
+  display: inline-block;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_no_progress::before {
+  content: "•";
+  padding-right: 4px;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_no_progress.oe_goal_reached::before {
+  content: "✓";
+  padding-right: 0;
+  margin-left: -2px;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_no_progress.oe_goal_reached .oe_cell {
+  text-decoration: line-through;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_cell.oe_goal_current {
+  font-size: 150%;
+  font-weight: bold;
+  min-width: 50px;
+  padding: 0 5px;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_goal_outer_box {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  vertical-align: middle;
+  width: 100%;
+  border: solid 1px rgba(0, 0, 0, 0.03);
+  border-radius: 2px;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_goal_outer_box.oe_no_progress {
+  border: none;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_goal_progress_background {
+  background-color: white;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: -2;
+  top: 0;
+  left: 0;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_goal_progress {
+  background-color: #d4e9de;
+  position: absolute;
+  height: 100%;
+  width: 0;
+  z-index: -1;
+  top: 0;
+  left: 0;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_thead {
+  font-weight: normal;
+  padding: 5px;
+  text-align: center;
+}
+.openerp .oe_mail_wall .oe_goal .oe_goals_list .oe_cell {
+  padding: 3px 0;
+}
+.openerp .oe_mail_wall .oe_table.oe_goals_list .col0 {
+  font-size: 200%;
+  font-weight: bold;
+  width: 25px;
+  text-align: center;
+}
+.openerp .oe_mail_wall .oe_table.oe_goals_list .col1 {
+  padding: 0 5px;
+}
+.openerp .oe_mail_wall .oe_table.oe_goals_list .col2 {
+  width: auto;
+}
+.openerp .oe_mail_wall .oe_user_avatar {
+  width: 24px;
+  padding-right: 5px;
+}
+.openerp .oe_mail_wall .oe_mail {
+  display: inline-block;
+}
+.openerp .oe_mail_wall .oe_table {
+  display: table;
+}
+.openerp .oe_mail_wall .oe_row {
+  display: table-row;
+}
+.openerp .oe_mail_wall .oe_cell {
+  display: table-cell;
+  vertical-align: middle;
+}

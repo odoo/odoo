@@ -44,6 +44,15 @@ class product_template(osv.Model):
     _columns = {
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
+        # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
+        'website_message_ids': fields.one2many(
+            'mail.message', 'res_id',
+            domain=lambda self: [
+                '&', ('model', '=', self._name), ('type', '=', 'comment')
+            ],
+            string='Website Messages',
+            help="Website communication history",
+        ),
         'suggested_product_id': fields.many2one('product.template', 'Suggested For Product'),
         'suggested_product_ids': fields.one2many('product.template', 'suggested_product_id', 'Suggested Products'),
         'website_size_x': fields.integer('Size X'),
@@ -52,10 +61,16 @@ class product_template(osv.Model):
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
     }
+
+    def __defaults_website_sequence(self, cr, uid, *kwargs):
+        cr.execute('SELECT MAX(website_sequence) FROM product_template')
+        max_sequence = cr.fetchone()[0] or 0
+        return max_sequence + 1
+
     _defaults = {
         'website_size_x': 1,
         'website_size_y': 1,
-        'website_sequence': 1,
+        'website_sequence': __defaults_website_sequence,
         'website_published': False,
     }
 
@@ -65,7 +80,31 @@ class product_template(osv.Model):
         return self.write(cr, uid, ids, {'website_sequence': max_sequence + 1}, context=context)
 
     def set_sequence_bottom(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'website_sequence': 0}, context=context)
+        cr.execute('SELECT MIN(website_sequence) FROM product_template')
+        min_sequence = cr.fetchone()[0] or 0
+        return self.write(cr, uid, ids, {'website_sequence': min_sequence -1}, context=context)
+
+    def set_sequence_up(self, cr, uid, ids, context=None):
+        product = self.browse(cr, uid, ids[0], context=context)
+        cr.execute("""  SELECT id, website_sequence FROM product_template
+                        WHERE website_sequence > %s AND website_published = %s ORDER BY website_sequence ASC LIMIT 1""" % (product.website_sequence, product.website_published))
+        prev = cr.fetchone()
+        if prev:
+            self.write(cr, uid, [prev[0]], {'website_sequence': product.website_sequence}, context=context)
+            return self.write(cr, uid, [ids[0]], {'website_sequence': prev[1]}, context=context)
+        else:
+            return self.set_sequence_top(cr, uid, ids, context=context)
+
+    def set_sequence_down(self, cr, uid, ids, context=None):
+        product = self.browse(cr, uid, ids[0], context=context)
+        cr.execute("""  SELECT id, website_sequence FROM product_template
+                        WHERE website_sequence < %s AND website_published = %s ORDER BY website_sequence DESC LIMIT 1""" % (product.website_sequence, product.website_published))
+        next = cr.fetchone()
+        if next:
+            self.write(cr, uid, [next[0]], {'website_sequence': product.website_sequence}, context=context)
+            return self.write(cr, uid, [ids[0]], {'website_sequence': next[1]}, context=context)
+        else:
+            return self.set_sequence_bottom(cr, uid, ids, context=context)
 
     def recommended_products(self, cr, uid, ids, context=None):
         id = ids[0]

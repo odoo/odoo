@@ -2,12 +2,13 @@ var testRunner = require('./ui_test_runner.js');
 
 var waitFor = testRunner.waitFor;
 
-testRunner.run(function homepageTest (page) {
+testRunner.run(function homepageTest (page, timeout) {
     page.evaluate(function () { localStorage.clear(); });
     waitFor(function clientReady () {
         return page.evaluate(function () {
-            return window.openerp && window.openerp.website
+            return window.$ && window.openerp && window.openerp.website
                 && window.openerp.website.TestConsole
+                && window.openerp.website.TestConsole.test
                 && window.openerp.website.TestConsole.test('banner');
         });
     }, function executeTest () {
@@ -21,15 +22,15 @@ testRunner.run(function homepageTest (page) {
         });
         waitFor(function testExecuted () {
             var after = page.evaluate(function () {
-                return $('button[data-action=edit]').is(":visible") && {
+                return window.$ && $('button[data-action=edit]').is(":visible") && {
                     carousel: $('#wrap [data-snippet-id=carousel]').length,
                     columns: $('#wrap [data-snippet-id=three-columns]').length,
                 };
             });
-            return after && after.carousel === before.carousel + 1 && after.columns === before.columns + 1;
+            return after && (after.carousel === before.carousel + 1) && (after.columns === before.columns + 1);
         }, function finish () {
             console.log('{ "event": "success" }');
             phantom.exit();
-        }, 90000);
-    }, 20000);
+        }, 4*timeout/5);
+    }, timeout/5);
 });

@@ -5,9 +5,8 @@
     website.add_template_file('/website/static/src/xml/website.tour.xml');
 
     website.Tour = openerp.Class.extend({
-        tour: undefined,
-        steps: [],
-        tourStorage: window.localStorage,
+        steps: [], // Override
+        tourStorage: window.localStorage, // FIXME: will break on iPad in private mode
         init: function () {
             this.tour = new Tour({
                 name: this.id,
@@ -273,12 +272,11 @@
                 e.stopImmediatePropagation();
                 e.preventDefault();
             });
-            var url = new website.UrlParser(window.location.href);
             var menu = $('#help-menu');
             _.each(this.tours, function (tour) {
                 var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
                 $menuItem.click(function () {
-                    tour.redirect(url);
+                    tour.redirect(new website.UrlParser(window.location.href));
                     tour.reset();
                     tour.start();
                 });
@@ -293,6 +291,7 @@
             var self = this;
             var testId = 'test_'+tour.id+'_tour';
             this.tours.push(tour);
+            var defaultDelay = 500; //ms
             var test = {
                 id: tour.id,
                 run: function (force) {
@@ -300,37 +299,33 @@
                         this.reset();
                     }
                     var actionSteps = _.filter(tour.steps, function (step) {
-                       return step.trigger;
+                       return step.trigger || step.sampleText;
                     });
                     function executeStep (step) {
                         window.localStorage.setItem(testId, step.stepId);
-                        step.triggers(function () {
+                        function next () {
                             var nextStep = actionSteps.shift();
                             if (nextStep) {
-                                // Ensure the previous step has been fully propagated
-                                setTimeout(function () {
-                                    setTimeout(function () {
-                                        executeStep(nextStep);
-                                    }, 10);
-                                }, 10);
+                                executeStep(nextStep);
                             } else {
                                 window.localStorage.removeItem(testId);
                             }
-                        });
-                        var $element = $(step.element);
-                        if (step.snippet && step.trigger === 'drag') {
-                            website.TestConsole.dragAndDropSnippet(step.snippet);
-                        } else if (step.trigger.id === 'change') {
-                            var currentValue = $element.val();
-                            var options = $element[0].options;
-                            // FIXME: It may be necessary to set a particular value
-                            var newValue = _.find(options, function (option) {
-                                return option.value !== currentValue;
-                            }).value;
-                            $element.val(newValue).trigger($.Event("change"));
-                        } else {
-                            $element.trigger($.Event("click", { srcElement: $element }));
                         }
+                        setTimeout(function () {
+	                        if (step.triggers) step.triggers(next);
+	                        var $element = $(step.element);
+	                        if (step.snippet && step.trigger === 'drag') {
+	                            website.TestConsole.dragAndDropSnippet(step.snippet);
+	                        } else if (step.trigger && step.trigger.id === 'change') {
+	                            $element.trigger($.Event("change", { srcElement: $element }));
+	                        } else if (step.sampleText) {
+	                            $element.val(step.sampleText);
+	                            $element.trigger($.Event("change", { srcElement: $element }));
+	                        } else if ($element.is(":visible")) { // Click by default
+	                        	 $element.trigger($.Event("click", { srcElement: $element }));
+	                        }
+	                        if (!step.triggers) next();
+	                    }, step.delay || defaultDelay);
                     }
                     var url = new website.UrlParser(window.location.href);
                     if (tour.path && url.pathname !== tour.path) {
@@ -349,11 +344,7 @@
                                 executeStep(currentStep);
                             });
                         } else {
-                            setTimeout(function () {
-                                setTimeout(function () {
-                                   executeStep(currentStep);
-                                }, 10);
-                            }, 10);
+                            executeStep(currentStep);
                         }
                     }
                 },

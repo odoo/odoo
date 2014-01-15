@@ -560,6 +560,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.handler = function(e){
 
                 if(e.which === 13){ //ignore returns
+                    e.preventDefault();
                     return;
                 }
 

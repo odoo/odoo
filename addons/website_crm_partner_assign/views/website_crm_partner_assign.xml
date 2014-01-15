@@ -41,7 +41,7 @@
                     <t t-foreach="countries" t-as="country_dict">
                         <t t-if="country_dict['country_id']">
                             <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                                <a t-href="/partners/country/#{ country_dict['country_id'][0] }">
+                                <a t-href="#{ country_dict['country_id'][0] and '/partners/country/%s' % slug(country_dict['country_id']) or '/partners/' }">
                                     <t t-esc="country_dict['country_id'][1]"/> <small>(<t t-esc="country_dict['country_id_count']"/>)</small>
                                 </a>
                             </li>

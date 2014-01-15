@@ -400,7 +400,7 @@
             <field name="name">product.public.category.form</field>
             <field name="model">product.public.category</field>
             <field name="arch" type="xml">
-                <form string="Product Categories" version="7.0">
+                <form string="Pos/Public Categories" version="7.0">
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
                         <div class="oe_left">
@@ -426,7 +426,7 @@
             </field>
         </record>
         <record id="product_public_category_action" model="ir.actions.act_window">
-            <field name="name">Public Categories</field>
+            <field name="name">Pos/Public Product Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.public.category</field>
             <field name="view_type">form</field>
@@ -445,7 +445,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="product_public_category_action" id="menu_product_public_category" parent="base.menu_product" sequence="10" />
+        <menuitem action="product_public_category_action" id="menu_product_public_category" parent="prod_config_main" sequence="10" />
         <!-- END -->
 
         <!-- Unit of Measure -->
@@ -802,7 +802,7 @@
                                         <field name="mes_type"/>
                                     </group>
 
-                                    <group colspan="4" string="Product Variants">
+                                    <group colspan="4" string="Product Variants" groups="product.group_product_variant">
                                         <field colspan="4" name="product_variant_ids" nolabel="1">
                                             <tree string="Product Variants" editable="bottom">
                                                 <field name="active"/>
@@ -840,6 +840,10 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -851,6 +855,10 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_template_tree_view"/>
         </record>
+
+        <menuitem id="product_template_menu"
+            parent="base.menu_product" sequence="25"
+            action="product_template_action_tree"/>
 
     </data>
 </openerp>

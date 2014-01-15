@@ -21,6 +21,8 @@
 
 from openerp.addons.website_blog.tests import test_controllers
 
+import test_ui
+
 checks = [
     test_controllers,
 ]

@@ -126,6 +126,9 @@
                 self.make_active(false);
                 self.$el.toggleClass("hidden");
             });
+            $("#wrapwrap").click(function () {
+                self.$el.addClass("hidden");
+            });
 
             this.fetch_snippet_templates();
 
@@ -143,11 +146,15 @@
             this.getParent().on('change:height', this, function (editor) {
                 self.$el.css('top', editor.get('height'));
             });
+            self.$el.css('top', this.parent.get('height'));
+        },
+        _get_snippet_url: function () {
+            return '/website/snippets';
         },
         fetch_snippet_templates: function () {
             var self = this;
 
-            openerp.jsonRpc("/website/snippets", 'call', {})
+            openerp.jsonRpc(this._get_snippet_url(), 'call', {})
                 .then(function (html) {
                     var $html = $(html);
 
@@ -180,6 +187,7 @@
                 'top': pos.top - mt,
                 'left': pos.left
             });
+            $el.find(".oe_handle.size").css("bottom", mb+'px');
         },
         show: function () {
             this.$el.removeClass("hidden");
@@ -677,17 +685,6 @@
     });
 
 
-    website.snippet.styleRegistry.size = website.snippet.StyleEditor.extend({
-        select: function(event, np) {
-            this._super(event, np);
-            this.parent.parent.cover_target(this.$overlay, this.$target);
-        },
-        preview: function (event, np) {
-            this._super(event, np);
-            this.parent.parent.cover_target(this.$overlay, this.$target);
-        }
-    });
-
     website.snippet.styleRegistry.background = website.snippet.StyleEditor.extend({
         _get_bg: function () {
             return this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
@@ -878,7 +875,7 @@
                 }
                 var Editor = website.snippet.styleRegistry[val['snippet-style-id']] || website.snippet.StyleEditor;
                 var editor = new Editor(self, self.$target, val['snippet-style-id']);
-                $ul.prepend(editor.$el);
+                $ul.prepend(editor.$el.addClass("snippet-style-" + val['snippet-style-id']));
             });
 
             if ($ul.find("li").length) {
@@ -972,96 +969,121 @@
             if (!resize_values.s) $box.find(".oe_handle.s").remove();
             if (!resize_values.e) $box.find(".oe_handle.e").remove();
             if (!resize_values.w) $box.find(".oe_handle.w").remove();
+            if (!resize_values.size) $box.find(".oe_handle.size").remove();
 
             this.$overlay.append($box.find(".oe_handles").html());
 
             this.$overlay.find(".oe_handle").on('mousedown', function (event){
-                    event.preventDefault();
+                event.preventDefault();
 
-                    var $handle = $(this);
+                var $handle = $(this);
 
-                    var resize_values = self.getSize();
-                    var compass = false;
-                    var XY = false;
-                    if ($handle.hasClass('n')) {
-                        compass = 'n';
-                        XY = 'Y';
-                    }
-                    else if ($handle.hasClass('s')) {
-                        compass = 's';
-                        XY = 'Y';
-                    }
-                    else if ($handle.hasClass('e')) {
-                        compass = 'e';
-                        XY = 'X';
-                    }
-                    else if ($handle.hasClass('w')) {
-                        compass = 'w';
-                        XY = 'X';
-                    }
+                var resize_values = self.getSize();
+                var compass = false;
+                var XY = false;
+                if ($handle.hasClass('n')) {
+                    compass = 'n';
+                    XY = 'Y';
+                }
+                else if ($handle.hasClass('s')) {
+                    compass = 's';
+                    XY = 'Y';
+                }
+                else if ($handle.hasClass('e')) {
+                    compass = 'e';
+                    XY = 'X';
+                }
+                else if ($handle.hasClass('w')) {
+                    compass = 'w';
+                    XY = 'X';
+                }
+                else if ($handle.hasClass('size')) {
+                    compass = 'size';
+                    XY = 'Y';
+                }
 
-                    var resize = resize_values[compass];
-                    if (!resize) return;
+                var resize = resize_values[compass];
+                if (!resize) return;
 
+
+                if (compass === 'size') {
+                    var grid = resize[0];
+                    var offset = self.$target.offset().top;
+                    if (self.$target.css("background").match(/rgba\(0, 0, 0, 0\)/)) {
+                        self.$target.addClass("resize_editor_busy");
+                    }
+                } else {
+                    var xy = event['page'+XY];
                     var current = resize[2] || 0;
                     _.each(resize[0], function (val, key) {
                         if (self.$target.hasClass(val)) {
                             current = key;
                         }
                     });
-
-                    self.parent.editor_busy = true;
-
-                    var xy = event['page'+XY];
                     var begin = current;
                     var beginClass = self.$target.attr("class");
                     var regClass = new RegExp("\\s*" + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
+                }
 
-                    var cursor = $handle.css("cursor")+'-important';
-                    var $body = $(document.body);
-                    $body.addClass(cursor);
+                self.parent.editor_busy = true;
 
-                    var body_mousemove = function (event){
-                        event.preventDefault();
-                        var dd = event['page'+XY] - xy + resize[1][begin];
-                        var next = current+1 === resize[1].length ? current : (current+1);
-                        var prev = current ? (current-1) : 0;
+                var cursor = $handle.css("cursor")+'-important';
+                var $body = $(document.body);
+                $body.addClass(cursor);
 
-                        var change = false;
-                        if (dd > (2*resize[1][next] + resize[1][current])/3) {
-                            self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
-                            self.$target.addClass(resize[0][next]);
-                            current = next;
-                            change = true;
-                        }
-                        if (prev != current && dd < (2*resize[1][prev] + resize[1][current])/3) {
-                            self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
-                            self.$target.addClass(resize[0][prev]);
-                            current = prev;
-                            change = true;
-                        }
+                var body_mousemove = function (event){
+                    event.preventDefault();
+                    if (compass === 'size') {
+                        var dy = event.pageY-offset;
+                        dy = dy - dy%resize[0];
+                        if (dy <= 0) dy = resize[0];
+                        self.$target.css("height", dy+"px");
+                        self.on_resize(compass, beginClass, current);
+                        self.parent.cover_target(self.$overlay, self.$target);
+                        return;
+                    }
+                    var dd = event['page'+XY] - xy + resize[1][begin];
+                    var next = current+1 === resize[1].length ? current : (current+1);
+                    var prev = current ? (current-1) : 0;
 
-                        if (change) {
-                            self.on_resize(compass, beginClass, current);
-                            self.parent.cover_target(self.$overlay, self.$target);
-                        }
-                    };
+                    var change = false;
+                    if (dd > (2*resize[1][next] + resize[1][current])/3) {
+                        self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
+                        self.$target.addClass(resize[0][next]);
+                        current = next;
+                        change = true;
+                    }
+                    if (prev != current && dd < (2*resize[1][prev] + resize[1][current])/3) {
+                        self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
+                        self.$target.addClass(resize[0][prev]);
+                        current = prev;
+                        change = true;
+                    }
 
-                    var body_mouseup = function(){
-                        $body.unbind('mousemove', body_mousemove);
-                        $body.unbind('mouseup', body_mouseup);
-                        $body.removeClass(cursor);
-                        self.parent.editor_busy = false;
-                    };
-                    $body.mousemove(body_mousemove);
-                    $body.mouseup(body_mouseup);
-                });
+                    if (change) {
+                        self.on_resize(compass, beginClass, current);
+                        self.parent.cover_target(self.$overlay, self.$target);
+                    }
+                };
+
+                var body_mouseup = function(){
+                    $body.unbind('mousemove', body_mousemove);
+                    $body.unbind('mouseup', body_mouseup);
+                    $body.removeClass(cursor);
+                    self.parent.editor_busy = false;
+                    self.$target.removeClass("resize_editor_busy");
+                };
+                $body.mousemove(body_mousemove);
+                $body.mouseup(body_mouseup);
+            });
         },
         getSize: function () {
             var grid = [0,4,8,16,32,48,64,92,128];
             this.grid = {
+                // list of class (Array), grid (Array), default value (INT)
                 n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
-                s: [_.map(grid, function (v) {return 'mb'+v;}), grid]
+                s: [_.map(grid, function (v) {return 'mb'+v;}), grid],
+                size: [8]
             };
             return this.grid;
         },
@@ -1087,6 +1109,8 @@
 
             var grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
             this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
+
+            this.grid.s = null;
 
             return this.grid;
         },
@@ -1275,6 +1299,10 @@
             this._super();
             this.$target.css("background-image", "");
             this.$target.removeClass(this._class);
+        },
+        load_style_options : function () {
+            this._super();
+            $(".snippet-style-size li[data-class='']").remove();
         },
         start : function () {
             var self = this;
