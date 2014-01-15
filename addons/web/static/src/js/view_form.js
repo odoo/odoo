@@ -2612,6 +2612,11 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
                 e.stopPropagation();
             }
         },
+        'keypress': function (e) {
+            if (e.which === $.ui.keyCode.ENTER) {
+                e.stopPropagation();
+            }
+        },
         'change textarea': 'store_dom_value',
     },
     initialize_content: function() {
