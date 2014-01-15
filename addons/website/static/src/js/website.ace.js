@@ -94,6 +94,11 @@
             }).then(function (views) {
                 self.loadViews.call(self, views);
                 self.open.call(self);
+                // cf. fp's direct request
+	            if (views.length >= 2) {
+	            	var mainTemplate = views[1];
+	            	self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
+	            }
             });
 
             var $editor = self.$('.ace_editor');

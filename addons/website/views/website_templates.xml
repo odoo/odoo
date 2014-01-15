@@ -97,12 +97,13 @@
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"/>
                                     </t>
+                                    <li class="divider"/>
                                     <li class="dropdown" t-ignore="true" t-if="user_id.id != website.public_user.id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                            <span class="badge">
+                                            <b>
                                                 <span t-esc="user_id.name"/>
                                                 <span class="caret"></span>
-                                            </span>
+                                            </b>
                                         </a>
                                         <ul class="dropdown-menu js_usermenu" role="menu">
                                             <li><a href="/web" role="menuitem">Administration</a></li>
@@ -236,7 +237,7 @@
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li t-if="user_id.id == website.public_user.id">
             <a t-attf-href="/web#redirect=#{ quote_plus(url_for('', keep_query='*')) }">
-                <span class="badge">Sign in</span>
+                <b>Sign in</b>
             </a>
         </li>
     </xpath>
@@ -534,7 +535,7 @@
                     </div>
 
                     <div class="container" t-if="views">
-                        <div class="bs-callout bs-callout-danger" t-if="qweb_template and editable">
+                        <div class="alert alert-danger" t-if="qweb_template and editable">
                             <h4>Template fallback</h4>
                             <p>An error occured while rendering the template <code t-esc="qweb_template"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
