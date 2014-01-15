@@ -32,6 +32,7 @@ class sale_quote_template(osv.osv):
         'website_description': fields.html('Description'),
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
+        'options': fields.one2many('sale.option.line', 'option_id', 'Optional Products Lines'),
     }
 
     def open_template(self, cr, uid, quote_id, context=None):
@@ -105,7 +106,7 @@ class sale_order(osv.osv):
 
     def onchange_template_id(self, cr, uid, ids, template_id, context=None):
         lines = []
-        quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context)
+        quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
             lines.append((0, 0, {
                 'name': line.name,
@@ -116,7 +117,17 @@ class sale_order(osv.osv):
                 'website_description': line.website_description,
                 'state': 'draft',
             }))
-        data = {'order_line': lines, 'website_description': quote_template.website_description, 'note': quote_template.note}
+        options = []
+        for option in quote_template.options:
+            options.append((0, 0, {
+                'product_id': option.product_id.id,
+                'name': option.name,
+                'quantity': option.quantity,
+                'uom_id': option.uom_id.id,
+                'price_unit': option.price_unit,
+                'discount': option.discount,
+            }))
+        data = {'order_line': lines, 'website_description': quote_template.website_description, 'note': quote_template.note, 'options': options}
         return {'value': data}
 
     def recommended_products(self, cr, uid, ids, context=None):

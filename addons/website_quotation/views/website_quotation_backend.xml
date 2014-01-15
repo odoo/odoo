@@ -11,7 +11,7 @@
                         attrs="{'invisible': [('template_id','=',False)]}"/>
                 </xpath>
                 <xpath expr="//page[@string='Order Lines']" position="after">
-                    <page string="Option">
+                    <page string="Suggested Products">
                         <label string="Optional Products &amp; Services" for="options"/>
                         <field name="options">
                             <tree string="Sales Quote Template Lines" editable="bottom">
@@ -49,36 +49,53 @@
                                 <field name="name"/>
                             </h1>
                         </div>
-                        <field name="quote_line">
-                            <form string="Sales Quote Template Lines" version="7.0">
-                                <group>
+                        <notebook>
+                            <page string="Lines">
+                            <field name="quote_line">
+                                <form string="Sales Quote Template Lines" version="7.0">
                                     <group>
-                                        <field name="product_id" on_change="on_change_product_id(product_id)"/>
-                                        <label for="product_uom_qty"/>
-                                        <div>
-                                            <field
-                                                name="product_uom_qty" class="oe_inline"/>
-                                        </div>
-                                        <field name="price_unit"/>
+                                        <group>
+                                            <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                            <label for="product_uom_qty"/>
+                                            <div>
+                                                <field
+                                                    name="product_uom_qty" class="oe_inline"/>
+                                            </div>
+                                            <field name="price_unit"/>
+                                        </group>
                                     </group>
-                                </group>
-                                <notebook colspan="4">
-                                    <page string="Description">
-                                        <field name="name" />
-                                    </page>
-                                    <page string="Website Description">
-                                        <field name="website_description" />
-                                    </page>
-                                </notebook>
-                            </form>
-                            <tree string="Sales Quote Template Lines" editable="bottom">
+                                    <notebook colspan="4">
+                                        <page string="Description">
+                                            <field name="name" />
+                                        </page>
+                                        <page string="Website Description">
+                                            <field name="website_description" />
+                                        </page>
+                                    </notebook>
+                                </form>
+                                <tree string="Sales Quote Template Lines" editable="bottom">
+                                    <field name="product_id" on_change="on_change_product_id(product_id)"/>
+                                    <field name="name"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="price_unit"/>
+                                    <field name="website_description" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Suggested Products">
+                            <field name="options">
+                              <tree string="Sales Quote Template Lines" editable="bottom">
                                 <field name="product_id" on_change="on_change_product_id(product_id)"/>
                                 <field name="name"/>
-                                <field name="product_uom_qty"/>
+                                <field name="quantity"/>
+                                <field name="uom_id"/>
                                 <field name="price_unit"/>
+                                <field name="discount"/>
                                 <field name="website_description" invisible="1"/>
-                            </tree>
-                        </field>
+                              </tree>
+                            </field>
+                        </page>
+                        </notebook>
                         <field name="website_description" invisible="1"/>
                         <field name="note" placeholder="Terms and conditions..."  nolable="1"/>
                     </sheet>
