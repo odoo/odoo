@@ -43,7 +43,7 @@ function run (test) {
 
     var page = require('webpage').create();
 
-    page.viewportSize = { width: 1920, height: 1080 };
+    page.viewportSize = { width: 1440, height: 900 };
 
     page.onError = function(message, trace) {
         console.log('{ "event": "error", "message": "'+message+'"}');
@@ -64,13 +64,17 @@ function run (test) {
             test(page, timeout);
         }
     };
-     
+    
+    var maxRetries = 10;
+    var retryDelay = 1000; // ms
     var tries = 0; 
     page.open(url, function openPage (status) {
         if (status !== 'success') {
             tries++;
-            if (tries < 5) {
-                page.open(url, openPage);
+            if (tries < maxRetries) {
+            	setTimeout(function () {
+            		page.open(url, openPage);
+            	}, retryDelay);
             } else {
                 console.log('{ "event": "error", "message": "'+url+' failed to load '+tries+' times ('+status+')"}');
                 phantom.exit(1);

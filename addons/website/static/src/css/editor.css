@@ -81,6 +81,10 @@
   outline: none !important;
 }
 
+.css_editable_display {
+  display: block !important;
+}
+
 .css_non_editable_mode_hidden {
   display: none;
 }
@@ -101,6 +105,14 @@
   vertical-align: middle !important;
   position: relative !important;
   top: 2px;
+}
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
+  background-image: url("/website/static/src/img/edit_here.png") !important;
+}
+
+.oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
+  content: "Press The Top-Left Edit Button" !important;
 }
 
 /* ---- EDITOR BAR ---- {{{ */
@@ -432,6 +444,10 @@ ul.oe_menu_editor .disclose {
 }
 
 /* ---- SNIPPET MANIPULATOR ---- {{{ */
+.resize_editor_busy {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 .oe_overlay {
   display: none;
   position: absolute;
@@ -514,15 +530,27 @@ ul.oe_menu_editor .disclose {
 .oe_overlay .oe_handle.e:before {
   content: "\F061";
 }
-.oe_overlay .oe_handle.s {
+.oe_overlay .oe_handle.s, .oe_overlay .oe_handle.size {
   top: auto;
   left: 2px;
   width: 100%;
   bottom: -4px;
   cursor: n-resize;
 }
-.oe_overlay .oe_handle.s:before {
+.oe_overlay .oe_handle.s:before, .oe_overlay .oe_handle.size:before {
   content: "\F063";
+}
+.oe_overlay .oe_handle.size {
+  border-style: dashed;
+  border-width: 0 0 1px 0;
+  border-color: rgba(0, 0, 0, 0.5);
+}
+.oe_overlay .oe_handle.size:before {
+  content: "Resize";
+  width: 64px;
+  text-align: center;
+  margin-left: -32px;
+  margin-top: -4px;
 }
 .oe_overlay .oe_handle.w {
   top: 2px;

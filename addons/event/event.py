@@ -272,21 +272,6 @@ class event_event(osv.osv):
             }
             return {'value': dic}
 
-    def on_change_address_id(self, cr, uid, ids, address_id, context=None):
-        values = {}
-        if not address_id:
-            return values
-        address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
-        values.update({
-            'street' : address.street,
-            'street2' : address.street2,
-            'city' : address.city,
-            'country_id' : address.country_id and address.country_id.id or False,
-            'state_id' : address.state_id and address.state_id.id or False,
-            'zip' : address.zip,
-        })
-        return {'value' : values}
-
     def onchange_start_date(self, cr, uid, ids, date_begin=False, date_end=False, context=None):
         res = {'value':{}}
         if date_end:

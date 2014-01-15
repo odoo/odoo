@@ -51,7 +51,7 @@
 
 <template id="products_cart" name="Shopping cart">
   <div class="ribbon-wrapper">
-    <div class="ribbon btn btn-danger">Promo</div>
+    <div class="ribbon btn btn-danger">Sale</div>
   </div>
   <div class="oe_product_image">
       <a t-href="/shop/product/#{ slug(product) }/" t-keep-query="category,search,filters">
@@ -166,6 +166,9 @@
                                       <a tabindex="-1" href="#">Promote</a>
                                       <ul class="dropdown-menu" name="sequence">
                                           <li><a href="#" class="js_go_to_top">Push to top</a></li>
+                                          <li><a href="#" class="js_go_up">Push up</a>
+                                          </li>
+                                          <li><a href="#" class="js_go_down">Push down</a></li>
                                           <li><a href="#" class="js_go_to_bottom">Push to bottom</a></li>
                                       </ul>
                                   </li>
@@ -185,7 +188,8 @@
               </table>
               <t t-if="not bins">
                 <div class="text-center text-muted">
-                  <h3>No product found</h3>
+                  <h3 class="css_editable_display">No product found</h3>
+                  <h3 class="css_non_editable_mode_hidden">There isn't available products right know, click <a t-href="/page/website.contactus">here</a> to contact us</h3>
                   <t groups="base.group_website_publisher">
                     <p>Click on "Content" to define a new product or "Help" for more informations.</p>
                     <img src="/website/static/src/img/content_here.png"/>
@@ -675,7 +679,7 @@
                       }'/>
                   </td>
                   <td class="text-center">
-                      <a t-href="./add_cart/#{ product.id }/"><strong>Add to Cart</strong></a>
+                      <a t-href="/shop/add_cart/#{ product.product_variant_ids[0].id }/"><strong>Add to Cart</strong></a>
                   </td>
               </tr>
           </tbody>
@@ -1027,17 +1031,19 @@
                   <div class="oe_structure"/>
               </div>
               <div class="col-md-3 col-md-offset-1 text-muted" id="right_column">
-                  <h4>Bill To:</h4>
-                  <div t-field="order.partner_invoice_id"/>
-
-                  <h4 class="mt32">Ship To:</h4>
-                  <div t-field="order.partner_shipping_id"/>
-
-                  <h4 class="mt32">Amount:</h4>
-                  <!--<div t-field="order.amount_total" t-field-options='{
-                      "widget": "monetary",
-                      "display_currency": "website.pricelist_id.currency_id"
-                  }'/> -->
+                <h4>Bill To:</h4>
+                <div t-field="order.partner_invoice_id" t-field-options='{
+                    "widget": "contact",
+                    "fields": ["address", "name", "phone", "email"]
+                    }'/>
+                <h4 class="mt32">Ship To:</h4>
+                <t t-if="order.partner_shipping_id and order.partner_shipping_id.id != order.partner_invoice_id.id">
+                  <div t-field="order.partner_shipping_id" t-field-options='{
+                    "widget": "contact",
+                    "fields": ["address", "name", "phone"]
+                    }'/>
+                </t>
+                <address t-if="order.partner_shipping_id.id == order.partner_invoice_id.id">Ship to the same address</address>
               </div>
           </div>
 

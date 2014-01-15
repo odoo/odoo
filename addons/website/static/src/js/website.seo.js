@@ -92,7 +92,7 @@
                     }
                 });
             }
-            $.getJSON("http://seo.eu01.aws.af.cm/suggest/"+encodeURIComponent(this.root + " "), addSuggestions);
+            $.getJSON("http://suggest.hp.af.cm/suggest/"+encodeURIComponent(this.root + " "), addSuggestions);
         },
     });
 
