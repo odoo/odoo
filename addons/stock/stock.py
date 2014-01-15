@@ -977,9 +977,8 @@ class stock_picking(osv.osv):
     def do_recompute_remaining_quantities(self, cr, uid, picking_ids, context=None):
         def _create_link_for_product(product_id, qty):
             qty_to_assign = qty
-            active_lines = [x for x in picking.move_lines if x.state not in ['done', 'cancel']]
-            for move in active_lines:
-                if move.product_id.id == product_id:
+            for move in picking.move_lines:
+                if move.product_id.id == product_id and move.state not in ['done', 'cancel']:
                     qty_on_link = min(move.remaining_qty, qty_to_assign)
                     link_obj.create(cr, uid, {'move_id': move.id, 'operation_id': op.id, 'qty': qty_on_link}, context=context)
                     qty_to_assign -= qty_on_link
