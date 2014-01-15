@@ -77,8 +77,8 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         var row_gbs = this.create_field_values(row_groupby),
             col_gbs = this.create_field_values(col_groupby),
             dom_changed = !_.isEqual(this.domain, domain),
-            row_gb_changed = !_.isEqual(row_gbs, this.rows.groupby),
-            col_gb_changed = !_.isEqual(col_gbs, this.cols.groupby);
+            row_gb_changed = !this.equal_groupby(row_gbs, this.rows.groupby),
+            col_gb_changed = !this.equal_groupby(col_gbs, this.cols.groupby);
 
         if (dom_changed) {
             this.domain = domain;
@@ -93,6 +93,22 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         if (this.active && (row_gb_changed || col_gb_changed || dom_changed)) {
             this.update_data();
         }
+    },
+
+    // compare groupby, ignoring the 'interval' attribute of dates... 
+    // this is necessary to avoid problems with the groupby received by the
+    // context which do not have the interval attribute.  This is ugly
+    // and need to be changed at some point
+    equal_groupby: function (groupby1, groupby2) {
+        if (groupby1.length !== groupby2.length) { return false; }
+        for (var i = 0; i < groupby1.length; i++) {
+            if (!this.equal_value(groupby1[i], groupby2[i])) { return false; }
+        }
+        return true;
+    },
+
+    equal_value: function (val1, val2) {
+        return ((val1.field === val2.field) && (val1.string === val2.string) && (val1.type === val2.type));
     },
 
     create_field_value: function (f) {
