@@ -179,7 +179,7 @@
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR USD'), ('partner_id', '=', ref('base.res_partner_19'))])
-    self.signal_workflow(cr, uid, voucher, 'voucher_proforma')
+    self.signal_workflow(cr, uid, voucher, 'proforma_voucher')
 -
   I check that the move of my voucher is valid
 -
