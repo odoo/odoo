@@ -49,9 +49,9 @@ class decimal_precision(osv.osv):
         self.precision_get.clear_cache(self)
         for obj in self.pool.obj_list():
             for colname, col in self.pool.get(obj)._columns.items():
-                if isinstance(col, (fields.float, fields.function)):
+                if hasattr(col, 'digits_change'):
                     col.digits_change(cr)
-        RegistryManager.signal_registry_change(cr.dbname)
+        RegistryManager.signal_caches_change(cr.dbname)
 
     def create(self, cr, uid, data, context=None):
         res = super(decimal_precision, self).create(cr, uid, data, context=context)
