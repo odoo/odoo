@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
+import time
 from os import listdir
 from os.path import join
+from threading import Thread
+from Queue import Queue, Empty
 import openerp
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 from openerp.tools.translate import _
@@ -20,8 +23,9 @@ except ImportError:
 
 from select import select
 
-class ScannerDriver(hw_proxy.Proxy):
+class Scanner(Thread):
     def __init__(self):
+        Thread.__init__(self)
         self.input_dir = '/dev/input/by-id/'
         self.keymap = {
             2: ("1","!"),
@@ -81,53 +85,105 @@ class ScannerDriver(hw_proxy.Proxy):
         }
 
     def get_device(self):
-        if not evdev:
-            return None
-        devices   = [ device for device in listdir(self.input_dir)]
-        keyboards = [ device for device in devices if 'kbd' in device ]
-        scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower()) ]
-        if len(scanners) > 0:
-            return evdev.InputDevice(join(self.input_dir,scanners[0]))
-        elif len(keyboards) > 0:
-            return evdev.InputDevice(join(self.input_dir,keyboards[0]))
-        else:
+        try:
+            if not evdev:
+                return None
+            devices   = [ device for device in listdir(self.input_dir)]
+            keyboards = [ device for device in devices if 'kbd' in device ]
+            scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower()) ]
+            if len(scanners) > 0:
+                return evdev.InputDevice(join(self.input_dir,scanners[0]))
+            elif len(keyboards) > 0:
+                return evdev.InputDevice(join(self.input_dir,keyboards[0]))
+            else:
+                _logger.error('Could not find the Barcode Scanner')
+                return None
+        except Exception as e:
+            _logger.error('Found the Barcode Scanner, but unable to access it\n Exception: ' + str(e))
             return None
 
-    @http.route('/hw_proxy/is_scanner_connected', type='json', auth='admin')
+    @http.route('/hw_proxy/Vis_scanner_connected', type='json', auth='admin')
     def is_scanner_connected(self):
         return self.get_device() != None
     
+    def get_barcode(self):
+        """ Returns a scanned barcode. Will wait at most 5 seconds to get a barcode, and will
+            return barcode scanned in the past if they are not older than 5 seconds and have not
+            been returned before. This is necessary to catch barcodes scanned while the POS is
+            busy reading another barcode
+        """
+
+        while True:
+            try:
+                timestamp, barcode = self.barcodes.get(True, 5)
+                if timestamp > time.time() - 5: 
+                    return barcode
+            except Empty:
+                return ''
+
+    def run(self):
+        """ This will start a loop that catches all keyboard events, parse barcode
+            sequences and put them on a timestamped queue that can be consumed by
+            the point of sale's requests for barcode events 
+        """
+        
+        self.barcodes = Queue()
+        
+        barcode  = []
+        shift    = False
+        device   = None
+
+        while True: # barcodes loop
+            if device:  # ungrab device between barcodes and timeouts for plug & play
+                try:
+                    device.ungrab() 
+                except Exception as e:
+                    _logger.error('Unable to release barcode scanner\n Exception:'+str(e))
+            device = self.get_device()
+            if not device:
+                time.sleep(5)   # wait until a suitable device is plugged
+            else:
+                try:
+                    device.grab()
+                    shift = False
+                    barcode = []
+
+                    while True: # keycode loop
+                        r,w,x = select([device],[],[],5)
+                        if len(r) == 0: # timeout
+                            break
+                        events = device.read()
+
+                        for event in events:
+                            if event.type == evdev.ecodes.EV_KEY:
+                                #_logger.debug('Evdev Keyboard event %s',evdev.categorize(event))
+                                if event.value == 1: # keydown events
+                                    if event.code in self.keymap: 
+                                        if shift:
+                                            barcode.append(self.keymap[event.code][1])
+                                        else:
+                                            barcode.append(self.keymap[event.code][0])
+                                    elif event.code == 42 or event.code == 54: # SHIFT
+                                        shift = True
+                                    elif event.code == 28: # ENTER, end of barcode
+                                        self.barcodes.put( (time.time(),''.join(barcode)) )
+                                        barcode = []
+                                elif event.value == 0: #keyup events
+                                    if event.code == 42 or event.code == 54: # LEFT SHIFT
+                                        shift = False
+
+                except Exception as e:
+                    _logger.error('Could not read Barcode Scanner Events:\n Exception: '+str(e))
+
+s = Scanner()
+s.start()
+
+class ScannerDriver(hw_proxy.Proxy):
+    @http.route('/hw_proxy/is_scanner_connected', type='json', auth='admin')
+    def is_scanner_connected(self):
+        return s.get_device() != None
+    
     @http.route('/hw_proxy/scanner', type='json', auth='admin')
     def scanner(self):
-        device = self.get_device()
-        barcode = []
-        shift   = False
-        if not device:
-            return ''
-        else:
-            device.grab()
-        while True:
-            r,w,x = select([device],[],[],5)
-            if len(r) == 0: # timeout
-                device.ungrab()
-                return ''
-            for event in device.read():
-                if event.type == evdev.ecodes.EV_KEY:
-                    #_logger.debug('Evdev Keyboard event %s',evdev.categorize(event))
-                    if event.value == 1: # keydown events
-                        if event.code in self.keymap: 
-                            if shift:
-                                barcode.append(self.keymap[event.code][1])
-                            else:
-                                barcode.append(self.keymap[event.code][0])
-                        elif event.code == 42 or event.code == 54: # SHIFT
-                            shift = True
-                        elif event.code == 28: # ENTER
-                            device.ungrab()
-                            barcode = ''.join(barcode)
-                            return barcode
-                    elif event.value == 0: #keyup events
-                        if event.code == 42 or event.code == 54: # LEFT SHIFT
-                            shift = False
-
+        return s.get_barcode()
         
