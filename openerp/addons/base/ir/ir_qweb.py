@@ -21,35 +21,6 @@ from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
-# BUILTINS = {
-#     'False': False,
-#     'None': None,
-#     'True': True,
-#     'abs': abs,
-#     'bool': bool,
-#     'dict': dict,
-#     'filter': filter,
-#     'len': len,
-#     'list': list,
-#     'map': map,
-#     'max': max,
-#     'min': min,
-#     'reduce': reduce,
-#     'repr': repr,
-#     'round': round,
-#     'set': set,
-#     'str': str,
-#     'tuple': tuple,
-#     # 'quote':  urllib.quote,
-#     # 'urlencode': urllib.urlencode,
-#     'datetime': datetime,
-#     # dateutil.relativedelta is an old-style class and cannot be directly
-#     # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
-#     # is needed, apparently.
-#     # 'relativedelta': lambda *a, **kw : dateutil.relativedelta.relativedelta(*a, **kw),
-# }
-
-
 class QWebException(Exception):
     def __init__(self, message, template=None, node=None, attribute=None):
         self.message = message
