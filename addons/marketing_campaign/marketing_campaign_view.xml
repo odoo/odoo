@@ -16,8 +16,6 @@
     </data>
     <data>
 
-    <menuitem name="Configuration" id="menu_marketing_configuration" parent="base.marketing_menu" sequence="1"/>
-
     <!-- Marketing Campaign -->
     
     <record id="act_marketing_campaing_segment_opened" model="ir.actions.act_window">
@@ -177,7 +175,7 @@
         </field>
     </record>
 
-    <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu"/>
+    <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu" groups="marketing.group_marketing_user,marketing.group_marketing_manager"/>
     <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="30"/>
 
     <!-- Marketing Segments -->

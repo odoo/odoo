@@ -52,6 +52,12 @@ class TestPortalProjectBase(TestProjectBase):
             'alias_name': 'donovan',
             'groups_id': [(6, 0, [self.group_public_id])]
         })
+        self.user_manager_id = self.res_users.create(cr, uid, {
+            'name': 'Eustache Manager',
+            'login': 'eustache',
+            'alias_name': 'eustache',
+            'groups_id': [(6, 0, [self.group_project_manager_id])]
+        })
 
         # Test 'Pigs' project
         self.project_pigs_id = self.project_project.create(cr, uid, {
@@ -221,7 +227,7 @@ class TestPortalProject(TestPortalProjectBase):
 
         # Data: subscribe Alfred, Chell and Donovan as follower
         self.project_project.message_subscribe_users(cr, uid, [pigs_id], [self.user_projectuser_id, self.user_portal_id, self.user_public_id])
-        self.project_task.message_subscribe_users(cr, self.user_projectuser_id, [self.task_1_id, self.task_3_id], [self.user_portal_id, self.user_projectuser_id])
+        self.project_task.message_subscribe_users(cr, self.user_manager_id, [self.task_1_id, self.task_3_id], [self.user_portal_id, self.user_projectuser_id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
         self.project_project.read(cr, self.user_projectuser_id, pigs_id, ['name'])

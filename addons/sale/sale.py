@@ -242,7 +242,7 @@ class sale_order(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
-    _order = 'name desc'
+    _order = 'date_order desc, id desc'
 
     # Form filling
     def unlink(self, cr, uid, ids, context=None):

@@ -88,4 +88,10 @@ class mrp_production(osv.osv):
     }
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class sale_order(osv.Model):
+    _inherit ='sale.order'
+
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
+        result = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context)
+        result['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
+        return result
