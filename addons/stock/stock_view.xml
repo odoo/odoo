@@ -1764,7 +1764,7 @@
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="help">This analysis gives you a fast overview on the current stock level of your products and their today's inventory value.</field>
         </record>
 
@@ -1777,15 +1777,17 @@
                     <div class="oe_right oe_button_box">
                         <button name="action_view_quant_history" type="object" string="Quant History"/>                            
                     </div>
-                    <field name="product_id"/>
-                    <field name="qty"/>
-                    <field name="lot_id" groups="stock.group_tracking_lot"/>
-                    <field name="package_id" groups="stock.group_tracking_lot"/>
-                    <field name="location_id"/>
-                    <field name="in_date"/>
-                    <field name="reservation_id"/>
-                    <field name="propagated_from_id"/>
-                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                    <group>
+                        <field name="product_id"/>
+                        <field name="qty"/>
+                        <field name="lot_id" groups="stock.group_tracking_lot"/>
+                        <field name="package_id" groups="stock.group_tracking_lot"/>
+                        <field name="location_id"/>
+                        <field name="in_date"/>
+                        <field name="reservation_id"/>
+                        <field name="propagated_from_id"/>
+                        <field name="owner_id" groups="stock.group_tracking_owner"/>
+                    </group>
                 </form>
             </field>
         </record>
