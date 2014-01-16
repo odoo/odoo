@@ -8,6 +8,7 @@ HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
 class test_ir_attachment(openerp.tests.common.TransactionCase):
     def setUp(self):
+        super(test_ir_attachment, self).setUp()
         registry, cr, uid = self.registry, self.cr, self.uid
         self.ira = registry('ir.attachment')
         self.filestore = self.ira._filestore(cr, uid)
