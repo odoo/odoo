@@ -13,12 +13,11 @@
                 
                     <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>
 
-                    <% set signup_url = object.quote_url %>
                     <p>
                         You can access this document and pay online via our Customer Portal:
                     </p>
                     <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;"
-                   href="${signup_url}">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>
+                   href="${object.open_quotation()['url']}">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>
                 </div>
             ]]></field>
         </record>

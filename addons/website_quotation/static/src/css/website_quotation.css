@@ -1,3 +1,74 @@
-.affix {
-    width : 260px;
+.bs-sidebar.affix {
+  position: static;
+  margin-top: 30px;
 }
+
+.bs-sidenav {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-shadow: 0 1px 0 #fff;
+  background-color: #f7f5fa;
+  border-radius: 5px;
+}
+
+.bs-sidebar .nav > li > a {
+  display: block;
+  color: #716b7a;
+  padding: 5px 20px;
+}
+.bs-sidebar .nav > li > a:hover,
+.bs-sidebar .nav > li > a:focus {
+  text-decoration: none;
+  background-color: #e5e3e9;
+  border-right: 1px solid #dbd8e0;
+}
+.bs-sidebar .nav > .active > a,
+.bs-sidebar .nav > .active:hover > a,
+.bs-sidebar .nav > .active:focus > a {
+  font-weight: bold;
+  color: #563d7c;
+  background-color: transparent;
+  border-right: 1px solid #563d7c;
+}
+
+.bs-sidebar .nav .nav {
+  display: none;
+  margin-bottom: 8px;
+}
+.bs-sidebar .nav .nav > li > a {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 30px;
+  font-size: 90%;
+}
+
+@media (min-width: 992px) {
+  .bs-sidebar .nav > .active > ul {
+    display: block;
+  }
+  .bs-sidebar.affix,
+  .bs-sidebar.affix-bottom {
+    width: 213px;
+  }
+  .bs-sidebar.affix {
+    position: fixed;
+    top: 80px;
+  }
+  .bs-sidebar.affix-bottom {
+    position: absolute;
+  }
+  .bs-sidebar.affix-bottom .bs-sidenav,
+  .bs-sidebar.affix .bs-sidenav {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+@media (min-width: 1200px) {
+  .bs-sidebar.affix-bottom,
+  .bs-sidebar.affix {
+    width: 263px;
+  }
+}
+

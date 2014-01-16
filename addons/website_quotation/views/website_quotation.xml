@@ -2,6 +2,9 @@
 <openerp>
     <data>
         <template id="pricing" name="Price">
+            <section data-snippet-id="title">
+                <h1 class="page-header">Pricing</h1>
+            </section>
             <section id="quote" class="container">
                 <table class="table table-hover">
                     <thead>
@@ -40,7 +43,7 @@
                                     t-field-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}'/>
                             </td>
                             <td>
-                                <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right hidden-print">
+                                <a t-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json pull-right hidden-print" t-if="line.is_optional">
                                     <span class="fa fa-trash-o"></span>
                                 </a>
                             </td>
@@ -84,7 +87,9 @@
         </template>
 
         <template id="chatter">
-            <h2 class="page-header">History</h2>
+            <section data-snippet-id="title">
+                <h1 class="page-header">History</h1>
+            </section>
             <ul class="media-list" id="comments-list">
                 <li t-foreach="quotation.message_ids" t-as="message" class="media">
                     <div class="media-body">
@@ -102,7 +107,7 @@
 
         <!-- Options:Quotation Chatter: user can reply -->
         <template id="opt_quotation_chatter_post_complete_comment" name="Allow Comments" inherit_option_id="website_quotation.chatter" inherit_id="website_quotation.chatter">
-            <xpath expr="//h2" position="after">
+            <xpath expr="//h1" position="after">
                 <section class="mb32 css_editable_mode_hidden hidden-print">
                     <form id="comment" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/post"
                             method="POST">
@@ -124,11 +129,13 @@
                   <link rel='stylesheet' href='/website_quotation/static/src/css/website_quotation.css'/>
                   <t t-raw="head or ''"/>
               </t>
-              <body data-spy="scroll" data-target=".nav">
+              <body data-spy="scroll" data-target=".navspy">
                   <div class="container">
                     <div class="row mt16">
                         <div class="col-md-3">
-                            <ul class="nav" data-id="quote_sidebar" data-offset-top="60" data-offset-bottom="110" data-spy="affix"/>
+                            <div class="bs-sidebar hidden-print affix navspy" role="complementary">
+                                <ul class="nav bs-sidenav" data-id="quote_sidebar" />
+                            </div>
                         </div>
                         <div class="col-md-9">
 
@@ -149,7 +156,7 @@
                             <h1 class="page-header">
                                 <span t-if="quotation.state in ('draft','sent','cancel')">Your Quotation</span>
                                 <span t-if="quotation.state not in ('draft','sent','cancel')">Your Order</span>
-                                <em t-esc="quotation.name"/>
+                                <a t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (quotation._name, quotation.id)"><em t-esc="quotation.name"/></a>
                                 <small t-field="quotation.state"/>
                             </h1>
 
