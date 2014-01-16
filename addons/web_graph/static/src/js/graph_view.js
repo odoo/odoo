@@ -78,7 +78,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.graph_widget = new openerp.web_graph.Graph(this, this.model, domain, this.widget_config);
             this.graph_widget.appendTo(this.$el);
             this.graph_widget.on('groupby_changed', this, this.proxy('register_groupby'));
+            this.graph_widget.on('groupby_swapped', this, this.proxy('swap_groupby'));
             this.ViewManager.on('switch_mode', this, function (e) { if (e === 'graph') this.graph_widget.reload(); });
+            return;
+        }
+
+        if (this.swapped) {
+            this.swapped = false;
             return;
         }
 
@@ -87,8 +93,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     get_col_groupbys_from_searchview: function () {
         var facet = this.search_view.query.findWhere({category:'ColGroupBy'}),
-            groupby_list = facet ? facet.attributes.values : [];
-        return _.map(groupby_list, function (g) { return g.value.attrs.context.col_group_by; });
+            groupby_list = facet ? facet.values.models : [];
+        return _.map(groupby_list, function (g) { return g.attributes.value.attrs.context.col_group_by; });
     },
 
     do_show: function () {
@@ -130,6 +136,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 query.add(col_facet);
             }
         }
+    },
+
+    swap_groupby: function () {
+        this.swap = true;
+        this.register_groupby();
     },
 
     make_row_groupby_facets: function(groupbys) {

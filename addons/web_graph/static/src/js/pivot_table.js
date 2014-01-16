@@ -4,7 +4,7 @@
 (function () {
 'use strict';
 
-//  Pivot Table emits the events 'groupby_changed' and 'redraw_required' when necessary.
+//  Pivot Table emits the events 'groupby_changed', 'groupby_swapped' and 'redraw_required' when necessary.
 //  PivotTable is initialized by default 'inactive', and require a call to activate() 
 //  after init to load initial data and start triggering events.
 openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherMixin, {
@@ -318,7 +318,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		var temp = this.rows;
 		this.rows = this.cols;
 		this.cols = temp;
-		this.trigger('groupby_changed');
+		this.trigger('groupby_swapped');
 		this.trigger('redraw_required');
 	},
 

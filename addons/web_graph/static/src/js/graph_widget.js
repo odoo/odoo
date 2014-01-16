@@ -41,6 +41,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
             self.pivot = new openerp.web_graph.PivotTable(self.model, self.domain, self.fields, self.pivot_options);
             self.pivot.on('redraw_required', self, self.proxy('display_data'));
             self.pivot.on('groupby_changed', self, function () { self.trigger('groupby_changed'); });
+            self.pivot.on('groupby_swapped', self, function () { self.trigger('groupby_swapped'); });
             openerp.web.bus.on('click', self, function () {
                 if (self.dropdown) {
                     self.dropdown.remove();
