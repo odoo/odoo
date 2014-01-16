@@ -628,14 +628,18 @@ class configmanager(object):
     def addons_data_dir(self):
         d = os.path.join(self['data_dir'], 'addons', release.series)
         if not os.path.exists(d):
-            os.makedirs(d)
+            os.makedirs(d, 0700)
+        else:
+            os.chmod(d, 0700)
         return d
 
     @property
     def session_dir(self):
         d = os.path.join(self['data_dir'], 'sessions', release.series)
         if not os.path.exists(d):
-            os.makedirs(d)
+            os.makedirs(d, 0700)
+        else:
+            os.chmod(d, 0700)
         return d
 
 config = configmanager()
