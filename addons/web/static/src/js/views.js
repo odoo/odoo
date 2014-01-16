@@ -331,6 +331,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_menu_id: null,
             additional_context: {},
         });
+
         if (action === false) {
             action = { type: 'ir.actions.act_window_close' };
         } else if (_.isString(action) && instance.web.client_actions.contains(action)) {
