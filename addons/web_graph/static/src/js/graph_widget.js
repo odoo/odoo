@@ -16,7 +16,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         this._super(parent);
         this.model = model;
         this.domain = domain;
-        this.mode = options.mode || 'pivot';
+        this.mode = options.mode || 'pivot';  // pivot, bar, pie, line
+        this.heatmap_mode = options.heatmap_mode || 'none';
         this.title = options.title || 'Graph';
         this.visible_ui = options.visible_ui || true;
         this.bar_ui = options.bar_ui || 'group';
@@ -27,6 +28,17 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         var self = this;
         this.table = $('<table></table>');
         this.$('.graph_main_content').append(this.table);
+
+        var index = 0;
+        if (this.mode === 'bar') { index = 1; }
+        if (this.mode === 'line') { index = 2; }
+        if (this.mode === 'chart') { index = 3; }
+        this.$('.graph_mode_selection label').eq(index).addClass('active');
+
+        if (this.mode !== 'pivot') {
+            this.$('.graph_heatmap label').addClass('disabled');
+        }
+
         var def1 = this.get_search_fields().then(function (f) {
             self.important_fields = f;
         });
@@ -117,6 +129,22 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
 
     set_mode: function (mode) {
         this.mode = mode;
+
+        if (mode === 'pivot') {
+            this.$('.graph_heatmap label').removeClass('disabled');
+        } else {
+            this.$('.graph_heatmap label').addClass('disabled');
+        }        
+        this.display_data();
+    },
+
+    set_heatmap_mode: function (mode) { // none, row, col, all
+        debugger;
+        this.heatmap_mode = mode;
+        if (mode === 'none') {
+            this.$('.graph_heatmap label').removeClass('disabled');
+            this.$('.graph_heatmap label').removeClass('active');
+        }
         this.display_data();
     },
 
@@ -138,16 +166,17 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
     // UI code
     // ----------------------------------------------------------------------
     events: {
-        'click .graph_mode_selection li' : 'mode_selection',
+        'click .graph_mode_selection label' : 'mode_selection',
         'click .graph_measure_selection li' : 'measure_selection',
-        'click .graph_options_selection li' : 'option_selection',
+        'click .graph_options_selection label' : 'option_selection',
+        'click .graph_heatmap label' : 'heatmap_mode_selection',
         'click .web_graph_click' : 'header_cell_clicked',
         'click a.field-selection' : 'field_selection',
     },
 
     mode_selection: function (event) {
         event.preventDefault();
-        var mode = event.target.attributes['data-mode'].nodeValue;
+        var mode = event.currentTarget.attributes['data-mode'].nodeValue;
         this.set_mode(mode);
     },
 
@@ -159,7 +188,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
 
     option_selection: function (event) {
         event.preventDefault();
-        switch (event.target.attributes['data-choice'].nodeValue) {
+        switch (event.currentTarget.attributes['data-choice'].nodeValue) {
             case 'bar_grouped':
                 this.bar_ui = 'group';
                 if (this.mode === 'bar') {
@@ -184,6 +213,17 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
             case 'export_data':
                 // Export code...  To do...
                 break;
+        }
+    },
+
+    heatmap_mode_selection: function (event) {
+        event.preventDefault();
+        var mode = event.currentTarget.attributes['data-mode'].nodeValue;
+        if (this.heatmap_mode === mode) {
+            event.stopPropagation();
+            this.set_heatmap_mode('none');
+        } else {
+            this.set_heatmap_mode(mode);
         }
     },
 
@@ -245,8 +285,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         if (this.pivot.no_data) {
             this.$('.graph_main_content').append($(QWeb.render('graph_no_data')));
         } else {
-            var table_modes = ['pivot', 'heatmap', 'row_heatmap', 'col_heatmap'];
-            if (_.contains(table_modes, this.mode)) {
+            if (this.mode === 'pivot') {
                 this.draw_table();
             } else {
                 this.$('.graph_main_content').append($('<div><svg></svg></div>'));
@@ -416,17 +455,17 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
                 return cell;
             }
             cell.append(openerp.web.format_value(value, {type: measure_type}));
-            if (self.mode === 'heatmap') {
+            if (self.heatmap_mode === 'both') {
                 total = pivot.get_total()[index];
                 color = Math.floor(90 + 165*(total - Math.abs(value))/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
-            if (self.mode === 'row_heatmap') {
+            if (self.heatmap_mode === 'row') {
                 total = pivot.get_total(row)[index];
                 color = Math.floor(90 + 165*(total - Math.abs(value))/total);
                 cell.css('background-color', $.Color(255, color, color));
             }
-            if (self.mode === 'col_heatmap') {
+            if (self.heatmap_mode === 'col') {
                 debugger;
                 total = pivot.get_total(col)[index];
                 color = Math.floor(90 + 165*(total - Math.abs(value))/total);
@@ -453,10 +492,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
             }]}];
         // Only column groupbys 
         } else if ((dim_x === 0) && (dim_y >= 1)){
-            data =  _.map(this.pivot.get_columns_with_depth(1), function (header) {
+            data =  _.map(this.pivot.get_cols_with_depth(1), function (header) {
                 return {
                     key: header.title,
-                    values: [{x:header.root[0].title, y: self.pivot.get_total(header)[0]}]
+                    values: [{x:header.title, y: self.pivot.get_total(header)[0]}]
                 };
             });
         // Just 1 row groupby 
