@@ -45,7 +45,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def web_login(self, *args, **kw):
         response = super(Website, self).web_login(*args, **kw)
         if isinstance(response, LazyResponse):
-            values = dict(response.params['values'], disable_footer=True, redirect="/")
+            values = dict(response.params['values'], disable_footer=True)
             response = request.website.render(response.params['template'], values)
         return response
 

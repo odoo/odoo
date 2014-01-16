@@ -241,7 +241,7 @@
 <template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li t-if="user_id.id == website.public_user.id">
-            <a t-attf-href="/web#redirect=#{ quote_plus(url_for('', keep_query='*')) }">
+            <a t-attf-href="/web/login?redirect=#{ quote_plus(url_for('', keep_query='*')) }">
                 <b>Sign in</b>
             </a>
         </li>
