@@ -577,7 +577,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 } catch(e) {}
             }
             _.each(this.view.aggregates, function(value, key) {
-                self.aggregates[value] = group.get('aggregates')[key];
+                self.aggregates[value] = instance.web.format_value(group.get('aggregates')[key], {type: 'float'});
             });
         }
 

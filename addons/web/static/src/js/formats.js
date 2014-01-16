@@ -147,6 +147,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
             console.warn('Field', descriptor, 'had an empty string as value, treating as false...');
             return value_if_empty === undefined ?  '' : value_if_empty;
         case false:
+        case undefined:
         case Infinity:
         case -Infinity:
             return value_if_empty === undefined ?  '' : value_if_empty;
