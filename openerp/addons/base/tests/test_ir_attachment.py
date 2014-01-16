@@ -44,7 +44,7 @@ class test_ir_attachment(openerp.tests.common.TransactionCase):
         a2_store_fname = self.ira.browse(cr, uid, a2).store_fname
 
         self.assertEqual(a2_store_fname, self.blob1_fname)
-        self.assertTrue(os.path.isdir(os.path.join(self.filestore, a2_store_fname)))
+        self.assertTrue(os.path.isfile(os.path.join(self.filestore, a2_store_fname)))
 
     def test_03_no_duplication(self):
         registry, cr, uid = self.registry, self.cr, self.uid
