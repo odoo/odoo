@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (C) 2012-2013 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2012-TODAY OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -29,6 +29,7 @@ import re
 import socket
 import threading
 import time
+from email.utils import getaddresses
 
 import openerp
 from openerp.loglevels import ustr
@@ -45,10 +46,14 @@ tags_to_remove = ['html', 'body', 'font']
 
 # allow new semantic HTML5 tags
 allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split())
-safe_attrs = clean.defs.safe_attrs | frozenset(['style'])
+safe_attrs = clean.defs.safe_attrs | frozenset(
+    ['style',
+     'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translate', 'data-oe-nodeid',
+     'data-snippet-id', 'data-publish', 'data-id', 'data-res_id', 'data-member_id', 'data-view-id'
+     ])
 
 
-def html_sanitize(src, silent=True):
+def html_sanitize(src, silent=True, strict=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -62,7 +67,6 @@ def html_sanitize(src, silent=True):
     kwargs = {
         'page_structure': True,
         'style': False,             # do not remove style attributes
-        'frames': False,            # de not remove frames (embbed video in CMS blogs)
         'forms': True,              # remove form tags
         'remove_unknown_tags': False,
         'allow_tags': allowed_tags,
@@ -76,7 +80,16 @@ def html_sanitize(src, silent=True):
     else:
         kwargs['remove_tags'] = tags_to_kill + tags_to_remove
 
-    kwargs['safe_attrs_only'] = False
+    if strict:
+        if etree.LXML_VERSION >= (3, 1, 0):
+            # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
+            kwargs.update({
+                'safe_attrs_only': True,
+                'safe_attrs': safe_attrs,
+            })
+    else:
+        kwargs['safe_attrs_only'] = False    # keep oe-data attributes + style
+        kwargs['frames'] = False,            # do not remove frames (embbed video in CMS blogs)
 
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
@@ -94,6 +107,11 @@ def html_sanitize(src, silent=True):
             raise
         logger.warning('unknown error obtained when sanitizing %r', src, exc_info=True)
         cleaned = '<p>Unknown error when sanitizing</p>'
+
+    # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
+    if cleaned.startswith('<div>') and cleaned.endswith('</div>'):
+        cleaned = cleaned[5:-6]
+
     return cleaned
 
 
@@ -627,4 +645,9 @@ def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
     if not text:
         return []
-    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
+    return [addr[1] for addr in getaddresses([text])
+                # getaddresses() returns '' when email parsing fails, and
+                # sometimes returns emails without at least '@'. The '@'
+                # is strictly required in RFC2822's `addr-spec`.
+                if addr[1]
+                if '@' in addr[1]]

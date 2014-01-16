@@ -395,16 +395,8 @@ class QWeb(orm.AbstractModel):
         inner = self.eval_str(t_att["raw"], v)
         return self.render_element(e, t_att, g_att, v, inner)
 
-    def render_tag_rawf(self, e, t_att, g_att, v):
-        inner = self.eval_format(t_att["rawf"], v)
-        return self.render_element(e, t_att, g_att, v, inner)
-
     def render_tag_esc(self, e, t_att, g_att, v):
         inner = werkzeug.utils.escape(self.eval_str(t_att["esc"], v))
-        return self.render_element(e, t_att, g_att, v, inner)
-
-    def render_tag_escf(self, e, t_att, g_att, v):
-        inner = werkzeug.utils.escape(self.eval_format(t_att["escf"], v))
         return self.render_element(e, t_att, g_att, v, inner)
 
     def render_tag_foreach(self, e, t_att, g_att, v):

@@ -286,7 +286,7 @@ class JsonRequest(WebRequest):
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
-                self.session.jsonp_requests[request_id] = self.httprequest.form['r']
+                self.session['jsonp_request_%s' % (request_id,)] = self.httprequest.form['r']
                 self.session.modified = True
                 headers=[('Content-Type', 'text/plain; charset=utf-8')]
                 r = werkzeug.wrappers.Response(request_id, headers=headers)
@@ -298,7 +298,7 @@ class JsonRequest(WebRequest):
             request = args.get('r')
         elif jsonp and request_id:
             # jsonp 2 steps step2 GET: run and return result
-            request = self.session.jsonp_requests.pop(request_id, "")
+            request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
         else:
             # regular jsonrpc2
             request = self.httprequest.stream.read()
@@ -637,7 +637,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("login", None)
         self.setdefault("password", None)
         self.setdefault("context", {'tz': "UTC", "uid": None})
-        self.setdefault("jsonp_requests", {})
 
     def get_context(self):
         """
@@ -940,7 +939,12 @@ class Root(object):
             try:
                 result.process()
             except(Exception), e:
-                result = request.registry['ir.http']._handle_exception(e)
+                # In case of auth="none" we re-activate db getter for exception handling
+                request.disable_db = False
+                if request.db:
+                    result = request.registry['ir.http']._handle_exception(e)
+                else:
+                    raise
 
         if isinstance(result, basestring):
             response = werkzeug.wrappers.Response(result, mimetype='text/html')

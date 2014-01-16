@@ -827,7 +827,7 @@ class users_view(osv.osv):
             fields.append('groups_id')
         res = super(users_view, self).read(cr, uid, ids, fields, context=context, load=load)
 
-        if group_fields:
+        if res and group_fields:
             for values in (res if isinstance(res, list) else [res]):
                 self._get_reified_groups(group_fields, values)
                 if inject_groups_id:
@@ -859,6 +859,7 @@ class users_view(osv.osv):
                     'selection': [(False, '')] + [(g.id, g.name) for g in gs],
                     'help': '\n'.join(tips),
                     'exportable': False,
+                    'selectable': False,
                 }
             else:
                 # boolean group fields
@@ -868,6 +869,7 @@ class users_view(osv.osv):
                         'string': g.name,
                         'help': g.comment,
                         'exportable': False,
+                        'selectable': False,
                     }
         return res
 

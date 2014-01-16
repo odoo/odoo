@@ -88,7 +88,7 @@ class ir_http(osv.AbstractModel):
         return auth_method
 
     def _handle_exception(self, exception):
-        raise exception
+        raise
 
     def _dispatch(self):
         # locate the controller method
