@@ -115,18 +115,20 @@ def serialize_exception(f):
             return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
     return wrap
 
-def redirect_with_hash(path, keep_query=None, exclude_query=[], code=303):
+def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=303):
     url = path
-    if keep_query:
-        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-        for key in exclude_query:
-            query.pop(key, None)
-        if hasattr(keep_query, '__iter__'):
-            for key in query.keys():
-                if key not in keep_query:
-                    query.pop(key)
-        url = path + '?' + urllib.urlencode(query)
+    if not query:
+        query = {}
+    if forward_debug and request and request.debug:
+        query['debug'] = None
+    if query:
+        url += '?' + urllib.urlencode(query)
+    if keep_hash:
+        return redirect_with_hash(url)
+    else:
+        return werkzeug.utils.redirect(url, code)
 
+def redirect_with_hash(url, code=303):
     if request.httprequest.user_agent.browser in ('msie', 'safari'):
         # Most IE and Safari versions decided not to preserve location.hash upon
         # redirect. And even if IE10 pretends to support it, it still fails
@@ -588,7 +590,7 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
-        return redirect_with_hash('/web', keep_query=True)
+        return local_redirect('/web', query=request.params)
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, db=None, **kw):
@@ -603,7 +605,7 @@ class Home(http.Controller):
         # if no db can be found til here, send to the database selector
         # the database selector will redirect to database manager if needed
         if not db:
-            return redirect_with_hash('/web/database/selector', keep_query=['debug'])
+            return local_redirect('/web/database/selector')
 
         # always switch the session to the computed db
         if db != request.session.db:
@@ -614,12 +616,12 @@ class Home(http.Controller):
             html = render_bootstrap_template(db, "web.webclient_bootstrap", debug=request.debug)
             return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
         else:
-            return redirect_with_hash('/web/login', keep_query=True)
+            return local_redirect('/web/login', query=request.params)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         if request.session.db is None:
-            return redirect_with_hash('/web/database/selector', keep_query=['debug'])
+            return local_redirect('/web/database/selector')
         values = request.params.copy()
         if not redirect:
             redirect = '/web?' + request.httprequest.query_string
@@ -808,7 +810,7 @@ class Database(http.Controller):
         try:
             dbs = http.db_list()
             if not dbs:
-                return redirect_with_hash('/web/database/manager', keep_query=['debug'])
+                return local_redirect('/web/database/manager')
         except openerp.exceptions.AccessDenied:
             dbs = False
         return env.get_template("database_selector.html").render({
