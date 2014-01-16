@@ -1243,6 +1243,12 @@ class stock_move(osv.osv):
                 res.add(quant.reservation_id.id)
         return list(res)
 
+    def _get_move_ids(self, cr, uid, ids, context=None):
+        res = []
+        for picking in self.browse(cr, uid, ids, context=context):
+            res += [x.id for x in picking.move_lines]
+        return res
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1281,7 +1287,7 @@ class stock_move(osv.osv):
         'move_orig_ids': fields.one2many('stock.move', 'move_dest_id', 'Original Move', help="Optional: previous stock move when chaining them", select=True),
 
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True, states={'done': [('readonly', True)]}),
-        'picking_priority': fields.related('picking_id', 'priority', type='selection', selection=[('0', 'Low'), ('1', 'Normal'), ('2', 'High')], string='Picking Priority'),
+        'picking_priority': fields.related('picking_id', 'priority', type='selection', selection=[('0', 'Low'), ('1', 'Normal'), ('2', 'High')], string='Picking Priority', store={'stock.picking': (_get_move_ids, ['priority'], 10)}),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),
@@ -2904,7 +2910,7 @@ class stock_location_path(osv.osv):
 
     def _get_rules(self, cr, uid, ids, context=None):
         res = []
-        for route in self.browse(cr, uid, ids):
+        for route in self.browse(cr, uid, ids, context=context):
             res += [x.id for x in route.push_ids]
         return res
 
