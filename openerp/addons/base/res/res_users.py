@@ -681,8 +681,13 @@ class groups_view(osv.osv):
     def update_user_groups_view(self, cr, uid, context=None):
         # the view with id 'base.user_groups_view' inherits the user form view,
         # and introduces the reified group fields
-        view = self.get_user_groups_view(cr, uid, context)
-        if view:
+        # we have to try-catch this, because at first init the view does not exist
+        # but we are already creating some basic groups
+        try:
+            view = self.pool['ir.model.data'].get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context=context, check_existence_and_raise=False)
+        except ValueError:
+            view = False
+        if view and view.exists() and view._table_name == 'ir.ui.view':
             xml1, xml2 = [], []
             xml1.append(E.separator(string=_('Application'), colspan="4"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
@@ -706,14 +711,6 @@ class groups_view(osv.osv):
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
             view.write({'arch': xml_content})
         return True
-
-    def get_user_groups_view(self, cr, uid, context=None):
-        try:
-            view = self.pool['ir.model.data'].get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context=context, check_existence_and_raise=False)
-            assert view and view.exists() and view._table_name == 'ir.ui.view'
-        except Exception:
-            view = False
-        return view
 
     def get_application_groups(self, cr, uid, domain=None, context=None):
         return self.search(cr, uid, domain or [])
