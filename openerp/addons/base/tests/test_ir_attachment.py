@@ -1,89 +1,91 @@
 import hashlib
 import os
 
-import unittest2
-
 import openerp
 import openerp.tests.common
 
-class test_ir_attachment(openerp.tests.common.TransactionCase):
+HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
-    def test_00_attachment_flow(self):
+class test_ir_attachment(openerp.tests.common.TransactionCase):
+    def setUp(self):
         registry, cr, uid = self.registry, self.cr, self.uid
-        root_path = openerp.tools.config['root_path']
-        ira = registry('ir.attachment')
+        self.ira = registry('ir.attachment')
+        self.filestore = self.ira._filestore(cr, uid)
 
         # Blob1
-        blob1 = 'blob1'
-        blob1_b64 = blob1.encode('base64')
-        blob1_hash = hashlib.sha1(blob1).hexdigest()
-        blob1_fname = blob1_hash[:3] + '/' + blob1_hash
+        self.blob1 = 'blob1'
+        self.blob1_b64 = self.blob1.encode('base64')
+        blob1_hash = hashlib.sha1(self.blob1).hexdigest()
+        self.blob1_fname = blob1_hash[:HASH_SPLIT] + '/' + blob1_hash
 
         # Blob2
         blob2 = 'blob2'
-        blob2_b64 = blob2.encode('base64')
-        blob2_hash = hashlib.sha1(blob2).hexdigest()
-        blob2_fname = blob2_hash[:3] + '/' + blob2_hash
+        self.blob2_b64 = blob2.encode('base64')
+
+    def test_01_store_in_db(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
+
+        # force storing in database
+        registry('ir.config_parameter').set_param(cr, uid, 'ir_attachment.location', '')
 
         # 'ir_attachment.location' is undefined test database storage
-        a1 = ira.create(cr, uid, {'name': 'a1', 'datas': blob1_b64})
-        a1_read = ira.read(cr, uid, [a1], ['datas'])
-        self.assertEqual(a1_read[0]['datas'], blob1_b64)
+        a1 = self.ira.create(cr, uid, {'name': 'a1', 'datas': self.blob1_b64})
+        a1_read = self.ira.read(cr, uid, [a1], ['datas'])
+        self.assertEqual(a1_read[0]['datas'], self.blob1_b64)
 
-        cr.execute("select id,db_datas from ir_attachment where id = %s", (a1,) )
-        a1_db_datas = str(cr.fetchall()[0][1])
-        self.assertEqual(a1_db_datas, blob1_b64)
+        a1_db_datas = self.ira.browse(cr, uid, a1).db_datas
+        self.assertEqual(a1_db_datas, self.blob1_b64)
 
-        # define a location for filestore
-        registry('ir.config_parameter').set_param(cr, uid, 'ir_attachment.location', 'file:///filestore')
+    def test_02_store_on_disk(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
 
-        # Test file storage
-        a2 = ira.create(cr, uid, {'name': 'a2', 'datas': blob1_b64})
-        a2_read = ira.read(cr, uid, [a2], ['datas'])
-        self.assertEqual(a2_read[0]['datas'], blob1_b64)
+        a2 = self.ira.create(cr, uid, {'name': 'a2', 'datas': self.blob1_b64})
+        a2_store_fname = self.ira.browse(cr, uid, a2).store_fname
 
-        cr.execute("select id,store_fname from ir_attachment where id = %s", (a2,) )
-        a2_store_fname = cr.fetchall()[0][1]
-        self.assertEqual(a2_store_fname, blob1_fname)
+        self.assertEqual(a2_store_fname, self.blob1_fname)
+        self.assertTrue(os.path.isdir(os.path.join(self.filestore, a2_store_fname)))
 
-        a2_fn = os.path.join(root_path, 'filestore', cr.dbname, blob1_hash[:3], blob1_hash)
-        fc = file(a2_fn).read()
-        self.assertEqual(fc, blob1)
+    def test_03_no_duplication(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
 
-        # create a3 with same blob
-        a3 = ira.create(cr, uid, {'name': 'a3', 'datas': blob1_b64})
-        a3_read = ira.read(cr, uid, [a3], ['datas'])
-        self.assertEqual(a3_read[0]['datas'], blob1_b64)
+        a2 = self.ira.create(cr, uid, {'name': 'a2', 'datas': self.blob1_b64})
+        a2_store_fname = self.ira.browse(cr, uid, a2).store_fname
 
-        cr.execute("select id,store_fname from ir_attachment where id = %s", (a3,) )
-        a3_store_fname = cr.fetchall()[0][1]
+        a3 = self.ira.create(cr, uid, {'name': 'a3', 'datas': self.blob1_b64})
+        a3_store_fname = self.ira.browse(cr, uid, a3).store_fname
+
         self.assertEqual(a3_store_fname, a2_store_fname)
 
-        # create a4 blob2
-        a4 = ira.create(cr, uid, {'name': 'a4', 'datas': blob2_b64})
-        a4_read = ira.read(cr, uid, [a4], ['datas'])
-        self.assertEqual(a4_read[0]['datas'], blob2_b64)
+    def test_04_keep_file(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
 
-        a4_fn = os.path.join(root_path, 'filestore', cr.dbname, blob2_hash[:3], blob2_hash)
-        self.assertTrue(os.path.isfile(a4_fn))
+        a2 = self.ira.create(cr, uid, {'name': 'a2', 'datas': self.blob1_b64})
+        a3 = self.ira.create(cr, uid, {'name': 'a3', 'datas': self.blob1_b64})
 
-        # delete a3 but file stays
-        ira.unlink(cr, uid, [a3])
+        a2_store_fname = self.ira.browse(cr, uid, a2).store_fname
+        a2_fn = os.path.join(self.filestore, a2_store_fname)
+
+        self.ira.unlink(cr, uid, [a3])
         self.assertTrue(os.path.isfile(a2_fn))
 
         # delete a2 it is unlinked
-        ira.unlink(cr, uid, [a2])
+        self.ira.unlink(cr, uid, [a2])
         self.assertFalse(os.path.isfile(a2_fn))
 
-        # update a4 blob2 by blob1
-        ira.write(cr, uid, [a4], {'datas': blob1_b64})
-        a4_read = ira.read(cr, uid, [a4], ['datas'])
-        self.assertEqual(a4_read[0]['datas'], blob1_b64)
+    def test_05_change_data_change_file(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
 
-        # file of a4 disapear and a2 reappear
-        self.assertFalse(os.path.isfile(a4_fn))
+        a2 = self.ira.create(cr, uid, {'name': 'a2', 'datas': self.blob1_b64})
+        a2_store_fname = self.ira.browse(cr, uid, a2).store_fname
+        a2_fn = os.path.join(self.filestore, a2_store_fname)
+
         self.assertTrue(os.path.isfile(a2_fn))
 
-        # everybody applause
+        self.ira.write(cr, uid, [a2], {'datas': self.blob2_b64})
+        self.assertFalse(os.path.isfile(a2_fn))
 
+        new_a2_store_fname = self.ira.browse(cr, uid, a2).store_fname
+        self.assertNotEqual(a2_store_fname, new_a2_store_fname)
 
+        new_a2_fn = os.path.join(self.filestore, new_a2_store_fname)
+        self.assertTrue(os.path.isfile(new_a2_fn))
