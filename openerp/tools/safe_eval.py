@@ -174,7 +174,7 @@ def _import(name, globals=None, locals=None, fromlist=None, level=-1):
         return __import__(name, globals, locals, level)
     raise ImportError(name)
 
-def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False):
+def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
     """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
 
     System-restricted Python expression evaluation
@@ -218,29 +218,34 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
             locals_dict = dict(locals_dict)
 
     globals_dict.update(
-            __builtins__ = {
-                '__import__': _import,
-                'True': True,
-                'False': False,
-                'None': None,
-                'str': str,
-                'globals': locals,
-                'locals': locals,
-                'bool': bool,
-                'dict': dict,
-                'list': list,
-                'tuple': tuple,
-                'map': map,
-                'abs': abs,
-                'min': min,
-                'max': max,
-                'reduce': reduce,
-                'filter': filter,
-                'round': round,
-                'len': len,
-                'set' : set
-            }
+        __builtins__={
+            '__import__': _import,
+            'True': True,
+            'False': False,
+            'None': None,
+            'str': str,
+            'globals': locals,
+            'locals': locals,
+            'bool': bool,
+            'dict': dict,
+            'list': list,
+            'tuple': tuple,
+            'map': map,
+            'abs': abs,
+            'min': min,
+            'max': max,
+            'reduce': reduce,
+            'filter': filter,
+            'round': round,
+            'len': len,
+            'set': set,
+            'repr': repr,
+        }
     )
+    if locals_builtins:
+        if locals_dict is None:
+            locals_dict = {}
+        locals_dict.update(globals_dict.get('__builtins__'))
     c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
         return eval(c, globals_dict, locals_dict)
