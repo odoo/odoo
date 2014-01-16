@@ -11,4 +11,4 @@ Miscellanous
    06_misc_user_img_specs.rst
    06_misc_import.rst
    06_misc_auto_join.rst
-   06_misc_qweb.rst
+   06_ir_qweb.rst
