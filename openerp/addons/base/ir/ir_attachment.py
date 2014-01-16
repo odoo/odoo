@@ -138,7 +138,7 @@ class ir_attachment(osv.osv):
         location = self._storage(cr, uid, context)
         bin_size = context.get('bin_size')
         for attach in self.browse(cr, uid, ids, context=context):
-            if location and attach.store_fname:
+            if location != 'db' and attach.store_fname:
                 result[attach.id] = self._file_read(cr, uid, location, attach.store_fname, bin_size)
             else:
                 result[attach.id] = attach.db_datas
@@ -152,7 +152,7 @@ class ir_attachment(osv.osv):
             context = {}
         location = self._storage(cr, uid, context)
         file_size = len(value.decode('base64'))
-        if location:
+        if location != 'db':
             attach = self.browse(cr, uid, id, context=context)
             if attach.store_fname:
                 self._file_delete(cr, uid, location, attach.store_fname)
@@ -299,7 +299,7 @@ class ir_attachment(osv.osv):
             ids = [ids]
         self.check(cr, uid, ids, 'unlink', context=context)
         location = self._storage(cr, uid, context)
-        if location:
+        if location != 'db':
             for attach in self.browse(cr, uid, ids, context=context):
                 if attach.store_fname:
                     self._file_delete(cr, uid, location, attach.store_fname)

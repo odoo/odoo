@@ -27,7 +27,7 @@ class test_ir_attachment(openerp.tests.common.TransactionCase):
         registry, cr, uid = self.registry, self.cr, self.uid
 
         # force storing in database
-        registry('ir.config_parameter').set_param(cr, uid, 'ir_attachment.location', '')
+        registry('ir.config_parameter').set_param(cr, uid, 'ir_attachment.location', 'db')
 
         # 'ir_attachment.location' is undefined test database storage
         a1 = self.ira.create(cr, uid, {'name': 'a1', 'datas': self.blob1_b64})
