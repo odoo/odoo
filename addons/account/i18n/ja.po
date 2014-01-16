@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2014-01-14 15:09+0000\n"
+"PO-Revision-Date: 2014-01-15 09:04+0000\n"
 "Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-15 06:21+0000\n"
-"X-Generator: Launchpad (build 16890)\n"
+"X-Launchpad-Export-Date: 2014-01-16 06:04+0000\n"
+"X-Generator: Launchpad (build 16901)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -1078,7 +1078,7 @@ msgstr "合計金額"
 #. module: account
 #: help:account.invoice,supplier_invoice_number:0
 msgid "The reference of this invoice as provided by the supplier."
-msgstr ""
+msgstr "仕入先から提供される請求書の参照"
 
 #. module: account
 #: selection:account.account,type:0
@@ -6818,6 +6818,8 @@ msgid ""
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
 msgstr ""
+"支払条件を使用する場合、期日は会計項目の生成時に自動で計算されます。支払条件は複数の期日(たとえば直ぐに50%、1ヶ月以内に50%)を計算できます。期日を"
+"強制したい場合、支払条件は請求書に設定されないことを確認してください。支払条件を設定して期日が空の場合は直接支払いを意味します。"
 
 #. module: account
 #: code:addons/account/account.py:414

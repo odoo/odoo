@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-01-15 02:01+0000\n"
+"PO-Revision-Date: 2014-01-15 08:02+0000\n"
 "Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-15 06:22+0000\n"
-"X-Generator: Launchpad (build 16890)\n"
+"X-Launchpad-Export-Date: 2014-01-16 06:04+0000\n"
+"X-Generator: Launchpad (build 16901)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -380,7 +380,7 @@ msgstr "取引先でグルーピング"
 #: help:stock.picking.in,move_type:0
 #: help:stock.picking.out,move_type:0
 msgid "It specifies goods to be deliver partially or all at once"
-msgstr ""
+msgstr "商品を部分的または一度にすべて配送するか指定します。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -1022,7 +1022,7 @@ msgstr "入荷"
 #: help:stock.picking.in,date:0
 #: help:stock.picking.out,date:0
 msgid "Creation date, usually the time of the order."
-msgstr ""
+msgstr "作成日、通常は注文時。"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1818,7 +1818,7 @@ msgstr "計画月"
 #: help:stock.picking.in,origin:0
 #: help:stock.picking.out,origin:0
 msgid "Reference of the document"
-msgstr ""
+msgstr "ドキュメントの参照"
 
 #. module: stock
 #: view:stock.picking:0
@@ -4099,6 +4099,8 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
+"在庫の立場から見た製品の数量です。「完了」状態で移動した場合、実際に移動した製品の数量です。他の状態で移動した場合、移動を予定している製品の数量です。この"
+"数量が低下してもバックオーダーは生成しません。指定された移動で数量が変化すると、製品の予約に影響するため注意してください。"
 
 #. module: stock
 #: help:stock.location,valuation_in_account_id:0
@@ -4720,7 +4722,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Date of Reception"
-msgstr ""
+msgstr "受領日"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_multiple_locations:0
