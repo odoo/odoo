@@ -65,12 +65,12 @@ $(document).ready(function () {
         ev.preventDefault();
         var $label = $(ev.currentTarget);
         var $price = $label.parent("form").find(".oe_price .oe_currency_value");
-        if (!$price.data("price")) {
-            $price.data("price", parseFloat($price.text()));
+        var $variant_price = $label.find(".oe_variant_price .oe_currency_value");
+        if (!$variant_price.data("price")) {
+            $variant_price.data("price", parseFloat($variant_price.text()));
         }
-        $price.html($price.data("price")+parseFloat($label.find(".badge span").text() || 0));
+        $price.html($variant_price.data("price"));
     });
-
 
     $(".js_slider").each(function() {
         var $slide = $(this);
