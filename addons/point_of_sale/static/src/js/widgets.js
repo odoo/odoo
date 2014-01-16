@@ -832,18 +832,31 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
+            
+            var pending = this.pos.get('nbr_pending_orders');
+            this.set_status(pending ? 'disconnected' : 'connected',pending);
+
             this.$el.click(function(){
                 self.pos.flush();
             });
         },
+        set_status: function(state,pending){
+            var self = this;
+            this.$('.js_connected, .js_connecting, .js_disconnected, .js_pending').addClass('oe_hidden');
+            this.$('.js_pending').html(pending || '');
+            if(state === 'connected'){
+                this.$('.js_connected').removeClass('oe_hidden');
+            }else if(state === 'disconnected'){
+                this.$('.js_disconnected, .js_pending').removeClass('oe_hidden');
+            }else if(state === 'connecting'){
+                this.$('.js_connecting, .js_pending').removeClass('oe_hidden');
+            }
+        },
         start: function(){
             var self = this;
-            this.pos.bind('change:nbr_pending_operations', function(){
-                self.renderElement();
+            this.pos.bind('change:synch', function(pos,synch){
+                self.set_status(synch.state, synch.pending);
             });
-        },
-        get_nbr_pending: function(){
-            return this.pos.get('nbr_pending_operations');
         },
     });
 

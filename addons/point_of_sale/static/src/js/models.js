@@ -53,9 +53,18 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             // these dynamic attributes can be watched for change by other models or widgets
             this.set({
-                'nbr_pending_operations': 0,    
+                'synch':            { state:'connected', pending:0 }, 
                 'orders':           new module.OrderCollection(),
                 'selectedOrder':    null,
+            });
+
+            this.bind('change:synch',function(pos,synch){
+                clearTimeout(self.synch_timeout);
+                self.synch_timeout = setTimeout(function(){
+                    if(synch.state !== 'disconnected' && synch.pending > 0){
+                        self.set('synch',{state:'disconnected', pending:synch.pending});
+                    }
+                },3000);
             });
 
             this.get('orders').bind('remove', function(order,_unused_,options){ 
@@ -296,7 +305,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var order_id = this.db.add_order(order.export_as_JSON());
             var pushed = new $.Deferred();
 
-            this.set('nbr_pending_operations',self.db.get_orders().length);
+            this.set('synch',{state:'connecting', pending:self.db.get_orders().length});
 
             this.flush_mutex.exec(function(){
                 var flushed = self._flush_all_orders();
@@ -329,7 +338,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             var order_id = this.db.add_order(order.export_as_JSON());
 
-            this.set('nbr_pending_operations',self.db.get_orders().length);
+            this.set('synch',{state:'connecting', pending:self.db.get_orders().length});
 
             this.flush_mutex.exec(function(){
                 var done = new $.Deferred(); // holds the mutex
@@ -396,6 +405,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             options = options || {};
             timeout = typeof options.timeout === 'number' ? options.timeout : 7500;
 
+            this.set('synch',{state:'connecting', pending: this.get('synch').pending});
+
             var order  = this.db.get_order(order_id);
             order.to_invoice = options.to_invoice || false;
 
@@ -417,7 +428,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
             rpc.done(function(){
                 self.db.remove_order(order_id);
-                self.set('nbr_pending_operations',self.db.get_orders().length);
+                var pending = self.db.get_orders().length;
+                self.set('synch',{state: pending ? 'connecting' : 'connected', pending:pending});
             });
 
             return rpc;

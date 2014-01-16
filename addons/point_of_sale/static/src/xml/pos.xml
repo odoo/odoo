@@ -101,17 +101,18 @@
     </t>
 
     <t t-name="SynchNotificationWidget">
-        <t t-if="widget.get_nbr_pending() > 0">
-            <div class="oe_pos_synch-notification">
-                <t   t-esc="widget.get_nbr_pending()"/>
-                <div class="oe_status_red"></div>
+        <div class="oe_pos_synch-notification">
+            <span class='js_pending oe_hidden'>0</span>
+            <div class="js_connected oe_status oe_green">
+                <i class='fa fa-fw fa-circle'></i>
             </div>
-        </t>
-        <t t-if="widget.get_nbr_pending() === 0">
-            <div class="oe_pos_synch-notification oe_inactive">
-                <div class="oe_status_green"></div>
+            <div class="js_connecting oe_status oe_hidden">
+                <i class='fa fa-fw fa-spin fa-spinner'></i>
             </div>
-        </t>
+            <div class="js_disconnected oe_status oe_red oe_hidden">
+                <i class='fa fa-fw fa-circle'></i>
+            </div>
+        </div>
     </t>
 
     <t t-name="HeaderButtonWidget">
