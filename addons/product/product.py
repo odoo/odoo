@@ -672,7 +672,7 @@ class product_product(osv.osv):
         res = dict.fromkeys(ids, False)
         for product in self.browse(cr, uid, ids, context=context):
             no_varaints = [x for x in product.product_tmpl_id.product_variant_ids if x.variants == False]
-            res[product.id] = {'standard_variants' : len(no_varaints) and True or False}
+            res[product.id] = len(no_varaints) and True or False
         return res
     
     _defaults = {
