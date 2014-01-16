@@ -514,7 +514,7 @@ class view(osv.osv):
                     children = False
                     views = {}
                     for f in node:
-                        if f.tag in ('form', 'tree', 'graph', 'kanban'):
+                        if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = Model
@@ -550,7 +550,6 @@ class view(osv.osv):
                 if field:
                     orm.transfer_field_to_modifiers(field, modifiers)
 
-
         elif node.tag in ('form', 'tree'):
             result = Model.view_header_get(cr, user, False, node.tag, context)
             if result:
@@ -558,7 +557,7 @@ class view(osv.osv):
             in_tree_view = node.tag == 'tree'
 
         elif node.tag == 'calendar':
-            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
+            for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day', 'attendee'):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 

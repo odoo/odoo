@@ -6,6 +6,7 @@ import logging
 import os
 import threading
 import traceback
+from contextlib import contextmanager, closing
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -24,24 +25,17 @@ self_id_protect = threading.Semaphore()
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(id, db_name, demo, lang, user_password):
     try:
-        cr = None
-        try:
-            self_actions[id]['progress'] = 0
-            cr = openerp.sql_db.db_connect(db_name).cursor()
+        self_actions[id]['progress'] = 0
+        db = openerp.sql_db.db_connect(db_name)
+        with closing(db.cursor()) as cr:
             openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by RegistryManager.new().
             openerp.tools.config['lang'] = lang
             cr.commit()
-        finally:
-            if cr:
-                cr.close()
-                cr = None
 
         registry = openerp.modules.registry.RegistryManager.new(
             db_name, demo, self_actions[id], update_module=True)
 
-        try:
-            cr = openerp.sql_db.db_connect(db_name).cursor()
-
+        with closing(db.cursor()) as cr:
             if lang:
                 modobj = registry['ir.module.module']
                 mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
@@ -54,9 +48,7 @@ def _initialize_db(id, db_name, demo, lang, user_password):
             cr.execute('SELECT login, password FROM res_users ORDER BY login')
             self_actions[id].update(users=cr.dictfetchall(), clean=True)
             cr.commit()
-        finally:
-            if cr:
-                cr.close()
+
     except Exception, e:
         self_actions[id].update(clean=False, exception=e)
         _logger.exception('CREATE DATABASE failed:')
@@ -81,19 +73,15 @@ def dispatch(method, params):
 
 def _create_empty_database(name):
     db = openerp.sql_db.db_connect('postgres')
-    cr = db.cursor()
-    chosen_template = openerp.tools.config['db_template']
-    cr.execute("""SELECT datname 
-                          FROM pg_database
-                          WHERE datname = %s """,
-                       (name,))
-    if cr.fetchall():
-        raise openerp.exceptions.Warning(" %s database already exists!" % name )
-    try:
-        cr.autocommit(True) # avoid transaction block
-        cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
-    finally:
-        cr.close()
+    with closing(db.cursor()) as cr:
+        chosen_template = openerp.tools.config['db_template']
+        cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
+                   (name,))
+        if cr.fetchall():
+            raise openerp.exceptions.Warning(" %s database already exists!" % name )
+        else:
+            cr.autocommit(True) # avoid transaction block
+            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
 
 def exp_create(db_name, demo, lang, user_password='admin'):
     self_id_protect.acquire()
@@ -132,12 +120,9 @@ def exp_duplicate_database(db_original_name, db_name):
     _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
     openerp.sql_db.close_db(db_original_name)
     db = openerp.sql_db.db_connect('postgres')
-    cr = db.cursor()
-    try:
+    with closing(db.cursor()) as cr:
         cr.autocommit(True) # avoid transaction block
         cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
-    finally:
-        cr.close()
     return True
 
 def exp_get_progress(id):
@@ -166,9 +151,8 @@ def exp_drop(db_name):
     openerp.sql_db.close_db(db_name)
 
     db = openerp.sql_db.db_connect('postgres')
-    cr = db.cursor()
-    cr.autocommit(True) # avoid transaction block
-    try:
+    with closing(db.cursor()) as cr:
+        cr.autocommit(True) # avoid transaction block
         # Try to terminate all other connections that might prevent
         # dropping the database
         try:
@@ -192,8 +176,6 @@ def exp_drop(db_name):
             raise Exception("Couldn't drop database %s: %s" % (db_name, e))
         else:
             _logger.info('DROP DB: %s', db_name)
-    finally:
-        cr.close()
     return True
 
 @contextlib.contextmanager
@@ -290,9 +272,8 @@ def exp_rename(old_name, new_name):
     openerp.sql_db.close_db(old_name)
 
     db = openerp.sql_db.db_connect('postgres')
-    cr = db.cursor()
-    cr.autocommit(True) # avoid transaction block
-    try:
+    with closing(db.cursor()) as cr:
+        cr.autocommit(True) # avoid transaction block
         try:
             cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
         except Exception, e:
@@ -304,8 +285,6 @@ def exp_rename(old_name, new_name):
                 os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
 
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)
-    finally:
-        cr.close()
     return True
 
 def exp_db_exist(db_name):
@@ -318,8 +297,7 @@ def exp_list(document=False):
     chosen_template = openerp.tools.config['db_template']
     templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
     db = openerp.sql_db.db_connect('postgres')
-    cr = db.cursor()
-    try:
+    with closing(db.cursor()) as cr:
         try:
             db_user = openerp.tools.config["db_user"]
             if not db_user and os.name == 'posix':
@@ -336,8 +314,6 @@ def exp_list(document=False):
             res = [str(name) for (name,) in cr.fetchall()]
         except Exception:
             res = []
-    finally:
-        cr.close()
     res.sort()
     return res
 

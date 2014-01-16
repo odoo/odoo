@@ -13,3 +13,6 @@ python setup.py install --optimize 1 --root=$RPM_BUILD_ROOT --record=INSTALLED_F
 
 SUFFIX=gz
 sed "s!\(/share/man/.*\)!\1.$SUFFIX!" -i INSTALLED_FILES
+
+# quote files with a space
+sed 's/\(.* .*\)/"\1"/' -i INSTALLED_FILES
