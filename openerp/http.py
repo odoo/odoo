@@ -835,7 +835,7 @@ class Root(object):
     """
     def __init__(self):
         # Setup http sessions
-        path = os.path.join(openerp.tools.config.session_dir
+        path = openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
 
