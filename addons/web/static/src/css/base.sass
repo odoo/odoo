@@ -594,6 +594,9 @@ $sheet-padding: 16px
         text-decoration: none
         background-color: #eee
         border-color: #eee #eee #ddd
+    .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active
+        border-bottom: none
+        padding-bottom: 1px
     .oe_notebook > li.ui-state-active > a, .oe_notebook > li.ui-state-active > a:hover
         background-color: #ffffff
         border: 1px solid #ddd
@@ -2204,6 +2207,8 @@ $sheet-padding: 16px
             &.oe_form_field_datetime,&.oe_form_field_date
                 input.oe_datepicker_master
                     width: 100% !important
+            &.oe_form_field_reference
+                display: table
     .oe_list_group_name
         white-space: nowrap
     // }}}
@@ -2430,6 +2435,106 @@ $sheet-padding: 16px
         float: right
         color: #333
     // }}}
+    // Bootstrap HACKS {{{
+    .navbar
+        min-height: 32px
+        margin-bottom: 0px
+        border: none
+        z-index: 1
+        background-color: #414141
+        @include vertical-gradient(#646060, #262626)
+    .navbar-default
+        .navbar-nav
+            li
+                a:hover,a:focus
+                    background: rgba(0, 0, 0, 0.3)
+            .open > a,a:hover,a:focus
+                background: rgba(0, 0, 0, 0.3) !important
+            .dropdown > a .caret
+                border-top-color: #777 !important
+                border-bottom-color: #777 !important
+    .navbar-nav
+        li
+            a
+                padding: 4px 32px 4px 12px
+    .oe_navbar .dropdown-menu
+        font-size: 13px
+        padding: 4px 0
+        background: #333333 !important
+        background: rgba(37, 37, 37, 0.9) !important
+        border-color: #999999
+        border-color: rgba(0, 0, 0, 0.2)
+        background-color: #414141
+        text-shadow: none
+        @include vertical-gradient(#646060, #262626)
+        @include radius(3px)
+        li
+            a,a:hover,a:focus
+                color: #eeeeee
+
+    // Minimized unused white space and label weight for wizard popup
+    .oe_view_manager_new .oe_form_nosheet
+        margin-top: 8px
+        .oe_form_label
+            font-weight: normal
+
+    // Customize bootstrap3 for leftbar
+    .nav
+        li > a
+            padding: 3px 4px 2px 18px
+            color: #4c4c4c
+        nav-pills.nav-stacked > li > ul
+            padding-left: 16px
+    .nav-pills > li.active,a.list-group-item.active
+        > a
+            background-color: #7c7bad
+            color: white
+            border-radius: 0
+        a:hover,a:focus
+            background-color: #7c7bad
+        .badge
+            background-color: white
+            color: #7c7bad
+            text-shadow: none
+    .badge
+        font-weight: normal
+        font-size: 11px
+        background-color: #7c7bad
+
+    // Customize for global tags
+    button, body
+        line-height: normal
+    h1,h2
+        font-weight: bold
+    h3
+        font-size: 1.17em
+        font-weight: bold
+    p
+        display: block
+        -webkit-margin-before: 1em
+        -webkit-margin-after: 1em
+        -webkit-margin-start: 0px
+        -webkit-margin-end: 0px
+    pre
+        background-color: #FFFFFF
+        border: none
+        padding: 10px 0 3px 0
+
+    // Customize for kanban tooltip
+    .jqstooltip
+        height: auto !important
+        width: auto !important
+
+    // Customize for chatter
+    h5
+        font-weight: bold
+        font-size: smaller
+    .oe_form .oe_subtype label, .oe_subtype label
+        font-weight: normal
+    .oe_msg_subtype_check
+        margin: 3px 3px 0 !important
+    // }}}
+
 @-moz-document url-prefix()
     .openerp
         .oe_searchview .oe_searchview_search
@@ -2672,110 +2777,6 @@ body.oe_single_form
             overflow: hidden !important
 // }}}
 
-// Customize bootstrap3 for leftbar
-.nav
-    li > a
-        padding: 3px 4px 2px 18px
-        color: #4c4c4c
-    nav-pills.nav-stacked > li > ul
-        padding-left: 16px
-.nav-pills > li.active,a.list-group-item.active
-    > a
-        background-color: #7c7bad
-        color: white
-        border-radius: 0
-    a:hover,a:focus
-        background-color: #7c7bad
-    .badge
-        background-color: white
-        color: #7c7bad
-        text-shadow: none
-.badge
-    font-weight: normal
-    font-size: 11px
-    background-color: #7c7bad
-// End of customize
-
-// Customize for global tags
-button, body
-    line-height: normal
-h1,h2
-    font-weight: bold
-h3
-    font-size: 1.17em
-    font-weight: bold
-p
-    display: block
-    -webkit-margin-before: 1em
-    -webkit-margin-after: 1em
-    -webkit-margin-start: 0px
-    -webkit-margin-end: 0px
-pre
-    background-color: #FFFFFF
-    border: none
-    padding: 10px 0 3px 0
-// End of customize
-
-// Customize for kanban tooltip
-.jqstooltip
-    height: auto !important
-    width: auto !important
-// End of kanban tooltip
-
-// Customize for chatter
-h5
-    font-weight: bold
-    font-size: smaller
-.oe_form .oe_subtype label, .oe_subtype label
-    font-weight: normal
-.oe_msg_subtype_check
-    margin: 3px 3px 0 !important
-// End of customize
-
-// Minimized unused white space and label weight for wizard popup
-.oe_view_manager_new .oe_form_nosheet
-    margin-top: 8px
-    .oe_form_label
-        font-weight: normal
-// End of customize
-
-// navbar hack {{{
-.navbar
-    min-height: 32px
-    margin-bottom: 0px
-    border: none
-    z-index: 1
-    background-color: #414141
-    @include vertical-gradient(#646060, #262626)
-.navbar-default
-    .navbar-nav
-        li
-            a:hover,a:focus
-                background: rgba(0, 0, 0, 0.3)
-        .open > a,a:hover,a:focus
-            background: rgba(0, 0, 0, 0.3) !important
-        .dropdown > a .caret
-            border-top-color: #777 !important
-            border-bottom-color: #777 !important
-.navbar-nav
-    li
-        a
-            padding: 4px 32px 4px 12px
-.oe_navbar .dropdown-menu
-    font-size: 13px
-    padding: 4px 0
-    background: #333333 !important
-    background: rgba(37, 37, 37, 0.9) !important
-    border-color: #999999
-    border-color: rgba(0, 0, 0, 0.2)
-    background-color: #414141
-    text-shadow: none
-    @include vertical-gradient(#646060, #262626)
-    @include radius(3px)
-    li
-        a,a:hover,a:focus
-            color: #eeeeee
-// End hack }}}
 
 // Hack for ui icon {{{
 .ui-icon
