@@ -633,7 +633,7 @@ class configmanager(object):
 
     @property
     def session_dir(self):
-        d = os.path.join(self['data_dir'], 'sessions')
+        d = os.path.join(self['data_dir'], 'sessions', release.series)
         if not os.path.exists(d):
             os.makedirs(d)
         return d

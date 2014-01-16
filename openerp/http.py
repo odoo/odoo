@@ -830,33 +830,12 @@ class DisableCacheMiddleware(object):
             start_response(status, new_headers)
         return self.app(environ, start_wrapped)
 
-def session_path():
-    try:
-        import pwd
-        username = pwd.getpwuid(os.geteuid()).pw_name
-    except ImportError:
-        try:
-            username = getpass.getuser()
-        except Exception:
-            username = "unknown"
-    path = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
-    try:
-        os.mkdir(path, 0700)
-    except OSError as exc:
-        if exc.errno == errno.EEXIST:
-            # directory exists: ensure it has the correct permissions
-            # this will fail if the directory is not owned by the current user
-            os.chmod(path, 0700)
-        else:
-            raise
-    return path
-
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
     def __init__(self):
         # Setup http sessions
-        path = session_path()
+        path = os.path.join(openerp.tools.config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
 
