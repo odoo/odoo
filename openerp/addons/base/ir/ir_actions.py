@@ -911,10 +911,10 @@ class ir_actions_server(osv.osv):
             self.pool[action.model_id.model].write(cr, uid, [context.get('active_id')], {action.link_field_id.name: res_id})
 
     def run(self, cr, uid, ids, context=None):
-        """ Run the server action. For each server action, the condition is
-        checked. Note that A void (aka False) condition is considered as always
+        """ Runs the server action. For each server action, the condition is
+        checked. Note that a void (``False``) condition is considered as always
         valid. If it is verified, the run_action_<STATE> method is called. This
-        allows easy inheritance of the server actions.
+        allows easy overriding of the server actions.
 
         :param dict context: context should contain following keys
 
