@@ -508,16 +508,6 @@ class product_product(osv.osv):
             res.setdefault(id, 0.0)
         return res
 
-    def _get_product_available_func(states, what):
-        def _product_available(self, cr, uid, ids, name, arg, context=None):
-            return {}.fromkeys(ids, 0.0)
-        return _product_available
-
-    _product_qty_available = _get_product_available_func(('done',), ('in', 'out'))
-    _product_virtual_available = _get_product_available_func(('confirmed','waiting','assigned','done'), ('in', 'out'))
-    _product_outgoing_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('out',))
-    _product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
-
     def _product_lst_price(self, cr, uid, ids, name, arg, context=None):
         res = {}
         product_uom_obj = self.pool.get('product.uom')
@@ -622,10 +612,6 @@ class product_product(osv.osv):
     _inherit = ['mail.thread']
     _order = 'default_code,name_template'
     _columns = {
-        'qty_available': fields.function(_product_qty_available, type='float', string='Quantity On Hand'),
-        'virtual_available': fields.function(_product_virtual_available, type='float', string='Quantity Available'),
-        'incoming_qty': fields.function(_product_incoming_qty, type='float', string='Incoming'),
-        'outgoing_qty': fields.function(_product_outgoing_qty, type='float', string='Outgoing'),
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'lst_price' : fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
