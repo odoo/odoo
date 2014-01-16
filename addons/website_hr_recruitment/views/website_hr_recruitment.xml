@@ -23,7 +23,7 @@
     <t t-call="website.layout">
         <div id="wrap">
             <div class="oe_structure">
-                <section data-snippet-id="text-block" class="mb32">
+                <section data-snippet-id="text-block" class="mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12 text-center mb16" data-snippet-id="colmd">
@@ -51,11 +51,21 @@
 
             <div class="container oe_website_jobs">
                 <div class="row">
-                    <div class="col-md-1" id="jobs_grid_left">
+                    <div class="hidden" id="jobs_grid_left">
 
                     </div>
-                    <div class="col-md-9" id="jobs_grid">
-                        <ul class="media-list">
+                    <div class="col-md-12" id="jobs_grid">
+                        <div t-if="not jobs">
+                            <div class="text-center text-muted">
+                              <h4 class="css_editable_display">No job offer found</h4>
+                              <h4 class="css_non_editable_mode_hidden">There isn't job offer published now, click <a t-href="/page/website.contactus">here</a> to contact us</h4>
+                              <t groups="base.group_website_publisher">
+                                <p>Click on "Content" to define a new job offer or "Help" for more informations.</p>
+                                <img src="/website/static/src/img/content_here.png"/>
+                              </t>
+                            </div>
+                        </div>
+                        <ul class="media-list" t-if="jobs">
                             <li t-foreach="jobs" t-as="job" class="media">
                                 <div class="media-body" t-att-data-publish="job.website_published and 'on' or 'off'">
                                     <h3 class="media-heading">
@@ -237,6 +247,9 @@
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
         <attribute name="class">col-md-3</attribute>
     </xpath>
+    <xpath expr="//div[@id='jobs_grid']" position="attributes">
+        <attribute name="class">col-md-9</attribute>
+    </xpath>
 </template>
 
 <template id="job_offices" inherit_option_id="website_hr_recruitment.index" name="Filter by Offices">
@@ -256,6 +269,9 @@
     </xpath>
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
         <attribute name="class">col-md-3</attribute>
+    </xpath>
+    <xpath expr="//div[@id='jobs_grid']" position="attributes">
+        <attribute name="class">col-md-9</attribute>
     </xpath>
 </template>
 

@@ -954,6 +954,8 @@
         clean_for_save: function () {
             this.$target.removeAttr('contentEditable')
                 .find('*').removeAttr('contentEditable');
+            this.$target.removeAttr('attributeEditable')
+                .find('*').removeAttr('attributeEditable');
         },
     });
 
