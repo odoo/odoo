@@ -245,7 +245,7 @@ class purchase_order(osv.osv):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Purchase Order"
-    _order = "name desc"
+    _order = 'date_order desc, id desc'
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':

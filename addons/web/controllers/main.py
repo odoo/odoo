@@ -91,13 +91,11 @@ db_list = http.db_list
 db_monodb = http.db_monodb
 
 def redirect_with_hash(url, code=303):
-    if request.httprequest.user_agent.browser in ('msie', 'safari'): 
-        # Most IE and Safari versions decided not to preserve location.hash upon
-        # redirect. And even if IE10 pretends to support it, it still fails
-        # inexplicably in case of multiple redirects (and we do have some).
-        # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
-        return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
-    return werkzeug.utils.redirect(url, code)
+    # Most IE and Safari versions decided not to preserve location.hash upon
+    # redirect. And even if IE10 pretends to support it, it still fails
+    # inexplicably in case of multiple redirects (and we do have some).
+    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
+    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the

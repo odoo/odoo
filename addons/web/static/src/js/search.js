@@ -1848,9 +1848,14 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             new instance.web.Model(this.view.model).call('fields_get', {
                     context: this.view.dataset.context
                 }).done(function(data) {
-                    self.fields = _.extend({
+                    self.fields = {
                         id: { string: 'ID', type: 'id' }
-                    }, data);
+                    };
+                    _.each(data, function(field_def, field_name) {
+                        if (field_def.selectable !== false && field_name != 'id') {
+                            self.fields[field_name] = field_def;
+                        }
+                    });
         })).done(function () {
             self.append_proposition();
         });

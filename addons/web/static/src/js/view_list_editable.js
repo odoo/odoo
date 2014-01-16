@@ -53,8 +53,10 @@
             });
             this.on('edit:after', this, function () {
                 self.$el.add(self.$buttons).addClass('oe_editing');
+                self.$('.ui-sortable').sortable('disable');
             });
             this.on('save:after cancel:after', this, function () {
+                self.$('.ui-sortable').sortable('enable');
                 self.$el.add(self.$buttons).removeClass('oe_editing');
             });
         },
@@ -275,7 +277,7 @@
             if (!this.editor.is_editing()) { return; }
             for(var i=0, len=this.fields_for_resize.length; i<len; ++i) {
                 var item = this.fields_for_resize[i];
-                if (!item.field.get('invisible')) {
+                if (!item.field.get('effective_invisible')) {
                     this.resize_field(item.field, item.cell);
                 }
             }
@@ -441,20 +443,26 @@
         setup_events: function () {
             var self = this;
             _.each(this.editor.form.fields, function(field, field_name) {
-                var setting = false;
                 var set_invisible = function() {
-                    if (!setting && field.get("effective_readonly")) {
-                        setting = true;
-                        field.set({invisible: true});
-                        setting = false;
-                    }
+                    field.set({'force_invisible': field.get('effective_readonly')});
                 };
                 field.on("change:effective_readonly", self, set_invisible);
-                field.on("change:invisible", self, set_invisible);
                 set_invisible();
+                field.on('change:effective_invisible', self, function () {
+                    if (field.get('effective_invisible')) { return; }
+                    var item = _(self.fields_for_resize).find(function (item) {
+                        return item.field === field;
+                    });
+                    if (item) {
+                        setTimeout(function() {
+                            self.resize_field(item.field, item.cell);
+                        }, 0);
+                    }
+                     
+                });
             });
 
-            this.editor.$el.on('keyup keydown', function (e) {
+            this.editor.$el.on('keyup keypress keydown', function (e) {
                 if (!self.editor.is_editing()) { return true; }
                 var key = _($.ui.keyCode).chain()
                     .map(function (v, k) { return {name: k, code: v}; })
@@ -480,6 +488,7 @@
             next_record = next_record || 'succ';
             var self = this;
             return this.save_edition().then(function (saveInfo) {
+                if (!saveInfo) { return null; }
                 if (saveInfo.created) {
                     return self.start_edition();
                 }
@@ -488,7 +497,7 @@
                 return self.start_edition(record, options);
             });
         },
-        keyup_ENTER: function () {
+        keypress_ENTER: function () {
             return this._next();
         },
         keydown_ESCAPE: function (e) {

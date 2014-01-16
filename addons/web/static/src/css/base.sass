@@ -582,6 +582,9 @@ $sheet-padding: 16px
         text-decoration: none
         background-color: #eee
         border-color: #eee #eee #ddd
+    .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active
+        border-bottom: none
+        padding-bottom: 1px
     .oe_notebook > li.ui-state-active > a, .oe_notebook > li.ui-state-active > a:hover
         background-color: #ffffff
         border: 1px solid #ddd
@@ -2290,6 +2293,8 @@ $sheet-padding: 16px
             &.oe_form_field_datetime,&.oe_form_field_date
                 input.oe_datepicker_master
                     width: 100% !important
+            &.oe_form_field_reference
+                display: table
     .oe_list_group_name
         white-space: nowrap
     // }}}
