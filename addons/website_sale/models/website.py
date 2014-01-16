@@ -145,4 +145,4 @@ class Website(orm.Model):
         return super(Website, self).preprocess_request(cr, uid, ids, request, context=None)
 
     def ecommerce_get_product_domain(self):
-        return [("sale_ok", "=", True)]
+        return [("sale_ok", "=", True),("product_variant_ids","!=",False)]
