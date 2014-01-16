@@ -61,15 +61,19 @@
                 <form string="Product" version="7.0">
                     <sheet>
                         <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
+                        <field name="has_variants" invisible="1"/>
+                        <field name="lst_price" invisible="1"/>
+                        <field name="price_extra" invisible="1"/>
+                        <field name="price_margin" invisible="1"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" name='label_name' string="Product Name"/>
                             </div>
                             <h1>
                                 <field name="name" class="oe_inline"/>
-                                <field name="product_tmpl_id" groups="product.group_product_variant" class="oe_inline" context="{'search_variants':1}"/>
+                                <field name="product_tmpl_id" groups="product.group_product_variant" on_change="onchange_product_tmpl_id(product_tmpl_id,lst_price,price_margin,price_extra)" class="oe_inline" context="{'search_variants':1}"/>
                                 <span attrs="{'invisible':[('variants','=',False)]}" groups="product.group_product_variant"> - </span>
-                                <field name="variants" placeholder="Variant Name" groups="product.group_product_variant" class="oe_inline" readonly="0"/>
+                                <field name="variants" placeholder="Variant Name" groups="product.group_product_variant" class="oe_inline" readonly="0" attrs="{'required': [('standard_variants', '=', True)]}"/>
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>
@@ -854,7 +858,7 @@
                                             <field name="variants" required="1"/>
                                             <field name="price_margin" string="Variant Price Margin(%%)"/>
                                             <field name="price_extra"/>
-                                            <field name="lst_price" string="Sale Price"/>
+                                            <field name="lst_price" string="Sale Price" readonly="1"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -961,7 +965,6 @@
         </record>
 
         <menuitem action="product_template_action"
-            groups="product.group_product_variant"
             id="menu_product_template_action"
             parent="base.menu_product" sequence="0"/>
 

@@ -581,14 +581,16 @@ class product_product(osv.osv):
 
     def _save_product_lst_price(self, cr, uid, product_id, field_name, field_value, arg, context=None):
         field_value = field_value or 0.0
-        if not field_value:
-            return True
         product = self.browse(cr, uid, product_id, context=context)
         price = product.list_price
         if product.price_margin:
             price = (product.list_price + (product.list_price * (product.price_margin / 100)))
-        price_extra = (field_value - price)
-        return product.write({'price_extra': price_extra}, context=context)
+        price = (field_value - price)
+        price_field = 'price_extra'
+        if product.standard_variants:
+            price_field = 'list_price'
+            price = field_value - product.price_extra
+        return product.write({price_field: price}, context=context)
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
@@ -666,6 +668,13 @@ class product_product(osv.osv):
             result.add(el)
         return list(result)
 
+    def _check_variants(self, cr, uid, ids, fields, args, context=None):
+        res = dict.fromkeys(ids, False)
+        for product in self.browse(cr, uid, ids, context=context):
+            no_varaints = [x for x in product.product_tmpl_id.product_variant_ids if x.variants == False]
+            res[product.id] = {'standard_variants' : len(no_varaints) and True or False}
+        return res
+    
     _defaults = {
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
@@ -730,19 +739,9 @@ class product_product(osv.osv):
         'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
         'description': fields.text('Description',translate=True,
             help="A precise description of the Product, used only for internal information purposes."),
+        'standard_variants': fields.function(_check_variants, type='boolean', string='Standard Variants', store=False),
     }
 
-    def create(self, cr, uid, data, context=None):
-        if 'product_tmpl_id' in data:
-            if data['product_tmpl_id']:
-                template = self.pool.get('product.template').browse(cr, uid, data['product_tmpl_id'], context=context)
-                if template.image and not 'image' in data:
-                    data['image'] = template.image
-                ''' while product name change into template - at that time name
-                field are hidden. so need to remove name from data '''
-                if 'name' in data:
-                    del data['name']
-        return super(product_product, self).create(cr, uid, data, context=context)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         #override of fields_view_get in order to replace the name field to product template
@@ -769,6 +768,20 @@ class product_product(osv.osv):
             if uom.category_id.id != uom_po.category_id.id:
                 return {'value': {'uom_po_id': uom_id}}
         return False
+
+    def onchange_product_tmpl_id(self, cr, uid, ids, template_id, lst_price, price_margin, price_extra, context=None):
+        res = {}
+        if template_id:
+            template = self.pool.get('product.template').browse(cr, uid, template_id, context=context)
+            no_varaints = [x for x in template.product_variant_ids if x.variants == False]
+            if not lst_price:
+                lst_price = (template.list_price + ((template.list_price * (price_margin)) / 100)) + price_extra
+            res['value'] = {
+                'standard_variants': len(no_varaints) and True or False, 
+                'name': template.name,
+                'lst_price': lst_price,
+            }
+        return res
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for product in self.read(cr, uid, ids, ['ean13'], context=context):
