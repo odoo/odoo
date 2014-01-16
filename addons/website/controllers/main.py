@@ -206,8 +206,6 @@ class Website(openerp.addons.web.controllers.main.Home):
                         'value': new_content,
                     }
                     irt.create(request.cr, request.uid, new_trans)
-        ir_ui_view = request.registry.get('ir.ui.view')
-        ir_ui_view.read_template.clear_cache(ir_ui_view)
         return True
 
     @website.route('/website/attach', type='http', auth='user')
