@@ -2502,24 +2502,24 @@ div.ui-widget-overlay
     margin-top: -($width / 2)
     margin-left: -($width / 2)
 
-.oe_single_form
+body.oe_single_form
     background: #eee url(/web/static/src/img/form_sheetbg.png)
     height: 100%
 
-.oe_single_form_logo
-    padding: 10px
-    text-align: center
-    margin-bottom: 10px
+    .oe_single_form_logo
+        padding: 10px
+        text-align: center
+        margin-bottom: 10px
 
-.oe_single_form_footer
-    position: absolute
-    bottom: -30px
-    right: 0px
-    width: 100%
-    text-align: center
+    .oe_single_form_footer
+        position: absolute
+        bottom: -30px
+        right: 0px
+        width: 100%
+        text-align: center
 
-.oe_single_form form
-    @include single-form(400px)
+    .oe_single_form_container
+        @include single-form(400px)
 
 // }}}
 
