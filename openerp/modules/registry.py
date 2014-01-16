@@ -66,8 +66,8 @@ class Registry(object):
         # must be reloaded.
         # The `base_cache_signaling sequence` indicates all caches must be
         # invalidated (i.e. cleared).
-        self.base_registry_signaling_sequence = 1
-        self.base_cache_signaling_sequence = 1
+        self.base_registry_signaling_sequence = None
+        self.base_cache_signaling_sequence = None
 
         # Flag indicating if at least one model cache has been cleared.
         # Useful only in a multi-process context.
@@ -283,15 +283,19 @@ class RegistryManager(object):
                            base_cache_signaling.last_value
                     FROM base_registry_signaling, base_cache_signaling""")
                 r, c = cr.fetchone()
+                _logger.debug("Multiprocess signaling check: [Registry - old# %s new# %s] "\
+                    "[Cache - old# %s new# %s]",
+                    registry.base_registry_signaling_sequence, r,
+                    registry.base_cache_signaling_sequence, c)
                 # Check if the model registry must be reloaded (e.g. after the
                 # database has been updated by another process).
-                if registry.base_registry_signaling_sequence > 1 and registry.base_registry_signaling_sequence != r:
+                if registry.base_registry_signaling_sequence is not None and registry.base_registry_signaling_sequence != r:
                     _logger.info("Reloading the model registry after database signaling.")
                     registry = cls.new(db_name)
                 # Check if the model caches must be invalidated (e.g. after a write
                 # occured on another process). Don't clear right after a registry
                 # has been reload.
-                elif registry.base_cache_signaling_sequence > 1 and registry.base_cache_signaling_sequence != c:
+                elif registry.base_cache_signaling_sequence is not None and registry.base_cache_signaling_sequence != c:
                     _logger.info("Invalidating all model caches after database signaling.")
                     registry.clear_caches()
                     registry.reset_any_cache_cleared()
@@ -328,6 +332,7 @@ class RegistryManager(object):
     @classmethod
     def signal_registry_change(cls, db_name):
         if openerp.multi_process and db_name in cls.registries:
+            _logger.info("Registry changed, signaling through the database")
             registry = cls.get(db_name)
             cr = registry.db.cursor()
             r = 1
