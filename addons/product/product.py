@@ -749,14 +749,19 @@ class product_product(osv.osv):
             context = {}
         res = super(product_product, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         #check the current user in group_product_variant
-        if self.pool['res.users'].has_group(cr, uid, 'product.group_product_variant') and view_type == 'form':
+        if view_type == 'form':
             doc = etree.XML(res['arch'])
-            for node in doc.xpath("//field[@name='name']"):
-                node.set('invisible', '1')
-                node.set('required', '0')
-                setup_modifiers(node, res['fields']['name'])
-            for node in doc.xpath("//label[@name='label_name']"):
-                node.set('string','Product Template')
+            if self.pool['res.users'].has_group(cr, uid, 'product.group_product_variant'):
+                for node in doc.xpath("//field[@name='name']"):
+                    node.set('invisible', '1')
+                    node.set('required', '0')
+                    setup_modifiers(node, res['fields']['name'])
+                for node in doc.xpath("//label[@name='label_name']"):
+                    node.set('string','Product Template')
+            else:
+                for node in doc.xpath("//field[@name='product_tmpl_id']"):
+                    node.set('required', '0')
+                    setup_modifiers(node, res['fields']['name'])
             res['arch'] = etree.tostring(doc)
         return res
 
