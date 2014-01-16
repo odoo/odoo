@@ -13,7 +13,7 @@ import subprocess
 
 try:
     import usb.core
-except: ImportError:
+except ImportError:
     usb = None
 
 from openerp.tools.translate import _
