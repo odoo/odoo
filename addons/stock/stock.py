@@ -1055,17 +1055,20 @@ class stock_picking(osv.osv):
                 todo_move_ids = []
                 toassign_move_ids = []
                 for move in picking.move_lines:
-                    if move.state == 'draft':
+                    if move.state in ('done', 'cancel'):
+                        #ignore stock moves cancelled or already done
+                        continue
+                    elif move.state == 'draft':
                         toassign_move_ids.append(move.id)
                     if move.remaining_qty == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
-                    elif move.remaining_qty > 0 and move.state not in  ['done', 'cancel']:
+                    elif move.remaining_qty > 0:
                         new_move = stock_move_obj.split(cr, uid, move, move.remaining_qty, context=context)
                         todo_move_ids.append(move.id)
                         #Assign move as it was assigned before
                         toassign_move_ids.append(new_move)
-                    elif move.state not in ['done', 'cancel']:
+                    elif move.state:
                         #this should never happens
                         raise
                 self.rereserve_quants(cr, uid, picking, move_ids=todo_move_ids, context=context)
