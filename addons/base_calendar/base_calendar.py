@@ -1413,12 +1413,12 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
             new_args.append(new_arg)
-        if context.get('virtual_id', True):
-            #offset, limit, order and count must be treated separately as we may need to deal with virtual ids
-            res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=None, context=context, count=False)
-            res = self._get_recurrent_ids(cr, uid, res, args, limit, order=order, context=context)
-        else:
-            res = super(calendar_event, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, context=context, count=count)
+        if not context.get('virtual_id', True):
+            return super(calendar_event, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, context=context, count=count)
+
+        # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
+        res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=None, context=context, count=False)
+        res = self._get_recurrent_ids(cr, uid, res, args, limit, order=order, context=context)            
 
         if count:
             return len(res)
