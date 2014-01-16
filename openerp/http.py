@@ -939,7 +939,12 @@ class Root(object):
             try:
                 result.process()
             except(Exception), e:
-                result = request.registry['ir.http']._handle_exception(e)
+                # In case of auth="none" we re-activate db getter for exception handling
+                request.disable_db = False
+                if request.db:
+                    result = request.registry['ir.http']._handle_exception(e)
+                else:
+                    raise
 
         if isinstance(result, basestring):
             response = werkzeug.wrappers.Response(result, mimetype='text/html')
