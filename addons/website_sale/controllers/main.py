@@ -416,11 +416,6 @@ class Ecommerce(http.Controller):
         self.add_product_to_cart(product_id=int(product_id))
         return request.redirect("/shop/mycart/")
 
-    @website.route(['/shop/add_cart/<model("product.product"):product>/'], type='http', auth="public", multilang=True)
-    def add_cart_product(self, product=None, product_id=None, remove=None, **kw):
-        self.add_product_to_cart(product_id=product.id)
-        return request.redirect("/shop/mycart/")
-
     @website.route(['/shop/change_cart/<int:order_line_id>/'], type='http', auth="public", multilang=True)
     def add_cart_order_line(self, order_line_id=None, remove=None, **kw):
         self.add_product_to_cart(order_line_id=order_line_id, number=(remove and -1 or 1))

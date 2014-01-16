@@ -7,8 +7,8 @@
     <field name="description">Job Posts on your website</field>
 </record>
 
-<template id="editor_head" inherit_id="website.editor_head" name="Jobs Editor" groups="base.group_website_designer">
-    <xpath expr="//script[last()]" position="after">
+<template id="editor_head" inherit_id="website.editor_head" name="Jobs Editor" groups="base.group_hr_manager">
+    <xpath expr="//script[@id='website_tour_js']" position="after">
         <script type="text/javascript" src="/website_hr_recruitment/static/src/js/website_hr_recruitment.editor.js"></script>
     </xpath>
 </template>
@@ -58,10 +58,12 @@
                         <div t-if="not jobs">
                             <div class="text-center text-muted">
                               <h4 class="css_editable_display">No job offer found</h4>
-                              <h4 class="css_non_editable_mode_hidden">There isn't job offer published now, click <a t-href="/page/website.contactus">here</a> to contact us</h4>
+                              <h4 class="css_editable_hidden">There isn't job offer published now, click <a t-href="/page/website.contactus">here</a> to contact us</h4>
                               <t groups="base.group_website_publisher">
-                                <p>Click on "Content" to define a new job offer or "Help" for more informations.</p>
-                                <img src="/website/static/src/img/content_here.png"/>
+                                <t  groups="base.group_hr_manager">
+                                  <p>Click on "Content" to define a new job offer or "Help" for more informations.</p>
+                                  <img src="/website/static/src/img/content_here.png"/>
+                                </t>
                               </t>
                             </div>
                         </div>
@@ -99,7 +101,7 @@
 <template id="detail">
     <t t-call="website.layout">
     <t t-set="additional_title">Job Detail</t>
-    <div id="wrap">
+    <div id="wrap" class="js_hr_recruitment">
         <div class="oe_structure"/>
 
         <section class="container mt8">

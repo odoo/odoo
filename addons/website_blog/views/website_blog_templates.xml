@@ -2,8 +2,8 @@
 <openerp>
 <data>
 
-<template id="editor_head" inherit_id="website.editor_head" name="Blog Editor" groups="base.group_website_designer">
-    <xpath expr="//script[last()]" position="after">
+<template id="editor_head" inherit_id="website.editor_head" name="Blog Editor" groups="base.group_document_user">
+    <xpath expr="//script[@id='website_tour_js']" position="after">
         <script type="text/javascript" src="/website_blog/static/src/js/website_blog.editor.js"></script>
         <script type="text/javascript" src="/website_blog/static/src/js/website.tour.blog.js"></script>
     </xpath>
@@ -100,10 +100,12 @@
     <div t-if="not blog_posts">
         <div class="text-center text-muted">
           <h3 class="css_editable_display">No blog post found</h3>
-          <h3 class="css_non_editable_mode_hidden">There isn't available blog post right now, click <a t-href="/page/website.contactus">here</a> to contact us</h3>
+          <h3 class="css_editable_hidden">There isn't available blog post right now, click <a t-href="/page/website.contactus">here</a> to contact us</h3>
           <t groups="base.group_website_publisher">
-            <p>Click on "Content" to define a new blog post or "Help" for more informations.</p>
-            <img src="/website/static/src/img/content_here.png"/>
+            <t groups="base.group_document_user">
+                <p>Click on "Content" to define a new blog post or "Help" for more informations.</p>
+                <img src="/website/static/src/img/content_here.png"/>
+              </t>
           </t>
         </div>
     </div>
@@ -268,7 +270,7 @@
         <t t-set="head">
             <link rel='stylesheet' href='/website_blog/static/src/css/website_blog.css'/>
         </t>
-        <div id="wrap">
+        <div id="wrap" class="js_blog">
             <div class="oe_structure"></div>
             <div class="container mt16 js_website_blog">
                 <div class="row">

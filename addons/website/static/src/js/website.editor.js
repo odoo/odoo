@@ -397,12 +397,14 @@
             'click button[data-action=edit]': 'edit',
             'click button[data-action=save]': 'save',
             'click a[data-action=cancel]': 'cancel',
-            'click a[data-action=new_page]': 'new_page',
         },
         container: 'body',
         customize_setup: function() {
             var self = this;
             var view_name = $(document.documentElement).data('view-xmlid');
+            if (!view_name) {
+                this.$('#customize-menu-button').addClass("hidden");
+            }
             var menu = $('#customize-menu');
             this.$('#customize-menu-button').click(function(event) {
                 menu.empty();
@@ -578,17 +580,6 @@
             }).then(function () {
                 website.reload();
             })
-        },
-        new_page: function (ev) {
-            ev.preventDefault();
-            website.prompt({
-                window_title: "New Page",
-                input: "Page Title",
-            }).then(function (val) {
-                if (val) {
-                    document.location = '/pagenew/' + encodeURI(val);
-                }
-            });
         },
 
         /**

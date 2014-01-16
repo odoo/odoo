@@ -219,11 +219,12 @@
         <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
 
         <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js" groups="base.group_website_designer"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.menu.js" groups="base.group_website_designer"></script>
         <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
+        <script type="text/javascript" id="website_tour_js" src="/website/static/src/js/website.tour.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js" groups="base.group_website_designer"></script>
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
         <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
