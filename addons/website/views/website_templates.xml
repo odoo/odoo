@@ -230,7 +230,13 @@
     </xpath>
 </template>
 
-
+<template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
+    <xpath expr="t" position="replace">
+        <t t-call="website.layout">
+            <div class="oe_website_login_container" t-raw="0"/>
+        </t>
+    </xpath>
+</template>
 
 <template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In">
     <xpath expr="//ul[@id='top_menu']" position="inside">
