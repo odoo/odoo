@@ -897,8 +897,6 @@ class product_product(osv.osv):
             context = {}
         if context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
-        if context.get('search_variants'):
-            args.append(('variants', '!=', ''))
         return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
 

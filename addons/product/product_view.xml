@@ -70,7 +70,7 @@
                             </div>
                             <h1>
                                 <field name="name" class="oe_inline"/>
-                                <field name="product_tmpl_id" groups="product.group_product_variant" on_change="onchange_product_tmpl_id(product_tmpl_id,lst_price,price_margin,price_extra)" class="oe_inline" context="{'search_variants':1}"/>
+                                <field name="product_tmpl_id" groups="product.group_product_variant" on_change="onchange_product_tmpl_id(product_tmpl_id,lst_price,price_margin,price_extra)" class="oe_inline"/>
                                 <span attrs="{'invisible':[('variants','=',False)]}" groups="product.group_product_variant"> - </span>
                                 <field name="variants" placeholder="Variant Name" groups="product.group_product_variant" class="oe_inline" readonly="0"/>
                             </h1>
@@ -721,7 +721,7 @@
             <field name="arch" type="xml">
                 <form string="Product Variant" version="7.0">
                     <group col="4">
-                        <field name="product_tmpl_id" context="{'search_variants': 1}"/>
+                        <field name="product_tmpl_id"/>
                         <field name="active"/>
                         <field name="variants" required="1"/>
                         <field name="default_code"/>
@@ -959,7 +959,6 @@
             <field name="res_model">product.template</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_type">form</field>
-            <field name="context">{'search_variants': 1}</field>
             <field name="view_id" ref="product_template_kanban_view"/>
         </record>
 
