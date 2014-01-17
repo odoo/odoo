@@ -17,7 +17,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
 		this.model = model;
 		this.fields = fields;
         this.fields.__count = {type: 'integer', string:'Quantity'};
-        this.measures = [{field:'__count', type: this.fields.type, string:this.fields.string}];
+        this.measures = [{field:'__count', type: 'integer', string:'Quantity'}];
 		this.active = false;
         this.rows = { groupby: this.create_field_values(options.row_groupby || []), headers: null };
         this.cols = { groupby: this.create_field_values(options.col_groupby || []), headers: null };
@@ -410,10 +410,10 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
             rows = this.rows.groupby,
             visible_fields = rows.concat(cols, self.measures);
 
-        if (this.measures.length === 0) { 
+        if (this.measures.length === 0) {
             var result = $.Deferred();
-            result.resolve()
-            return result; 
+            result.resolve();
+            return result;
         }
 
         var groupbys = _.map(_.range(cols.length + 1), function (i) {

@@ -61,14 +61,14 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
                 }
             });
             self.pivot.activate();
+            self.put_measure_checkmarks();
         });
     },
 
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
-        var self = this,
-            options = {model:this.model, view_type: 'search'},
+        var options = {model:this.model, view_type: 'search'},
             result = [];
 
         return openerp.web.fields_view_get(options).then(function (search_view) {
@@ -94,8 +94,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
     },
 
     // Extracts the integer/float fields which are not 'id'
-    get_measures: function(fields) {
-        var measures = [];
+    get_measures: function() {
+        var measures = [{field:'__count', type: 'integer', string:'Quantity'}];
         _.each(this.fields, function (f, id) {
             if (((f.type === 'integer') || (f.type === 'float')) && (id !== 'id')) {
                 measures.push({field:id, type: f.type, string: f.string});
@@ -134,12 +134,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
             this.$('.graph_heatmap label').removeClass('disabled');
         } else {
             this.$('.graph_heatmap label').addClass('disabled');
-        }        
+        }
         this.display_data();
     },
 
     set_heatmap_mode: function (mode) { // none, row, col, all
-        debugger;
         this.heatmap_mode = mode;
         if (mode === 'none') {
             this.$('.graph_heatmap label').removeClass('disabled');
@@ -184,6 +183,22 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         event.preventDefault();
         var measure = event.target.attributes['data-choice'].nodeValue;
         this.pivot.toggle_measure(measure);
+        this.put_measure_checkmarks();
+    },
+
+    put_measure_checkmarks: function () {
+        var self = this,
+            measures_li = this.$('.graph_measure_selection a');
+        measures_li.removeClass('oe_selected');
+        // measures_li.eq(0).addClass('oe_selected');
+        console.log('measures_li', measures_li);
+        _.each(this.measure_list, function (measure, index) {
+            if (_.findWhere(self.pivot.measures, measure)) {
+                console.log('measure', measure, index);
+                measures_li.eq(index).addClass('oe_selected');
+            }
+        });
+
     },
 
     option_selection: function (event) {
@@ -385,8 +400,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
     },
 
     make_measure_row: function() {
-        var self = this,
-            measures = this.pivot.measures,
+        var measures = this.pivot.measures,
             cols = this.pivot.cols.headers,
             measure_cells,
             measure_row = $('<tr></tr>');
@@ -466,7 +480,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
                 cell.css('background-color', $.Color(255, color, color));
             }
             if (self.heatmap_mode === 'col') {
-                debugger;
                 total = pivot.get_total(col)[index];
                 color = Math.floor(90 + 165*(total - Math.abs(value))/total);
                 cell.css('background-color', $.Color(255, color, color));
