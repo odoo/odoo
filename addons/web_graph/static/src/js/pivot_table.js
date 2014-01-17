@@ -65,7 +65,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
             var index = this.measures.indexOf(current_measure);
             this.measures = _.without(this.measures, current_measure);
             if (this.measures.length === 0) {
-                this.nodata = true;
+                this.no_data = true;
             } else {
                 _.each(this.cells, function (cell) {
                     cell.values.splice(index, 1);

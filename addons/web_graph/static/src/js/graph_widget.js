@@ -191,11 +191,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         var self = this,
             measures_li = this.$('.graph_measure_selection a');
         measures_li.removeClass('oe_selected');
-        // measures_li.eq(0).addClass('oe_selected');
-        console.log('measures_li', measures_li);
         _.each(this.measure_list, function (measure, index) {
             if (_.findWhere(self.pivot.measures, measure)) {
-                console.log('measure', measure, index);
                 measures_li.eq(index).addClass('oe_selected');
             }
         });
