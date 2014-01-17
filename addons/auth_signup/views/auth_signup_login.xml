@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="auth_signup.login" inherit_id="web.login" name="Login (overloaded by auth_signup)">
+            <xpath expr="//button[@type='submit']" position="before">
+                <a t-if="signup" href="/web/login?signup=1" class="btn btn-default pull-left">Sign up</a>
+                <a t-if="reset_password" href="/web/login?reset=1" class="btn btn-default pull-left">Reset Password</a>
+            </xpath>
+        </template>
+
+        <template id="auth_signup.signup" name="Sinup">
+            <t t-call="web.login_layout">
+                <t t-set="head">
+                    <t t-foreach="css" t-as="css_file">
+                        <link rel="stylesheet" t-att-href="css_file"/>
+                    </t>
+                    <t t-foreach="js" t-as="js_file">
+                        <script type="text/javascript" t-att-src="js_file"></script>
+                    </t>
+                </t>
+
+                <form class="oe_signup_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post">
+                    <div class="form-group field-name">
+                        <label for="name" class="control-label">Name</label>
+                        <input type="text" name="name" t-att-value="name" id="name" class="form-control" placeholder="Enter your name" required="required" autofocus="autofocus"/>
+                    </div>
+
+                    <div class="form-group field-login">
+                        <label for="login" class="control-label">Username (email)</label>
+                        <input type="text" name="login" t-att-value="login" id="login" class="form-control" placeholder="Enter login" required="required"/>
+                    </div>
+
+                    <div class="form-group field-password">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="required"/>
+                    </div>
+
+                    <div class="form-group field-confirm_password">
+                        <label for="confirm_password" class="control-label">Confirm Password</label>
+                        <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm your password" required="required"/>
+                    </div>
+
+                    <div class="oe_login_messages">
+                        <p class="alert alert-danger" t-if="authentication_failed">
+                            Wrong login/password
+                        </p>
+                    </div>
+
+                    <hr/>
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <input type="hidden" name="signup" value="1"/>
+                    <div class="clearfix oe_login_buttons">
+                        <a href="/web/login" class="btn btn-default pull-left">Back to Login</a>
+                        <button type="submit" class="btn btn-primary pull-right">Signup</button>
+                    </div>
+
+                </form>
+                <div class="oe_single_form_footer" t-if="not disable_footer">
+                    <t t-if="not disable_database_manager">
+                        <a class="oe_login_manage_db" t-attf-href="/web/database/manager{{ '?debug' if debug else '' }}">Manage Databases</a>
+                        <span class="oe_footer_seperator"> | </span>
+                    </t>
+                    <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
+                </div>
+
+            </t>
+        </template>
+
+    </data>
+</openerp>

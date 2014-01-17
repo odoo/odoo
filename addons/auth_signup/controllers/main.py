@@ -22,16 +22,27 @@ import logging
 
 import openerp
 from openerp import http
-from openerp.http import request
+from openerp.http import request, LazyResponse
 from openerp.modules.registry import RegistryManager
 from ..res_users import SignupError
 
 _logger = logging.getLogger(__name__)
 
-class Controller(http.Controller):
+class Home(openerp.addons.web.controllers.main.Home):
 
-    @http.route('/auth_signup/get_config', type='json', auth="none")
-    def get_config(self, dbname):
+    @http.route('/web/login', type='http', auth="none")
+    def web_login(self, *args, **kw):
+        response = super(Home, self).web_login(*args, **kw)
+        if isinstance(response, LazyResponse):
+            config = self.get_auth_signup_config(request.session.db)
+            response.params['values'].update(config)
+            if request.params.get('signup', None) and config['signup']:
+                response.params['template'] = 'auth_signup.signup'
+            if request.params.get('reset', None) and config['signup']:
+                response.params['template'] = 'auth_signup.reset'
+        return response
+
+    def get_auth_signup_config(self, dbname):
         """ retrieve the module config (which features are enabled) for the login page """
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
@@ -41,6 +52,8 @@ class Controller(http.Controller):
                 'reset_password': icp.get_param(cr, openerp.SUPERUSER_ID, 'auth_signup.reset_password') == 'True',
             }
         return config
+
+class Controller(http.Controller):
 
     @http.route('/auth_signup/retrieve', type='json', auth="none")
     def retrieve(self, dbname, token):
