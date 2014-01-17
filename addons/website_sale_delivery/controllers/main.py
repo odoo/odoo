@@ -18,6 +18,7 @@ class Ecommerce(Ecommerce):
             SaleOrder = request.registry['sale.order']
             SaleOrder.write(cr, SUPERUSER_ID, [order.id], {'carrier_id': carrier_id}, context=context)
             SaleOrder.delivery_set(cr, SUPERUSER_ID, [order.id], context=context)
+            return request.redirect("/shop/payment/")
 
         res = super(Ecommerce, self).payment(**post)
         return res

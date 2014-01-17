@@ -540,7 +540,10 @@
                           <tr style="border-top: 1px solid #000" id="order_total">
                               <th><h3>Total:</h3></th>
                               <th class="text-right">
-                                <h3><t t-call="website_sale.total"/></h3>
+                                <h3><span t-field="website_sale_order.amount_total" t-field-options='{
+                                    "widget": "monetary",
+                                    "display_currency": "website.pricelist_id.currency_id"
+                                  }'/></h3>
                               </th>
                           </tr>
                           <tr class="text-muted" id="order_total_taxes">
@@ -1060,11 +1063,5 @@
   </t>
 </template>
 
-<template id="total">
-<span t-field="website_sale_order.amount_total" t-field-options='{
-    "widget": "monetary",
-    "display_currency": "website.pricelist_id.currency_id"
-  }'/>
-</template>
 </data>
 </openerp>
