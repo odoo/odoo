@@ -68,8 +68,7 @@ class ir_attachment(osv.osv):
 
     @tools.ormcache()
     def _filestore(self, cr, uid, context=None):
-        dbuuid = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'database.uuid')
-        return os.path.join(tools.config['data_dir'], 'filestore', dbuuid)
+        return os.path.join(tools.config['data_dir'], 'filestore', cr.dbname)
 
     # 'data' field implementation
     def _full_path(self, cr, uid, location, path):
