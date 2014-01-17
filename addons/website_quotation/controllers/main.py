@@ -36,6 +36,7 @@ class sale_quote(http.Controller):
         # TODO: if not order.template_id: return to the URL of the portal view of SO
         values = {
             'quotation': order,
+            'new_post' : request.httprequest.session.get('new_post',False)
         }
         return request.website.render('website_quotation.so_quotation', values)
 
@@ -57,11 +58,13 @@ class sale_quote(http.Controller):
     @website.route(['/quote/<int:order_id>/<token>/post'], type='http', auth="public")
     def post(self, order_id, token, **post):
         # use SUPERUSER_ID allow to access/view order for public user
-        order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, order_id)
+        order_obj = request.registry.get('sale.order')
+        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         message = post.get('comment')
         assert token == order.access_token, 'Access denied, wrong token!'
         if message:
             self.message_post(message, order_id)
+            request.httprequest.session['new_post'] = True
         return werkzeug.utils.redirect("/quote/%s/%s" % (order_id, token))
 
     def message_post(self , message, order_id):
@@ -76,6 +79,15 @@ class sale_quote(http.Controller):
                 )
             request.session.body = False
         return True
+
+    @website.route(['/quote/<int:order_id>/<token>/close'], type='http', auth="public")
+    def close(self, order_id, token, **post):
+        """ close an alert message when click on 'X' and set session new_post as False"""
+        order_obj = request.registry.get('sale.order')
+        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
+        assert token == order.access_token, 'Access denied, wrong token!'
+        request.httprequest.session['new_post'] = False
+        return werkzeug.utils.redirect("/quote/%s/%s" % (order_id, token))
 
     @website.route(['/quote/update_line'], type='json', auth="public")
     def update(self, line_id=None, remove=False, unlink=False, order_id=None, token=None, **post):
@@ -109,9 +121,9 @@ class sale_quote(http.Controller):
         option_obj = request.registry.get('sale.option.line')
         option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
         vals.update({
-            'price_unit': option.product_id.list_price,
-            'website_description': option.product_id.website_description,
-            'name': option.product_id.name,
+            'price_unit': option.price_unit,
+            'website_description': option.website_description,
+            'name': option.name,
             'order_id': order.id,
             'product_id' : option.product_id.id,
             'product_uom_qty': option.quantity,

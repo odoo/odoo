@@ -159,9 +159,8 @@
                             </div>
                         </div>
                         <div class="col-md-9">
-                            <div id="psot_info"/>
-                            <div id="post_info" class="alert alert-info alert-dismissable">
-                                <button type="button" class="close hidden-print" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                            <div class="alert alert-info alert-dismissable" t-if="new_post">
+                                <a class="close hidden-print" data-dismiss="alert" aria-hidden="true" t-href="/quote/#{quotation.id}/#{quotation.access_token}/close">&amp;times;</a>
                                 <strong>Your message has been sent! We will come back to you as soon as possible!.</strong>
                             </div>
                             <t t-call="website_quotation.quotation_toolbar"/>

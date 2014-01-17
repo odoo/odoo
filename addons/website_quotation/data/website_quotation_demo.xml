@@ -153,7 +153,7 @@
                 </section>
 
                 <section data-snippet-id="text-block">
-                    <h2>Your OpenERP Enterprise commissions</h2>
+                    <h2>Enterprise commissions</h2>
                     <p>
                         As an official partner, you benefit from OpenERP Enterprise
                         commissions, according to your partner grade, as well as
@@ -192,7 +192,7 @@
                 <section data-snippet-id="text-block">
                     <div class="row">
                         <div class="col-md-12">
-                            <h2>Get access to our consultants and technical experts</h2>
+                            <h2>Get access to our experts</h2>
                         </div>
                         <div class="col-md-7">
                             <p>
@@ -212,7 +212,7 @@
                 <section data-snippet-id="text-block">
                     <div class="row">
                         <div class="col-md-12">
-                            <h2>Get recognition as an official certified partner</h2>
+                            <h2>Official certified partner</h2>
                         </div>
                         <div class="col-md-7">
                             <p>
@@ -233,7 +233,7 @@
                 <section data-snippet-id="text-block">
                     <div class="row">
                         <div class="col-md-12">
-                            <h2>Access to the Lead Generation Program</h2>
+                            <h2>Access to the Lead</h2>
                         </div>
                         <div class="col-md-7">
                             <p>
@@ -264,7 +264,7 @@
                 </section>
 
                 <section class="mb32" data-snippet-id="text-block">
-                    <h2>Test all your developments automatically</h2>
+                    <h2>Test developments automatically</h2>
                     <div class="row">
                         <div class="col-md-5">
                             <img src="/website_quotation/static/src/img/partner_sc_01.png" class="img shadow"/>
@@ -375,5 +375,38 @@
                 </section>
             </field>
         </record>
+
+        <record id="website_sale_option_line_1" model="sale.option.line">
+            <field name="temp_option_id" ref="website_quote_template_1"/>
+            <field name="name">Advanced CRM Functional</field>
+            <field name="product_id" ref="product_product_quote_3"/>
+            <field name="product_uom_qty">1</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="price_unit">9000.00</field>
+            <field name="website_description" type="html">
+                <section data-snippet-id="title">
+                    <h1>Advanced CRM Functional</h1>
+                </section>
+                <section data-snippet-id="text-image">
+                </section>
+            </field>
+        </record>
+
+        <record id="website_sale_option_line_2" model="sale.option.line">
+            <field name="temp_option_id" ref="website_quote_template_1"/>
+            <field name="name">Advanced Account Functional</field>
+            <field name="product_id" ref="product_product_quote_4"/>
+            <field name="product_uom_qty">1</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="price_unit">18000.00</field>
+            <field name="website_description" type="html">
+                <section data-snippet-id="title">
+                    <h1>Advanced Account Functional</h1>
+                </section>
+                <section data-snippet-id="text-image">
+                </section>
+            </field>
+        </record>
+
     </data>
 </openerp>

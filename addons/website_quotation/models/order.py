@@ -32,7 +32,7 @@ class sale_quote_template(osv.osv):
         'website_description': fields.html('Description'),
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
-        'options': fields.one2many('sale.option.line', 'option_id', 'Optional Products Lines'),
+        'options': fields.one2many('sale.option.line', 'temp_option_id', 'Optional Products Lines'),
     }
 
     def open_template(self, cr, uid, quote_id, context=None):
@@ -127,6 +127,7 @@ class sale_order(osv.osv):
                 'uom_id': option.uom_id.id,
                 'price_unit': option.price_unit,
                 'discount': option.discount,
+                'website_description': option.website_description,
             }))
         data = {'order_line': lines, 'website_description': quote_template.website_description, 'note': quote_template.note, 'options': options}
         return {'value': data}
@@ -143,7 +144,8 @@ class sale_option_line(osv.osv):
     _name = "sale.option.line"
     _description = "Sale Options"
     _columns = {
-        'option_id': fields.many2one('sale.order', 'Sale Order Reference', required=True, ondelete='cascade', select=True),
+        'option_id': fields.many2one('sale.order', 'Sale Order Reference', ondelete='cascade', select=True),
+        'temp_option_id': fields.many2one('sale.quote.template', 'Quotation Template Reference', ondelete='cascade', select=True),
         'line_id': fields.many2one('sale.order.line', on_delete="set null"),
         'name': fields.text('Description', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
@@ -163,7 +165,7 @@ class sale_option_line(osv.osv):
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
         vals.update({
             'price_unit': product_obj.list_price,
-            'website_description': product_obj.website_description,
+            'website_description': product_obj.product_tmpl_id.website_description,
             'name': product_obj.name,
             'uom_id': product_obj.product_tmpl_id.uom_id.id,
         })
