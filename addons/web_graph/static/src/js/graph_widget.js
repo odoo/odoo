@@ -495,6 +495,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
         var self = this,
             dim_x = this.pivot.rows.groupby.length,
             dim_y = this.pivot.cols.groupby.length,
+            show_controls = (this.width > 400 && this.height > 300 && dim_x + dim_y >=2),
             data;
 
         // No groupby 
@@ -555,7 +556,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
                 .height(self.height)
                 .reduceXTicks(false)
                 .stacked(self.bar_ui === 'stack')
-                .showControls(false);
+                .showControls(show_controls);
 
             if (self.width / data[0].values.length < 80) {
                 chart.rotateLabels(-15);
