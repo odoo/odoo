@@ -66,7 +66,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     do_search: function (domain, context, group_by) {
-        var col_group_by = this.get_col_groupbys_from_searchview();
+        var self = this,
+            col_group_by = this.get_col_groupbys_from_searchview();
 
         if (!this.graph_widget) {
             if (group_by.length) {
@@ -79,7 +80,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
             this.graph_widget.appendTo(this.$el);
             this.graph_widget.on('groupby_changed', this, this.proxy('register_groupby'));
             this.graph_widget.on('groupby_swapped', this, this.proxy('swap_groupby'));
-            this.ViewManager.on('switch_mode', this, function (e) { if (e === 'graph') this.graph_widget.reload(); });
+            this.ViewManager.on('switch_mode', this, function (e) { 
+                var domain = self.graph_widget.get_domain(),
+                    col_gb = self.get_col_groupbys_from_searchview(),
+                    row_gb = self.get_row_groupbys_from_searchview();
+
+                if (e === 'graph') this.graph_widget.set(domain, row_gb, col_gb); 
+            });
             return;
         }
 
@@ -95,6 +102,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var facet = this.search_view.query.findWhere({category:'ColGroupBy'}),
             groupby_list = facet ? facet.values.models : [];
         return _.map(groupby_list, function (g) { return g.attributes.value.attrs.context.col_group_by; });
+    },
+
+    get_row_groupbys_from_searchview: function () {
+        var facet = this.search_view.query.findWhere({category:'GroupBy'}),
+            groupby_list = facet ? facet.values.models : [];
+        return _.map(groupby_list, function (g) { return g.attributes.value.attrs.context.group_by; });
     },
 
     do_show: function () {

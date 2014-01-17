@@ -62,6 +62,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
             });
             self.pivot.activate();
             self.put_measure_checkmarks();
+            self.trigger('groupby_changed');
         });
     },
 
@@ -150,15 +151,15 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
     // returns the row groupbys as a list of fields (not the representation used
     // internally by pivot table)
     get_row_groupby: function () {
-        return this.pivot.rows.groupby;
+        return (this.pivot) ? this.pivot.rows.groupby : this.pivot_options.row_groupby;
     },
 
     get_col_groupby: function () {
-        return this.pivot.cols.groupby;
+        return (this.pivot) ? this.pivot.cols.groupby : this.pivot_options.col_groupby;
     },
 
-    reload: function () {
-        this.pivot.update_data();
+    get_domain: function () {
+        return (this.pivot) ? this.pivot.domain : this.pivot_options.domain;
     },
 
     // ----------------------------------------------------------------------

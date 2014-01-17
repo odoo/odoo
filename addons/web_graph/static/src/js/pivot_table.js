@@ -82,6 +82,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend(openerp.EventDispatcherM
         }
 	},
 
+    // return true if an update is triggered, false otherwise
     set: function (domain, row_groupby, col_groupby) {
         var row_gbs = this.create_field_values(row_groupby),
             col_gbs = this.create_field_values(col_groupby),
