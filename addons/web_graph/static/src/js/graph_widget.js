@@ -181,6 +181,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend(openerp.EventDispatcherMixin
 
     measure_selection: function (event) {
         event.preventDefault();
+        event.stopPropagation();
         var measure = event.target.attributes['data-choice'].nodeValue;
         this.pivot.toggle_measure(measure);
         this.put_measure_checkmarks();
