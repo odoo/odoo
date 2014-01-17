@@ -25,7 +25,7 @@
 from lxml import etree
 import unittest2
 from . import test_mail_examples
-from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html
+from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html, email_split
 
 class TestSanitizer(unittest2.TestCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
@@ -325,6 +325,19 @@ class TestHtmlTools(unittest2.TestCase):
         for html, content, plaintext_flag, preserve_flag, container_tag, expected in test_samples:
             self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
 
+class TestEmailTools(unittest2.TestCase):
+    """ Test some of our generic utility functions for emails """
+
+    def test_email_split(self):
+        cases = [
+            ("John <12345@gmail.com>", ['12345@gmail.com']), # regular form 
+            ("d@x; 1@2", ['d@x', '1@2']), # semi-colon + extra space
+            ("'(ss)' <123@gmail.com>, 'foo' <foo@bar>", ['123@gmail.com','foo@bar']), # comma + single-quoting
+            ('"john@gmail.com"<johnny@gmail.com>', ['johnny@gmail.com']), # double-quoting
+            ('"<jg>" <johnny@gmail.com>', ['johnny@gmail.com']), # double-quoting with brackets 
+        ]
+        for text, expected in cases:
+            self.assertEqual(email_split(text), expected, 'email_split is broken')
 
 if __name__ == '__main__':
     unittest2.main()
