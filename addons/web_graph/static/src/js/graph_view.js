@@ -56,7 +56,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 if ('operator' in field.attrs) {
                     self.widget_config.measures.push(field.attrs.name);
                 } else {
-                    self.widet_config.row_groupby.push(field.attrs.name);
+                    self.widget_config.row_groupby.push(field.attrs.name);
                 }
             }
         });
