@@ -726,9 +726,7 @@
                         <field name="variants" required="1"/>
                         <field name="default_code"/>
                         <label for="price_margin"/>
-                        <div>
-                            <field name="price_margin" class="oe_inline" style="vertical-align:baseline"/> %%
-                        </div>
+                        <field name="price_margin" class="oe_inline"/>
                         <field name="price_extra"/>
                     </group>
                 </form>
@@ -855,7 +853,7 @@
                                     <field colspan="4" name="product_variant_ids" nolabel="1" >
                                         <tree string="Product Variants" editable="bottom">
                                             <field name="variants" required="1"/>
-                                            <field name="price_margin" string="Variant Price Margin(%%)"/>
+                                            <field name="price_margin" string="Variant Price Margin"/>
                                             <field name="price_extra"/>
                                             <field name="lst_price" string="Sale Price" readonly="1"/>
                                         </tree>

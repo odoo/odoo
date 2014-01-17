@@ -576,7 +576,7 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
-            res[product.id] =  (res[product.id] + ((res[product.id] * (product.price_margin)) / 100)) + product.price_extra
+            res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
         return res
 
     def _save_product_lst_price(self, cr, uid, product_id, field_name, field_value, arg, context=None):
@@ -655,7 +655,7 @@ class product_product(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
-        'price_margin': lambda *a: 0.0,
+        'price_margin': lambda *a: 1.0,
         'color': 0,
     }
 
@@ -681,7 +681,7 @@ class product_product(osv.osv):
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price'), help="Price Extra: Extra price for the variant on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
-        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price'), help="Price Margin: Margin in percentage on sale price for the variant. eg. 10% price margin, 1000 + 10% = 1100."),
+        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price'), help="Price Margin: Margin in percentage amount on sale price for the variant. eg. 10 price margin, 1000 * 1.1 = 1100."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store={
             'product.template': (_get_name_template_ids, ['name'], 10),
@@ -732,7 +732,7 @@ class product_product(osv.osv):
         if template_id:
             template = self.pool.get('product.template').browse(cr, uid, template_id, context=context)
             if not lst_price:
-                lst_price = (template.list_price + ((template.list_price * (price_margin)) / 100)) + price_extra
+                lst_price = template.list_price + ((template.list_price * price_margin) + price_extra)
             res['value'] = {
                 'name': template.name,
                 'lst_price': lst_price,
@@ -844,7 +844,7 @@ class product_product(osv.osv):
         for product in products:
             res[product.id] = product[ptype] or 0.0
             if ptype == 'list_price':
-                res[product.id] = (res[product.id] + ((res[product.id] * (product.price_margin)) / 100)) + \
+                res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
                         product.price_extra
             if 'uom' in context:
                 uom = product.uom_id or product.uos_id
