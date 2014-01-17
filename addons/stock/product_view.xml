@@ -11,6 +11,12 @@
                     <field name="location_id" widget="selection" context="{'location': self}"/>
                     <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
                 </field>
+                <field name="categ_id" position="before">
+                    <separator/>
+                    <filter name="virtual_stock_negative" string="Negative Forecast Qty" domain="[('virtual_available','&lt;=',0)]"/>
+                    <filter name="real_stock_negative" string="Negative On Hand Qty" domain="[('qty_available','&lt;=',0)]"/>
+
+                </field>
             </field>
         </record>
 

@@ -148,12 +148,29 @@ class product_product(osv.osv):
             
         return res
 
+    def _search_product_quantity(self, cr, uid, obj, name, args, context):
+        res = []
+        for field, operator, value in args:
+            if operator == '=':
+                operator = '=='
+            
+            product_ids = self.search(cr, uid, [], context=context)
+            ids = []
+            if product_ids:
+                for element in self.browse(cr, uid, product_ids, context=context):
+                    if eval(str(element[field]) + operator + str(value)):
+                        ids.append(element.id)
+            res.append(('id', 'in', ids))
+        return res
+
+
     _columns = {
         'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
         'qty_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Quantity On Hand',
+            fnct_search=_search_product_quantity,
             help="Current quantity of products.\n"
                  "In a context with a single Stock Location, this includes "
                  "goods stored at this Location, or any of its children.\n"
@@ -167,6 +184,7 @@ class product_product(osv.osv):
         'virtual_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Forecasted Quantity',
+            fnct_search=_search_product_quantity,
             help="Forecast quantity (computed as Quantity On Hand "
                  "- Outgoing + Incoming)\n"
                  "In a context with a single Stock Location, this includes "
