@@ -617,9 +617,16 @@ class Home(http.Controller):
             return local_redirect('/web/login', query=request.params)
 
     @http.route('/web/login', type='http', auth="none")
-    def web_login(self, redirect=None, **kw):
-        if request.session.db is None:
+    def web_login(self, redirect=None, db=None, **kw):
+        if db and db != request.session.db:
+            request.session.logout()
+            request.session.db = db
+            request.params.pop('db', None)
+            return local_redirect('/web/login', query=request.params)
+
+        if not request.session.db and not db:
             return local_redirect('/web/database/selector')
+
         values = request.params.copy()
         if not redirect:
             redirect = '/web?' + request.httprequest.query_string
