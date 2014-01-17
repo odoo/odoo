@@ -5452,6 +5452,11 @@ class BaseModel(object):
         record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
         if not record_ids:
             return []
+
+        if fields and fields == ['id']:
+            # shortcut read if we only want the ids
+            return [{'id': id} for id in record_ids]
+
         result = self.read(cr, uid, record_ids, fields or [], context or {})
         # reorder read
         if len(result) >= 1:
