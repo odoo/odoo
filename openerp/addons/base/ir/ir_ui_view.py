@@ -709,6 +709,9 @@ class view(osv.osv):
         arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
         return arch
 
+    def clear_cache(self):
+        self.read_template.clear_cache(self)
+
     def distribute_branding(self, e, branding=None, parent_xpath='',
                             index_map=misc.ConstantMapping(1)):
         if e.get('t-ignore') or e.tag == 'head':
