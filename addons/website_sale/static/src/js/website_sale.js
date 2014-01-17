@@ -71,7 +71,13 @@ $(document).ready(function () {
         }
         $price.html($variant_price.data("price"));
     });
-    $('form.js_add_cart_json label:first').trigger('mouseup');
+    //Trigger mouseup event of the checked radio button.
+    $('form.js_add_cart_json label input.variant_radio').each(function() {
+        if (this.checked) {
+            $(this).parent().trigger('mouseup'); 
+            }
+    });
+    
     $(".js_slider").each(function() {
         var $slide = $(this);
         var $slider = $('<div>'+

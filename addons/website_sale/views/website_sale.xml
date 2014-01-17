@@ -302,17 +302,18 @@
                     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
                     <t t-if="len(product.product_variant_ids) &gt; 1">
                         <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
-                            <input type="radio" name="product_id" t-att-value="variant_id.id" t-att-checked="variant_id.price == min([x.price for x in product.product_variant_ids])"/>
+                            <input class="variant_radio" type="radio" name="product_id" t-att-value="variant_id.id" t-att-checked="variant_id.price == min([x.price for x in product.product_variant_ids])"/>
                             <t t-esc="variant_id.variants or ''">Standard</t>
                             <span class="badge" t-if="variant_id.price_extra">
-                                <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-esc="variant_id.price_extra" t-field-options='{
+                                <t t-esc="variant_id.price_extra > 0 and '+' or ''"/>
+                                    <span t-esc="variant_id.price_extra" t-field-options='{
                                      "widget": "monetary",
                                      "display_currency": "website.pricelist_id.currency_id"
                                          }'/>
                             </span>
                             <span t-if = "variant_id.lst_price != variant_id.price">
                                 <span class="oe_variant_lst_price text-danger" style="text-decoration: line-through;"
-                                  t-field="variant_id.lst_price"
+                                  t-esc="variant_id.lst_price"
                                   t-field-options='{
                                      "widget": "monetary",
                                      "display_currency": "website.pricelist_id.currency_id"
