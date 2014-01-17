@@ -198,10 +198,11 @@ class website_event(http.Controller):
         order_line_obj = request.registry.get('sale.order.line')
         ticket_obj = request.registry.get('event.event.ticket')
         order_obj = request.registry.get('sale.order')
+        website = request.registry['website']
 
-        order = request.registry['website'].get_current_order(request.cr, request.uid, context=request.context)
+        order = website.ecommerce_get_current_order(request.cr, request.uid, context=request.context)
         if not order:
-            order = request.registry['website']._get_order(request.cr, request.uid, context=request.context)
+            order = website.ecommerce_get_new_order(request.cr, request.uid, context=request.context)
 
         partner_id = user_obj.browse(request.cr, SUPERUSER_ID, request.uid,
                                      context=request.context).partner_id.id

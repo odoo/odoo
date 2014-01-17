@@ -86,8 +86,7 @@ class Website(orm.Model):
 
         order_id = self._ecommerce_create_quotation(cr, uid, context=context)
         request.httprequest.session['ecommerce_order_id'] = order_id
-        order = SaleOrder.browse(cr, SUPERUSER_ID, order_id, context=context)
-        return SaleOrder.browse(cr, uid, order_id, context=dict(request.context, pricelist=order.pricelist_id.id))
+        return SaleOrder.browse(cr, SUPERUSER_ID, order_id, context=context)
 
     def ecommerce_get_current_order(self, cr, uid, context=None):
         SaleOrder = self.pool.get('sale.order')

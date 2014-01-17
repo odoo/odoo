@@ -544,8 +544,8 @@ class Ecommerce(http.Controller):
         billing_info['parent_id'] = company_id
 
         if request.uid != request.registry['website'].get_public_user(cr, uid, context):
-            partner_id = orm_user.browse(cr, uid, uid, context=context).partner_id.id
-            orm_parter.write(cr, uid, [partner_id], billing_info, context=context)
+            partner_id = orm_user.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
+            orm_parter.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
             partner_id = orm_parter.create(cr, SUPERUSER_ID, billing_info, context=context)
 

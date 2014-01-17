@@ -34,7 +34,7 @@
         </xpath>
 
         <xpath expr="//div[@id='payment_method']" position="before">
-            <div t-if="len(deliveries)" class="row" id="delivery_carrier">
+            <div t-if="deliveries" class="row" id="delivery_carrier">
                 <h4>Choose your Delivery Method</h4>
                 <div class="col-lg-5 col-sm-6">
                     <ul class="list-unstyled">
