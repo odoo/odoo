@@ -1519,8 +1519,8 @@ class Export(openerpweb.Controller):
             req, model, map(operator.itemgetter('name'), export_fields_list))
 
         return [
-            {'name': field['name'], 'label': fields_data[field['name']]}
-            for field in export_fields_list
+            {'name': field_name, 'label': fields_data[field_name]}
+            for field_name in fields_data.keys()
         ]
 
     def fields_info(self, req, model, export_fields):
@@ -1567,7 +1567,7 @@ class Export(openerpweb.Controller):
                     req, fields[base]['relation'], base, fields[base]['string'],
                     subfields
                 ))
-            else:
+            elif base in fields:
                 info[base] = fields[base]['string']
 
         return info
