@@ -1,52 +1,25 @@
 # -*- coding: utf-8 -*-
+import collections
 import cStringIO
 import datetime
 import json
 import logging
 import math
 import re
-import urllib
-import xml # FIXME use lxml and etree
+import xml  # FIXME use lxml and etree
 
 import babel
 import babel.dates
-import dateutil.relativedelta
 import werkzeug.utils
 from PIL import Image
 
 import openerp.tools
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-BUILTINS = {
-    'False': False,
-    'None': None,
-    'True': True,
-    'abs': abs,
-    'bool': bool,
-    'dict': dict,
-    'filter': filter,
-    'len': len,
-    'list': list,
-    'map': map,
-    'max': max,
-    'min': min,
-    'reduce': reduce,
-    'repr': repr,
-    'round': round,
-    'set': set,
-    'str': str,
-    'tuple': tuple,
-    'quote':  urllib.quote,
-    'urlencode': urllib.urlencode,
-    'datetime': datetime,
-    # dateutil.relativedelta is an old-style class and cannot be directly
-    # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
-    # is needed, apparently.
-    'relativedelta': lambda *a, **kw : dateutil.relativedelta.relativedelta(*a, **kw),
-}
 
 class QWebException(Exception):
     def __init__(self, message, template=None, node=None, attribute=None):
@@ -55,59 +28,27 @@ class QWebException(Exception):
         self.node = node
         self.attribute = attribute
 
-## We use a jinja2 sandboxed environment to render qWeb templates.
-#from openerp.tools.safe_eval import safe_eval as eval
-#from jinja2.sandbox import SandboxedEnvironment
-#from jinja2.exceptions import SecurityError, UndefinedError
-#UNSAFE = ["browse", "search", "read", "unlink", "read_group"]
-#SAFE = ["_name"]
 
 class QWebContext(dict):
-    def __init__(self, cr, uid, data, undefined_handler=None, loader=None,
-                 templates=None, context=None):
+    def __init__(self, cr, uid, data, loader=None, templates=None, context=None):
         self.cr = cr
         self.uid = uid
         self.loader = loader
-        self.undefined_handler = undefined_handler
         self.templates = templates or {}
         self.context = context
-        dic = BUILTINS.copy()
-        dic.update(data)
+        dic = dict(data)
         super(QWebContext, self).__init__(dic)
         self['defined'] = lambda key: key in self
 
-    def __getitem__(self, key):
-        if key in self:
-            return self.get(key)
-        elif not self.undefined_handler:
-            raise NameError("QWeb: name %r is not defined while rendering template %r" % (key, self.get('__template__')))
-        else:
-            return self.get(key, self.undefined_handler(key, self))
-
     def safe_eval(self, expr):
-        # This is too slow, we should cached compiled expressions attribute of
-        # qweb to will be changed into a model object ir.qweb.
-        #
-        # The cache should be on qweb, and qweb context contructor take qweb as
-        # argument to store the cache.
-        #
-        #class QWebSandboxedEnvironment(SandboxedEnvironment):
-        #    def is_safe_attribute(self, obj, attr, value):
-        #        if str(attr) in SAFE:
-        #            res = True
-        #        else:
-        #            res = super(QWebSandboxedEnvironment, self).is_safe_attribute(obj, attr, value)
-        #            if str(attr) in UNSAFE or not res:
-        #                raise SecurityError("access to attribute '%s' of '%s' object is unsafe." % (attr,obj))
-        #        return res
-        #env = qWebSandboxedEnvironment(variable_start_string="${", variable_end_string="}")
-        #env.globals.update(context)
-        #env.compile_expression(expr)()
-        return eval(expr, None, self)
+        locals_dict = collections.defaultdict(lambda: None)
+        locals_dict.update(self)
+        locals_dict.pop('cr', None)
+        locals_dict.pop('loader', None)
+        return eval(expr, None, locals_dict, nocopy=True, locals_builtins=True)
 
     def copy(self):
         return QWebContext(self.cr, self.uid, dict.copy(self),
-                           undefined_handler=self.undefined_handler,
                            loader=self.loader,
                            templates=self.templates,
                            context=self.context)
@@ -257,8 +198,7 @@ class QWeb(orm.AbstractModel):
         xmlid = imd.search_read(cr, uid, domain, ['module', 'name'])[0]
         return '%s.%s' % (xmlid['module'], xmlid['name'])
 
-    def render(self, cr, uid, id_or_xml_id, v=None, loader=None,
-               undefined_handler=None, context=None):
+    def render(self, cr, uid, id_or_xml_id, v=None, loader=None, context=None):
         if isinstance(id_or_xml_id, list):
             id_or_xml_id = id_or_xml_id[0]
         tname = id_or_xml_id
@@ -268,8 +208,7 @@ class QWeb(orm.AbstractModel):
         if v is None:
             v = {}
         if not isinstance(v, QWebContext):
-            v = QWebContext(cr, uid, v, undefined_handler=undefined_handler,
-                            loader=loader, context=context)
+            v = QWebContext(cr, uid, v, loader=loader, context=context)
         v['__template__'] = tname
         stack = v.get('__stack__', [])
         if stack:
