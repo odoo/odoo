@@ -183,7 +183,7 @@ class view(osv.osv):
             # TODO: should be doable in a read and a write
             for view_ in self.browse(cr, uid, ids, context=context):
                 if view_.model_data_id:
-                    view_.model_data_id.write({'noupdate': True})
+                    self.pool.get('ir.model.data').write(cr, openerp.SUPERUSER_ID, view_.model_data_id.id, {'noupdate': True})
         return ret
 
     # default view selection
