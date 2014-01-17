@@ -137,7 +137,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
     //noinspection FallthroughInSwitchStatementJS
     switch (value) {
         case '':
-            if (descriptor.type === 'char') {
+            if (descriptor.type === 'char' || descriptor.type === 'text') {
                 return '';
             }
             console.warn('Field', descriptor, 'had an empty string as value, treating as false...');
