@@ -31,7 +31,6 @@ class StockMove(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True),
         'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
         'consumed_for': fields.many2one('stock.move', 'Consumed for'),
-        'track_production': fields.related('product_id', 'track_production'), 
     }
 
     def check_tracking(self, cr, uid, move, lot_id, context=None):
@@ -103,7 +102,7 @@ class StockMove(osv.osv):
         return processed_ids
 
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id = False, restrict_partner_id = False, context=None):
-        """ Consumed product with specific quatity from specific source location.
+        """ Consumed product with specific quantity from specific source location.
         @param product_qty: Consumed product quantity
         @param location_id: Source location
         @return: Consumed lines
@@ -120,10 +119,9 @@ class StockMove(osv.osv):
                     production_obj.force_production(cr, uid, [prod.id])
             production_obj.signal_button_produce(cr, uid, production_ids)
             for new_move in new_moves:
-                if new_move == move.id:
-                    #This move is already there in move lines of production order
-                    continue
-                production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
+                if new_move != move.id:
+                    #This move is not already there in move lines of production order
+                    production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)
         return res
 

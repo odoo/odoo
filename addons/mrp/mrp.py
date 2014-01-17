@@ -774,13 +774,6 @@ class mrp_production(osv.osv):
 
 
 
-
-
-
-
-
-
-
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, wiz, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
         If Production mode is consume, all stock move lines of raw materials will be done/consumed.
@@ -812,17 +805,18 @@ class mrp_production(osv.osv):
                 if not consumed_data.get(consumed.product_id.id, False):
                     consumed_data[consumed.product_id.id] = 0
                 consumed_data[consumed.product_id.id] += consumed.product_qty
+        consumed_moves = []
         for consume in wiz.consume_lines:
             # Search move for the product
             corresponding_move = [x for x in production.move_lines if x.product_id.id == consume.product_id.id]
             if corresponding_move:
                 corresponding_move = corresponding_move[0]
                 if corresponding_move.product_qty > consume.product_qty:
-                    stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], consume.product_qty, corresponding_move.location_id.id, 
-                                                  restrict_lot_id = consume.lot_id.id, context=context)
+                    consumed_moves.append(stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], consume.product_qty, corresponding_move.location_id.id, 
+                                                  restrict_lot_id = consume.lot_id.id, context=context))
                 else:
-                    stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], corresponding_move.product_qty, corresponding_move.location_id.id, 
-                                                  restrict_lot_id = consume.lot_id.id, context=context)
+                    consumed_moves.append(stock_mov_obj.action_consume(cr, uid, [corresponding_move.id], corresponding_move.product_qty, corresponding_move.location_id.id, 
+                                                  restrict_lot_id = consume.lot_id.id, context=context))
         
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
@@ -842,106 +836,20 @@ class mrp_production(osv.osv):
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
                 subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 rest_qty = (subproduct_factor * production.product_qty) - produced_qty
-
                 if rest_qty < (subproduct_factor * production_qty):
                     prod_name = produce_product.product_id.name_get()[0][1]
                     raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % ((subproduct_factor * production_qty), prod_name, rest_qty))
                 if rest_qty > 0 :
-                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
+                    new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), location_id = produce_product.location_id.id, restrict_lot_id = wiz.lot_id.id, context=context)
+                    if produce_product.product_id.id == production.bom_id.product_id.id:
+                        stock_mov_obj.write(cr, uid, new_moves, {'consumed_for': produce_product.id}, context=context)
+                    
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_button_produce_done(cr, uid, [production_id])
         return True
-        
 
 
-    def action_produce2(self, cr, uid, production_id, production_qty, production_mode, context=None):
-        """ To produce final product based on production mode (consume/consume&produce).
-        If Production mode is consume, all stock move lines of raw materials will be done/consumed.
-        If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
-        and stock move lines of final product will be also done/produced.
-        @param production_id: the ID of mrp.production object
-        @param production_qty: specify qty to produce
-        @param production_mode: specify production mode (consume/consume&produce).
-        @return: True
-        """
-        stock_mov_obj = self.pool.get('stock.move')
-        production = self.browse(cr, uid, production_id, context=context)
-        if not production.move_lines and production.state == 'ready':
-            # trigger workflow if not products to consume (eg: services)
-            self.signal_button_produce(cr, uid, [production_id])
-
-        produced_qty = 0
-        for produced_product in production.move_created_ids2:
-            if (produced_product.scrapped) or (produced_product.product_id.id != production.product_id.id):
-                continue
-            produced_qty += produced_product.product_qty
-        if production_mode in ['consume','consume_produce']:
-            consumed_data = {}
-
-            # Calculate already consumed qtys
-            for consumed in production.move_lines2:
-                if consumed.scrapped:
-                    continue
-                if not consumed_data.get(consumed.product_id.id, False):
-                    consumed_data[consumed.product_id.id] = 0
-                consumed_data[consumed.product_id.id] += consumed.product_qty
-
-            # Find product qty to be consumed and consume it
-            for scheduled in production.product_lines:
-
-                # total qty of consumed product we need after this consumption
-                total_consume = ((production_qty + produced_qty) * scheduled.product_qty / production.product_qty)
-
-                # qty available for consume and produce
-                qty_avail = scheduled.product_qty - consumed_data.get(scheduled.product_id.id, 0.0)
-
-                if qty_avail <= 0.0:
-                    # there will be nothing to consume for this raw material
-                    continue
-
-                raw_product = [move for move in production.move_lines if move.product_id.id==scheduled.product_id.id]
-                if raw_product:
-                    # qtys we have to consume
-                    qty = total_consume - consumed_data.get(scheduled.product_id.id, 0.0)
-                    if float_compare(qty, qty_avail, precision_rounding=scheduled.product_id.uom_id.rounding) == 1:
-                        # if qtys we have to consume is more than qtys available to consume
-                        prod_name = scheduled.product_id.name_get()[0][1]
-                        raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can only consume up to total %s quantities.') % (qty, prod_name, qty_avail))
-                    if qty <= 0.0:
-                        # we already have more qtys consumed than we need
-                        continue
-
-                    raw_product[0].action_consume(qty, raw_product[0].location_id.id, context=context)
-
-        if production_mode == 'consume_produce':
-            # To produce remaining qty of final product
-            #vals = {'state':'confirmed'}
-            #final_product_todo = [x.id for x in production.move_created_ids]
-            #stock_mov_obj.write(cr, uid, final_product_todo, vals)
-            #stock_mov_obj.action_confirm(cr, uid, final_product_todo, context)
-            produced_products = {}
-            for produced_product in production.move_created_ids2:
-                if produced_product.scrapped:
-                    continue
-                if not produced_products.get(produced_product.product_id.id, False):
-                    produced_products[produced_product.product_id.id] = 0
-                produced_products[produced_product.product_id.id] += produced_product.product_qty
-
-            for produce_product in production.move_created_ids:
-                produced_qty = produced_products.get(produce_product.product_id.id, 0)
-                subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
-                rest_qty = (subproduct_factor * production.product_qty) - produced_qty
-
-                if rest_qty < (subproduct_factor * production_qty):
-                    prod_name = produce_product.product_id.name_get()[0][1]
-                    raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % ((subproduct_factor * production_qty), prod_name, rest_qty))
-                if rest_qty > 0 :
-                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
-
-        self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
-        self.signal_button_produce_done(cr, uid, [production_id])
-        return True
 
     def _costs_generate(self, cr, uid, production):
         """ Calculates total costs at the end of the production.

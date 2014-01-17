@@ -1920,7 +1920,6 @@ class stock_move(osv.osv):
                 if location_id:
                     self.write(cr, uid, [move.id], {'location_id': location_id, 'restrict_lot_id': restrict_lot_id, 
                                                     'restrict_partner_id': restrict_partner_id}, context=context)
-
         self.action_done(cr, uid, res, context=context)
         return res
 

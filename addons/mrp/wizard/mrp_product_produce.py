@@ -31,7 +31,8 @@ class mrp_product_produce_line(osv.osv_memory):
         'product_id': fields.many2one('product.product', 'Product'), 
         'product_qty': fields.float('Quantity'), 
         'lot_id': fields.many2one('stock.production.lot', 'Lot'), 
-        'produce_id': fields.many2one('mrp.product.produce')
+        'produce_id': fields.many2one('mrp.product.produce'), 
+        'track_production': fields.related('product_id', 'track_production', type='boolean')
         }
 
 class mrp_product_produce(osv.osv_memory):
@@ -39,6 +40,7 @@ class mrp_product_produce(osv.osv_memory):
     _description = "Product Produce"
 
     _columns = {
+        'product_id': fields.many2one('product.product', type='many2one'),
         'product_qty': fields.float('Select Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'mode': fields.selection([('consume_produce', 'Consume & Produce'),
                                   ('consume', 'Consume Only')], 'Mode', required=True,
@@ -47,12 +49,14 @@ class mrp_product_produce(osv.osv_memory):
                                         "and it will finish the production order when total ordered quantities are produced."),
         'lot_id': fields.many2one('stock.production.lot', 'Lot'), #Should only be visible when it is consume and produce mode
         'consume_lines': fields.one2many('mrp.product.produce.line', 'produce_id', 'Products Consumed'),
+        'track_production': fields.boolean('Track production'),
     }
     
     
     def on_change_qty(self, cr, uid, ids, product_qty, consume_lines, context=None):
         """ Will calculate number of products based on 
         """
+        quant_obj = self.pool.get("stock.quant")
         prod_obj = self.pool.get("mrp.production")
         production = prod_obj.browse(cr, uid, context['active_id'], context=context)
         
@@ -88,10 +92,24 @@ class mrp_product_produce(osv.osv_memory):
             if qty_avail <= 0.0:
                 # there will be nothing to consume for this raw material
                 continue
-
+            
+            
             qty = total_consume - consumed_data.get(scheduled.product_id.id, 0.0)
-            dict_new = {'product_id': scheduled.product_id.id, 'product_qty': qty}
-            new_consume_lines.append([0, False, dict_new])
+            # Search for quants related to this related move
+            move = [x for x in production.move_lines if x.product_id.id == scheduled.product_id.id]
+            #TODO: check if not already in dict_new
+            if move:
+                move = move[0]
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, scheduled.product_id, qty, domain=None, 
+                                                     prefered_domain=[('reservation_id', '=', move.id)], fallback_domain=[('reservation_id', '=', False)], context=context)
+                for quant in quants: 
+                    if quant[0]:
+                        dict_new = {'product_id': scheduled.product_id.id, 'product_qty': quant[1], 'lot_id': quant[0].lot_id.id}
+                        new_consume_lines.append([0, False, dict_new])
+                        qty -= quant[1]
+            if qty > 0:
+                dict_new = {'product_id': scheduled.product_id.id, 'product_qty': qty}
+                new_consume_lines.append([0, False, dict_new])
         
         return {'value': {'consume_lines': new_consume_lines}}
 
@@ -115,9 +133,26 @@ class mrp_product_produce(osv.osv_memory):
                     done += move.product_qty
         return (prod.product_qty - done) or prod.product_qty
 
+    def _get_product_id(self, cr, uid, context=None):
+        """ To obtain product id
+        @return: id
+        """
+        prod=False
+        if context and context.get("active_id"):
+            prod = self.pool.get('mrp.production').browse(cr, uid,
+                                    context['active_id'], context=context)
+        return prod and prod.product_id.id or False
+    
+    def _get_track(self, cr, uid, context=None):
+        prod = self._get_product_id(cr, uid, context=context)
+        prod_obj = self.pool.get("product.product")
+        return prod and prod_obj.browse(cr, uid, prod, context=context).track_production or False
+
     _defaults = {
          'product_qty': _get_product_qty,
-         'mode': lambda *x: 'consume_produce'
+         'mode': lambda *x: 'consume_produce',
+         'product_id': _get_product_id,
+         'track_production': _get_track, 
     }
 
     def do_produce(self, cr, uid, ids, context=None):
