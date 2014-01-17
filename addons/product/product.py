@@ -727,15 +727,13 @@ class product_product(osv.osv):
                 return {'value': {'uom_po_id': uom_id}}
         return False
 
-    def onchange_product_tmpl_id(self, cr, uid, ids, template_id, lst_price, price_margin, price_extra, context=None):
+    def onchange_product_tmpl_id(self, cr, uid, ids, template_id, context=None):
         res = {}
         if template_id:
             template = self.pool.get('product.template').browse(cr, uid, template_id, context=context)
-            if not lst_price:
-                lst_price = template.list_price + ((template.list_price * price_margin) + price_extra)
             res['value'] = {
                 'name': template.name,
-                'lst_price': lst_price,
+                'lst_price': template.list_price,
             }
         return res
 
