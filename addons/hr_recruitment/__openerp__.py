@@ -42,7 +42,7 @@ You can define the different phases of interviews and easily rate the applicant 
         'decimal_precision',
         'hr',
         'survey',
-        'base_calendar',
+        'calendar',
         'fetchmail',
     ],
     'data': [

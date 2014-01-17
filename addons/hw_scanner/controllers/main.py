@@ -12,7 +12,12 @@ from openerp.http import request
 
 _logger = logging.getLogger(__name__)
 
-from evdev import InputDevice, ecodes, categorize, list_devices
+try:
+    import evdev
+except ImportError:
+    _logger.error('OpenERP module hw_scanner depends on the evdev python module')
+    evdev = None
+
 from select import select
 
 class ScannerDriver(hw_proxy.Proxy):
@@ -76,13 +81,15 @@ class ScannerDriver(hw_proxy.Proxy):
         }
 
     def get_device(self):
+        if not evdev:
+            return None
         devices   = [ device for device in listdir(self.input_dir)]
         keyboards = [ device for device in devices if 'kbd' in device ]
         scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower()) ]
         if len(scanners) > 0:
-            return InputDevice(join(self.input_dir,scanners[0]))
+            return evdev.InputDevice(join(self.input_dir,scanners[0]))
         elif len(keyboards) > 0:
-            return InputDevice(join(self.input_dir,keyboards[0]))
+            return evdev.InputDevice(join(self.input_dir,keyboards[0]))
         else:
             return None
 
@@ -105,9 +112,9 @@ class ScannerDriver(hw_proxy.Proxy):
                 device.ungrab()
                 return ''
             for event in device.read():
-                if event.type == ecodes.EV_KEY:
+                if event.type == evdev.ecodes.EV_KEY:
+                    #_logger.debug('Evdev Keyboard event %s',evdev.categorize(event))
                     if event.value == 1: # keydown events
-                        #print categorize(event)
                         if event.code in self.keymap: 
                             if shift:
                                 barcode.append(self.keymap[event.code][1])
